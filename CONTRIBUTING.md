@@ -23,6 +23,8 @@ Playwright Sharp should have a .NET/C# flavor.
  * Getter functions should be expressed as properties.
  * Async suffix should be honored.
 
+Our guide for architecture and code style will by [Microsoft.Extensions.Configuration](https://github.com/dotnet/extensions/tree/master/src/Configuration).
+
 ## Code Style
 
 Though this list will change over time, these are the things to consider now:
