@@ -1,0 +1,68 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Browsers", "Browsers", "{24D46C64-EDC5-47EC-9F96-103F22EBF93B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D250D790-5A30-4C38-8F60-50FA96DB4E67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F0EC30F-2600-4399-9925-A16B049B9311}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp", "PlaywrightSharp\PlaywrightSharp.csproj", "{F71C95D9-84E0-4FD1-816C-B1EC6099562D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Abstractions", "PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj", "{DE2E50FC-10C8-492E-918E-595913798213}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Chromium", "Playwright.Chromium\Playwright.Chromium.csproj", "{3226FD2D-69B7-456C-8019-AAB4D89E99AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Webkit", "Playwright.Webkit\Playwright.Webkit.csproj", "{A556185B-3339-490E-ABEC-FFC181F59BBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Firefox", "Playwright.Firefox\Playwright.Firefox.csproj", "{CCB96C31-EFD1-4408-86CF-15BDC005C911}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests", "PlaywrightSharp.Tests\PlaywrightSharp.Tests.csproj", "{62EE7AA0-C5D5-43F9-A750-6451C9B8B574}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base Libraries", "Base Libraries", "{16E85370-63ED-44F6-9F9C-DB9C9E456DCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F71C95D9-84E0-4FD1-816C-B1EC6099562D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F71C95D9-84E0-4FD1-816C-B1EC6099562D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F71C95D9-84E0-4FD1-816C-B1EC6099562D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F71C95D9-84E0-4FD1-816C-B1EC6099562D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE2E50FC-10C8-492E-918E-595913798213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE2E50FC-10C8-492E-918E-595913798213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE2E50FC-10C8-492E-918E-595913798213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE2E50FC-10C8-492E-918E-595913798213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3226FD2D-69B7-456C-8019-AAB4D89E99AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3226FD2D-69B7-456C-8019-AAB4D89E99AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3226FD2D-69B7-456C-8019-AAB4D89E99AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3226FD2D-69B7-456C-8019-AAB4D89E99AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A556185B-3339-490E-ABEC-FFC181F59BBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A556185B-3339-490E-ABEC-FFC181F59BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A556185B-3339-490E-ABEC-FFC181F59BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A556185B-3339-490E-ABEC-FFC181F59BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCB96C31-EFD1-4408-86CF-15BDC005C911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCB96C31-EFD1-4408-86CF-15BDC005C911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCB96C31-EFD1-4408-86CF-15BDC005C911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCB96C31-EFD1-4408-86CF-15BDC005C911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62EE7AA0-C5D5-43F9-A750-6451C9B8B574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62EE7AA0-C5D5-43F9-A750-6451C9B8B574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62EE7AA0-C5D5-43F9-A750-6451C9B8B574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62EE7AA0-C5D5-43F9-A750-6451C9B8B574}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 0.0.0
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3226FD2D-69B7-456C-8019-AAB4D89E99AE} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
+		{A556185B-3339-490E-ABEC-FFC181F59BBE} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
+		{CCB96C31-EFD1-4408-86CF-15BDC005C911} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
+		{F71C95D9-84E0-4FD1-816C-B1EC6099562D} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
+		{DE2E50FC-10C8-492E-918E-595913798213} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
+	EndGlobalSection
+EndGlobal
