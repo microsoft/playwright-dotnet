@@ -12,7 +12,4 @@
     <Commandlineparameters></Commandlineparameters>
     <RunWithWarnings>true</RunWithWarnings>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Class1.cs" />
-  </ItemGroup>
 </Project>
