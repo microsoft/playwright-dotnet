@@ -26,13 +26,12 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 <PrivateAssets>all</PrivateAssets>
 </PackageReference>
+    <PackageReference Include="MicrosoftExtensions.Logging.Xunit" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Playwright.Chromium\Playwright.Chromium.csproj" />
-    <ProjectReference Include="..\Playwright.Firefox\Playwright.Firefox.csproj" />
-    <ProjectReference Include="..\Playwright.Webkit\Playwright.Webkit.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
     <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
+    <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
   </ItemGroup>
 </Project>
