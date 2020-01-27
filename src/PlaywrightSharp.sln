@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Firefox", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Webkit", "PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj", "{D0AFE02A-46B3-4A08-A137-7E50260E82C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.TestServer", "PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj", "{A011DB2C-600A-48C4-B714-50CEBB590B61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{D0AFE02A-46B3-4A08-A137-7E50260E82C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0AFE02A-46B3-4A08-A137-7E50260E82C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0AFE02A-46B3-4A08-A137-7E50260E82C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A011DB2C-600A-48C4-B714-50CEBB590B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A011DB2C-600A-48C4-B714-50CEBB590B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A011DB2C-600A-48C4-B714-50CEBB590B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A011DB2C-600A-48C4-B714-50CEBB590B61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		version = 0.0.0
@@ -64,5 +70,6 @@ Global
 		{DE2E50FC-10C8-492E-918E-595913798213} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
 		{E0FF64A2-6B52-468C-B221-FE26D94E32A8} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
 		{D0AFE02A-46B3-4A08-A137-7E50260E82C2} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
+		{A011DB2C-600A-48C4-B714-50CEBB590B61} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 	EndGlobalSection
 EndGlobal
