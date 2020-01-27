@@ -14,11 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp", "Playwrig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Abstractions", "PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj", "{DE2E50FC-10C8-492E-918E-595913798213}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Chromium", "Playwright.Chromium\Playwright.Chromium.csproj", "{3226FD2D-69B7-456C-8019-AAB4D89E99AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Chromium", "Playwright.Chromium\PlaywrightSharp.Chromium.csproj", "{3226FD2D-69B7-456C-8019-AAB4D89E99AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Webkit", "Playwright.Webkit\Playwright.Webkit.csproj", "{A556185B-3339-490E-ABEC-FFC181F59BBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Webkit", "Playwright.Webkit\PlaywrightSharp.Webkit.csproj", "{A556185B-3339-490E-ABEC-FFC181F59BBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Firefox", "Playwright.Firefox\Playwright.Firefox.csproj", "{CCB96C31-EFD1-4408-86CF-15BDC005C911}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Firefox", "Playwright.Firefox\PlaywrightSharp.Firefox.csproj", "{CCB96C31-EFD1-4408-86CF-15BDC005C911}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests", "PlaywrightSharp.Tests\PlaywrightSharp.Tests.csproj", "{62EE7AA0-C5D5-43F9-A750-6451C9B8B574}"
 EndProject
