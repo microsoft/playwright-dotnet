@@ -7,7 +7,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netstandard2.0\Playwright.Chromium.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.Chromium.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
