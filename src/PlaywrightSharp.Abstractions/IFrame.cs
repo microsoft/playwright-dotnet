@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace PlaywrightSharp
 {
@@ -37,5 +38,47 @@ namespace PlaywrightSharp
         /// Child frames of the this frame
         /// </summary>
         IFrame[] ChildFrames { get; }
+
+        /// <summary>
+        /// Gets the frame's name attribute as specified in the tag
+        /// If the name is empty, returns the id attribute instead
+        /// </summary>
+        string Name { get; }
+        /// <summary>
+        /// Gets the frame's url
+        /// </summary>
+        string Url { get; }
+
+        /// <summary>
+        /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content
+        /// </summary>
+        /// <param name="options">add script tag options</param>
+        /// <remarks>
+        /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>
+        /// </remarks>
+        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame</returns>
+        Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
+        /// <summary>
+        /// Executes a function in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// TODO
+        /// </remarks>
+        /// <returns>Task that completes result of the script</returns>
+        Task<T> EvaluateAsync<T>(string script, params object[] args);
+
+        /// <summary>
+        /// Executes a function in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>Task that completes with the return value of the script</returns>
+        Task<JToken> EvaluateAsync(string script, params object[] args);
+
     }
 }

@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             await Task.WhenAll(
                 popupTargetCompletion.Task,
-                page.EvaluateFunctionAsync("url => window.open(url)", TestConstants.EmptyPage)
+                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage)
             );
 
             var popupTarget = await popupTargetCompletion.Task;
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             // Create a page in first incognito context.
             var page1 = await context1.NewPageAsync();
             await page1.GoToAsync(TestConstants.EmptyPage);
-            await page1.EvaluateFunctionAsync(@"() => {
+            await page1.EvaluateAsync(@"() => {
                 localStorage.setItem('name', 'page1');
                 document.cookie = 'name=page1';
             }");
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             // Create a page in second incognito context.
             var page2 = await context2.NewPageAsync();
             await page2.GoToAsync(TestConstants.EmptyPage);
-            await page2.EvaluateFunctionAsync(@"() => {
+            await page2.EvaluateAsync(@"() => {
                 localStorage.setItem('name', 'page2');
                 document.cookie = 'name=page2';
             }");
@@ -100,10 +100,10 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(page2, (await context2.GetPagesAsync())[0]);
 
             // Make sure pages don't share localstorage or cookies.
-            Assert.Equal("page1", await page1.EvaluateFunctionAsync<string>("() => localStorage.getItem('name')"));
-            Assert.Equal("name=page1", await page1.EvaluateFunctionAsync<string>("() => document.cookie"));
-            Assert.Equal("page2", await page2.EvaluateFunctionAsync<string>("() => localStorage.getItem('name')"));
-            Assert.Equal("name=page2", await page2.EvaluateFunctionAsync<string>("() => document.cookie"));
+            Assert.Equal("page1", await page1.EvaluateAsync<string>("() => localStorage.getItem('name')"));
+            Assert.Equal("name=page1", await page1.EvaluateAsync<string>("() => document.cookie"));
+            Assert.Equal("page2", await page2.EvaluateAsync<string>("() => localStorage.getItem('name')"));
+            Assert.Equal("name=page2", await page2.EvaluateAsync<string>("() => document.cookie"));
 
             // Cleanup contexts.
             await Task.WhenAll(context1.CloseAsync(), context2.CloseAsync());
@@ -127,8 +127,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             Assert.Equal(456, page.Viewport.Width);
             Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateExpressionAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateExpressionAsync<int>("window.innerWidth"));
+            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerWidth"));
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -144,14 +144,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             await page.GoToAsync(TestConstants.EmptyPage + "/grid.html");
 
-            var sizeBefore = await page.EvaluateFunctionAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var screenshot = await page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });
 
             Assert.NotEmpty(screenshot);
-            var sizeAfter = await page.EvaluateFunctionAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            var sizeAfter = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             Assert.Equal(sizeBefore, sizeAfter);
         }
 
@@ -172,8 +172,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             Assert.Equal(456, page.Viewport.Width);
             Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateExpressionAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateExpressionAsync<int>("window.innerHeight"));
+            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
 
             var screenshot = await page.ScreenshotAsync(new ScreenshotOptions
             {
@@ -183,8 +183,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.NotEmpty(screenshot);
             Assert.Equal(456, page.Viewport.Width);
             Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateExpressionAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateExpressionAsync<int>("window.innerHeight"));
+            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -210,8 +210,40 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             Assert.Equal(456, page.Viewport.Width);
             Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateExpressionAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateExpressionAsync<int>("window.innerHeight"));
+            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>should take element screenshot when default viewport is null and restore back</playwright-it>
+        [Fact]
+        public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
+        {
+            var page = await NewPageAsync(new BrowserContextOptions { Viewport = null });
+            await page.SetContentAsync(@"
+                <div style=""height: 14px"">oooo</div>
+                <style>
+                div.to-screenshot {
+                    border: 1px solid blue;
+                    width: 600px;
+                    height: 600px;
+                    margin-left: 50px;
+                }
+                ::-webkit-scrollbar{
+                    display: none;
+                }
+                </styl >
+                <div class=""to-screenshot""></div>
+                <div class=""to-screenshot""></div>
+                <div class=""to-screenshot""></div>
+            ");
+            var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
+            var screenshot = await elementHandle.ScreenshotAsync();
+            Assert.NotEmpty(screenshot);
+            var sizeAfter = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            Assert.Equal(sizeBefore, sizeAfter);
         }
     }
 }

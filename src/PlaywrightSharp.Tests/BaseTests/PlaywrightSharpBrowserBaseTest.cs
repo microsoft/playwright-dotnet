@@ -11,6 +11,8 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest//, IAsyncLifetime
     {
         internal IBrowser Browser { get; set; }
+        internal const bool IsWebKit = false;
+
         //protected LaunchOptions DefaultOptions { get; set; }
 
         internal PlaywrightSharpBrowserBaseTest(ITestOutputHelper output) : base(output)
@@ -26,7 +28,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options) => Browser.NewContextAsync(options);
 
-        internal async Task<IPage> NewPageAsync(BrowserContextOptions options)
+        internal async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
             var context = await NewContextAsync(options);
             return await context.NewPageAsync();

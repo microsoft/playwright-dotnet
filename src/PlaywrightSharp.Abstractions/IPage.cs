@@ -71,7 +71,7 @@ namespace PlaywrightSharp
         /// TODO
         /// </remarks>
         /// <returns>Task that completes result of the script</returns>
-        Task<T> EvaluateFunctionAsync<T>(string script, params object[] args);
+        Task<T> EvaluateAsync<T>(string script, params object[] args);
 
         /// <summary>
         /// Executes a function in browser context
@@ -82,29 +82,27 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>Task that completes with the return value of the script</returns>
-        Task<JToken> EvaluateFunctionAsync(string script, params object[] args);
+        Task<JToken> EvaluateAsync(string script, params object[] args);
 
         /// <summary>
         /// Executes an expression in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
-        /// <param name="args">Arguments to pass to script</param>
         /// <remarks>
         /// TODO
         /// </remarks>
         /// <returns>Task that completes result of the script</returns>
-        Task<T> EvaluateExpressionAsync<T>(string script);
+        Task<T> EvaluateAsync<T>(string script);
 
         /// <summary>
         /// Executes an expression in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
-        /// <param name="args">Arguments to pass to script</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>Task that completes with the return value of the script</returns>
-        Task<JToken> EvaluateExpressionAsync(string script);
+        Task<JToken> EvaluateAsync(string script);
 
         /// <summary>
         /// Emitted when the page opens a new tab or window.
@@ -120,9 +118,66 @@ namespace PlaywrightSharp
         /// <param name="options">Screenshot options</param>
         /// <returns>
         /// <![CDATA[
-        /// A <see cref="Task<byte[]>"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="byte[]"/>
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="byte[]"/>
         /// ]]>
         /// </returns>
         Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
+
+
+        /// <summary>
+        /// Sets the HTML markup to the page
+        /// </summary>
+        /// <param name="html">HTML markup to assign to the page.</param>
+        /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes</returns>
+        Task SetContentAsync(string html);
+
+        /// <summary>
+        /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.
+        /// </summary>
+        /// <param name="selector">A selector to query page for</param>
+        /// <returns>
+        /// A <see cref="Task{IElementHandle}"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/> pointing to the frame element
+        /// </returns>
+        Task<IElementHandle> QuerySelectorAsync(string selector);
+
+        /// <summary>
+        /// Executes a script in browser context
+        /// </summary>
+        /// <param name="expression">Script to be evaluated in browser context</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// <see cref="IJSHandle"/> instances can be passed as arguments
+        /// </remarks>
+        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when function is executed, yielding the return value</returns>
+        Task<IJSHandle> EvaluateHandleAsync(string expression);
+
+        /// <summary>
+        /// Executes a script in browser context
+        /// </summary>
+        /// <param name="pageFunction">Script to be evaluated in browser context</param>
+        /// <param name="args">Function arguments</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// <see cref="IJSHandle"/> instances can be passed as arguments
+        /// </remarks>
+        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when function is executed, yielding the return value</returns>
+        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args);
+
+        /// <summary>
+        /// Sets the user agent to be used in this page
+        /// </summary>
+        /// <param name="userAgent">Specific user agent to use in this page</param>
+        /// <returns>A <see cref="Task"/> that completes when the user agent is changed</returns>
+        Task SetUserAgentAsync(string userAgent);
+
+        /// <summary>
+        /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content
+        /// </summary>
+        /// <param name="options">add script tag options</param>
+        /// <remarks>
+        /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>
+        /// </remarks>
+        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame</returns>
+        Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
     }
 }
