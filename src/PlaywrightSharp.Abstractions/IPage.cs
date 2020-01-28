@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -16,5 +19,110 @@ namespace PlaywrightSharp
     /// </example>
     public interface IPage
     {
+        /// <summary>
+        /// Navigates to an URL
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        /// <remarks>
+        /// <see cref="IPage.GoToAsync(string)"/> will throw an error if:
+        /// * There's an SSL error (e.g. in case of self-signed certificates).
+        /// * Target URL is invalid.
+        /// * The timeout is exceeded during navigation.
+        /// * The remote server does not respond or is unreachable.
+        /// * The main resource failed to load.
+        ///
+        /// <see cref="IPage.GoToAsync(string)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// The status code for such responses can be retrieved by calling response.status().
+        ///
+        /// NOTE <see cref="IPage.GoToAsync(string)"/> either throws an error or returns a main resource response.
+        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
+        ///
+        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        ///
+        /// Shortcut for <see cref="IFrame.GoToAsync"/>
+        /// </remarks>
+        Task<IResponse> GoToAsync(string url);
+
+        /// <summary>
+        /// Page is guaranteed to have a main frame which persists during navigations.
+        /// </summary>
+        IFrame MainFrame { get; }
+
+        /// <summary>
+        /// Get the browser context that the page belongs to.
+        /// </summary>
+        IBrowser BrowserContext { get; }
+
+        /// <summary>
+        /// Page Viewport
+        /// </summary>
+        Viewport Viewport { get; }
+
+
+        /// <summary>
+        /// Executes a function in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// TODO
+        /// </remarks>
+        /// <returns>Task that completes result of the script</returns>
+        Task<T> EvaluateFunctionAsync<T>(string script, params object[] args);
+
+        /// <summary>
+        /// Executes a function in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>Task that completes with the return value of the script</returns>
+        Task<JToken> EvaluateFunctionAsync(string script, params object[] args);
+
+        /// <summary>
+        /// Executes an expression in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// TODO
+        /// </remarks>
+        /// <returns>Task that completes result of the script</returns>
+        Task<T> EvaluateExpressionAsync<T>(string script);
+
+        /// <summary>
+        /// Executes an expression in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>Task that completes with the return value of the script</returns>
+        Task<JToken> EvaluateExpressionAsync(string script);
+
+        /// <summary>
+        /// Emitted when the page opens a new tab or window.
+        /// </summary>
+        /// <example>
+        /// TODO
+        /// </example>
+        event EventHandler<PopupEventArgs> Popup;
+
+        /// <summary>
+        /// Takes a screenshot of the page
+        /// </summary>
+        /// <param name="options">Screenshot options</param>
+        /// <returns>
+        /// <![CDATA[
+        /// A <see cref="Task<byte[]>"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="byte[]"/>
+        /// ]]>
+        /// </returns>
+        Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -10,8 +12,22 @@ namespace PlaywrightSharp
     public interface IBrowser
     {
         /// <summary>
+        /// Returns an array of all open browser contexts.
+        /// In a newly created browser, this will return a single instance of <seealso cref="IBrowserContext"/>.
+        /// </summary>
+        IBrowserContext[] BrowserContexts { get; }
+        /// <summary>
+        /// Returns the default browser context.
+        /// </summary>
+        /// <remarks>
+        /// The default browser context can not be closed.
+        /// </remarks>
+        IBrowserContext DefaultContext { get; }
+
+        /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
         /// </summary>
+        /// <param name="options">Context options</param>
         /// <example>
         /// <code>
         /// <![CDATA[
@@ -23,6 +39,6 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created</returns>
-        Task<IBrowserContext> NewContextAsync();
+        Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.BaseTests
@@ -22,12 +24,20 @@ namespace PlaywrightSharp.Tests.BaseTests
             }
         }
 
+        internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options) => Browser.NewContextAsync(options);
+
+        internal async Task<IPage> NewPageAsync(BrowserContextOptions options)
+        {
+            var context = await NewContextAsync(options);
+            return await context.NewPageAsync();
+        }
+
         /*
         public virtual async Task InitializeAsync()
             => Browser = await Puppeteer.LaunchAsync(
                 DefaultOptions ?? TestConstants.DefaultBrowserOptions(),
                 TestConstants.LoggerFactory);
-
+                
         public virtual async Task DisposeAsync() => await Browser.CloseAsync();
         */
     }
