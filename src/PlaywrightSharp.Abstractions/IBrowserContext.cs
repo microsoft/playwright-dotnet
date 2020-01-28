@@ -57,6 +57,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="cookies">Cookies to delete</param>
         /// <returns>Task</returns>
-        Task DeleteCookiesAsync(params SetNetworkCookieParam[] cookies)
+        Task DeleteCookiesAsync(params SetNetworkCookieParam[] cookies);
     }
 }
