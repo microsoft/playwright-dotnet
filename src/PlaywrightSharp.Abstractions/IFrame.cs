@@ -79,6 +79,5 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task that completes with the return value of the script</returns>
         Task<JToken> EvaluateAsync(string script, params object[] args);
-
     }
 }

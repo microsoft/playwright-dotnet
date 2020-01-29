@@ -61,7 +61,6 @@ namespace PlaywrightSharp
         /// </summary>
         Viewport Viewport { get; }
 
-
         /// <summary>
         /// Executes a function in browser context
         /// </summary>
@@ -122,7 +121,6 @@ namespace PlaywrightSharp
         /// ]]>
         /// </returns>
         Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
-
 
         /// <summary>
         /// Sets the HTML markup to the page
