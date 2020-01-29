@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace PlaywrightSharp
 {
@@ -81,7 +81,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>Task that completes with the return value of the script</returns>
-        Task<JToken> EvaluateAsync(string script, params object[] args);
+        Task<JsonElement> EvaluateAsync(string script, params object[] args);
 
         /// <summary>
         /// Executes an expression in browser context
@@ -101,7 +101,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>Task that completes with the return value of the script</returns>
-        Task<JToken> EvaluateAsync(string script);
+        Task<JsonElement?> EvaluateAsync(string script);
 
         /// <summary>
         /// Emitted when the page opens a new tab or window.

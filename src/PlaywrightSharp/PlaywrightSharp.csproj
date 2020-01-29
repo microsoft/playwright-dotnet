@@ -12,6 +12,10 @@
     <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
     <RunWithWarnings>true</RunWithWarnings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />

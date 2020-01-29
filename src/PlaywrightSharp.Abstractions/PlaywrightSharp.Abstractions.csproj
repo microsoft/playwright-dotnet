@@ -11,8 +11,13 @@
     <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.Abstractions.xml</DocumentationFile>
     <Commandlineparameters></Commandlineparameters>
     <RunWithWarnings>true</RunWithWarnings>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Json" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
   </ItemGroup>
 </Project>

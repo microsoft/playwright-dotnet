@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
@@ -78,6 +78,6 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>Task that completes with the return value of the script</returns>
-        Task<JToken> EvaluateAsync(string script, params object[] args);
+        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
     }
 }
