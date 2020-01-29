@@ -3,11 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ReleaseVersion>0.0.0</ReleaseVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LangVersion>8.0</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.Webkit.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Webkit.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols></DebugSymbols>

@@ -4,12 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <RootNamespace>PlaywrightSharp</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.Abstractions.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Abstractions.xml</DocumentationFile>
     <Commandlineparameters></Commandlineparameters>
     <RunWithWarnings>true</RunWithWarnings>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Json" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+  </ItemGroup>
 </Project>

@@ -5,17 +5,14 @@
 
     <IsPackable>false</IsPackable>
     <ReleaseVersion>0.0.0</ReleaseVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\netcoreapp3.1\PlaywrightSharp.Tests.xml</DocumentationFile>
-    <LangVersion>8.0</LangVersion>
-    <NoWarn></NoWarn>
     <NoWarn>1701;1702</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>8.0</LangVersion>
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
@@ -33,5 +30,8 @@
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
     <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BrowserContext\" />
   </ItemGroup>
 </Project>

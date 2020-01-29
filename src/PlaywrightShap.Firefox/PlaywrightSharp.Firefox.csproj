@@ -3,12 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ReleaseVersion>0.0.0</ReleaseVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.Firefox.xml</DocumentationFile>
+    <LangVersion>8.0</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Firefox.xml</DocumentationFile>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
