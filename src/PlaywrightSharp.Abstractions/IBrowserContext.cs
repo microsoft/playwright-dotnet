@@ -38,9 +38,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// An array of all pages inside the browser context.
         /// </summary>
-        /// <returns><![CDATA[
-        /// A <see cref="Task<IPage[]>"/> that completes when get browser context got all the pages, yielding the pages inside that browser context.
-        /// ]]>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when get browser context got all the pages, yielding the pages inside that browser context.
         /// </returns>
         Task<IPage[]> GetPagesAsync();
     }

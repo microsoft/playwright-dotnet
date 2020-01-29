@@ -6,16 +6,10 @@
     <PackOnBuild>true</PackOnBuild>
     <PackageVersion>0.0.0</PackageVersion>
     <Authors>Dario Kondratiuk</Authors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DocumentationFile>bin\Debug\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
+    <LangVersion>8.0</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\PuppeteerSharp.xml</DocumentationFile>
     <RunWithWarnings>true</RunWithWarnings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />

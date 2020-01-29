@@ -11,6 +11,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest//, IAsyncLifetime
     {
         internal IBrowser Browser { get; set; }
+        //TODO
         internal const bool IsWebKit = false;
 
         //protected LaunchOptions DefaultOptions { get; set; }
@@ -39,7 +40,7 @@ namespace PlaywrightSharp.Tests.BaseTests
             => Browser = await Puppeteer.LaunchAsync(
                 DefaultOptions ?? TestConstants.DefaultBrowserOptions(),
                 TestConstants.LoggerFactory);
-                
+
         public virtual async Task DisposeAsync() => await Browser.CloseAsync();
         */
     }

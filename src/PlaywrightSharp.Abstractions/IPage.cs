@@ -62,52 +62,43 @@ namespace PlaywrightSharp
         Viewport Viewport { get; }
 
         /// <summary>
-        /// Executes a function in browser context
+        /// Executes a script in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
         /// <param name="args">Arguments to pass to script</param>
         /// <remarks>
-        /// TODO
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>Task that completes result of the script</returns>
+        /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
+        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task<T> EvaluateAsync<T>(string script, params object[] args);
 
         /// <summary>
-        /// Executes a function in browser context
+        /// Executes a script in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
         /// <param name="args">Arguments to pass to script</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>Task that completes with the return value of the script</returns>
-        Task<JsonElement> EvaluateAsync(string script, params object[] args);
-
-        /// <summary>
-        /// Executes an expression in browser context
-        /// </summary>
-        /// <param name="script">Script to be evaluated in browser context</param>
-        /// <remarks>
-        /// TODO
-        /// </remarks>
-        /// <returns>Task that completes result of the script</returns>
-        Task<T> EvaluateAsync<T>(string script);
-
-        /// <summary>
-        /// Executes an expression in browser context
-        /// </summary>
-        /// <param name="script">Script to be evaluated in browser context</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// </remarks>
-        /// <returns>Task that completes with the return value of the script</returns>
-        Task<JsonElement?> EvaluateAsync(string script);
+        /// <seealso cref="IFrame.EvaluateAsync(string, object[])"/>
+        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
+        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
 
         /// <summary>
         /// Emitted when the page opens a new tab or window.
         /// </summary>
         /// <example>
-        /// TODO
+        /// <code>
+        /// <![CDATA[
+        /// var popupTargetCompletion = new TaskCompletionSource<IPage>();
+        /// page.Popup += (sender, e) => popupTargetCompletion.SetResult(e.Page);
+        /// await Task.WhenAll(
+        ///     popupTargetCompletion.Task,
+        ///     page.ClickAsync('a[target=_blank]')
+        /// );
+        /// ]]>
+        /// </code>
         /// </example>
         event EventHandler<PopupEventArgs> Popup;
 
@@ -116,9 +107,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="options">Screenshot options</param>
         /// <returns>
-        /// <![CDATA[
-        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="byte[]"/>
-        /// ]]>
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="t:byte[]"/>
         /// </returns>
         Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
 
@@ -134,7 +123,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for</param>
         /// <returns>
-        /// A <see cref="Task{IElementHandle}"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/> pointing to the frame element
+        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/> pointing to the frame element
         /// </returns>
         Task<IElementHandle> QuerySelectorAsync(string selector);
 
@@ -146,7 +135,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments
         /// </remarks>
-        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when function is executed, yielding the return value</returns>
+        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value</returns>
         Task<IJSHandle> EvaluateHandleAsync(string expression);
 
         /// <summary>
@@ -158,7 +147,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments
         /// </remarks>
-        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when function is executed, yielding the return value</returns>
+        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value</returns>
         Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args);
 
         /// <summary>
@@ -175,7 +164,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>
         /// </remarks>
-        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame</returns>
+        /// <returns>A <see cref="Task"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame</returns>
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
     }
 }

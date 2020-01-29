@@ -5,8 +5,16 @@ namespace PlaywrightSharp
 {
     /// <summary>
     /// At every point of time, page exposes its current frame tree via the <see cref="IPage.MainFrame"/> and <see cref="IFrame.ChildFrames"/> methods.
-    /// TODO
     /// </summary>
+    /// <example>
+    /// <code>
+    /// <![CDATA[
+    /// var frame = page.Frames.FirstOrDefault(frame => frame.Name == "myframe");
+    /// var text = await frame.QuerySelectorEvalAsync(".selector", "element => element.textContent");
+    /// Console.WriteLine(text);
+    /// ]]>
+    /// </code>
+    /// </example>
     public interface IFrame
     {
         /// <summary>
@@ -56,28 +64,31 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>
         /// </remarks>
-        /// <returns>A <see cref="Task{IElementHandle}"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame</returns>
+        /// <returns>A <see cref="Task"/> that completes when the tag is added, yielding the added tag as an <see cref="IElementHandle"/> when the script's onload fires or when the script content was injected into frame</returns>
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
-        /// <summary>
-        /// Executes a function in browser context
-        /// </summary>
-        /// <param name="script">Script to be evaluated in browser context</param>
-        /// <param name="args">Arguments to pass to script</param>
-        /// <remarks>
-        /// TODO
-        /// </remarks>
-        /// <returns>Task that completes result of the script</returns>
-        Task<T> EvaluateAsync<T>(string script, params object[] args);
 
         /// <summary>
-        /// Executes a function in browser context
+        /// Executes a script in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
         /// <param name="args">Arguments to pass to script</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>Task that completes with the return value of the script</returns>
+        /// <seealso cref="IPage.EvaluateAsync{T}(string, object[])"/>
+        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        Task<T> EvaluateAsync<T>(string script, params object[] args);
+
+        /// <summary>
+        /// Executes a script in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <seealso cref="IPage.EvaluateAsync(string, object[])"/>
+        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
     }
 }
