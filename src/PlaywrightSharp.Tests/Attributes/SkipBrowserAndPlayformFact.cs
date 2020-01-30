@@ -37,6 +37,5 @@ namespace PlaywrightSharp.Tests.Attributes
                 Skip = "Skipped by browser/platform";
             }
         }
-
     }
 }

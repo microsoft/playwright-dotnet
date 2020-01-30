@@ -162,6 +162,5 @@ namespace PlaywrightSharp.Tests.Accessibility
 
             Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
-
     }
 }
