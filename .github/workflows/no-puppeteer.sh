@@ -1,6 +1,6 @@
 #!/bin/sh
 
-search_result=$(grep -r -i -n "password[=:]" $GITHUB_WORKSPACE/src)
+search_result=$(grep -r -i -n "puppeteer" $GITHUB_WORKSPACE/src)
 
 if [[ $search_result ]]; then
     echo "Puppeteer found! \n $search_result"
