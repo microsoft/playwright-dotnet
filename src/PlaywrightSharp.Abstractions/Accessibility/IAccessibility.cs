@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Accessibility
     /// Blink - Chrome's rendering engine - has a concept of "accessibility tree", which is than translated into different platform-specific APIs. 
     /// Accessibility namespace gives users access to the Blink Accessibility Tree.
     /// Most of the accessibility tree gets filtered out when converting from Blink AX Tree to Platform-specific AX-Tree or by assistive technologies themselves. 
-    /// By default, Puppeteer tries to approximate this filtering, exposing only the "interesting" nodes of the tree.
+    /// By default, PlaywrightSharp tries to approximate this filtering, exposing only the "interesting" nodes of the tree.
     /// </summary>
     public interface IAccessibility
     {
