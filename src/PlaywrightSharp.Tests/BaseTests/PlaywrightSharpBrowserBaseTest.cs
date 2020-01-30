@@ -11,8 +11,6 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest//, IAsyncLifetime
     {
         internal IBrowser Browser { get; set; }
-        //TODO
-        internal const bool IsWebKit = false;
 
         //protected LaunchOptions DefaultOptions { get; set; }
 

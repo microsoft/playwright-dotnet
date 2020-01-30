@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Accessibility;
 
 namespace PlaywrightSharp
 {
@@ -62,6 +63,11 @@ namespace PlaywrightSharp
         Viewport Viewport { get; }
 
         /// <summary>
+        /// Gets the accessibility.
+        /// </summary>
+        IAccessibility Accessibility { get; }
+
+        /// <summary>
         /// Executes a script in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
@@ -72,6 +78,19 @@ namespace PlaywrightSharp
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task<T> EvaluateAsync<T>(string script, params object[] args);
+
+        /// <summary>
+        /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for</param>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
 
         /// <summary>
         /// Executes a script in browser context
