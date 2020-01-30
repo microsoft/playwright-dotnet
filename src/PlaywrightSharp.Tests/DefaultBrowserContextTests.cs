@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-test>context.setCookies() should work</playwright-test>
         [Fact]
-        public async Task PageSetCookiesAsyncShouldWork()
+        public async Task ContextSetCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.BrowserContext.SetCookiesAsync(new SetNetworkCookieParam
