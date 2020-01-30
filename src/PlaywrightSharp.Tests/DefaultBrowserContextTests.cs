@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-test>page.cookies() should work</playwright-test>
         [Fact]
-        public async Task PageGetCookiesAsyncShouldWork()
+        public async Task ContextGetCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateExpressionAsync("document.cookie = 'username=John Doe'");
