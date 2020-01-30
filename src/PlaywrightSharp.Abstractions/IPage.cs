@@ -72,7 +72,6 @@ namespace PlaywrightSharp
         /// </summary>
         event EventHandler<DialogEventArgs> Dialog;
 
-
         /// <summary>
         /// Executes a script in browser context
         /// </summary>
