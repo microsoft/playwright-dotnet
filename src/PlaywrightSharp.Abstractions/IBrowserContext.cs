@@ -24,7 +24,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Creates a new page in the browser context and optionally navigates it to the specified URL.
         /// </summary>
-        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created</returns>
+        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created</returns>, yielding the new <see cref="IPage"/>.
         Task<IPage> NewPageAsync();
 
         /// <summary>
