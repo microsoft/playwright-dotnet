@@ -1,0 +1,21 @@
+name: PlawrightSharp Checks
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: We shouldn't mention puppeteer
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        search_result=$(grep -r -i -n "puppeteer")
+        if [[ $search_result ]]; then
+            echo "Puppeteer found! \n $search_result"
+            exit 1
+        else
+            echo "What is a puppeteer?"
+        fi

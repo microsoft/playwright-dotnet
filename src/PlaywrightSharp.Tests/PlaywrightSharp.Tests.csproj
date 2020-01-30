@@ -31,14 +31,4 @@
     <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BrowserContext\" />
-    <Folder Include="Attributes\" />
-    <Folder Include="Accessibility\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Attributes\SkipFirefoxFact.cs" />
-    <Compile Remove="Attributes\SkipFirefoxFact %28another copy%29.cs" />
-    <Compile Remove="Attributes\SkipWebKitFact %28copy%29.cs" />
-  </ItemGroup>
 </Project>
