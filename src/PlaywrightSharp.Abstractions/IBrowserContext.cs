@@ -44,6 +44,16 @@ namespace PlaywrightSharp
         Task<IPage[]> GetPagesAsync();
 
         /// <summary>
+        /// Sets the HTML markup to the browser context
+        /// </summary>
+        /// <param name="html">HTML markup to assign to the page.</param>
+        /// <param name="options">The navigations options</param>
+        /// <returns>Task.</returns>
+        /// <seealso cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
+        /// <seealso cref="IPage.SetContentAsync(string, NavigationOptions)"/>
+        Task SetContentAsync(string html, NavigationOptions options = null);
+
+        /// <summary>
         /// Returns the context's cookies
         /// </summary>
         /// <param name="urls">Url's to return cookies for</param>
@@ -52,13 +62,15 @@ namespace PlaywrightSharp
         /// If no URLs are specified, this method returns cookies for the current page URL.
         /// If URLs are specified, only cookies for those URLs are returned.
         /// </remarks>
-        Task<SetNetworkCookieParam[]> GetCookiesAsync(params string[] urls);
+        /// <seealso cref="IPage.GetCookiesAsync(string[])"/>
+        Task<NetworkCookie[]> GetCookiesAsync(params string[] urls);
 
         /// <summary>
         /// Clears all of the current cookies and then sets the cookies for the context
         /// </summary>
         /// <param name="cookies">Cookies to set</param>
         /// <returns>A <see cref="Task"/> that completes when the cookies are set</returns>
+        /// <seealso cref="IPage.SetCookiesAsync(SetNetworkCookieParam[])"/>
         Task SetCookiesAsync(params SetNetworkCookieParam[] cookies);
 
         /// <summary>
@@ -66,6 +78,14 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="cookies">Cookies to delete</param>
         /// <returns>A <see cref="Task"/> that completes when the cookies are deleted.</returns>
+        /// <seealso cref="IPage.DeleteCookiesAsync(SetNetworkCookieParam[])"/>
         Task DeleteCookiesAsync(params SetNetworkCookieParam[] cookies);
+
+        /// <summary>
+        /// Clears the context's cookies
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are cleared.</returns>
+        /// <seealso cref="IPage.ClearCookiesAsync"/>
+        Task ClearCookiesAsync();
     }
 }

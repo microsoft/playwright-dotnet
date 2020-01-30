@@ -19,17 +19,19 @@ namespace PlaywrightSharp.Tests
         public async Task ContextGetCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.EvaluateExpressionAsync("document.cookie = 'username=John Doe'");
+            await Page.EvaluateAsync(@"() => {
+              document.cookie = 'username=John Doe';
+            }");
             var cookie = (await Page.BrowserContext.GetCookiesAsync()).FirstOrDefault();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
             Assert.Equal("/", cookie.Path);
             Assert.Equal(-1, cookie.Expires);
-            Assert.Equal(16, cookie.Size);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
             Assert.True(cookie.Session);
+            Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
@@ -43,17 +45,17 @@ namespace PlaywrightSharp.Tests
                 Name = "username",
                 Value = "John Doe"
             });
-
+            Assert.Equal("username=John Doe", await Page.EvaluateAsync<string>("() => document.cookie"));
             var cookie = (await Page.BrowserContext.GetCookiesAsync()).FirstOrDefault();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
             Assert.Equal("/", cookie.Path);
             Assert.Equal(-1, cookie.Expires);
-            Assert.Equal(16, cookie.Size);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
             Assert.True(cookie.Session);
+            Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
@@ -75,23 +77,9 @@ namespace PlaywrightSharp.Tests
                     Value = "2"
                 });
 
-            Assert.Equal("cookie1=1; cookie2=2", await Page.EvaluateExpressionAsync<string>("document.cookie"));
-            await Page.BrowserContext.DeleteCookiesAsync(new SetNetworkCookieParam
-            {
-                Name = "cookie2"
-            });
-            Assert.Equal("cookie1=1", await Page.EvaluateExpressionAsync<string>("document.cookie"));
-
-            var cookie = (await Page.BrowserContext.GetCookiesAsync()).FirstOrDefault();
-            Assert.Equal("cookie1", cookie.Name);
-            Assert.Equal("1", cookie.Value);
-            Assert.Equal("localhost", cookie.Domain);
-            Assert.Equal("/", cookie.Path);
-            Assert.Equal(-1, cookie.Expires);
-            Assert.Equal(8, cookie.Size);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
-            Assert.True(cookie.Session);
+            Assert.Equal("cookie1=1; cookie2=2", await Page.EvaluateAsync<string>("() => document.cookie"));
+            await Page.BrowserContext.ClearCookiesAsync();
+            Assert.Equal(string.Empty, await Page.EvaluateAsync<string>("() => document.cookie"));
         }
     }
 }
