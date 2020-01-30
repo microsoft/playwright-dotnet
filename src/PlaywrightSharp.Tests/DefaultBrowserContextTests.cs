@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-file>context.clearCookies() should work</playwright-file>
         [Fact]
-        public async Task PageDeleteCookieAsyncShouldWork()
+        public async Task ContextClearCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
 
