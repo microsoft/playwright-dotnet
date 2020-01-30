@@ -62,6 +62,11 @@ namespace PlaywrightSharp
         Viewport Viewport { get; }
 
         /// <summary>
+        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
+        /// </summary>
+        event EventHandler<DialogEventArgs> Dialog;
+
+        /// <summary>
         /// Executes a script in browser context
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>

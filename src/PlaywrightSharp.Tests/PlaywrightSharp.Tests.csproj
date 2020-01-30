@@ -31,7 +31,4 @@
     <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BrowserContext\" />
-  </ItemGroup>
 </Project>

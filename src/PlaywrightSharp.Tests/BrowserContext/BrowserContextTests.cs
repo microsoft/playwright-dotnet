@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should have default context</playwright-it>
+        ///<playwright-it>should create new incognito context</playwright-it>
         [Fact]
         public async Task ShouldHaveDefaultContext()
         {
