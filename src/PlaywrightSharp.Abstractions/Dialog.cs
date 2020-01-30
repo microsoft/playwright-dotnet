@@ -13,7 +13,7 @@ namespace PlaywrightSharp
     /// {
     ///     await e.Dialog.AcceptAsync();
     /// }
-    /// await Page.EvaluateExpressionAsync("alert('yo');");
+    /// await Page.EvaluateAsync("alert('yo');");
     /// ]]>
     /// </code>
     /// </example>
@@ -23,17 +23,17 @@ namespace PlaywrightSharp
         /// Dialog's type, can be one of alert, beforeunload, confirm or prompt.
         /// </summary>
         /// <value>The type of the dialog.</value>
-        public DialogType DialogType { get; set; }
+        DialogType DialogType { get; set; }
         /// <summary>
         /// If dialog is prompt, returns default prompt value. Otherwise, returns empty string.
         /// </summary>
         /// <value>The default value.</value>
-        public string DefaultValue { get; set; }
+        string DefaultValue { get; set; }
         /// <summary>
         /// A message displayed in the dialog.
         /// </summary>
         /// <value>The message.</value>
-        public string Message { get; set; }
+        string Message { get; set; }
 
         /// <summary>
         /// Accept the Dialog.

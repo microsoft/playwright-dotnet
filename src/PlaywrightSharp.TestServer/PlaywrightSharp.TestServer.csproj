@@ -5,14 +5,6 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="testCert.cer" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="testCert.cer">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net471'">
     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
