@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
         public static readonly string CrossProcessUrl = ServerIpUrl;
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
-
+        public static readonly DeviceDescriptor IPhone = null;
         public static ILoggerFactory LoggerFactory { get; private set; }
         public static string FileToUpload => Path.Combine(Directory.GetCurrentDirectory(), "Assets", "file-to-upload.txt");
 

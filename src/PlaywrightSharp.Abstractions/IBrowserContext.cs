@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
@@ -26,13 +28,20 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created</returns>
         Task<IPage> NewPageAsync();
-
         /// <summary>
         /// Closes the browser context. All the targets that belong to the browser context will be closed.
         /// </summary>
         /// <remarks>NOTE only incognito browser contexts can be closed.</remarks>
         /// <returns>A <see cref="Task"/> that completes when the browser context is closed</returns>
         Task CloseAsync();
+
+        /// <summary>
+        /// An array of all pages inside the browser context.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when get browser context got all the pages, yielding the pages inside that browser context.
+        /// </returns>
+        Task<IPage[]> GetPagesAsync();
 
         /// <summary>
         /// Returns the context's cookies
