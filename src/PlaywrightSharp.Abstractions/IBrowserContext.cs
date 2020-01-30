@@ -38,7 +38,7 @@ namespace PlaywrightSharp
         /// Returns the context's cookies
         /// </summary>
         /// <param name="urls">Url's to return cookies for</param>
-        /// <returns>Array of cookies</returns>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are sent by the browser, yielding a <see cref="t:NetworkCookie[]"/></returns>
         /// <remarks>
         /// If no URLs are specified, this method returns cookies for the current page URL.
         /// If URLs are specified, only cookies for those URLs are returned.
