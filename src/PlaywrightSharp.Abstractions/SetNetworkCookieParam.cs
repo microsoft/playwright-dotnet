@@ -5,7 +5,7 @@
     /// </summary>
     /// <seealso cref="IBrowserContext.SetCookiesAsync(SetNetworkCookieParam[])"/>
     /// <seealso cref="IBrowserContext.GetCookiesAsync(string[])"/>
-    /// <seealso cref="IPage.DeleteCookieAsync(SetNetworkCookieParam[])"/>
+    /// <seealso cref="IPage.DeleteCookiesAsync(SetNetworkCookieParam[])"/>
     /// <seealso cref="IPage.GetCookiesAsync(string[])"/>
     public class SetNetworkCookieParam
     {

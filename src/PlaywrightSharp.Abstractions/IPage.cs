@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -19,6 +20,21 @@ namespace PlaywrightSharp
     /// </example>
     public interface IPage
     {
+        /// <summary>
+        /// This setting will change the default maximum times for the following methods:
+        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
+        /// </summary>
+        int DefaultTimeout { get; set; }
+
+        /// <summary>
+        /// This setting will change the default maximum time for the following methods:
+        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
+        /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>
+        /// </summary>
+        int DefaultNavigationTimeout { get; set; }
+
         /// <summary>
         /// Navigates to an URL
         /// </summary>
@@ -45,6 +61,29 @@ namespace PlaywrightSharp
         /// Shortcut for <see cref="IFrame.GoToAsync"/>
         /// </remarks>
         Task<IResponse> GoToAsync(string url);
+
+        /// <summary>
+        /// This resolves when the page navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="options">navigation options</param>
+        /// <returns>Task which resolves to the main resource response. 
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var navigationTask = page.WaitForNavigationAsync();
+        /// await page.ClickAsync("a.my-link");
+        /// await navigationTask;
+        /// ]]>
+        /// </code>
+        /// </example>
+        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -155,6 +194,13 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the cookies are cleared.</returns>
         /// <seealso cref="IBrowserContext.ClearCookiesAsync"/>
         Task ClearCookiesAsync();
+
+        /// <summary>
+        /// Sets extra HTTP headers that will be sent with every request the page initiates
+        /// </summary>
+        /// <param name="headers">Additional http headers to be sent with every request</param>
+        /// <returns>Task</returns>
+        Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers);
 
         /// <summary>
         /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.

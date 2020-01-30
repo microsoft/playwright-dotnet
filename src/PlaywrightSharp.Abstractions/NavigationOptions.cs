@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Navigation options used by <see TODOcref="Page.WaitForNavigationAsync(NavigationOptions)"/> and <see TODOcref="Page.SetContentAsync(string, NavigationOptions)"/>
+    /// Navigation options used by <see cref="IPage.WaitForNavigationAsync(NavigationOptions)"/> and <see cref="IPage.SetContentAsync(string, NavigationOptions)"/>
     /// </summary>
     public class NavigationOptions
     {
@@ -9,7 +9,7 @@
         /// Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. 
         /// </summary>
         /// <remarks>
-        /// The default value can be changed by setting the <see TODOcref="Page.DefaultNavigationTimeout"/> or <see TODOcref="Page.DefaultTimeout"/> property.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultNavigationTimeout"/> or <see cref="IPage.DefaultTimeout"/> property.
         /// </remarks>
         public int? Timeout { get; set; }
 
@@ -19,7 +19,7 @@
         public WaitUntilNavigation[] WaitUntil { get; set; }
 
         /// <summary>
-        /// Referer header value. If provided it will take prefrence over the referer header value set by <see TODOcref="Page.SetExtraHttpHeadersAsync(System.Collections.Generic.Dictionary{string, string})"/>
+        /// Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.IReadOnlyDictionary{string, string})"/>
         /// </summary>
         /// <value>The referer.</value>
         public string Referer { get; set; }

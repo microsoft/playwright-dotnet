@@ -4,7 +4,7 @@ using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace PlaywrightSharp.Tests.DefaultBrowserContext
 {
     /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
     public class DefaultBrowserContextTests : PlaywrightSharpPageBaseTest
@@ -14,7 +14,8 @@ namespace PlaywrightSharp.Tests
         }
 
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
-        /// <playwright-test>page.cookies() should work</playwright-test>
+        /// <playwright-describe>defaultContext()</playwright-describe>
+        /// <playwright-it>page.cookies() should work</playwright-it>
         [Fact]
         public async Task ContextGetCookiesAsyncShouldWork()
         {
@@ -35,7 +36,8 @@ namespace PlaywrightSharp.Tests
         }
 
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
-        /// <playwright-test>context.setCookies() should work</playwright-test>
+        /// <playwright-describe>defaultContext()</playwright-describe>
+        /// <playwright-it>context.setCookies() should work</playwright-it>
         [Fact]
         public async Task ContextSetCookiesAsyncShouldWork()
         {
@@ -59,7 +61,8 @@ namespace PlaywrightSharp.Tests
         }
 
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
-        /// <playwright-file>context.clearCookies() should work</playwright-file>
+        /// <playwright-describe>defaultContext()</playwright-describe>
+        /// <playwright-it>context.clearCookies() should work</playwright-it>
         [Fact]
         public async Task ContextClearCookiesAsyncShouldWork()
         {
