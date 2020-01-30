@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 search_result=$(grep -r -i -n "puppeteer" $GITHUB_WORKSPACE/src)
 
