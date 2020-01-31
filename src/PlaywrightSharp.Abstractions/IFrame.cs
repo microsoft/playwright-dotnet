@@ -68,7 +68,6 @@ namespace PlaywrightSharp
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="options">The navigations options</param>
         /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes</returns>
-        /// <seealso cref="IBrowserContext.SetContentAsync(string, NavigationOptions)"/>
         /// <seealso cref="IPage.SetContentAsync(string, NavigationOptions)"/>
         Task SetContentAsync(string html, NavigationOptions options = null);
 
