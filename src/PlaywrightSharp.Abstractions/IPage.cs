@@ -199,7 +199,7 @@ namespace PlaywrightSharp
         /// Sets extra HTTP headers that will be sent with every request the page initiates
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request</param>
-        /// <returns>Task</returns>
+        /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers);
 
         /// <summary>
