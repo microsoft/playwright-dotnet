@@ -107,9 +107,55 @@ namespace PlaywrightSharp
         IAccessibility Accessibility { get; }
 
         /// <summary>
+        /// Gets this page's mouse
+        /// </summary>
+        IMouse Mouse { get; }
+
+        /// <summary>
+        /// Shortcut for MainFrame.Url
+        /// </summary>
+        string Url { get; }
+
+        /// <summary>
+        /// Gets all frames attached to the page.
+        /// </summary>
+        IFrame[] Frames { get; }
+
+        /// <summary>
+        /// Gets this page's keyboard
+        /// </summary>
+        IKeyboard Keyboard { get; }
+
+        /// <summary>
+        /// Raised when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c> or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
+        /// The arguments passed into <c>console.log</c> appear as arguments on the event handler.
+        /// </summary>
+        /// <example>
+        /// An example of handling <see cref="Console"/> event:
+        /// <code>
+        /// <![CDATA[
+        /// page.Console += (sender, e) => 
+        /// {
+        ///     for (var i = 0; i < e.Message.Args.Count; ++i)
+        ///     {
+        ///         System.Console.WriteLine($"{i}: {e.Message.Args[i]}");
+        ///     }
+        /// }
+        /// ]]>
+        /// </code>
+        /// </example>
+        event EventHandler<ConsoleEventArgs> Console;
+
+        /// <summary>
         /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
         /// </summary>
         event EventHandler<DialogEventArgs> Dialog;
+
+        /// <summary>
+        /// Closes the page.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
+        Task CloseAsync(PageCloseOptions options = null);
 
         /// <summary>
         /// Executes a script in browser context
@@ -120,7 +166,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
-        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task<T> EvaluateAsync<T>(string script, params object[] args);
 
         /// <summary>
@@ -133,8 +179,29 @@ namespace PlaywrightSharp
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// <![CDATA[
+        /// This method focuses the element and triggers an input event after filling. If there's no text <input>, <textarea> or [contenteditable] element matching selector, the method throws an error.
+        /// ]]>
+        /// Shortcut for MainFrame.FillAsync.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
+        /// <param name="options">Optional waiting parameters</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
+        Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Waits for a selector to be added to the DOM
+        /// </summary>
+        /// <param name="selector">A selector of an element to wait for</param>
+        /// <param name="options">Optional waiting parameters</param>
+        /// <returns>A task that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
+        /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
 
         /// <summary>
         /// Executes a script in browser context
@@ -274,5 +341,44 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame</returns>
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to click in the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">click options</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked</returns>
+        Task ClickAsync(string selector, ClickOptions options = null);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to triple click in the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">click options</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully triple clicked</returns>
+        Task TripleClickAsync(string selector, ClickOptions options = null);
+
+        /// <summary>
+        /// Sets the viewport.
+        /// In the case of multiple pages in a single browser, each page can have its own viewport size.
+        /// <see cref="SetViewportAsync(Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
+        /// </summary>
+        /// <example>
+        ///<![CDATA[
+        /// using(var page = await context.NewPageAsync())
+        /// {
+        ///     await page.SetViewPortAsync(new Viewport
+        ///     {
+        ///         Width = 640, 
+        ///         Height = 480, 
+        ///         DeviceScaleFactor = 1
+        ///     });
+        ///     await page.GoToAsync('https://www.example.com');
+        /// }
+        /// ]]>
+        /// </example>
+        /// <param name="viewport">Viewport</param>
+        /// <returns>A<see cref="Task"/> that copletes when the message is confirmed by the browser</returns>
+        Task SetViewportAsync(Viewport viewport);
     }
 }
