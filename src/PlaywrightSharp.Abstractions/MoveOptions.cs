@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// options to use <see cref="IMouse.MoveAsync(decimal, decimal, MoveOptions)"/>
+    /// Options for <see cref="IMouse.MoveAsync(decimal, decimal, MoveOptions)"/>
     /// </summary>
     public class MoveOptions
     {

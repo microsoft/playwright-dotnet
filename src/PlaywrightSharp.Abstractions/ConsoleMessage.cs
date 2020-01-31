@@ -12,11 +12,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <value>ConsoleMessageType.</value>
         public ConsoleType Type { get; }
+
         /// <summary>
         /// Gets the console text.
         /// </summary>
         /// <value>The text.</value>
         public string Text { get; }
+
         /// <summary>
         /// Gets the arguments.
         /// </summary>

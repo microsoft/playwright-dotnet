@@ -1,9 +1,8 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Page close options.
+    /// Options for <see cref="IPage.CloseAsync(PageCloseOptions)"/>.
     /// </summary>
-    /// <seealso cref="IPage.CloseAsync(PageCloseOptions)"/>
     public class PageCloseOptions
     {
         /// <summary>

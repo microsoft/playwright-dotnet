@@ -39,7 +39,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments
         /// </remarks>
-        /// <returns>Task which resolves to script return value</returns>
+        /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script</returns>
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
     }
 }

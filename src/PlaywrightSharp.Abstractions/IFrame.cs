@@ -114,7 +114,7 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="options">Optional waiting parameters</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
         /// <summary>
@@ -122,9 +122,9 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector of an element to wait for</param>
         /// <param name="options">Optional waiting parameters</param>
-        /// <returns>A task that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
+        /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
+        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
 
         /// <summary>
         /// Queries frame for the selector. If there's no such element within the frame, the method will resolve to <c>null</c>.
@@ -132,7 +132,7 @@ namespace PlaywrightSharp
         /// <param name="selector">Selector to query frame for</param>
         /// <returns>A <see cref="Task"/> that completes when the selector is found (or failed), yielding the <see cref="IElementHandle"/> pointing to the frame element</returns>
         /// <seealso cref="IPage.QuerySelectorAsync(string)"/>
-        public Task<IElementHandle> QuerySelectorAsync(string selector);
+        Task<IElementHandle> QuerySelectorAsync(string selector);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
@@ -152,7 +152,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
     }
 }

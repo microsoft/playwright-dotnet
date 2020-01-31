@@ -154,7 +154,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Closes the page.
         /// </summary>
-        /// <returns>Task.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
         Task CloseAsync(PageCloseOptions options = null);
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
-        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task<T> EvaluateAsync<T>(string script, params object[] args);
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script</returns>
         Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="options">Optional waiting parameters</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
         /// <summary>

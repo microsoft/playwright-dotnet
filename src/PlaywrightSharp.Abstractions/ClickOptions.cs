@@ -21,6 +21,7 @@ namespace PlaywrightSharp
         /// The button to use for the click. Defaults to <see cref="MouseButton.Left"/>
         /// </summary>
         public MouseButton Button { get; set; } = MouseButton.Left;
+
         /// <summary>
         /// Wait for element to become visible (visible), hidden (hidden), present in dom (any) or do not wait at all (nowait). Defaults to visible.
         /// </summary>
