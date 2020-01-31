@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
+    ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
     public class BypassCSPTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>

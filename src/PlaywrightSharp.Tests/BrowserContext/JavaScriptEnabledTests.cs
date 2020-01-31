@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
+    ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
     public class JavaScriptEnabledTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
@@ -25,11 +26,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await page.EvaluateAsync("something"));
 
-            if (IsWebKit)
+            if (TestConstants.IsWebKit)
             {
-#pragma warning disable CS0162 // Unreachable code detected
                 Assert.Contains("Can\'t find variable: something", exception.Message);
-#pragma warning restore CS0162 // Unreachable code detected
             }
             else
             {
