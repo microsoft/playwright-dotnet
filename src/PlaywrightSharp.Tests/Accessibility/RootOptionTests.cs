@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Accessibility
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
+    ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>root option</playwright-describe>
     public class RootOptionTests : PlaywrightSharpPageBaseTest
     {

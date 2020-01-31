@@ -6,7 +6,8 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Page.Events
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
+    ///<playwright-file>dialog.spec.js</playwright-file>
+    ///<playwright-describe>Page.Events.Dialog</playwright-describe>
     public class DialogTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

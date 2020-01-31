@@ -7,7 +7,8 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Accessibility
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
+    ///<playwright-file>accessibility.spec.js</playwright-file>
+    ///<playwright-describe>Accessibility</playwright-describe>
     public class AccessibilityTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
