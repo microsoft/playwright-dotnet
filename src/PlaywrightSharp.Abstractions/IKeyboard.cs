@@ -27,6 +27,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="key">Name of key to release, such as `ArrowLeft`.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser</returns>
-        public Task UpAsync(string key);
+        Task UpAsync(string key);
     }
 }
