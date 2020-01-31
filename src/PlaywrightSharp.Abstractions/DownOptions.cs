@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// options to use with <see cref="IKeyboard.DownAsync(string, DownOptions)"/>
+    /// Options for <see cref="IKeyboard.DownAsync(string, DownOptions)"/>
     /// </summary>
     public class DownOptions
     {

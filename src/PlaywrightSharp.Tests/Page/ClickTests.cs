@@ -449,7 +449,7 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button with fixed position inside an iframe</playwright-it>
-        [Fact(Skip = "see https://github.com/GoogleChrome/puppeteer/issues/4110")]
+        [Fact(Skip = "See test in playwright")]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
