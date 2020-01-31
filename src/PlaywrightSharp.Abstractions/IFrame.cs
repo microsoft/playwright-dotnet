@@ -63,6 +63,16 @@ namespace PlaywrightSharp
         IFrame ParentFrame { get; }
 
         /// <summary>
+        /// Sets the HTML markup to the frame
+        /// </summary>
+        /// <param name="html">HTML markup to assign to the page.</param>
+        /// <param name="options">The navigations options</param>
+        /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes</returns>
+        /// <seealso cref="IBrowserContext.SetContentAsync(string, NavigationOptions)"/>
+        /// <seealso cref="IPage.SetContentAsync(string, NavigationOptions)"/>
+        Task SetContentAsync(string html, NavigationOptions options = null);
+
+        /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content
         /// </summary>
         /// <param name="options">add script tag options</param>
