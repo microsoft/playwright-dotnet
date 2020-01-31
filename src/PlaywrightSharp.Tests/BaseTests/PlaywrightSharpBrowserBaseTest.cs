@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.BaseTests
             }
         }
 
-        internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options) => Browser.NewContextAsync(options);
+        internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null) => Browser.NewContextAsync(options);
 
         internal async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
