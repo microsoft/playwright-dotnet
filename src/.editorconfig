@@ -18,6 +18,7 @@ indent_size = 2
 
 # C# files
 [*.cs]
+end_of_line = crlf
 # New line preferences
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
