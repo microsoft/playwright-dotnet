@@ -4,7 +4,6 @@
     /// Cookie data.
     /// </summary>
     /// <seealso cref="IBrowserContext.GetCookiesAsync(string[])"/>
-    /// <seealso cref="IPage.GetCookiesAsync(string[])"/>
     public class NetworkCookie
     {
         /// <summary>
