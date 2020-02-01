@@ -18,10 +18,5 @@
         /// </summary>
         public WaitUntilNavigation[] WaitUntil { get; set; }
 
-        /// <summary>
-        /// Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.IReadOnlyDictionary{string, string})"/>
-        /// </summary>
-        /// <value>The referer.</value>
-        public string Referer { get; set; }
     }
 }

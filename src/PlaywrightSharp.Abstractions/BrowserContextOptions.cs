@@ -21,5 +21,9 @@
         /// Whether or not to enable or disable JavaScript in the context. Defaults to true.
         /// </summary>
         public bool JavaScriptEnabled { get; set; }
+        /// <summary>
+        /// Whether to ignore HTTPS errors during navigation. Defaults to false.
+        /// </summary>
+        public bool IgnoreHTTPSErrors { get; set; }
     }
 }
