@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var cookies = await Page.GetCookiesAsync();
+            var cookies = await Context.GetCookiesAsync();
             Assert.Single(cookies);
             Assert.True(cookies[0].HttpOnly);
         }
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var cookies = await Page.GetCookiesAsync();
+            var cookies = await Context.GetCookiesAsync();
             Assert.Single(cookies);
             Assert.Equal(SameSite.Strict, cookies[0].SameSite);
         }
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var cookies = await Page.GetCookiesAsync();
+            var cookies = await Context.GetCookiesAsync();
             Assert.Single(cookies);
             Assert.Equal(SameSite.Lax, cookies[0].SameSite);
         }
@@ -101,14 +101,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldGetMultipleCookies()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Empty(await Page.GetCookiesAsync());
+            Assert.Empty(await Context.GetCookiesAsync());
 
             await Page.EvaluateAsync(@"() => {
                 document.cookie = 'username=John Doe';
                 document.cookie = 'password=1234';
             }");
 
-            var cookies = (await Page.GetCookiesAsync()).OrderBy(c => c.Name).ToList();
+            var cookies = (await Context.GetCookiesAsync()).OrderBy(c => c.Name).ToList();
 
             var cookie = cookies[0];
             Assert.Equal("password", cookie.Name);
@@ -137,7 +137,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldGetCookiesFromMultipleUrls()
         {
-            await Page.SetCookiesAsync(
+            await Context.SetCookiesAsync(
                 new SetNetworkCookieParam
                 {
                     Url = "https://foo.com",
@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                     Value = "tweets"
                 }
             );
-            var cookies = (await Page.GetCookiesAsync("https://foo.com", "https://baz.com")).OrderBy(c => c.Name).ToList();
+            var cookies = (await Context.GetCookiesAsync("https://foo.com", "https://baz.com")).OrderBy(c => c.Name).ToList();
 
             Assert.Equal(2, cookies.Count);
 

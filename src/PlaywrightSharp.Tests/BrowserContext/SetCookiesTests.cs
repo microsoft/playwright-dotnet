@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldHaveExpiresSetToMinus1ForSessionCookies()
         {
-            await Page.SetCookiesAsync(new SetNetworkCookieParam
+            await Context.SetCookiesAsync(new SetNetworkCookieParam
             {
                 Url = TestConstants.EmptyPage,
                 Name = "password",
@@ -150,14 +150,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldSetACookieWithAPath()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Page.SetCookiesAsync(new SetNetworkCookieParam
+            await Context.SetCookiesAsync(new SetNetworkCookieParam
             {
                 Domain = "localhost",
                 Path = "/grid.html",
                 Name = "gridcookie",
                 Value = "GRID"
             });
-            var cookie = Assert.Single(await Page.GetCookiesAsync());
+            var cookie = Assert.Single(await Context.GetCookiesAsync());
             Assert.Equal("gridcookie", cookie.Name);
             Assert.Equal("GRID", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
@@ -184,7 +184,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.AboutBlank);
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
-                => await Page.SetCookiesAsync(
+                => await Context.SetCookiesAsync(
                     new SetNetworkCookieParam
                     {
                         Url = TestConstants.EmptyPage,
@@ -208,7 +208,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             await Page.GoToAsync("data:,Hello%2C%20World!");
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async ()
-                => await Page.SetCookiesAsync(
+                => await Context.SetCookiesAsync(
                     new SetNetworkCookieParam
                     {
                         Url = "data:,Hello%2C%20World!",
@@ -228,13 +228,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             string SecureUrl = "https://example.com";
 
-            await Page.SetCookiesAsync(new SetNetworkCookieParam
+            await Context.SetCookiesAsync(new SetNetworkCookieParam
             {
                 Url = SecureUrl,
                 Name = "foo",
                 Value = "bar"
             });
-            var cookie = Assert.Single(await Page.GetCookiesAsync(SecureUrl));
+            var cookie = Assert.Single(await Context.GetCookiesAsync(SecureUrl));
             Assert.True(cookie.Secure);
         }
 
@@ -247,13 +247,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             string SecureUrl = "http://example.com";
 
-            await Page.SetCookiesAsync(new SetNetworkCookieParam
+            await Context.SetCookiesAsync(new SetNetworkCookieParam
             {
                 Url = SecureUrl,
                 Name = "foo",
                 Value = "bar"
             });
-            var cookie = Assert.Single(await Page.GetCookiesAsync(SecureUrl));
+            var cookie = Assert.Single(await Context.GetCookiesAsync(SecureUrl));
             Assert.False(cookie.Secure);
         }
 
@@ -264,10 +264,10 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldSetACookieOnADifferentDomain()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Page.SetCookiesAsync(new SetNetworkCookieParam { Name = "example-cookie", Value = "best", Url = "https://www.example.com" });
+            await Context.SetCookiesAsync(new SetNetworkCookieParam { Name = "example-cookie", Value = "best", Url = "https://www.example.com" });
             Assert.Equal(string.Empty, await Page.EvaluateAsync<string>("document.cookie"));
-            Assert.Empty(await Page.GetCookiesAsync());
-            var cookie = Assert.Single(await Page.GetCookiesAsync("https://www.example.com"));
+            Assert.Empty(await Context.GetCookiesAsync());
+            var cookie = Assert.Single(await Context.GetCookiesAsync("https://www.example.com"));
             Assert.Equal("example-cookie", cookie.Name);
             Assert.Equal("best", cookie.Value);
             Assert.Equal("www.example.com", cookie.Domain);
@@ -285,7 +285,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldSetCookiesFromAFrame()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Page.SetCookiesAsync(
+            await Context.SetCookiesAsync(
                 new SetNetworkCookieParam
                 {
                     Url = TestConstants.ServerUrl,
@@ -312,7 +312,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("localhost-cookie=best", await Page.EvaluateAsync<string>("document.cookie"));
             Assert.Equal("127-cookie=worst", await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie"));
 
-            var cookie = Assert.Single(await Page.GetCookiesAsync());
+            var cookie = Assert.Single(await Context.GetCookiesAsync());
             Assert.Equal("localhost-cookie", cookie.Name);
             Assert.Equal("best", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
@@ -323,7 +323,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.True(cookie.Session);
             Assert.Equal(SameSite.None, cookie.SameSite);
 
-            cookie = Assert.Single(await Page.GetCookiesAsync(TestConstants.CrossProcessHttpPrefix));
+            cookie = Assert.Single(await Context.GetCookiesAsync(TestConstants.CrossProcessHttpPrefix));
             Assert.Equal("127-cookie", cookie.Name);
             Assert.Equal("worst", cookie.Value);
             Assert.Equal("127.0.0.1", cookie.Domain);

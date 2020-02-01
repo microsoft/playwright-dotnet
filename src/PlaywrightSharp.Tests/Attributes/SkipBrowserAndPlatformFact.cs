@@ -26,13 +26,13 @@ namespace PlaywrightSharp.Tests.Attributes
             bool skipWindows = false,
             bool skipLinux = false)
         {
-            if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPLatform(skipOSX, skipWindows, skipLinux))
+            if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPlatform(skipOSX, skipWindows, skipLinux))
             {
                 Skip = "Skipped by browser/platform";
             }
         }
 
-        private static bool SkipPLatform(bool skipOSX, bool skipWindows, bool skipLinux)
+        private static bool SkipPlatform(bool skipOSX, bool skipWindows, bool skipLinux)
             =>
             (
                 (skipOSX && RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) ||
@@ -44,7 +44,6 @@ namespace PlaywrightSharp.Tests.Attributes
                 !skipLinux &&
                 !skipWindows
             );
-
 
         private static bool SkipBrowser(bool skipFirefox, bool skipChromium, bool skipWebkit)
             =>
