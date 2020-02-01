@@ -140,7 +140,6 @@ namespace PlaywrightSharp.Tests.Mouse
                 });
             }");
             await Page.Mouse.MoveAsync(200, 300, new MoveOptions { Steps = 5 });
-            var arr = new int[][] { new[] { 1, 2 } };
             Assert.Equal(new int[][]
                 { new[] { 120, 140 },
                  new[] { 140, 180 },
