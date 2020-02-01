@@ -63,6 +63,11 @@ namespace PlaywrightSharp
         IFrame ParentFrame { get; }
 
         /// <summary>
+        /// Gets a value indicating if the frame is detached or not
+        /// </summary>
+        public bool Detached { get; }
+
+        /// <summary>
         /// Sets the HTML markup to the frame
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
@@ -103,8 +108,19 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IPage.EvaluateAsync(string, object[])"/>
-        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
+
+        /// <summary>
+        /// Executes a script in browser context
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="args">Arguments to pass to script</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/></returns>
+        Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
 
         /// <summary>
         /// <![CDATA[

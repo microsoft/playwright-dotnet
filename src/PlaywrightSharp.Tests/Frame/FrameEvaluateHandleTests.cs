@@ -19,7 +19,6 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var mainFrame = Page.MainFrame;
             var windowHandle = await Page.MainFrame.EvaluateHandleAsync("() => window");
             Assert.NotNull(windowHandle);
         }

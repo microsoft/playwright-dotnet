@@ -37,6 +37,21 @@ namespace PlaywrightSharp
         int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
+        /// Raised when a frame is attached.
+        /// </summary>
+        public event EventHandler<FrameEventArgs> FrameAttached;
+
+        /// <summary>
+        /// Raised when a frame is detached.
+        /// </summary>
+        public event EventHandler<FrameEventArgs> FrameDetached;
+
+        /// <summary>
+        /// Raised when a frame is navigated to a new url.
+        /// </summary>
+        public event EventHandler<FrameEventArgs> FrameNavigated;
+
+        /// <summary>
         /// Navigates to an URL
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>

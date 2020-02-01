@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Frame
             var navigatedFrames = new List<IFrame>();
             Page.FrameNavigated += (sender, e) => navigatedFrames.Add(e.Frame);
             await FrameUtils.NavigateFrameAsync(Page, "frame1", "./empty.html");
-            Assert.Single(navigatedFrames).Url);
+            Assert.Single(navigatedFrames);
             Assert.Equal(TestConstants.EmptyPage, navigatedFrames[0].Url);
 
             // validate framedetached events
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Frame
             Page.FrameDetached += (sender, e) => detachedFrames.Add(e.Frame);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             Assert.Single(detachedFrames);
-            Assert.True(detachedFrames[0].IsDetached);
+            Assert.True(detachedFrames[0].Detached);
         }
 
         ///<playwright-file>frame.spec.js</playwright-file>
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var framenavigated = new TaskCompletionSource<bool>();
-            Task WaitFrameNavigated(object sender, EventArgs e)
+            void WaitFrameNavigated(object sender, EventArgs e)
             {
                 framenavigated.TrySetResult(true);
                 Page.FrameNavigated -= WaitFrameNavigated;
@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Tests.Frame
                 await new Promise(x => frame.onload = x);
             }", TestConstants.EmptyPage);
             Assert.Equal(2, Page.Frames.Length);
-            Assert.Equal(TestConstants.EmptyPage, Page.Frames[1].Url)
+            Assert.Equal(TestConstants.EmptyPage, Page.Frames[1].Url);
         }
 
         ///<playwright-file>frame.spec.js</playwright-file>
@@ -201,21 +201,21 @@ namespace PlaywrightSharp.Tests.Frame
                 window.frame = document.querySelector('#frame1');
                 window.frame.remove();
             }");
-            Assert.True(frame1.IsDetached);
+            Assert.True(frame1.Detached);
             var frameattached = new TaskCompletionSource<IFrame>();
-            Task WaitFrameAttached(object sender, EventArgs e)
+            void WaitFrameAttached(object sender, FrameEventArgs e)
             {
                 frameattached.TrySetResult(e.Frame);
-                Page.FrameNavigated -= WaitFrameNavigated;
+                Page.FrameAttached -= WaitFrameAttached;
             }
-            Page.FrameNavigated += WaitFrameNavigated;
+            Page.FrameAttached += WaitFrameAttached;
 
             await Task.WhenAll(
               frameattached.Task,
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
             var frame2 = frameattached.Task.Result;
-            Assert.False(frame2.IsDetached);
+            Assert.False(frame2.Detached);
             Assert.NotSame(frame1, frame2);
         }
     }
