@@ -17,6 +17,5 @@
         /// When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired
         /// </summary>
         public WaitUntilNavigation[] WaitUntil { get; set; }
-
     }
 }
