@@ -194,6 +194,10 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
+        Task FocusAsync(string selector);
+
+        Task HoverAsync(string selector);
+
         /// <summary>
         /// Waits for a selector to be added to the DOM
         /// </summary>
