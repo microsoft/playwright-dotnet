@@ -5,7 +5,6 @@
     /// </summary>
     public class EmulateMedia
     {
-
         /// <summary>
         /// Changes the CSS media type of the page. Passing null disables CSS media emulation
         /// </summary>
