@@ -54,7 +54,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 Url = TestConstants.EmptyPage
             });
 
-
             Assert.Single(await Context.GetCookiesAsync());
             Assert.Single(await anotherContext.GetCookiesAsync());
 

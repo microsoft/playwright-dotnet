@@ -26,35 +26,37 @@ namespace PlaywrightSharp.Tests.Attributes
             bool skipWindows = false,
             bool skipLinux = false)
         {
-            if (
-                (
-                    (
-                        (skipFirefox && TestConstants.IsFirefox) ||
-                        (skipWebkit && TestConstants.IsWebKit) ||
-                        (skipChromium && TestConstants.IsChromium)
-                    ) ||
-                    (
-                        !skipFirefox &&
-                        !skipWebkit &&
-                        !skipChromium
-                    )
-                ) &&
-                (
-                    (
-                        (skipOSX && RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) ||
-                        (skipWindows && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ||
-                        (skipLinux && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    ) ||
-                    (
-                        !skipOSX &&
-                        !skipLinux &&
-                        !skipWindows
-                    )
-                )
-            )
+            if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPLatform(skipOSX, skipWindows, skipLinux))
             {
                 Skip = "Skipped by browser/platform";
             }
         }
+
+        private static bool SkipPLatform(bool skipOSX, bool skipWindows, bool skipLinux)
+            =>
+            (
+                (skipOSX && RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) ||
+                (skipWindows && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ||
+                (skipLinux && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            ) ||
+            (
+                !skipOSX &&
+                !skipLinux &&
+                !skipWindows
+            );
+
+
+        private static bool SkipBrowser(bool skipFirefox, bool skipChromium, bool skipWebkit)
+            =>
+            (
+                (skipFirefox && TestConstants.IsFirefox) ||
+                (skipWebkit && TestConstants.IsWebKit) ||
+                (skipChromium && TestConstants.IsChromium)
+            ) ||
+            (
+                !skipFirefox &&
+                !skipWebkit &&
+                !skipChromium
+            );
     }
 }
