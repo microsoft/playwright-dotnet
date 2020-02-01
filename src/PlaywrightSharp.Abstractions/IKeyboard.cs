@@ -29,6 +29,11 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser</returns>
         Task UpAsync(string key);
 
+        /// <summary>
+        /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="text">A text to type into a focused element</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser</returns>
         Task TypeAsync(string text);
     }
 }
