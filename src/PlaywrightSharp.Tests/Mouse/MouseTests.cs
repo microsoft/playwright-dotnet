@@ -140,13 +140,16 @@ namespace PlaywrightSharp.Tests.Mouse
                 });
             }");
             await Page.Mouse.MoveAsync(200, 300, new MoveOptions { Steps = 5 });
-            Assert.Equal(new int[][]
-                { new[] { 120, 140 },
-                 new[] { 140, 180 },
-                 new[] { 160, 220 },
-                 new[] { 180, 260 },
-                 new[] { 200, 300 }
-            }, await Page.EvaluateAsync<int[][]>("result"));
+            Assert.Equal(
+                new int[][]
+                {
+                    new[] { 120, 140 },
+                    new[] { 140, 180 },
+                    new[] { 160, 220 },
+                    new[] { 180, 260 },
+                    new[] { 200, 300 }
+                },
+                await Page.EvaluateAsync<int[][]>("result"));
         }
 
         ///<playwright-file>mouse.spec.js</playwright-file>
