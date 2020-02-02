@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
-            var exception = await Assert.ThrowsAsync<Exception>(() => frame1.EvaluateAsync("() => 7 * 8"));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => frame1.EvaluateAsync("() => 7 * 8"));
             Assert.Contains("Execution Context is not available in detached frame", exception.Message);
         }
 
