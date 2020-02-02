@@ -17,6 +17,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should throw for detached frames</playwright-it>
+        [Fact]
         public async Task ShouldThrowForDetachedFrames()
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -28,6 +29,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should be isolated between frames</playwright-it>
+        [Fact]
         public async Task ShouldBeIsolatedBetweenFrames()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -16,6 +16,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluateHandle</playwright-describe>
         ///<playwright-it>should work</playwright-it>
+        [Fact]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
