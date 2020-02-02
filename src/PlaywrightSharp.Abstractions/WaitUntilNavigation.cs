@@ -23,6 +23,6 @@
         /// <summary>
         /// Consider navigation to be finished when there are no more than 2 network connections for at least <c>500</c> ms
         /// </summary>
-        Networkidle2
+        Networkidle2,
     }
 }

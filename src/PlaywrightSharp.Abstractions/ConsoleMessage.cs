@@ -3,7 +3,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>
+    /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
     /// </summary>
     public class ConsoleMessage
     {
@@ -13,7 +13,7 @@ namespace PlaywrightSharp
         /// <param name="type">Type.</param>
         /// <param name="text">Text.</param>
         /// <param name="args">Arguments.</param>
-        /// <param name="location">Message location</param>
+        /// <param name="location">Message location.</param>
         public ConsoleMessage(ConsoleType type, string text, IList<IJSHandle> args, ConsoleMessageLocation location = null)
         {
             Type = type;

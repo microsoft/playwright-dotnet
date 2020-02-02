@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp.Accessibility
 {
     /// <summary>
-    /// Three-state boolean. See <seealso cref="SerializedAXNode.Checked"/> and <seealso cref="SerializedAXNode.Pressed"/>
+    /// Three-state boolean. See <seealso cref="SerializedAXNode.Checked"/> and <seealso cref="SerializedAXNode.Pressed"/>.
     /// </summary>
     public enum CheckedState
     {
@@ -18,6 +18,6 @@
         /// <summary>
         /// Mixed.
         /// </summary>
-        Mixed
+        Mixed,
     }
 }

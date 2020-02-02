@@ -23,11 +23,11 @@ namespace PlaywrightSharp
         /// </summary>
         public int? ColumnNumber { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEquatable{T}"/>
         public static bool operator ==(ConsoleMessageLocation location1, ConsoleMessageLocation location2)
             => EqualityComparer<ConsoleMessageLocation>.Default.Equals(location1, location2);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEquatable{T}"/>
         public static bool operator !=(ConsoleMessageLocation location1, ConsoleMessageLocation location2)
             => !(location1 == location2);
 
