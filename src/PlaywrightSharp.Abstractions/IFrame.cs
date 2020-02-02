@@ -112,7 +112,8 @@ namespace PlaywrightSharp
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
 
         /// <summary>
-        /// Executes a script in browser context
+        /// Executes a function that returns a <see cref="IJSHandle"/>
+
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
         /// <param name="args">Arguments to pass to script</param>
