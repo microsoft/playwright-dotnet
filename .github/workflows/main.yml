@@ -24,4 +24,4 @@ jobs:
       with:
         dotnet-version: 2.2.108
     - name: Build with dotnet
-      run: dotnet build ./src/PlawrightSharp.sln --configuration Release
+      run: dotnet build ./src/PlaywrightSharp.sln --configuration Release
