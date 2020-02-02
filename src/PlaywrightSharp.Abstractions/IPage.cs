@@ -49,17 +49,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when a frame is attached.
         /// </summary>
-        public event EventHandler<FrameEventArgs> FrameAttached;
+        event EventHandler<FrameEventArgs> FrameAttached;
 
         /// <summary>
         /// Raised when a frame is detached.
         /// </summary>
-        public event EventHandler<FrameEventArgs> FrameDetached;
+        event EventHandler<FrameEventArgs> FrameDetached;
 
         /// <summary>
         /// Raised when a frame is navigated to a new url.
         /// </summary>
-        public event EventHandler<FrameEventArgs> FrameNavigated;
+        event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -292,7 +292,7 @@ namespace PlaywrightSharp
         /// <param name="options">Optional waiting parameters</param>
         /// <returns>A task that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
+        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
 
         /// <summary>
         /// Executes a script in browser context
