@@ -8,6 +8,11 @@
         /// <summary>
         /// Console event
         /// </summary>
-        Console
+        Console,
+
+        /// <summary>
+        /// Popup event
+        /// </summary>
+        Popup
     }
 }

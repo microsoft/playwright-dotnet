@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -17,11 +18,32 @@ namespace PlaywrightSharp
         /// </returns>
         Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
 
+        Task FillAsync(string text);
+
         /// <summary>
         /// Content frame for element handles referencing iframe nodes, or null otherwise.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the frame is resolved, yielding element's parent <see cref="IFrame" /></returns>
         Task<IFrame> ContentFrameAsync();
+
+        Task HoverAsync();
+
+        Task ScrollIntoViewIfNeededAsync();
+
+        /// <summary>
+        /// Returns the frame containing the given element
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the frame is resolved, yielding element's owner <see cref="IFrame" /></returns>
+        Task<IFrame> OwnerFrameAsync();
+
+        /// <summary>
+        /// Gets the bounding box of the element (relative to the main frame), 
+        /// or null if the element is not visible.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="BoundingBox"/> is resolved, yielding element's <see cref="BoundingBox"/></returns>
+        Task<BoundingBox> BoundingBoxAsync();
+
+        Task<double> VisibleRatioAsync();
 
         /// <summary>
         /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.

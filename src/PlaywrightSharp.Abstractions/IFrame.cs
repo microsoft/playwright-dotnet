@@ -119,6 +119,8 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
+        Task<IJSHandle> EvaluateHandleAsync(string expression);
+
         /// <summary>
         /// Waits for a selector to be added to the DOM
         /// </summary>
