@@ -19,4 +19,9 @@ jobs:
       run: |
         chmod +x ./.github/workflows/no-puppeteer.sh
         ./.github/workflows/no-puppeteer.sh
-        
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.108
+    - name: Build with dotnet
+      run: dotnet ./src/PlawrightSharp.sln build --configuration Release
