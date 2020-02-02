@@ -115,7 +115,8 @@ namespace PlaywrightSharp
         /// Executes a function that returns a <see cref="IJSHandle"/>
 
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context</param>
+        /// <param name="script">Function to be evaluated in the frame context.</param>
+
         /// <param name="args">Arguments to pass to script</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
