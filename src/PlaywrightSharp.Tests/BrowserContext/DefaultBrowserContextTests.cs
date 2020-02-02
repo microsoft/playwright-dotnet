@@ -4,9 +4,10 @@ using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.DefaultBrowserContext
+namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
+    /// <playwright-describe>defaultContext()</playwright-describe>
     public class DefaultBrowserContextTests : PlaywrightSharpPageBaseTest
     {
         internal DefaultBrowserContextTests(ITestOutputHelper output) : base(output)

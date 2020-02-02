@@ -557,7 +557,7 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should update modifiers correctly</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -584,7 +584,7 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click an offscreen element when scroll-behavior is smooth</playwright-it>
-        [SkipBrowserAndPlayformFact(skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipChromium: true)]
         public async Task ShouldClickAnOffscreenElementWhenScrollBehaviorIsSmooth()
         {
             await Page.SetContentAsync(@$"

@@ -8,12 +8,6 @@ namespace PlaywrightSharp
     public class FrameEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets or sets the frame.
-        /// </summary>
-        /// <value>The frame.</value>
-        public IFrame Frame { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="FrameEventArgs"/> class.
         /// </summary>
         /// <param name="frame">Frame.</param>
@@ -21,5 +15,11 @@ namespace PlaywrightSharp
         {
             Frame = frame;
         }
+
+        /// <summary>
+        /// Gets or sets the frame.
+        /// </summary>
+        /// <value>The frame.</value>
+        public IFrame Frame { get; set; }
     }
 }
