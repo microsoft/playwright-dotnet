@@ -4,6 +4,9 @@
   </GlobalSettings>
   <Analyzers>
     <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">
+      <AnalyzerSettings>
+        <BooleanProperty Name="IgnoreInternals">True</BooleanProperty>
+      </AnalyzerSettings>
       <Rules>
         <Rule Name="FileMustHaveHeader">
           <RuleSettings>
