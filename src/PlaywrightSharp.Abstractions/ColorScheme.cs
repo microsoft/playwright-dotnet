@@ -9,10 +9,12 @@
         /// Light
         /// </summary>
         Light,
+
         /// <summary>
         /// Dark
         /// </summary>
         Dark,
+
         /// <summary>
         /// No preference
         /// </summary>

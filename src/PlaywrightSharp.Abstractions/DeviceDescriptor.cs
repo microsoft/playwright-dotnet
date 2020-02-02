@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -11,11 +12,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <value>The name.</value>
         public string Name { get; set; }
+
         /// <summary>
         /// User Agent
         /// </summary>
         /// <value>The user agent.</value>
         public string UserAgent { get; set; }
+
         /// <summary>
         /// ViewPort.
         /// </summary>

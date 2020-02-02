@@ -7,8 +7,8 @@ namespace PlaywrightSharp
     /// </summary>
     /// <example>
     /// An example of using Dialog class:
-    ///<code>
-    ///<![CDATA[
+    /// <code>
+    /// <![CDATA[
     /// Page.Dialog += async (sender, e) =>
     /// {
     ///     await e.Dialog.AcceptAsync();
@@ -24,11 +24,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <value>The type of the dialog.</value>
         DialogType DialogType { get; set; }
+
         /// <summary>
         /// If dialog is prompt, returns default prompt value. Otherwise, returns empty string.
         /// </summary>
         /// <value>The default value.</value>
         string DefaultValue { get; set; }
+
         /// <summary>
         /// A message displayed in the dialog.
         /// </summary>

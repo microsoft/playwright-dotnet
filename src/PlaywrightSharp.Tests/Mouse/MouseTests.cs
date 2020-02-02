@@ -103,7 +103,7 @@ namespace PlaywrightSharp.Tests.Mouse
             await Page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window.lastEvent = e, true)");
             var modifiers = new Dictionary<string, string> { ["Shift"] = "shiftKey", ["Control"] = "ctrlKey", ["Alt"] = "altKey", ["Meta"] = "metaKey" };
             // In Firefox, the Meta modifier only exists on Mac
-            if (TestConstants.IsFirefox && !TestConstants.IsMac)
+            if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
             {
                 modifiers.Remove("Meta");
             }

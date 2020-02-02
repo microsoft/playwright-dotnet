@@ -18,6 +18,27 @@ namespace PlaywrightSharp
     public interface IFrame
     {
         /// <summary>
+        /// Child frames of the this frame
+        /// </summary>
+        IFrame[] ChildFrames { get; }
+
+        /// <summary>
+        /// Gets the frame's name attribute as specified in the tag
+        /// If the name is empty, returns the id attribute instead
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Gets the frame's url
+        /// </summary>
+        string Url { get; }
+
+        /// <summary>
+        /// Gets the parent <see cref="IFrame"/>, if any. Detached frames and main frames return <c>null</c>
+        /// </summary>
+        IFrame ParentFrame { get; }
+
+        /// <summary>
         /// Navigates to an URL
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
@@ -32,36 +53,16 @@ namespace PlaywrightSharp
         /// * The timeout is exceeded during navigation.
         /// * The remote server does not respond or is unreachable.
         /// * The main resource failed to load.
-        ///
+        /// <para/>
         /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
         /// The status code for such responses can be retrieved by calling response.status().
-        ///
+        /// <para/>
         /// NOTE <see cref="IFrame.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
         /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
-        ///
+        /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// </remarks>
         Task<IResponse> GoToAsync(string url, GoToOptions options = null);
-
-        /// <summary>
-        /// Child frames of the this frame
-        /// </summary>
-        IFrame[] ChildFrames { get; }
-
-        /// <summary>
-        /// Gets the frame's name attribute as specified in the tag
-        /// If the name is empty, returns the id attribute instead
-        /// </summary>
-        string Name { get; }
-        /// <summary>
-        /// Gets the frame's url
-        /// </summary>
-        string Url { get; }
-
-        /// <summary>
-        /// Gets the parent <see cref="IFrame"/>, if any. Detached frames and main frames return <c>null</c>
-        /// </summary>
-        IFrame ParentFrame { get; }
 
         /// <summary>
         /// Sets the HTML markup to the frame
@@ -85,6 +86,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context
         /// </summary>
+        /// <typeparam name="T">Return type</typeparam>
         /// <param name="script">Script to be evaluated in browser context</param>
         /// <param name="args">Arguments to pass to script</param>
         /// <remarks>

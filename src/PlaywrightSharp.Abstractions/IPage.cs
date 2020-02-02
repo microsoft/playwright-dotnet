@@ -22,18 +22,53 @@ namespace PlaywrightSharp
     public interface IPage
     {
         /// <summary>
+        /// Raised when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c> or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
+        /// The arguments passed into <c>console.log</c> appear as arguments on the event handler.
+        /// </summary>
+        /// <example>
+        /// An example of handling <see cref="Console"/> event:
+        /// <code>
+        /// <![CDATA[
+        /// page.Console += (sender, e) => 
+        /// {
+        ///     for (var i = 0; i < e.Message.Args.Count; ++i)
+        ///     {
+        ///         System.Console.WriteLine($"{i}: {e.Message.Args[i]}");
+        ///     }
+        /// }
+        /// ]]>
+        /// </code>
+        /// </example>
+        event EventHandler<ConsoleEventArgs> Console;
+
+        /// <summary>
+        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
+        /// </summary>
+        event EventHandler<DialogEventArgs> Dialog;
+
+        /// <summary>
+        /// Emitted when the page opens a new tab or window.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var popupTargetCompletion = new TaskCompletionSource<IPage>();
+        /// page.Popup += (sender, e) => popupTargetCompletion.SetResult(e.Page);
+        /// await Task.WhenAll(
+        ///     popupTargetCompletion.Task,
+        ///     page.ClickAsync('a[target=_blank]')
+        /// );
+        /// ]]>
+        /// </code>
+        /// </example>
+        event EventHandler<PopupEventArgs> Popup;
+
+        /// <summary>
         /// This setting will change the default maximum times for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
         /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
         /// </summary>
         int DefaultTimeout { get; set; }
-
-        /// <summary>
-        /// Setup media emulation
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task EmulateMediaAsync(EmulateMedia options);
 
         /// <summary>
         /// This setting will change the default maximum time for the following methods:
@@ -42,57 +77,6 @@ namespace PlaywrightSharp
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
-
-        /// <summary>
-        /// Navigates to an URL
-        /// </summary>
-        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <param name="options">Extra options</param>
-        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// </returns>
-        /// <remarks>
-        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will throw an error if:
-        /// * There's an SSL error (e.g. in case of self-signed certificates).
-        /// * Target URL is invalid.
-        /// * The timeout is exceeded during navigation.
-        /// * The remote server does not respond or is unreachable.
-        /// * The main resource failed to load.
-        ///
-        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
-        /// The status code for such responses can be retrieved by calling response.status().
-        ///
-        /// NOTE <see cref="IPage.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
-        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
-        ///
-        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
-        ///
-        /// Shortcut for <see cref="IFrame.GoToAsync"/>
-        /// </remarks>
-        Task<IResponse> GoToAsync(string url, GoToOptions options = null);
-
-        /// <summary>
-        /// This resolves when the page navigates to a new URL or reloads.
-        /// It is useful for when you run code which will indirectly cause the page to navigate.
-        /// </summary>
-        /// <param name="options">navigation options</param>
-        /// <returns>Task which resolves to the main resource response. 
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
-        /// </returns>
-        /// <remarks>
-        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation
-        /// </remarks>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// var navigationTask = page.WaitForNavigationAsync();
-        /// await page.ClickAsync("a.my-link");
-        /// await navigationTask;
-        /// ]]>
-        /// </code>
-        /// </example>
-        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -135,41 +119,103 @@ namespace PlaywrightSharp
         IKeyboard Keyboard { get; }
 
         /// <summary>
-        /// Raised when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c> or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
-        /// The arguments passed into <c>console.log</c> appear as arguments on the event handler.
+        /// Setup media emulation
         /// </summary>
+        /// <param name="options">Extra options</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task EmulateMediaAsync(EmulateMedia options);
+
+        /// <summary>
+        /// Navigates to an URL
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="options">Extra options</param>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        /// <remarks>
+        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will throw an error if:
+        /// * There's an SSL error (e.g. in case of self-signed certificates).
+        /// * Target URL is invalid.
+        /// * The timeout is exceeded during navigation.
+        /// * The remote server does not respond or is unreachable.
+        /// * The main resource failed to load.
+        /// <para/>
+        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// The status code for such responses can be retrieved by calling response.status().
+        /// <para/>
+        /// NOTE <see cref="IPage.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
+        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
+        /// <para/>
+        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        /// <para/>
+        /// Shortcut for <see cref="IFrame.GoToAsync"/>
+        /// </remarks>
+        Task<IResponse> GoToAsync(string url, GoToOptions options = null);
+
+        /// <summary>
+        /// This resolves when the page navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="options">navigation options</param>
+        /// <returns>Task which resolves to the main resource response. 
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation
+        /// </remarks>
         /// <example>
-        /// An example of handling <see cref="Console"/> event:
         /// <code>
         /// <![CDATA[
-        /// page.Console += (sender, e) => 
-        /// {
-        ///     for (var i = 0; i < e.Message.Args.Count; ++i)
-        ///     {
-        ///         System.Console.WriteLine($"{i}: {e.Message.Args[i]}");
-        ///     }
-        /// }
+        /// var navigationTask = page.WaitForNavigationAsync();
+        /// await page.ClickAsync("a.my-link");
+        /// await navigationTask;
         /// ]]>
         /// </code>
         /// </example>
-        event EventHandler<ConsoleEventArgs> Console;
+        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for</param>
         /// <param name="options">Extra options</param>
+        /// <typeparam name="T">Return type</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
 
         /// <summary>
-        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
+        /// Navigates to an URL
         /// </summary>
-        event EventHandler<DialogEventArgs> Dialog;
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        /// <remarks>
+        /// <see cref="IPage.GoToAsync(string)"/> will throw an error if:
+        /// * There's an SSL error (e.g. in case of self-signed certificates).
+        /// * Target URL is invalid.
+        /// * The timeout is exceeded during navigation.
+        /// * The remote server does not respond or is unreachable.
+        /// * The main resource failed to load.
+        /// <para/>
+        /// <see cref="IPage.GoToAsync(string)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// The status code for such responses can be retrieved by calling response.status().
+        /// <para/>
+        /// NOTE <see cref="IPage.GoToAsync(string)"/> either throws an error or returns a main resource response.
+        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
+        /// <para/>
+        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        /// <para/>
+        /// Shortcut for <see cref="IFrame.GoToAsync"/>
+        /// </remarks>
+        Task<IResponse> GoToAsync(string url);
 
         /// <summary>
         /// Closes the page.
         /// </summary>
+        /// <param name="options">Extra options</param>
         /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
         Task CloseAsync(PageCloseOptions options = null);
 
@@ -178,6 +224,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context</param>
         /// <param name="args">Arguments to pass to script</param>
+        /// <typeparam name="T">Return type</typeparam>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
@@ -244,23 +291,6 @@ namespace PlaywrightSharp
         /// <seealso cref="IFrame.EvaluateAsync(string, object[])"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
-
-        /// <summary>
-        /// Emitted when the page opens a new tab or window.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// var popupTargetCompletion = new TaskCompletionSource<IPage>();
-        /// page.Popup += (sender, e) => popupTargetCompletion.SetResult(e.Page);
-        /// await Task.WhenAll(
-        ///     popupTargetCompletion.Task,
-        ///     page.ClickAsync('a[target=_blank]')
-        /// );
-        /// ]]>
-        /// </code>
-        /// </example>
-        event EventHandler<PopupEventArgs> Popup;
 
         /// <summary>
         /// Takes a screenshot of the page
@@ -358,7 +388,7 @@ namespace PlaywrightSharp
         /// <see cref="SetViewportAsync(Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
         /// </summary>
         /// <example>
-        ///<![CDATA[
+        /// <![CDATA[
         /// using(var page = await context.NewPageAsync())
         /// {
         ///     await page.SetViewPortAsync(new Viewport

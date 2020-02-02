@@ -9,14 +9,17 @@
         /// Wait for visible
         /// </summary>
         Visible,
+
         /// <summary>
         /// Wait for hidden
         /// </summary>
         Hidden,
+
         /// <summary>
         /// Wait for any
         /// </summary>
         Any,
+
         /// <summary>
         /// No wait
         /// </summary>

@@ -22,7 +22,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        [Fact]
         public async Task ShouldWork()
         {
             const string func = "() => new Date(1479579154987).toString()";
@@ -47,6 +46,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 await page.EvaluateAsync<string>(func));
         }
 
+        ///<playwright-file>emulation.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
+        ///<playwright-it>should throw for invalid timezone IDs</playwright-it>
         [Fact]
         public async Task ShouldThrowForInvalidTimezoneId()
         {

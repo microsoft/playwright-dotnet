@@ -9,6 +9,7 @@
         /// Changes the CSS media type of the page. Passing null disables CSS media emulation
         /// </summary>
         public MediaType? Media { get; set; }
+
         /// <summary>
         /// Emulates 'prefers-colors-scheme' media feature.
         /// </summary>
