@@ -26,14 +26,14 @@ namespace PlaywrightSharp
         /// <summary>
         /// Creates a new page in the browser context and optionally navigates it to the specified URL.
         /// </summary>
-        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created</returns>, yielding the new <see cref="IPage"/>.
+        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created, yielding the new <see cref="IPage"/>.</returns>.
         Task<IPage> NewPageAsync();
 
         /// <summary>
         /// Closes the browser context. All the targets that belong to the browser context will be closed.
         /// </summary>
         /// <remarks>NOTE only incognito browser contexts can be closed.</remarks>
-        /// <returns>A <see cref="Task"/> that completes when the browser context is closed</returns>
+        /// <returns>A <see cref="Task"/> that completes when the browser context is closed.</returns>
         Task CloseAsync();
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace PlaywrightSharp
         Task<IPage[]> GetPagesAsync();
 
         /// <summary>
-        /// Returns the context's cookies
+        /// Returns the context's cookies.
         /// </summary>
-        /// <param name="urls">Url's to return cookies for</param>
-        /// <returns>A <see cref="Task"/> that completes when the cookies are sent by the browser, yielding a <see cref="t:NetworkCookie[]"/></returns>
+        /// <param name="urls">Url's to return cookies for.</param>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are sent by the browser, yielding a <see cref="t:NetworkCookie[]"/>.</returns>
         /// <remarks>
         /// If no URLs are specified, this method returns cookies for the current page URL.
         /// If URLs are specified, only cookies for those URLs are returned.
@@ -56,14 +56,14 @@ namespace PlaywrightSharp
         Task<NetworkCookie[]> GetCookiesAsync(params string[] urls);
 
         /// <summary>
-        /// Clears all of the current cookies and then sets the cookies for the context
+        /// Clears all of the current cookies and then sets the cookies for the context.
         /// </summary>
-        /// <param name="cookies">Cookies to set</param>
-        /// <returns>A <see cref="Task"/> that completes when the cookies are set</returns>
+        /// <param name="cookies">Cookies to set.</param>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are set.</returns>
         Task SetCookiesAsync(params SetNetworkCookieParam[] cookies);
 
         /// <summary>
-        /// Clears the context's cookies
+        /// Clears the context's cookies.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the cookies are cleared.</returns>
         Task ClearCookiesAsync();

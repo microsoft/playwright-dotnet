@@ -9,7 +9,7 @@ namespace PlaywrightSharp
     public interface IResponse
     {
         /// <summary>
-        /// Status code of the response
+        /// Status code of the response.
         /// </summary>
         public HttpStatusCode Status { get; }
     }

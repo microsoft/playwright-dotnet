@@ -6,7 +6,7 @@
     public class Viewport
     {
         /// <summary>
-        /// Gets or sets the width
+        /// Gets or sets the width.
         /// </summary>
         /// <value>The page width width in pixels.</value>
         public int Width { get; set; }

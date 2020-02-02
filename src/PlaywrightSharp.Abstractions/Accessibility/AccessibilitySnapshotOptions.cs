@@ -3,7 +3,7 @@
 namespace PlaywrightSharp.Accessibility
 {
     /// <summary>
-    /// <see cref="IAccessibility.SnapshotAsync(AccessibilitySnapshotOptions)"/>
+    /// Options for <see cref="IAccessibility.SnapshotAsync(AccessibilitySnapshotOptions)"/>.
     /// </summary>
     /// <seealso cref="IPage.Accessibility"/>
     public class AccessibilitySnapshotOptions

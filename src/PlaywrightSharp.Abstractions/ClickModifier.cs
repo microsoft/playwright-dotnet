@@ -1,28 +1,28 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Modifiers for <see cref="ClickOptions.Modifiers"/>
+    /// Modifiers for <see cref="ClickOptions.Modifiers"/>.
     /// </summary>
     public enum ClickModifier
     {
         /// <summary>
-        /// Alt key
+        /// Alt key.
         /// </summary>
         Alt,
 
         /// <summary>
-        /// Control key
+        /// Control key.
         /// </summary>
         Control,
 
         /// <summary>
-        /// Meta key
+        /// Meta key.
         /// </summary>
         Meta,
 
         /// <summary>
-        /// Shift Key
+        /// Shift Key.
         /// </summary>
-        Shift
+        Shift,
     }
 }

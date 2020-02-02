@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IPage.EmulateMediaAsync(EmulateMedia)"/>
+    /// Options for <see cref="IPage.EmulateMediaAsync(EmulateMedia)"/>.
     /// </summary>
     public enum MediaType
     {
@@ -18,6 +18,6 @@
         /// <summary>
         /// None
         /// </summary>
-        None
+        None,
     }
 }
