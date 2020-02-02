@@ -67,5 +67,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the cookies are cleared.</returns>
         Task ClearCookiesAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serverUrl"></param>
+        /// <param name="permissions"></param>
+        /// <returns></returns>
+        Task SetPermissionsAsync(string serverUrl, ContextPermission[] permissions);
     }
 }
