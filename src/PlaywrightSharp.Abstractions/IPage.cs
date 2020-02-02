@@ -119,6 +119,73 @@ namespace PlaywrightSharp
         IKeyboard Keyboard { get; }
 
         /// <summary>
+        /// Setup media emulation
+        /// </summary>
+        /// <param name="options">Extra options</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task EmulateMediaAsync(EmulateMedia options);
+
+        /// <summary>
+        /// Navigates to an URL
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="options">Extra options</param>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        /// <remarks>
+        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will throw an error if:
+        /// * There's an SSL error (e.g. in case of self-signed certificates).
+        /// * Target URL is invalid.
+        /// * The timeout is exceeded during navigation.
+        /// * The remote server does not respond or is unreachable.
+        /// * The main resource failed to load.
+        /// <para/>
+        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// The status code for such responses can be retrieved by calling response.status().
+        /// <para/>
+        /// NOTE <see cref="IPage.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
+        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
+        /// <para/>
+        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        /// <para/>
+        /// Shortcut for <see cref="IFrame.GoToAsync"/>
+        /// </remarks>
+        Task<IResponse> GoToAsync(string url, GoToOptions options = null);
+
+        /// <summary>
+        /// This resolves when the page navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="options">navigation options</param>
+        /// <returns>Task which resolves to the main resource response. 
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var navigationTask = page.WaitForNavigationAsync();
+        /// await page.ClickAsync("a.my-link");
+        /// await navigationTask;
+        /// ]]>
+        /// </code>
+        /// </example>
+        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Waits for event to fire and passes its value into the predicate function.
+        /// </summary>
+        /// <param name="e">Event to wait for</param>
+        /// <param name="options">Extra options</param>
+        /// <typeparam name="T">Return type</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
+        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
+
+        /// <summary>
         /// Navigates to an URL
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
@@ -144,29 +211,6 @@ namespace PlaywrightSharp
         /// Shortcut for <see cref="IFrame.GoToAsync"/>
         /// </remarks>
         Task<IResponse> GoToAsync(string url);
-
-        /// <summary>
-        /// This resolves when the page navigates to a new URL or reloads.
-        /// It is useful for when you run code which will indirectly cause the page to navigate.
-        /// </summary>
-        /// <param name="options">navigation options</param>
-        /// <returns>Task which resolves to the main resource response. 
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
-        /// </returns>
-        /// <remarks>
-        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation
-        /// </remarks>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// var navigationTask = page.WaitForNavigationAsync();
-        /// await page.ClickAsync("a.my-link");
-        /// await navigationTask;
-        /// ]]>
-        /// </code>
-        /// </example>
-        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
 
         /// <summary>
         /// Closes the page.
@@ -212,6 +256,20 @@ namespace PlaywrightSharp
         /// <param name="options">Optional waiting parameters</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/> and focuses it
+        /// </summary>
+        /// <param name="selector">A selector to search for element to focus. If there are multiple elements satisfying the selector, the first will be focused.</param>
+        /// <returns>A <see cref="Task"/> that completes when the the element matching <paramref name="selector"/> is successfully focused</returns>
+        Task FocusAsync(string selector);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to hover over the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to hover. If there are multiple elements satisfying the selector, the first will be hovered.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered</returns>
+        Task HoverAsync(string selector);
 
         /// <summary>
         /// Waits for a selector to be added to the DOM

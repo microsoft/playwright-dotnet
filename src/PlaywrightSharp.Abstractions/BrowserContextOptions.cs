@@ -24,5 +24,15 @@
         /// Whether or not to enable or disable JavaScript in the context. Defaults to true.
         /// </summary>
         public bool JavaScriptEnabled { get; set; }
+
+        /// <summary>
+        /// Whether to ignore HTTPS errors during navigation. Defaults to false.
+        /// </summary>
+        public bool IgnoreHTTPSErrors { get; set; }
+
+        /// <summary>
+        /// Changes the timezone of the context. See <see href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU’s metaZones.txt</see> for a list of supported timezone IDs.
+        /// </summary>
+        public string TimezoneId { get; set; }
     }
 }
