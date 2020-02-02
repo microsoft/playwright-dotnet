@@ -65,7 +65,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets a value indicating if the frame is detached or not
         /// </summary>
-        public bool Detached { get; }
+       bool Detached { get; }
+
 
         /// <summary>
         /// Sets the HTML markup to the frame
