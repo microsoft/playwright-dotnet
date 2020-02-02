@@ -29,6 +29,7 @@ namespace PlaywrightSharp.Tests
         internal static bool IsWebKit = false;
         internal static bool IsFirefox = false;
         internal static bool IsChromium = true;
+        internal static bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
         public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>()
         {
