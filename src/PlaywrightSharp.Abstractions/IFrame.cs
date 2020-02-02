@@ -69,7 +69,6 @@ namespace PlaywrightSharp
         /// </summary>
        bool Detached { get; }
 
-
         /// <summary>
         /// Sets the HTML markup to the frame
         /// </summary>
