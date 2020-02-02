@@ -29,6 +29,13 @@ namespace PlaywrightSharp
         int DefaultTimeout { get; set; }
 
         /// <summary>
+        /// Setup media emulation
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task EmulateMediaAsync(EmulateMedia options);
+
+        /// <summary>
         /// This setting will change the default maximum time for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
         /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
@@ -148,6 +155,14 @@ namespace PlaywrightSharp
         event EventHandler<ConsoleEventArgs> Console;
 
         /// <summary>
+        /// Waits for event to fire and passes its value into the predicate function.
+        /// </summary>
+        /// <param name="e">Event to wait for</param>
+        /// <param name="options">Extra options</param>
+        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
+        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
+
+        /// <summary>
         /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
         /// </summary>
         event EventHandler<DialogEventArgs> Dialog;
@@ -194,6 +209,20 @@ namespace PlaywrightSharp
         /// <param name="options">Optional waiting parameters</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/> and focuses it
+        /// </summary>
+        /// <param name="selector">A selector to search for element to focus. If there are multiple elements satisfying the selector, the first will be focused.</param>
+        /// <returns>A <see cref="Task"/> that completes when the the element matching <paramref name="selector"/> is successfully focused</returns>
+        Task FocusAsync(string selector);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to hover over the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to hover. If there are multiple elements satisfying the selector, the first will be hovered.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered</returns>
+        Task HoverAsync(string selector);
 
         /// <summary>
         /// Waits for a selector to be added to the DOM
