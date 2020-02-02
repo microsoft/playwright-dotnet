@@ -14,21 +14,24 @@ namespace PlaywrightSharp
         public PlaywrightSharpException()
         {
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
         /// </summary>
-        /// <param name="message">Message.</param>
+        /// <param name="message">Exception message.</param>
         public PlaywrightSharpException(string message) : base(message)
         {
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
         /// </summary>
-        /// <param name="message">Message.</param>
+        /// <param name="message">Exception message.</param>
         /// <param name="innerException">Inner exception.</param>
         public PlaywrightSharpException(string message, Exception innerException) : base(message, innerException)
         {
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
         /// </summary>

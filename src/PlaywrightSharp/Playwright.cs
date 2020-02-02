@@ -1,16 +1,11 @@
 ﻿using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// TODO
+    /// Main class
     /// </summary>
     public class Playwright
     {
-        /// <summary>
-        /// TODO
-        /// </summary>
-        public Playwright()
-        {
-        }
     }
 }

@@ -8,6 +8,21 @@ namespace PlaywrightSharp
     public class ConsoleMessage
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleMessage"/> class.
+        /// </summary>
+        /// <param name="type">Type.</param>
+        /// <param name="text">Text.</param>
+        /// <param name="args">Arguments.</param>
+        /// <param name="location">Message location</param>
+        public ConsoleMessage(ConsoleType type, string text, IList<IJSHandle> args, ConsoleMessageLocation location = null)
+        {
+            Type = type;
+            Text = text;
+            Args = args;
+            Location = location;
+        }
+
+        /// <summary>
         /// Gets the ConsoleMessage type.
         /// </summary>
         /// <value>ConsoleMessageType.</value>
@@ -29,20 +44,5 @@ namespace PlaywrightSharp
         /// Gets the location.
         /// </summary>
         public ConsoleMessageLocation Location { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleMessage"/> class.
-        /// </summary>
-        /// <param name="type">Type.</param>
-        /// <param name="text">Text.</param>
-        /// <param name="args">Arguments.</param>
-        /// <param name="location">Message location</param>
-        public ConsoleMessage(ConsoleType type, string text, IList<IJSHandle> args, ConsoleMessageLocation location = null)
-        {
-            Type = type;
-            Text = text;
-            Args = args;
-            Location = location;
-        }
     }
 }

@@ -9,10 +9,12 @@
         /// Flse.
         /// </summary>
         False = 0,
+
         /// <summary>
         /// True.
         /// </summary>
         True,
+
         /// <summary>
         /// Mixed.
         /// </summary>

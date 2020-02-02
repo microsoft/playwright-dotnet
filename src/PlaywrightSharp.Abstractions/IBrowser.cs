@@ -16,6 +16,7 @@ namespace PlaywrightSharp
         /// In a newly created browser, this will return a single instance of <seealso cref="IBrowserContext"/>.
         /// </summary>
         IBrowserContext[] BrowserContexts { get; }
+
         /// <summary>
         /// Returns the default browser context.
         /// </summary>

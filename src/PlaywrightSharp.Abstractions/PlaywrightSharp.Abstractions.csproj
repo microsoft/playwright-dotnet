@@ -8,6 +8,7 @@
     <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Abstractions.xml</DocumentationFile>
     <Commandlineparameters></Commandlineparameters>
     <RunWithWarnings>true</RunWithWarnings>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -16,5 +17,9 @@
   <ItemGroup>
     <PackageReference Include="System.Json" Version="4.7.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
+    <PackageReference Include="StyleCop.MSBuild" Version="6.1.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
