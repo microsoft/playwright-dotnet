@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// <see cref="IPage.ScreenshotAsync(ScreenshotOptions)"/> options
+    /// <see cref="IPage.ScreenshotAsync(ScreenshotOptions)"/> options.
     /// </summary>
     public class ScreenshotOptions
     {

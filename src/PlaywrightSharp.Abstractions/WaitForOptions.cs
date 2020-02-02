@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="ClickOptions.WaitFor"/>
+    /// Options for <see cref="ClickOptions.WaitFor"/>.
     /// </summary>
     public enum WaitForOptions
     {
@@ -23,6 +23,6 @@
         /// <summary>
         /// No wait
         /// </summary>
-        NoWait
+        NoWait,
     }
 }

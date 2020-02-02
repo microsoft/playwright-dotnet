@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options fo
+    /// Options for <see cref="IPage.EmulateMediaAsync(EmulateMedia)"/>.
     /// </summary>
     public enum ColorScheme
     {
@@ -18,6 +18,6 @@
         /// <summary>
         /// No preference
         /// </summary>
-        NoPreference
+        NoPreference,
     }
 }
