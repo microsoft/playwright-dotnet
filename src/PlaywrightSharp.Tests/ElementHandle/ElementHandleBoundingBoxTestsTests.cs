@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
-            var box = await elementHandle.BoundingBoxAsync();
+            var box = await elementHandle.GetBoundingBoxAsync();
             Assert.Equal(new BoundingBox(x: 100, y: 50, width: 50, height: 50), box);
         }
 
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
-            var box = await elementHandle.BoundingBoxAsync();
+            var box = await elementHandle.GetBoundingBoxAsync();
             Assert.Equal(new BoundingBox(x: 24, y: 224, width: 268, height: 18), box);
         }
 
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
             await Page.SetContentAsync("<div style=\"display:none\">hi</div>");
             var element = await Page.QuerySelectorAsync("div");
-            Assert.Null(await element.BoundingBoxAsync());
+            Assert.Null(await element.GetBoundingBoxAsync());
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.SetContentAsync("<div style=\"width: 100px; height: 100px\">hello</div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
-            var box = await elementHandle.BoundingBoxAsync();
+            var box = await elementHandle.GetBoundingBoxAsync();
             Assert.Equal(new BoundingBox(x: 8, y: 8, width: 100, height: 200), box);
         }
 
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                     <rect id=""theRect"" x=""30"" y=""50"" width=""200"" height=""300""></rect>
                   </svg>");
             var element = await Page.QuerySelectorAsync("#therect");
-            var pwBoundingBox = await element.BoundingBoxAsync();
+            var pwBoundingBox = await element.GetBoundingBoxAsync();
             var webBoundingBox = await Page.EvaluateAsync<BoundingBox>(@"e => {
                     const rect = e.getBoundingClientRect();
                     return { x: rect.x, y: rect.y, width: rect.width, height: rect.height};
