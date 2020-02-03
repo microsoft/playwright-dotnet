@@ -69,7 +69,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="obj">The <see cref="BoundingBox"/> to compare with the current <see cref="BoundingBox"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="BoundingBox"/> is equal to the current
-        /// <see cref="T:PuppeteerSharp.BoundingBox"/>; otherwise, <c>false</c>.</returns>
+        /// <see cref="BoundingBox"/>; otherwise, <c>false</c>.</returns>
         public bool Equals(BoundingBox obj)
             => obj != null &&
                 obj.X == X &&
