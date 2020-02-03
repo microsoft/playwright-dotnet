@@ -26,4 +26,4 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ./src/PlaywrightSharp.sln --configuration Release
     - name: Check formatting
-      run: dotnet tool update dotnet-format --tool-path ./dotnet-format/ && ./dotnet-format/dotnet-format -w ./src/ --dry-run --check -v:diag
+      run: dotnet tool update dotnet-format --add-source https://dotnet.myget.org/F/format/api/v3/index.json --tool-path ./dotnet-format/ && ./dotnet-format/dotnet-format -w ./src/ --dry-run --check -v:diag
