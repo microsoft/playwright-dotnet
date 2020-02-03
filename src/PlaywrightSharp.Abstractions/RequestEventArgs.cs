@@ -5,7 +5,9 @@ namespace PlaywrightSharp
     /// <summary>
     /// Arguments used by <see cref="IPage"/> events.
     /// </summary>
-    /// <seealso cref="Page.Request"/>
+    /// <seealso cref="IPage.Request"/>
+    /// <seealso cref="IPage.RequestFailed"/>
+    /// <seealso cref="IPage.RequestFinished"/>
     public class RequestEventArgs : EventArgs
     {
         /// <summary>

@@ -42,11 +42,6 @@ namespace PlaywrightSharp
         event EventHandler<ConsoleEventArgs> Console;
 
         /// <summary>
-        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
-        /// </summary>
-        event EventHandler<DialogEventArgs> Dialog;
-
-        /// <summary>
         /// Emitted when the page opens a new tab or window.
         /// </summary>
         /// <example>
@@ -79,19 +74,30 @@ namespace PlaywrightSharp
         event EventHandler<RequestEventArgs> RequestFailed;
 
         /// <summary>
-        /// This setting will change the default maximum times for the following methods:
-        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>.
-        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>.
+        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>.
+        /// PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
         /// </summary>
-        int DefaultTimeout { get; set; }
+        event EventHandler<DialogEventArgs> Dialog;
 
         /// <summary>
-        /// This setting will change the default maximum time for the following methods:
-        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
-        /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
+        /// Raised when a frame is attached.
         /// </summary>
-        int DefaultNavigationTimeout { get; set; }
+        event EventHandler<FrameEventArgs> FrameAttached;
+
+        /// <summary>
+        /// Raised when a frame is detached.
+        /// </summary>
+        event EventHandler<FrameEventArgs> FrameDetached;
+
+        /// <summary>
+        /// Raised when a frame is navigated to a new url.
+        /// </summary>
+        event EventHandler<FrameEventArgs> FrameNavigated;
+
+        /// <summary>
+        /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/load"/> event is dispatched.
+        /// </summary>
+        public event EventHandler Load;
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -132,6 +138,21 @@ namespace PlaywrightSharp
         /// Gets this page's keyboard.
         /// </summary>
         IKeyboard Keyboard { get; }
+
+        /// <summary>
+        /// This setting will change the default maximum times for the following methods:
+        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>.
+        /// </summary>
+        int DefaultTimeout { get; set; }
+
+        /// <summary>
+        /// This setting will change the default maximum time for the following methods:
+        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
+        /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
+        /// </summary>
+        int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
         /// Setup media emulation.
@@ -228,16 +249,27 @@ namespace PlaywrightSharp
         Task<IResponse> GoToAsync(string url);
 
         /// <summary>
-        /// Navigates to an url
+        /// Navigates to an url.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. </param>
-        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired</param>
-        /// <seealso cref="GoToAsync(string, NavigationOptions)"/>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        public Task<IResponse> GoToAsync(string url, int? timeout = null, WaitUntilNavigation[] waitUntil = null)
+        public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
+
+        /// <summary>
+        /// Navigates to an url.
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
 
         /// <summary>
         /// Closes the page.
@@ -305,7 +337,7 @@ namespace PlaywrightSharp
         /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A task that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
+        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
 
         /// <summary>
         /// Executes a script in browser context.

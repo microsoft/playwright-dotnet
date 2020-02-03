@@ -1,4 +1,6 @@
-﻿namespace PlaywrightSharp
+﻿using System.Collections.Generic;
+
+namespace PlaywrightSharp
 {
     /// <summary>
     /// <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> options.
@@ -34,5 +36,15 @@
         /// Changes the timezone of the context. See <see href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU’s metaZones.txt</see> for a list of supported timezone IDs.
         /// </summary>
         public string TimezoneId { get; set; }
+
+        /// <summary>
+        /// Changes the Geolocation of the context.
+        /// </summary>
+        public GeolocationOption Geolocation { get; set; }
+
+        /// <summary>
+        /// A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/> for more details.
+        /// </summary>
+        public Dictionary<string, ContextPermission[]> Permissions { get; set; }
     }
 }

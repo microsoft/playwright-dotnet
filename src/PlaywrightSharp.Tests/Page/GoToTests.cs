@@ -292,36 +292,48 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when exceeding maximum navigation timeout</playwright-it>
         [Fact]
         public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
 
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async ()
-                => await Page.GoToAsync(TestConstants.EmptyPage, new NavigationOptions { Timeout = 1 }));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async ()
+                => await Page.GoToAsync(TestConstants.EmptyPage, new GoToOptions { Timeout = 1 }));
             Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when exceeding maximum navigation timeout</playwright-it>
         [Fact]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
 
             Page.DefaultNavigationTimeout = 1;
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when exceeding default maximum timeout</playwright-it>
         [Fact]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
             // Hang for request to the empty.html
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             Page.DefaultTimeout = 1;
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when exceeding default maximum timeout</playwright-it>
         [Fact]
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
@@ -329,10 +341,13 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             Page.DefaultTimeout = 0;
             Page.DefaultNavigationTimeout = 1;
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should disable timeout when its set to 0</playwright-it>
         [Fact]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
@@ -344,10 +359,13 @@ namespace PlaywrightSharp.Tests.Page
             }
             Page.Load += OnLoad;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new NavigationOptions { Timeout = 0, WaitUntil = new[] { WaitUntilNavigation.Load } });
+            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = new[] { WaitUntilNavigation.Load } });
             Assert.True(loaded);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should work when navigating to valid url</playwright-it>
         [Fact]
         public async Task ShouldWorkWhenNavigatingToValidUrl()
         {
@@ -355,6 +373,9 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should work when navigating to data url</playwright-it>
         [Fact]
         public async Task ShouldWorkWhenNavigatingToDataUrl()
         {
@@ -362,6 +383,9 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should work when navigating to 404</playwright-it>
         [Fact]
         public async Task ShouldWorkWhenNavigatingTo404()
         {
@@ -369,6 +393,9 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.NotFound, response.Status);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should return last response in redirect chain</playwright-it>
         [Fact]
         public async Task ShouldReturnLastResponseInRedirectChain()
         {
@@ -381,106 +408,33 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, response.Url);
         }
 
-        [Fact]
-        public async Task ShouldWaitForNetworkIdleToSucceedNavigation()
-        {
-            var responses = new List<TaskCompletionSource<Func<HttpResponse, Task>>>();
-            var fetches = new Dictionary<string, TaskCompletionSource<bool>>();
-            foreach (var url in new[] {
-                "/fetch-request-a.js",
-                "/fetch-request-b.js",
-                "/fetch-request-c.js",
-                "/fetch-request-d.js" })
-            {
-                fetches[url] = new TaskCompletionSource<bool>();
-                Server.SetRoute(url, async context =>
-                {
-                    var taskCompletion = new TaskCompletionSource<Func<HttpResponse, Task>>();
-                    responses.Add(taskCompletion);
-                    fetches[context.Request.Path].SetResult(true);
-                    var actionResponse = await taskCompletion.Task;
-                    await actionResponse(context.Response).WithTimeout();
-                });
-            }
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should not leak listeners during navigation</playwright-it>
+        [Fact(Skip = "We don't need this test")]
+        public void ShouldNotLeakListenersDuringNavigation() { }
 
-            var initialFetchResourcesRequested = Task.WhenAll(
-                Server.WaitForRequest("/fetch-request-a.js"),
-                Server.WaitForRequest("/fetch-request-b.js"),
-                Server.WaitForRequest("/fetch-request-c.js")
-            );
-            var secondFetchResourceRequested = Server.WaitForRequest("/fetch-request-d.js");
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should not leak listeners during bad navigation</playwright-it>
+        [Fact(Skip = "We don't need this test")]
+        public void ShouldNotLeakListenersDuringBadNavigation() { }
 
-            var pageLoaded = new TaskCompletionSource<bool>();
-            void WaitPageLoad(object sender, EventArgs e)
-            {
-                pageLoaded.SetResult(true);
-                Page.Load -= WaitPageLoad;
-            }
-            Page.Load += WaitPageLoad;
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should not leak listeners during navigation of 11 pages</playwright-it>
+        [Fact(Skip = "We don't need this test")]
+        public void ShouldNotLeakListenersDuringNavigationOf11Pages() { }
 
-            var navigationFinished = false;
-            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html",
-                new NavigationOptions { WaitUntil = new[] { WaitUntilNavigation.Networkidle0 } })
-                .ContinueWith(res =>
-                {
-                    navigationFinished = true;
-                    return res.Result;
-                });
-
-            await pageLoaded.Task.WithTimeout();
-
-            Assert.False(navigationFinished);
-
-            await initialFetchResourcesRequested.WithTimeout();
-
-            Assert.False(navigationFinished);
-
-            await Task.WhenAll(
-                fetches["/fetch-request-a.js"].Task,
-                fetches["/fetch-request-b.js"].Task,
-                fetches["/fetch-request-c.js"].Task).WithTimeout();
-
-            foreach (var actionResponse in responses)
-            {
-                actionResponse.SetResult(response =>
-                {
-                    response.StatusCode = 404;
-                    return response.WriteAsync("File not found");
-                });
-            }
-
-            responses.Clear();
-
-            await secondFetchResourceRequested.WithTimeout();
-
-            Assert.False(navigationFinished);
-
-            await fetches["/fetch-request-d.js"].Task.WithTimeout();
-
-            foreach (var actionResponse in responses)
-            {
-                actionResponse.SetResult(response =>
-                {
-                    response.StatusCode = 404;
-                    return response.WriteAsync("File not found");
-                });
-            }
-
-            var navigationResponse = await navigationTask;
-            Assert.Equal(HttpStatusCode.OK, navigationResponse.Status);
-        }
-
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should navigate to dataURL and not fire dataURL requests</playwright-it>
         [Fact]
         public async Task ShouldNavigateToDataURLAndFireDataURLRequests()
         {
-            var requests = new List<Request>();
-            Page.Request += (sender, e) =>
-            {
-                if (!TestUtils.IsFavicon(e.Request))
-                {
-                    requests.Add(e.Request);
-                }
-            };
+            var requests = new List<IRequest>();
+            Page.Request += (sender, e) => requests.Add(e.Request);
+
             var dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataUrl);
             Assert.Equal(HttpStatusCode.OK, response.Status);
@@ -488,17 +442,15 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(dataUrl, requests[0].Url);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should navigate to URL with hash and fire requests without hash</playwright-it>
         [Fact]
         public async Task ShouldNavigateToURLWithHashAndFireRequestsWithoutHash()
         {
-            var requests = new List<Request>();
-            Page.Request += (sender, e) =>
-            {
-                if (!TestUtils.IsFavicon(e.Request))
-                {
-                    requests.Add(e.Request);
-                }
-            };
+            var requests = new List<IRequest>();
+            Page.Request += (sender, e) => requests.Add(e.Request);
+
             var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
             Assert.Equal(HttpStatusCode.OK, response.Status);
             Assert.Equal(TestConstants.EmptyPage, response.Url);
@@ -506,6 +458,9 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should work with self requesting page</playwright-it>
         [Fact]
         public async Task ShouldWorkWithSelfRequestingPage()
         {
@@ -514,6 +469,9 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("self-request.html", response.Url);
         }
 
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when navigating and show the url at the error message</playwright-it>
         [Fact]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
@@ -523,28 +481,19 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(url, exception.Url);
         }
 
-        [Fact]
-        public async Task ResponseOkShouldBeTrueForFile()
-        {
-            var fileToNavigate = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("Assets", "file-to-upload.txt"));
-            var url = new Uri(fileToNavigate).AbsoluteUri;
-
-            var response = await Page.GoToAsync(url);
-            Assert.True(response.Ok);
-        }
-
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should send referer</playwright-it>
         [Fact]
         public async Task ShouldSendReferer()
         {
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             string referer1 = null;
             string referer2 = null;
 
             await Task.WhenAll(
                 Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
                 Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
-                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new NavigationOptions
+                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
                 {
                     Referer = "http://google.com/"
                 })
@@ -553,6 +502,73 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("http://google.com/", referer1);
             // Make sure subresources do not inherit referer.
             Assert.Equal(TestConstants.ServerUrl + "/grid.html", referer2);
+            Assert.Equal(TestConstants.ServerUrl + "/grid.html", Page.Url);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should reject referer option when setExtraHTTPHeaders provides referer</playwright-it>
+        [Fact]
+        public async Task ShouldRejectRefererOptionWhenSetExtraHTTPHeadersProvidesReferer()
+        {
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
+            {
+                ["referer"] = "http://microsoft.com/"
+            });
+
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () =>
+                await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
+                {
+                    Referer = "http://google.com/"
+                }));
+
+            Assert.Equal("\"referer\" is already specified as extra HTTP header", exception.Message);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should override referrer-policy</playwright-it>
+        [Fact]
+        public async Task ShouldOverrideReferrerPolicy()
+        {
+            Server.SetRoute("/grid.html", context =>
+            {
+                context.Response.Headers["Referrer-Policy"] = "no-referrer";
+                return Task.CompletedTask;
+            });
+
+            string referer1 = null;
+            string referer2 = null;
+
+            await Task.WhenAll(
+                Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
+                Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
+                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
+                {
+                    Referer = "http://microsoft.com/"
+                })
+            );
+
+            Assert.Equal("http://microsoft.com/", referer1);
+            // Make sure subresources do not inherit referer.
+            Assert.Null(referer2);
+            Assert.Equal(TestConstants.ServerUrl + "/grid.html", Page.Url);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when canceled by another navigation</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldFailWhenCanceledByAnotherNavigation()
+        {
+            var request = Server.WaitForRequest("/one-style.css");
+            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? WaitUntilNavigation.Networkidle0 : WaitUntilNavigation.Load);
+            await request;
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await failed);
+
+            Assert.Equal($"Navigation to {TestConstants.ServerUrl}/one-style.html was canceled by another one", exception.Message);
         }
 
         private void AssertSSLError(string errorMessage)

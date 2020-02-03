@@ -67,5 +67,20 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the cookies are cleared.</returns>
         Task ClearCookiesAsync();
+
+        /// <summary>
+        /// Grants permissions to an URL.
+        /// </summary>
+        /// <param name="url">The origin to grant permissions to, e.g. "https://example.com".</param>
+        /// <param name="permissions">An array of permissions to grant.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task SetPermissionsAsync(string url, params ContextPermission[] permissions);
+
+        /// <summary>
+        /// Sets the page's geolocation.
+        /// </summary>
+        /// <param name="geolocation">Geolocation.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task SetGeolocationAsync(GeolocationOption geolocation);
     }
 }
