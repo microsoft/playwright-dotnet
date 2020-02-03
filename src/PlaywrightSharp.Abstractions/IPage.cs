@@ -133,9 +133,9 @@ namespace PlaywrightSharp
         int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
-        /// Setup media emulation
+        /// Setup media emulation.
         /// </summary>
-        /// <param name="options">Extra options</param>
+        /// <param name="options">Extra options.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task EmulateMediaAsync(EmulateMedia options);
 

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// A Browser is created when Playwright connects to a browser instance
-    /// TODO: Complete when we have more APIs to refer to
+    /// A Browser is created when Playwright connects to a browser instance.
     /// </summary>
     public interface IBrowser
     {
@@ -28,8 +27,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
         /// </summary>
-        /// <param name="options">Context options</param>
-        /// <example>
+        /// <param name="options">Context options.</param>
+        /// <example>.
         /// <code>
         /// <![CDATA[
         /// // Create a new incognito browser context.
@@ -39,7 +38,7 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created</returns>
+        /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created.</returns>
         Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null);
     }
 }

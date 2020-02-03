@@ -3,7 +3,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Main class
+    /// Main class.
     /// </summary>
     public class Playwright
     {

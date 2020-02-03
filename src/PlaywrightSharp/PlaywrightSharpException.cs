@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Base exception used to identify any exception thrown by PlaywrightSharp
+    /// Base exception used to identify any exception thrown by PlaywrightSharp.
     /// </summary>
     public class PlaywrightSharpException : Exception
     {

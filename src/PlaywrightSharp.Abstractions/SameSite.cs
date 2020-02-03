@@ -1,7 +1,7 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// SameSite values in cookies
+    /// SameSite values in cookies.
     /// </summary>
     public enum SameSite
     {
@@ -23,6 +23,6 @@
         /// <summary>
         /// Extended
         /// </summary>
-        Extended
+        Extended,
     }
 }
