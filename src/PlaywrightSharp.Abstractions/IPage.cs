@@ -64,6 +64,21 @@ namespace PlaywrightSharp
         event EventHandler<PopupEventArgs> Popup;
 
         /// <summary>
+        /// Raised when a page issues a request. The <see cref="IRequest"/> object is read-only.
+        /// </summary>
+        event EventHandler<RequestEventArgs> Request;
+
+        /// <summary>
+        /// Raised when a request finishes successfully.
+        /// </summary>
+        event EventHandler<RequestEventArgs> RequestFinished;
+
+        /// <summary>
+        /// Raised when a request fails, for example by timing out.
+        /// </summary>
+        event EventHandler<RequestEventArgs> RequestFailed;
+
+        /// <summary>
         /// This setting will change the default maximum times for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>.
         /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>.
@@ -211,6 +226,18 @@ namespace PlaywrightSharp
         /// Shortcut for <see cref="IFrame.GoToAsync"/>.
         /// </remarks>
         Task<IResponse> GoToAsync(string url);
+
+        /// <summary>
+        /// Navigates to an url
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. </param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired</param>
+        /// <seealso cref="GoToAsync(string, NavigationOptions)"/>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        public Task<IResponse> GoToAsync(string url, int? timeout = null, WaitUntilNavigation[] waitUntil = null)
 
         /// <summary>
         /// Closes the page.

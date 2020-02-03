@@ -12,5 +12,15 @@ namespace PlaywrightSharp
         /// Status code of the response.
         /// </summary>
         public HttpStatusCode Status { get; }
+
+        /// <summary>
+        /// An <see cref="IFrame"/> that initiated this response, or null if navigating to error pages.
+        /// </summary>
+        IFrame Frame { get; }
+
+        /// <summary>
+        /// Contains the URL of the response.
+        /// </summary>
+        string Url { get; }
     }
 }

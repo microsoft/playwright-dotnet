@@ -27,11 +27,13 @@ namespace PlaywrightSharp.Tests
         public static ILoggerFactory LoggerFactory { get; private set; }
         public static string FileToUpload => Path.Combine(Directory.GetCurrentDirectory(), "Assets", "file-to-upload.txt");
 
+
         //TODO
         internal static bool IsWebKit = false;
         internal static bool IsFirefox = false;
         internal static bool IsChromium = true;
         internal static bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        internal static bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>()
         {
