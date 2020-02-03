@@ -1,4 +1,4 @@
-﻿using PlaywrightSharp.TestServer;
+using PlaywrightSharp.TestServer;
 using System.IO;
 using Xunit.Abstractions;
 

@@ -1,4 +1,4 @@
-﻿using PlaywrightSharp.TestServer;
+using PlaywrightSharp.TestServer;
 using System;
 using System.Threading.Tasks;
 

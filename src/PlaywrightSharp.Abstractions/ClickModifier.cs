@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Modifiers for <see cref="ClickOptions.Modifiers"/>.
