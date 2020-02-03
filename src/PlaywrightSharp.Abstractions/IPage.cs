@@ -392,5 +392,13 @@ namespace PlaywrightSharp
         /// <param name="viewport">Viewport.</param>
         /// <returns>A<see cref="Task"/> that copletes when the message is confirmed by the browser.</returns>
         Task SetViewportAsync(Viewport viewport);
+
+        /// <summary>
+        /// Activating request interception enables <see cref="Request.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
+        /// <see cref="Request.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="Request.RespondAsync(ResponseData)">request.RespondAsync</see> methods.
+        /// </summary>
+        /// <returns>The request interception task.</returns>
+        /// <param name="value">Whether to enable request interception..</param>
+        Task SetRequestInterceptionAsync(bool value);
     }
 }
