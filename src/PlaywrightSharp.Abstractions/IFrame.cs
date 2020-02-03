@@ -39,6 +39,11 @@ namespace PlaywrightSharp
         IFrame ParentFrame { get; }
 
         /// <summary>
+        /// Gets a value indicating if the frame is detached or not.
+        /// </summary>
+        bool Detached { get; }
+
+        /// <summary>
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
@@ -63,11 +68,6 @@ namespace PlaywrightSharp
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// </remarks>
         Task<IResponse> GoToAsync(string url, GoToOptions options = null);
-
-        /// <summary>
-        /// Gets a value indicating if the frame is detached or not
-        /// </summary>
-        bool Detached { get; }
 
         /// <summary>
         /// Sets the HTML markup to the frame.
@@ -114,14 +114,14 @@ namespace PlaywrightSharp
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
 
         /// <summary>
-        /// Executes a function that returns a <see cref="IJSHandle"/>
+        /// Executes a function that returns a <see cref="IJSHandle"/>.
         /// </summary>
         /// <param name="script">Function to be evaluated in the frame context.</param>
-        /// <param name="args">Arguments to pass to script</param>
+        /// <param name="args">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/></returns>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/>.</returns>
         Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
-        /// <param name="options">Optional waiting parameters</param>
+        /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
