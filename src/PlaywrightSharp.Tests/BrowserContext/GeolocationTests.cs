@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
-            await Context.SetPermissionsAsync(TestConstants.ServerUrl, new[] { ContextPermission.Geolocation });
+            await Context.SetPermissionsAsync(TestConstants.ServerUrl, ContextPermission.Geolocation);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Context.SetGeolocationAsync(new GeolocationOption
             {
