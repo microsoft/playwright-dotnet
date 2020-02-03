@@ -10,13 +10,19 @@
     <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
     <RunWithWarnings>true</RunWithWarnings>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.MSBuild" Version="6.1.0">
+    <AdditionalFiles Include="..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

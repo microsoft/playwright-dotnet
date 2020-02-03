@@ -14,7 +14,7 @@ namespace PlaywrightSharp
         public string Name { get; set; }
 
         /// <summary>
-        /// User Agent
+        /// User Agent.
         /// </summary>
         /// <value>The user agent.</value>
         public string UserAgent { get; set; }
