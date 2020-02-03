@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Page
         public Task ShouldWaitForToSucceedNavigation(WaitUntilNavigation waitUntil)
             => NetworkIdleTest(Page.MainFrame, waitUntil, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", waitUntil));
 
-        public async Task NetworkIdleTest(IFrame frame, WaitUntilNavigation signal, Func<Task<IResponse>> func, bool isSetContent = false)
+        private async Task NetworkIdleTest(IFrame frame, WaitUntilNavigation signal, Func<Task<IResponse>> func, bool isSetContent = false)
         {
             var lastResponseFinished = new Stopwatch();
             var responses = new Dictionary<string, TaskCompletionSource<Func<HttpResponse, Task>>>();
