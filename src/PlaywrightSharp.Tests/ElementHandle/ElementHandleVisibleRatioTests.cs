@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             for (var i = 0; i < 11; ++i)
             {
                 var button = await Page.QuerySelectorAsync("#btn" + i);
-                var ratio = await button.VisibleRatioAsync();
+                var ratio = await button.GetVisibleRatioAsync();
                 Assert.Equal(10 - i, Math.Round(ratio * 10));
             }
         }
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             for (var i = 0; i < 11; ++i)
             {
                 var button = await Page.QuerySelectorAsync("#btn" + i);
-                var ratio = await button.VisibleRatioAsync();
+                var ratio = await button.GetVisibleRatioAsync();
                 Assert.Equal(10 - i, Math.Round(ratio * 10));
             }
         }
