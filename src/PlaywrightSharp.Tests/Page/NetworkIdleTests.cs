@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Page
         [InlineData(WaitUntilNavigation.Networkidle0)]
         [InlineData(WaitUntilNavigation.Networkidle2)]
         public Task ShouldWaitForToSucceedNavigation(WaitUntilNavigation waitUntil)
-            => NetworkIdleTest(Page.MainFrame, waitUntil, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", waitUntil);
+            => NetworkIdleTest(Page.MainFrame, waitUntil, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", waitUntil));
 
         public async Task NetworkIdleTest(IFrame frame, WaitUntilNavigation signal, Func<Task<IResponse>> func, bool isSetContent = false)
         {
