@@ -119,6 +119,15 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
+        /// <summary>
+        /// Executes a script in browser context.
+        /// </summary>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// <see cref="IJSHandle"/> instances can be passed as arguments.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
         Task<IJSHandle> EvaluateHandleAsync(string expression);
 
         /// <summary>

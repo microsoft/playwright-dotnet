@@ -13,6 +13,6 @@
         /// <summary>
         /// Popup event
         /// </summary>
-        Popup
+        Popup,
     }
 }

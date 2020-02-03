@@ -8,30 +8,11 @@ namespace PlaywrightSharp
     public class BoundingBox : IEquatable<BoundingBox>
     {
         /// <summary>
-        /// The x coordinate of the element in pixels.
-        /// </summary>
-        /// <value>The x.</value>
-        public decimal X { get; set; }
-        /// <summary>
-        /// The y coordinate of the element in pixels.
-        /// </summary>
-        /// <value>The y.</value>
-        public decimal Y { get; set; }
-        /// <summary>
-        /// The width of the element in pixels.
-        /// </summary>
-        /// <value>The width.</value>
-        public decimal Width { get; set; }
-        /// <summary>
-        /// The height of the element in pixels.
-        /// </summary>
-        /// <value>The height.</value>
-        public decimal Height { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BoundingBox"/> class.
         /// </summary>
-        public BoundingBox() { }
+        public BoundingBox()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundingBox"/> class.
@@ -47,6 +28,30 @@ namespace PlaywrightSharp
             Width = width;
             Height = height;
         }
+
+        /// <summary>
+        /// The x coordinate of the element in pixels.
+        /// </summary>
+        /// <value>The x.</value>
+        public decimal X { get; set; }
+
+        /// <summary>
+        /// The y coordinate of the element in pixels.
+        /// </summary>
+        /// <value>The y.</value>
+        public decimal Y { get; set; }
+
+        /// <summary>
+        /// The width of the element in pixels.
+        /// </summary>
+        /// <value>The width.</value>
+        public decimal Width { get; set; }
+
+        /// <summary>
+        /// The height of the element in pixels.
+        /// </summary>
+        /// <value>The height.</value>
+        public decimal Height { get; set; }
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
