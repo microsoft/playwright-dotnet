@@ -3,6 +3,7 @@ using Xunit.Abstractions;
 using Xunit;
 using System.Threading.Tasks;
 using System;
+using PlaywrightSharp.Tests.Attributes;
 
 namespace PlaywrightSharp.Tests.ElementHandle
 {
