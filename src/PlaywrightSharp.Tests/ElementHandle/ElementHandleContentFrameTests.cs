@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var elementHandle = await Page.QuerySelectorAsync("#frame1");
-            var frame = await elementHandle.ContentFrameAsync();
+            var frame = await elementHandle.GetContentFrameAsync();
             Assert.Equal(Page.Frames[1], frame);
         }
 
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.CrossProcessUrl + "/empty.html");
             var elementHandle = await Page.QuerySelectorAsync("#frame1");
-            var frame = await elementHandle.ContentFrameAsync();
+            var frame = await elementHandle.GetContentFrameAsync();
             Assert.Equal(Page.Frames[1], frame);
         }
 
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.Frames[1];
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => window.top.document.querySelector('#frame1')");
-            Assert.Equal(frame, await elementHandle.ContentFrameAsync());
+            Assert.Equal(frame, await elementHandle.GetContentFrameAsync());
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.Frames[1];
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
-            Assert.Null(await elementHandle.ContentFrameAsync());
+            Assert.Null(await elementHandle.GetContentFrameAsync());
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.Frames[1];
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.documentElement");
-            Assert.Null(await elementHandle.ContentFrameAsync());
+            Assert.Null(await elementHandle.GetContentFrameAsync());
         }
     }
 }

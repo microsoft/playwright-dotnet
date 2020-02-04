@@ -30,7 +30,7 @@ namespace PlaywrightSharp
         /// Content frame for element handles referencing iframe nodes, or null otherwise.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the frame is resolved, yielding element's parent <see cref="IFrame" />.</returns>
-        Task<IFrame> ContentFrameAsync();
+        Task<IFrame> GetContentFrameAsync();
 
         /// <summary>
         /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to hover over the center of the element.
