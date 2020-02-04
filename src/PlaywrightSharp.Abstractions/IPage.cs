@@ -155,7 +155,7 @@ namespace PlaywrightSharp
         int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
-        /// This completes when the page reaches a required load state, load by default.
+        /// Completes when the page reaches a required load state, load by default.
         /// The navigation can be in progress when it is called.
         /// If navigation is already at a required state, completes immediately.
         /// </summary>
