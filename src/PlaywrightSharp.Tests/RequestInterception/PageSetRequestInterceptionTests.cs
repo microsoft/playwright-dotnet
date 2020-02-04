@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace PlaywrightSharp.Tests.RequestInterception
 {
+    ///<playwright-file>interception.spec.js</playwright-file>
+    ///<playwright-describe>Page.setRequestInterception</playwright-describe>
     public class PageSetRequestInterceptionTests : PlaywrightSharpPageBaseTest
     {
         internal PageSetRequestInterceptionTests(ITestOutputHelper output) : base(output)
@@ -53,7 +55,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
-            await page.setContent(@"
+            await Page.SetContentAsync(@"
                   <form action='/rredirect' method='post'>
                     <input type=""hidden"" id=""foo"" name=""foo"" value=""FOOBAR"">
                   </form>");
@@ -112,7 +114,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
 
             await Page.SetRequestInterceptionAsync(true);
-            var requests = new List<IRequest>;
+            var requests = new List<IRequest>();
             Page.Request += (sender, e) =>
             {
                 requests.Add(e.Request);
@@ -155,7 +157,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             async void ContinueRequestOnce(object sender, RequestEventArgs e)
             {
-                Page.SetRequestInterceptionAsync -= ContinueRequestOnce;
+                Page.Request -= ContinueRequestOnce;
                 await e.Request.ContinueAsync();
             }
             Page.Request += ContinueRequestOnce;
@@ -170,7 +172,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldShowCustomHTTPHeaders()
         {
-            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["foo"] = "bar"
             });
@@ -209,7 +211,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
-            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) =>
             {
@@ -251,18 +253,18 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += (sender, e) =>
             {
-                e.Request.AbortAsync("internetdisconnected");
+                e.Request.AbortAsync(RequestAbortErrorCode.InternetDisconnected);
             };
-            var failedRequest = null;
+            IRequest failedRequest = null;
             Page.RequestFailed += (sender, e) => failedRequest = e.Request;
             await Page.GoToAsync(TestConstants.EmptyPage).ContinueWith(task => { });
             Assert.NotNull(failedRequest);
             if (TestConstants.IsWebKit)
-                Assert.Equal("Request intercepted", failedRequest.Failure.ErrorText);
+                Assert.Equal("Request intercepted", failedRequest.Failure);
             else if (TestConstants.IsFirefox)
-                Assert.Equal("NS_ERROR_OFFLINE", failedRequest.Failure.ErrorText);
+                Assert.Equal("NS_ERROR_OFFLINE", failedRequest.Failure);
             else
-                Assert.Equal("net::ERR_INTERNET_DISCONNECTED", failedRequest.Failure.ErrorText);
+                Assert.Equal("net::ERR_INTERNET_DISCONNECTED", failedRequest.Failure);
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
@@ -271,7 +273,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldSendReferer()
         {
-            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             var requestTask = Server.WaitForRequest("grid.html", request => request.Headers["referer"]);
@@ -309,7 +311,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
 
             await Page.SetRequestInterceptionAsync(true);
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) =>
+            Page.Request += async (sender, e) =>
             {
                 await e.Request.ContinueAsync();
                 requests.Add(e.Request);
@@ -319,20 +321,20 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Server.SetRedirect("/non-existing-page-3.html", "/non-existing-page-4.html");
             Server.SetRedirect("/non-existing-page-4.html", "/empty.html");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/non-existing-page.html");
-            Assert.Equal(200, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.Status);
             Assert.Contains("empty.html", response.Url);
             Assert.Equal(5, requests.Count);
             Assert.Equal(ResourceType.Document, requests[2].ResourceType);
             // Check redirect chain
             var redirectChain = response.Request.RedirectChain;
-            Assert.Equal(4, redirectChain.Count);
-            Assert.Contains("/non-existing-page.html", redirectChain[0].url());
-            Assert.Contains("/non-existing-page-3.html", redirectChain[2].url());
-            for (var i = 0; i < redirectChain.length; ++i)
+            Assert.Equal(4, redirectChain.Length);
+            Assert.Contains("/non-existing-page.html", redirectChain[0].Url);
+            Assert.Contains("/non-existing-page-3.html", redirectChain[2].Url);
+            for (var i = 0; i < redirectChain.Length; ++i)
             {
                 var request = redirectChain[i];
                 Assert.True(request.IsNavigationRequest);
-                Assert.Equal(request.redirectChain[i], request);
+                Assert.Equal(request.RedirectChain[i], request);
             }
         }
 
@@ -344,10 +346,10 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
             await Page.SetRequestInterceptionAsync(true);
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) =>
+            Page.Request += async (sender, e) =>
             {
                 await e.Request.ContinueAsync();
-                requests.push(e.Request);
+                requests.Add(e.Request);
             };
             Server.SetRedirect("/one-style.css", "/two-style.css");
             Server.SetRedirect("/two-style.css", "/three-style.css");
@@ -359,10 +361,10 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Contains("one-style.html", response.Url);
             Assert.Equal(5, requests.Count);
             Assert.Equal(ResourceType.Document, requests[0].ResourceType);
-            Assert.Equal(ResourceType.Stylesheet, requests[1].ResourceType);
+            Assert.Equal(ResourceType.StyleSheet, requests[1].ResourceType);
             // Check redirect chain
-            var redirectChain = requests[1].redirectChain();
-            Assert.Equal(3, redirectChain.Count);
+            var redirectChain = requests[1].RedirectChain;
+            Assert.Equal(3, redirectChain.Length);
             Assert.Contains("/one-style.css", redirectChain[0].Url);
             Assert.Contains("/three-style.css", redirectChain[2].Url);
         }
@@ -373,26 +375,31 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWithEqualRequests()
         {
-
             await Page.GoToAsync(TestConstants.EmptyPage);
-            let responseCount = 1;
-            server.setRoute('/zzz', (req, res) => res.end((responseCount++) * 11 + ''));
+            var responseCount = 1;
+            Server.SetRoute("/zzz", context => context.Response.WriteAsync((responseCount++ * 11).ToString()));
             await Page.SetRequestInterceptionAsync(true);
 
-            let spinner = false;
+            var spinner = false;
             // Cancel 2nd request.
-            Page.Request += (sender, e) =>
+            Page.Request += async (sender, e) =>
             {
-                spinner? request.AbortAsync() : await e.Request.ContinueAsync();
+                if (spinner)
+                {
+                    await e.Request.AbortAsync();
+                }
+                else
+                {
+                    await e.Request.ContinueAsync();
+                }
                 spinner = !spinner;
-            });
-            var results = await page.evaluate(() => Promise.all([
-              fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
-        fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
-        fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
-      ]));
-            expect(results).toEqual(['11', 'FAILED', '22']);
-            }
+            };
+            var results = await Page.EvaluateAsync<string[]>(@"() => Promise.all([
+                fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
+                fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
+                fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
+            ])");
+            Assert.Equal(new[] { "11", "FAILED", "22" }, results);
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
@@ -401,235 +408,212 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
-
             await Page.SetRequestInterceptionAsync(true);
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) =>
+            Page.Request += async (sender, e) =>
             {
-                requests.push(request);
+                requests.Add(e.Request);
                 await e.Request.ContinueAsync();
-            });
-            var dataURL = 'data:text/html,<div>yo</div>';
+            };
+            var dataURL = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataURL);
-            expect(response).toBe(null);
-            expect(requests.length).toBe(0);
+            Assert.Null(response);
+            Assert.Empty(requests);
         }
-    }
 
-    ///<playwright-file>interception.spec.js</playwright-file>
-    ///<playwright-describe>Page.setRequestInterception</playwright-describe>
-    ///<playwright-it>should be able to fetch dataURL and not fire dataURL requests</playwright-it>
-    [Fact]
-    public async Task ShouldBeAbleToFetchDataURLAndNotFireDataURLRequests()
-    {
-
-        await Page.GoToAsync(TestConstants.EmptyPage);
-        await Page.SetRequestInterceptionAsync(true);
-        var requests = new List<IRequest>();
-        Page.Request += (sender, e) =>
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should be able to fetch dataURL and not fire dataURL requests</playwright-it>
+        [Fact]
+        public async Task ShouldBeAbleToFetchDataURLAndNotFireDataURLRequests()
         {
-            requests.push(request);
-            await e.Request.ContinueAsync();
-        });
-        var dataURL = 'data:text/html,<div>yo</div>';
-        var text = await page.evaluate(url => fetch(url).then(r => r.text()), dataURL);
-        expect(text).toBe('<div>yo</div>');
-        expect(requests.length).toBe(0);
-    }
-}
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.SetRequestInterceptionAsync(true);
+            var requests = new List<IRequest>();
+            Page.Request += async (sender, e) =>
+            {
+                requests.Add(e.Request);
+                await e.Request.ContinueAsync();
+            };
+            var dataURL = "data:text/html,<div>yo</div>";
+            var text = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", dataURL);
+            Assert.Equal("<div>yo</div>", text);
+            Assert.Empty(requests);
+        }
 
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should navigate to URL with hash and and fire requests without hash</playwright-it>
-[Fact(Skip = "Not implemented")]
-public async Task ShouldNavigateToURLWithHashAndAndFireRequestsWithoutHash()
-{
-
-    await Page.SetRequestInterceptionAsync(true);
-    var requests = new List<IRequest>();
-    Page.Request += (sender, e) =>
-    {
-        requests.push(request);
-        await e.Request.ContinueAsync();
-    });
-    var response = await Page.GoToAsync(server.EMPTY_PAGE + '#hash');
-    expect(response.status()).toBe(200);
-    expect(response.url()).toBe(server.EMPTY_PAGE);
-    expect(requests.length).toBe(1);
-    expect(requests[0].url()).toBe(server.EMPTY_PAGE);
-}
-}
-
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should work with encoded server</playwright-it>
-[Fact]
-public async Task ShouldWorkWithEncodedServer()
-{
-
-    // The requestWillBeSent will report encoded URL, whereas interception will
-    // report URL as-is. @see crbug.com/759388
-    await Page.SetRequestInterceptionAsync(true);
-    Page.Request += async (sender, e) => await e.Request.ContinueAsync();
-    var response = await Page.GoToAsync(server.PREFIX + '/some nonexisting page');
-    expect(response.status()).toBe(404);
-}
-}
-
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should work with badly encoded server</playwright-it>
-[Fact]
-public async Task ShouldWorkWithBadlyEncodedServer()
-{
-
-    await Page.SetRequestInterceptionAsync(true);
-    server.setRoute('/malformed?rnd=%911', (req, res) => res.end());
-    Page.Request += async (sender, e) => await e.Request.ContinueAsync();
-    var response = await Page.GoToAsync(server.PREFIX + '/malformed?rnd=%911');
-    expect(response.status()).toBe(200);
-}
-}
-
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should work with encoded server - 2</playwright-it>
-[Fact]
-public async Task ShouldWorkWithEncodedServer-2()
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should navigate to URL with hash and and fire requests without hash</playwright-it>
+        [Fact(Skip = "Not implemented")]
+        public async Task ShouldNavigateToURLWithHashAndAndFireRequestsWithoutHash()
         {
+            await Page.SetRequestInterceptionAsync(true);
+            var requests = new List<IRequest>();
+            Page.Request += async (sender, e) =>
+            {
+                requests.Add(e.Request);
+                await e.Request.ContinueAsync();
+            };
+            var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
+            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(TestConstants.EmptyPage, response.Url);
+            Assert.Single(requests);
+            Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
+        }
 
-      // The requestWillBeSent will report URL as-is, whereas interception will
-      // report encoded URL for stylesheet. @see crbug.com/759388
-      await Page.SetRequestInterceptionAsync(true);
-var requests = new List<IRequest>();
-Page.Request += (sender, e) => {
-        await e.Request.ContinueAsync();
-requests.push(request);
-      });
-      var response = await Page.GoToAsync(`data: text / html,< link rel = "stylesheet" href = "${server.PREFIX}/fonts?helvetica|arial" />`);
-expect(response).toBe(null);
-expect(requests.length).toBe(1);
-expect(requests[0].response().status()).toBe(404);
-    }
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should work with encoded server</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithEncodedServer()
+        {
+            // The requestWillBeSent will report encoded URL, whereas interception will
+            // report URL as-is. @see crbug.com/759388
+            await Page.SetRequestInterceptionAsync(true);
+            Page.Request += async (sender, e) => await e.Request.ContinueAsync();
+            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/some nonexisting page");
+            Assert.Equal(HttpStatusCode.NotFound, response.Status);
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should work with badly encoded server</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithBadlyEncodedServer()
+        {
+            await Page.SetRequestInterceptionAsync(true);
+            Server.SetRoute("/malformed?rnd=%911", context => context.Response.CompleteAsync());
+            Page.Request += async (sender, e) => await e.Request.ContinueAsync();
+            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/malformed?rnd=%911");
+            Assert.Equal(HttpStatusCode.OK, response.Status);
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should work with encoded server - 2</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithEncodedServer2()
+        {
+            // The requestWillBeSent will report URL as-is, whereas interception will
+            // report encoded URL for stylesheet. @see crbug.com/759388
+            await Page.SetRequestInterceptionAsync(true);
+            var requests = new List<IRequest>();
+            Page.Request += async (sender, e) =>
+            {
+                await e.Request.ContinueAsync();
+                requests.Add(e.Request);
+            };
+            var response = await Page.GoToAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{TestConstants.EmptyPage}/fonts?helvetica|arial\"/>");
+            Assert.Null(response);
+            Assert.Single(requests);
+            Assert.Equal(HttpStatusCode.NotFound, requests[0].Response.Status);
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should not throw "Invalid Interception Id" if the request was cancelled</playwright-it>
         [Fact]
-public async Task ShouldNotThrow"InvalidInterceptionId"IfTheRequestWasCancelled()
-{
-
-    await page.setContent('<iframe></iframe>');
-    await Page.SetRequestInterceptionAsync(true);
-    let request = null;
-    page.on('request', async r => request = r);
-    page.$eval('iframe', (frame, url) => frame.src = url, server.EMPTY_PAGE),
-      // Wait for request interception.
-      await utils.waitEvent(page, 'request');
-    // Delete frame to cause request to be canceled.
-    await page.$eval('iframe', frame => frame.remove());
-    let error = null;
-    await request.continue().catch (e => error = e);
-    expect(error).toBe(null);
-    }
-}
-
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should throw if interception is not enabled</playwright-it>
-[Fact]
-public async Task ShouldThrowIfInterceptionIsNotEnabled()
-{
-    async({ newPage, server}) => {
-        let error = null;
-        var page = await newPage();
-        page.on('request', async request =>
+        public async Task ShouldNotThrowInvalidInterceptionIdIfTheRequestWasCancelled()
         {
-            try
+            await Page.SetContentAsync("<iframe></iframe>");
+            await Page.SetRequestInterceptionAsync(true);
+            IRequest request = null;
+            Page.Request += (sender, e) => request = e.Request;
+            _ = Page.QuerySelectorAsync("iframe").EvaluateAsync("(frame, url) => frame.src = url", TestConstants.EmptyPage);
+            // Wait for request interception.
+            await Page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
+            // Delete frame to cause request to be canceled.
+            _ = Page.QuerySelectorAsync("iframe").EvaluateAsync("frame => frame.remove()");
+            await request.ContinueAsync();
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should throw if interception is not enabled</playwright-it>
+        [Fact]
+        public async Task ShouldThrowIfInterceptionIsNotEnabled()
+        {
+            var context = await Browser.NewContextAsync();
+            var page = await context.NewPageAsync();
+            Exception exception = null;
+            page.Request += async (sender, e) =>
             {
-                await await e.Request.ContinueAsync();
-            }
-            catch (e)
+                try { await e.Request.ContinueAsync(); }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+            };
+            await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Contains("Request Interception is not enabled", exception.Message);
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should intercept main resource during cross-process navigation</playwright-it>
+        [Fact]
+        public async Task ShouldInterceptMainResourceDuringCrossProcessNavigation()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.SetRequestInterceptionAsync(true);
+            var intercepted = false;
+            Page.Request += async (sender, e) =>
             {
-                error = e;
-            }
-        });
-        await Page.GoToAsync(TestConstants.EmptyPage);
-        expect(error.message).toContain('Request Interception is not enabled');
-    }
-}
+                if (e.Request.Url.Contains(TestConstants.CrossProcessHttpPrefix + "/empty.html"))
+                    intercepted = true;
+                await e.Request.ContinueAsync();
+            };
+            var response = await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
+            Assert.True(response.Ok);
+            Assert.True(intercepted);
+        }
 
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should intercept main resource during cross-process navigation</playwright-it>
-[Fact]
-public async Task ShouldInterceptMainResourceDuringCross-processNavigation()
-{
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should not throw when continued after navigation</playwright-it>
+        [Fact]
+        public async Task ShouldNotThrowWhenContinuedAfterNavigation()
+        {
+            await Page.SetRequestInterceptionAsync(true);
+            Page.Request += async (sender, e) =>
+            {
+                if (e.Request.Url != TestConstants.ServerUrl + "/one-style.css")
+                    await e.Request.ContinueAsync();
+            };
+            // For some reason, Firefox issues load event with one outstanding request.
+            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
+            {
+                WaitUntil = TestConstants.IsFirefox ? new[] { WaitUntilNavigation.Networkidle0 } : new[] { WaitUntilNavigation.Load }
+            });
+            var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => failed);
+            Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
+            await request.ContinueAsync();
+        }
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    await Page.SetRequestInterceptionAsync(true);
-    let intercepted = false;
-    Page.Request += (sender, e) =>
-    {
-        if (request.url().includes(server.CROSS_PROCESS_PREFIX + '/empty.html'))
-            intercepted = true;
-        await e.Request.ContinueAsync();
-    });
-    var response = await Page.GoToAsync(server.CROSS_PROCESS_PREFIX + '/empty.html');
-    expect(response.ok()).toBe(true);
-    expect(intercepted).toBe(true);
-}
-}
-
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should not throw when continued after navigation</playwright-it>
-[Fact]
-public async Task ShouldNotThrowWhenContinuedAfterNavigation()
-{
-
-    await Page.SetRequestInterceptionAsync(true);
-    Page.Request += (sender, e) =>
-    {
-        if (request.url() !== server.PREFIX + '/one-style.css')
-            await e.Request.ContinueAsync();
-    });
-    // For some reason, Firefox issues load event with one outstanding request.
-    var failed = Page.GoToAsync(server.PREFIX + '/one-style.html', { waitUntil: FFOX ? 'networkidle0' : 'load' }).catch (e => e);
-    var request = await page.waitForRequest(server.PREFIX + '/one-style.css');
-    await Page.GoToAsync(server.PREFIX + '/empty.html');
-    var error = await failed;
-    expect(error.message).toBe('Navigation to ' + server.PREFIX + '/one-style.html was canceled by another one');
-    var notAnError = await request.continue().then(() => null).catch (e => e);
-    expect(notAnError).toBe(null);
-    }
-}
-
-///<playwright-file>interception.spec.js</playwright-file>
-///<playwright-describe>Page.setRequestInterception</playwright-describe>
-///<playwright-it>should not throw when continued after cross-process navigation</playwright-it>
-[Fact]
-public async Task ShouldNotThrowWhenContinuedAfterCross-processNavigation()
-{
-
-    await Page.SetRequestInterceptionAsync(true);
-    Page.Request += (sender, e) =>
-    {
-        if (request.url() !== server.PREFIX + '/one-style.css')
-            await e.Request.ContinueAsync();
-    });
-    // For some reason, Firefox issues load event with one outstanding request.
-    var failed = Page.GoToAsync(server.PREFIX + '/one-style.html', { waitUntil: FFOX ? 'networkidle0' : 'load' }).catch (e => e);
-    var request = await page.waitForRequest(server.PREFIX + '/one-style.css');
-    await Page.GoToAsync(server.CROSS_PROCESS_PREFIX + '/empty.html');
-    var error = await failed;
-    expect(error.message).toBe('Navigation to ' + server.PREFIX + '/one-style.html was canceled by another one');
-    var notAnError = await request.continue().then(() => null).catch (e => e);
-    expect(notAnError).toBe(null);
-    }
-}
-
-}
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+        ///<playwright-it>should not throw when continued after cross-process navigation</playwright-it>
+        [Fact]
+        public async Task ShouldNotThrowWhenContinuedAfterCrossProcessNavigation()
+        {
+            await Page.SetRequestInterceptionAsync(true);
+            Page.Request += async (sender, e) =>
+            {
+                if (e.Request.Url != TestConstants.ServerUrl + "/one-style.css")
+                    await e.Request.ContinueAsync();
+            };
+            // For some reason, Firefox issues load event with one outstanding request.
+            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
+            {
+                WaitUntil = TestConstants.IsFirefox ? new[] { WaitUntilNavigation.Networkidle0 } : new[] { WaitUntilNavigation.Load }
+            });
+            var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
+            await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => failed);
+            Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
+            await request.ContinueAsync();
+        }
     }
 }

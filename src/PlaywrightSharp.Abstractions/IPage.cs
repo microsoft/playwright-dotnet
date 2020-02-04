@@ -60,6 +60,22 @@ namespace PlaywrightSharp
 
         /// <summary>
         /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
+        /// Raised when a page issues a request. The <see cref="IRequest"/> object is read-only.
+        /// </summary>
+        event EventHandler<RequestEventArgs> Request;
+
+        /// <summary>
+        /// Raised when a request finishes successfully.
+        /// </summary>
+        event EventHandler<RequestEventArgs> RequestFinished;
+
+        /// <summary>
+        /// Raised when a request fails, for example by timing out.
+        /// </summary>
+        event EventHandler<RequestEventArgs> RequestFailed;
+
+        /// <summary>
+        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
         /// </summary>
         event EventHandler<DialogEventArgs> Dialog;
 
@@ -169,6 +185,13 @@ namespace PlaywrightSharp
         Task<IResponse> GoToAsync(string url, GoToOptions options = null);
 
         /// <summary>
+        /// Reloads the page.
+        /// </summary>
+        /// <param name="options">Navigation options.</param>
+        /// <returns>Task which resolves to the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last redirect.</returns>
+        Task<IResponse> ReloadAsync(NavigationOptions options = null);
+
+        /// <summary>
         /// This resolves when the page navigates to a new URL or reloads.
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
@@ -190,6 +213,22 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Waits for a request.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var firstRequest = await page.WaitForRequestAsync("http://example.com/resource");
+        /// return firstRequest.Url;
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A task which resolves when a matching request was made.</returns>
+        /// <param name="url">URL to wait for.</param>
+        /// <param name="options">Options.</param>
+        Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
@@ -394,8 +433,8 @@ namespace PlaywrightSharp
         Task SetViewportAsync(Viewport viewport);
 
         /// <summary>
-        /// Activating request interception enables <see cref="Request.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
-        /// <see cref="Request.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="Request.RespondAsync(ResponseData)">request.RespondAsync</see> methods.
+        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
+        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.RespondAsync(ResponseData)">request.RespondAsync</see> methods.
         /// </summary>
         /// <returns>The request interception task.</returns>
         /// <param name="value">Whether to enable request interception..</param>
