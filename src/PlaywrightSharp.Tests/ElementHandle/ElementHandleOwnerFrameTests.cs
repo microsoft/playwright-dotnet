@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         public async Task ShouldWorkForDetachedElements()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var divHandle = (IElementHandle) await Page.EvaluateHandleAsync(@"() => {
+            var divHandle = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
                     var div = document.createElement('div');
                     document.body.appendChild(div);
                     return div;
