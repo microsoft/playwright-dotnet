@@ -136,7 +136,7 @@ namespace PlaywrightSharp
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a function in the <see cref="IFrame"/> context. It returns an <see cref="IJSHandle"/> which points to the value returned by the function.
         /// </summary>
         /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
