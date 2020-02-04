@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
