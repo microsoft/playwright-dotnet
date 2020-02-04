@@ -27,7 +27,6 @@ namespace PlaywrightSharp.Tests
         public static ILoggerFactory LoggerFactory { get; private set; }
         public static string FileToUpload => Path.Combine(Directory.GetCurrentDirectory(), "Assets", "file-to-upload.txt");
 
-
         //TODO
         internal static bool IsWebKit = false;
         internal static bool IsFirefox = false;
