@@ -142,17 +142,33 @@ namespace PlaywrightSharp
         /// <summary>
         /// This setting will change the default maximum times for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>.
+        /// - <see cref="WaitForNavigationAsync(WaitUntilNavigation)"/>.
         /// </summary>
         int DefaultTimeout { get; set; }
 
         /// <summary>
         /// This setting will change the default maximum time for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(WaitForNavigationOptions)"/>
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
+
+        /// <summary>
+        /// This completes when the page reaches a required load state, load by default.
+        /// The navigation can be in progress when it is called.
+        /// If navigation is already at a required state, completes immediately.
+        /// </summary>
+        /// <param name="options">Extra options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
+        Task WaitForLoadStateAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
+        /// </summary>
+        /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetCacheEnabledAsync(bool enabled = true);
 
         /// <summary>
         /// Setup media emulation.
@@ -185,7 +201,7 @@ namespace PlaywrightSharp
         /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// <para/>
-        /// Shortcut for <see cref="IFrame.GoToAsync"/>.
+        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
         /// </remarks>
         Task<IResponse> GoToAsync(string url, GoToOptions options = null);
 
@@ -210,7 +226,21 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
+        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null);
+
+        /// <summary>
+        /// This resolves when the page navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
@@ -244,7 +274,7 @@ namespace PlaywrightSharp
         /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// <para/>
-        /// Shortcut for <see cref="IFrame.GoToAsync"/>.
+        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
         /// </remarks>
         Task<IResponse> GoToAsync(string url);
 
@@ -370,6 +400,15 @@ namespace PlaywrightSharp
         Task SetContentAsync(string html, NavigationOptions options = null);
 
         /// <summary>
+        /// Sets the HTML markup to the page.
+        /// </summary>
+        /// <param name="html">HTML markup to assign to the page.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes.</returns>
+        /// <seealso cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
+        Task SetContentAsync(string html, WaitUntilNavigation waitUntil);
+
+        /// <summary>
         /// Sets extra HTTP headers that will be sent with every request the page initiates.
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
@@ -463,5 +502,28 @@ namespace PlaywrightSharp
         /// <param name="viewport">Viewport.</param>
         /// <returns>A<see cref="Task"/> that copletes when the message is confirmed by the browser.</returns>
         Task SetViewportAsync(Viewport viewport);
+
+        /// <summary>
+        /// Navigate to the previous page in history.
+        /// </summary>
+        /// <param name="options">Navigation parameters.</param>
+        /// <returns>A <see cref="Task"/> that completes to the main resource response. In case of multiple redirects,
+        /// the navigation will resolve with the response of the last redirect. If can not go back, resolves to null.</returns>
+        Task<IResponse> GoBackAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Navigate to the next page in history.
+        /// </summary>
+        /// <param name="options">Navigation parameters.</param>
+        /// <returns>A <see cref="Task"/> that completes to the main resource response. In case of multiple redirects,
+        /// the navigation will resolve with the response of the last redirect. If can not go forward, resolves to null.</returns>
+        Task<IResponse> GoForwardAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Reloads the page.
+        /// </summary>
+        /// <param name="options">Navigation options.</param>
+        /// <returns>A <see cref="Task"/> that completes to the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last redirect.</returns>
+        Task<IResponse> ReloadAsync(NavigationOptions options = null);
     }
 }

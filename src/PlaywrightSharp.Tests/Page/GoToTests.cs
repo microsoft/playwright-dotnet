@@ -235,7 +235,7 @@ namespace PlaywrightSharp.Tests.Page
             Page.RequestFailed += (sender, e) => Assert.NotNull(e.Request);
 
             var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
-            AssertSSLError(exception.Message);
+            TestUtils.AssertSSLError(exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -246,8 +246,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
             Server.SetRedirect("/redirect/2.html", "/empty.html");
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/redirect/1.html"));
-            AssertSSLError(exception.Message);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/redirect/1.html"));
+            TestUtils.AssertSSLError(exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -569,27 +569,6 @@ namespace PlaywrightSharp.Tests.Page
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await failed);
 
             Assert.Equal($"Navigation to {TestConstants.ServerUrl}/one-style.html was canceled by another one", exception.Message);
-        }
-
-        private void AssertSSLError(string errorMessage)
-        {
-            if (TestConstants.IsChromium)
-            {
-                Assert.Contains("net::ERR_CERT_AUTHORITY_INVALID", errorMessage);
-            }
-            else if (TestConstants.IsWebKit)
-            {
-                if (TestConstants.IsMacOSX)
-                    Assert.Contains("The certificate for this server is invalid", errorMessage);
-                else if (TestConstants.IsWindows)
-                    Assert.Contains("SSL peer certificate or SSH remote key was not OK", errorMessage);
-                else
-                    Assert.Contains("Unacceptable TLS certificate", errorMessage);
-            }
-            else
-            {
-                Assert.Contains("SSL_ERROR_UNKNOWN", errorMessage);
-            }
         }
     }
 }

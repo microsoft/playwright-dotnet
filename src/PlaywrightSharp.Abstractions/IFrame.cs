@@ -70,6 +70,32 @@ namespace PlaywrightSharp
         Task<IResponse> GoToAsync(string url, GoToOptions options = null);
 
         /// <summary>
+        /// Navigates to an URL.
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        /// <remarks>
+        /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will throw an error if:
+        /// * There's an SSL error (e.g. in case of self-signed certificates).
+        /// * Target URL is invalid.
+        /// * The timeout is exceeded during navigation.
+        /// * The remote server does not respond or is unreachable.
+        /// * The main resource failed to load.
+        /// <para/>
+        /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// The status code for such responses can be retrieved by calling response.status().
+        /// <para/>
+        /// NOTE <see cref="IFrame.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
+        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
+        /// <para/>
+        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        /// </remarks>
+        Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil);
+
+        /// <summary>
         /// Sets the HTML markup to the frame.
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
@@ -172,5 +198,33 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This resolves when the frame navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="options">navigation options.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null);
+
+        /// <summary>
+        /// This resolves when the frame navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
     }
 }
