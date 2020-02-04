@@ -9,5 +9,10 @@
         /// Console event
         /// </summary>
         Console,
+
+        /// <summary>
+        /// Popup event
+        /// </summary>
+        Popup,
     }
 }
