@@ -59,7 +59,6 @@ namespace PlaywrightSharp
         event EventHandler<PopupEventArgs> Popup;
 
         /// <summary>
-        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
         /// Raised when a page issues a request. The <see cref="IRequest"/> object is read-only.
         /// </summary>
         event EventHandler<RequestEventArgs> Request;
@@ -75,7 +74,8 @@ namespace PlaywrightSharp
         event EventHandler<RequestEventArgs> RequestFailed;
 
         /// <summary>
-        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>. PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
+        /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>.
+        /// PlaywrightSharp can respond to the dialog via <see cref="Dialog"/>'s <see cref="IDialog.AcceptAsync(string)"/> or <see cref="IDialog.DismissAsync"/> methods.
         /// </summary>
         event EventHandler<DialogEventArgs> Dialog;
 
@@ -93,6 +93,11 @@ namespace PlaywrightSharp
         /// Raised when a frame is navigated to a new url.
         /// </summary>
         event EventHandler<FrameEventArgs> FrameNavigated;
+
+        /// <summary>
+        /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/load"/> event is dispatched.
+        /// </summary>
+        public event EventHandler Load;
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -137,17 +142,33 @@ namespace PlaywrightSharp
         /// <summary>
         /// This setting will change the default maximum times for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>.
+        /// - <see cref="WaitForNavigationAsync(WaitUntilNavigation)"/>.
         /// </summary>
         int DefaultTimeout { get; set; }
 
         /// <summary>
         /// This setting will change the default maximum time for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(NavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(WaitForNavigationOptions)"/>
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
+
+        /// <summary>
+        /// Completes when the page reaches a required load state, load by default.
+        /// The navigation can be in progress when it is called.
+        /// If navigation is already at a required state, completes immediately.
+        /// </summary>
+        /// <param name="options">Extra options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
+        Task WaitForLoadStateAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
+        /// </summary>
+        /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetCacheEnabledAsync(bool enabled = true);
 
         /// <summary>
         /// Setup media emulation.
@@ -180,7 +201,7 @@ namespace PlaywrightSharp
         /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// <para/>
-        /// Shortcut for <see cref="IFrame.GoToAsync"/>.
+        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
         /// </remarks>
         Task<IResponse> GoToAsync(string url, GoToOptions options = null);
 
@@ -212,7 +233,21 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(NavigationOptions options = null);
+        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null);
+
+        /// <summary>
+        /// This resolves when the page navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
 
         /// <summary>
         /// Waits for a request.
@@ -238,6 +273,56 @@ namespace PlaywrightSharp
         /// <typeparam name="T">Return type.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
+
+        /// <summary>
+        /// Navigates to an URL.
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        /// <remarks>
+        /// <see cref="IPage.GoToAsync(string)"/> will throw an error if:
+        /// * There's an SSL error (e.g. in case of self-signed certificates).
+        /// * Target URL is invalid.
+        /// * The timeout is exceeded during navigation.
+        /// * The remote server does not respond or is unreachable.
+        /// * The main resource failed to load.
+        /// <para/>
+        /// <see cref="IPage.GoToAsync(string)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// The status code for such responses can be retrieved by calling response.status().
+        /// <para/>
+        /// NOTE <see cref="IPage.GoToAsync(string)"/> either throws an error or returns a main resource response.
+        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
+        /// <para/>
+        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        /// <para/>
+        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
+        /// </remarks>
+        Task<IResponse> GoToAsync(string url);
+
+        /// <summary>
+        /// Navigates to an url.
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. </param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
+
+        /// <summary>
+        /// Navigates to an url.
+        /// </summary>
+        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
+        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// </returns>
+        public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
 
         /// <summary>
         /// Closes the page.
@@ -338,6 +423,15 @@ namespace PlaywrightSharp
         Task SetContentAsync(string html, NavigationOptions options = null);
 
         /// <summary>
+        /// Sets the HTML markup to the page.
+        /// </summary>
+        /// <param name="html">HTML markup to assign to the page.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes.</returns>
+        /// <seealso cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
+        Task SetContentAsync(string html, WaitUntilNavigation waitUntil);
+
+        /// <summary>
         /// Sets extra HTTP headers that will be sent with every request the page initiates.
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
@@ -431,6 +525,29 @@ namespace PlaywrightSharp
         /// <param name="viewport">Viewport.</param>
         /// <returns>A<see cref="Task"/> that copletes when the message is confirmed by the browser.</returns>
         Task SetViewportAsync(Viewport viewport);
+
+        /// <summary>
+        /// Navigate to the previous page in history.
+        /// </summary>
+        /// <param name="options">Navigation parameters.</param>
+        /// <returns>A <see cref="Task"/> that completes to the main resource response. In case of multiple redirects,
+        /// the navigation will resolve with the response of the last redirect. If can not go back, resolves to null.</returns>
+        Task<IResponse> GoBackAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Navigate to the next page in history.
+        /// </summary>
+        /// <param name="options">Navigation parameters.</param>
+        /// <returns>A <see cref="Task"/> that completes to the main resource response. In case of multiple redirects,
+        /// the navigation will resolve with the response of the last redirect. If can not go forward, resolves to null.</returns>
+        Task<IResponse> GoForwardAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Reloads the page.
+        /// </summary>
+        /// <param name="options">Navigation options.</param>
+        /// <returns>A <see cref="Task"/> that completes to the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last redirect.</returns>
+        Task<IResponse> ReloadAsync(NavigationOptions options = null);
 
         /// <summary>
         /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,

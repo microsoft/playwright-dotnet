@@ -12,6 +12,11 @@
         Console,
 
         /// <summary>
+        /// Popup event
+        /// </summary>
+        Popup,
+
+        /// <summary>
         /// Request event
         /// </summary>
         /// <see cref="IPage.Request"/>
