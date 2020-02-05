@@ -1,6 +1,6 @@
-﻿using PlaywrightSharp.TestServer;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.TestServer;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {

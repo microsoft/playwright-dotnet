@@ -1,7 +1,7 @@
-﻿using PlaywrightSharp.Tests.BaseTests;
-using Xunit.Abstractions;
+﻿using System.Threading.Tasks;
+using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
-using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.ElementHandle
 {

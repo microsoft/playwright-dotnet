@@ -1,8 +1,8 @@
-﻿using PlaywrightSharp.Tests.BaseTests;
-using Xunit.Abstractions;
-using Xunit;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using PlaywrightSharp.Tests.BaseTests;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.RequestInterception
 {

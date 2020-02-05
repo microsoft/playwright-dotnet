@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.BaseTests;
-using Xunit.Abstractions;
-using Xunit;
-using System.Net.Http;
-using Microsoft.Extensions.Primitives;
-using System.Net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using PlaywrightSharp.Tests.BaseTests;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.RequestInterception
 {
