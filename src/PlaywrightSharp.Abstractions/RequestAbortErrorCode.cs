@@ -1,7 +1,7 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
-    /// Abort error codes. used by <see cref="IRequest.AbortAsync(RequestAbortErrorCode)"/>
+    /// Abort error codes. used by <see cref="IRequest.AbortAsync(RequestAbortErrorCode)"/>.
     /// </summary>
     public enum RequestAbortErrorCode
     {
@@ -26,7 +26,7 @@
         BlockedByClient,
 
         /// <summary>
-        /// The request failed because the response was delivered along with requirements which are not met 
+        /// The request failed because the response was delivered along with requirements which are not met
         /// ('X-Frame-Options' and 'Content-Security-Policy' ancestor checks, for instance).
         /// </summary>
         BlockedByResponse,

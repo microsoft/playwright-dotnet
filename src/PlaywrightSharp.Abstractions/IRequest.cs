@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -93,6 +93,13 @@ namespace PlaywrightSharp
         /// <param name="response">Response that will fulfill this request.</param>
         /// <returns>Task.</returns>
         Task RespondAsync(ResponseData response);
+
+        /// <summary>
+        /// Fulfills request with given response. To use this, request interception should be enabled with <see cref="IPage.SetRequestInterceptionAsync(bool)"/>. Exception is thrown if request interception is not enabled.
+        /// </summary>
+        /// <param name="response">Response that will fulfill this request.</param>
+        /// <returns>Task.</returns>
+        Task FulfillAsync(ResponseData response);
 
         /// <summary>
         /// Aborts request. To use this, request interception should be enabled with <see cref="IPage.SetRequestInterceptionAsync(bool)"/>.
