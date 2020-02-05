@@ -40,7 +40,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
-
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
         ///<playwright-it>should work with status code 422</playwright-it>
@@ -87,7 +86,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             var img = await Page.QuerySelectorAsync("img");
             Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
         }
-
 
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
