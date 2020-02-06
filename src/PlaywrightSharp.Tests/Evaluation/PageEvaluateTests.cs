@@ -10,6 +10,8 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Evaluation
 {
+    ///<playwright-file>evaluation.spec.js</playwright-file>
+    ///<playwright-describe>Page.evaluate</playwright-describe>
     public class PageEvaluateTests : PlaywrightSharpPageBaseTest
     {
         internal PageEvaluateTests(ITestOutputHelper output) : base(output)
@@ -22,7 +24,6 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldWork()
         {
-
             var result = await Page.EvaluateAsync<int>("() => 7 * 3");
             Assert.Equal(21, result);
         }
@@ -43,7 +44,6 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferNegative0()
         {
-
             var result = await Page.EvaluateAsync<int>("a => a", -0);
             Assert.Equal(-0, result);
         }
@@ -84,7 +84,6 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferArraysAsArraysNotObjects()
         {
-
             var result = await Page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
             Assert.True(result);
         }
