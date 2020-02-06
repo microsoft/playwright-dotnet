@@ -25,6 +25,13 @@ namespace PlaywrightSharp
         IBrowserContext DefaultContext { get; }
 
         /// <summary>
+        /// Disconnects Browser from the browser application, but leaves the application process running.
+        /// After calling disconnect, the Browser object is considered disposed and cannot be used anymore.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the browser was disconnected.</returns>
+        Task DisconnectAsync();
+
+        /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
         /// </summary>
         /// <param name="options">Context options.</param>

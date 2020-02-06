@@ -11,8 +11,13 @@
         public int SlowMo { get; set; }
 
         /// <summary>
+        /// We don´t need doc. This is going to be removed.
+        /// </summary>
+        public string BrowserURL { get; set; }
+
+        /// <summary>
         /// A browser websocket endpoint to connect to.
         /// </summary>
-        public string BrowserWSEndpoint { get; set; }
+        public string WebSocketEndpoint { get; set; }
     }
 }
