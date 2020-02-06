@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
-using Xunit.Abstractions;
 using Xunit;
-using System.Text.Json;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Evaluation
 {
@@ -206,9 +206,9 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkFromInsideAnExposedFunction()
         {
             // Setup inpage callback, which calls Page.evaluate
-            await Page.ExposeFunctionAsync("callController", @"async function(a, b) {
-                return await Page.EvaluateAsync<object>((a, b) => a * b, a, b);
-            }");
+            await Page.ExposeFunctionAsync("callController", async (int a, int b) => {
+                return await Page.EvaluateAsync<int>("(a, b) => a * b", a, b);
+            });
             var result = await Page.EvaluateAsync<int>(@"async function() {
                 return await callController(9, 3);
             }");
@@ -374,177 +374,146 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldBeAbleToThrowATrickyError()
         {
 
-            var windowHandle = (IElementHandle)await Page.EvaluateHandleAsync("() => window");
-            var errorText = await windowHandle.jsonValue().catch (e => e.message);
-            var error = await Page.EvaluateAsync<object>(errorText =>
-            {
+            var windowHandle = await Page.EvaluateHandleAsync("() => window");
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => windowHandle.JsonValueAsync());
+            var error = await Page.EvaluateAsync<JsonElement>(@"errorText => {
                 throw new Error(errorText);
-            }, errorText).catch (e => e);
-            expect(error.message).toContain(errorText);
-            }
+            }", exception.Message);
+            Assert.Contains(error.GetProperty("message").GetString(), exception.Message);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should accept a string</playwright-it>
-        [Fact]
-        public async Task ShouldAcceptAString()
+        [Fact(Skip = "Not relevant for C#, js specific")]
+        public Task ShouldAcceptAString()
         {
-
-            var result = await Page.EvaluateAsync<object>('1 + 2');
-            expect(result).toBe(3);
+            return Task.CompletedTask;
         }
-    }
 
-    ///<playwright-file>evaluation.spec.js</playwright-file>
-    ///<playwright-describe>Page.evaluate</playwright-describe>
-    ///<playwright-it>should accept a string with semi colons</playwright-it>
-    [Fact]
-    public async Task ShouldAcceptAStringWithSemiColons()
-    {
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should accept a string with semi colons</playwright-it>
+        [Fact(Skip = "Not relevant for C#, js specific")]
+        public Task ShouldAcceptAStringWithSemiColons()
+        {
+            return Task.CompletedTask;
+        }
 
-        var result = await Page.EvaluateAsync<object>('1 + 5;');
-        expect(result).toBe(6);
-    }
-}
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should accept a string with comments</playwright-it>
+        [Fact]
+        public async Task ShouldAcceptAStringWithComments()
+        {
+            var result = await Page.EvaluateAsync<int>("2 + 5;\n// do some math!");
+            Assert.Equal(7, result);
+        }
 
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should accept a string with comments</playwright-it>
-[Fact]
-public async Task ShouldAcceptAStringWithComments()
-{
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should accept element handle as an argument</playwright-it>
+        [Fact]
+        public async Task ShouldAcceptElementHandleAsAnArgument()
+        {
+            await Page.SetContentAsync("<section>42</section>");
+            var element = await Page.QuerySelectorAsync("section");
+            var text = await Page.EvaluateAsync<string>("e => e.textContent", element);
+            Assert.Equal("42", text);
+        }
 
-    var result = await Page.EvaluateAsync<object>('2 + 5;\n// do some math!');
-    expect(result).toBe(7);
-}
-}
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should throw if underlying element was disposed</playwright-it>
+        [Fact]
+        public async Task ShouldThrowIfUnderlyingElementWasDisposed()
+        {
+            await Page.SetContentAsync("<section>39</section>");
+            var element = await Page.QuerySelectorAsync("section");
+            Assert.NotNull(element);
+            await element.DisposeAsync();
 
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should accept element handle as an argument</playwright-it>
-[Fact]
-public async Task ShouldAcceptElementHandleAsAnArgument()
-{
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("e => e.textContent", element));
+            Assert.Contains("JSHandle is disposed", exception.Message);
+        }
 
-    await page.setContent('<section>42</section>');
-    var element = await page.$('section');
-    var text = await Page.EvaluateAsync<object>(e => e.textContent, element);
-    expect(text).toBe('42');
-}
-}
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should simulate a user gesture</playwright-it>
+        [Fact]
+        public async Task ShouldSimulateAUserGesture()
+        {
+            var result = await Page.EvaluateAsync<bool>(@"() => {
+                document.body.appendChild(document.createTextNode('test'));
+                document.execCommand('selectAll');
+                return document.execCommand('copy');
+            }");
+            Assert.True(result);
+        }
 
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should throw if underlying element was disposed</playwright-it>
-[Fact]
-public async Task ShouldThrowIfUnderlyingElementWasDisposed()
-{
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should throw a nice error after a navigation</playwright-it>
+        [Fact]
+        public async Task ShouldThrowANiceErrorAfterANavigation()
+        {
+            var exceptionTask = Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => new Promise(f => window.__resolve = f)"));
+            await Task.WhenAll(
+                Page.WaitForNavigationAsync(),
+                Page.EvaluateAsync(@"() => {
+                    window.location.reload();
+                    setTimeout(() => window.__resolve(42), 1000);
+                }")
+            );
+            var exception = await exceptionTask;
+            Assert.Contains("navigation", exception.Message);
+        }
 
-    await page.setContent('<section>39</section>');
-    var element = await page.$('section');
-    expect(element).toBeTruthy();
-    await element.dispose();
-    let error = null;
-    await Page.EvaluateAsync<object>(e => e.textContent, element).catch (e => error = e);
-    expect(error.message).toContain('JSHandle is disposed');
-    }
-}
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not throw an error when evaluation does a navigation</playwright-it>
+        [Fact]
+        public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            var result = await Page.EvaluateAsync<int[]>(@"() => {
+                window.location = '/empty.html';
+                return [42];
+            }");
+            Assert.Equal(new[] { 42 }, result);
+        }
 
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should simulate a user gesture</playwright-it>
-[Fact]
-public async Task ShouldSimulateAUserGesture()
-{
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
+        [Fact(Skip = "Not implemented")]
+        public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
+        {
+            var a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
+            Assert.Equal(100 * 1024 * 1024, a.Length);
+        }
 
-    var result = await Page.EvaluateAsync<object>(() =>
-    {
-        document.body.appendChild(document.createTextNode('test'));
-        document.execCommand('selectAll');
-        return document.execCommand('copy');
-    });
-    expect(result).toBe(true);
-}
-}
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should throw error with detailed information on exception inside promise </playwright-it>
+        [Fact]
+        public async Task ShouldThrowErrorWithDetailedInformationOnExceptionInsidePromise()
+        {
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => new Promise(() => {
+                throw new Error('Error in promise');
+            })"));
+            Assert.Contains("Error in promise", exception.Message);
+        }
 
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should throw a nice error after a navigation</playwright-it>
-[Fact]
-public async Task ShouldThrowANiceErrorAfterANavigation()
-{
-
-    var errorPromise = page.evaluate(() => new Promise(f => window.__resolve = f)).catch (e => e);
-    await Promise.all([
-      page.waitForNavigation(),
-      page.evaluate(() =>
-      {
-          window.location.reload();
-          setTimeout(() => window.__resolve(42), 1000);
-      })
-    ]);
-    var error = await errorPromise;
-    expect(error.message).toContain('navigation');
-    }
-}
-
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should not throw an error when evaluation does a navigation</playwright-it>
-[Fact]
-public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
-{
-
-    await Page.GoToAsync(server.PREFIX + '/one-style.html');
-    var result = await Page.EvaluateAsync<object>(() =>
-    {
-        window.location = '/empty.html';
-        return [42];
-    });
-    expect(result).toEqual([42]);
-}
-}
-
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
-[Fact(Skip = "Not implemented")]
-public async Task ShouldTransfer100MbOfDataFromPageToNode.js()
-{
-
-    var a = await Page.EvaluateAsync<object>(() => Array(100 * 1024 * 1024 + 1).join('a'));
-    expect(a.length).toBe(100 * 1024 * 1024);
-}
-}
-
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should throw error with detailed information on exception inside promise </playwright-it>
-[Fact]
-public async Task ShouldThrowErrorWithDetailedInformationOnExceptionInsidePromise()
-{
-
-    let error = null;
-    await Page.EvaluateAsync<object>(() => new Promise(() =>
-    {
-        throw new Error('Error in promise');
-    })).catch (e => error = e);
-    expect(error.message).toContain('Error in promise');
-    }
-}
-
-///<playwright-file>evaluation.spec.js</playwright-file>
-///<playwright-describe>Page.evaluate</playwright-describe>
-///<playwright-it>should work even when JSON is set to null</playwright-it>
-[Fact]
-public async Task ShouldWorkEvenWhenJSONIsSetToNull()
-{
-    async({ page }) => {
-        await Page.EvaluateAsync<object>(() => { window.JSON.stringify = null; window.JSON = null; });
-        var result = await Page.EvaluateAsync<object>(() => ({ abc: 123}));
-        expect(result).toEqual({ abc: 123});
-    }
-}
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should work even when JSON is set to null</playwright-it>
+        [Fact]
+        public async Task ShouldWorkEvenWhenJSONIsSetToNull()
+        {
+            await Page.EvaluateAsync<object>("() => { window.JSON.stringify = null; window.JSON = null; }");
+            var result = await Page.EvaluateAsync<object>("() => ({ abc: 123})");
+            Assert.Equal(new { abc = 123 }, result);
+        }
     }
 }
