@@ -372,7 +372,6 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldBeAbleToThrowATrickyError()
         {
-
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => windowHandle.JsonValueAsync());
             var error = await Page.EvaluateAsync<JsonElement>(@"errorText => {
