@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -50,18 +50,17 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWhenPOSTIsRedirectedWith302()
         {
-
             Server.SetRedirect("/rredirect", "/empty.html");
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             await Page.SetContentAsync(@"
-                  <form action='/rredirect' method='post'>
+                <form action='/rredirect' method='post'>
                     <input type=""hidden"" id=""foo"" name=""foo"" value=""FOOBAR"">
-                  </form>");
+                </form>");
             await Task.WhenAll(
-              Page.QuerySelectorAsync("form").EvaluateAsync("form => form.submit()"),
-              Page.WaitForNavigationAsync()
+                Page.QuerySelectorEvaluateAsync("form", "form => form.submit()"),
+                Page.WaitForNavigationAsync()
             );
         }
 
@@ -71,7 +70,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWhenHeaderManipulationHeadersWithRedirect()
         {
-
             Server.SetRedirect("/rrredirect", "/empty.html");
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += (sender, e) =>
@@ -89,7 +87,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldBeAbleToRemoveHeaders()
         {
-
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += (sender, e) =>
             {
@@ -100,9 +97,9 @@ namespace PlaywrightSharp.Tests.RequestInterception
 
             var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
             await Task.WhenAll(
-             originRequestHeader,
-             Page.GoToAsync(TestConstants.EmptyPage)
-         );
+                originRequestHeader,
+                Page.GoToAsync(TestConstants.EmptyPage)
+            );
             Assert.Equal(StringValues.Empty, originRequestHeader.Result);
         }
 
@@ -112,7 +109,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldContainRefererHeader()
         {
-
             await Page.SetRequestInterceptionAsync(true);
             var requests = new List<IRequest>();
             Page.Request += (sender, e) =>
@@ -197,11 +193,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             var status = await Page.EvaluateAsync<int>(@"async () => {
-            var request = new XMLHttpRequest();
-            request.open('GET', '/logo.png', false);  // `false` makes the request synchronous
-            request.send(null);
-            return request.status;
-        }");
+                var request = new XMLHttpRequest();
+                request.open('GET', '/logo.png', false);  // `false` makes the request synchronous
+                request.send(null);
+                return request.status;
+            }");
             Assert.Equal(200, status);
         }
 
@@ -232,9 +228,13 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Page.Request += async (sender, e) =>
             {
                 if (e.Request.Url.EndsWith(".css"))
+                {
                     await e.Request.AbortAsync();
+                }
                 else
+                {
                     await e.Request.ContinueAsync();
+                }
             };
             var failedRequests = 0;
             Page.RequestFailed += (sender, e) => ++failedRequests;
@@ -260,11 +260,17 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage).ContinueWith(task => { });
             Assert.NotNull(failedRequest);
             if (TestConstants.IsWebKit)
+            {
                 Assert.Equal("Request intercepted", failedRequest.Failure);
+            }
             else if (TestConstants.IsFirefox)
+            {
                 Assert.Equal("NS_ERROR_OFFLINE", failedRequest.Failure);
+            }
             else
+            {
                 Assert.Equal("net::ERR_INTERNET_DISCONNECTED", failedRequest.Failure);
+            }
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
@@ -278,8 +284,8 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             var requestTask = Server.WaitForRequest("grid.html", request => request.Headers["referer"]);
             await Task.WhenAll(
-              requestTask,
-              Page.GoToAsync(TestConstants.ServerUrl + "/grid.html")
+                requestTask,
+                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html")
             );
             Assert.Equal("http://google.com/", requestTask.Result);
         }
@@ -295,11 +301,17 @@ namespace PlaywrightSharp.Tests.RequestInterception
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
+            {
                 Assert.Contains("Request intercepted", exception.Message);
+            }
             else if (TestConstants.IsFirefox)
+            {
                 Assert.Contains("NS_ERROR_FAILURE", exception.Message);
+            }
             else
+            {
                 Assert.Contains("net::ERR_FAILED", exception.Message);
+            }
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
@@ -308,7 +320,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWithRedirects()
         {
-
             await Page.SetRequestInterceptionAsync(true);
             var requests = new List<IRequest>();
             Page.Request += async (sender, e) =>
@@ -519,11 +530,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             IRequest request = null;
             Page.Request += (sender, e) => request = e.Request;
-            _ = Page.QuerySelectorAsync("iframe").EvaluateAsync("(frame, url) => frame.src = url", TestConstants.EmptyPage);
+            _ = Page.QuerySelectorEvaluateAsync("iframe", "(frame, url) => frame.src = url", TestConstants.EmptyPage);
             // Wait for request interception.
             await Page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
             // Delete frame to cause request to be canceled.
-            _ = Page.QuerySelectorAsync("iframe").EvaluateAsync("frame => frame.remove()");
+            _ = Page.QuerySelectorEvaluateAsync("iframe", "frame => frame.remove()");
             await request.ContinueAsync();
         }
 
@@ -560,7 +571,10 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Page.Request += async (sender, e) =>
             {
                 if (e.Request.Url.Contains(TestConstants.CrossProcessHttpPrefix + "/empty.html"))
+                {
                     intercepted = true;
+                }
+
                 await e.Request.ContinueAsync();
             };
             var response = await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
@@ -578,7 +592,9 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Page.Request += async (sender, e) =>
             {
                 if (e.Request.Url != TestConstants.ServerUrl + "/one-style.css")
+                {
                     await e.Request.ContinueAsync();
+                }
             };
             // For some reason, Firefox issues load event with one outstanding request.
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
@@ -602,7 +618,9 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Page.Request += async (sender, e) =>
             {
                 if (e.Request.Url != TestConstants.ServerUrl + "/one-style.css")
+                {
                     await e.Request.ContinueAsync();
+                }
             };
             // For some reason, Firefox issues load event with one outstanding request.
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
