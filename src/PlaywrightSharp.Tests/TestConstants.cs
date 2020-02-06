@@ -35,7 +35,6 @@ namespace PlaywrightSharp.Tests
 #endif
         };
 
-
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
         public static readonly DeviceDescriptor IPhone = null;
         public static readonly DeviceDescriptor IPhoneLandscape = null;
