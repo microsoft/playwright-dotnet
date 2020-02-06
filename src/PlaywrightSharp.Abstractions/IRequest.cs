@@ -106,7 +106,7 @@ namespace PlaywrightSharp
         /// Exception is immediately thrown if the request interception is not enabled.
         /// </summary>
         /// <param name="errorCode">Optional error code. Defaults to <see cref="RequestAbortErrorCode.Failed"/>.</param>
-        /// <returns>Task.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed);
     }
 }
