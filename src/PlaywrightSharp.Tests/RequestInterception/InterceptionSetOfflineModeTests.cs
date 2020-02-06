@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,7 +18,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Interception.setOfflineMode</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
             await Page.SetOfflineModeAsync(true);
@@ -30,7 +31,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Interception.setOfflineMode</playwright-describe>
         ///<playwright-it>should emulate navigator.onLine</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldEmulateNavigatorOnLine()
         {
             Assert.True(await Page.EvaluateAsync<bool>("() => window.navigator.onLine"));

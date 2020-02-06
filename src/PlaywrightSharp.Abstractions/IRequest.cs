@@ -28,7 +28,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets or sets the post data.
         /// </summary>
-        object PostData { get; }
+        string PostData { get; }
 
         /// <summary>
         /// An <see cref="IFrame"/> that initiated this request, or null if navigating to error pages.
@@ -67,12 +67,12 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <value>The redirect chain.</value>
-        public IRequest[] RedirectChain { get; }
+        IRequest[] RedirectChain { get; }
 
         /// <summary>
         /// Responsed attached to the request.
         /// </summary>
-        public IResponse Response { get; internal set; }
+        IResponse Response { get; }
 
         /// <summary>
         /// Gets or sets the failure.
