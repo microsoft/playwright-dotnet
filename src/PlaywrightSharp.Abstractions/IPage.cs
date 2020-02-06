@@ -253,8 +253,7 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest">.</returns>
-
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
         /// <param name="url">URL to wait for.</param>
         /// <param name="options">Options.</param>
         Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null);
