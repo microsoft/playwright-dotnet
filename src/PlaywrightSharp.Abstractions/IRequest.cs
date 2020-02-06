@@ -84,7 +84,7 @@ namespace PlaywrightSharp
         /// If the URL is set it won't perform a redirect. The request will be silently forwarded to the new url. For example, the address bar will show the original url.
         /// </summary>
         /// <param name="overrides">Optional request overwrites.</param>
-        /// <returns>Task.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task ContinueAsync(Payload overrides = null);
 
         /// <summary>
