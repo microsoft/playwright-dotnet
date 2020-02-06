@@ -98,7 +98,7 @@ namespace PlaywrightSharp
         /// Fulfills request with given response. To use this, request interception should be enabled with <see cref="IPage.SetRequestInterceptionAsync(bool)"/>. Exception is thrown if request interception is not enabled.
         /// </summary>
         /// <param name="response">Response that will fulfill this request.</param>
-        /// <returns>Task.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task FulfillAsync(ResponseData response);
 
         /// <summary>
