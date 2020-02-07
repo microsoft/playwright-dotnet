@@ -288,7 +288,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
+        Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
 
         /// <summary>
         /// Navigates to an url.
@@ -299,7 +299,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
+        Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
 
         /// <summary>
         /// Closes the page.
@@ -320,6 +320,25 @@ namespace PlaywrightSharp
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task<T> EvaluateAsync<T>(string script, params object[] args);
+
+        /// <summary>
+        /// Adds a function which would be invoked in one of the following scenarios:
+        /// - whenever the page is navigated
+        /// - whenever the child frame is attached or navigated. In this case, the function is invoked in the context of the newly attached frame.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to <c>pageFunction</c>.</param>
+        /// <remarks>
+        /// The function is invoked after the document was created but before any of its scripts were run. This is useful to amend JavaScript environment, e.g. to seed <c>Math.random</c>.
+        /// </remarks>
+        /// <example>
+        /// An example of overriding the navigator.languages property before the page loads:
+        /// <code>
+        /// await page.EvaluateOnNewDocumentAsync("() => window.__example = true");
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved.</returns>
+        Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
