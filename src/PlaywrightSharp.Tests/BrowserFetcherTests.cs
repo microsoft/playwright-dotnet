@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.Browser
             Assert.Empty(browserFetcher.GetLocalRevisions());
 
             //Download should return data from a downloaded version
-            //This section is not in the Puppeteer test.
+            //This section is not in the Playwright test.
             await browserFetcher.DownloadAsync(123456);
             Server.Reset();
             revisionInfo = await browserFetcher.DownloadAsync(123456);
