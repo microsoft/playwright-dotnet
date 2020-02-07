@@ -20,6 +20,13 @@ namespace PlaywrightSharp
         string ExecutablePath { get; set; }
 
         /// <summary>
+        /// Creates the browser fetcher.
+        /// </summary>
+        /// <param name="options">Options.</param>
+        /// <returns>The browser fetcher.</returns>
+        IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options);
+
+        /// <summary>
         /// Launches a new browser app.
         /// </summary>
         /// <param name="options">Launch options.</param>
