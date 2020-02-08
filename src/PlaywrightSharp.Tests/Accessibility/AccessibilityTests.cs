@@ -203,7 +203,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>should work with regular text</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipLinux: true, skipWindows: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipLinux: true, skipWindows: true)]
         public async Task ShouldWorkWithRegularRext()
         {
             await Page.SetContentAsync("<div>Hello World</div>");
@@ -273,7 +273,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>filtering children of leaf nodes</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipWindows: true, skipLinux: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true, skipLinux: true)]
         public async Task FilteringChildrenOfLeafNodes()
         {
             await Page.SetContentAsync(@"
@@ -309,7 +309,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>rich text editable fields should have children</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task RichTextEditableFieldsShouldHaveChildren()
         {
             await Page.SetContentAsync(@"
@@ -369,7 +369,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>rich text editable fields with role should have children</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task RichTextEditableFieldsWithRoleShouldHaveChildren()
         {
             await Page.SetContentAsync(@"

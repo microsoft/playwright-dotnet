@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>plaintext contenteditable</playwright-describe>
         ///<playwright-it>plain text field with role should not have children</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithRoleShouldNotHaveChildren()
         {
             await Page.SetContentAsync("<div contenteditable='plaintext-only' role='textbox'>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>plaintext contenteditable</playwright-describe>
         ///<playwright-it>plain text field without role should not have content</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithoutRoleShouldNotHaveContent()
         {
             await Page.SetContentAsync(
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>plaintext contenteditable</playwright-describe>
         ///<playwright-it>plain text field with tabindex and without role should not have content</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithTabindexAndWithoutRoleShouldNotHaveContent()
         {
             await Page.SetContentAsync("div contenteditable=\"plaintext-only\" tabIndex=0>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>plaintext contenteditable</playwright-describe>
         ///<playwright-it>non editable textbox with role and tabIndex and label should not have children</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task NonEditableTextboxWithRoleAndTabIndexAndLabelShouldNotHaveChildren()
         {
             await Page.SetContentAsync(@"
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>plaintext contenteditable</playwright-describe>
         ///<playwright-it>checkbox with and tabIndex and label should not have children</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task CheckboxWithAndTabIndexAndLabelShouldNotHaveChildren()
         {
             await Page.SetContentAsync(@"
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>plaintext contenteditable</playwright-describe>
         ///<playwright-it>checkbox without label should not have children</playwright-it>
-        [SkipBrowserAndPlayformFact(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task CheckboxWithoutLabelShouldNotHaveChildren()
         {
             await Page.SetContentAsync(@"

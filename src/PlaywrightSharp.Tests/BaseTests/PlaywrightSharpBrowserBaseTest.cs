@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
+using PlaywrightSharp.Chromium;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
@@ -10,6 +11,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest//, IAsyncLifetime
     {
+        internal IBrowserType Playwright { get; set; }
         internal IBrowser Browser { get; set; }
 
         //protected LaunchOptions DefaultOptions { get; set; }
@@ -23,9 +25,19 @@ namespace PlaywrightSharp.Tests.BaseTests
             {
                 dirInfo.Create();
             }
+
+            switch (Environment.GetEnvironmentVariable("PRODUCT"))
+            {
+                case TestConstants.WebkitProduct:
+                case TestConstants.FirefoxProduct:
+                    break;
+                default:
+                    Playwright = new ChromiumBrowserType();
+                    break;
+            }
         }
 
-        internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options) => Browser.NewContextAsync(options);
+        internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null) => Browser.NewContextAsync(options);
 
         internal async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
