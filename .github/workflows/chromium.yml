@@ -23,7 +23,7 @@ jobs:
           PRODUCT: CHROMIUM
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj
 
-  linux:
+  windows:
     runs-on: windows-latest
 
     steps:
