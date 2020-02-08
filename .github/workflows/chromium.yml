@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --results-directory ./artifacts --no-build --logger:trx
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --results-directory ./artifacts --logger:trx
       - name: Upload Artifacts
         uses: actions/upload-artifact@v1.0.0
         if: always()
