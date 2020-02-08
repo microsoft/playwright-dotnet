@@ -38,7 +38,4 @@
     <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.0.0-alpha12" />
-  </ItemGroup>
 </Project>

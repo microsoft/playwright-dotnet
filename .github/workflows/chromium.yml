@@ -21,17 +21,20 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+      - name: Install reporter
+        run: dotnet tool update dotnet-reportgenerator-globaltool --tool-path ./reporter/ 
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./artifacts
-      - name: Run Covertage
+      - name: Run Coverage
         if: always()
-        working-directory: ./src/PlaywrightSharp.Tests
-        run: dotnet reportgenerator "-reports:../artifacts/coverage.cobertura.xml" "-targetdir:../artifacts/" -reportTypes:htmlInline 
+        run: ./reporter/reportgenerator "-reports:../artifacts/coverage.cobertura.xml" "-targetdir:../artifacts/" -reportTypes:htmlInline 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v1.0.0
         if: always()
         with:
           name: artifacts
           path: artifacts
+
+          dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
