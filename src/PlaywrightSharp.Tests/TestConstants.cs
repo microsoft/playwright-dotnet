@@ -21,6 +21,20 @@ namespace PlaywrightSharp.Tests
         public const string CrossProcessHttpPrefix = "http://127.0.0.1:8081";
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
         public static readonly string CrossProcessUrl = ServerIpUrl;
+
+        internal static LaunchOptions DefaultBrowserOptions => new LaunchOptions
+        {
+            SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+            Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
+            Timeout = 0,
+            LogProcess = true,
+#if NETCOREAPP
+            EnqueueTransportMessages = false
+#else
+            EnqueueTransportMessages = true
+#endif
+        };
+
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
         public static readonly DeviceDescriptor IPhone = null;
         public static readonly DeviceDescriptor IPhoneLandscape = null;

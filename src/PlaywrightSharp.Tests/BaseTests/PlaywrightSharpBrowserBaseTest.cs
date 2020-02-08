@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest//, IAsyncLifetime
     {
+        internal IBrowserType Playwright { get; set; }
         internal IBrowser Browser { get; set; }
 
         //protected LaunchOptions DefaultOptions { get; set; }
