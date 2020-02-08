@@ -24,4 +24,10 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --results-directory ./artifacts
+    - name: Upload test results
+      uses: actions/upload-artifact@v1
+      with:
+        name: Test results
+        path: ./artifacts/
+        
