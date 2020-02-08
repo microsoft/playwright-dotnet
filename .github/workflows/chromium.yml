@@ -36,5 +36,3 @@ jobs:
         with:
           name: artifacts
           path: artifacts
-
-          dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
