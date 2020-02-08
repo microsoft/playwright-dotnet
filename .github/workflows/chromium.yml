@@ -26,6 +26,7 @@ jobs:
           PRODUCT: CHROMIUM
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./artifacts
       - name: Run Covertage
+        if: always()
         working-directory: ./src/PlaywrightSharp.Tests
         run: dotnet reportgenerator "-reports:../artifacts/coverage.cobertura.xml" "-targetdir:../artifacts/" -reportTypes:htmlInline 
       - name: Upload Artifacts
