@@ -9,20 +9,14 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IBrowserType"/>
     public class ChromiumBrowserType : IBrowserType
     {
-        private readonly string _revision = "733125";
+        /// <summary>
+        /// Preferred revision.
+        /// </summary>
+        public const int PreferredRevision = 733125;
 
         /// <inheritdoc cref="IBrowserType"/>
         public ChromiumBrowserType()
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChromiumBrowserType"/> class.
-        /// </summary>
-        /// <param name="preferredRevision">Revision to use.</param>
-        public ChromiumBrowserType(string preferredRevision)
-        {
-            _revision = preferredRevision;
         }
 
         /// <inheritdoc cref="IBrowserType"/>
@@ -48,29 +42,33 @@ namespace PlaywrightSharp.Chromium
                 [Platform.Win64] = "{0}/chromium-browser-snapshots/Win_x64/{1}/{2}.zip",
             };
 
-            var path = options?.Path ?? Path.Combine(Directory.GetCurrentDirectory(), ".local-chromium");
+            string path = options?.Path ?? Path.Combine(Directory.GetCurrentDirectory(), ".local-chromium");
             string host = options?.Host ?? "https://storage.googleapis.com";
             var platform = options.Platform ?? GetPlatform();
 
             Func<Platform, string, BrowserFetcherConfig> paramsGetter = (platform, revision) =>
             {
                 var archiveName = string.Empty;
-                var executablePath = string.Empty;
-                if (platform == Platform.Linux)
+                string executablePath = string.Empty;
+
+                switch (platform)
                 {
-                    archiveName = "chrome-linux";
-                    executablePath = Path.Combine(archiveName, "chrome");
-                }
-                else if (platform == Platform.MacOS)
-                {
-                    archiveName = "chrome-mac";
-                    executablePath = Path.Combine(archiveName, "Chromium.app", "Contents", "MacOS", "Chromium");
-                }
-                else if (platform == Platform.Win32 || platform == Platform.Win64)
-                {
-                    // Windows archive name changed at r591479.
-                    archiveName = int.TryParse(_revision, out int revisionNumber) && revisionNumber > 591479 ? "chrome-win" : "chrome-win32";
-                    executablePath = Path.Combine(archiveName, "chrome.exe");
+                    case Platform.Linux:
+                        archiveName = "chrome-linux";
+                        executablePath = Path.Combine(archiveName, "chrome");
+                        break;
+                    case Platform.MacOS:
+                        archiveName = "chrome-mac";
+                        executablePath = Path.Combine(archiveName, "Chromium.app", "Contents", "MacOS", "Chromium");
+                        break;
+                    case Platform.Win32:
+                    case Platform.Win64:
+                        {
+                            // Windows archive name changed at r591479.
+                            archiveName = int.TryParse(revision, out int revisionNumber) && revisionNumber > 591479 ? "chrome-win" : "chrome-win32";
+                            executablePath = Path.Combine(archiveName, "chrome.exe");
+                            break;
+                        }
                 }
 
                 return new BrowserFetcherConfig
@@ -80,7 +78,7 @@ namespace PlaywrightSharp.Chromium
                 };
             };
 
-            return new BrowserFetcher(path, platform, _revision, paramsGetter);
+            return new BrowserFetcher(path, platform, PreferredRevision.ToString(), paramsGetter);
         }
 
         /// <inheritdoc cref="IBrowserType"/>
