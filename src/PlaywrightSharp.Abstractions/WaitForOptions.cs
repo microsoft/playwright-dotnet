@@ -1,28 +1,15 @@
 ﻿namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="ClickOptions.WaitFor"/>.
+    /// Optional waiting parameters.
     /// </summary>
-    public enum WaitForOptions
+    /// <seealso cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
+    public class WaitForOptions
     {
         /// <summary>
-        /// Wait for visible
+        /// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.
         /// </summary>
-        Visible,
-
-        /// <summary>
-        /// Wait for hidden
-        /// </summary>
-        Hidden,
-
-        /// <summary>
-        /// Wait for any
-        /// </summary>
-        Any,
-
-        /// <summary>
-        /// No wait
-        /// </summary>
-        NoWait,
+        public int? Timeout { get; set; }
     }
 }
