@@ -243,6 +243,22 @@ namespace PlaywrightSharp
         Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
 
         /// <summary>
+        /// Waits for a request.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var firstRequest = await page.WaitForRequestAsync("http://example.com/resource");
+        /// return firstRequest.Url;
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        /// <param name="url">URL to wait for.</param>
+        /// <param name="options">Options.</param>
+        Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null);
+
+        /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for.</param>
@@ -435,6 +451,16 @@ namespace PlaywrightSharp
         Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers);
 
         /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task AuthenticateAsync(Credentials credentials);
+
+        /// <summary>
         /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
@@ -519,7 +545,7 @@ namespace PlaywrightSharp
         /// ]]>
         /// </example>
         /// <param name="viewport">Viewport.</param>
-        /// <returns>A<see cref="Task"/> that copletes when the message is confirmed by the browser.</returns>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetViewportAsync(Viewport viewport);
 
         /// <summary>
@@ -637,5 +663,20 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction);
+
+        /// <summary>
+        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
+        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.RespondAsync(ResponseData)">request.RespondAsync</see> methods.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="value">Whether to enable request interception..</param>
+        Task SetRequestInterceptionAsync(bool value);
+
+        /// <summary>
+        /// Set offline mode for the page.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="value">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineModeAsync(bool value);
     }
 }
