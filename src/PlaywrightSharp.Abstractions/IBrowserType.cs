@@ -24,7 +24,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="options">Options.</param>
         /// <returns>The browser fetcher.</returns>
-        IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options);
+        IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
         /// <summary>
         /// Launches a new browser app.
