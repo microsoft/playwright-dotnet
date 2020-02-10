@@ -1,16 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers.Linux;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserFetcher"/>
-    public class BrowserFetcher : IBrowserFetcher
+    public sealed class BrowserFetcher : IBrowserFetcher, IDisposable
     {
-        private string _downloadsFolder;
-        private Platform _platform;
-        private string _preferredRevision;
-        private Func<Platform, string, BrowserFetcherConfig> _params;
+        private readonly string _downloadsFolder;
+        private readonly Platform _platform;
+        private readonly string _preferredRevision;
+        private readonly Func<Platform, string, BrowserFetcherConfig> _params;
+        private readonly WebClient _webClient = new WebClient();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowserFetcher"/> class.
@@ -27,34 +35,191 @@ namespace PlaywrightSharp
             _params = paramsGetter;
         }
 
+        /// <inheritdoc cref="IDisposable"/>
+        ~BrowserFetcher() => Dispose(false);
+
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public Task<bool> CanDownloadAsync(int revision)
+        public event DownloadProgressChangedEventHandler DownloadProgressChanged;
+
+        /// <inheritdoc cref="IBrowserFetcher"/>
+        public async Task<bool> CanDownloadAsync(string revision)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string url = _params(_platform, revision).DownloadURL;
+
+                var client = WebRequest.Create(url);
+                client.Proxy = _webClient.Proxy;
+                client.Method = "HEAD";
+                var response = await client.GetResponseAsync().ConfigureAwait(false) as HttpWebResponse;
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch (WebException)
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public Task<RevisionInfo> DownloadAsync(int revision)
+        public async Task<RevisionInfo> DownloadAsync(string revision)
         {
-            throw new NotImplementedException();
+            string url = _params(_platform, revision).DownloadURL;
+            string zipPath = Path.Combine(_downloadsFolder, $"download-{_platform.ToString()}-{revision}.zip");
+            string folderPath = GetFolderPath(revision);
+
+            if (new DirectoryInfo(folderPath).Exists)
+            {
+                return GetRevisionInfo(revision);
+            }
+
+            var downloadFolder = new DirectoryInfo(_downloadsFolder);
+            if (!downloadFolder.Exists)
+            {
+                downloadFolder.Create();
+            }
+
+            if (DownloadProgressChanged != null)
+            {
+                _webClient.DownloadProgressChanged += DownloadProgressChanged;
+            }
+
+            await _webClient.DownloadFileTaskAsync(new Uri(url), zipPath).ConfigureAwait(false);
+
+            if (_platform == Platform.MacOS)
+            {
+                // ZipFile and many others unzip libraries have issues extracting .app files
+                // Until we have a clear solution we'll call the native unzip tool
+                // https://github.com/dotnet/corefx/issues/15516
+                NativeExtractToDirectory(zipPath, folderPath);
+            }
+            else
+            {
+                ZipFile.ExtractToDirectory(zipPath, folderPath);
+            }
+
+            new FileInfo(zipPath).Delete();
+
+            var revisionInfo = GetRevisionInfo(revision);
+
+            if (revisionInfo != null && GetCurrentPlatform() == Platform.Linux)
+            {
+                if (LinuxSysCall.Chmod(revisionInfo.ExecutablePath, LinuxSysCall.ExecutableFilePermissions) != 0)
+                {
+                    throw new PlaywrightSharpException("Unable to chmod the BrowserApp");
+                }
+            }
+
+            return revisionInfo;
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public IEnumerable<int> GetLocalRevisions()
+        public IEnumerable<string> GetLocalRevisions()
         {
-            throw new NotImplementedException();
+            var directoryInfo = new DirectoryInfo(_downloadsFolder);
+
+            if (directoryInfo.Exists)
+            {
+                return directoryInfo.GetDirectories()
+                    .Select(d => ParseFolderPath(d.Name))
+                    .Where(v => v.platform == _platform)
+                    .Select(v => v.revision);
+            }
+
+            return new string[] { };
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public RevisionInfo GetRevisionInfo(int revision)
+        public RevisionInfo GetRevisionInfo(string revision)
         {
-            throw new NotImplementedException();
+            var paramsFunctions = _params(_platform, revision);
+
+            var result = new RevisionInfo
+            {
+                FolderPath = GetFolderPath(revision),
+                Url = paramsFunctions.DownloadURL,
+                Revision = revision,
+                Platform = _platform,
+            };
+            result.ExecutablePath = Path.Combine(result.FolderPath, paramsFunctions.ExecutablePath);
+            result.Local = new DirectoryInfo(result.FolderPath).Exists;
+
+            return result;
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public void Remove(int revision)
+        public void Remove(string revision)
         {
-            throw new NotImplementedException();
+            var directory = new DirectoryInfo(GetFolderPath(revision));
+            if (directory.Exists)
+            {
+                directory.Delete(true);
+            }
         }
+
+        /// <inheritdoc cref="IDisposable"/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc cref="IDisposable"/>
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _webClient?.Dispose();
+            }
+        }
+
+        private void NativeExtractToDirectory(string zipPath, string folderPath)
+        {
+            var process = new Process();
+
+            process.StartInfo.FileName = "unzip";
+            process.StartInfo.Arguments = $"\"{zipPath}\" -d \"{folderPath}\"";
+            process.Start();
+            process.WaitForExit();
+        }
+
+        private (Platform platform, string revision) ParseFolderPath(string folderName)
+        {
+            string[] splits = folderName.Split('-');
+
+            if (splits.Length != 2)
+            {
+                return (Platform.Unknown, "0");
+            }
+
+            if (!Enum.TryParse<Platform>(splits[0], out var platform))
+            {
+                platform = Platform.Unknown;
+            }
+
+            return (platform, splits[1]);
+        }
+
+        private Platform GetCurrentPlatform()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return Platform.MacOS;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return Platform.Linux;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return RuntimeInformation.OSArchitecture == Architecture.X64 ? Platform.Win64 : Platform.Win32;
+            }
+
+            return Platform.Unknown;
+        }
+
+        private string GetFolderPath(string revision)
+            => Path.Combine(_downloadsFolder, $"{_platform.ToString()}-{revision}");
     }
 }
