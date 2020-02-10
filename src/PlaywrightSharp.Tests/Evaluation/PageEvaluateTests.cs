@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -481,7 +482,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
         {
             var a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
