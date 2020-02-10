@@ -129,9 +129,8 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should work with function shorthands</playwright-it>
         [Fact(Skip = "Not relevant for C#, js specific")]
-        public Task ShouldWorkWithFunctionShorthands()
+        public void ShouldWorkWithFunctionShorthands()
         {
-            return Task.CompletedTask;
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -140,7 +139,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldWorkWithUnicodeChars()
         {
-            var result = await Page.EvaluateAsync<int>("a => a['Σ╕¡µצחσ¡קτ¼ª'], { 'Σ╕¡µצחσ¡קτ¼ª': 42}");
+            var result = await Page.EvaluateAsync<int>("a => a['中文字符'], { '中文字符': 42}");
             Assert.Equal(42, result);
         }
 
@@ -311,9 +310,8 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize undefined arguments</playwright-it>
         [Fact(Skip = "Not relevant for C#, js specific")]
-        public Task ShouldProperlySerializeUndefinedArguments()
+        public void ShouldProperlySerializeUndefinedArguments()
         {
-            return Task.CompletedTask;
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -385,18 +383,16 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should accept a string</playwright-it>
         [Fact(Skip = "Not relevant for C#, js specific")]
-        public Task ShouldAcceptAString()
+        public void ShouldAcceptAString()
         {
-            return Task.CompletedTask;
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should accept a string with semi colons</playwright-it>
         [Fact(Skip = "Not relevant for C#, js specific")]
-        public Task ShouldAcceptAStringWithSemiColons()
+        public void ShouldAcceptAStringWithSemiColons()
         {
-            return Task.CompletedTask;
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -485,7 +481,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
-        [Fact(Skip = "Not implemented")]
+        [Fact(Skip = "Skipped in Playwright")]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
         {
             var a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");

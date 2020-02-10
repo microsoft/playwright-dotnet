@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace PlaywrightSharp.Tests.Evaluation
 {
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should allow cross-frame js handles</playwright-it>
-        [Fact(Skip = "Not implemented")]
+        [Fact(Skip = "Skipped in Playwright")]
         public async Task ShouldAllowCrossFrameJsHandles()
         {
             // TODO: this should be possible because frames script each other, but
@@ -117,7 +117,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should not allow cross-frame element handles when frames do not script each other</playwright-it>
-        [Fact(Skip = "Not implemented")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
