@@ -10,11 +10,11 @@ namespace PlaywrightSharp
         /// <summary>
         /// Returns a JSON representation of the object.
         /// </summary>
-        /// <returns>Task.</returns>
+        /// <typeparam name="T">Return type.</typeparam>
         /// <remarks>
         /// The method will return an empty JSON if the referenced object is not stringifiable. It will throw an error if the object has circular references.
-        /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding an <see cref="object"/> with the json value of the handle.</returns>
         /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding an <see cref="object"/> with the json value of the handle.</returns>
         Task<T> GetJsonValueAsync<T>();
 
         /// <summary>
