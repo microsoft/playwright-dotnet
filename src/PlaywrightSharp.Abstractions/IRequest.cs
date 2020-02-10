@@ -83,9 +83,9 @@ namespace PlaywrightSharp
         /// Continues request with optional request overrides. To use this, request interception should be enabled with <see cref="IPage.SetRequestInterceptionAsync(bool)"/>. Exception is immediately thrown if the request interception is not enabled.
         /// If the URL is set it won't perform a redirect. The request will be silently forwarded to the new url. For example, the address bar will show the original url.
         /// </summary>
-        /// <param name="overrides">Optional request overwrites.</param>
+        /// <param name="payload">Optional request overwrites.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task ContinueAsync(Payload overrides = null);
+        Task ContinueAsync(Payload payload = null);
 
         /// <summary>
         /// Fulfills request with given response. To use this, request interception should be enabled with <see cref="IPage.SetRequestInterceptionAsync(bool)"/>. Exception is thrown if request interception is not enabled.

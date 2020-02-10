@@ -1,15 +1,24 @@
-﻿namespace PlaywrightSharp
+﻿using System;
+
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Exception thrown when an element selector returns null.
     /// </summary>
     public class SelectorException : PlaywrightSharpException
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SelectorException"/> class.
-        /// </summary>
-        /// <param name="message">Message.</param>
+        /// <inheritdoc cref="Exception"/>
+        public SelectorException()
+        {
+        }
+
+        /// <inheritdoc cref="Exception"/>
         public SelectorException(string message) : base(message)
+        {
+        }
+
+        /// <inheritdoc cref="Exception"/>
+        public SelectorException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
