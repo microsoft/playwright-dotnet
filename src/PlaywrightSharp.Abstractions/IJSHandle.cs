@@ -15,7 +15,7 @@ namespace PlaywrightSharp
         /// The method will return an empty JSON if the referenced object is not stringifiable. It will throw an error if the object has circular references.
         /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding an <see cref="object"/> with the json value of the handle.</returns>
         /// </remarks>
-        Task<object> GetJsonValueAsync();
+        Task<T> GetJsonValueAsync<T>();
 
         /// <summary>
         /// Disposes the Handle. It will mark the JSHandle as disposed and release the <see cref="IJSHandle"/>.
