@@ -321,7 +321,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldProperlySerializeUndefinedFields()
         {
-            Assert.Equal(JsonDocument.Parse("{}"), await Page.EvaluateAsync<JsonDocument>("() => ({ a: undefined})"));
+            Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: undefined})"));
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
