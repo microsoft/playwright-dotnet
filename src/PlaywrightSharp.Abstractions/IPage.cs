@@ -572,6 +572,21 @@ namespace PlaywrightSharp
         Task<IResponse> ReloadAsync(NavigationOptions options = null);
 
         /// <summary>
+        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
+        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.RespondAsync(ResponseData)">request.RespondAsync</see> methods.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="value">Whether to enable request interception..</param>
+        Task SetRequestInterceptionAsync(bool value);
+
+        /// <summary>
+        /// Set offline mode for the page.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="value">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineModeAsync(bool value);
+
+        /// <summary>
         /// Adds a function called <c>name</c> on the page's <c>window</c> object.
         /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightFunction"/> completes.
         /// </summary>
@@ -663,20 +678,5 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction);
-
-        /// <summary>
-        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
-        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.RespondAsync(ResponseData)">request.RespondAsync</see> methods.
-        /// </summary>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="value">Whether to enable request interception..</param>
-        Task SetRequestInterceptionAsync(bool value);
-
-        /// <summary>
-        /// Set offline mode for the page.
-        /// </summary>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="value">When <c>true</c> enables offline mode for the page.</param>
-        Task SetOfflineModeAsync(bool value);
     }
 }
