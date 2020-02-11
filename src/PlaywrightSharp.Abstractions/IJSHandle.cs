@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -16,6 +17,10 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding an <see cref="object"/> with the json value of the handle.</returns>
         Task<T> GetJsonValueAsync<T>();
+
+        Task<IJSHandle> GetPropertyAsync(string property);
+
+        Task<IReadOnlyDictionary<string, IJSHandle>> GetPropertiesAsync();
 
         /// <summary>
         /// Disposes the Handle. It will mark the JSHandle as disposed and release the <see cref="IJSHandle"/>.
