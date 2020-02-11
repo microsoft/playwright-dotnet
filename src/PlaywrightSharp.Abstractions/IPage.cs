@@ -304,7 +304,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
+        Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
 
         /// <summary>
         /// Navigates to an url.
@@ -315,7 +315,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
+        Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
 
         /// <summary>
         /// Closes the page.
@@ -336,6 +336,25 @@ namespace PlaywrightSharp
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task<T> EvaluateAsync<T>(string script, params object[] args);
+
+        /// <summary>
+        /// Adds a function which would be invoked in one of the following scenarios:
+        /// - whenever the page is navigated
+        /// - whenever the child frame is attached or navigated. In this case, the function is invoked in the context of the newly attached frame.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to <c>pageFunction</c>.</param>
+        /// <remarks>
+        /// The function is invoked after the document was created but before any of its scripts were run. This is useful to amend JavaScript environment, e.g. to seed <c>Math.random</c>.
+        /// </remarks>
+        /// <example>
+        /// An example of overriding the navigator.languages property before the page loads:
+        /// <code>
+        /// await page.EvaluateOnNewDocumentAsync("() => window.__example = true");
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved.</returns>
+        Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
@@ -566,5 +585,98 @@ namespace PlaywrightSharp
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         /// <param name="value">When <c>true</c> enables offline mode for the page.</param>
         Task SetOfflineModeAsync(bool value);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightFunction"/> completes.
+        /// </summary>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync(string, Action)"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync(string name, Action playwrightFunction);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// </summary>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync{TResult}(string, Func{TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// </summary>
+        /// <typeparam name="T">The parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync{T, TResult}(string, Func{T, TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// </summary>
+        /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync{T1, T2, TResult}(string, Func{T1, T2, TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// </summary>
+        /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync{T1, T2, T3, TResult}(string, Func{T1, T2, T3, TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// </summary>
+        /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T4">The fourth parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync{T1, T2, T3, T4, TResult}(string, Func{T1, T2, T3, T4, TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction);
     }
 }

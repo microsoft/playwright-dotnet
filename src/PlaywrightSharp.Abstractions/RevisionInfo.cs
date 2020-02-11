@@ -8,9 +8,25 @@ namespace PlaywrightSharp
     public class RevisionInfo
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RevisionInfo"/> class.
+        /// </summary>
+        public RevisionInfo()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RevisionInfo"/> class.
+        /// </summary>
+        /// <param name="revision">Revision.</param>
+        public RevisionInfo(string revision)
+        {
+            Revision = revision;
+        }
+
+        /// <summary>
         /// Gets or sets the revision.
         /// </summary>
-        public int Revision { get; set; }
+        public string Revision { get; set; }
 
         /// <summary>
         /// Gets or sets the folder path.
