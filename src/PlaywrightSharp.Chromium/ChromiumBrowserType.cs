@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Chromium
 
             Func<Platform, string, BrowserFetcherConfig> paramsGetter = (platform, revision) =>
             {
-                var archiveName = string.Empty;
+                string archiveName = string.Empty;
                 string executablePath = string.Empty;
 
                 switch (platform)
