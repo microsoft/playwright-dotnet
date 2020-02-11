@@ -72,7 +72,6 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             // TODO(yurys): change subtype from array to typedarray in WebKit.
             Assert.Equal(TestConstants.IsWebKit ? "JSHandle@array" : "JSHandle@typedarray", (await Page.EvaluateHandleAsync("new Int32Array()")).ToString());
             Assert.Equal("JSHandle@proxy", (await Page.EvaluateHandleAsync("new Proxy({}, {})")).ToString());
-
         }
     }
 }
