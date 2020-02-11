@@ -10,10 +10,11 @@ using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Browser
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>BrowserFetcher</playwright-describe>
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserFetcherTests : PlaywrightSharpBrowserBaseTest, IDisposable
     {
         private readonly TempDirectory _downloadsFolder;
