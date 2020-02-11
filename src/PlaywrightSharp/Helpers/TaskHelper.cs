@@ -61,12 +61,17 @@ namespace PlaywrightSharp.Helpers
         /// <param name="timeout">The timeout period.</param>
         public static async Task WithTimeout(this Task task, Func<Task> timeoutAction, TimeSpan timeout)
         {
-            if (await TimeoutTask(task, timeout))
+            if (task == null)
             {
-                await timeoutAction();
+                throw new ArgumentNullException(nameof(task));
             }
 
-            await task;
+            if (await TimeoutTask(task, timeout).ConfigureAwait(false) && timeoutAction != null)
+            {
+                await timeoutAction().ConfigureAwait(false);
+            }
+
+            await task.ConfigureAwait(false);
         }
 
         // Recipe from https://blogs.msdn.microsoft.com/pfxteam/2012/10/05/how-do-i-cancel-non-cancelable-async-operations/
@@ -93,13 +98,18 @@ namespace PlaywrightSharp.Helpers
         /// <typeparam name="T">Result type.</typeparam>
         public static async Task<T> WithTimeout<T>(this Task<T> task, Action timeoutAction, TimeSpan timeout)
         {
-            if (await TimeoutTask(task, timeout))
+            if (task == null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
+
+            if (await TimeoutTask(task, timeout).ConfigureAwait(false) && timeoutAction != null)
             {
                 timeoutAction();
                 return default;
             }
 
-            return await task;
+            return await task.ConfigureAwait(false);
         }
 
         /// Recipe from https://blogs.msdn.microsoft.com/pfxteam/2012/10/05/how-do-i-cancel-non-cancelable-async-operations/
@@ -125,19 +135,24 @@ namespace PlaywrightSharp.Helpers
         /// <typeparam name="T">Task return type.</typeparam>
         public static async Task<T> WithTimeout<T>(this Task<T> task, TimeSpan timeout, Func<TimeSpan, Exception> exceptionFactory = null)
         {
-            if (await TimeoutTask(task, timeout))
+            if (task == null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
+
+            if (await TimeoutTask(task, timeout).ConfigureAwait(false))
             {
                 throw (exceptionFactory ?? DefaultExceptionFactory)(timeout);
             }
 
-            return await task;
+            return await task.ConfigureAwait(false);
         }
 
         private static async Task<bool> TimeoutTask(Task task, TimeSpan timeout)
         {
             if (timeout <= TimeSpan.Zero)
             {
-                await task;
+                await task.ConfigureAwait(false);
                 return false;
             }
 
@@ -147,7 +162,7 @@ namespace PlaywrightSharp.Helpers
                 cancellationToken.CancelAfter(timeout);
                 using (cancellationToken.Token.Register(s => ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs))
                 {
-                    return tcs.Task == await Task.WhenAny(task, tcs.Task);
+                    return tcs.Task == await Task.WhenAny(task, tcs.Task).ConfigureAwait(false);
                 }
             }
         }

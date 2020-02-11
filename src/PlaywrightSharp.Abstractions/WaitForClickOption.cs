@@ -3,7 +3,7 @@
     /// <summary>
     /// Options for <see cref="ClickOptions.WaitFor"/>.
     /// </summary>
-    public enum WaitForClickOptions
+    public enum WaitForClickOption
     {
         /// <summary>
         /// Wait for visible

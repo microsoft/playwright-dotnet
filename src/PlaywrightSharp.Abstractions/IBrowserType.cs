@@ -15,16 +15,11 @@ namespace PlaywrightSharp
         IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
 
         /// <summary>
-        /// A path where PlaywrightSharp expects to find a bundled browser.
-        /// </summary>
-        string ExecutablePath { get; set; }
-
-        /// <summary>
         /// Creates the browser fetcher.
         /// </summary>
         /// <param name="options">Options.</param>
         /// <returns>The browser fetcher.</returns>
-        IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options);
+        IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
         /// <summary>
         /// Launches a new browser app.
