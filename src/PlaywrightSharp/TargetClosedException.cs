@@ -1,10 +1,27 @@
-﻿namespace PlaywrightSharp
+﻿using System;
+
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Exception thrown by a connection when it detects that the target was closed.
     /// </summary>
     public class TargetClosedException : PlaywrightSharpException
     {
+        /// <inheritdoc cref="Exception"/>
+        public TargetClosedException()
+        {
+        }
+
+        /// <inheritdoc cref="Exception"/>
+        public TargetClosedException(string message) : base(message)
+        {
+        }
+
+        /// <inheritdoc cref="Exception"/>
+        public TargetClosedException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TargetClosedException"/> class.
         /// </summary>

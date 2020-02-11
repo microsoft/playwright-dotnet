@@ -319,25 +319,29 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize undefined fields</playwright-it>
         [Fact]
-        public async Task ShouldProperlySerializeUndefinedFields() => Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: undefined})"));
+        public async Task ShouldProperlySerializeUndefinedFields()
+            => Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: undefined})"));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize null arguments</playwright-it>
         [Fact]
-        public async Task ShouldProperlySerializeNullArguments() => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));
+        public async Task ShouldProperlySerializeNullArguments()
+            => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize null fields</playwright-it>
         [Fact]
-        public async Task ShouldProperlySerializeNullFields() => Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: null}))"));
+        public async Task ShouldProperlySerializeNullFields()
+            => Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: null}))"));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should return undefined for non-serializable objects</playwright-it>
         [Fact]
-        public async Task ShouldReturnUndefinedForNonSerializableObjects() => Assert.Null(await Page.EvaluateAsync<object>("() => window"));
+        public async Task ShouldReturnUndefinedForNonSerializableObjects()
+            => Assert.Null(await Page.EvaluateAsync<object>("() => window"));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
