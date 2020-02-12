@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Helpers.Linux
             FileAccessPermissions.OtherRead |
             FileAccessPermissions.OtherExecute;
 
-        [DllImport("libc", SetLastError = true, EntryPoint = "chmod")]
+        [DllImport("libc", SetLastError = true, EntryPoint = "chmod", CharSet = CharSet.Unicode)]
         internal static extern int Chmod(string path, FileAccessPermissions mode);
     }
 }

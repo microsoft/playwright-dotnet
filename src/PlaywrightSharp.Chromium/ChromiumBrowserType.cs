@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -70,12 +71,12 @@ namespace PlaywrightSharp.Chromium
 
                 return new BrowserFetcherConfig
                 {
-                    DownloadURL = string.Format(downloadUrls[platform], host, revision, archiveName),
+                    DownloadURL = string.Format(CultureInfo.InvariantCulture, downloadUrls[platform], host, revision, archiveName),
                     ExecutablePath = executablePath,
                 };
             };
 
-            return new BrowserFetcher(path, platform, PreferredRevision.ToString(), paramsGetter);
+            return new BrowserFetcher(path, platform, PreferredRevision.ToString(CultureInfo.InvariantCulture.NumberFormat), paramsGetter);
         }
 
         /// <inheritdoc cref="IBrowserType"/>

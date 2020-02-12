@@ -125,7 +125,7 @@ namespace PlaywrightSharp
                     .Select(v => v.revision);
             }
 
-            return new string[] { };
+            return Array.Empty<string>();
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
@@ -174,7 +174,7 @@ namespace PlaywrightSharp
 
         private void NativeExtractToDirectory(string zipPath, string folderPath)
         {
-            var process = new Process();
+            using var process = new Process();
 
             process.StartInfo.FileName = "unzip";
             process.StartInfo.Arguments = $"\"{zipPath}\" -d \"{folderPath}\"";
