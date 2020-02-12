@@ -26,15 +26,7 @@ namespace PlaywrightSharp.Tests.BaseTests
                 dirInfo.Create();
             }
 
-            switch (Environment.GetEnvironmentVariable("PRODUCT"))
-            {
-                case TestConstants.WebkitProduct:
-                case TestConstants.FirefoxProduct:
-                    break;
-                default:
-                    Playwright = new ChromiumBrowserType();
-                    break;
-            }
+            Playwright = TestConstants.GetNewBrowserType();
         }
 
         internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null) => Browser.NewContextAsync(options);

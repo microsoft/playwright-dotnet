@@ -61,8 +61,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public async Task<RevisionInfo> DownloadAsync(string revision)
+        public async Task<RevisionInfo> DownloadAsync(string revision = null)
         {
+            revision ??= _preferredRevision.ToString();
+
             string url = _params(_platform, revision).DownloadURL;
             string zipPath = Path.Combine(_downloadsFolder, $"download-{_platform.ToString()}-{revision}.zip");
             string folderPath = GetFolderPath(revision);

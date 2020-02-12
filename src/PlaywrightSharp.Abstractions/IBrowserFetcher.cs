@@ -31,9 +31,9 @@ namespace PlaywrightSharp
         /// <summary>
         /// Downloads the revision.
         /// </summary>
-        /// <param name="revision">Revision.</param>
+        /// <param name="revision">Revision to download. Preferred revision will be used if not set.</param>
         /// <returns>A <see cref="Task"/> that completes when the download completes, yielding the information of the revision downloaded.</returns>
-        Task<RevisionInfo> DownloadAsync(string revision);
+        Task<RevisionInfo> DownloadAsync(string revision = null);
 
         /// <summary>
         /// A list of all revisions available locally on disk.

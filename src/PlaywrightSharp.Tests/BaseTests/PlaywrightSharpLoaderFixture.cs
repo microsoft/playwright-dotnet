@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         private async Task SetupAsync()
         {
-            //var downloaderTask = new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+            var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher().DownloadAsync();
 
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
             HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.BaseTests
             var serverStart = Server.StartAsync();
             var httpsServerStart = HttpsServer.StartAsync();
 
-            await Task.WhenAll(/*downloaderTask, */serverStart, httpsServerStart);
+            await Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
         }
     }
 }

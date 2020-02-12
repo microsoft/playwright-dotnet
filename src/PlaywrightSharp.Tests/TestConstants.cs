@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
+using PlaywrightSharp.Chromium;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
@@ -23,6 +24,16 @@ namespace PlaywrightSharp.Tests
         public const string ServerUrl = "http://localhost:8081";
         public const string ServerIpUrl = "http://127.0.0.1:8081";
         public const string HttpsPrefix = "https://localhost:8082";
+
+        internal static IBrowserType GetNewBrowserType()
+            => Environment.GetEnvironmentVariable("PRODUCT") switch
+            {
+                WebkitProduct => null,
+                FirefoxProduct => null,
+                _ => new ChromiumBrowserType(),
+            };
+
+
         public const string AboutBlank = "about:blank";
         public const string CrossProcessHttpPrefix = "http://127.0.0.1:8081";
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
