@@ -16,4 +16,8 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <Import Project="../Common/Dependencies.props" />
+  <ItemGroup>
+    <PackageReference Include="System.Json" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+  </ItemGroup>
 </Project>
