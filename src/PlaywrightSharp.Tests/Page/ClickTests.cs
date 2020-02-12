@@ -557,7 +557,7 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should update modifiers correctly</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Fact]
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -578,7 +578,6 @@ button.style.position = 'absolute';
 
             await Page.ClickAsync("button");
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
-
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -594,6 +593,41 @@ button.style.position = 'absolute';
 
             await Page.ClickAsync("button");
             Assert.True(await Page.EvaluateAsync<bool>("window.clicked"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should click on an animated button</playwright-it>
+        [Fact(Skip = "Skipped in Playwright")]
+        public async Task ShouldClickOnAnAnimatedButton()
+        {
+            int buttonSize = 50;
+            int containerWidth = 500;
+            int transition = 500;
+            await Page.SetContentAsync($@"
+                <html>
+                <body>
+                <div style=""border: 1px solid black; height: 50px; overflow: auto; width: {containerWidth}px;"">
+                <button id=""button"" style=""height: {buttonSize}px; width: {buttonSize}px; transition: left {transition}ms linear 0s; left: 0; position: relative"" onClick=""window.clicked++"">hi</ button>
+                </div>
+                </body>
+                <script>
+                var animateLeft = () => {{
+                  var button = document.querySelector('#button');
+                  document.querySelector('#button').style.left = button.style.left === '0px' ? '{containerWidth - buttonSize}px' : '0px';
+                }};
+                window.clicked = 0;
+                window.setTimeout(animateLeft, 0);
+                window.setInterval(animateLeft, {transition});
+                </script>
+                </html>");
+            await Page.ClickAsync("button");
+            Assert.Equal(1, await Page.EvaluateAsync<int>("window.clicked"));
+            Assert.Equal($"{containerWidth - buttonSize}px", await Page.EvaluateAsync<string>("document.querySelector('#button').style.left"));
+            await Task.Delay(500);
+            await Page.ClickAsync("button");
+            Assert.Equal(2, await Page.EvaluateAsync<int>("window.clicked"));
+            Assert.Equal("0px", await Page.EvaluateAsync<string>("document.querySelector('#button').style.left"));
         }
     }
 }
