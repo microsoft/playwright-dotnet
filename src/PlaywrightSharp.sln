@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F0EC30F-2600-4399-9925-A16B049B9311}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+        Common\Dependencies.props = Common\Dependencies.props
 		PlaywrightSharp.ruleset = PlaywrightSharp.ruleset
 		stylecop.json = stylecop.json
 	EndProjectSection
