@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Launcher
+namespace PlaywrightSharp.Tests.Chromium.Launcher
 {
-    ///<playwright-file>launcher.spec.js</playwright-file>
+    ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
     public class WebSocketOptionsTests : PlaywrightSharpBrowserContextBaseTest
     {
@@ -16,10 +17,10 @@ namespace PlaywrightSharp.Tests.Launcher
         {
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
         ///<playwright-it>should support the remote-debugging-port argument</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldSupportTheRemoteDebuggingPortArgument()
         {
             var options = TestConstants.DefaultBrowserOptions;

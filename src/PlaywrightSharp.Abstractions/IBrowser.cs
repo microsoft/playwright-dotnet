@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -8,7 +9,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// A Browser is created when Playwright connects to a browser instance.
     /// </summary>
-    public interface IBrowser
+    public interface IBrowser : IDisposable
     {
         /// <summary>
         /// Raised when the url of a target changes
@@ -38,6 +39,11 @@ namespace PlaywrightSharp
         /// The default browser context can not be closed.
         /// </remarks>
         IBrowserContext DefaultContext { get; }
+
+        /// <summary>
+        /// Gets the spawned browser process. Returns <c>null</c> if the browser instance was created with <see cref="IBrowserType.ConnectAsync(ConnectOptions)"/> method.
+        /// </summary>
+        Process Process { get; }
 
         /// <summary>
         /// Closes browser and all of its pages (if any were opened).
