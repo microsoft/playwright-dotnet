@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests.Launcher
 
             using var browserApp = await Playwright.LaunchAsync(launchOptions);
 
-            Assert.False(browserApp.Process.StartInfo.Arguments.Contains("fake-profile"));
+            Assert.DoesNotContain("fake-profile", browserApp.Process.StartInfo.Arguments);
         }
     }
 }

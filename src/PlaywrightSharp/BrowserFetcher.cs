@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IBrowserFetcher"/>
         public async Task<RevisionInfo> DownloadAsync(string revision = null)
         {
-            revision ??= _preferredRevision.ToString();
+            revision ??= _preferredRevision.ToString(CultureInfo.InvariantCulture);
 
             string url = _params(_platform, revision).DownloadURL;
             string zipPath = Path.Combine(_downloadsFolder, $"download-{_platform.ToString()}-{revision}.zip");
