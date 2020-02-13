@@ -14,6 +14,7 @@ namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>BrowserFetcher</playwright-describe>
+    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserFetcherTests : PlaywrightSharpBrowserBaseTest, IDisposable
     {
