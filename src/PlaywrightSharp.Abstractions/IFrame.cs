@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -42,6 +42,12 @@ namespace PlaywrightSharp
         /// Gets a value indicating if the frame is detached or not.
         /// </summary>
         bool Detached { get; }
+
+        /// <summary>
+        /// Gets the frame's utility execution context.
+        /// </summary>
+        /// <returns>A <see cref="Task{IFrameExecutionContext}"/> that completes when the frame execution context is resolved, yielding the <see cref="IFrameExecutionContext"/>.</returns>
+        Task<IFrameExecutionContext> GetUtilityContext();
 
         /// <summary>
         /// Navigates to an URL.

@@ -96,9 +96,9 @@ namespace PlaywrightSharp.Tests.Evaluation
                 return foo;
             }");
             var childFrame = Page.MainFrame.ChildFrames[0];
-            var childResult = await childFrame.EvaluateAsync<object>("() => window.__foo");
+            object childResult = await childFrame.EvaluateAsync<object>("() => window.__foo");
             Assert.Equal(new { bar = "baz" }, childResult);
-            var result = await childFrame.EvaluateAsync<string>("foo => foo.bar", handle);
+            string result = await childFrame.EvaluateAsync<string>("foo => foo.bar", handle);
             Assert.Equal("baz", result);
         }
 
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var bodyHandle = await Page.MainFrame.ChildFrames[0].QuerySelectorAsync("body");
-            var result = await Page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
+            string result = await Page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
             Assert.Equal("<div>Hi, I\'m frame</div>", result.Trim());
         }
 
@@ -125,6 +125,21 @@ namespace PlaywrightSharp.Tests.Evaluation
             var bodyHandle = await frame.QuerySelectorAsync("body");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
             Assert.Contains("Unable to adopt element handle from a different document", exception.Message);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Frame.evaluate</playwright-describe>
+        ///<playwright-it>should return non-empty Node.constructor.name in utility context</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldReturnNonEmptyNodeConstructorNameInUtilityContext()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            var frame = Page.Frames[1];
+            var context = await frame.GetUtilityContext();
+            var elementHandle = await context.EvaluateHandleAsync("() => window.top.document.querySelector('#frame1')");
+            string constructorName = await context.EvaluateAsync<string>("node => node.constructor.name", elementHandle);
+            Assert.Equal("HTMLIFrameElement", constructorName);
         }
     }
 }
