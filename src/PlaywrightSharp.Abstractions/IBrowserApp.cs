@@ -9,6 +9,11 @@ namespace PlaywrightSharp
     public interface IBrowserApp : IDisposable
     {
         /// <summary>
+        /// Triggered when the <see cref="IBrowserApp"/> gets closed.
+        /// </summary>
+        event EventHandler Closed;
+
+        /// <summary>
         /// Browser websocket endpoint which can be used as an argument to <see cref="IBrowserType.ConnectAsync(ConnectOptions)"/> to establish connection to the browser.
         /// </summary>
         string WebSocketEndpoint { get; }
@@ -30,5 +35,10 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns><see cref="ConnectOptions"/> to connect to this <see cref="IBrowserApp"/>.</returns>
         ConnectOptions GetConnectOptions();
+
+        /// <summary>
+        /// Kills the browser process.
+        /// </summary>
+        void Kill();
     }
 }

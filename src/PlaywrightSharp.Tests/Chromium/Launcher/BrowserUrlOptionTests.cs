@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
             await Assert.ThrowsAsync<PlaywrightSharpException>(() => Playwright.ConnectAsync(new ConnectOptions
             {
                 BrowserURL = browserURL,
-                WebSocketEndpoint = browserApp.WebSocketEndpoint
+                BrowserWSEndpoint = browserApp.WebSocketEndpoint
             }));
 
             await browserApp.CloseAsync();

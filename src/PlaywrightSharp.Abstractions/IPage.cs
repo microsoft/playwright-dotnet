@@ -678,5 +678,21 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction);
+
+        /// <summary>
+        /// Waits for a response.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var firstResponse = await page.WaitForResponseAsync("http://example.com/resource");
+        /// return firstResponse.Url;
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <param name="url">URL to wait for.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null);
     }
 }
