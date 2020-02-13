@@ -266,34 +266,7 @@ namespace PlaywrightSharp
         /// <typeparam name="T">Return type.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
-
-        /// <summary>
-        /// Navigates to an URL.
-        /// </summary>
-        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// </returns>
-        /// <remarks>
-        /// <see cref="IPage.GoToAsync(string)"/> will throw an error if:
-        /// * There's an SSL error (e.g. in case of self-signed certificates).
-        /// * Target URL is invalid.
-        /// * The timeout is exceeded during navigation.
-        /// * The remote server does not respond or is unreachable.
-        /// * The main resource failed to load.
-        /// <para/>
-        /// <see cref="IPage.GoToAsync(string)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
-        /// The status code for such responses can be retrieved by calling response.status().
-        /// <para/>
-        /// NOTE <see cref="IPage.GoToAsync(string)"/> either throws an error or returns a main resource response.
-        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
-        /// <para/>
-        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
-        /// <para/>
-        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
-        /// </remarks>
-        Task<IResponse> GoToAsync(string url);
-
+        
         /// <summary>
         /// Navigates to an url.
         /// </summary>
@@ -380,6 +353,24 @@ namespace PlaywrightSharp
         /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="options">Type options.</param>
+        /// <remarks>
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, PressOptions)"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// await page.TypeAsync("#mytextarea", "Hello"); // Types instantly
+        /// await page.TypeAsync("#mytextarea", "World", new TypeOptions { Delay = 100 }); // Types slower, like a user
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
+        Task TypeAsync(string selector, string text, TypeOptions options = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.

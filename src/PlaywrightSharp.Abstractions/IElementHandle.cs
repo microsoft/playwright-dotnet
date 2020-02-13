@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -9,6 +9,17 @@ namespace PlaywrightSharp
     /// </summary>
     public interface IElementHandle : IJSHandle
     {
+        /// <summary>
+        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string, DownOptions)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
+        /// </summary>
+        /// <param name="key">Name of key to press, such as <c>ArrowLeft</c>. See <see cref="KeyDefinitions"/> for a list of all key names.</param>
+        /// <param name="options">press options.</param>
+        /// <remarks>
+        /// If <c>key</c> is a single character and no modifier keys besides <c>Shift</c> are being held down, a <c>keypress</c>/<c>input</c> event will also be generated. The <see cref="DownOptions.Text"/> option can be specified to force an input event to be generated.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task PressAsync(string key, PressOptions options = null);
+
         /// <summary>
         /// Takes a screenshot of the element.
         /// </summary>
