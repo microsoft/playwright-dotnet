@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
@@ -118,11 +118,17 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync(@"async () => {
                 const child = window.open(document.location.href);
-                while(child.document.readyState !== 'complete' || child.document.location.href === 'about:blank')
-                  await new Promise(setTimeout);
+                while (child.document.readyState !== 'complete' || child.document.location.href === 'about:blank')
+                  await new Promise(f => setTimeout(f, 100));
             }");
-            var childPage = (await Context.GetPagesAsync())[1];
-            await childPage.WaitForLoadStateAsync();
+            var pages = await Context.GetPagesAsync();
+            Assert.Equal(2, pages.Length);
+            Assert.Equal(Page, pages[0]);
+            Assert.Equal(TestConstants.EmptyPage, pages[0].Url);
+
+            Assert.Equal(TestConstants.EmptyPage, pages[1].Url);
+            await pages[1].WaitForLoadStateAsync();
+            Assert.Equal(TestConstants.EmptyPage, pages[1].Url);
         }
     }
 }
