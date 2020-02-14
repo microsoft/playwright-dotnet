@@ -38,7 +38,4 @@
     <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
     <ProjectReference Include="..\PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Browser\" />
-  </ItemGroup>
 </Project>
