@@ -106,7 +106,10 @@ namespace PlaywrightSharp
 
             if (revisionInfo != null && GetCurrentPlatform() == Platform.Linux)
             {
-                _ = LinuxSysCall.Chmod(revisionInfo.ExecutablePath, LinuxSysCall.ExecutableFilePermissions);
+                if (LinuxSysCall.Chmod(revisionInfo.ExecutablePath, LinuxSysCall.ExecutableFilePermissions) != 0)
+                {
+                    throw new PlaywrightSharpException("Unable to chmod the BrowserApp");
+                }
             }
 
             return revisionInfo;
