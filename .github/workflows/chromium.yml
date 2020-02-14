@@ -18,6 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+      - name: Setup .NET Core
+        if: ${{ matrix.os }} == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install apt-transport-https
