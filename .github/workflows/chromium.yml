@@ -18,9 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.100
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https
+          sudo apt-get update
+          sudo apt-get install dotnet-sdk-3.1
+      - name: Run tests
         env:
           PRODUCT: CHROMIUM
         run: sudo dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium
