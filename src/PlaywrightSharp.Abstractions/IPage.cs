@@ -266,7 +266,7 @@ namespace PlaywrightSharp
         /// <typeparam name="T">Return type.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
-        
+
         /// <summary>
         /// Navigates to an url.
         /// </summary>
