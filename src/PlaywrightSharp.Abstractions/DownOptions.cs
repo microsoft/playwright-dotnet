@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Options for <see cref="IKeyboard.DownAsync(string, DownOptions)"/>.

@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// The type of button click to use with <see cref="IPage.ClickAsync(string, ClickOptions)"/>.

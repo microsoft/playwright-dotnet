@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Options for <see cref="IPage.GoToAsync(string, GoToOptions)"/> and <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
