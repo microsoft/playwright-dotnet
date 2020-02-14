@@ -1,4 +1,4 @@
-﻿using PlaywrightSharp;
+using PlaywrightSharp;
 
 namespace PlaywrightSharp.Accessibility
 {

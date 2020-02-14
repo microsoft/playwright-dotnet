@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Browser fetcher options used to construct a <see cref="IBrowserFetcher"/>.
