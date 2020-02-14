@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Mono.Unix;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Helpers.Linux;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace PlaywrightSharp.Tests.Chromium
 {
-    ///<playwright-file>launcher.spec.js</playwright-file>
+    ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>BrowserFetcher</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserFetcherTests : PlaywrightSharpBrowserBaseTest, IDisposable
@@ -31,10 +32,10 @@ namespace PlaywrightSharp.Tests
             _downloadsFolder.Dispose();
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>BrowserFetcher</playwright-describe>
         ///<playwright-it>should download and extract linux binary</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldDownloadAndExtractLinuxBinary()
         {
             var browserFetcher = Playwright.CreateBrowserFetcher(new BrowserFetcherOptions

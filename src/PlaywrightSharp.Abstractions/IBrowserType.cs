@@ -15,6 +15,16 @@ namespace PlaywrightSharp
         IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
 
         /// <summary>
+        /// Executable path based on <see cref="IBrowserFetcher"/>.
+        /// </summary>
+        string ExecutablePath { get; }
+
+        /// <summary>
+        /// Returns browser name. For example: 'chromium', 'webkit' or 'firefox'.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Creates the browser fetcher.
         /// </summary>
         /// <param name="options">Options.</param>

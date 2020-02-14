@@ -24,6 +24,12 @@ namespace PlaywrightSharp.Chromium
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
 
         /// <inheritdoc cref="IBrowserType"/>
+        public string ExecutablePath => null;
+
+        /// <inheritdoc cref="IBrowserType"/>
+        public string Name => "chromium";
+
+        /// <inheritdoc cref="IBrowserType"/>
         public Task<IBrowser> ConnectAsync(ConnectOptions options = null)
         {
             throw new NotImplementedException();
