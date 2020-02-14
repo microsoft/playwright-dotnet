@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should press the metaKey</playwright-it>
         [Fact]
-        public async Task ShouldPressTheMetaKey()
+        public async Task ShouldPressTheMetaKey1()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
             await Page.EvaluateAsync<string>(@"() => {
@@ -304,8 +304,7 @@ namespace PlaywrightSharp.Tests.Keyboard
 
             exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.Keyboard.PressAsync("😊"));
             Assert.Equal("Unknown key: \"😊\"", exception.Message);
-
-            }
+        }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
@@ -313,11 +312,9 @@ namespace PlaywrightSharp.Tests.Keyboard
         [Fact]
         public async Task ShouldTypeEmoji()
         {
-
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.TypeAsync('textarea', '≡ƒס╣ Tokyo street Japan ≡ƒח»≡ƒח╡');
-            expect(await Page.$eval('textarea', textarea => textarea.value)).toBe('≡ƒס╣ Tokyo street Japan ≡ƒח»≡ƒח╡');
-
+            await Page.TypeAsync("textarea", "👹 Tokyo street Japan 🇯🇵");
+            Assert.Equal("👹 Tokyo street Japan 🇯🇵", await Page.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -326,113 +323,112 @@ namespace PlaywrightSharp.Tests.Keyboard
         [Fact]
         public async Task ShouldTypeEmojiIntoAnIframe()
         {
-
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await await FrameUtils.AttachFrameAsync(Page, 'emoji-test', TestConstants.ServerUrl + "/input/textarea.html");
+            await FrameUtils.AttachFrameAsync(Page, "emoji-test", TestConstants.ServerUrl + "/input/textarea.html");
             var frame = Page.Frames[1];
-            var textarea = await frame.QuerySelectorAsync('textarea');
-            await textarea.TypeAsync('≡ƒס╣ Tokyo street Japan ≡ƒח»≡ƒח╡');
-            expect(await frame.$eval('textarea', textarea => textarea.value)).toBe('≡ƒס╣ Tokyo street Japan ≡ƒח»≡ƒח╡');
+            var textarea = await frame.QuerySelectorAsync("textarea");
+            await textarea.TypeAsync("👹 Tokyo street Japan 🇯🇵");
+            Assert.Equal("👹 Tokyo street Japan 🇯🇵", await frame.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
 
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should handle selectAll</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [SkipBrowserAndPlatformFact(skipOSX: true, skipChromium: true)]
         public async Task ShouldHandleSelectAll()
         {
-
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            var textarea = await Page.QuerySelectorAsync('textarea');
-            await textarea.TypeAsync('some text');
-            var modifier = MAC ? 'Meta' : 'Control';
-            await Page.keyboard.down(modifier);
-            await Page.keyboard.press('a');
-            await Page.keyboard.up(modifier);
-            await Page.keyboard.press('Backspace');
-            expect(await Page.$eval('textarea', textarea => textarea.value)).toBe('');
-
+            var textarea = await Page.QuerySelectorAsync("textarea");
+            await textarea.TypeAsync("some text");
+            string modifier = TestConstants.IsMacOSX ? "Meta" : "Control";
+            await Page.Keyboard.DownAsync(modifier);
+            await Page.Keyboard.PressAsync("a");
+            await Page.Keyboard.UpAsync(modifier);
+            await Page.Keyboard.PressAsync("Backspace");
+            Assert.Empty(await Page.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should be able to prevent selectAll</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [SkipBrowserAndPlatformFact(skipOSX: true, skipChromium: true)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            var textarea = await Page.QuerySelectorAsync('textarea');
-            await textarea.TypeAsync('some text');
-            await Page.$eval('textarea', textarea =>
-            {
+            var textarea = await Page.QuerySelectorAsync("textarea");
+            await textarea.TypeAsync("some text");
+            await Page.QuerySelectorEvaluateAsync("textarea", @"textarea => {
                 textarea.addEventListener('keydown', event => {
-            if (event.key === 'a' && (event.metaKey || event.ctrlKey))
-            event.preventDefault();
-    }, false);
-      });
-      var modifier = MAC ? 'Meta' : 'Control';
-await Page.keyboard.down(modifier);
-await Page.keyboard.press('a');
-await Page.keyboard.up(modifier);
-await Page.keyboard.press('Backspace');
-expect(await Page.$eval('textarea', textarea => textarea.value)).toBe('some tex');
-
+                    if (event.key === 'a' && (event.metaKey || event.ctrlKey))
+                    event.preventDefault();
+                }, false);
+            }");
+            string modifier = TestConstants.IsMacOSX ? "Meta" : "Control";
+            await Page.Keyboard.DownAsync(modifier);
+            await Page.Keyboard.PressAsync("a");
+            await Page.Keyboard.UpAsync(modifier);
+            await Page.Keyboard.PressAsync("Backspace");
+            Assert.Equal("some tex", await Page.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should press the meta key</playwright-it>
         [Fact]
-public async Task ShouldPressTheMetaKey()
-{
+        public async Task ShouldPressTheMetaKey2()
+        {
+            await Page.EvaluateAsync<string>(@"() => {
+                window.result = null;
+                document.addEventListener('keydown', event => {
+                    window.result = [event.key, event.code, event.metaKey];
+                });
+            }");
+            await Page.Keyboard.PressAsync("Meta");
+            string[] result = await Page.EvaluateAsync<string[]>("result");
+            string key = result[0], code = result[1], metaKey = result[2];
+            if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
+            {
+                Assert.Equal("OS", key);
+            }
+            else
+            {
+                Assert.Equal("Meta", key);
+            }
 
-    await Page.EvaluateAsync<string>(() =>
-    {
-    window.result = null;
-    document.addEventListener('keydown', event => {
-        window.result = [event.key, event.code, event.metaKey];
-    });
-});
-      await Page.keyboard.press('Meta');
-var[key, code, metaKey] = await Page.EvaluateAsync<string>('result');
-      if (FFOX && !MAC)
-        expect(key).toBe('OS');
-      else
-        expect(key).toBe('Meta');
+            if (TestConstants.IsFirefox)
+            {
+                Assert.Equal("OSLeft", code);
+            }
+            else
+            {
+                Assert.Equal("MetaLeft", code);
+            }
 
-      if (TestConstants.IsFirefox)
-        expect(code).toBe('OSLeft');
-      else
-        expect(code).toBe('MetaLeft');
-
-      if (FFOX && !MAC)
-        expect(metaKey).toBe(false);
-      else
-        expect(metaKey).toBe(true);
-
-
+            if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
+            {
+                Assert.False(bool.Parse(metaKey));
+            }
+            else
+            {
+                Assert.True(bool.Parse(metaKey));
+            }
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should work after a cross origin navigation</playwright-it>
         [Fact]
-public async Task ShouldWorkAfterACrossOriginNavigation()
-{
-
-    await Page.GoToAsync(TestConstants.ServerUrl + '/empty.html');
-    await Page.GoToAsync(TestConstants.CrossProcessUrl + '/empty.html');
-    await Page.EvaluateAsync<string>(() =>
-    {
-        document.addEventListener('keydown', event => window.lastKey = event);
-    })
-      await Page.keyboard.press('a');
-    expect(await Page.EvaluateAsync<string>('lastKey.key')).toBe('a');
-
-}
-
+        public async Task ShouldWorkAfterACrossOriginNavigation()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
+            await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.EvaluateAsync<string>(@"() => {
+                document.addEventListener('keydown', event => window.lastKey = event);
+            }");
+            await Page.Keyboard.PressAsync("a");
+            Assert.Equal("a", await Page.EvaluateAsync<string>("lastKey.key"));
+        }
     }
-
 }

@@ -21,6 +21,29 @@ namespace PlaywrightSharp
         Task PressAsync(string key, PressOptions options = null);
 
         /// <summary>
+        /// Focuses the element, and sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="options">Type options.</param>
+        /// <remarks>
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IElementHandle.PressAsync(string, PressOptions)"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// elementHandle.TypeAsync("#mytextarea", "Hello"); // Types instantly
+        /// elementHandle.TypeAsync("#mytextarea", "World", new TypeOptions { Delay = 100 }); // Types slower, like a user
+        /// </code>
+        /// An example of typing into a text field and then submitting the form:
+        /// <code>
+        /// var elementHandle = await page.GetElementAsync("input");
+        /// await elementHandle.TypeAsync("some text");
+        /// await elementHandle.PressAsync("Enter");
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task TypeAsync(string text, TypeOptions options = null);
+
+        /// <summary>
         /// Takes a screenshot of the element.
         /// </summary>
         /// <param name="options">Screenshot options.</param>
