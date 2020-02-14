@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.name</playwright-describe>
+    [Trait("Category", "chromium")]
     public class NameTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
