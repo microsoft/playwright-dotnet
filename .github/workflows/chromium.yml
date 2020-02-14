@@ -1,4 +1,4 @@
-name: Chromium Tests
+name: Chromium Tests On Win and Mac
 
 on:
   push:
