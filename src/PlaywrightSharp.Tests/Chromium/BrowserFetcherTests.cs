@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>BrowserFetcher</playwright-describe>
         ///<playwright-it>should download and extract linux binary</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldDownloadAndExtractLinuxBinary()
         {
             var browserFetcher = Playwright.CreateBrowserFetcher(new BrowserFetcherOptions
