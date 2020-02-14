@@ -1,16 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
     /// <summary>
     /// Browser process manager.
     /// </summary>
-    public interface IBrowserApp
+    public interface IBrowserApp : IDisposable
     {
+        /// <summary>
+        /// Triggered when the <see cref="IBrowserApp"/> gets closed.
+        /// </summary>
+        event EventHandler Closed;
+
         /// <summary>
         /// Browser websocket endpoint which can be used as an argument to <see cref="IBrowserType.ConnectAsync(ConnectOptions)"/> to establish connection to the browser.
         /// </summary>
         string WebSocketEndpoint { get; }
+
+        /// <summary>
+        /// Process id.
+        /// </summary>
+        int ProcessId { get; }
 
         /// <summary>
         /// Closes browser and all of its pages (if any were opened).
@@ -24,5 +35,10 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns><see cref="ConnectOptions"/> to connect to this <see cref="IBrowserApp"/>.</returns>
         ConnectOptions GetConnectOptions();
+
+        /// <summary>
+        /// Kills the browser process.
+        /// </summary>
+        void Kill();
     }
 }

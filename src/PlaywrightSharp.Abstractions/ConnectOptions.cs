@@ -18,6 +18,6 @@
         /// <summary>
         /// A browser websocket endpoint to connect to.
         /// </summary>
-        public string WebSocketEndpoint { get; set; }
+        public string BrowserWSEndpoint { get; set; }
     }
 }
