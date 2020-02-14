@@ -14,22 +14,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
-        if: ${{ matrix.os }} == 'ubuntu-latest'
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
-      - name: Setup .NET Core
-        if: ${{ matrix.os }} == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install apt-transport-https
-          sudo apt-get update
-          sudo apt-get install dotnet-sdk-3.1
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: sudo dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium
