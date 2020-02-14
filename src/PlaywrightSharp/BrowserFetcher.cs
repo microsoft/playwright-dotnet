@@ -108,7 +108,7 @@ namespace PlaywrightSharp
             {
                 if (LinuxSysCall.Chmod(revisionInfo.ExecutablePath, LinuxSysCall.ExecutableFilePermissions) != 0)
                 {
-                    throw new PlaywrightSharpException("Unable to chmod the BrowserApp");
+                    throw new PlaywrightSharpException($"Unable to chmod the BrowserApp ({Marshal.GetLastWin32Error()})");
                 }
             }
 
