@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// options to use when pressing a key.
