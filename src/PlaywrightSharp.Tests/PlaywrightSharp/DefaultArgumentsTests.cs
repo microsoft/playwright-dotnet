@@ -13,6 +13,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class DefaultArgumentsTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>

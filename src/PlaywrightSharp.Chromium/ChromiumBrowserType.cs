@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -14,6 +16,34 @@ namespace PlaywrightSharp.Chromium
         /// Preferred revision.
         /// </summary>
         public const int PreferredRevision = 733125;
+
+        private const string UserDataDirArgument = "--user-data-dir";
+        private static readonly string[] DefaultArgs = new[]
+        {
+            "--disable-background-networking",
+            "--enable-features=NetworkService,NetworkServiceInProcess",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-breakpad",
+            "--disable-client-side-phishing-detection",
+            "--disable-component-extensions-with-background-pages",
+            "--disable-default-apps",
+            "--disable-dev-shm-usage",
+            "--disable-extensions",
+            "--disable-features=TranslateUI,BlinkGenPropertyTrees",
+            "--disable-hang-monitor",
+            "--disable-ipc-flooding-protection",
+            "--disable-popup-blocking",
+            "--disable-prompt-on-repost",
+            "--disable-renderer-backgrounding",
+            "--disable-sync",
+            "--force-color-profile=srgb",
+            "--metrics-recording-only",
+            "--no-first-run",
+            "--enable-automation",
+            "--password-store=basic",
+            "--use-mock-keychain",
+        };
 
         /// <inheritdoc cref="IBrowserType"/>
         public ChromiumBrowserType()
@@ -88,7 +118,39 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowserType"/>
         public string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
-            throw new NotImplementedException();
+            bool devtools = options?.Devtools ?? false;
+            bool headless = options?.Headless ?? !devtools;
+            string userDataDir = options?.UserDataDir;
+            string[] args = options?.Args ?? Array.Empty<string>();
+
+            var chromeArguments = new List<string>(DefaultArgs);
+            if (userDataDir != null)
+            {
+                chromeArguments.Add($"{UserDataDirArgument}={options.UserDataDir.Quote()}");
+            }
+
+            if (devtools)
+            {
+                chromeArguments.Add("--auto-open-devtools-for-tabs");
+            }
+
+            if (headless)
+            {
+                chromeArguments.AddRange(new[]
+                {
+                    "--headless",
+                    "--hide-scrollbars",
+                    "--mute-audio",
+                });
+            }
+
+            if (args.All(arg => arg.StartsWith("-", StringComparison.Ordinal)))
+            {
+                chromeArguments.Add("about:blank");
+            }
+
+            chromeArguments.AddRange(args);
+            return chromeArguments.ToArray();
         }
 
         /// <inheritdoc cref="IBrowserType"/>
