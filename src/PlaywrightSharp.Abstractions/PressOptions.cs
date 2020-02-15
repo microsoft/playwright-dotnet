@@ -2,7 +2,6 @@ namespace PlaywrightSharp
 {
     /// <summary>
     /// Options to use when pressing a key.
-
     /// </summary>
     /// <seealso cref="IKeyboard.PressAsync(string, PressOptions)"/>
     /// <seealso cref="IElementHandle.PressAsync(string, PressOptions)"/>
