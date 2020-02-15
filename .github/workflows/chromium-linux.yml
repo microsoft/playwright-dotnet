@@ -1,4 +1,4 @@
-name: Chromium Tests on Ubunto
+name: Chromium Tests on Ubuntu
 
 on:
   push:
