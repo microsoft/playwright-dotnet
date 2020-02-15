@@ -21,7 +21,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// Close the connection.
         /// </summary>
-        void Close();
+        /// <param name="closeReason">Close reason.</param>
+        void Close(string closeReason = null);
 
         /// <summary>
         /// Sends a message using the transport.
