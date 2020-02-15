@@ -154,9 +154,10 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowserType"/>
-        public Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+        public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
-            throw new NotImplementedException();
+            var app = await LaunchBrowserAppAsync(options).ConfigureAwait(false);
+            return await ChromiumBrowser.ConnectAsync(app).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserType"/>

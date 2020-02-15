@@ -19,5 +19,10 @@ namespace PlaywrightSharp
         /// A browser websocket endpoint to connect to.
         /// </summary>
         public string BrowserWSEndpoint { get; set; }
+
+        /// <summary>
+        /// Transport used to communicate with the browser.
+        /// </summary>
+        public ITransport Transport { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace PlaywrightSharp
 {
     /// <summary>
     /// Message received event arguments.
-    /// <see cref="IConnectionTransport.MessageReceived"/>.
+    /// <see cref="ITransport.MessageReceived"/>.
     /// </summary>
     public class MessageReceivedEventArgs : EventArgs
     {
