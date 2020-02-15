@@ -88,5 +88,21 @@ namespace PlaywrightSharp
         /// </example>
         /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created.</returns>
         Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null);
+
+        /// <summary>
+        /// This searches for a target in this specific browser context.
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// await page.EvaluateAsync("() => window.open('https://www.example.com/')");
+        /// var newWindowTarget = await browserContext.WaitForTargetAsync((target) => target.Url == "https://www.example.com/");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="predicate">A function to be run for every target.</param>
+        /// <param name="options">options.</param>
+        /// <returns>Resolves to the first target found that matches the predicate function.</returns>
+        Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null);
     }
 }

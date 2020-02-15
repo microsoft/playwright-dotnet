@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -10,8 +12,15 @@ namespace PlaywrightSharp.Chromium
     public sealed class ChromiumBrowser : IBrowser
     {
         private readonly IBrowserApp _app;
+        private readonly ChromiumConnection _connection;
+        private readonly string[] _browserContextIds;
 
-        internal ChromiumBrowser(IBrowserApp app) => _app = app;
+        internal ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
+        {
+            _app = app;
+            _connection = connection;
+            _browserContextIds = browserContextIds;
+        }
 
         /// <inheritdoc cref="IBrowser"/>
         public event EventHandler<TargetChangedArgs> TargetChanged;
@@ -61,19 +70,21 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowser"/>
-        internal static Task<IBrowser> ConnectAsync(IBrowserApp app)
+        public Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null)
         {
-            /*
-            var transport = await CreateTransport(options);
-            const connection = new CRConnection(transport);
-            const { browserContextIds } = await connection.rootSession.send('Target.getBrowserContexts');
-            const browser = new CRBrowser(connection, browserContextIds);
-            await connection.rootSession.send('Target.setDiscoverTargets', { discover: true });
-            await browser.waitForTarget(t => t.type() === 'page');
-            return browser;
-            */
+            throw new NotImplementedException();
+        }
 
-            return Task.FromResult<IBrowser>(new ChromiumBrowser(app));
+        /// <inheritdoc cref="IBrowser"/>
+        internal static async Task<IBrowser> ConnectAsync(IBrowserApp app)
+        {
+            var transport = await BrowserHelper.CreateTransportAsync(app.GetConnectOptions()).ConfigureAwait(false);
+            var connection = new ChromiumConnection(transport);
+            var response = await connection.RootSession.SendAsync<TargetGetBrowserContextsResponse>("Target.getBrowserContexts").ConfigureAwait(false);
+            var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);
+            await connection.RootSession.SendAsync("Target.setDiscoverTargets", new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
+            await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
+            return browser;
         }
     }
 }
