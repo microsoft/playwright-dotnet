@@ -1660,5 +1660,19 @@ namespace PlaywrightSharp
                 Location = 4,
             },
         };
+
+        /// <summary>
+        /// Gets the <see cref="KeyDefinition"/> for the givin key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="KeyDefinition"/> of the specified key.</returns>
+        public static KeyDefinition Get(string key) => Definitions[key];
+
+        /// <summary>
+        /// Checks whether a <see cref="KeyDefinition"/> exists for the givin key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A value indicating if the key exists or not.</returns>
+        public static bool ContainsKey(string key) => Definitions.ContainsKey(key);
     }
 }
