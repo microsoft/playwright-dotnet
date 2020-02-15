@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Utility class for getting KeyDefinition.
+    /// Utility class for getting <see cref="KeyDefinition"/>.
     /// </summary>
     public static class KeyDefinitions
     {
