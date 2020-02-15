@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Chromium
 
             string path = options?.Path ?? Path.Combine(Directory.GetCurrentDirectory(), ".local-chromium");
             string host = options?.Host ?? "https://storage.googleapis.com";
-            var platform = options.Platform ?? GetPlatform();
+            var platform = options?.Platform ?? GetPlatform();
 
             Func<Platform, string, BrowserFetcherConfig> paramsGetter = (platform, revision) =>
             {
