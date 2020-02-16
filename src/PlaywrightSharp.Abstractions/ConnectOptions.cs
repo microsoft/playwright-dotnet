@@ -21,8 +21,13 @@ namespace PlaywrightSharp
         public string BrowserWSEndpoint { get; set; }
 
         /// <summary>
-        /// Transport used to communicate with the browser.
+        /// Optional factory for <see cref="IConnectionTransport"/> implementations.
         /// </summary>
-        public ITransport Transport { get; set; }
+        public TransportFactory TransportFactory { get; set; }
+
+        /// <summary>
+        /// Whether the transport should enqueue messages or not.
+        /// </summary>
+        public bool EnqueueTransportMessages { get; set; }
     }
 }

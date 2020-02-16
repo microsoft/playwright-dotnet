@@ -6,7 +6,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Transport interface.
     /// </summary>
-    public interface ITransport
+    public interface IConnectionTransport
     {
         /// <summary>
         /// Occurs when the transport is closed.

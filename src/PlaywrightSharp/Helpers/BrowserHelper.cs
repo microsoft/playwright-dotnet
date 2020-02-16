@@ -7,22 +7,22 @@ namespace PlaywrightSharp.Helpers
 {
     internal static class BrowserHelper
     {
-        public static async Task<ITransport> CreateTransportAsync(ConnectOptions options)
+        public static async Task<IConnectionTransport> CreateTransportAsync(ConnectOptions options)
         {
-            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) && options.Transport != null)
+            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) && options.TransportFactory != null)
             {
-                throw new ArgumentException("Exactly one of BrowserWSEndpoint or Transport must be passed to connect");
+                throw new ArgumentException("Exactly one of BrowserWSEndpoint or TransportFactory must be passed to connect");
             }
 
-            ITransport transport = null;
+            IConnectionTransport transport = null;
 
-            if (options.Transport != null)
+            if (options.TransportFactory != null)
             {
-                transport = options.Transport;
+                transport = await options.TransportFactory(new Uri(options.BrowserWSEndpoint), options).ConfigureAwait(false);
             }
             else if (!string.IsNullOrEmpty(options.BrowserWSEndpoint))
             {
-                transport = await WebsocketTransport.CreateAsync(options.BrowserWSEndpoint).ConfigureAwait(false);
+                transport = await WebSocketTransport.CreateAsync(options).ConfigureAwait(false);
             }
 
             return SlowMoTransport.Wrap(transport, options.SlowMo);

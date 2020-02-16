@@ -36,7 +36,7 @@ namespace PlaywrightSharp
         public bool LogProcess { get; set; }
 
         /// <summary>
-        /// If no <see cref="ITransport"/> is set, this will be use to determine is the default <see cref="ITransport"/> will enqueue messages.
+        /// If no <see cref="IConnectionTransport"/> is set, this will be use to determine is the default <see cref="IConnectionTransport"/> will enqueue messages.
         /// </summary>
         /// <remarks>
         /// It's set to <c>true</c> by default because it's the safest way to send commands to the browser.

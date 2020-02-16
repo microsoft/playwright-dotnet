@@ -2,9 +2,9 @@ namespace PlaywrightSharp.Chromium
 {
     internal class ChromiumConnection
     {
-        private readonly ITransport _transport;
+        private readonly IConnectionTransport _transport;
 
-        public ChromiumConnection(ITransport transport)
+        public ChromiumConnection(IConnectionTransport transport)
         {
             _transport = transport;
         }

@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// <see cref="ITransport.Closed"/>.
+    /// <see cref="IConnectionTransport.Closed"/>.
     /// </summary>
     public class TransportClosedEventArgs : EventArgs
     {
