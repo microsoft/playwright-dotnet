@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
 
             var rgb1 = default(Rgb24);
             var rgb2 = default(Rgb24);
-            var invalidPixelsCount = 0;
+            int invalidPixelsCount = 0;
 
             for (int y = 0; y < baseImage.Height; y++)
             {

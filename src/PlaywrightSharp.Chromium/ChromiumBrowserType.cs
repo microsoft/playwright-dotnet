@@ -24,6 +24,12 @@ namespace PlaywrightSharp.Chromium
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
 
         /// <inheritdoc cref="IBrowserType"/>
+        public string ExecutablePath => null;
+
+        /// <inheritdoc cref="IBrowserType"/>
+        public string Name => "chromium";
+
+        /// <inheritdoc cref="IBrowserType"/>
         public Task<IBrowser> ConnectAsync(ConnectOptions options = null)
         {
             throw new NotImplementedException();
@@ -42,7 +48,7 @@ namespace PlaywrightSharp.Chromium
 
             string path = options?.Path ?? Path.Combine(Directory.GetCurrentDirectory(), ".local-chromium");
             string host = options?.Host ?? "https://storage.googleapis.com";
-            var platform = options.Platform ?? GetPlatform();
+            var platform = options?.Platform ?? GetPlatform();
 
             Func<Platform, string, BrowserFetcherConfig> paramsGetter = (platform, revision) =>
             {

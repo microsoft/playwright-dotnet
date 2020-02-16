@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,7 +16,9 @@ namespace PlaywrightSharp.Tests
         public const string WebkitProduct = "WEBKIT";
         public const string FirefoxProduct = "FIREFOX";
 
-        public static string Product => Environment.GetEnvironmentVariable("PRODUCT") ?? ChromiumProduct;
+        public static string Product => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PRODUCT")) ?
+            ChromiumProduct :
+            Environment.GetEnvironmentVariable("PRODUCT");
 
         public const string TestFixtureCollectionName = "PlaywrightSharpLoaderFixture collection";
         public const int Port = 8081;

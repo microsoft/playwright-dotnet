@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Browser
+namespace PlaywrightSharp.Tests.Chromium.Browser
 {
-    ///<playwright-file>launcher.spec.js</playwright-file>
+    ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser target events</playwright-describe>
     public class TargetEventsTests : PlaywrightSharpBrowserContextBaseTest
     {
@@ -17,10 +18,10 @@ namespace PlaywrightSharp.Tests.Browser
         {
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser target events</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldWork()
         {
             var browser = await Playwright.LaunchAsync(TestConstants.DefaultBrowserOptions);

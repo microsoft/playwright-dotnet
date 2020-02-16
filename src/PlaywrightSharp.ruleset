@@ -17,6 +17,7 @@
     <Rule Id="CA1815" Action="Info" /> <!-- should override equality and inequality. -->
     <Rule Id="CA2227" Action="Info" /> <!-- Change '...' to be read-only by removing the property setter. -->
     <Rule Id="CA1200" Action="Info" /> <!-- Avoid using cref tags with a prefix -->
+    <Rule Id="CA2101" Action="None" /> <!-- Marshaling for P/Invoke-->
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1303" Action="None" />

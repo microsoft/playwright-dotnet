@@ -1,4 +1,4 @@
-name: Chromium Tests
+name: Chromium Tests On Win and Mac
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
@@ -24,4 +24,4 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium

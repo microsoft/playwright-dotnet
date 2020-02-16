@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -107,7 +108,7 @@ namespace PlaywrightSharp
             {
                 if (LinuxSysCall.Chmod(revisionInfo.ExecutablePath, LinuxSysCall.ExecutableFilePermissions) != 0)
                 {
-                    throw new PlaywrightSharpException("Unable to chmod the BrowserApp");
+                    throw new PlaywrightSharpException($"Unable to chmod the BrowserApp ({Marshal.GetLastWin32Error()})");
                 }
             }
 

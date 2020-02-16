@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Accessibility
+namespace PlaywrightSharp.Accessibility
 {
     /// <summary>
     /// Three-state boolean. See <seealso cref="SerializedAXNode.Checked"/> and <seealso cref="SerializedAXNode.Pressed"/>.
