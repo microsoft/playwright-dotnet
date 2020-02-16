@@ -100,6 +100,11 @@ namespace PlaywrightSharp
         event EventHandler Load;
 
         /// <summary>
+        /// The JavaScript <c>DOMContentLoaded</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded"/> event
+        /// </summary>
+        event EventHandler DOMContentLoaded;
+
+        /// <summary>
         /// Raised when the page crashes.
         /// </summary>
 #pragma warning disable CA1716 // Identifiers should not match keywords
@@ -165,6 +170,24 @@ namespace PlaywrightSharp
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
+
+        /// <summary>
+        /// Returns the opener for popup pages and <c>null</c> for others.
+        /// </summary>
+        /// <remarks>
+        /// If the opener has been closed already the task may resolve to <c>null</c>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// IPage popup;
+        /// page.Popup += (sender, e) => popup = e.Page;
+        /// await page.EvaluateAsync("() => window.open('about:blank')");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the opener is resolved, yielding the opener <see cref="IPage"/>.</returns>
+        Task<IPage> GetOpenerAsync();
 
         /// <summary>
         /// Completes when the page reaches a required load state, load by default.
@@ -294,7 +317,7 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
+        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null);
 
         /// <summary>
         /// Waits for event to fire once and return its value.
@@ -303,6 +326,14 @@ namespace PlaywrightSharp
         /// <param name="e">Event to wait for.</param>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> OnceAsync<T>(PageEvent e);
+
+        /// <summary>
+        /// Waits for event to fire once and passes its value into the delegate.
+        /// </summary>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="e">Event to wait for.</param>
+        /// <param name="action">The delegate that will recieve the returned value.</param>
+        void Once<T>(PageEvent e, Action<T> action);
 
         /// <summary>
         /// Navigates to an url.

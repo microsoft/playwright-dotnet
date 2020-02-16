@@ -1,9 +1,16 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IPage.WaitForEvent(PageEvent, WaitForEventOptions)"/>.
+    /// Options for <see cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>.
     /// </summary>
-    public class WaitForEventOptions
+    /// <typeparam name="T">Predicate input type.</typeparam>
+    public class WaitForEventOptions<T>
     {
+        /// <summary>
+        /// Gets or sets the predicate to use when waiting for events.
+        /// </summary>
+        public Func<T, bool> Predicate { get; set; }
     }
 }

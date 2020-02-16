@@ -229,395 +229,408 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithNoopener()
         {
-
-            var[popup] = await Promise.all([
-              new Promise(x => Page.once('popup', x)),
-              Page.EvaluateAsync<string>(() => window.open('about:blank', null, 'noopener')),
-
-
-
-
-
-            ]);
-            expect(await Page.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
-            expect(await popup.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
-
+            var popupTask = Page.OnceAsync<PopupEventArgs>(PageEvent.Popup);
+            await Task.WhenAll(
+                popupTask,
+                Page.EvaluateAsync<string>("() => window.open('about:blank', null, 'noopener')")
+            );
+            var popup = popupTask.Result.Page;
+            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with clicking target=_blank</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
-        public async Task ShouldWorkWithClickingTarget = _blank()
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldWorkWithClickingTargetBlank()
         {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.SetContentAsync("<a target=_blank rel=\"opener\" href=\"/one-style.html\">yo</a>");
+            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup).ContinueWith(async task =>
+            {
+                var popup = task.Result.Page;
+                await popup.WaitForLoadStateAsync();
+                return popup;
+            });
+            await Task.WhenAll(
+                await popupTask,
+                Page.ClickAsync("a")
+            );
+            var popup = await popupTask.Result;
+            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+        }
 
-      await Page.GoToAsync(TestConstants.EmptyPage);
-        await Page.SetContentAsync('<a target=_blank rel="opener" href="/one-style.html">yo</a>');
-        var[popup] = await Promise.all([
-         Page.waitForEvent('popup').then(async popup => { await popup.waitForLoadState(); return popup; }),
-        Page.ClickAsync('a'),
-        ]);
-        expect(await Page.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
-        expect(await popup.EvaluateAsync<string>(() => !!window.opener)).toBe(true);
-
-    }
-
-    ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.Events.Popup</playwright-describe>
-    ///<playwright-it>should work with fake-clicking target=_blank and rel=noopener</playwright-it>
-    [Fact(Skip = "Skipped in Playwright")]
-    public async Task ShouldWorkWithFake-clickingTarget=_blankAndRel=noopener()
-    {
-
-        // TODO: FFOX sends events for "one-style.html" request to both pages.
-        await Page.GoToAsync(TestConstants.EmptyPage);
-        await Page.SetContentAsync('<a target=_blank rel=noopener href="/one-style.html">yo</a>');
-        var[popup] = await Promise.all([
-          Page.waitForEvent('popup').then(async popup => { await popup.waitForLoadState(); return popup; }),
-          Page.$eval('a', a => a.ClickAsync()),
-
-
-
-        ]);
-        expect(await Page.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
-        // TODO: At this point popup might still have about:blank as the current document.
-        // FFOX is slow enough to trigger this. We should do something about popups api.
-        expect(await popup.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
-
-    }
-
-    ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.Events.Popup</playwright-describe>
-    ///<playwright-it>should work with clicking target=_blank and rel=noopener</playwright-it>
-    [Fact(Skip = "Skipped in Playwright")]
-    public async Task ShouldWorkWithClickingTarget = _blankAndRel = noopener()
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Popup</playwright-describe>
+        ///<playwright-it>should work with fake-clicking target=_blank and rel=noopener</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
+            // TODO: FFOX sends events for "one-style.html" request to both pages.
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
+            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup).ContinueWith(async task =>
+            {
+                var popup = task.Result.Page;
+                await popup.WaitForLoadStateAsync();
+                return popup;
+            });
+            await Task.WhenAll(
+                popupTask,
+                Page.QuerySelectorEvaluateAsync("a", "a => a.click()")
+            );
+            var popup = await popupTask.Result;
+            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            // TODO: At this point popup might still have about:blank as the current document.
+            // FFOX is slow enough to trigger this. We should do something about popups api.
+            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+        }
 
-      await Page.GoToAsync(TestConstants.EmptyPage);
-    await Page.SetContentAsync('<a target=_blank rel=noopener href="/one-style.html">yo</a>');
-    var[popup] = await Promise.all([
-     Page.waitForEvent('popup').then(async popup => { await popup.waitForLoadState(); return popup; }),
-        Page.ClickAsync('a'),
-    ]);
-    expect(await Page.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
-    expect(await popup.EvaluateAsync<string>(() => !!window.opener)).toBe(false);
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Popup</playwright-describe>
+        ///<playwright-it>should work with clicking target=_blank and rel=noopener</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
+            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup).ContinueWith(async task =>
+            {
+                var popup = task.Result.Page;
+                await popup.WaitForLoadStateAsync();
+                return popup;
+            });
+            await Task.WhenAll(
+                popupTask,
+                Page.ClickAsync("a")
+            );
+            var popup = await popupTask.Result;
+            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+        }
 
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.Events.Popup</playwright-describe>
-///<playwright-it>should not treat navigations as new popups</playwright-it>
-[Fact(Skip = "Skipped in Playwright")]
-public async Task ShouldNotTreatNavigationsAsNewPopups()
-{
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    await Page.SetContentAsync('<a target=_blank rel=noopener href="/one-style.html">yo</a>');
-    var[popup] = await Promise.all([
-      Page.waitForEvent('popup').then(async popup => { await popup.waitForLoadState(); return popup; }),
-      Page.ClickAsync('a'),
-
-    ]);
-    let badSecondPopup = false;
-    Page.popup', () => badSecondPopup = true);
-      await popup.GoToAsync(TestConstants.CrossProcessUrl + '/empty.html');
-    expect(badSecondPopup).toBe(false);
-
-}
-
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Popup</playwright-describe>
+        ///<playwright-it>should not treat navigations as new popups</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldNotTreatNavigationsAsNewPopups()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
+            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup).ContinueWith(async task =>
+            {
+                var popup = task.Result.Page;
+                await popup.WaitForLoadStateAsync();
+                return popup;
+            });
+            await Task.WhenAll(
+                popupTask,
+                Page.ClickAsync("a")
+            );
+            var popup = await popupTask.Result;
+            bool badSecondPopup = false;
+            Page.Popup += (sender, e) => badSecondPopup = true;
+            await popup.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            Assert.False(badSecondPopup);
+        }
     }
+
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.opener</playwright-describe>
-    public class Page.openerTests
+    public class PageOpenerTests : PlaywrightSharpPageBaseTest
     {
+        internal PageOpenerTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.opener</playwright-describe>
         ///<playwright-it>should provide access to the opener page</playwright-it>
         [Fact]
-public async Task ShouldProvideAccessToTheOpenerPage()
-{
+        public async Task ShouldProvideAccessToTheOpenerPage()
+        {
+            var popupTask = Page.OnceAsync<PopupEventArgs>(PageEvent.Popup);
+            await Task.WhenAll(
+                popupTask,
+                Page.EvaluateAsync("() => window.open('about:blank')")
+            );
+            var popup = popupTask.Result.Page;
+            var opener = await popup.GetOpenerAsync();
+            Assert.Equal(Page, opener);
+        }
 
-    var[popup] = await Promise.all([
-      new Promise(x => Page.once('popup', x)),
-      Page.EvaluateAsync<string>(() => window.open('about:blank')),
-
-    ]);
-    var opener = await popup.opener();
-    expect(opener).toBe(page);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.opener</playwright-describe>
-///<playwright-it>should return null if parent page has been closed</playwright-it>
-[Fact]
-public async Task ShouldReturnNullIfParentPageHasBeenClosed()
-{
-
-    var[popup] = await Promise.all([
-      new Promise(x => Page.once('popup', x)),
-      Page.EvaluateAsync<string>(() => window.open('about:blank')),
-
-    ]);
-    await Page.CloseAsync();
-    var opener = await popup.opener();
-    expect(opener).toBe(null);
-
-}
-
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.opener</playwright-describe>
+        ///<playwright-it>should return null if parent page has been closed</playwright-it>
+        [Fact]
+        public async Task ShouldReturnNullIfParentPageHasBeenClosed()
+        {
+            var popupTask = Page.OnceAsync<PopupEventArgs>(PageEvent.Popup);
+            await Task.WhenAll(
+                popupTask,
+                Page.EvaluateAsync("() => window.open('about:blank')")
+            );
+            var popup = popupTask.Result.Page;
+            await Page.CloseAsync();
+            var opener = await popup.GetOpenerAsync();
+            Assert.Null(opener);
+        }
     }
+
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Console</playwright-describe>
-    public class Page.Events.ConsoleTests
+    public class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
     {
+        internal PageEventsConsoleTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact]
-public async Task ShouldWork()
-{
+        public async Task ShouldWork()
+        {
+            ConsoleMessage message = null;
+            Page.Once(PageEvent.Console, (ConsoleEventArgs e) => message = e.Message);
+            await Task.WhenAll(
+                Page.EvaluateAsync<string>("() => console.log('hello', 5, { foo: 'bar'})"),
+                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
+            );
+            Assert.Equal("hello 5 JSHandle@object", message.Text);
+            Assert.Equal(ConsoleType.Log, message.Type);
+            Assert.Equal("hello", await message.Args[0].GetJsonValueAsync<string>());
+            Assert.Equal(5, await message.Args[1].GetJsonValueAsync<int>());
+            Assert.Equal(new { foo = "bar" }, await message.Args[2].GetJsonValueAsync<object>());
+        }
 
-    let message = null;
-    Page.once('console', m => message = m);
-    await Promise.all([
-      Page.EvaluateAsync<string>(() => console.log('hello', 5, { foo: 'bar'})),
-        waitEvent(page, 'console')
-      ]);
-    expect(message.text()).toEqual('hello 5 JSHandle@object');
-    expect(message.TypeAsync()).toEqual('log');
-    expect(await message.args()[0].jsonValue()).toEqual('hello');
-    expect(await message.args()[1].jsonValue()).toEqual(5);
-    expect(await message.args()[2].jsonValue()).toEqual({ foo: 'bar'});
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Console</playwright-describe>
+        ///<playwright-it>should work for different console API calls</playwright-it>
+        [Fact]
+        public async Task ShouldWorkForDifferentConsoleAPICalls()
+        {
+            var messages = new List<ConsoleMessage>();
+            Page.Console += (sender, e) => messages.Add(e.Message);
+            // All console events will be reported before `Page.evaluate` is finished.
+            await Page.EvaluateAsync(@"() => {
+                // A pair of time/timeEnd generates only one Console API call.
+                console.time('calling console.time');
+                console.timeEnd('calling console.time');
+                console.trace('calling console.trace');
+                console.dir('calling console.dir');
+                console.warn('calling console.warn');
+                console.error('calling console.error');
+                console.log(Promise.resolve('should not wait until resolved!'));
+            }");
+            Assert.Equal(new[] { ConsoleType.TimeEnd, ConsoleType.Trace, ConsoleType.Dir, ConsoleType.Warning, ConsoleType.Error, ConsoleType.Log }, messages.Select(msg => msg.Type));
+            Assert.Contains("calling console.time", messages[0].Text);
+            Assert.Equal(new[]
+            {
+                "calling console.trace",
+                "calling console.dir",
+                "calling console.warn",
+                "calling console.error",
+                "JSHandle@promise"
+            }, messages.Skip(1).Select(msg => msg.Text));
+        }
 
-}
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Console</playwright-describe>
+        ///<playwright-it>should not fail for window object</playwright-it>
+        [Fact]
+        public async Task ShouldNotFailForWindowObject()
+        {
+            ConsoleMessage message = null;
+            Page.Once(PageEvent.Console, (ConsoleEventArgs e) => message = e.Message);
+            await Task.WhenAll(
+                Page.EvaluateAsync("() => console.error(window)"),
+                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
+            );
+            Assert.Equal("JSHandle@object", message.Text);
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.Events.Console</playwright-describe>
-///<playwright-it>should work for different console API calls</playwright-it>
-[Fact]
-public async Task ShouldWorkForDifferentConsoleAPICalls()
-{
-
-    var messages = [];
-    Page.console', msg => messages.push(msg));
-      // All console events will be reported before `Page.evaluate` is finished.
-      await Page.EvaluateAsync<string>(() =>
-      {
-          // A pair of time/timeEnd generates only one Console API call.
-          console.time('calling console.time');
-          console.timeEnd('calling console.time');
-          console.trace('calling console.trace');
-          console.dir('calling console.dir');
-          console.warn('calling console.warn');
-          console.error('calling console.error');
-          console.log(Promise.resolve('should not wait until resolved!'));
-      });
-    expect(messages.map(msg => msg.TypeAsync())).toEqual([
-      'timeEnd', 'trace', 'dir', 'warning', 'error', 'log'
-    ]);
-    expect(messages[0].text()).toContain('calling console.time');
-    expect(messages.slice(1).map(msg => msg.text())).toEqual([
-      'calling console.trace',
-      'calling console.dir',
-      'calling console.warn',
-      'calling console.error',
-      'JSHandle@promise',
-
-    ]);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.Events.Console</playwright-describe>
-///<playwright-it>should not fail for window object</playwright-it>
-[Fact]
-public async Task ShouldNotFailForWindowObject()
-{
-
-    let message = null;
-    Page.once('console', msg => message = msg);
-    await Promise.all([
-      Page.EvaluateAsync<string>(() => console.error(window)),
-      waitEvent(page, 'console')
-    ]);
-    expect(message.text()).toBe('JSHandle@object');
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.Events.Console</playwright-describe>
-///<playwright-it>should trigger correct Log</playwright-it>
-[Fact]
-public async Task ShouldTriggerCorrectLog()
-{
-
-    await Page.GoToAsync('about:blank');
-    var[message] = await Promise.all([
-      waitEvent(page, 'console'),
-      Page.EvaluateAsync<string>(async url => fetch(url).catch (e => { }), TestConstants.EmptyPage)
-      ]);
-    expect(message.text()).toContain('Access-Control-Allow-Origin');
-    expect(message.TypeAsync()).toEqual('error');
-
-    }
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Console</playwright-describe>
+        ///<playwright-it>should trigger correct Log</playwright-it>
+        [Fact]
+        public async Task ShouldTriggerCorrectLog()
+        {
+            await Page.GoToAsync("about:blank");
+            var messageTask = Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+            await Task.WhenAll(
+                messageTask,
+                Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
+            );
+            var message = messageTask.Result.Message;
+            Assert.Contains("Access-Control-Allow-Origin", message.Text);
+            Assert.Equal(ConsoleType.Error, message.Type);
+        }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should have location for console API calls</playwright-it>
-[Fact]
-public async Task ShouldHaveLocationForConsoleAPICalls()
-{
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[message] = await Promise.all([
-      waitEvent(page, 'console'),
-      Page.GoToAsync(TestConstants.ServerUrl + '/consolelog.html'),
-
-    ]);
-    expect(message.text()).toBe('yellow');
-    expect(message.TypeAsync()).toBe('log');
-    var location = message.location();
-    // Engines have different column notion.
-    delete location.columnNumber;
-    expect(location).toEqual({
-    url: TestConstants.ServerUrl + '/consolelog.html',
-        lineNumber: 7,
-      });
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.Events.Console</playwright-describe>
-///<playwright-it>should not throw when there are console messages in detached iframes</playwright-it>
-[Fact(Skip = "Skipped in Playwright")]
-public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
-{
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    await Page.EvaluateAsync<string>(async () =>
-    {
-        // 1. Create a popup that Playwright is not connected to.
-        var win = window.open(window.location.href, 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0');
-        while (window.document.readyState !== 'complete')
+        [Fact]
+        public async Task ShouldHaveLocationForConsoleAPICalls()
         {
-            await new Promise(f => setTimeout(f, 100));
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var messageTask = Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+            await Task.WhenAll(
+                messageTask,
+                Page.GoToAsync(TestConstants.ServerUrl + "/consolelog.html")
+            );
+            var message = messageTask.Result.Message;
+            Assert.Equal("yellow", message.Text);
+            Assert.Equal(ConsoleType.Log, message.Type);
+            var location = message.Location;
+            // Engines have different column notion.
+            location.ColumnNumber = null;
+            Assert.Equal(new ConsoleMessageLocation
+            {
+                URL = TestConstants.ServerUrl + "/consolelog.html",
+                LineNumber = 7
+            }, location);
         }
-        // 2. In this popup, create an iframe that console.logs a message.
-        win.document.body.innerHTML = `< iframe src = '/consolelog.html' ></ iframe >`;
-        var frame = win.document.querySelector('iframe');
-        while (frame.contentDocument.readyState !== 'complete')
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Console</playwright-describe>
+        ///<playwright-it>should not throw when there are console messages in detached iframes</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {
-            await new Promise(f => setTimeout(f, 100));
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.EvaluateAsync(@"async () =>
+            {
+                // 1. Create a popup that Playwright is not connected to.
+                var win = window.open(window.location.href, 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0');
+                while (window.document.readyState !== 'complete')
+                {
+                    await new Promise(f => setTimeout(f, 100));
+                }
+                // 2. In this popup, create an iframe that console.logs a message.
+                win.document.body.innerHTML = `< iframe src = '/consolelog.html' ></ iframe >`;
+                var frame = win.document.querySelector('iframe');
+                while (frame.contentDocument.readyState !== 'complete')
+                {
+                    await new Promise(f => setTimeout(f, 100));
+                }
+                // 3. After that, remove the iframe.
+                frame.remove();
+            }");
+            // 4. Connect to the popup and make sure it doesn't throw.
+            await Page.BrowserContext.GetPagesAsync();
         }
-        // 3. After that, remove the iframe.
-        frame.remove();
-    });
-    // 4. Connect to the popup and make sure it doesn't throw.
-    await Page.browserContext().Pages;
-
-}
-
     }
+
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.DOMContentLoaded</playwright-describe>
-    public class Page.Events.DOMContentLoadedTests
+    public class PageEventsDOMContentLoadedTests : PlaywrightSharpPageBaseTest
     {
+        internal PageEventsDOMContentLoadedTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.DOMContentLoaded</playwright-describe>
         ///<playwright-it>should fire when expected</playwright-it>
         [Fact]
-public async Task ShouldFireWhenExpected()
-{
-
-    Page.GoToAsync('about:blank');
-    await waitEvent(page, 'domcontentloaded');
-
-}
-
+        public async Task ShouldFireWhenExpected()
+        {
+            Page.GoToAsync("about:blank");
+            await Page.WaitForEvent<object>(PageEvent.DOMContentLoaded);
+        }
     }
+
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForRequest</playwright-describe>
-    public class Page.waitForRequestTests
+    public class PageWaitForRequestTests : PlaywrightSharpPageBaseTest
     {
+        internal PageWaitForRequestTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact]
-public async Task ShouldWork()
-{
+        public async Task ShouldWork()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var requestTask = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png");
+            await Task.WhenAll(
+                requestTask,
+                Page.EvaluateAsync(@"() => {
+                  fetch('/digits/1.png');
+                  fetch('/digits/2.png');
+                  fetch('/digits/3.png');
+                }")
+            );
+            var request = requestTask.Result;
+            Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", request.Url);
+        }
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[request] = await Promise.all([
-      Page.waitForRequest(TestConstants.ServerUrl + '/digits/2.png'),
-      Page.EvaluateAsync<string>(() =>
-      {
-          fetch('/digits/1.png');
-          fetch('/digits/2.png');
-          fetch('/digits/3.png');
-      })
-    ]);
-    expect(request.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.waitForRequest</playwright-describe>
+        ///<playwright-it>should work with predicate</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithPredicate()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var requestTask = Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png"
+            });
+            await Task.WhenAll(
+                requestTask,
+                Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }")
+            );
+            var request = requestTask.Result;
+            Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", request.Url);
+        }
 
-}
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.waitForRequest</playwright-describe>
+        ///<playwright-it>should respect timeout</playwright-it>
+        [Fact]
+        public async Task ShouldRespectTimeout()
+        {
+            let error = null;
+            var exception = await Assert
+            await Page.waitForEvent('request', { predicate: () => false, timeout: 1 }).catch (e => error = e);
+            expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.waitForRequest</playwright-describe>
-///<playwright-it>should work with predicate</playwright-it>
-[Fact]
-public async Task ShouldWorkWithPredicate()
-{
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[request] = await Promise.all([
-      Page.waitForEvent('request', request => request.Url === TestConstants.ServerUrl + '/digits/2.png'),
-      Page.EvaluateAsync<string>(() =>
-      {
-          fetch('/digits/1.png');
-          fetch('/digits/2.png');
-          fetch('/digits/3.png');
-      })
-    ]);
-    expect(request.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.waitForRequest</playwright-describe>
-///<playwright-it>should respect timeout</playwright-it>
-[Fact]
-public async Task ShouldRespectTimeout()
-{
-
-    let error = null;
-    await Page.waitForEvent('request', { predicate: () => false, timeout: 1 }).catch (e => error = e);
-    expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
-
-    }
+            }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should respect default timeout</playwright-it>
-[Fact]
-public async Task ShouldRespectDefaultTimeout()
-{
+        [Fact]
+        public async Task ShouldRespectDefaultTimeout()
+        {
 
-    let error = null;
-    Page.setDefaultTimeout(1);
-    await Page.waitForEvent('request', () => false).catch (e => error = e);
-    expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
+            let error = null;
+            Page.setDefaultTimeout(1);
+            await Page.waitForEvent('request', () => false).catch (e => error = e);
+            expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
 
-    }
+            }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with no timeout</playwright-it>
-[Fact]
-public async Task ShouldWorkWithNoTimeout()
-{
+        [Fact]
+        public async Task ShouldWorkWithNoTimeout()
+        {
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[request] = await Promise.all([
-      Page.waitForRequest(TestConstants.ServerUrl + '/digits/2.png', { timeout: 0}),
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var[request] = await Promise.all([
+              Page.waitForRequest(TestConstants.ServerUrl + '/digits/2.png', { timeout: 0}),
         Page.EvaluateAsync<string>(() => setTimeout(() =>
         {
             fetch('/digits/1.png');
@@ -625,28 +638,28 @@ public async Task ShouldWorkWithNoTimeout()
             fetch('/digits/3.png');
         }, 50))
       ]);
-    expect(request.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
+            expect(request.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
 
-}
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.waitForRequest</playwright-describe>
-///<playwright-it>should work with url match</playwright-it>
-[Fact]
-public async Task ShouldWorkWithUrlMatch()
-{
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.waitForRequest</playwright-describe>
+        ///<playwright-it>should work with url match</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithUrlMatch()
+        {
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[request] = await Promise.all([
-      Page.waitForRequest(/ digits\/\d\.png /),
-      Page.EvaluateAsync<string>(() =>
-      {
-          fetch('/digits/1.png');
-      })
-    ]);
-    expect(request.Url).toBe(TestConstants.ServerUrl + '/digits/1.png');
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var[request] = await Promise.all([
+              Page.waitForRequest(/ digits\/\d\.png /),
+              Page.EvaluateAsync<string>(() =>
+              {
+                  fetch('/digits/1.png');
+              })
+            ]);
+            expect(request.Url).toBe(TestConstants.ServerUrl + '/digits/1.png');
 
-}
+        }
 
     }
     ///<playwright-file>page.spec.js</playwright-file>
@@ -657,96 +670,96 @@ public async Task ShouldWorkWithUrlMatch()
         ///<playwright-describe>Page.waitForResponse</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact]
-public async Task ShouldWork()
-{
+    public async Task ShouldWork()
+    {
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[response] = await Promise.all([
-      Page.waitForResponse(TestConstants.ServerUrl + '/digits/2.png'),
-      Page.EvaluateAsync<string>(() =>
-      {
-          fetch('/digits/1.png');
-          fetch('/digits/2.png');
-          fetch('/digits/3.png');
-      })
-    ]);
-    expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.waitForResponse</playwright-describe>
-///<playwright-it>should respect timeout</playwright-it>
-[Fact]
-public async Task ShouldRespectTimeout()
-{
-
-    let error = null;
-    await Page.waitForEvent('response', { predicate: () => false, timeout: 1 }).catch (e => error = e);
-    expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
+        await Page.GoToAsync(TestConstants.EmptyPage);
+        var[response] = await Promise.all([
+          Page.waitForResponse(TestConstants.ServerUrl + '/digits/2.png'),
+          Page.EvaluateAsync<string>(() =>
+          {
+              fetch('/digits/1.png');
+              fetch('/digits/2.png');
+              fetch('/digits/3.png');
+          })
+        ]);
+        expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
 
     }
+
+    ///<playwright-file>page.spec.js</playwright-file>
+    ///<playwright-describe>Page.waitForResponse</playwright-describe>
+    ///<playwright-it>should respect timeout</playwright-it>
+    [Fact]
+    public async Task ShouldRespectTimeout()
+    {
+
+        let error = null;
+        await Page.waitForEvent('response', { predicate: () => false, timeout: 1 }).catch (e => error = e);
+        expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
+
+        }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForResponse</playwright-describe>
         ///<playwright-it>should respect default timeout</playwright-it>
 [Fact]
-public async Task ShouldRespectDefaultTimeout()
-{
+    public async Task ShouldRespectDefaultTimeout()
+    {
 
-    let error = null;
-    Page.setDefaultTimeout(1);
-    await Page.waitForEvent('response', () => false).catch (e => error = e);
-    expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
+        let error = null;
+        Page.setDefaultTimeout(1);
+        await Page.waitForEvent('response', () => false).catch (e => error = e);
+        expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
 
-    }
+        }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForResponse</playwright-describe>
         ///<playwright-it>should work with predicate</playwright-it>
 [Fact]
-public async Task ShouldWorkWithPredicate()
-{
+    public async Task ShouldWorkWithPredicate()
+    {
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[response] = await Promise.all([
-      Page.waitForEvent('response', response => response.Url === TestConstants.ServerUrl + '/digits/2.png'),
-      Page.EvaluateAsync<string>(() =>
-      {
-          fetch('/digits/1.png');
-          fetch('/digits/2.png');
-          fetch('/digits/3.png');
-      })
-    ]);
-    expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
+        await Page.GoToAsync(TestConstants.EmptyPage);
+        var[response] = await Promise.all([
+          Page.waitForEvent('response', response => response.Url === TestConstants.ServerUrl + '/digits/2.png'),
+          Page.EvaluateAsync<string>(() =>
+          {
+              fetch('/digits/1.png');
+              fetch('/digits/2.png');
+              fetch('/digits/3.png');
+          })
+        ]);
+        expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
 
-}
+    }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.waitForResponse</playwright-describe>
-///<playwright-it>should work with no timeout</playwright-it>
-[Fact]
-public async Task ShouldWorkWithNoTimeout()
-{
+    ///<playwright-file>page.spec.js</playwright-file>
+    ///<playwright-describe>Page.waitForResponse</playwright-describe>
+    ///<playwright-it>should work with no timeout</playwright-it>
+    [Fact]
+    public async Task ShouldWorkWithNoTimeout()
+    {
 
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var[response] = await Promise.all([
-      Page.waitForResponse(TestConstants.ServerUrl + '/digits/2.png', { timeout: 0 }),
+        await Page.GoToAsync(TestConstants.EmptyPage);
+        var[response] = await Promise.all([
+          Page.waitForResponse(TestConstants.ServerUrl + '/digits/2.png', { timeout: 0 }),
         Page.EvaluateAsync<string>(() => setTimeout(() =>
         {
             fetch('/digits/1.png');
             fetch('/digits/2.png');
             fetch('/digits/3.png');
         }, 50))
-      ]);
-    expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
-
-}
+          ]);
+        expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
 
     }
-    ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.exposeFunction</playwright-describe>
-    public class Page.exposeFunctionTests
+
+}
+///<playwright-file>page.spec.js</playwright-file>
+///<playwright-describe>Page.exposeFunction</playwright-describe>
+public class Page.exposeFunctionTests
     {
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>

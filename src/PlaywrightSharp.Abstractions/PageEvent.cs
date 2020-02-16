@@ -12,6 +12,11 @@ namespace PlaywrightSharp
         Load,
 
         /// <summary>
+        /// The JavaScript <c>DOMContentLoaded</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded"/> event
+        /// </summary>
+        DOMContentLoaded,
+
+        /// <summary>
         /// Console event
         /// </summary>
         /// <see cref="IPage.Console"/>
