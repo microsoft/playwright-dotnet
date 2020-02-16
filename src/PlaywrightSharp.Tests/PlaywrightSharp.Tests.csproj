@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -27,6 +27,7 @@
     </PackageReference>
     <PackageReference Include="MicrosoftExtensions.Logging.Xunit" Version="1.0.0" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,8 +37,5 @@
     <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
     <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
     <ProjectReference Include="..\PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Browser\" />
   </ItemGroup>
 </Project>

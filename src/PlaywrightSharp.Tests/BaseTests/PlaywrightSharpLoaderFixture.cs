@@ -1,6 +1,6 @@
-﻿using PlaywrightSharp.TestServer;
 using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.TestServer;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
@@ -12,9 +12,10 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal static SimpleServer Server { get; private set; }
         internal static SimpleServer HttpsServer { get; private set; }
 
-        internal PlaywrightSharpLoaderFixture()
+        /// <inheritdoc/>
+        public PlaywrightSharpLoaderFixture()
         {
-            //SetupAsync().GetAwaiter().GetResult();
+            SetupAsync().GetAwaiter().GetResult();
         }
 
         /// <inheritdoc />
@@ -23,10 +24,9 @@ namespace PlaywrightSharp.Tests.BaseTests
             Task.WaitAll(Server.StopAsync(), HttpsServer.StopAsync());
         }
 
-        /*
         private async Task SetupAsync()
         {
-            var downloaderTask = new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+            var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher().DownloadAsync();
 
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
             HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
@@ -36,6 +36,5 @@ namespace PlaywrightSharp.Tests.BaseTests
 
             await Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
         }
-        */
     }
 }

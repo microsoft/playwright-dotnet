@@ -1,5 +1,5 @@
-﻿using PlaywrightSharp.TestServer;
 using System.IO;
+using PlaywrightSharp.TestServer;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.BaseTests

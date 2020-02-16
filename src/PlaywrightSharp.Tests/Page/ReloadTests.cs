@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Helpers;
-using Xunit;
-using Xunit.Abstractions;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Tests.Attributes;
+using PlaywrightSharp.Tests.BaseTests;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Page
 {

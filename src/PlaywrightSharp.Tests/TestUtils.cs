@@ -1,10 +1,21 @@
-﻿using System;
+using System;
+using System.IO;
 using Xunit;
 
 namespace PlaywrightSharp.Tests
 {
     internal class TestUtils
     {
+        internal static string FindParentDirectory(string directory)
+        {
+            var current = Directory.GetCurrentDirectory();
+            while (!Directory.Exists(Path.Combine(current, directory)))
+            {
+                current = Directory.GetParent(current).FullName;
+            }
+            return Path.Combine(current, directory);
+        }
+
         internal static void AssertSSLError(string errorMessage)
         {
             if (TestConstants.IsChromium)

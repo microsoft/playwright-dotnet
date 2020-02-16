@@ -44,11 +44,11 @@ namespace PlaywrightSharp.Helpers
         public override string ToString() => Path;
 
         public Task DeleteAsync(CancellationToken cancellationToken = default)
-            => _deleteTask ?? (_deleteTask = DeleteAsync(Path, CancellationToken.None));
+            => _deleteTask ?? (_deleteTask = DeleteAsync(Path, cancellationToken));
 
         protected void Dispose(bool disposing)
         {
-            if (_deleteTask == null)
+            if (_deleteTask == null && disposing)
             {
                 _ = DeleteAsync();
             }
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Helpers
                     Directory.Delete(path, true);
                     return;
                 }
-                catch
+                catch (IOException)
                 {
                     await Task.Delay(retryDelay, cancellationToken).ConfigureAwait(false);
                     if (retryDelay < maxDelayInMsec)

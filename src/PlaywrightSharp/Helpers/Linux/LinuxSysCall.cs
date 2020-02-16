@@ -5,8 +5,10 @@ namespace PlaywrightSharp.Helpers.Linux
 {
     internal static class LinuxSysCall
     {
-        internal static readonly FileAccessPermissions ExecutableFilePermissions =
-            FileAccessPermissions.UserRead | FileAccessPermissions.UserWrite | FileAccessPermissions.UserExecute |
+        internal const FileAccessPermissions ExecutableFilePermissions =
+            FileAccessPermissions.UserRead |
+            FileAccessPermissions.UserWrite |
+            FileAccessPermissions.UserExecute |
             FileAccessPermissions.GroupRead |
             FileAccessPermissions.GroupExecute |
             FileAccessPermissions.OtherRead |

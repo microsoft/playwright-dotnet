@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace PlaywrightSharp.Accessibility
@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Accessibility
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedAXNode"/> class.
         /// </summary>
-        public SerializedAXNode() => Children = new SerializedAXNode[] { };
+        public SerializedAXNode() => Children = Array.Empty<SerializedAXNode>();
 
         /// <summary>
         /// The <see fref="https://www.w3.org/TR/wai-aria/#usage_intro">role</see>.
@@ -145,7 +145,8 @@ namespace PlaywrightSharp.Accessibility
 
         /// <inheritdoc/>
         public bool Equals(SerializedAXNode other)
-            => ReferenceEquals(this, other) || (
+            => other != null &&
+                (ReferenceEquals(this, other) || (
                     Role == other.Role &&
                     Name == other.Name &&
                     Value == other.Value &&
@@ -170,7 +171,7 @@ namespace PlaywrightSharp.Accessibility
                     Level == other.Level &&
                     ValueMin == other.ValueMin &&
                     ValueMax == other.ValueMax &&
-                    (Children == other.Children || Children.SequenceEqual(other.Children)));
+                    (Children == other.Children || Children.SequenceEqual(other.Children))));
 
         /// <inheritdoc/>
         public override bool Equals(object obj) => obj is SerializedAXNode s && Equals(s);

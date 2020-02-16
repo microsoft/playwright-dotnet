@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,7 +12,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Status code of the response.
         /// </summary>
-        public HttpStatusCode Status { get; }
+        HttpStatusCode Status { get; }
+
+        /// <summary>
+        /// Contains the status text of the response (e.g. usually an "OK" for a success).
+        /// </summary>
+        string StatusText { get; }
 
         /// <summary>
         /// An <see cref="IFrame"/> that initiated this response, or null if navigating to error pages.
@@ -25,9 +30,19 @@ namespace PlaywrightSharp
         string Url { get; }
 
         /// <summary>
+        /// An object with HTTP headers associated with the response. All header names are lower-case.
+        /// </summary>
+        IDictionary<string, string> Headers { get; }
+
+        /// <summary>
         /// Whether the response was successful (status in the range 200-299) or not.
         /// </summary>
         bool Ok { get; }
+
+        /// <summary>
+        /// A matching <see cref="IRequest"/> object.
+        /// </summary>
+        IRequest Request { get; }
 
         /// <summary>
         /// A text representation of response body.

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 using Mono.Unix;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Helpers.Linux;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Browser
+namespace PlaywrightSharp.Tests.Chromium
 {
-    ///<playwright-file>launcher.spec.js</playwright-file>
+    ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>BrowserFetcher</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserFetcherTests : PlaywrightSharpBrowserBaseTest, IDisposable
     {
         private readonly TempDirectory _downloadsFolder;
@@ -30,10 +33,10 @@ namespace PlaywrightSharp.Tests.Browser
             _downloadsFolder.Dispose();
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>BrowserFetcher</playwright-describe>
         ///<playwright-it>should download and extract linux binary</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldDownloadAndExtractLinuxBinary()
         {
             var browserFetcher = Playwright.CreateBrowserFetcher(new BrowserFetcherOptions
@@ -42,15 +45,15 @@ namespace PlaywrightSharp.Tests.Browser
                 Path = _downloadsFolder.Path,
                 Host = TestConstants.ServerUrl
             });
-            var revisionInfo = browserFetcher.GetRevisionInfo(123456);
+            var revisionInfo = browserFetcher.GetRevisionInfo("123456");
 
             Server.SetRedirect(revisionInfo.Url.Substring(TestConstants.ServerUrl.Length), "/chromium-linux.zip");
             Assert.False(revisionInfo.Local);
             Assert.Equal(Platform.Linux, revisionInfo.Platform);
-            Assert.False(await browserFetcher.CanDownloadAsync(100000));
-            Assert.True(await browserFetcher.CanDownloadAsync(123456));
+            Assert.False(await browserFetcher.CanDownloadAsync("100000"));
+            Assert.True(await browserFetcher.CanDownloadAsync("123456"));
 
-            revisionInfo = await browserFetcher.DownloadAsync(123456);
+            revisionInfo = await browserFetcher.DownloadAsync("123456");
             Assert.True(revisionInfo.Local);
             Assert.Equal("LINUX BINARY\n", File.ReadAllText(revisionInfo.ExecutablePath));
 
@@ -62,15 +65,15 @@ namespace PlaywrightSharp.Tests.Browser
                 Assert.Equal(permissions, UnixFileSystemInfo.GetFileSystemEntry(revisionInfo.ExecutablePath).FileAccessPermissions & permissions);
 #endif
             }
-            Assert.Equal(new[] { 123456 }, browserFetcher.GetLocalRevisions());
-            browserFetcher.Remove(123456);
+            Assert.Equal(new[] { "123456" }, browserFetcher.GetLocalRevisions());
+            browserFetcher.Remove("123456");
             Assert.Empty(browserFetcher.GetLocalRevisions());
 
             //Download should return data from a downloaded version
             //This section is not in the Playwright test.
-            await browserFetcher.DownloadAsync(123456);
+            await browserFetcher.DownloadAsync("123456");
             Server.Reset();
-            revisionInfo = await browserFetcher.DownloadAsync(123456);
+            revisionInfo = await browserFetcher.DownloadAsync("123456");
             Assert.True(revisionInfo.Local);
             Assert.Equal("LINUX BINARY\n", File.ReadAllText(revisionInfo.ExecutablePath));
         }

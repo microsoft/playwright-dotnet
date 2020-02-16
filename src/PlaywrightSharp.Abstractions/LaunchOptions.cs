@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Options for <see cref="IBrowserType.LaunchAsync(LaunchOptions)"/> and <see cref="IBrowserType.LaunchBrowserAppAsync(LaunchOptions)"/>.
@@ -48,5 +48,16 @@
         /// Setting this to <c>false</c> proved to work in .NET Core but it tends to fail on .NET Framework.
         /// </remarks>
         public bool EnqueueTransportMessages { get; set; } = true;
+
+        /// <summary>
+        /// If <c>true</c>, then do not use <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
+        /// Dangerous option; use with care. Defaults to <c>false</c>.
+        /// </summary>
+        public bool IgnoreDefaultArgs { get; set; }
+
+        /// <summary>
+        /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
+        /// </summary>
+        public string[] IgnoredDefaultArgs { get; set; }
     }
 }

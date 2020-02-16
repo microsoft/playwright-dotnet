@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 
 namespace PlaywrightSharp
 {
@@ -25,7 +25,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Wait for element to become visible (visible), hidden (hidden), present in dom (any) or do not wait at all (nowait). Defaults to visible.
         /// </summary>
-        public WaitForOptions WaitFor { get; set; }
+        public WaitForClickOption WaitFor { get; set; }
 
         /// <summary>
         /// A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.

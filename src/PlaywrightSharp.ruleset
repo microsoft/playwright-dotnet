@@ -8,4 +8,18 @@
     <Rule Id="SA1309" Action="None" />
     <Rule Id="SX1309" Action="Error" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1054" Action="None" /> <!-- Overloads to System.Uri-->
+    <Rule Id="CA1056" Action="None" /> <!-- Change string to System.Uri-->
+    <Rule Id="CA1040" Action="None" /> <!-- Avoid empty interfaces-->
+    <Rule Id="CA2007" Action="Error" /> <!-- Use ConfigureAwait -->
+    <Rule Id="CA1819" Action="Info" /> <!-- Properties should not return arrays. -->
+    <Rule Id="CA1815" Action="Info" /> <!-- should override equality and inequality. -->
+    <Rule Id="CA2227" Action="Info" /> <!-- Change '...' to be read-only by removing the property setter. -->
+    <Rule Id="CA1200" Action="Info" /> <!-- Avoid using cref tags with a prefix -->
+    <Rule Id="CA2101" Action="None" /> <!-- Marshaling for P/Invoke-->
+  </Rules>
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1303" Action="None" />
+  </Rules>
 </RuleSet>

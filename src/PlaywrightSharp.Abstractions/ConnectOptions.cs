@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Options for <see cref="IBrowserType.ConnectAsync(ConnectOptions)"/>.
@@ -18,6 +18,6 @@
         /// <summary>
         /// A browser websocket endpoint to connect to.
         /// </summary>
-        public string WebSocketEndpoint { get; set; }
+        public string BrowserWSEndpoint { get; set; }
     }
 }
