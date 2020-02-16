@@ -97,7 +97,19 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/load"/> event is dispatched.
         /// </summary>
-        public event EventHandler Load;
+        event EventHandler Load;
+
+        /// <summary>
+        /// Raised when the page crashes.
+        /// </summary>
+#pragma warning disable CA1716 // Identifiers should not match keywords
+        event EventHandler<ErrorEventArgs> Error;
+#pragma warning restore CA1716 // Identifiers should not match keywords
+
+        /// <summary>
+        /// Get an indication that the page has been closed.
+        /// </summary>
+        bool IsClosed { get; }
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -264,8 +276,33 @@ namespace PlaywrightSharp
         /// <param name="e">Event to wait for.</param>
         /// <param name="options">Extra options.</param>
         /// <typeparam name="T">Return type.</typeparam>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// // wait for console event:
+        /// var console = await page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+        ///
+        /// // wait for popup event:
+        /// var popup = await page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+        ///
+        /// // wait for dialog event:
+        /// var dialog = await page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+        ///
+        /// // wait for request event:
+        /// var request = await page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
+        /// ]]>
+        /// </code>
+        /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
+
+        /// <summary>
+        /// Waits for event to fire once and return its value.
+        /// </summary>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="e">Event to wait for.</param>
+        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
+        Task<T> OnceAsync<T>(PageEvent e);
 
         /// <summary>
         /// Navigates to an url.
