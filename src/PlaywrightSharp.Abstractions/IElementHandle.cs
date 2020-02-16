@@ -10,6 +10,40 @@ namespace PlaywrightSharp
     public interface IElementHandle : IJSHandle
     {
         /// <summary>
+        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string, DownOptions)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
+        /// </summary>
+        /// <param name="key">Name of key to press, such as <c>ArrowLeft</c>. See <see cref="KeyDefinitions"/> for a list of all key names.</param>
+        /// <param name="options">press options.</param>
+        /// <remarks>
+        /// If <c>key</c> is a single character and no modifier keys besides <c>Shift</c> are being held down, a <c>keypress</c>/<c>input</c> event will also be generated. The <see cref="DownOptions.Text"/> option can be specified to force an input event to be generated.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task PressAsync(string key, PressOptions options = null);
+
+        /// <summary>
+        /// Focuses the element, and sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="options">Type options.</param>
+        /// <remarks>
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IElementHandle.PressAsync(string, PressOptions)"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// elementHandle.TypeAsync("#mytextarea", "Hello"); // Types instantly
+        /// elementHandle.TypeAsync("#mytextarea", "World", new TypeOptions { Delay = 100 }); // Types slower, like a user
+        /// </code>
+        /// An example of typing into a text field and then submitting the form:
+        /// <code>
+        /// var elementHandle = await page.GetElementAsync("input");
+        /// await elementHandle.TypeAsync("some text");
+        /// await elementHandle.PressAsync("Enter");
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task TypeAsync(string text, TypeOptions options = null);
+
+        /// <summary>
         /// Takes a screenshot of the element.
         /// </summary>
         /// <param name="options">Screenshot options.</param>
