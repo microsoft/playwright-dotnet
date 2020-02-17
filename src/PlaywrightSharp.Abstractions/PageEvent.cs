@@ -41,6 +41,12 @@ namespace PlaywrightSharp
         Request,
 
         /// <summary>
+        /// Response event
+        /// </summary>
+        /// <see cref="IPage.Response"/>
+        Response,
+
+        /// <summary>
         /// Error event
         /// </summary>
         /// <see cref="IPage.Error"/>

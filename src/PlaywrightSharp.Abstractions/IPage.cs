@@ -65,6 +65,31 @@ namespace PlaywrightSharp
         event EventHandler<RequestEventArgs> Request;
 
         /// <summary>
+        /// Raised when a <see cref="IResponse"/> is received.
+        /// </summary>
+        /// <example>
+        /// An example of handling <see cref="IResponse"/> event:
+        /// <code>
+        /// <![CDATA[
+        /// var tcs = new TaskCompletionSource<string>();
+        /// page.Response += async(sender, e) =>
+        /// {
+        ///     if (e.Response.Url.Contains("script.js"))
+        ///     {
+        ///         tcs.TrySetResult(await e.Response.TextAsync());
+        ///     }
+        /// };
+        ///
+        /// await Task.WhenAll(
+        ///     page.GoToAsync(TestConstants.ServerUrl + "/grid.html"),
+        ///     tcs.Task);
+        /// Console.WriteLine(await tcs.Task);
+        /// ]]>
+        /// </code>
+        /// </example>
+        event EventHandler<ResponseEventArgs> Response;
+
+        /// <summary>
         /// Raised when a request finishes successfully.
         /// </summary>
         event EventHandler<RequestEventArgs> RequestFinished;
@@ -532,6 +557,12 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes.</returns>
         /// <seealso cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
         Task SetContentAsync(string html, WaitUntilNavigation waitUntil);
+
+        /// <summary>
+        /// Gets the full HTML contents of the page, including the doctype.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding the HTML content.</returns>
+        Task<string> GetContentAsync();
 
         /// <summary>
         /// Sets extra HTTP headers that will be sent with every request the page initiates.

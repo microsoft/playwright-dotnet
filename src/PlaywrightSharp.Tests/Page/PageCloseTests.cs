@@ -121,556 +121,325 @@ namespace PlaywrightSharp.Tests.Page
         }
     }
     ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.Events.error</playwright-describe>
-    public class PageEventsErrorTests : PlaywrightSharpPageBaseTest
+    ///<playwright-describe>Page.waitForResponse</playwright-describe>
+    public class PageWaitForResponseTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsErrorTests(ITestOutputHelper output) : base(output)
+        internal PageWaitForResponseTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.error</playwright-describe>
-        ///<playwright-it>should throw when page crashes</playwright-it>
-        [Fact]
-        public async Task ShouldThrowWhenPageCrashes()
-        {
-            string error = null;
-            Page.Error += (sender, e) => error = e.Error;
-            if (TestConstants.IsChromium)
-            {
-                _ = Page.GoToAsync("chrome://crash").ContinueWith(t => { });
-            }
-            else if (TestConstants.IsWebKit)
-            {
-                // TODO: expose PageDelegate
-                // Page._delegate._session.send('Page.crash', }
-            }
-            await Page.WaitForEvent<ErrorEventArgs>(PageEvent.Error);
-            Assert.Equal("Page crashed!", error);
-        }
-    }
-    ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.waitForResponse</playwright-describe>
-    public class Page.waitForResponseTests
-    {
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForResponse</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact]
-    public async Task ShouldWork()
-    {
+        public async Task ShouldWork()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var (response, _) = await TaskUtils.WhenAll(
+                Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png"),
+                Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }")
+            );
+            Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", response.Url);
+        }
 
-        await Page.GoToAsync(TestConstants.EmptyPage);
-        var[response] = await Promise.all([
-          Page.waitForResponse(TestConstants.ServerUrl + '/digits/2.png'),
-          Page.EvaluateAsync<string>(() =>
-          {
-              fetch('/digits/1.png');
-              fetch('/digits/2.png');
-              fetch('/digits/3.png');
-          })
-        ]);
-        expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
-
-    }
-
-    ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.waitForResponse</playwright-describe>
-    ///<playwright-it>should respect timeout</playwright-it>
-    [Fact]
-    public async Task ShouldRespectTimeout()
-    {
-
-        let error = null;
-        await Page.waitForEvent('response', { predicate: () => false, timeout: 1 }).catch (e => error = e);
-        expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
-
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.waitForResponse</playwright-describe>
+        ///<playwright-it>should respect timeout</playwright-it>
+        [Fact]
+        public async Task ShouldRespectTimeout()
+        {
+            var exception = await Assert.ThrowsAsync<TimeoutException>(
+                () => Page.WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs>
+                {
+                    Predicate = _ => false,
+                    Timeout = 1
+                }));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForResponse</playwright-describe>
         ///<playwright-it>should respect default timeout</playwright-it>
-[Fact]
-    public async Task ShouldRespectDefaultTimeout()
-    {
-
-        let error = null;
-        Page.setDefaultTimeout(1);
-        await Page.waitForEvent('response', () => false).catch (e => error = e);
-        expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
-
+        [Fact]
+        public async Task ShouldRespectDefaultTimeout()
+        {
+            var exception = await Assert.ThrowsAsync<TimeoutException>(
+                () => Page.WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs>
+                {
+                    Predicate = _ => false
+                }));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForResponse</playwright-describe>
         ///<playwright-it>should work with predicate</playwright-it>
-[Fact]
-    public async Task ShouldWorkWithPredicate()
-    {
-
-        await Page.GoToAsync(TestConstants.EmptyPage);
-        var[response] = await Promise.all([
-          Page.waitForEvent('response', response => response.Url === TestConstants.ServerUrl + '/digits/2.png'),
-          Page.EvaluateAsync<string>(() =>
-          {
-              fetch('/digits/1.png');
-              fetch('/digits/2.png');
-              fetch('/digits/3.png');
-          })
-        ]);
-        expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
-
-    }
-
-    ///<playwright-file>page.spec.js</playwright-file>
-    ///<playwright-describe>Page.waitForResponse</playwright-describe>
-    ///<playwright-it>should work with no timeout</playwright-it>
-    [Fact]
-    public async Task ShouldWorkWithNoTimeout()
-    {
-
-        await Page.GoToAsync(TestConstants.EmptyPage);
-        var[response] = await Promise.all([
-          Page.waitForResponse(TestConstants.ServerUrl + '/digits/2.png', { timeout: 0 }),
-        Page.EvaluateAsync<string>(() => setTimeout(() =>
-        {
-            fetch('/digits/1.png');
-            fetch('/digits/2.png');
-            fetch('/digits/3.png');
-        }, 50))
-          ]);
-        expect(response.Url).toBe(TestConstants.ServerUrl + '/digits/2.png');
-
-    }
-
-}
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-public class Page.exposeFunctionTests
-    {
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.exposeFunction</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
         [Fact]
-public async Task ShouldWork()
-{
-
-    await Page.exposeFunction('compute', function(a, b) {
-        return a * b;
-    });
-    var result = await Page.EvaluateAsync<string>(async function() {
-        return await compute(9, 4);
-    });
-    expect(result).toBe(36);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should throw exception in page context</playwright-it>
-[Fact]
-public async Task ShouldThrowExceptionInPageContext()
-{
-
-    await Page.exposeFunction('woof', function() {
-        throw new Error('WOOF WOOF');
-    });
-    var { message, stack} = await Page.EvaluateAsync<string>(async () =>
-    {
-        try
-        {
-            await woof();
-        }
-        catch (e)
-        {
-            return { message: e.message, stack: e.stack};
-        }
-    });
-    expect(message).toBe('WOOF WOOF');
-    expect(stack).toContain(__filename);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should support throwing "null"</playwright-it>
-[Fact]
-public async Task ShouldSupportThrowing"null"()
+        public async Task ShouldWorkWithPredicate()
         {
 
-      await Page.exposeFunction('woof', function() {
-    throw null;
-});
-      var thrown = await Page.EvaluateAsync<string>(async () =>
-      {
-          try
-          {
-              await woof();
-          }
-          catch (e)
-          {
-              return e;
-          }
-      });
-expect(thrown).toBe(null);
-
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var (responseEvent, _) = await TaskUtils.WhenAll(
+                Page.WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs> { Predicate = e => e.Response.Url == TestConstants.ServerUrl + "/digits/2.png" }),
+                Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }")
+            );
+            Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", responseEvent.Response.Url);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.exposeFunction</playwright-describe>
-        ///<playwright-it>should be callable from-inside evaluateOnNewDocument</playwright-it>
+        ///<playwright-describe>Page.waitForResponse</playwright-describe>
+        ///<playwright-it>should work with no timeout</playwright-it>
         [Fact]
-public async Task ShouldBeCallableFrom-insideEvaluateOnNewDocument()
-{
-
-    let called = false;
-    await Page.exposeFunction('woof', function() {
-        called = true;
-    });
-    await Page.evaluateOnNewDocument(() => woof());
-    await Page.reload();
-    expect(called).toBe(true);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should survive navigation</playwright-it>
-[Fact]
-public async Task ShouldSurviveNavigation()
-{
-
-    await Page.exposeFunction('compute', function(a, b) {
-        return a * b;
-    });
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var result = await Page.EvaluateAsync<string>(async function() {
-        return await compute(9, 4);
-    });
-    expect(result).toBe(36);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should await returned promise</playwright-it>
-[Fact]
-public async Task ShouldAwaitReturnedPromise()
-{
-
-    await Page.exposeFunction('compute', function(a, b) {
-        return Promise.resolve(a * b);
-    });
-
-    var result = await Page.EvaluateAsync<string>(async function() {
-        return await compute(3, 5);
-    });
-    expect(result).toBe(15);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should work on frames</playwright-it>
-[Fact]
-public async Task ShouldWorkOnFrames()
-{
-
-    await Page.exposeFunction('compute', function(a, b) {
-        return Promise.resolve(a * b);
-    });
-
-    await Page.GoToAsync(TestConstants.ServerUrl + '/frames/nested-frames.html');
-    var frame = Page.Frames[1];
-    var result = await frame.EvaluateAsync<string>(async function() {
-        return await compute(3, 5);
-    });
-    expect(result).toBe(15);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should work on frames before navigation</playwright-it>
-[Fact]
-public async Task ShouldWorkOnFramesBeforeNavigation()
-{
-
-    await Page.GoToAsync(TestConstants.ServerUrl + '/frames/nested-frames.html');
-    await Page.exposeFunction('compute', function(a, b) {
-        return Promise.resolve(a * b);
-    });
-
-    var frame = Page.Frames[1];
-    var result = await frame.EvaluateAsync<string>(async function() {
-        return await compute(3, 5);
-    });
-    expect(result).toBe(15);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should work after cross origin navigation</playwright-it>
-[Fact]
-public async Task ShouldWorkAfterCrossOriginNavigation()
-{
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    await Page.exposeFunction('compute', function(a, b) {
-        return a * b;
-    });
-
-    await Page.GoToAsync(TestConstants.CrossProcessUrl + '/empty.html');
-    var result = await Page.EvaluateAsync<string>(async function() {
-        return await compute(9, 4);
-    });
-    expect(result).toBe(36);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.exposeFunction</playwright-describe>
-///<playwright-it>should work with complex objects</playwright-it>
-[Fact]
-public async Task ShouldWorkWithComplexObjects()
-{
-
-    await Page.exposeFunction('complexObject', function(a, b) {
-        return { x: a.x + b.x};
-    });
-    var result = await Page.EvaluateAsync<string>(async () => complexObject({ x: 5}, { x: 2}));
-    expect(result.x).toBe(7);
-
-}
+        public async Task ShouldWorkWithNoTimeout()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var (response, _) = await TaskUtils.WhenAll(
+                Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", new WaitForOptions { Timeout = 0 }),
+                Page.EvaluateAsync<string>(@"() => setTimeout(() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }, 50)")
+            );
+            Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", response.Url);
+        }
 
     }
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.PageError</playwright-describe>
-    public class Page.Events.PageErrorTests
+    public class PageEventsPageErrorTests : PlaywrightSharpPageBaseTest
     {
+        internal PageEventsPageErrorTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.PageError</playwright-describe>
         ///<playwright-it>should fire</playwright-it>
         [Fact]
-public async Task ShouldFire()
-{
+        public async Task ShouldFire()
+        {
+            let error = null;
+            Page.once('pageerror', e => error = e);
+            await Promise.all([
+              Page.GoToAsync(TestConstants.ServerUrl + '/error.html'),
+              waitEvent(page, 'pageerror')
+            ]);
+            expect(error.message).toContain('Fancy');
 
-    let error = null;
-    Page.once('pageerror', e => error = e);
-    await Promise.all([
-      Page.GoToAsync(TestConstants.ServerUrl + '/error.html'),
-      waitEvent(page, 'pageerror')
-    ]);
-    expect(error.message).toContain('Fancy');
-
-}
+        }
 
     }
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setContent</playwright-describe>
-    public class Page.setContentTests
+    public class PageSetContentTests : PlaywrightSharpPageBaseTest
     {
+        const string expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
+
+        internal PageSetContentTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact]
-public async Task ShouldWork()
-{
+        public async Task ShouldWork()
+        {
+            await Page.SetContentAsync("<div>hello</div>");
+            string result = await Page.GetContentAsync();
+            Assert.Equal(expectedOutput, result);
+        }
 
-    await Page.SetContentAsync('<div>hello</div>');
-    var result = await Page.content();
-    expect(result).toBe(expectedOutput);
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with domcontentloaded</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithDomcontentloaded()
+        {
+            await Page.SetContentAsync("<div>hello</div>", WaitUntilNavigation.DOMContentLoaded);
+            string result = await Page.GetContentAsync();
+            Assert.Equal(expectedOutput, result);
+        }
 
-}
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should not confuse with previous navigation</playwright-it>
+        [Fact]
+        public async Task ShouldNotConfuseWithPreviousNavigation()
+        {
+            var imgPath = "/img.png";
+            let imgResponse = null;
+            server.setRoute(imgPath, (req, res) => imgResponse = res);
+            let loaded = false;
+            // get the global object to make sure that the main execution context is alive and well.
+            await Page.EvaluateAsync<string>(() => this);
+            // Trigger navigation which might resolve next setContent call.
+            var evalPromise = Page.EvaluateAsync<string>(url => window.location.href = url, TestConstants.EmptyPage);
+            var contentPromise = Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`).then(() => loaded = true);
+            await server.waitForRequest(imgPath);
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with domcontentloaded</playwright-it>
-[Fact]
-public async Task ShouldWorkWithDomcontentloaded()
-{
+            expect(loaded).toBe(false);
+            for (let i = 0; i < 5; i++)
+            {
+                await Page.EvaluateAsync<string>('1');  // Roundtrips to give setContent a chance to resolve.
+            }
 
-    await Page.SetContentAsync('<div>hello</div>', { waitUntil: 'domcontentloaded' });
-    var result = await Page.content();
-    expect(result).toBe(expectedOutput);
+            expect(loaded).toBe(false);
 
-}
+            imgResponse.end();
+            await contentPromise;
+            await evalPromise;
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should not confuse with previous navigation</playwright-it>
-[Fact]
-public async Task ShouldNotConfuseWithPreviousNavigation()
-{
+        }
 
-    var imgPath = '/img.png';
-    let imgResponse = null;
-    server.setRoute(imgPath, (req, res) => imgResponse = res);
-    let loaded = false;
-    // get the global object to make sure that the main execution context is alive and well.
-    await Page.EvaluateAsync<string>(() => this);
-    // Trigger navigation which might resolve next setContent call.
-    var evalPromise = Page.EvaluateAsync<string>(url => window.location.href = url, TestConstants.EmptyPage);
-    var contentPromise = Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`).then(() => loaded = true);
-    await server.waitForRequest(imgPath);
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with doctype</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithDoctype()
+        {
 
-    expect(loaded).toBe(false);
-    for (let i = 0; i < 5; i++)
-    {
-        await Page.EvaluateAsync<string>('1');  // Roundtrips to give setContent a chance to resolve.
-    }
+            var doctype = '<!DOCTYPE html>';
+            await Page.SetContentAsync(`${ doctype}< div > hello </ div >`);
+            var result = await Page.content();
+            expect(result).toBe(`${ doctype}${ expectedOutput}`);
 
-    expect(loaded).toBe(false);
+        }
 
-    imgResponse.end();
-    await contentPromise;
-    await evalPromise;
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with HTML 4 doctype</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithHTML4Doctype()
+        {
 
-}
+            var doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" ' +
+              '"http://www.w3.org/TR/html4/strict.dtd">';
+            await Page.SetContentAsync(`${ doctype}< div > hello </ div >`);
+            var result = await Page.content();
+            expect(result).toBe(`${ doctype}${ expectedOutput}`);
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with doctype</playwright-it>
-[Fact]
-public async Task ShouldWorkWithDoctype()
-{
+        }
 
-    var doctype = '<!DOCTYPE html>';
-    await Page.SetContentAsync(`${ doctype}< div > hello </ div >`);
-    var result = await Page.content();
-    expect(result).toBe(`${ doctype}${ expectedOutput}`);
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should respect timeout</playwright-it>
+        [Fact]
+        public async Task ShouldRespectTimeout()
+        {
 
-}
+            var imgPath = '/img.png';
+            // stall for image
+            server.setRoute(imgPath, (req, res) => { });
+            let error = null;
+            await Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`, { timeout: 1}).catch (e => error = e);
+            expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with HTML 4 doctype</playwright-it>
-[Fact]
-public async Task ShouldWorkWithHTML4Doctype()
-{
-
-    var doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" ' +
-      '"http://www.w3.org/TR/html4/strict.dtd">';
-    await Page.SetContentAsync(`${ doctype}< div > hello </ div >`);
-    var result = await Page.content();
-    expect(result).toBe(`${ doctype}${ expectedOutput}`);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should respect timeout</playwright-it>
-[Fact]
-public async Task ShouldRespectTimeout()
-{
-
-    var imgPath = '/img.png';
-    // stall for image
-    server.setRoute(imgPath, (req, res) => { });
-    let error = null;
-    await Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`, { timeout: 1}).catch (e => error = e);
-    expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
-
-    }
+            }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should respect default navigation timeout</playwright-it>
-[Fact]
-public async Task ShouldRespectDefaultNavigationTimeout()
-{
+        [Fact]
+        public async Task ShouldRespectDefaultNavigationTimeout()
+        {
 
-    Page.setDefaultNavigationTimeout(1);
-    var imgPath = '/img.png';
-    // stall for image
-    server.setRoute(imgPath, (req, res) => { });
-    let error = null;
-    await Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`).catch (e => error = e);
-    expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
+            Page.setDefaultNavigationTimeout(1);
+            var imgPath = '/img.png';
+            // stall for image
+            server.setRoute(imgPath, (req, res) => { });
+            let error = null;
+            await Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`).catch (e => error = e);
+            expect(error).toBeInstanceOf(playwright.errors.TimeoutError);
 
-    }
+            }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should await resources to load</playwright-it>
-[Fact]
-public async Task ShouldAwaitResourcesToLoad()
-{
+        [Fact]
+        public async Task ShouldAwaitResourcesToLoad()
+        {
 
-    var imgPath = '/img.png';
-    let imgResponse = null;
-    server.setRoute(imgPath, (req, res) => imgResponse = res);
-    let loaded = false;
-    var contentPromise = Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`).then(() => loaded = true);
-    await server.waitForRequest(imgPath);
-    expect(loaded).toBe(false);
-    imgResponse.end();
-    await contentPromise;
+            var imgPath = '/img.png';
+            let imgResponse = null;
+            server.setRoute(imgPath, (req, res) => imgResponse = res);
+            let loaded = false;
+            var contentPromise = Page.SetContentAsync(`< img src = "${TestConstants.ServerUrl + imgPath}" ></ img >`).then(() => loaded = true);
+            await server.waitForRequest(imgPath);
+            expect(loaded).toBe(false);
+            imgResponse.end();
+            await contentPromise;
 
-}
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work fast enough</playwright-it>
-[Fact]
-public async Task ShouldWorkFastEnough()
-{
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work fast enough</playwright-it>
+        [Fact]
+        public async Task ShouldWorkFastEnough()
+        {
 
-    for (let i = 0; i < 20; ++i)
-    {
-        await Page.SetContentAsync('<div>yo</div>');
-    }
-}
+            for (let i = 0; i < 20; ++i)
+            {
+                await Page.SetContentAsync('<div>yo</div>');
+            }
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with tricky content</playwright-it>
-[Fact]
-public async Task ShouldWorkWithTrickyContent()
-{
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with tricky content</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithTrickyContent()
+        {
 
-    await Page.SetContentAsync('<div>hello world</div>' + '\x7F');
-    expect(await Page.$eval('div', div => div.textContent)).toBe('hello world');
+            await Page.SetContentAsync('<div>hello world</div>' + '\x7F');
+            expect(await Page.$eval('div', div => div.textContent)).toBe('hello world');
 
-}
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with accents</playwright-it>
-[Fact]
-public async Task ShouldWorkWithAccents()
-{
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with accents</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithAccents()
+        {
 
-    await Page.SetContentAsync('<div>aberraci├│n</div>');
-    expect(await Page.$eval('div', div => div.textContent)).toBe('aberraci├│n');
+            await Page.SetContentAsync('<div>aberraci├│n</div>');
+            expect(await Page.$eval('div', div => div.textContent)).toBe('aberraci├│n');
 
-}
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with emojis</playwright-it>
-[Fact]
-public async Task ShouldWorkWithEmojis()
-{
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with emojis</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithEmojis()
+        {
 
-    await Page.SetContentAsync('<div>≡ƒנÑ</div>');
-    expect(await Page.$eval('div', div => div.textContent)).toBe('≡ƒנÑ');
+            await Page.SetContentAsync('<div>≡ƒנÑ</div>');
+            expect(await Page.$eval('div', div => div.textContent)).toBe('≡ƒנÑ');
 
-}
+        }
 
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.setContent</playwright-describe>
-///<playwright-it>should work with newline</playwright-it>
-[Fact]
-public async Task ShouldWorkWithNewline()
-{
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.setContent</playwright-describe>
+        ///<playwright-it>should work with newline</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithNewline()
+        {
 
-    await Page.SetContentAsync('<div>\n</div>');
-    expect(await Page.$eval('div', div => div.textContent)).toBe('\n');
+            await Page.SetContentAsync('<div>\n</div>');
+            expect(await Page.$eval('div', div => div.textContent)).toBe('\n');
 
-}
+        }
 
     }
     ///<playwright-file>page.spec.js</playwright-file>
@@ -681,53 +450,53 @@ public async Task ShouldWorkWithNewline()
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should throw an error if no options are provided</playwright-it>
         [Fact]
-public async Task ShouldThrowAnErrorIfNoOptionsAreProvided()
-{
-
-    let error = null;
-    try
+    public async Task ShouldThrowAnErrorIfNoOptionsAreProvided()
     {
-        await Page.addScriptTag('/injectedfile.js');
+
+        let error = null;
+        try
+        {
+            await Page.addScriptTag('/injectedfile.js');
+        }
+        catch (e)
+        {
+            error = e;
+        }
+        expect(error.message).toBe('Provide an object with a `url`, `path` or `content` property');
+
     }
-    catch (e)
+
+    ///<playwright-file>page.spec.js</playwright-file>
+    ///<playwright-describe>Page.addScriptTag</playwright-describe>
+    ///<playwright-it>should work with a url</playwright-it>
+    [Fact]
+    public async Task ShouldWorkWithAUrl()
     {
-        error = e;
+
+        await Page.GoToAsync(TestConstants.EmptyPage);
+        var scriptHandle = await Page.addScriptTag({ url: '/injectedfile.js' });
+        expect(scriptHandle.asElement()).not.toBeNull();
+        expect(await Page.EvaluateAsync<string>(() => __injected)).toBe(42);
+
     }
-    expect(error.message).toBe('Provide an object with a `url`, `path` or `content` property');
 
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.addScriptTag</playwright-describe>
-///<playwright-it>should work with a url</playwright-it>
-[Fact]
-public async Task ShouldWorkWithAUrl()
-{
-
-    await Page.GoToAsync(TestConstants.EmptyPage);
-    var scriptHandle = await Page.addScriptTag({ url: '/injectedfile.js' });
-    expect(scriptHandle.asElement()).not.toBeNull();
-    expect(await Page.EvaluateAsync<string>(() => __injected)).toBe(42);
-
-}
-
-///<playwright-file>page.spec.js</playwright-file>
-///<playwright-describe>Page.addScriptTag</playwright-describe>
-///<playwright-it>should work with a url and type=module</playwright-it>
-[Fact]
-public async Task ShouldWorkWithAUrlAndType = module()
+    ///<playwright-file>page.spec.js</playwright-file>
+    ///<playwright-describe>Page.addScriptTag</playwright-describe>
+    ///<playwright-it>should work with a url and type=module</playwright-it>
+    [Fact]
+    public async Task ShouldWorkWithAUrlAndType = module()
         {
 
       await Page.GoToAsync(TestConstants.EmptyPage);
-await Page.addScriptTag({ url: '/es6/es6import.js', type: 'module' });
+    await Page.addScriptTag({ url: '/es6/es6import.js', type: 'module' });
       expect(await Page.EvaluateAsync<string>(() => __es6injected)).toBe(42);
 
-        }
+}
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addScriptTag</playwright-describe>
-        ///<playwright-it>should work with a path and type=module</playwright-it>
-        [Fact]
+///<playwright-file>page.spec.js</playwright-file>
+///<playwright-describe>Page.addScriptTag</playwright-describe>
+///<playwright-it>should work with a path and type=module</playwright-it>
+[Fact]
 public async Task ShouldWorkWithAPathAndType = module()
         {
 
