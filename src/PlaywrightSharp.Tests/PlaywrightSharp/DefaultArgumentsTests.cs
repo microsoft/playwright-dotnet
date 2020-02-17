@@ -58,9 +58,10 @@ namespace PlaywrightSharp.Tests.Launcher
 
             var launchOptions = TestConstants.DefaultBrowserOptions;
             launchOptions.UserDataDir = "fake-profile";
+            launchOptions.IgnoreDefaultArgs = true;
             launchOptions.IgnoredDefaultArgs = defaultArgsWithUserDataDir.Where(x => !defaultArgsWithoutUserDataDir.Contains(x)).ToArray();
 
-            using var browserApp = await Playwright.LaunchAsync(launchOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(launchOptions);
 
             Assert.DoesNotContain("fake-profile", browserApp.Process.StartInfo.Arguments);
         }

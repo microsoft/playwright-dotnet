@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -54,5 +56,10 @@ namespace PlaywrightSharp
         /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
         /// </summary>
         public string[] IgnoredDefaultArgs { get; set; }
+
+        /// <summary>
+        /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
+        /// </summary>
+        public IDictionary<string, string> Env { get; } = new Dictionary<string, string>();
     }
 }

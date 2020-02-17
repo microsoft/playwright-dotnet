@@ -49,11 +49,6 @@ namespace PlaywrightSharp
         IBrowserContext DefaultContext { get; }
 
         /// <summary>
-        /// Gets the spawned browser process. Returns <c>null</c> if the browser instance was created with <see cref="IBrowserType.ConnectAsync(ConnectOptions)"/> method.
-        /// </summary>
-        Process Process { get; }
-
-        /// <summary>
         /// Indicates that the browser is connected.
         /// </summary>
         bool IsConnected { get; }

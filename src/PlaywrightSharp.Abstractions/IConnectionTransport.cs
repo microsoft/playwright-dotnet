@@ -29,6 +29,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>The task.</returns>
         /// <param name="message">Message to send.</param>
-        Task SendAsync(string message);
+        /// <param name="arguments">Message arguments.</param>
+        Task SendAsync(string message, object arguments = null);
     }
 }

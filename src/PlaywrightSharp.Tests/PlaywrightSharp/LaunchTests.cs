@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldReturnChildProcessInstance()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
-            Assert.True(browserApp.ProcessId > 0);
+            Assert.True(browserApp.Process.Id > 0);
         }
     }
 }

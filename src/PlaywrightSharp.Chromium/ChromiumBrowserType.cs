@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Messaging.Browser;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -17,7 +20,9 @@ namespace PlaywrightSharp.Chromium
         /// </summary>
         public const int PreferredRevision = 733125;
 
+        private const int BrowserCloseMessageId = -9999;
         private const string UserDataDirArgument = "--user-data-dir";
+
         private static readonly string[] DefaultArgs = new[]
         {
             "--disable-background-networking",
@@ -161,9 +166,133 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowserType"/>
-        public Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
+        public async Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
         {
-            throw new NotImplementedException();
+            options ??= new LaunchOptions();
+
+            var (chromiumArgs, tempUserDataDir) = PrepareChromiumArgs(options);
+            string chromiumExecutable = GeChromeExecutablePath(options);
+            ChromiumBrowserApp browserApp = null;
+
+            var process = new ChromiumProcessManager(
+                chromiumExecutable,
+                chromiumArgs,
+                tempUserDataDir,
+                options.Timeout,
+                async () =>
+                {
+                    if (browserApp == null)
+                    {
+                        return;
+                    }
+
+                    var transport = await BrowserHelper.CreateTransportAsync(browserApp.GetConnectOptions()).ConfigureAwait(false);
+                    await transport.SendAsync("Browser.close", new BrowserCloseRequest { Id = BrowserCloseMessageId }).ConfigureAwait(false);
+                },
+                (exitCode) =>
+                {
+                    if (browserApp != null)
+                    {
+                        browserApp.ProcessKilled(exitCode);
+                    }
+                });
+
+            try
+            {
+                SetEnvVariables(process.Process.StartInfo.Environment, options.Env, Environment.GetEnvironmentVariables());
+
+                if (options.DumpIO == true)
+                {
+                    process.Process.ErrorDataReceived += (sender, e) => Console.Error.WriteLine(e.Data);
+                }
+
+                await process.StartAsync().ConfigureAwait(false);
+                return new ChromiumBrowserApp(process);
+            }
+            catch
+            {
+                await process.KillAsync().ConfigureAwait(false);
+                throw;
+            }
+        }
+
+        private static void SetEnvVariables(IDictionary<string, string> environment, IDictionary<string, string> customEnv, IDictionary realEnv)
+        {
+            foreach (DictionaryEntry item in realEnv)
+            {
+                environment[item.Key.ToString()] = item.Value.ToString();
+            }
+
+            if (customEnv != null)
+            {
+                foreach (var item in customEnv)
+                {
+                    environment[item.Key] = item.Value;
+                }
+            }
+        }
+
+        private string GeChromeExecutablePath(LaunchOptions options)
+        {
+            string chromeExecutable = options.ExecutablePath;
+            if (string.IsNullOrEmpty(chromeExecutable))
+            {
+                chromeExecutable = ResolveExecutablePath();
+            }
+
+            if (!File.Exists(chromeExecutable))
+            {
+                throw new FileNotFoundException("Failed to launch chrome! path to executable does not exist", chromeExecutable);
+            }
+
+            return chromeExecutable;
+        }
+
+        private string ResolveExecutablePath()
+        {
+            var browserFetcher = CreateBrowserFetcher();
+            var revisionInfo = browserFetcher.GetRevisionInfo();
+
+            if (!revisionInfo.Local)
+            {
+                throw new FileNotFoundException("Chromium revision is not downloaded. Run BrowserFetcher.DownloadAsync or download Chromium manually", revisionInfo.ExecutablePath);
+            }
+
+            return revisionInfo.ExecutablePath;
+        }
+
+        private (List<string> chromiumArgs, TempDirectory tempUserDataDir) PrepareChromiumArgs(LaunchOptions options)
+        {
+            var chromiumArgs = new List<string>();
+
+            if (!options.IgnoreDefaultArgs)
+            {
+                chromiumArgs.AddRange(GetDefaultArgs(options));
+            }
+            else if (options.IgnoredDefaultArgs?.Length > 0)
+            {
+                chromiumArgs.AddRange(GetDefaultArgs(options).Except(options.IgnoredDefaultArgs));
+            }
+            else
+            {
+                chromiumArgs.AddRange(options.Args);
+            }
+
+            TempDirectory tempUserDataDir = null;
+
+            if (!chromiumArgs.Any(argument => argument.StartsWith("--remote-debugging-", StringComparison.Ordinal)))
+            {
+                chromiumArgs.Add("--remote-debugging-port=0");
+            }
+
+            string userDataDirOption = chromiumArgs.FirstOrDefault(i => i.StartsWith(UserDataDirArgument, StringComparison.Ordinal));
+            if (string.IsNullOrEmpty(userDataDirOption))
+            {
+                tempUserDataDir = new TempDirectory();
+                chromiumArgs.Add($"{UserDataDirArgument}={tempUserDataDir.Path.Quote()}");
+            }
+
+            return (chromiumArgs, tempUserDataDir);
         }
 
         private Platform GetPlatform()

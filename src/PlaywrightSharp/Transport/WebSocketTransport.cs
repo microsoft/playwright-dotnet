@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Transport
             throw new NotImplementedException();
         }
 
-        public Task SendAsync(string message)
+        public Task SendAsync(string message, object arguments)
         {
             throw new NotImplementedException();
         }
@@ -47,7 +47,11 @@ namespace PlaywrightSharp.Transport
         }
 
         private static void ScheduleTransportTask(Func<CancellationToken, Task> taskFactory, CancellationToken cancellationToken)
-            => Task.Factory.StartNew(() => taskFactory(cancellationToken), TaskCreationOptions.LongRunning);
+            => Task.Factory.StartNew(
+                () => taskFactory(cancellationToken),
+                CancellationToken.None,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
 
         private static async Task<WebSocket> CreateWebSocket(string url)
         {

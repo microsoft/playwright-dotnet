@@ -41,9 +41,6 @@ namespace PlaywrightSharp.Chromium
         public IBrowserContext DefaultContext => null;
 
         /// <inheritdoc cref="IBrowser"/>
-        public Process Process => null;
-
-        /// <inheritdoc cref="IBrowser"/>
         public bool IsConnected => false;
 
         /// <inheritdoc cref="IBrowser"/>

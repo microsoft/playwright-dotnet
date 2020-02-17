@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Transport
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         /// <inheritdoc cref="IConnectionTransport"/>
-        public Task SendAsync(string message) => _delegate.SendAsync(message);
+        public Task SendAsync(string message, object arguments = null) => _delegate.SendAsync(message, arguments);
 
         /// <inheritdoc cref="IConnectionTransport"/>
         public void Close(string closeReason = null)
