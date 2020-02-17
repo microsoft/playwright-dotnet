@@ -15,8 +15,11 @@ namespace PlaywrightSharp
         public event DownloadProgressChangedEventHandler DownloadProgressChanged;
 
         /// <summary>
-        /// Gets the revision info. It will return the default revision info if <paramref name="revision"/> is not set.
+        /// Gets the revision info.
         /// </summary>
+        /// <remarks>
+        /// It will return the default revision info if <paramref name="revision"/> is not set.
+        /// </remarks>
         /// <returns>Revision info.</returns>
         /// <param name="revision">A revision to get info for.</param>
         RevisionInfo GetRevisionInfo(string revision = null);

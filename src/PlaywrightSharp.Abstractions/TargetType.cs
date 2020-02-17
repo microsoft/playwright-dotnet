@@ -42,22 +42,22 @@ namespace PlaywrightSharp
         Javascript,
 
         /// <summary>
-        /// Target type network
+        /// Target type network.
         /// </summary>
         Network,
 
         /// <summary>
-        /// Target type network
+        /// Target type Deprecation.
         /// </summary>
         Deprecation,
 
         /// <summary>
-        /// Target type security
+        /// Target type security.
         /// </summary>
         Security,
 
         /// <summary>
-        /// Target type recommendation
+        /// Target type recommendation.
         /// </summary>
         Recommendation,
 

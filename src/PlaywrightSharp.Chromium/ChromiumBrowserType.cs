@@ -171,7 +171,7 @@ namespace PlaywrightSharp.Chromium
             options ??= new LaunchOptions();
 
             var (chromiumArgs, tempUserDataDir) = PrepareChromiumArgs(options);
-            string chromiumExecutable = GeChromeExecutablePath(options);
+            string chromiumExecutable = GetChromeExecutablePath(options);
             ChromiumBrowserApp browserApp = null;
 
             var process = new ChromiumProcessManager(
@@ -191,10 +191,7 @@ namespace PlaywrightSharp.Chromium
                 },
                 (exitCode) =>
                 {
-                    if (browserApp != null)
-                    {
-                        browserApp.ProcessKilled(exitCode);
-                    }
+                    browserApp?.ProcessKilled(exitCode);
                 });
 
             try
@@ -232,7 +229,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private string GeChromeExecutablePath(LaunchOptions options)
+        private string GetChromeExecutablePath(LaunchOptions options)
         {
             string chromeExecutable = options.ExecutablePath;
             if (string.IsNullOrEmpty(chromeExecutable))
