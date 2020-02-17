@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
 
@@ -292,6 +293,22 @@ namespace PlaywrightSharp
         /// <param name="url">URL to wait for.</param>
         /// <param name="options">Options.</param>
         Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null);
+
+        /// <summary>
+        /// Waits for a request.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var firstRequest = await page.WaitForRequestAsync(new Regex("digits\\d\\.png");
+        /// return firstRequest.Url;
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        /// <param name="regex">Pattern to wait for.</param>
+        /// <param name="options">Options.</param>
+        Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.

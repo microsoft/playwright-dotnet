@@ -12,5 +12,10 @@ namespace PlaywrightSharp
         /// Gets or sets the predicate to use when waiting for events.
         /// </summary>
         public Func<T, bool> Predicate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout to use when waiting for events in milliseconds.
+        /// </summary>
+        public int Timeout { get; set; }
     }
 }
