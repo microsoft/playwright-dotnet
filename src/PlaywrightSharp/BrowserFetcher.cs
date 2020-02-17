@@ -132,8 +132,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IBrowserFetcher"/>
-        public RevisionInfo GetRevisionInfo(string revision)
+        public RevisionInfo GetRevisionInfo(string revision = null)
         {
+            revision ??= _preferredRevision;
+
             var paramsFunctions = _params(_platform, revision);
 
             var result = new RevisionInfo

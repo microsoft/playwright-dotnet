@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -36,15 +38,10 @@ namespace PlaywrightSharp
         public bool LogProcess { get; set; }
 
         /// <summary>
-        /// Optional factory for <see cref="IConnectionTransport"/> implementations.
-        /// </summary>
-        public TransportFactory TransportFactory { get; set; }
-
-        /// <summary>
         /// If no <see cref="IConnectionTransport"/> is set, this will be use to determine is the default <see cref="IConnectionTransport"/> will enqueue messages.
         /// </summary>
         /// <remarks>
-        /// It's set to <c>true</c> by default because it's the safest way to send commands to Chromium.
+        /// It's set to <c>true</c> by default because it's the safest way to send commands to the browser.
         /// Setting this to <c>false</c> proved to work in .NET Core but it tends to fail on .NET Framework.
         /// </remarks>
         public bool EnqueueTransportMessages { get; set; } = true;
@@ -59,5 +56,10 @@ namespace PlaywrightSharp
         /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
         /// </summary>
         public string[] IgnoredDefaultArgs { get; set; }
+
+        /// <summary>
+        /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
+        /// </summary>
+        public IDictionary<string, string> Env { get; } = new Dictionary<string, string>();
     }
 }

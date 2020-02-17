@@ -13,6 +13,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class DefaultArgumentsTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
@@ -56,9 +58,10 @@ namespace PlaywrightSharp.Tests.Launcher
 
             var launchOptions = TestConstants.DefaultBrowserOptions;
             launchOptions.UserDataDir = "fake-profile";
+            launchOptions.IgnoreDefaultArgs = true;
             launchOptions.IgnoredDefaultArgs = defaultArgsWithUserDataDir.Where(x => !defaultArgsWithoutUserDataDir.Contains(x)).ToArray();
 
-            using var browserApp = await Playwright.LaunchAsync(launchOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(launchOptions);
 
             Assert.DoesNotContain("fake-profile", browserApp.Process.StartInfo.Arguments);
         }

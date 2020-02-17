@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Connection transport abstraction.
+    /// Transport interface.
     /// </summary>
-    public interface IConnectionTransport : IDisposable
+    public interface IConnectionTransport
     {
         /// <summary>
         /// Occurs when the transport is closed.
@@ -19,20 +19,17 @@ namespace PlaywrightSharp
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="IConnectionTransport"/> is closed.
+        /// Close the connection.
         /// </summary>
-        bool IsClosed { get; }
-
-        /// <summary>
-        /// Stops reading incoming data.
-        /// </summary>
-        void StopReading();
+        /// <param name="closeReason">Close reason.</param>
+        void Close(string closeReason = null);
 
         /// <summary>
         /// Sends a message using the transport.
         /// </summary>
         /// <returns>The task.</returns>
         /// <param name="message">Message to send.</param>
-        Task SendAsync(string message);
+        /// <param name="arguments">Message arguments.</param>
+        Task SendAsync(string message, object arguments = null);
     }
 }

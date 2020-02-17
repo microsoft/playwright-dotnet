@@ -19,5 +19,15 @@ namespace PlaywrightSharp
         /// A browser websocket endpoint to connect to.
         /// </summary>
         public string BrowserWSEndpoint { get; set; }
+
+        /// <summary>
+        /// Optional factory for <see cref="IConnectionTransport"/> implementations.
+        /// </summary>
+        public TransportFactory TransportFactory { get; set; }
+
+        /// <summary>
+        /// Whether the transport should enqueue messages or not.
+        /// </summary>
+        public bool EnqueueTransportMessages { get; set; }
     }
 }
