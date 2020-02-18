@@ -44,10 +44,7 @@ namespace PlaywrightSharp.Chromium
         public bool IsConnected => false;
 
         /// <inheritdoc cref="IBrowser"/>
-        public Task CloseAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task CloseAsync() => _app?.CloseAsync();
 
         /// <inheritdoc cref="IBrowser"/>
         public Task DisconnectAsync()
@@ -72,10 +69,11 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IBrowser"/>
-        internal static async Task<IBrowser> ConnectAsync(IBrowserApp app)
+        internal static Task<IBrowser> ConnectAsync(ConnectOptions options) => ConnectAsync(null, options);
+
+        internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
         {
-            var transport = await BrowserHelper.CreateTransportAsync(app.GetConnectOptions()).ConfigureAwait(false);
+            var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
             var connection = new ChromiumConnection(transport);
             var response = await connection.RootSession.SendAsync<TargetGetBrowserContextsResponse>("Target.getBrowserContexts").ConfigureAwait(false);
             var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);

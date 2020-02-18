@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             var options = TestConstants.DefaultBrowserOptions;
             using var browserApp = await Playwright.LaunchBrowserAppAsync(options);
-            using var browser = await Playwright.ConnectAsync(browserApp.GetConnectOptions());
+            using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             Assert.Single(await browser.DefaultContext.GetPagesAsync());
             Assert.NotNull(browserApp.WebSocketEndpoint);
             var page = await browser.DefaultContext.NewPageAsync();
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             var options = TestConstants.DefaultBrowserOptions;
             using var browserApp = await Playwright.LaunchBrowserAppAsync(options);
-            using var browser = await Playwright.ConnectAsync(browserApp.GetConnectOptions());
+            using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             var disconnectedTask = new TaskCompletionSource<bool>();
             browser.Disconnected += (sender, e) => disconnectedTask.TrySetResult(true);
             browserApp.Kill();

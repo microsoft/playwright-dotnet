@@ -40,10 +40,13 @@ namespace PlaywrightSharp.Transport
             throw new NotImplementedException();
         }
 
-        internal static async Task<IConnectionTransport> CreateAsync(ConnectOptions options)
+        internal static Task<IConnectionTransport> CreateAsync(ConnectOptions options)
+            => CreateAsync(options.BrowserWSEndpoint, options.EnqueueTransportMessages);
+
+        internal static async Task<IConnectionTransport> CreateAsync(string browserWSEndpoint, bool enqueueTransportMessages)
         {
-            var webSocket = await CreateWebSocket(options.BrowserWSEndpoint).ConfigureAwait(false);
-            return new WebSocketTransport(webSocket, DefaultTransportScheduler, options.EnqueueTransportMessages);
+            var webSocket = await CreateWebSocket(browserWSEndpoint).ConfigureAwait(false);
+            return new WebSocketTransport(webSocket, DefaultTransportScheduler, enqueueTransportMessages);
         }
 
         private static void ScheduleTransportTask(Func<CancellationToken, Task> taskFactory, CancellationToken cancellationToken)

@@ -13,8 +13,6 @@ namespace PlaywrightSharp.Chromium
     {
         private static int _processCount;
 
-        private readonly string _chromiumExecutable;
-        private readonly List<string> _chromiumArgs;
         private readonly TempDirectory _tempUserDataDir;
         private readonly Func<Task> _attemptToGracefullyCloseFunc;
         private readonly Action<int> _onKill;
@@ -30,8 +28,6 @@ namespace PlaywrightSharp.Chromium
             Func<Task> attemptToGracefullyCloseFunc,
             Action<int> onKill)
         {
-            _chromiumExecutable = chromiumExecutable;
-            _chromiumArgs = chromiumArgs;
             _tempUserDataDir = tempUserDataDir;
 
             Timeout = timeout;
@@ -58,6 +54,11 @@ namespace PlaywrightSharp.Chromium
         public Process Process { get; }
 
         public int Timeout { get; }
+
+        /// <summary>
+        /// Gets Chromium endpoint.
+        /// </summary>
+        public string Endpoint => _startCompletionSource.Task.IsCompleted ? _startCompletionSource.Task.Result : null;
 
         /// <inheritdoc />
         public void Dispose()

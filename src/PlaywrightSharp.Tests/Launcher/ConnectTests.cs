@@ -12,6 +12,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.connect</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ConnectTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
@@ -26,14 +28,14 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldBeAbleToReconnectToADisconnectedBrowser()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
-            using var browser = await Playwright.ConnectAsync(browserApp.GetConnectOptions());
+            using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             string url = TestConstants.ServerUrl + "/frames/nested-frames.html";
             var page = await Browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(url);
 
             await Browser.DisconnectAsync();
 
-            using var remote = await Playwright.ConnectAsync(browserApp.GetConnectOptions());
+            using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
 
             var pages = (await remote.DefaultContext.GetPagesAsync()).ToList();
             var restoredPage = pages.FirstOrDefault(x => x.Url == url);
