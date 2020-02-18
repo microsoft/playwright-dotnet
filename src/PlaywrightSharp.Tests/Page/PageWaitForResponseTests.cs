@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -65,7 +65,6 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithPredicate()
         {
-
             await Page.GoToAsync(TestConstants.EmptyPage);
             var (responseEvent, _) = await TaskUtils.WhenAll(
                 Page.WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs> { Predicate = e => e.Response.Url == TestConstants.ServerUrl + "/digits/2.png" }),
@@ -95,7 +94,5 @@ namespace PlaywrightSharp.Tests.Page
             );
             Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", response.Url);
         }
-
     }
-
 }

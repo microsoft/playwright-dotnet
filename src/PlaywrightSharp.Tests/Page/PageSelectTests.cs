@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Page
 {
@@ -9,6 +10,10 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-describe>Page.select</playwright-describe>
     public class PageSelectTests : PlaywrightSharpPageBaseTest
     {
+        internal PageSelectTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.select</playwright-describe>
         ///<playwright-it>should select single option</playwright-it>
@@ -175,7 +180,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReturnEmptyArrayOnNoMatchedValues()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            var result = await Page.SelectAsync("select", "42", "abc");
+            string[] result = await Page.SelectAsync("select", "42", "abc");
             Assert.Empty(result);
         }
 
@@ -187,7 +192,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync<string>("() => makeMultiple()");
-            var result = await Page.SelectAsync("select", "blue", "black", "magenta");
+            string[] result = await Page.SelectAsync("select", "blue", "black", "magenta");
             Assert.Equal(new[] { "blue", "black", "magenta" }, result);
         }
 
@@ -198,7 +203,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReturnAnArrayOfOneElementWhenMultipleIsNotSet()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            var result = await Page.SelectAsync("select","42", "blue", "black", "magenta");
+            string[] result = await Page.SelectAsync("select","42", "blue", "black", "magenta");
             Assert.Single(result);
         }
 
@@ -209,7 +214,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReturnEmptyArrayOnNoValues()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            var result = await Page.SelectAsync("select", Array.Empty<string>());
+            string[] result = await Page.SelectAsync("select", Array.Empty<string>());
             Assert.Empty(result);
         }
 
@@ -221,7 +226,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
-            await Page.SelectAsync("select", ["blue", "black", "magenta"]);
+            await Page.SelectAsync("select", "blue", "black", "magenta");
             await Page.SelectAsync("select", Array.Empty<string>());
             Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected))"));
         }

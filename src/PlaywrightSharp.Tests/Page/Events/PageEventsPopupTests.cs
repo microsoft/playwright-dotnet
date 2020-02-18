@@ -143,5 +143,4 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.False(badSecondPopup);
         }
     }
-
 }

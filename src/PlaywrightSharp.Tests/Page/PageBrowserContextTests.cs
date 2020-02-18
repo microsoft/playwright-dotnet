@@ -20,7 +20,5 @@ namespace PlaywrightSharp.Tests.Page
         {
             Assert.Equal(Context, Page.BrowserContext);
         }
-
     }
-
 }

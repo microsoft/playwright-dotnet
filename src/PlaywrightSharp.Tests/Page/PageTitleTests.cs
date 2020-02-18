@@ -22,7 +22,5 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/title.html");
             Assert.Equal("Woof-Woof", await Page.GetTitleAsync());
         }
-
     }
-
 }
