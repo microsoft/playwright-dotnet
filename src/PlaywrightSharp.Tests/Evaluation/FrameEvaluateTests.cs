@@ -136,7 +136,8 @@ namespace PlaywrightSharp.Tests.Evaluation
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.Frames[1];
-            var context = await frame.GetUtilityContext();
+            // TODO We might want cast frame to a FrameBase when implementing this instead of exposing an internal class as an interface.
+            var context = await frame.GetUtilityContextAsync();
             var elementHandle = await context.EvaluateHandleAsync("() => window.top.document.querySelector('#frame1')");
             string constructorName = await context.EvaluateAsync<string>("node => node.constructor.name", elementHandle);
             Assert.Equal("HTMLIFrameElement", constructorName);
