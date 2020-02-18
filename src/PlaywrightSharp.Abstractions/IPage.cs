@@ -198,6 +198,12 @@ namespace PlaywrightSharp
         int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
+        /// Returns page's title.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> the completes when the title is resolved, yielding the page's title.</returns>
+        Task<string> GetTitleAsync();
+
+        /// <summary>
         /// Returns the opener for popup pages and <c>null</c> for others.
         /// </summary>
         /// <remarks>
@@ -517,6 +523,36 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to search for element to hover. If there are multiple elements satisfying the selector, the first will be hovered.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered.</returns>
         Task HoverAsync(string selector);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params string[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params SelectOption[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Option elements to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params IElementHandle[] values);
 
         /// <summary>
         /// Waits for a selector to be added to the DOM.
