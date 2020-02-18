@@ -187,7 +187,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithNewline()
         {
-            await Page.SetContentAsync('<div>\n</div>');
+            await Page.SetContentAsync("<div>\n</div>");
             Assert.Equal("\n", await Page.QuerySelectorEvaluateAsync<string>("div", "div => div.textContent"));
         }
     }
