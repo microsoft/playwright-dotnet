@@ -131,11 +131,21 @@ namespace PlaywrightSharp
         event EventHandler DOMContentLoaded;
 
         /// <summary>
+        /// Raised when the page closes.
+        /// </summary>
+        event EventHandler Close;
+
+        /// <summary>
         /// Raised when the page crashes.
         /// </summary>
 #pragma warning disable CA1716 // Identifiers should not match keywords
         event EventHandler<ErrorEventArgs> Error;
 #pragma warning restore CA1716 // Identifiers should not match keywords
+
+        /// <summary>
+        /// Raised when an uncaught exception happens within the page.
+        /// </summary>
+        event EventHandler<PageErrorEventArgs> PageError;
 
         /// <summary>
         /// Get an indication that the page has been closed.
@@ -490,7 +500,7 @@ namespace PlaywrightSharp
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
-        Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+        Task FillAsync(string selector, string text, WaitForFillOptions options = null);
 
         /// <summary>
         /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.

@@ -19,16 +19,14 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithWindowClose()
         {
-            var newPagePromise = new Promise(f => Page.once('popup', f));
-            await Page.EvaluateAsync<string>(() => window['newPage'] = window.open('about:blank'));
-            var newPage = await newPagePromise;
-            var closedPromise = new Promise(x => newPage.close', x));
-
-
-
-            await Page.EvaluateAsync<string>(() => window['newPage'].CloseAsync());
-            await closedPromise;
-
+            var newPageTsc = new TaskCompletionSource<IPage>();
+            Page.Once<PopupEventArgs>(PageEvent.Popup, popup => newPageTsc.SetResult(popup.Page));
+            await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
+            var newPage = await newPageTsc.Task;
+            var closedTsc = new TaskCompletionSource<bool>();
+            newPage.Close += (sender, e) => closedTsc.SetResult(true);
+            await Page.EvaluateAsync<string>("() => window['newPage'].close()");
+            await closedTsc.Task;
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -37,13 +35,11 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithPageClose()
         {
-            var newPage = await context.NewPageAsync();
-            var closedPromise = new Promise(x => newPage.close, x));
-
-
+            var newPage = await Context.NewPageAsync();
+            var closedTsc = new TaskCompletionSource<bool>();
+            newPage.Close += (sender, e) => closedTsc.SetResult(true);
             await newPage.CloseAsync();
-            await closedPromise;
-
+            await closedTsc.Task;
         }
     }
 }

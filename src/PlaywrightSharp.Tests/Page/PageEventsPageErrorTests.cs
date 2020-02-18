@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -19,16 +19,13 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldFire()
         {
-            let error = null;
-            Page.once('pageerror', e => error = e);
-            await Promise.all([
-              Page.GoToAsync(TestConstants.ServerUrl + '/error.html'),
-              waitEvent(page, 'pageerror')
-            ]);
-            expect(error.message).toContain('Fancy');
-
+            string error = null;
+            Page.Once<PageErrorEventArgs>(PageEvent.PageError, e => error = e.Message);
+            await Task.WhenAll(
+                Page.GoToAsync(TestConstants.ServerUrl + "/error.html"),
+                Page.WaitForEvent<PageErrorEventArgs>(PageEvent.PageError)
+            );
+            Assert.Contains("Fancy", error);
         }
-
     }
-
 }

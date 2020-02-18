@@ -51,5 +51,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.Error"/>
         Error,
+
+        /// <summary>
+        /// Page error event
+        /// </summary>
+        /// <see cref="IPage.PageError"/>
+        PageError,
     }
 }

@@ -203,7 +203,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReturnAnArrayOfOneElementWhenMultipleIsNotSet()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            string[] result = await Page.SelectAsync("select","42", "blue", "black", "magenta");
+            string[] result = await Page.SelectAsync("select", "42", "blue", "black", "magenta");
             Assert.Single(result);
         }
 
@@ -264,5 +264,4 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
     }
-
 }
