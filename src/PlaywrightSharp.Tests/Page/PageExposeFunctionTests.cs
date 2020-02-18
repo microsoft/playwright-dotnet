@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -66,7 +66,8 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldBeCallableFromInsideEvaluateOnNewDocument()
         {
             bool called = false;
-            await Page.ExposeFunctionAsync("woof", () => {
+            await Page.ExposeFunctionAsync("woof", () =>
+            {
                 called = true;
             });
             await Page.EvaluateOnNewDocumentAsync("() => woof()");
@@ -152,7 +153,8 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithComplexObjects()
         {
-            await Page.ExposeFunctionAsync("complexObject", (ComplexObject a, ComplexObject b) => {
+            await Page.ExposeFunctionAsync("complexObject", (ComplexObject a, ComplexObject b) =>
+            {
                 return new ComplexObject { x = a.x + b.x };
             });
             var result = await Page.EvaluateAsync<ComplexObject>("async () => complexObject({ x: 5}, { x: 2})");

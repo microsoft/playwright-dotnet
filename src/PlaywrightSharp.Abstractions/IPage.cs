@@ -336,6 +336,14 @@ namespace PlaywrightSharp
         Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null);
 
         /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="script">Function to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to <c>script</c>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args);
+
+        /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for.</param>
@@ -627,8 +635,15 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>.
         /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the script's onload fires or when the script content was injected into frame, yielding the added <see cref="IElementHandle"/>.</returns>
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
+
+        /// <summary>
+        /// Adds a <c><![CDATA[<link rel="stylesheet">]]></c> tag into the page with the desired url or a <c><![CDATA[<link rel="stylesheet">]]></c> tag with the content.
+        /// </summary>
+        /// <param name="options">add style tag options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the stylesheet's onload fires or when the CSS content was injected into frame, yieling the added <see cref="IElementHandle"/>.</returns>
+        Task<IElementHandle> AddStyleTagAsync(AddTagOptions options);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to click in the center of the element.
