@@ -166,5 +166,4 @@ namespace PlaywrightSharp.Tests.Page
             public int x { get; set; }
         }
     }
-
 }

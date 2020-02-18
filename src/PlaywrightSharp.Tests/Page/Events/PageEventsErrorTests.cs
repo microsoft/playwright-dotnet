@@ -34,5 +34,4 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal("Page crashed!", error);
         }
     }
-
 }

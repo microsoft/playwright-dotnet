@@ -148,5 +148,4 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.BrowserContext.GetPagesAsync();
         }
     }
-
 }

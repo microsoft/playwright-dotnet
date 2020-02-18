@@ -42,5 +42,4 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(opener);
         }
     }
-
 }

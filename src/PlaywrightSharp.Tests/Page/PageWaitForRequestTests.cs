@@ -114,7 +114,5 @@ namespace PlaywrightSharp.Tests.Page
             );
             Assert.Equal(TestConstants.ServerUrl + "/digits/1.png", request.Url);
         }
-
     }
-
 }

@@ -104,5 +104,4 @@ namespace PlaywrightSharp.Tests.Page
                 Page.AddStyleTagAsync(new AddTagOptions { Url = TestConstants.CrossProcessUrl + "/injectedstyle.css" }));
         }
     }
-
 }

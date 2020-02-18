@@ -24,5 +24,4 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
         }
     }
-
 }

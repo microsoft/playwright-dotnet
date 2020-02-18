@@ -190,7 +190,5 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync('<div>\n</div>');
             Assert.Equal("\n", await Page.QuerySelectorEvaluateAsync<string>("div", "div => div.textContent"));
         }
-
     }
-
 }

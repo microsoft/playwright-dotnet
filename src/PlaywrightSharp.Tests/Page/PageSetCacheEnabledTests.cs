@@ -39,7 +39,5 @@ namespace PlaywrightSharp.Tests.Page
             );
             Assert.Equal(StringValues.Empty, nonCachedRequestIfModifiedSinceHeader);
         }
-
     }
-
 }
