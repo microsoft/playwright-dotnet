@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Messaging;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -21,6 +22,8 @@ namespace PlaywrightSharp.Chromium
             _sessionId = sessionId;
         }
 
+        public bool IsClosed { get; internal set; }
+
         internal Task<T> SendAsync<T>(string method, object args = null)
         {
             throw new NotImplementedException();
@@ -30,7 +33,7 @@ namespace PlaywrightSharp.Chromium
         {
             if (_connection == null)
             {
-                throw new PlaywrightSharpException(
+                throw new MessageException(
                     $"Protocol error ({method}): Session closed. " +
                     $"Most likely the {_targetType} has been closed." +
                     $"Close reason: {_closeReason}");
@@ -60,11 +63,21 @@ namespace PlaywrightSharp.Chromium
             {
                 if (waitForCallback && _callbacks.TryRemove(id, out _))
                 {
-                    callback.TaskWrapper.TrySetException(new PlaywrightSharpException(ex.Message, ex));
+                    callback.TaskWrapper.TrySetException(new MessageException(ex.Message, ex));
                 }
             }
 
             return waitForCallback ? await callback.TaskWrapper.Task.ConfigureAwait(false) : null;
+        }
+
+        internal void Close(string reasong)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void OnMessage(ConnectionResponse obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

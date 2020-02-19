@@ -266,11 +266,11 @@ namespace PlaywrightSharp.Chromium
                     return JsonSerializer.Deserialize<WSEndpointResponse>(data).WebSocketDebuggerUrl;
                 }
 
-                throw new PlaywrightSharpException($"Invalid URL {browserURL}");
+                throw new MessageException($"Invalid URL {browserURL}");
             }
             catch (Exception ex)
             {
-                throw new PlaywrightSharpException($"Failed to fetch browser webSocket url from {browserURL}.", ex);
+                throw new MessageException($"Failed to fetch browser webSocket url from {browserURL}.", ex);
             }
         }
 

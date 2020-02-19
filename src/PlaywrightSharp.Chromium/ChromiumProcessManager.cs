@@ -310,7 +310,7 @@ namespace PlaywrightSharp.Chromium
                     }
 
                     void OnProcessExitedWhileStarting(object sender, EventArgs e)
-                        => p._startCompletionSource.TrySetException(new PlaywrightSharpException($"Failed to launch Chromium! {output}"));
+                        => p._startCompletionSource.TrySetException(new MessageException($"Failed to launch Chromium! {output}"));
                     void OnProcessExited(object sender, EventArgs e) => Exited.EnterFrom(p, p._currentState);
 
                     p.Process.ErrorDataReceived += OnProcessDataReceivedWhileStarting;
@@ -329,7 +329,7 @@ namespace PlaywrightSharp.Chromium
                         {
                             cts = new CancellationTokenSource(timeout);
                             cts.Token.Register(() => p._startCompletionSource.TrySetException(
-                                new PlaywrightSharpException($"Timed out after {timeout} ms while trying to connect to Chromium!")));
+                                new MessageException($"Timed out after {timeout} ms while trying to connect to Chromium!")));
                         }
 
                         try
