@@ -27,8 +27,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             }
             else if (TestConstants.IsWebKit)
             {
-                // TODO: expose PageDelegate
-                // Page._delegate._session.send('Page.crash', }
+                Assert.True(false, "TODO: expose PageDelegate and invoke Page._delegate._session.send('Page.crash', }");
             }
             await Page.WaitForEvent<ErrorEventArgs>(PageEvent.Error);
             Assert.Equal("Page crashed!", error);
