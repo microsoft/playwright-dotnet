@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw when element is not an <input>, <textarea> or [contenteditable]</playwright-it>
+        ///<playwright-it>should throw when element is not an &lt;input&gt;, &lt;textarea&gt; or [contenteditable]</playwright-it>
         [Fact]
         public async Task ShouldThrowWhenElementIsNotAnInputOrTextareaOrContenteditable()
         {

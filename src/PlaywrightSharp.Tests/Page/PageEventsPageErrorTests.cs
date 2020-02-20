@@ -20,7 +20,12 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldFire()
         {
             string error = null;
-            Page.Once<PageErrorEventArgs>(PageEvent.PageError, e => error = e.Message);
+            void EventHandler(object sender, PageErrorEventArgs e)
+            {
+                error = e.Message;
+                Page.PageError -= EventHandler;
+            }
+            Page.PageError += EventHandler;
             await Task.WhenAll(
                 Page.GoToAsync(TestConstants.ServerUrl + "/error.html"),
                 Page.WaitForEvent<PageErrorEventArgs>(PageEvent.PageError)

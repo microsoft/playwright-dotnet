@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         [Fact]
         public async Task ShouldWork()
         {
-            var popupTask = Page.OnceAsync<PopupEventArgs>(PageEvent.Popup);
+            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
             await Task.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank')")
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         [Fact]
         public async Task ShouldWorkWithNoopener()
         {
-            var popupTask = Page.OnceAsync<PopupEventArgs>(PageEvent.Popup);
+            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
             await Task.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>("() => window.open('about:blank', null, 'noopener')")

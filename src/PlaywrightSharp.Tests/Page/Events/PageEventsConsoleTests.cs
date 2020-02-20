@@ -23,7 +23,12 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldWork()
         {
             ConsoleMessage message = null;
-            Page.Once(PageEvent.Console, (ConsoleEventArgs e) => message = e.Message);
+            void EventHandler(object sender, ConsoleEventArgs e)
+            {
+                message = e.Message;
+                Page.Console -= EventHandler;
+            }
+            Page.Console += EventHandler;
             await Task.WhenAll(
                 Page.EvaluateAsync<string>("() => console.log('hello', 5, { foo: 'bar'})"),
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
@@ -73,7 +78,12 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldNotFailForWindowObject()
         {
             ConsoleMessage message = null;
-            Page.Once(PageEvent.Console, (ConsoleEventArgs e) => message = e.Message);
+            void EventHandler(object sender, ConsoleEventArgs e)
+            {
+                message = e.Message;
+                Page.Console -= EventHandler;
+            }
+            Page.Console += EventHandler;
             await Task.WhenAll(
                 Page.EvaluateAsync("() => console.error(window)"),
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
