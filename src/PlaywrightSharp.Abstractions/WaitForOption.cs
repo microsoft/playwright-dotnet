@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Wair for options for <see cref="ClickOptions.WaitFor"/>.
+    /// Wait for options for <see cref="ClickOptions.WaitFor"/>.
     /// </summary>
     /// <seealso cref="ClickOptions.WaitFor"/>
     /// <seealso cref="FillOptions.WaitFor"/>
