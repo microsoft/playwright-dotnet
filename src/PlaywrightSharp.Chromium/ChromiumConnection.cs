@@ -38,13 +38,18 @@ namespace PlaywrightSharp.Chromium
         internal int GetMessageId() => Interlocked.Increment(ref _lastId);
 
         internal Task RawSendASync(int id, string method, object args, string sessionId)
-            => _transport.SendAsync(JsonSerializer.Serialize(new ConnectionRequest
-            {
-                Id = id,
-                Method = method,
-                Params = args,
-                SessionId = sessionId,
-            }));
+            => _transport.SendAsync(JsonSerializer.Serialize(
+                new ConnectionRequest
+                {
+                    Id = id,
+                    Method = method,
+                    Params = args,
+                    SessionId = sessionId,
+                },
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                }));
 
         internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 

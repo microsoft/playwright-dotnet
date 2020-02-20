@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -22,11 +23,14 @@ namespace PlaywrightSharp.Chromium
             _sessionId = sessionId;
         }
 
+        public event EventHandler<MessageEventArgs> MessageReceived;
+
         public bool IsClosed { get; internal set; }
 
-        internal Task<T> SendAsync<T>(string method, object args = null)
+        internal async Task<T> SendAsync<T>(string method, object args = null)
         {
-            throw new NotImplementedException();
+            var content = await SendAsync(method, args).ConfigureAwait(false);
+            return content == null ? default : content.Value.ToObject<T>();
         }
 
         internal async Task<JsonElement?> SendAsync(string method, object args = null, bool waitForCallback = true)
@@ -70,14 +74,37 @@ namespace PlaywrightSharp.Chromium
             return waitForCallback ? await callback.TaskWrapper.Task.ConfigureAwait(false) : null;
         }
 
-        internal void Close(string reasong)
+        internal void Close(string reason)
         {
             throw new NotImplementedException();
         }
 
         internal void OnMessage(ConnectionResponse obj)
         {
-            throw new NotImplementedException();
+            int? id = obj.Id;
+
+            if (id.HasValue && _callbacks.TryRemove(id.Value, out var callback))
+            {
+                if (obj.Error != null)
+                {
+                    callback.TaskWrapper.TrySetException(new MessageException(callback, obj.Error));
+                }
+                else
+                {
+                    callback.TaskWrapper.TrySetResult(obj.Result);
+                }
+            }
+            else
+            {
+                string method = obj.Method;
+                var param = obj.Params?.ToObject<ConnectionResponseParams>();
+
+                MessageReceived?.Invoke(this, new MessageEventArgs
+                {
+                    MessageID = method,
+                    MessageData = obj.Params,
+                });
+            }
         }
     }
 }
