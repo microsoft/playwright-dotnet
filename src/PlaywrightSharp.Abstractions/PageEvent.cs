@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Enums for <see cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions)"/>.
+    /// Enums for <see cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>.
     /// </summary>
     public enum PageEvent
     {
@@ -21,5 +21,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.Request"/>
         Request,
+
+        /// <summary>
+        /// FileChooser event.
+        /// </summary>
+        /// <see cref="IPage.FileChooser"/>
+        FileChooser,
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -118,5 +119,15 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script.</returns>
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="filePath">The file paths or files.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(params string[] filePath);
     }
 }
