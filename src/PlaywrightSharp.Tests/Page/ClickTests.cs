@@ -216,7 +216,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.ClickAsync("button", new ClickOptions { WaitFor = WaitForClickOption.Hidden }));
+                => Page.ClickAsync("button", new ClickOptions { WaitFor = WaitForOption.Hidden }));
 
             Assert.Equal("Node is either not visible or not an HTMLElement", exception.Message);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
@@ -229,7 +229,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWaitForHidden()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            var clickTask = Page.ClickAsync("button", new ClickOptions { WaitFor = WaitForClickOption.Hidden });
+            var clickTask = Page.ClickAsync("button", new ClickOptions { WaitFor = WaitForOption.Hidden });
 
             for (int i = 0; i < 5; i++)
             {

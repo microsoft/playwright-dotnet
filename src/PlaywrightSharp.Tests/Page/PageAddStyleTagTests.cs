@@ -1,0 +1,107 @@
+using System.IO;
+using System.Threading.Tasks;
+using PlaywrightSharp.Tests.BaseTests;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace PlaywrightSharp.Tests.Page
+{
+    ///<playwright-file>page.spec.js</playwright-file>
+    ///<playwright-describe>Page.addStyleTag</playwright-describe>
+    public class PageAddStyleTagTests : PlaywrightSharpPageBaseTest
+    {
+        internal PageAddStyleTagTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should throw an error if no options are provided</playwright-it>
+        [Fact(Skip = "Not relevant for C#, js specific")]
+        public void ShouldThrowAnErrorIfNoOptionsAreProvided()
+        {
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should work with a url</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithAUrl()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var styleHandle = await Page.AddStyleTagAsync(new AddTagOptions { Url = "/injectedstyle.css" });
+            Assert.NotNull(styleHandle);
+            Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should throw an error if loading from url fail</playwright-it>
+        [Fact]
+        public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
+                Page.AddStyleTagAsync(new AddTagOptions { Url = "/nonexistfile.js" }));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should work with a path</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithAPath()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var styleHandle = await Page.AddStyleTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/injectedstyle.css") });
+            Assert.NotNull(styleHandle);
+            Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should include sourceURL when path is provided</playwright-it>
+        [Fact]
+        public async Task ShouldIncludeSourceURLWhenPathIsProvided()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.AddStyleTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/injectedstyle.css") });
+            var styleHandle = await Page.QuerySelectorAsync("style");
+            string styleContent = await Page.EvaluateAsync<string>("style => style.innerHTML", styleHandle);
+            Assert.Contains(Path.Join("assets", "injectedstyle.css"), styleContent);
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should work with content</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithContent()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var styleHandle = await Page.AddStyleTagAsync(new AddTagOptions { Content = "body { background-color: green; }" });
+            Assert.NotNull(styleHandle);
+            Assert.Equal("rgb(0, 128, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should throw when added with content to the CSP page</playwright-it>
+        [Fact]
+        public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
+            await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
+                Page.AddStyleTagAsync(new AddTagOptions { Content = "body { background-color: green; }" }));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addStyleTag</playwright-describe>
+        ///<playwright-it>should throw when added with URL to the CSP page</playwright-it>
+        [Fact]
+        public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
+            await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
+                Page.AddStyleTagAsync(new AddTagOptions { Url = TestConstants.CrossProcessUrl + "/injectedstyle.css" }));
+        }
+    }
+}
