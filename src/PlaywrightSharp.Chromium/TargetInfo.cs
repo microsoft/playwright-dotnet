@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Chromium
         {
         }
 
-        public TargetType Type { get; internal set; }
+        public TargetType Type { get; set; }
+
+        public string BrowserContextId { get; set; }
     }
 }

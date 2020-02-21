@@ -24,7 +24,6 @@ namespace PlaywrightSharp.Chromium
         /// </summary>
         public const int PreferredRevision = 733125;
 
-        private const int BrowserCloseMessageId = -9999;
         private const string UserDataDirArgument = "--user-data-dir";
 
         private static readonly string[] DefaultArgs = new[]
@@ -203,7 +202,7 @@ namespace PlaywrightSharp.Chromium
                     }
 
                     var transport = await BrowserHelper.CreateTransportAsync(browserApp.ConnectOptions).ConfigureAwait(false);
-                    await transport.SendAsync("Browser.close", new BrowserCloseRequest { Id = BrowserCloseMessageId }).ConfigureAwait(false);
+                    await transport.SendAsync("Browser.close", new BrowserCloseRequest { Id = ChromiumConnection.BrowserCloseMessageId }).ConfigureAwait(false);
                 },
                 (exitCode) =>
                 {

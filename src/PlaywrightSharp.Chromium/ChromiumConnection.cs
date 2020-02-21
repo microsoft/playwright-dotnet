@@ -10,8 +10,9 @@ namespace PlaywrightSharp.Chromium
 {
     internal class ChromiumConnection : IDisposable
     {
+        internal const int BrowserCloseMessageId = -9999;
+
         private readonly AsyncDictionaryHelper<string, ChromiumSession> _asyncSessions;
-        private readonly ConcurrentDictionary<int, MessageTask> _callbacks = new ConcurrentDictionary<int, MessageTask>();
         private readonly IConnectionTransport _transport;
         private readonly ConcurrentDictionary<string, ChromiumSession> _sessions = new ConcurrentDictionary<string, ChromiumSession>();
         private int _lastId;
@@ -44,12 +45,9 @@ namespace PlaywrightSharp.Chromium
                     Id = id,
                     Method = method,
                     Params = args,
-                    SessionId = sessionId,
+                    SessionId = string.IsNullOrEmpty(sessionId) ? null : sessionId,
                 },
-                new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                }));
+                JsonHelper.DefaultJsonSerializerOptions));
 
         internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 
@@ -69,7 +67,7 @@ namespace PlaywrightSharp.Chromium
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException)
                 {
@@ -93,7 +91,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void Close(string message)
+        internal void Close(string message)
         {
             throw new NotImplementedException();
         }
@@ -102,51 +100,34 @@ namespace PlaywrightSharp.Chromium
         {
             string method = obj.Method;
             var param = obj.Params?.ToObject<ConnectionResponseParams>();
+            ChromiumSession session;
+
+            if (obj.Id == BrowserCloseMessageId)
+            {
+                return;
+            }
 
             if (method == "Target.attachedToTarget")
             {
                 string sessionId = param.SessionId;
-                var session = new ChromiumSession(this, param.TargetInfo.Type, sessionId);
+                session = new ChromiumSession(this, param.TargetInfo.Type, sessionId);
                 _asyncSessions.AddItem(sessionId, session);
+
+                return;
             }
-            else if (method == "Target.detachedFromTarget")
+
+            if (method == "Target.detachedFromTarget")
             {
                 string sessionId = param.SessionId;
-                if (_sessions.TryRemove(sessionId, out var session) && !session.IsClosed)
+                if (_sessions.TryRemove(sessionId, out session) && !session.IsClosed)
                 {
                     session.Close("Target.detachedFromTarget");
                 }
+
+                return;
             }
 
-            if (!string.IsNullOrEmpty(obj.SessionId))
-            {
-                var session = GetSession(obj.SessionId);
-                session.OnMessage(obj);
-            }
-            else if (obj.Id.HasValue)
-            {
-                // If we get the object we are waiting for we return if
-                // if not we add this to the list, sooner or later some one will come for it.
-                if (_callbacks.TryRemove(obj.Id.Value, out var callback))
-                {
-                    if (obj.Error != null)
-                    {
-                        callback.TaskWrapper.TrySetException(new MessageException(callback, obj.Error));
-                    }
-                    else
-                    {
-                        callback.TaskWrapper.TrySetResult(obj.Result);
-                    }
-                }
-            }
-            else
-            {
-                MessageReceived?.Invoke(this, new MessageEventArgs
-                {
-                    MessageID = method,
-                    MessageData = obj.Params,
-                });
-            }
+            GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
         }
     }
 }
