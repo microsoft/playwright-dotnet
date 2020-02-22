@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Messaging;
+using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging.Target;
 using PlaywrightSharp.Helpers;
 
@@ -19,7 +18,6 @@ namespace PlaywrightSharp.Chromium
         private readonly ChromiumConnection _connection;
         private readonly string[] _browserContextIds;
         private readonly ChromiumSession _session;
-        private readonly IDictionary<string, ChromiumTarget> _targets = new Dictionary<string, ChromiumTarget>();
         private readonly Dictionary<string, ChromiumBrowserContext> _contexts;
 
         internal ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
@@ -229,6 +227,6 @@ namespace PlaywrightSharp.Chromium
             target.TargetInfoChanged(e.TargetInfo);
         }
 
-        private IEnumerable<ChromiumTarget> GetAllTargets() => _targets.Values.Where(t => t.IsInitialized);
+        private IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
     }
 }

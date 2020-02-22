@@ -30,10 +30,10 @@ namespace PlaywrightSharp.Tests.Launcher
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
             using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             string url = TestConstants.ServerUrl + "/frames/nested-frames.html";
-            var page = await Browser.DefaultContext.NewPageAsync();
+            var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(url);
 
-            await Browser.DisconnectAsync();
+            await browser.DisconnectAsync();
 
             using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
 

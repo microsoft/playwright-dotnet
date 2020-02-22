@@ -2,8 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging;
-using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {

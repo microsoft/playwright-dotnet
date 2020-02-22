@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging;
 using PlaywrightSharp.Chromium.Messaging.Target;
 using PlaywrightSharp.Helpers;
@@ -50,7 +51,7 @@ namespace PlaywrightSharp.Chromium
                     Params = args,
                     SessionId = string.IsNullOrEmpty(sessionId) ? null : sessionId,
                 },
-                JsonHelper.DefaultJsonSerializerOptions));
+                JsonHelper.DefaultChromiumJsonSerializerOptions));
 
         internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 
@@ -90,7 +91,7 @@ namespace PlaywrightSharp.Chromium
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultChromiumJsonSerializerOptions);
                 }
                 catch (JsonException)
                 {

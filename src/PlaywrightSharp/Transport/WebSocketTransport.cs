@@ -34,7 +34,12 @@ namespace PlaywrightSharp.Transport
 
         public void Close(string closeReason = null)
         {
-            throw new NotImplementedException();
+            if (!IsClosed)
+            {
+                IsClosed = true;
+                StopReading();
+                Closed?.Invoke(this, new TransportClosedEventArgs(closeReason));
+            }
         }
 
         public Task SendAsync(string message, object arguments)

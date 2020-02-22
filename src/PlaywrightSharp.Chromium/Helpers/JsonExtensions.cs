@@ -2,12 +2,12 @@ using System;
 using System.IO;
 using System.Text.Json;
 
-namespace PlaywrightSharp.Helpers
+namespace PlaywrightSharp.Chromium.Helpers
 {
     internal static partial class JsonExtensions
     {
         public static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
-            => JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonHelper.DefaultJsonSerializerOptions);
+            => JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonHelper.DefaultChromiumJsonSerializerOptions);
 
         public static T ToObject<T>(this JsonDocument document, JsonSerializerOptions options = null)
         {
