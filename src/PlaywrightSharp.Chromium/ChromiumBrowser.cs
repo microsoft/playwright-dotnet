@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -65,6 +66,8 @@ namespace PlaywrightSharp.Chromium
 
         /// <inheritdoc cref="IBrowser"/>
         public bool IsConnected => false;
+
+        internal IDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
 
         /// <inheritdoc cref="IBrowser"/>
         public Task CloseAsync() => _app?.CloseAsync();
@@ -153,9 +156,14 @@ namespace PlaywrightSharp.Chromium
                         return;
                 }
             }
+
+            // We need to silence exceptions on async void events.
+#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 string message = $"Browser failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
+
                 // TODO Add Logger _logger.LogError(ex, message);
                 _connection.Close(message);
             }
@@ -173,12 +181,13 @@ namespace PlaywrightSharp.Chromium
 
             var target = new ChromiumTarget(
                 e.TargetInfo,
-                () => Connection.CreateSessionAsync(targetInfo),
+                () => _connection.CreateSessionAsync(targetInfo),
                 context);
 
             if (TargetsMap.ContainsKey(e.TargetInfo.TargetId))
             {
-                _logger.LogError("Target should not exist before targetCreated");
+                // TODO add logger
+                // _logger.LogError("Target should not exist before targetCreated");
             }
 
             TargetsMap[e.TargetInfo.TargetId] = target;
@@ -187,8 +196,37 @@ namespace PlaywrightSharp.Chromium
             {
                 var args = new TargetChangedArgs { Target = target };
                 TargetCreated?.Invoke(this, args);
-                context.OnTargetCreated(this, args);
             }
+        }
+
+        private async Task DestroyTargetAsync(TargetDestroyedResponse e)
+        {
+            if (!TargetsMap.ContainsKey(e.TargetId))
+            {
+                throw new PlaywrightSharpException("Target should exists before DestroyTarget");
+            }
+
+            var target = TargetsMap[e.TargetId];
+            TargetsMap.Remove(e.TargetId);
+
+            target.CloseTaskWrapper.TrySetResult(true);
+
+            if (await target.InitializedTask.ConfigureAwait(false))
+            {
+                var args = new TargetChangedArgs { Target = target };
+                TargetDestroyed?.Invoke(this, args);
+            }
+        }
+
+        private void ChangeTargetInfo(TargetCreatedResponse e)
+        {
+            if (!TargetsMap.ContainsKey(e.TargetInfo.TargetId))
+            {
+                throw new PlaywrightSharpException("Target should exists before ChangeTargetInfo");
+            }
+
+            var target = TargetsMap[e.TargetInfo.TargetId];
+            target.TargetInfoChanged(e.TargetInfo);
         }
 
         private IEnumerable<ChromiumTarget> GetAllTargets() => _targets.Values.Where(t => t.IsInitialized);

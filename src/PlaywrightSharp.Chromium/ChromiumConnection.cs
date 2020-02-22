@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
+using PlaywrightSharp.Chromium.Messaging.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -32,6 +33,8 @@ namespace PlaywrightSharp.Chromium
 
         public ChromiumSession RootSession { get; set; }
 
+        internal bool IsClosed { get; set; }
+
         public void Dispose()
         {
         }
@@ -50,6 +53,26 @@ namespace PlaywrightSharp.Chromium
                 JsonHelper.DefaultJsonSerializerOptions));
 
         internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
+
+        internal void Close(string closeReason)
+        {
+            if (!IsClosed)
+            {
+                _transport.Close(closeReason);
+            }
+        }
+
+        internal Task<ChromiumSession> GetSessionAsync(string sessionId) => _asyncSessions.GetItemAsync(sessionId);
+
+        internal async Task<ChromiumSession> CreateSessionAsync(TargetInfo targetInfo)
+        {
+            string sessionId = (await RootSession.SendAsync<TargetAttachToTargetResponse>("Target.attachToTarget", new TargetAttachToTargetRequest
+            {
+                TargetId = targetInfo.TargetId,
+                Flatten = true,
+            }).ConfigureAwait(false)).SessionId;
+            return await GetSessionAsync(sessionId).ConfigureAwait(false);
+        }
 
         private void Transport_Closed(object sender, TransportClosedEventArgs e)
         {
@@ -89,11 +112,6 @@ namespace PlaywrightSharp.Chromium
                 // _logger.LogError(ex, message);
                 Close(message);
             }
-        }
-
-        internal void Close(string message)
-        {
-            throw new NotImplementedException();
         }
 
         private void ProcessIncomingMessage(ConnectionResponse obj)

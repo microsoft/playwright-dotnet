@@ -14,6 +14,5 @@ namespace PlaywrightSharp
         /// Gets the type. It will be <see cref="ITarget.Type"/>.
         /// </summary>
         TargetType Type { get; }
-
     }
 }
