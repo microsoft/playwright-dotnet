@@ -151,9 +151,12 @@ namespace PlaywrightSharp.Chromium
                 }
             };
 
+            return _page;
+            /*
             await _page.InitializeAsync();
             await client.send('Target.setAutoAttach', { autoAttach: true, waitForDebuggerOnStart: false, flatten: true});
             return page;
+            */
         }
     }
 }

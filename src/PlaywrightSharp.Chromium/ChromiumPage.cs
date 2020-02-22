@@ -74,8 +74,7 @@ namespace PlaywrightSharp.Chromium
         private async void HandleFrameTree(PageGetFrameTreeItem frameTree)
         {
             OnFrameAttached(frameTree.Frame.Id, frameTree.Frame.ParentId);
-
-            await OnFrameNavigatedAsync(frameTree.Frame);
+            OnFrameNavigated(frameTree.Frame, true);
 
             if (frameTree.Childs != null)
             {
@@ -85,6 +84,9 @@ namespace PlaywrightSharp.Chromium
                 }
             }
         }
+
+        private void OnFrameNavigated(PageGetFrameTreeItemInfo frame, bool initial)
+            => FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
 
         private void OnFrameAttached(string frameId, string parentFrameId) => FrameManager.FrameAttached(frameId, parentFrameId);
 

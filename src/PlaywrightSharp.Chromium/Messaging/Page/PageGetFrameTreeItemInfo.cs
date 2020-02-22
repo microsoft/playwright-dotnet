@@ -10,5 +10,6 @@
 
         public string Url { get; set; }
 
+        public string LoaderId { get; set; }
     }
 }

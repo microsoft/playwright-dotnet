@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
 
 namespace PlaywrightSharp
 {
+    /// <inheritdoc cref="IPage"/>
     public class PageBase : IPage
     {
-        protected FrameManager FrameManager { get; }
-
+        /// <inheritdoc cref="IPage"/>
         public PageBase()
         {
             FrameManager = new FrameManager(this);
@@ -41,8 +42,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage"/>
         public event EventHandler<FrameEventArgs> FrameNavigated;
-
-        internal void OnFrameAttached(Frame frame) => FrameAttached?.Invoke(this, new FrameEventArgs(frame));
 
         /// <inheritdoc cref="IPage"/>
         public event EventHandler Load;
@@ -77,6 +76,8 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage"/>
         public int DefaultNavigationTimeout { get; set; }
 
+        internal FrameManager FrameManager { get; }
+
         internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
 
         /// <inheritdoc cref="IPage"/>
@@ -103,10 +104,11 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage"/>
+        /// <inheritdoc cref="IDisposable"/>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <inheritdoc cref="IPage"/>
@@ -368,7 +370,18 @@ namespace PlaywrightSharp
 
         internal void DidDisconnected()
         {
+        }
 
+        internal void OnFrameAttached(IFrame frame) => FrameAttached?.Invoke(this, new FrameEventArgs(frame));
+
+        internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
+
+        /// <inheritdoc cref="IDisposable"/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+            }
         }
     }
 }
