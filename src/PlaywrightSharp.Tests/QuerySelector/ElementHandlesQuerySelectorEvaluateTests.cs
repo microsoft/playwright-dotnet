@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
             await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"retweets\">10</div></div></body></html>");
             var tweet = await Page.QuerySelectorAsync(".tweet");
-            var content = await tweet.QuerySelectorEvaluateAsync<string>(".like", "node => node.innerText");
+            string content = await tweet.QuerySelectorEvaluateAsync<string>(".like", "node => node.innerText");
             Assert.Equal("100", content);
         }
 
@@ -31,11 +31,11 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task ShouldRetrieveContentFromSubtree()
         {
-            var htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a-child-div</div></div>";
+            string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a-child-div</div></div>";
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
-            var content = await elementHandle.QuerySelectorEvaluateAsync<string>(".a", "node => node.innerText");
-            expect(content).toBe("a-child-div");
+            string content = await elementHandle.QuerySelectorEvaluateAsync<string>(".a", "node => node.innerText");
+            Assert.Equal("a-child-div", content);
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -44,12 +44,11 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task ShouldThrowInCaseOfMissingSelector()
         {
-            var htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
+            string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => elementHandle.QuerySelectorEvaluateAsync(".a", "node => node.innerText"));
             Assert.Equal("Error: failed to find element matching selector \".a\"", exception.Message);
         }
     }
-
-        }
+}

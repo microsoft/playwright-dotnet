@@ -111,13 +111,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Any }));
             Assert.NotNull(await Page.WaitForSelectorAsync("css=section"));
 
-            await Page.SetContentAsync('<section id="testAttribute" style="display: none">43543</section>');
+            await Page.SetContentAsync("<section id=\"testAttribute\" style=\"display: none\">43543</section>");
             Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden }));
             Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Any }));
             Assert.NotNull(await Page.WaitForSelectorAsync("css=section"));
         }
     }
-
-        }
-
-    }
+}

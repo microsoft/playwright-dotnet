@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAsync(".second");
             var inner = await second.QuerySelectorAsync(".inner");
-            var content = await Page.EvaluateAsync<string>("e => e.textContent", inner);
+            string content = await Page.EvaluateAsync<string>("e => e.textContent", inner);
             Assert.Equal("A", content);
         }
 
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             var html = await Page.QuerySelectorAsync("zs=html");
             var second = await html.QuerySelectorAsync("zs=.second");
             var inner = await second.QuerySelectorAsync("zs=.inner");
-            var content = await Page.EvaluateAsync<string>("e => e.textContent", inner);
+            string content = await Page.EvaluateAsync<string>("e => e.textContent", inner);
             Assert.Equal("A", content);
         }
 
@@ -55,5 +55,4 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(second);
         }
     }
-
-        }
+}

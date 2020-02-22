@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkWithZsSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
-            var divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("zs=div", "divs => divs.length");
+            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("zs=div", "divs => divs.length");
             Assert.Equal(3, divsCount);
         }
 
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkWithXpathSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
-            var divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("xpath=/html/body/div", "divs => divs.length");
+            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("xpath=/html/body/div", "divs => divs.length");
             Assert.Equal(3, divsCount);
         }
 
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
-            var divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("div", "divs => divs.length");
+            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("div", "divs => divs.length");
             Assert.Equal(3, divsCount);
         }
 
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<div><span>hello</span></div><div>beautiful</div><div><span>wo</span><span>rld!</span></div><span>Not this one</span>");
-            var spansCount = await Page.QuerySelectorAllEvaluateAsync<int>("css=div >> css=span", "spans => spans.length");
+            int spansCount = await Page.QuerySelectorAllEvaluateAsync<int>("css=div >> css=span", "spans => spans.length");
             Assert.Equal(3, spansCount);
         }
 
@@ -75,10 +75,8 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldEnterShadowRootsWithDoubleGreaterThanSyntax()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
-            var spansCount = await Page.QuerySelectorAllEvaluateAsync<int>("css=div >> css=div >> css=span", "spans => spans.length");
+            int spansCount = await Page.QuerySelectorAllEvaluateAsync<int>("css=div >> css=div >> css=span", "spans => spans.length");
             Assert.Equal(2, spansCount);
         }
-
     }
-
-    }
+}

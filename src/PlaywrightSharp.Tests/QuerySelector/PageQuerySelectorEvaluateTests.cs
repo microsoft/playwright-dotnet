@@ -55,7 +55,6 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.SetContentAsync("<section data-testid=foo id=\"testAttribute\">43543</section>");
             string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("data-testid=foo", "e => e.id");
             Assert.Equal("testAttribute", idAttribute);
-
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -212,5 +211,4 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("Hello from root2", text5);
         }
     }
-
-    }
+}

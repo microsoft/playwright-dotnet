@@ -46,5 +46,4 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(2, elements.Length);
         }
     }
-
-        }
+}
