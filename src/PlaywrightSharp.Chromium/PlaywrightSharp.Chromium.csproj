@@ -27,5 +27,6 @@
     <Folder Include="Messaging\" />
     <Folder Include="Messaging\Target\" />
     <Folder Include="Messaging\Browser\" />
+    <Folder Include="Messaging\Page\" />
   </ItemGroup>
 </Project>

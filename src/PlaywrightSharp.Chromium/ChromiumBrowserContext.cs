@@ -1,16 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Messaging.Target;
 
 namespace PlaywrightSharp.Chromium
 {
     /// <inheritdoc cref="IBrowserContext"/>
     public class ChromiumBrowserContext : IBrowserContext
     {
-        private readonly ChromiumConnection _connection;
+        private readonly ChromiumSession _client;
         private readonly string _contextId;
 
-        internal ChromiumBrowserContext(ChromiumConnection connection, ChromiumBrowser chromiumBrowser, string contextId)
+        internal ChromiumBrowserContext(ChromiumSession client, ChromiumBrowser chromiumBrowser, string contextId)
         {
-            _connection = connection;
+            _client = client;
             Browser = chromiumBrowser;
             _contextId = contextId;
         }
@@ -42,9 +44,35 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowserContext"/>
-        public Task<IPage> NewPageAsync()
+        public async Task<IPage> NewPageAsync(string url = null)
         {
-            throw new System.NotImplementedException();
+            var page = await NewPage();
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                await page.GoToAsync(url);
+            }
+
+            return page;
+        }
+
+        private async Task<ChromiumPage> NewPage()
+        {
+            var createTargetRequest = new TargetCreateTargetRequest
+            {
+                Url = "about:blank"
+            };
+
+            if (_contextId != null)
+            {
+                createTargetRequest.BrowserContextId = _contextId;
+            }
+
+            string targetId = (await _client.SendAsync<TargetCreateTargetResponse>("Target.createTarget", createTargetRequest)
+                .ConfigureAwait(false)).TargetId;
+            var target = Browser.TargetsMap[targetId];
+            await target.InitializedTask.ConfigureAwait(false);
+            return await target.PageAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserContext"/>

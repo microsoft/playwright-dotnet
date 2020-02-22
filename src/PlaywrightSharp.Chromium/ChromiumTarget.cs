@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Helpers;
+using PlaywrightSharp.Chromium.Messaging.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -11,6 +13,7 @@ namespace PlaywrightSharp.Chromium
         private readonly Func<Task<ChromiumSession>> _sessionFactory;
         private readonly TaskCompletionSource<bool> _initializedTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         private Task<Worker> _workerTask;
+        private ChromiumPage _page;
 
         internal ChromiumTarget(
             TargetInfo targetInfo,
@@ -116,7 +119,6 @@ namespace PlaywrightSharp.Chromium
 
         internal void TargetInfoChanged(TargetInfo targetInfo)
         {
-            string previousUrl = TargetInfo.Url;
             TargetInfo = targetInfo;
 
             if (!IsInitialized && (TargetInfo.Type != TargetType.Page || !string.IsNullOrEmpty(TargetInfo.Url)))
@@ -129,6 +131,29 @@ namespace PlaywrightSharp.Chromium
 
         private static Task<Worker> WorkerInternalAsync() => Task.FromResult<Worker>(null);
 
-        private static Task<ChromiumPage> CreatePageAsync() => Task.FromResult<ChromiumPage>(null);
+        private async Task<ChromiumPage> CreatePageAsync()
+        {
+            var client = await _sessionFactory().ConfigureAwait(false);
+            _page = new ChromiumPage(client, Browser, BrowserContext);
+            _page.Target = this;
+
+            client.Disconnected += (sender, e) => _page.DidDisconnected();
+
+            client.MessageReceived += (sender, e) =>
+            {
+                if (e.MessageID == "Target.attachedToTarget")
+                {
+                    var response = e.MessageData.Value.ToObject<TargetAttachToTargetResponse>();
+                    if (response.TargetInfo.Type != TargetType.ServiceWorker)
+                    {
+                        _ = client.SendAsync("Target.detachFromTarget", new TargetDetachFromTargetRequest { SessionId = response.SessionId });
+                    }
+                }
+            };
+
+            await _page.InitializeAsync();
+            await client.send('Target.setAutoAttach', { autoAttach: true, waitForDebuggerOnStart: false, flatten: true});
+            return page;
+        }
     }
 }

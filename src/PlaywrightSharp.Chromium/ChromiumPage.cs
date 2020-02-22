@@ -4,359 +4,89 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
+using PlaywrightSharp.Chromium.Messaging.Page;
 
 namespace PlaywrightSharp.Chromium
 {
     /// <inheritdoc cref="IPage"/>
-    internal class ChromiumPage : IPage
+    internal class ChromiumPage : PageBase
     {
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<ConsoleEventArgs> Console;
+        private readonly ChromiumSession _client;
+        private readonly ChromiumBrowser _browser;
+        private readonly ChromiumBrowserContext _browserContext;
 
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<PopupEventArgs> Popup;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<RequestEventArgs> Request;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<RequestEventArgs> RequestFinished;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<RequestEventArgs> RequestFailed;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<DialogEventArgs> Dialog;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<FrameEventArgs> FrameAttached;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<FrameEventArgs> FrameDetached;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler<FrameEventArgs> FrameNavigated;
-
-        /// <inheritdoc cref="IPage"/>
-        public event EventHandler Load;
-
-        /// <inheritdoc cref="IPage"/>
-        public IFrame MainFrame => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public IBrowserContext BrowserContext => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public Viewport Viewport => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public IAccessibility Accessibility => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public IMouse Mouse => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public string Url => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public IFrame[] Frames => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public IKeyboard Keyboard => null;
-
-        /// <inheritdoc cref="IPage"/>
-        public int DefaultTimeout { get; set; }
-
-        /// <inheritdoc cref="IPage"/>
-        public int DefaultNavigationTimeout { get; set; }
-
-        internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
+        public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, ChromiumBrowserContext browserContext)
         {
-            throw new NotImplementedException();
+            _client = client;
+            _browser = browser;
+            _browserContext = browserContext;
         }
 
-        /// <inheritdoc cref="IPage"/>
-        public Task AuthenticateAsync(Credentials credentials)
+        public ChromiumTarget Target { get; set; }
+
+        private async Task InitializeAsync(bool ignoreHTTPSErrors)
         {
-            throw new NotImplementedException();
+            var getFrameTreeTask = _client.SendAsync<PageGetFrameTreeResponse>("Page.getFrameTree");
+
+            await Task.WhenAll(
+                _client.SendAsync("Page.enable"),
+                getFrameTreeTask).ConfigureAwait(false);
+
+            HandleFrameTree(getFrameTreeTask.Result);
+
+            FrameManager = await FrameManager.CreateFrameManagerAsync(Client, this, ignoreHTTPSErrors, _timeoutSettings).ConfigureAwait(false);
+            var networkManager = FrameManager.NetworkManager;
+
+            Client.MessageReceived += Client_MessageReceived;
+            FrameManager.FrameAttached += (sender, e) => FrameAttached?.Invoke(this, e);
+            FrameManager.FrameDetached += (sender, e) => FrameDetached?.Invoke(this, e);
+            FrameManager.FrameNavigated += (sender, e) => FrameNavigated?.Invoke(this, e);
+
+            networkManager.Request += (sender, e) => Request?.Invoke(this, e);
+            networkManager.RequestFailed += (sender, e) => RequestFailed?.Invoke(this, e);
+            networkManager.Response += (sender, e) => Response?.Invoke(this, e);
+            networkManager.RequestFinished += (sender, e) => RequestFinished?.Invoke(this, e);
+
+            await Task.WhenAll(
+               Client.SendAsync("Target.setAutoAttach", new TargetSetAutoAttachRequest
+               {
+                   AutoAttach = true,
+                   WaitForDebuggerOnStart = false,
+                   Flatten = true
+               }),
+               Client.SendAsync("Performance.enable", null),
+               Client.SendAsync("Log.enable", null)
+           ).ConfigureAwait(false);
+
+            try
+            {
+                await Client.SendAsync("Page.setInterceptFileChooserDialog", new PageSetInterceptFileChooserDialog
+                {
+                    Enabled = true
+                }).ConfigureAwait(false);
+            }
+            catch
+            {
+                _fileChooserInterceptionIsDisabled = true;
+            }
         }
 
-        /// <inheritdoc cref="IPage"/>
-        public Task ClickAsync(string selector, ClickOptions options = null)
+        private async void HandleFrameTree(PageGetFrameTreeItem frameTree)
         {
-            throw new NotImplementedException();
+            OnFrameAttached(frameTree.Frame.Id, frameTree.Frame.ParentId);
+
+            await OnFrameNavigatedAsync(frameTree.Frame);
+
+            if (frameTree.Childs != null)
+            {
+                foreach (var child in frameTree.Childs)
+                {
+                    await HandleFrameTreeAsync(child);
+                }
+            }
         }
 
-        /// <inheritdoc cref="IPage"/>
-        public Task CloseAsync(PageCloseOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        private void OnFrameAttached(string frameId, string parentFrameId) => FrameManager.FrameAttached(frameId, parentFrameId);
 
-        /// <inheritdoc cref="IPage"/>
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task EmulateMediaAsync(EmulateMedia options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task ExposeFunctionAsync(string name, Action playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task FocusAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> GoBackAsync(NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> GoForwardAsync(NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task HoverAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IElementHandle> QuerySelectorAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> ReloadAsync(NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetCacheEnabledAsync(bool enabled = true)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetContentAsync(string html, NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetContentAsync(string html, WaitUntilNavigation waitUntil)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetOfflineModeAsync(bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetRequestInterceptionAsync(bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetUserAgentAsync(string userAgent)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task SetViewportAsync(Viewport viewport)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task TripleClickAsync(string selector, ClickOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task TypeAsync(string selector, string text, TypeOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task WaitForLoadStateAsync(NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage"/>
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void OnPopup(object popupPage)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

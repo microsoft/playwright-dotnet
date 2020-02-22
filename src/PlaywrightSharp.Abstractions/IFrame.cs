@@ -44,6 +44,11 @@ namespace PlaywrightSharp
         bool Detached { get; }
 
         /// <summary>
+        /// FrameID.
+        /// </summary>
+        string Id { get; set; }
+
+        /// <summary>
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>

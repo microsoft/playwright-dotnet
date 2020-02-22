@@ -25,6 +25,8 @@ namespace PlaywrightSharp.Chromium
 
         public event EventHandler<MessageEventArgs> MessageReceived;
 
+        public event EventHandler<EventArgs> Disconnected;
+
         public bool IsClosed { get; internal set; }
 
         internal async Task<T> SendAsync<T>(string method, object args = null)
