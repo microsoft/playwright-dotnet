@@ -121,6 +121,11 @@ namespace PlaywrightSharp
         event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <summary>
+        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(string[])"/>.
+        /// </summary>
+        event EventHandler<FileChooserEventArgs> FileChooser;
+
+        /// <summary>
         /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/load"/> event is dispatched.
         /// </summary>
         event EventHandler Load;
