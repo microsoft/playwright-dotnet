@@ -4,27 +4,30 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
+using PlaywrightSharp.Chromium.Messaging.Emulation;
 using PlaywrightSharp.Chromium.Messaging.Page;
+using PlaywrightSharp.Chromium.Messaging.Security;
 
 namespace PlaywrightSharp.Chromium
 {
     /// <inheritdoc cref="IPage"/>
-    internal class ChromiumPage : PageBase
+    internal class ChromiumPage : PageBase, IPage
     {
         private readonly ChromiumSession _client;
         private readonly ChromiumBrowser _browser;
-        private readonly ChromiumBrowserContext _browserContext;
+        private readonly ChromiumNetworkManager _networkManager;
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, ChromiumBrowserContext browserContext)
         {
             _client = client;
             _browser = browser;
-            _browserContext = browserContext;
+            BrowserContext = browserContext;
+            _networkManager = new ChromiumNetworkManager(_client, this);
         }
 
         public ChromiumTarget Target { get; set; }
 
-        private async Task InitializeAsync(bool ignoreHTTPSErrors)
+        internal async Task InitializeAsync()
         {
             var getFrameTreeTask = _client.SendAsync<PageGetFrameTreeResponse>("Page.getFrameTree");
 
@@ -32,55 +35,76 @@ namespace PlaywrightSharp.Chromium
                 _client.SendAsync("Page.enable"),
                 getFrameTreeTask).ConfigureAwait(false);
 
-            HandleFrameTree(getFrameTreeTask.Result);
+            HandleFrameTree(getFrameTreeTask.Result.FrameTree);
 
-            FrameManager = await FrameManager.CreateFrameManagerAsync(Client, this, ignoreHTTPSErrors, _timeoutSettings).ConfigureAwait(false);
-            var networkManager = FrameManager.NetworkManager;
-
-            Client.MessageReceived += Client_MessageReceived;
-            FrameManager.FrameAttached += (sender, e) => FrameAttached?.Invoke(this, e);
-            FrameManager.FrameDetached += (sender, e) => FrameDetached?.Invoke(this, e);
-            FrameManager.FrameNavigated += (sender, e) => FrameNavigated?.Invoke(this, e);
-
-            networkManager.Request += (sender, e) => Request?.Invoke(this, e);
-            networkManager.RequestFailed += (sender, e) => RequestFailed?.Invoke(this, e);
-            networkManager.Response += (sender, e) => Response?.Invoke(this, e);
-            networkManager.RequestFinished += (sender, e) => RequestFinished?.Invoke(this, e);
-
-            await Task.WhenAll(
-               Client.SendAsync("Target.setAutoAttach", new TargetSetAutoAttachRequest
-               {
-                   AutoAttach = true,
-                   WaitForDebuggerOnStart = false,
-                   Flatten = true
-               }),
-               Client.SendAsync("Performance.enable", null),
-               Client.SendAsync("Log.enable", null)
-           ).ConfigureAwait(false);
-
-            try
+            var tasks = new List<Task>
             {
-                await Client.SendAsync("Page.setInterceptFileChooserDialog", new PageSetInterceptFileChooserDialog
+               _client.SendAsync("Log.enable", null),
+               _client.SendAsync("Page.setLifecycleEventsEnabled", new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
+               _client.SendAsync("Runtime.enable").ContinueWith(t => EnsureIsolatedWorldAsync(), TaskScheduler.Default),
+               _networkManager.InitializeAsync(),
+            };
+
+            if (BrowserContext.Options != null)
+            {
+                var options = BrowserContext.Options;
+
+                if (options.BypassCSP)
                 {
-                    Enabled = true
-                }).ConfigureAwait(false);
+                    tasks.Add(_client.SendAsync("Page.setBypassCSP", new PageSetBypassCSPRequest { Enabled = true }));
+                }
+
+                if (options.IgnoreHTTPSErrors)
+                {
+                    tasks.Add(_client.SendAsync("Security.setIgnoreCertificateErrors", new SecuritySetIgnoreCertificateErrorsRequest { Ignore = true }));
+                }
+
+                if (options.Viewport != null)
+                {
+                    tasks.Add(SetViewportAsync(options.Viewport));
+                }
+
+                if (!options.JavaScriptEnabled)
+                {
+                    tasks.Add(_client.SendAsync("Emulation.setScriptExecutionDisabled", new EmulationSetScriptExecutionDisabledRequest { Value = true }));
+                }
+
+                if (options.UserAgent != null)
+                {
+                    tasks.Add(_networkManager.SetUserAgentAsync(options.UserAgent));
+                }
+
+                if (options.TimezoneId != null)
+                {
+                    tasks.Add(EmulateTimezoneAsync(options.TimezoneId));
+                }
+
+                if (options.Geolocation != null)
+                {
+                    tasks.Add(_client.SendAsync("Emulation.setGeolocationOverride", options.Geolocation));
+                }
             }
-            catch
-            {
-                _fileChooserInterceptionIsDisabled = true;
-            }
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        private async void HandleFrameTree(PageGetFrameTreeItem frameTree)
+        private Task EnsureIsolatedWorldAsync() => Task.CompletedTask;
+
+        private Task EmulateTimezoneAsync(string timezoneId)
         {
-            OnFrameAttached(frameTree.Frame.Id, frameTree.Frame.ParentId);
+            throw new NotImplementedException();
+        }
+
+        private void HandleFrameTree(PageGetFrameTreeItem frameTree)
+        {
+            OnFrameAttached(frameTree.Frame.Id, frameTree.Frame.ParentId ?? string.Empty);
             OnFrameNavigated(frameTree.Frame, true);
 
-            if (frameTree.Childs != null)
+            if (frameTree.ChildFrames != null)
             {
-                foreach (var child in frameTree.Childs)
+                foreach (var child in frameTree.ChildFrames)
                 {
-                    await HandleFrameTreeAsync(child);
+                    HandleFrameTree(child);
                 }
             }
         }
@@ -89,6 +113,5 @@ namespace PlaywrightSharp.Chromium
             => FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
 
         private void OnFrameAttached(string frameId, string parentFrameId) => FrameManager.FrameAttached(frameId, parentFrameId);
-
     }
 }

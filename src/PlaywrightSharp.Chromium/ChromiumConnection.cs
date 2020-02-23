@@ -77,7 +77,6 @@ namespace PlaywrightSharp.Chromium
 
         private void Transport_Closed(object sender, TransportClosedEventArgs e)
         {
-            throw new System.NotImplementedException();
         }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e) => ProcessMessage(e);

@@ -24,6 +24,11 @@ namespace PlaywrightSharp
     public interface IBrowserContext
     {
         /// <summary>
+        /// Options used to create the context.
+        /// </summary>
+        BrowserContextOptions Options { get; }
+
+        /// <summary>
         /// Creates a new page in the browser context and optionally navigates it to the specified URL.
         /// </summary>
         /// <param name="url">URL to navigate after the page is created.</param>

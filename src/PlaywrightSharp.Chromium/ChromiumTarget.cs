@@ -151,12 +151,15 @@ namespace PlaywrightSharp.Chromium
                 }
             };
 
+            await _page.InitializeAsync().ConfigureAwait(false);
+            await client.SendAsync("Target.setAutoAttach", new TargetSetAutoAttachRequest
+            {
+                AutoAttach = true,
+                WaitForDebuggerOnStart = false,
+                Flatten = true,
+            }).ConfigureAwait(false);
+
             return _page;
-            /*
-            await _page.InitializeAsync();
-            await client.send('Target.setAutoAttach', { autoAttach: true, waitForDebuggerOnStart: false, flatten: true});
-            return page;
-            */
         }
     }
 }

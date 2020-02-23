@@ -27,11 +27,11 @@ namespace PlaywrightSharp.Chromium
             _browserContextIds = browserContextIds;
             _session = connection.RootSession;
 
-            DefaultContext = new ChromiumBrowserContext(connection.RootSession, this, null);
+            DefaultContext = new ChromiumBrowserContext(connection.RootSession, this, null, null);
 
             _contexts = browserContextIds.ToDictionary(
                 contextId => contextId,
-                contextId => new ChromiumBrowserContext(connection.RootSession, this, contextId));
+                contextId => new ChromiumBrowserContext(connection.RootSession, this, contextId, null));
 
             _session.MessageReceived += Session_MessageReceived;
         }
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Chromium
         public IBrowserContext[] BrowserContexts => null;
 
         /// <inheritdoc cref="IBrowser"/>
-        IBrowserContext IBrowser.DefaultContext { get; }
+        IBrowserContext IBrowser.DefaultContext => DefaultContext;
 
         /// <inheritdoc cref="IBrowser"/>
         public ChromiumBrowserContext DefaultContext { get; }

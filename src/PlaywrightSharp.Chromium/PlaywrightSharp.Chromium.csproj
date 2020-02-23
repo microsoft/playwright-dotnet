@@ -28,5 +28,7 @@
     <Folder Include="Messaging\Target\" />
     <Folder Include="Messaging\Browser\" />
     <Folder Include="Messaging\Page\" />
+    <Folder Include="Messaging\Security\" />
+    <Folder Include="Messaging\Emulation\" />
   </ItemGroup>
 </Project>

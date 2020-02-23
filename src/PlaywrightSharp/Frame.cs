@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -72,13 +73,98 @@ namespace PlaywrightSharp
 
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null)
         {
-            throw new System.NotImplementedException();
+            Page.PageState.ExtraHTTPHeaders.TryGetValue("referer", out string referer);
+
+            if (options?.Referer != null)
+            {
+                if (referer != null && referer != options.Referer)
+                {
+                    throw new ArgumentException("\"referer\" is already specified as extra HTTP header");
+                }
+
+
+                referer = options.Referer;
+            }
+
+            using (var watcher = new LifecycleWatcher(this, options, false))
+            {
+                try
+                {
+                    var navigateTask = NavigateAsync(Client, url, referrer, frame.Id);
+                    var task = await Task.WhenAny(
+                        watcher.TimeoutOrTerminationTask,
+                        navigateTask).ConfigureAwait(false);
+
+                    await task;
+
+                    task = await Task.WhenAny(
+                        watcher.TimeoutOrTerminationTask,
+                        _ensureNewDocumentNavigation ? watcher.NewDocumentNavigationTask : watcher.SameDocumentNavigationTask
+                    ).ConfigureAwait(false);
+
+                    await task;
+                }
+                catch (Exception ex)
+                {
+                    throw new NavigationException(ex.Message, ex);
+                }
+
+                return watcher.NavigationResponse;
+            }
+
+            /*
+             let referer = (this._page._state.extraHTTPHeaders || {})['referer'];
+    if (options && options.referer !== undefined) {
+      if (referer !== undefined && referer !== options.referer)
+        throw new Error('"referer" is already specified as extra HTTP header');
+      referer = options.referer;
+    }
+    const watcher = new LifecycleWatcher(this, options, false );
+
+            let navigateResult: GotoResult;
+            const navigate = async () => {
+                try
+                {
+                    navigateResult = await this._page._delegate.navigateFrame(this, url, referer);
+                }
+                catch (error)
+                {
+                    return error;
+                }
+            };
+
+            let error = await Promise.race([
+              navigate(),
+              watcher.timeoutOrTerminationPromise,
+        
+            ]);
+            if (!error)
+            {
+                const promises = [watcher.timeoutOrTerminationPromise];
+                if (navigateResult!.newDocumentId)
+                {
+                    watcher.setExpectedDocumentId(navigateResult!.newDocumentId, url);
+                    promises.push(watcher.newDocumentNavigationPromise);
+                }
+                else if (navigateResult!.isSameDocument)
+                {
+                    promises.push(watcher.sameDocumentNavigationPromise);
+                }
+                else
+                {
+                    promises.push(watcher.sameDocumentNavigationPromise, watcher.newDocumentNavigationPromise);
+                }
+                error = await Promise.race(promises);
+            }
+            watcher.dispose();
+            if (error)
+                throw error;
+            return watcher.navigationResponse();
+            */
         }
 
         public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil)
-        {
-            throw new System.NotImplementedException();
-        }
+            => GoToAsync(url, new GoToOptions { WaitUntil = new[] { waitUntil } });
 
         public void OnDetached()
         {

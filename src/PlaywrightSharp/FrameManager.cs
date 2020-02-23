@@ -75,12 +75,10 @@ namespace PlaywrightSharp
 
         private void ClearWebSockets(Frame frame)
         {
-            throw new NotImplementedException();
         }
 
         private void ClearFrameLifecycle(Frame frame)
         {
-            throw new NotImplementedException();
         }
 
         private void RemoveFramesRecursively(Frame frame)

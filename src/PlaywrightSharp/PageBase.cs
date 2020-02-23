@@ -47,10 +47,10 @@ namespace PlaywrightSharp
         public event EventHandler Load;
 
         /// <inheritdoc cref="IPage"/>
-        public IFrame MainFrame => null;
+        public IFrame MainFrame => FrameManager.MainFrame;
 
         /// <inheritdoc cref="IPage"/>
-        public IBrowserContext BrowserContext => null;
+        public virtual IBrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc cref="IPage"/>
         public Viewport Viewport => null;
@@ -80,6 +80,8 @@ namespace PlaywrightSharp
 
         internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
 
+        internal PageState PageState { get; } = new PageState();
+
         /// <inheritdoc cref="IPage"/>
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
         {
@@ -102,13 +104,6 @@ namespace PlaywrightSharp
         public Task CloseAsync(PageCloseOptions options = null)
         {
             throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IDisposable"/>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         /// <inheritdoc cref="IPage"/>
@@ -208,22 +203,15 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage"/>
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(url, options);
 
         /// <inheritdoc cref="IPage"/>
         public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil)
-        {
-            throw new NotImplementedException();
-        }
+             => MainFrame.GoToAsync(url, new GoToOptions { Timeout = timeout, WaitUntil = waitUntil });
 
         /// <inheritdoc cref="IPage"/>
         public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil)
-        {
-            throw new NotImplementedException();
-        }
+             => MainFrame.GoToAsync(url, new GoToOptions { WaitUntil = waitUntil });
 
         /// <inheritdoc cref="IPage"/>
         public Task HoverAsync(string selector)
@@ -375,13 +363,5 @@ namespace PlaywrightSharp
         internal void OnFrameAttached(IFrame frame) => FrameAttached?.Invoke(this, new FrameEventArgs(frame));
 
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
-
-        /// <inheritdoc cref="IDisposable"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-            }
-        }
     }
 }

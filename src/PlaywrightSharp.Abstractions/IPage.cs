@@ -19,7 +19,7 @@ namespace PlaywrightSharp
     /// ]]>
     /// </code>
     /// </example>
-    public interface IPage : IDisposable
+    public interface IPage
     {
         /// <summary>
         /// Raised when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c> or <c>console.dir</c>. Also emitted if the page throws an error or a warning.

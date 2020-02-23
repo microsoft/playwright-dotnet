@@ -10,12 +10,20 @@ namespace PlaywrightSharp.Chromium
         private readonly ChromiumSession _client;
         private readonly string _contextId;
 
-        internal ChromiumBrowserContext(ChromiumSession client, ChromiumBrowser chromiumBrowser, string contextId)
+        internal ChromiumBrowserContext(
+            ChromiumSession client,
+            ChromiumBrowser chromiumBrowser,
+            string contextId,
+            BrowserContextOptions options)
         {
             _client = client;
             Browser = chromiumBrowser;
             _contextId = contextId;
+            Options = options;
         }
+
+        /// <inheritdoc cref="IBrowserContext"/>
+        public BrowserContextOptions Options { get; }
 
         internal ChromiumBrowser Browser { get; }
 
@@ -46,33 +54,14 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowserContext"/>
         public async Task<IPage> NewPageAsync(string url = null)
         {
-            var page = await NewPage();
+            var page = await NewPage().ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(url))
             {
-                await page.GoToAsync(url);
+                await page.GoToAsync(url).ConfigureAwait(false);
             }
 
             return page;
-        }
-
-        private async Task<ChromiumPage> NewPage()
-        {
-            var createTargetRequest = new TargetCreateTargetRequest
-            {
-                Url = "about:blank"
-            };
-
-            if (_contextId != null)
-            {
-                createTargetRequest.BrowserContextId = _contextId;
-            }
-
-            string targetId = (await _client.SendAsync<TargetCreateTargetResponse>("Target.createTarget", createTargetRequest)
-                .ConfigureAwait(false)).TargetId;
-            var target = Browser.TargetsMap[targetId];
-            await target.InitializedTask.ConfigureAwait(false);
-            return await target.PageAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserContext"/>
@@ -91,6 +80,25 @@ namespace PlaywrightSharp.Chromium
         public Task SetPermissionsAsync(string url, params ContextPermission[] permissions)
         {
             throw new System.NotImplementedException();
+        }
+
+        private async Task<ChromiumPage> NewPage()
+        {
+            var createTargetRequest = new TargetCreateTargetRequest
+            {
+                Url = "about:blank",
+            };
+
+            if (_contextId != null)
+            {
+                createTargetRequest.BrowserContextId = _contextId;
+            }
+
+            string targetId = (await _client.SendAsync<TargetCreateTargetResponse>("Target.createTarget", createTargetRequest)
+                .ConfigureAwait(false)).TargetId;
+            var target = Browser.TargetsMap[targetId];
+            await target.InitializedTask.ConfigureAwait(false);
+            return await target.PageAsync().ConfigureAwait(false);
         }
     }
 }
