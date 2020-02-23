@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
             await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"like\">10</div></div></body></html>");
             var tweet = await Page.QuerySelectorAsync(".tweet");
-            var content = await tweet.QuerySelectorAllEvaluateAsync<string[]>(".like", "nodes => nodes.map(n => n.innerText)");
+            string[] content = await tweet.QuerySelectorAllEvaluateAsync<string[]>(".like", "nodes => nodes.map(n => n.innerText)");
             Assert.Equal(new[] { "100", "10" }, content);
         }
 
@@ -31,10 +31,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task ShouldRetrieveContentFromSubtree()
         {
-            var htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a1-child-div</div><div class=\"a\">a2-child-div</div></div>";
+            string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a1-child-div</div><div class=\"a\">a2-child-div</div></div>";
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
-            var content = await elementHandle.QuerySelectorAllEvaluateAsync<string[]>(".a", "nodes => nodes.map(n => n.innerText)");
+            string[] content = await elementHandle.QuerySelectorAllEvaluateAsync<string[]>(".a", "nodes => nodes.map(n => n.innerText)");
             Assert.Equal(new[] { "a1-child-div", "a2-child-div" }, content);
         }
 
@@ -44,10 +44,11 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task ShouldNotThrowInCaseOfMissingSelector()
         {
-            var htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
+            string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
-            var nodesLength = await elementHandle.QuerySelectorAllEvaluateAsync<int>(".a", "nodes => nodes.length");
+            int nodesLength = await elementHandle.QuerySelectorAllEvaluateAsync<int>(".a", "nodes => nodes.length");
             Assert.Equal(0, nodesLength);
         }
     }
+}

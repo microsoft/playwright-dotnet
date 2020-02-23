@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -14,34 +14,32 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
+        internal ISelectors Selectors { get; set; }
+
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>selectors.register</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact]
         public async Task ShouldWork()
         {
-            var createTagSelector = () => ({
-            name: 'tag',
-        create(root, target)
-          {
+            string createTagSelector = @"() => ({
+                name: 'tag',
+                create(root, target) {
                     return target.nodeName;
                 },
-        query(root, selector)
-          {
+                query(root, selector) {
                     return root.querySelector(selector);
                 },
-        queryAll(root, selector)
-          {
+                queryAll(root, selector) {
                     return Array.from(root.querySelectorAll(selector));
                 }
-            });
-            await selectors.register($"({createTagSelector.ToString()})()");
-            await Page.SetContentAsync('<div><span></span></div><div></div>');
-            expect(await selectors._createSelector('tag', await Page.QuerySelectorAsync('div'))).toBe('DIV');
-            expect(await Page.$eval('tag=DIV', e => e.nodeName)).toBe('DIV');
-            expect(await Page.$eval('tag=SPAN', e => e.nodeName)).toBe('SPAN');
-            expect(await Page.$$eval('tag=DIV', es => es.length)).toBe(2);
-
+            })";
+            await Selectors.RegisterAsync($"({createTagSelector})()");
+            await Page.SetContentAsync("<div><span></span></div><div></div>");
+            Assert.Equal("DIV", await Selectors.CreateSelectorAsync("tag", await Page.QuerySelectorAsync("div")));
+            Assert.Equal("DIV", await Page.QuerySelectorEvaluateAsync<string>("tag=DIV", "e => e.nodeName"));
+            Assert.Equal("SPAN", await Page.QuerySelectorEvaluateAsync<string>("tag=SPAN", "e => e.nodeName"));
+            Assert.Equal(2, await Page.QuerySelectorAllEvaluateAsync<int>("tag=DIV", "es => es.length"));
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -50,32 +48,25 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task ShouldUpdate()
         {
-            await Page.SetContentAsync('<div><dummy id=d1></dummy></div><span><dummy id=d2></dummy></span>');
-            expect(await Page.$eval('div', e => e.nodeName)).toBe('DIV');
-            var error = await Page.QuerySelectorAsync('dummy=foo').catch (e => e);
-            expect(error.message).toContain('Unknown engine dummy while parsing selector dummy=foo');
-            var createDummySelector = (name) => ({
+            await Page.SetContentAsync("<div><dummy id=d1></dummy></div><span><dummy id=d2></dummy></span>");
+            Assert.Equal("DIV", await Page.QuerySelectorEvaluateAsync<string>("div", "e => e.nodeName"));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.QuerySelectorAsync("dummy=foo"));
+            Assert.Contains("Unknown engine dummy while parsing selector dummy=foo", exception.Message);
+            string createDummySelector = @"(name) => ({
                 name,
-        create(root, target)
-                {
+                create(root, target) {
                     return target.nodeName;
                 },
-        query(root, selector)
-                {
+                query(root, selector) {
                     return root.querySelector(name);
                 },
-        queryAll(root, selector)
-                {
+                queryAll(root, selector) {
                     return Array.from(root.querySelectorAll(name));
                 }
-            });
-            await selectors.register(createDummySelector, 'dummy');
-            expect(await Page.$eval('dummy=foo', e => e.id)).toBe('d1');
-            expect(await Page.$eval('css=span >> dummy=foo', e => e.id)).toBe('d2');
-
-            }
-
+            })";
+            await Selectors.RegisterAsync(createDummySelector, "dummy");
+            Assert.Equal("d1", await Page.QuerySelectorEvaluateAsync<string>("dummy=foo", "e => e.id"));
+            Assert.Equal("d2", await Page.QuerySelectorEvaluateAsync<string>("css=span >> dummy=foo", "e => e.id"));
         }
-
     }
 }

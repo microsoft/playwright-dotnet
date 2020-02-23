@@ -40,3 +40,4 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Empty(elements);
         }
     }
+}

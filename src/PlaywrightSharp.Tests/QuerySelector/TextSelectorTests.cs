@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,6 +13,8 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
+        internal ISelectors Selectors { get; set; }
+
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>query</playwright-it>
@@ -24,7 +26,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<div>ya</div>", await Page.QuerySelectorEvaluateAsync<string>("text=\"ya\"", "e => e.outerHTML"));
             Assert.Equal("<div>ya</div>", await Page.QuerySelectorEvaluateAsync<string>("text=/^[ay]+$/", "e => e.outerHTML"));
             Assert.Equal("<div>ya</div>", await Page.QuerySelectorEvaluateAsync<string>("text=/Ya/i", "e => e.outerHTML"));
-            Assert.Equal('<div>\nye  </div>', await Page.QuerySelectorEvaluateAsync<string>("text=ye", "e => e.outerHTML"));
+            Assert.Equal("<div>\nye  </div>", await Page.QuerySelectorEvaluateAsync<string>("text=ye", "e => e.outerHTML"));
 
             await Page.SetContentAsync("<div> ye </div><div>ye</div>");
             Assert.Equal("<div>ye</div>", await Page.QuerySelectorEvaluateAsync<string>("text=\"ye\"", "e => e.outerHTML"));
@@ -47,24 +49,19 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task Create()
         {
-            await Page.SetContentAsync(`< div > yo </ div >< div > "ya</div><div>ye ye</div>`);
+            await Page.SetContentAsync("<div>yo</div><div>\"ya</div><div>ye ye</div>");
+            Assert.Equal("yo", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div")));
+            Assert.Equal("\"\\\\\"ya\"", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div:nth-child(2)")));
+            Assert.Equal("\"ye ye\"", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div:nth-child(3)")));
 
-            expect(await selectors._createSelector('text', await Page.QuerySelectorAsync('div'))).toBe('yo');
-            expect(await selectors._createSelector('text', await Page.QuerySelectorAsync('div:nth-child(2)'))).toBe('"\\"ya"');
-            expect(await selectors._createSelector('text', await Page.QuerySelectorAsync('div:nth-child(3)'))).toBe('"ye ye"');
+            await Page.SetContentAsync("<div>yo</div><div>yo<div>ya</div>hey</div>");
+            Assert.Equal("hey", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div:nth-child(2)")));
 
-            await Page.SetContentAsync(`< div > yo </ div >< div > yo < div > ya </ div > hey </ div >`);
-            expect(await selectors._createSelector('text', await Page.QuerySelectorAsync('div:nth-child(2)'))).toBe('hey');
+            await Page.SetContentAsync("<div> yo <div></div>ya</div>");
+            Assert.Equal("yo", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div")));
 
-            await Page.SetContentAsync(`< div > yo<div> </ div > ya </ div >`);
-            expect(await selectors._createSelector('text', await Page.QuerySelectorAsync('div'))).toBe('yo');
-
-            await Page.SetContentAsync(`< div > "yo <div></div>ya</div>`);
-
-
-
-            expect(await selectors._createSelector('text', await Page.QuerySelectorAsync('div'))).toBe('" \\"yo "');
-
+            await Page.SetContentAsync("<div> \"yo <div></div>ya</div>");
+            Assert.Equal("\" \\\\\"yo \"", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div")));
         }
     }
 }

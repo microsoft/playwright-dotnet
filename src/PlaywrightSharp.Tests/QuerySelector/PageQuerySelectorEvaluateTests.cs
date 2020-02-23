@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkWithIdSelector()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
-            var idAttribute = await Page.QuerySelectorEvaluateAsync<string>('id=testAttribute', e => e.id);
+            string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("id=testAttribute", "e => e.id");
             Assert.Equal("testAttribute", idAttribute);
         }
 

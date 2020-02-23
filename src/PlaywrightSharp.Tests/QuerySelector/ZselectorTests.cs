@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
 
             await Page.SetContentAsync("<div>yo<span id=\"s1\"></span></div><div>yo<span id=\"s2\"></span><span id = \"s3\" ></ span ></ div >");
             Assert.Equal("<div>yo<span id=\"s1\"></span></div>", await Page.QuerySelectorEvaluateAsync<string>("zs=\"yo\"", "e => e.outerHTML"));
-            Assert.Equal("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"", "es => es.map(\"e => e.outerHTML\").join('\n'))");
+            Assert.Equal("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"", "es => es.map(\"e => e.outerHTML\").join('\n')"));
             Assert.Equal("<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"#1", "es => es.map(\"e => e.outerHTML\").join('\n')"));
             Assert.Equal("<span id=\"s1\"></span>\n<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span", "es => es.map(\"e => e.outerHTML\").join('\n')"));
             Assert.Equal("<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"#1 ~ span", "es => es.map(\"e => e.outerHTML\").join('\n')"));
@@ -65,16 +65,16 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task Create()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>ya</div>");
-            Assert.Equal("\"yo\"", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("div")));
-            Assert.Equal("\"ya\"", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("div:nth-child(2)")));
-            Assert.Equal("\"ya\"#1", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("div:nth-child(3)")));
+            Assert.Equal("\"yo\"", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("div")));
+            Assert.Equal("\"ya\"", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("div:nth-child(2)")));
+            Assert.Equal("\"ya\"#1", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("div:nth-child(3)")));
 
             await Page.SetContentAsync("<img alt=\"foo bar\">");
-            Assert.Equal("img[alt=\"foo bar\"]", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("img")));
+            Assert.Equal("img[alt=\"foo bar\"]", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("img")));
 
             await Page.SetContentAsync("<div>yo<span></span></div><span></span>");
-            Assert.Equal("\"yo\"~SPAN", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("span")));
-            Assert.Equal("SPAN#1", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("span:nth-child(2)")));
+            Assert.Equal("\"yo\"~SPAN", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("span")));
+            Assert.Equal("SPAN#1", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("span:nth-child(2)")));
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -84,14 +84,14 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ChildrenOfVariousDisplayParents()
         {
             await Page.SetContentAsync("<body><div style='position: fixed;'><span>yo</span></div></body>");
-            Assert.Equal("\"yo\"", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("span")));
+            Assert.Equal("\"yo\"", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("span")));
 
             await Page.SetContentAsync("<div style='position: relative;'><span>yo</span></div>");
-            Assert.Equal("\"yo\"", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("span")));
+            Assert.Equal("\"yo\"", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("span")));
 
             // "display: none" makes all children text invisible - fallback to tag name.
             await Page.SetContentAsync("<div style='display: none;'><span>yo</span></div>");
-            Assert.Equal("SPAN", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("span")));
+            Assert.Equal("SPAN", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("span")));
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -147,7 +147,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             <div id=target2>hello</div>
           </div>
         </div>");
-            Assert.Equal("\"ya\"~\"hey\"~\"hello\"", await Selectors.CreateSelector("zs", await Page.QuerySelectorAsync("#target")));
+            Assert.Equal("\"ya\"~\"hey\"~\"hello\"", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("#target")));
             Assert.Equal("<div id=\"target\">hello</div>", await Page.QuerySelectorEvaluateAsync<string>("zs=\"ya\"~\"hey\"~\"hello\"", "e => e.outerHTML")); ;
             Assert.Equal("Error: failed to find element matching selector \"zs=\"ya\"~\"hey\"~\"unique\"\"", (await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.QuerySelectorEvaluateAsync("zs=\"ya\"~\"hey\"~\"unique\"", "e => e.outerHTML"))).Message);
             Assert.Equal("<div id=\"target\">hello</div>\n<div id=\"target2\">hello</div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"ya\" ~\"hey\" ~\"hello\"", "es => es.map(e => e.outerHTML).join('\n')"));

@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAllAsync("xpath=./body/div[contains(@class, 'second')]");
             var inner = await second[0].QuerySelectorAllAsync("xpath=./div[contains(@class, 'inner')]");
-            var content = await Page.EvaluateAsync<string>("e => e.textContent", inner[0]);
+            string content = await Page.EvaluateAsync<string>("e => e.textContent", inner[0]);
             Assert.Equal("A", content);
         }
 
@@ -40,3 +40,4 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Empty(second);
         }
     }
+}
