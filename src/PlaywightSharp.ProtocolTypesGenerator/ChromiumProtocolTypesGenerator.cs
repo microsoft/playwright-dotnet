@@ -81,7 +81,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             }
                             else if (type.Type == "array")
                             {
-                                
+
                             }
                         }
 
@@ -167,7 +167,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 {
                     if (char.IsLetter(value[i]))
                     {
-                        if (char.IsUpper(value[i]){
+                        if (char.IsUpper(value[i]))
+                        {
                             shouldUppercase = false;
                             builder.Append(char.ToUpper(value[i]));
                         }
