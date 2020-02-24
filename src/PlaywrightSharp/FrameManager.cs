@@ -9,12 +9,13 @@ namespace PlaywrightSharp
     {
         private readonly PageBase _page;
         private readonly ConcurrentDictionary<string, Frame> _frames = new ConcurrentDictionary<string, Frame>();
-        private readonly IList<LifecycleWatcher> _lifecycleWatchers = new List<LifecycleWatcher>();
 
         public FrameManager(PageBase page)
         {
             _page = page;
         }
+
+        internal IList<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
         internal Frame MainFrame { get; set; }
 
@@ -64,7 +65,7 @@ namespace PlaywrightSharp
 
             if (!initial)
             {
-                foreach (var watcher in _lifecycleWatchers)
+                foreach (var watcher in LifecycleWatchers)
                 {
                     watcher.OnCommittedNewDocumentNavigation(frame);
                 }

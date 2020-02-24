@@ -36,6 +36,8 @@ namespace PlaywrightSharp
 
         public PageBase Page => _page;
 
+        public IList<string> FiredLifecycleEvents { get; } = new List<string>();
+
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
         {
             throw new System.NotImplementedException();
@@ -86,39 +88,32 @@ namespace PlaywrightSharp
                 referer = options.Referer;
             }
 
-            using (var watcher = new LifecycleWatcher(this, options, false))
+            using var watcher = new LifecycleWatcher(this, options);
+
+            try
             {
-                try
-                {
-                    var navigateTask = NavigateAsync(Client, url, referrer, frame.Id);
-                    var task = await Task.WhenAny(
-                        watcher.TimeoutOrTerminationTask,
-                        navigateTask).ConfigureAwait(false);
+                var navigateTask = NavigateAsync(Client, url, referrer, frame.Id);
+                var task = await Task.WhenAny(
+                    watcher.TimeoutOrTerminationTask,
+                    navigateTask).ConfigureAwait(false);
 
-                    await task;
+                await task;
 
-                    task = await Task.WhenAny(
-                        watcher.TimeoutOrTerminationTask,
-                        _ensureNewDocumentNavigation ? watcher.NewDocumentNavigationTask : watcher.SameDocumentNavigationTask
-                    ).ConfigureAwait(false);
+                task = await Task.WhenAny(
+                    watcher.TimeoutOrTerminationTask,
+                    _ensureNewDocumentNavigation ? watcher.NewDocumentNavigationTask : watcher.SameDocumentNavigationTask
+                ).ConfigureAwait(false);
 
-                    await task;
-                }
-                catch (Exception ex)
-                {
-                    throw new NavigationException(ex.Message, ex);
-                }
-
-                return watcher.NavigationResponse;
+                await task;
+            }
+            catch (Exception ex)
+            {
+                throw new NavigationException(ex.Message, ex);
             }
 
+            return watcher.NavigationResponse;
+
             /*
-             let referer = (this._page._state.extraHTTPHeaders || {})['referer'];
-    if (options && options.referer !== undefined) {
-      if (referer !== undefined && referer !== options.referer)
-        throw new Error('"referer" is already specified as extra HTTP header');
-      referer = options.referer;
-    }
     const watcher = new LifecycleWatcher(this, options, false );
 
             let navigateResult: GotoResult;
