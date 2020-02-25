@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using PlaywrightSharp.Helpers;
@@ -226,12 +227,12 @@ namespace PlaywrightSharp.Tests.Page
             IResponse response1 = null;
             var response1Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
             {
-                UrlRegEx = "one-style\\.html"
+                UrlRegEx = new Regex("one-style\\.html")
             }).ContinueWith(t => response1 = t.Result);
             IResponse response2 = null;
             var response2Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
             {
-                UrlRegEx = "\\/frame.html"
+                UrlRegEx = new Regex("\\/frame.html")
             }).ContinueWith(t => response2 = t.Result);
             IResponse response3 = null;
             var response3Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
@@ -275,7 +276,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             bool resolved = false;
-            var waitTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions { UrlRegEx = "third\\.html" })
+            var waitTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions { UrlRegEx = new Regex("third\\.html") })
                 .ContinueWith(t => resolved = true);
 
             Assert.False(resolved);

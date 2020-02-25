@@ -6,7 +6,7 @@ using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
-    internal class LifecycleWatcher
+    internal class LifecycleWatcher : IDisposable
     {
         private static readonly Dictionary<WaitUntilNavigation, string> _puppeteerToProtocolLifecycle =
             new Dictionary<WaitUntilNavigation, string>
@@ -14,7 +14,7 @@ namespace PlaywrightSharp
                 [WaitUntilNavigation.Load] = "load",
                 [WaitUntilNavigation.DOMContentLoaded] = "DOMContentLoaded",
                 [WaitUntilNavigation.Networkidle0] = "networkIdle",
-                [WaitUntilNavigation.Networkidle2] = "networkAlmostIdle"
+                [WaitUntilNavigation.Networkidle2] = "networkAlmostIdle",
             };
 
         private static readonly WaitUntilNavigation[] _defaultWaitUntil = { WaitUntilNavigation.Load };
@@ -22,15 +22,15 @@ namespace PlaywrightSharp
         private readonly Frame _frame;
         private readonly IEnumerable<string> _expectedLifecycle;
         private readonly int _timeout;
-        private RequestBase _navigationRequest;
-        private bool _hasSameDocumentNavigation;
         private readonly WaitForNavigationOptions _options;
-        private string _expectedDocumentId;
-        private string _targetUrl;
         private readonly TaskCompletionSource<bool> _newDocumentNavigationTaskWrapper;
         private readonly TaskCompletionSource<bool> _sameDocumentNavigationTaskWrapper;
         private readonly TaskCompletionSource<bool> _lifecycleTaskWrapper;
         private readonly TaskCompletionSource<bool> _terminationTaskWrapper;
+        private Request _navigationRequest;
+        private bool _hasSameDocumentNavigation;
+        private string _expectedDocumentId;
+        private string _targetUrl;
 
         public LifecycleWatcher(Frame frame, NavigationOptions options)
         {
@@ -45,9 +45,11 @@ namespace PlaywrightSharp
                 {
                     throw new PlaywrightSharpException($"Unknown value for options.waitUntil: {w}");
                 }
+
                 return protocolEvent;
             });
 
+            _timeout = frame.Page.DefaultNavigationTimeout;
             _frame = frame;
             _sameDocumentNavigationTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             _lifecycleTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -60,11 +62,23 @@ namespace PlaywrightSharp
         }
 
         public Task<Task> NavigationTask { get; internal set; }
+
         public Task<bool> SameDocumentNavigationTask => _sameDocumentNavigationTaskWrapper.Task;
+
         public Task<bool> NewDocumentNavigationTask => _newDocumentNavigationTaskWrapper.Task;
+
         public IResponse NavigationResponse => _navigationRequest?.Response;
+
         public Task TimeoutOrTerminationTask => _terminationTaskWrapper.Task.WithTimeout(_timeout);
+
         public Task LifecycleTask => _lifecycleTaskWrapper.Task;
+
+        /// <inheritdoc cref="IDisposable"/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         internal bool UrlMatches(string url)
         {
@@ -113,27 +127,29 @@ namespace PlaywrightSharp
             }
         }
 
-        private void OnFrameDetached(Frame frame)
+        internal void OnFrameDetached(Frame frame)
         {
             if (_frame == frame)
             {
                 Terminate(new PlaywrightSharpException("Navigating frame was detached"));
                 return;
             }
+
             CheckLifecycleComplete();
         }
 
-        private void OnNavigatedWithinDocument(Frame frame)
+        internal void OnNavigatedWithinDocument(Frame frame)
         {
             if (frame != _frame)
             {
                 return;
             }
+
             _hasSameDocumentNavigation = true;
             CheckLifecycleComplete();
         }
 
-        private void OnNavigationRequest(Frame frame, RequestBase request)
+        internal void OnNavigationRequest(Frame frame, Request request)
         {
             if (frame != _frame || !UrlMatches(request.Url))
             {
@@ -180,10 +196,19 @@ namespace PlaywrightSharp
 
         internal void OnProvisionalLoadFailed(string documentId, string error) => OnAbortedNewDocumentNavigation(_frame, documentId, error);
 
+        protected void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _frame?.Page?.FrameManager?.LifecycleWatchers?.Remove(this);
+                _terminationTaskWrapper?.TrySetResult(false);
+            }
+        }
+
         private void OnClientDisconnected(object sender, EventArgs e)
             => Terminate(new PlaywrightSharpException("Navigation failed because browser has disconnected!"));
 
-        void OnLifecycleEvent(Frame frame) => CheckLifecycleComplete();
+        private void OnLifecycleEvent(Frame frame) => CheckLifecycleComplete();
 
         private void CheckLifecycleComplete()
         {
@@ -192,6 +217,7 @@ namespace PlaywrightSharp
             {
                 return;
             }
+
             if (UrlMatches(_frame.Url))
             {
                 _lifecycleTaskWrapper.TrySetResult(true);
@@ -219,6 +245,7 @@ namespace PlaywrightSharp
                     return false;
                 }
             }
+
             foreach (var child in frame.ChildFrames)
             {
                 if (!CheckLifecycleRecursively(child, expectedLifecycle))
@@ -226,6 +253,7 @@ namespace PlaywrightSharp
                     return false;
                 }
             }
+
             return true;
         }
     }

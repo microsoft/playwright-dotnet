@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Messaging.Target;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp
 {
-    /// <inheritdoc cref="IBrowserContext"/>
-    public class ChromiumBrowserContext : IBrowserContext
+    /// <inheritdoc cref="IBrowserContextDelegate"/>
+    public class ChromiumBrowserContext : IBrowserContextDelegate
     {
         private readonly ChromiumSession _client;
         private readonly string _contextId;
@@ -28,61 +29,7 @@ namespace PlaywrightSharp.Chromium
         internal ChromiumBrowser Browser { get; }
 
         /// <inheritdoc cref="IBrowserContext"/>
-        public Task ClearCookiesAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public Task CloseAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public Task<NetworkCookie[]> GetCookiesAsync(params string[] urls)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public Task<IPage[]> GetPagesAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public async Task<IPage> NewPageAsync(string url = null)
-        {
-            var page = await NewPage().ConfigureAwait(false);
-
-            if (!string.IsNullOrEmpty(url))
-            {
-                await page.GoToAsync(url).ConfigureAwait(false);
-            }
-
-            return page;
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public Task SetGeolocationAsync(GeolocationOption geolocation)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        public Task SetPermissionsAsync(string url, params ContextPermission[] permissions)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private async Task<ChromiumPage> NewPage()
+        public async Task<IPage> NewPage()
         {
             var createTargetRequest = new TargetCreateTargetRequest
             {

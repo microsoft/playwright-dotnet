@@ -6,41 +6,44 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IRequest"/>
-    public class RequestBase : IRequest
+    public class Request : IRequest
     {
-        public RequestBase()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Request"/> class.
+        /// </summary>
+        public Request()
         {
         }
 
         /// <inheritdoc cref="IRequest"/>
-        public string Url => throw new NotImplementedException();
+        public string Url => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public HttpMethod Method => throw new NotImplementedException();
+        public HttpMethod Method => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public IDictionary<string, string> Headers => throw new NotImplementedException();
+        public IDictionary<string, string> Headers => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public string PostData => throw new NotImplementedException();
+        public string PostData => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public IFrame Frame => throw new NotImplementedException();
+        public IFrame Frame => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public bool IsNavigationRequest => throw new NotImplementedException();
+        public bool IsNavigationRequest => false;
 
         /// <inheritdoc cref="IRequest"/>
-        public ResourceType ResourceType => throw new NotImplementedException();
+        public ResourceType ResourceType => ResourceType.Document;
 
         /// <inheritdoc cref="IRequest"/>
-        public IRequest[] RedirectChain => throw new NotImplementedException();
+        public IRequest[] RedirectChain => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public IResponse Response => throw new NotImplementedException();
+        public IResponse Response => null;
 
         /// <inheritdoc cref="IRequest"/>
-        public string Failure => throw new NotImplementedException();
+        public string Failure => null;
 
         internal string DocumentId { get; set; }
 

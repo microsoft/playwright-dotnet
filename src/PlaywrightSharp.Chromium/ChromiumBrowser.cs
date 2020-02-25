@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Chromium
         private readonly ChromiumConnection _connection;
         private readonly string[] _browserContextIds;
         private readonly ChromiumSession _session;
-        private readonly Dictionary<string, ChromiumBrowserContext> _contexts;
+        private readonly Dictionary<string, IBrowserContext> _contexts;
 
         internal ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
         {
@@ -27,11 +27,11 @@ namespace PlaywrightSharp.Chromium
             _browserContextIds = browserContextIds;
             _session = connection.RootSession;
 
-            DefaultContext = new ChromiumBrowserContext(connection.RootSession, this, null, null);
+            DefaultContext = new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, null, null));
 
             _contexts = browserContextIds.ToDictionary(
                 contextId => contextId,
-                contextId => new ChromiumBrowserContext(connection.RootSession, this, contextId, null));
+                contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
             _session.MessageReceived += Session_MessageReceived;
         }
@@ -52,10 +52,7 @@ namespace PlaywrightSharp.Chromium
         public IBrowserContext[] BrowserContexts => null;
 
         /// <inheritdoc cref="IBrowser"/>
-        IBrowserContext IBrowser.DefaultContext => DefaultContext;
-
-        /// <inheritdoc cref="IBrowser"/>
-        public ChromiumBrowserContext DefaultContext { get; }
+        public IBrowserContext DefaultContext { get; }
 
         /// <summary>
         /// Dafault wait time in milliseconds. Defaults to 30 seconds.
@@ -179,6 +176,7 @@ namespace PlaywrightSharp.Chromium
 
             var target = new ChromiumTarget(
                 e.TargetInfo,
+                this,
                 () => _connection.CreateSessionAsync(targetInfo),
                 context);
 

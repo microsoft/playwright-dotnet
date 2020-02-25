@@ -7,10 +7,10 @@ namespace PlaywrightSharp
 {
     internal class FrameManager
     {
-        private readonly PageBase _page;
+        private readonly Page _page;
         private readonly ConcurrentDictionary<string, Frame> _frames = new ConcurrentDictionary<string, Frame>();
 
-        public FrameManager(PageBase page)
+        public FrameManager(Page page)
         {
             _page = page;
         }

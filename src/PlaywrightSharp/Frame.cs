@@ -7,11 +7,11 @@ namespace PlaywrightSharp
 {
     internal class Frame : IFrame
     {
-        private readonly PageBase _page;
+        private readonly Page _page;
         private readonly string _frameId;
         private readonly IFrame _parentFrame;
 
-        public Frame(PageBase page, string frameId, IFrame parentFrame)
+        public Frame(Page page, string frameId, IFrame parentFrame)
         {
             _page = page;
             _frameId = frameId;
@@ -34,7 +34,7 @@ namespace PlaywrightSharp
 
         public string LastDocumentId { get; set; }
 
-        public PageBase Page => _page;
+        public Page Page => _page;
 
         public IList<string> FiredLifecycleEvents { get; } = new List<string>();
 
@@ -73,7 +73,7 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null)
+        public async Task<IResponse> GoToAsync(string url, GoToOptions options = null)
         {
             Page.PageState.ExtraHTTPHeaders.TryGetValue("referer", out string referer);
 
@@ -84,7 +84,6 @@ namespace PlaywrightSharp
                     throw new ArgumentException("\"referer\" is already specified as extra HTTP header");
                 }
 
-
                 referer = options.Referer;
             }
 
@@ -92,19 +91,31 @@ namespace PlaywrightSharp
 
             try
             {
-                var navigateTask = NavigateAsync(Client, url, referrer, frame.Id);
+                var navigateTask = Page.Delegate.NavigateFrameAsync(this, url, referer);
                 var task = await Task.WhenAny(
                     watcher.TimeoutOrTerminationTask,
                     navigateTask).ConfigureAwait(false);
 
-                await task;
+                await task.ConfigureAwait(false);
 
-                task = await Task.WhenAny(
-                    watcher.TimeoutOrTerminationTask,
-                    _ensureNewDocumentNavigation ? watcher.NewDocumentNavigationTask : watcher.SameDocumentNavigationTask
-                ).ConfigureAwait(false);
+                var tasks = new List<Task>() { watcher.TimeoutOrTerminationTask };
+                if (!string.IsNullOrEmpty(navigateTask.Result.NewDocumentId))
+                {
+                    watcher.SetExpectedDocumentId(navigateTask.Result.NewDocumentId, url);
+                    tasks.Add(watcher.NewDocumentNavigationTask);
+                }
+                else if (navigateTask.Result.IsSameDocument)
+                {
+                    tasks.Add(watcher.SameDocumentNavigationTask);
+                }
+                else
+                {
+                    tasks.AddRange(new[] { watcher.SameDocumentNavigationTask, watcher.NewDocumentNavigationTask });
+                }
 
-                await task;
+                task = await Task.WhenAny(tasks).ConfigureAwait(false);
+
+                await task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -112,50 +123,6 @@ namespace PlaywrightSharp
             }
 
             return watcher.NavigationResponse;
-
-            /*
-    const watcher = new LifecycleWatcher(this, options, false );
-
-            let navigateResult: GotoResult;
-            const navigate = async () => {
-                try
-                {
-                    navigateResult = await this._page._delegate.navigateFrame(this, url, referer);
-                }
-                catch (error)
-                {
-                    return error;
-                }
-            };
-
-            let error = await Promise.race([
-              navigate(),
-              watcher.timeoutOrTerminationPromise,
-        
-            ]);
-            if (!error)
-            {
-                const promises = [watcher.timeoutOrTerminationPromise];
-                if (navigateResult!.newDocumentId)
-                {
-                    watcher.setExpectedDocumentId(navigateResult!.newDocumentId, url);
-                    promises.push(watcher.newDocumentNavigationPromise);
-                }
-                else if (navigateResult!.isSameDocument)
-                {
-                    promises.push(watcher.sameDocumentNavigationPromise);
-                }
-                else
-                {
-                    promises.push(watcher.sameDocumentNavigationPromise, watcher.newDocumentNavigationPromise);
-                }
-                error = await Promise.race(promises);
-            }
-            watcher.dispose();
-            if (error)
-                throw error;
-            return watcher.navigationResponse();
-            */
         }
 
         public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil)

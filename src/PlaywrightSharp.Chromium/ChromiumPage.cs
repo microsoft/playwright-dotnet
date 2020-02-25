@@ -10,22 +10,36 @@ using PlaywrightSharp.Chromium.Messaging.Security;
 
 namespace PlaywrightSharp.Chromium
 {
-    /// <inheritdoc cref="IPage"/>
-    internal class ChromiumPage : PageBase, IPage
+    /// <inheritdoc cref="IPageDelegate"/>
+    internal class ChromiumPage : IPageDelegate
     {
         private readonly ChromiumSession _client;
         private readonly ChromiumBrowser _browser;
+        private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
 
-        public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, ChromiumBrowserContext browserContext)
+        public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
             _client = client;
             _browser = browser;
-            BrowserContext = browserContext;
+            _browserContext = browserContext;
             _networkManager = new ChromiumNetworkManager(_client, this);
+            Page = new Page(this, browserContext);
         }
 
         public ChromiumTarget Target { get; set; }
+
+        internal Page Page { get; }
+
+        public Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetViewportAsync(Viewport viewport)
+        {
+            throw new NotImplementedException();
+        }
 
         internal async Task InitializeAsync()
         {
@@ -45,9 +59,9 @@ namespace PlaywrightSharp.Chromium
                _networkManager.InitializeAsync(),
             };
 
-            if (BrowserContext.Options != null)
+            if (_browserContext.Options != null)
             {
-                var options = BrowserContext.Options;
+                var options = _browserContext.Options;
 
                 if (options.BypassCSP)
                 {
@@ -110,8 +124,8 @@ namespace PlaywrightSharp.Chromium
         }
 
         private void OnFrameNavigated(PageGetFrameTreeItemInfo frame, bool initial)
-            => FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
+            => Page.FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
 
-        private void OnFrameAttached(string frameId, string parentFrameId) => FrameManager.FrameAttached(frameId, parentFrameId);
+        private void OnFrameAttached(string frameId, string parentFrameId) => Page.FrameManager.FrameAttached(frameId, parentFrameId);
     }
 }

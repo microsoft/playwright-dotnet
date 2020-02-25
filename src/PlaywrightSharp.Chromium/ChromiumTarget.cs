@@ -10,17 +10,20 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="ITarget"/>
     public class ChromiumTarget : ITarget
     {
+        private readonly ChromiumBrowser _browser;
         private readonly Func<Task<ChromiumSession>> _sessionFactory;
         private readonly TaskCompletionSource<bool> _initializedTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         private Task<Worker> _workerTask;
-        private ChromiumPage _page;
+        private Page _page;
 
         internal ChromiumTarget(
             TargetInfo targetInfo,
+            ChromiumBrowser browser,
             Func<Task<ChromiumSession>> sessionFactory,
-            ChromiumBrowserContext browserContext)
+            IBrowserContext browserContext)
         {
             TargetInfo = targetInfo;
+            _browser = browser;
             _sessionFactory = sessionFactory;
             BrowserContext = browserContext;
             PageTask = null;
@@ -74,11 +77,9 @@ namespace PlaywrightSharp.Chromium
 
         internal string TargetId => TargetInfo.TargetId;
 
-        internal ChromiumTarget Opener => TargetInfo.OpenerId != null ? Browser.TargetsMap.GetValueOrDefault(TargetInfo.OpenerId) : null;
+        internal ChromiumTarget Opener => TargetInfo.OpenerId != null ? _browser.TargetsMap.GetValueOrDefault(TargetInfo.OpenerId) : null;
 
-        internal ChromiumBrowser Browser => BrowserContext.Browser;
-
-        internal ChromiumBrowserContext BrowserContext { get; }
+        internal IBrowserContext BrowserContext { get; }
 
         internal Task<bool> InitializedTask => _initializedTaskWrapper.Task;
 
@@ -86,7 +87,7 @@ namespace PlaywrightSharp.Chromium
 
         internal TaskCompletionSource<bool> CloseTaskWrapper { get; }
 
-        internal Task<ChromiumPage> PageTask { get; set; }
+        internal Task<Page> PageTask { get; set; }
 
         /// <summary>
         /// If the target is not of type `"service_worker"` or `"shared_worker"`, returns `null`.
@@ -107,14 +108,14 @@ namespace PlaywrightSharp.Chromium
             return _workerTask;
         }
 
-        internal Task<ChromiumPage> PageAsync()
+        internal async Task<IPage> PageAsync()
         {
             if ((TargetInfo.Type == TargetType.Page || TargetInfo.Type == TargetType.BackgroundPage) && PageTask == null)
             {
                 PageTask = CreatePageAsync();
             }
 
-            return PageTask ?? Task.FromResult<ChromiumPage>(null);
+            return await (PageTask ?? Task.FromResult<Page>(null)).ConfigureAwait(false);
         }
 
         internal void TargetInfoChanged(TargetInfo targetInfo)
@@ -131,11 +132,12 @@ namespace PlaywrightSharp.Chromium
 
         private static Task<Worker> WorkerInternalAsync() => Task.FromResult<Worker>(null);
 
-        private async Task<ChromiumPage> CreatePageAsync()
+        private async Task<Page> CreatePageAsync()
         {
             var client = await _sessionFactory().ConfigureAwait(false);
-            _page = new ChromiumPage(client, Browser, BrowserContext);
-            _page.Target = this;
+            var chromiumPage = new ChromiumPage(client, _browser, BrowserContext);
+            _page = chromiumPage.Page;
+            chromiumPage.Target = this;
 
             client.Disconnected += (sender, e) => _page.DidDisconnected();
 
@@ -151,7 +153,7 @@ namespace PlaywrightSharp.Chromium
                 }
             };
 
-            await _page.InitializeAsync().ConfigureAwait(false);
+            await chromiumPage.InitializeAsync().ConfigureAwait(false);
             await client.SendAsync("Target.setAutoAttach", new TargetSetAutoAttachRequest
             {
                 AutoAttach = true,

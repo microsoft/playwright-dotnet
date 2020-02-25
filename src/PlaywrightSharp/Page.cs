@@ -8,12 +8,14 @@ using PlaywrightSharp.Accessibility;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage"/>
-    public class PageBase : IPage
+    public class Page : IPage
     {
         /// <inheritdoc cref="IPage"/>
-        public PageBase()
+        internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
         {
             FrameManager = new FrameManager(this);
+            Delegate = pageDelegate;
+            BrowserContext = browserContext;
         }
 
         /// <inheritdoc cref="IPage"/>
@@ -81,6 +83,8 @@ namespace PlaywrightSharp
         internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
 
         internal PageState PageState { get; } = new PageState();
+
+        internal IPageDelegate Delegate { get; }
 
         /// <inheritdoc cref="IPage"/>
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
