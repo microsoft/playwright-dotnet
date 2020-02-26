@@ -5,11 +5,11 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IBrowserContext"/>
     public class BrowserContext : IBrowserContext
     {
-        private readonly IBrowserContextDelegate _browserContextDelegate;
+        private readonly IBrowserContextDelegate _delegate;
 
         internal BrowserContext(IBrowserContextDelegate browserContextDelegate)
         {
-            _browserContextDelegate = browserContextDelegate;
+            _delegate = browserContextDelegate;
         }
 
         /// <inheritdoc cref="IBrowserContext"/>
@@ -34,15 +34,12 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowserContext"/>
-        public Task<IPage[]> GetPagesAsync()
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<IPage[]> GetPagesAsync() => _delegate.GetPagesAsync();
 
         /// <inheritdoc cref="IBrowserContext"/>
         public async Task<IPage> NewPageAsync(string url = null)
         {
-            var page = await _browserContextDelegate.NewPage().ConfigureAwait(false);
+            var page = await _delegate.NewPage().ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(url))
             {

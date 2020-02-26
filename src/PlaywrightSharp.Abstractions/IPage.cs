@@ -100,6 +100,11 @@ namespace PlaywrightSharp
         public event EventHandler Load;
 
         /// <summary>
+        /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event"/> event is dispatched.
+        /// </summary>
+        public event EventHandler DOMContentLoaded;
+
+        /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
         /// </summary>
         IFrame MainFrame { get; }

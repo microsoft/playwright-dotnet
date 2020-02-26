@@ -49,6 +49,9 @@ namespace PlaywrightSharp
         public event EventHandler Load;
 
         /// <inheritdoc cref="IPage"/>
+        public event EventHandler DOMContentLoaded;
+
+        /// <inheritdoc cref="IPage"/>
         public IFrame MainFrame => FrameManager.MainFrame;
 
         /// <inheritdoc cref="IPage"/>
@@ -364,8 +367,12 @@ namespace PlaywrightSharp
         {
         }
 
+        internal void OnDOMContentLoaded() => DOMContentLoaded?.Invoke(this, new EventArgs());
+
         internal void OnFrameAttached(IFrame frame) => FrameAttached?.Invoke(this, new FrameEventArgs(frame));
 
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
+
+        internal void OnLoad() => Load?.Invoke(this, new EventArgs());
     }
 }

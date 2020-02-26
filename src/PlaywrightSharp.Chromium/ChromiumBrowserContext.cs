@@ -29,6 +29,9 @@ namespace PlaywrightSharp
         internal ChromiumBrowser Browser { get; }
 
         /// <inheritdoc cref="IBrowserContext"/>
+        public Task<IPage[]> GetPagesAsync() => Task.FromResult<IPage[]>(null);
+
+        /// <inheritdoc cref="IBrowserContext"/>
         public async Task<IPage> NewPage()
         {
             var createTargetRequest = new TargetCreateTargetRequest

@@ -34,6 +34,7 @@ namespace PlaywrightSharp.Chromium
                 contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
             _session.MessageReceived += Session_MessageReceived;
+            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, new EventArgs());
         }
 
         /// <inheritdoc cref="IBrowser"/>
@@ -70,7 +71,10 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowser"/>
         public Task DisconnectAsync()
         {
-            throw new NotImplementedException();
+            var disconnectedTcs = new TaskCompletionSource<bool>();
+            Disconnected += (sender, e) => disconnectedTcs.TrySetResult(true);
+            _connection.Close("Browser disconnected");
+            return disconnectedTcs.Task;
         }
 
         /// <inheritdoc cref="IBrowser"/>

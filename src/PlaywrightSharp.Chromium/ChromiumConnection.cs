@@ -32,6 +32,8 @@ namespace PlaywrightSharp.Chromium
 
         public event EventHandler<MessageEventArgs> MessageReceived;
 
+        public event EventHandler Disconnected;
+
         public ChromiumSession RootSession { get; set; }
 
         internal bool IsClosed { get; set; }
@@ -75,9 +77,7 @@ namespace PlaywrightSharp.Chromium
             return await GetSessionAsync(sessionId).ConfigureAwait(false);
         }
 
-        private void Transport_Closed(object sender, TransportClosedEventArgs e)
-        {
-        }
+        private void Transport_Closed(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, e);
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e) => ProcessMessage(e);
 

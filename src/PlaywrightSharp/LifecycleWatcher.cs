@@ -34,10 +34,10 @@ namespace PlaywrightSharp
 
         public LifecycleWatcher(Frame frame, NavigationOptions options)
         {
-            _options = options is NavigationOptions ? (WaitForNavigationOptions)options : null;
+            _options = options != null && options is NavigationOptions ? (WaitForNavigationOptions)options : new WaitForNavigationOptions();
             _frame = frame;
 
-            _expectedLifecycle = (options.WaitUntil ?? _defaultWaitUntil).Select(w =>
+            _expectedLifecycle = (_options.WaitUntil ?? _defaultWaitUntil).Select(w =>
             {
                 string protocolEvent = _puppeteerToProtocolLifecycle.GetValueOrDefault(w);
 
@@ -196,6 +196,8 @@ namespace PlaywrightSharp
 
         internal void OnProvisionalLoadFailed(string documentId, string error) => OnAbortedNewDocumentNavigation(_frame, documentId, error);
 
+        internal void OnLifecycleEvent(Frame frame) => CheckLifecycleComplete();
+
         protected void Dispose(bool disposing)
         {
             if (disposing)
@@ -207,8 +209,6 @@ namespace PlaywrightSharp
 
         private void OnClientDisconnected(object sender, EventArgs e)
             => Terminate(new PlaywrightSharpException("Navigation failed because browser has disconnected!"));
-
-        private void OnLifecycleEvent(Frame frame) => CheckLifecycleComplete();
 
         private void CheckLifecycleComplete()
         {

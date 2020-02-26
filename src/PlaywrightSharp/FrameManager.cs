@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
@@ -71,6 +72,36 @@ namespace PlaywrightSharp
                 }
 
                 _page.OnFrameNavigated(frame);
+            }
+        }
+
+        internal Task FrameCommittedNewDocumentNavigation(string id, string url, string v, object loaderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void FrameLifecycleEvent(string frameId, string e)
+        {
+            if (!_frames.TryGetValue(frameId, out var frame))
+            {
+                return;
+            }
+
+            frame.FiredLifecycleEvents.Add(e);
+
+            foreach (var watcher in LifecycleWatchers)
+            {
+                watcher.OnLifecycleEvent(frame);
+            }
+
+            if (frame == MainFrame && e == "load")
+            {
+                _page.OnLoad();
+            }
+
+            if (frame == MainFrame && e == "domcontentloaded")
+            {
+                _page.OnDOMContentLoaded();
             }
         }
 
