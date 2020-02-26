@@ -161,7 +161,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             builder.AppendLine("/// <remarks>");
                             builder.AppendLine($"/// Matches on the event <c>{domain.Domain}.{e.Name}</c>");
                             builder.AppendLine("/// </remarks>");
-                            builder.AppendLine($"public class {eventName}EventArgs : ChromiumEvent");
+                            builder.AppendLine($"public class {domain.Domain}{eventName}EventArgs : ChromiumEvent");
                             builder.AppendLine("{");
                             builder.AppendLine($"public override string InternalName {{ get; }} = \"{domain.Domain}.{e.Name}\";");
                             builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
