@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -11,6 +12,9 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 {
     public class ChromiumProtocolTypesGenerator : IProtocolTypesGenerator
     {
+        private static readonly string NamespacePrefix = "Playwright.Chromium.Protocol";
+        private readonly IDictionary<string, string> arrayTypes = new Dictionary<string, string>();
+
         public async Task GenerateTypesAsync(RevisionInfo revision)
         {
             string output = Path.Join("..", "..", "..", "..", "PlaywrightSharp.Chromium", "Protocol.Generated.cs");
@@ -42,7 +46,27 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 ");
                 foreach (var domain in response.Domains)
                 {
-                    builder.AppendLine($"namespace Playwright.Chromium.Protocol.{domain.Domain}");
+                    foreach (var type in domain.Types ?? Array.Empty<ChromiumProtocolDomainType>())
+                    {
+                        if (type.Type == "array")
+                        {
+                            string itemType = ConvertJsToCsharp(type?.Items?.Type);
+                            if (itemType != null)
+                            {
+                                arrayTypes.Add(type.Id, itemType + "[]");
+                                arrayTypes.Add($"{domain.Domain}.{type.Id}", itemType + "[]");
+                            }
+                        }
+                    }
+                }
+
+                // work around, too lazy to solve this
+                arrayTypes["ArrayOfStrings"] = "int[]";
+                arrayTypes["StringIndex"] = "int";
+
+                foreach (var domain in response.Domains)
+                {
+                    builder.AppendLine($"namespace {NamespacePrefix}.{domain.Domain}");
                     builder.AppendLine("{");
                     if (domain.Types != null)
                         foreach (var type in domain.Types)
@@ -79,10 +103,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                                 builder.AppendJoin("\n", NormalizeProperties(type.Properties));
                                 builder.AppendLine("}");
                             }
-                            else if (type.Type == "array")
-                            {
-
-                            }
                         }
 
                     if (domain.Commands != null)
@@ -103,7 +123,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         {
             if (property.Ref != null)
             {
-                return property.Ref.Contains('.') ? "Playwright.Chromium.Protocol." + property.Ref : property.Ref;
+                return ConvertRefToCsharp(property.Ref);
             }
             try
             {
@@ -121,7 +141,17 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
         public string ConvertItemsProperty(ChromiumProtocolDomainItems items)
         {
-            return (items.Type != null ? ConvertJsToCsharp(items.Type) : items.Ref.Contains('.') ? "Playwright.Chromium.Protocol." + items.Ref : items.Ref) + "[]";
+            return (items.Type != null ? ConvertJsToCsharp(items.Type) : ConvertRefToCsharp(items.Ref)) + "[]";
+        }
+
+        public string ConvertRefToCsharp(string refValue)
+        {
+            if (arrayTypes.TryGetValue(refValue, out string refClass))
+            {
+                return refClass;
+            }
+
+            return refValue.Contains('.') ? NamespacePrefix + "." + refValue : refValue;
         }
 
         public string ConvertJsToCsharp(string type)
@@ -134,7 +164,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 "boolean" => "bool",
                 "binary" => "byte[]",
                 "any" => "object",
-                "object" => "object"
+                "object" => "object",
+                _ => null
             };
         }
 
