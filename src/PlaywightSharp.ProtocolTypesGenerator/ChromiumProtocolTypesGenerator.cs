@@ -64,6 +64,17 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 arrayTypes["ArrayOfStrings"] = "int[]";
                 arrayTypes["StringIndex"] = "int";
 
+                builder.AppendLine($"namespace {NamespacePrefix}");
+                builder.AppendLine("{");
+                builder.AppendLine("public interface IChromiumRequest<TChromiumResponse> where TChromiumResponse : IChromiumResponse");
+                builder.AppendLine("{");
+                builder.AppendLine("    string Command { get; }");
+                builder.AppendLine("}");
+                builder.AppendLine("public interface IChromiumResponse");
+                builder.AppendLine("{");
+                builder.AppendLine("}");
+                builder.AppendLine("}");
+
                 foreach (var domain in response.Domains)
                 {
                     builder.AppendLine($"namespace {NamespacePrefix}.{domain.Domain}");
@@ -74,7 +85,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             if (type.Enum != null)
                             {
                                 builder.AppendLine("/// <summary>");
-                                builder.AppendLine($"/// {type.Description?.Replace("\n", "\n/// ").Replace("<", "&lt;").Replace(">", "&gt;")}");
+                                builder.AppendLine($"/// {FormatDocs(type.Description)}");
                                 builder.AppendLine("/// </summary>");
                                 builder.AppendLine($"public enum {type.Id}");
                                 builder.AppendLine("{");
@@ -96,7 +107,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             else if (type.Type == "object")
                             {
                                 builder.AppendLine("/// <summary>");
-                                builder.AppendLine($"/// {type.Description?.Replace("\n", "\n/// ").Replace("<", "&lt;").Replace(">", "&gt;")}");
+                                builder.AppendLine($"/// {FormatDocs(type.Description)}");
                                 builder.AppendLine("/// </summary>");
                                 builder.AppendLine($"public class {type.Id}");
                                 builder.AppendLine("{");
@@ -108,7 +119,19 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     if (domain.Commands != null)
                         foreach (var command in domain.Commands)
                         {
+                            // request
+                            string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0])}{command.Name.Substring(1)}";
+                            builder.AppendLine($"public class {baseName}Request : IChromiumRequest<{baseName}Response>");
+                            builder.AppendLine("{");
+                            builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
+                            builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
+                            builder.AppendLine("}");
 
+                            // response
+                            builder.AppendLine($"public class {baseName}Response : IChromiumResponse");
+                            builder.AppendLine("{");
+                            builder.AppendJoin("\n", NormalizeProperties(command.Returns));
+                            builder.AppendLine("}");
                         }
                     builder.AppendLine("}");
                 }
@@ -117,6 +140,16 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
                 return;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public string FormatDocs(string docs)
+        {
+            return docs?.Replace("\n", "\n/// ").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         public string GetTypeOfProperty(ChromiumProtocolDomainProperty property)
@@ -177,7 +210,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             {
                 var builder = new StringBuilder()
                     .AppendLine("/// <summary>")
-                    .AppendLine($"/// {property.Description?.Replace("\n", "\n/// ").Replace("<", "&lt;").Replace(">", "&gt;")}")
+                    .AppendLine($"/// {FormatDocs(property.Description)}")
                     .AppendLine("/// </summary>")
                     .Append("public ")
                     .Append(GetTypeOfProperty(property))
