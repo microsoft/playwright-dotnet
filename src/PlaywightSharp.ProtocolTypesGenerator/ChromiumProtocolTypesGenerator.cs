@@ -121,6 +121,13 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                         {
                             // request
                             string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0])}{command.Name.Substring(1)}";
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine($"/// {FormatDocs(command.Description)}");
+                            builder.AppendLine("/// </summary>");
+                            if (command.Description?.StartsWith("Deprecated") == true)
+                            {
+                                builder.AppendLine($"[System.Obsolete(\"{command.Description.Replace("\n", "\\n")}\")]");
+                            }
                             builder.AppendLine($"public class {baseName}Request : IChromiumRequest<{baseName}Response>");
                             builder.AppendLine("{");
                             builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
@@ -128,11 +135,21 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             builder.AppendLine("}");
 
                             // response
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine($"/// Response from <see cref=\"{baseName}Request\"/>");
+                            builder.AppendLine("/// </summary>");
                             builder.AppendLine($"public class {baseName}Response : IChromiumResponse");
                             builder.AppendLine("{");
                             builder.AppendJoin("\n", NormalizeProperties(command.Returns));
                             builder.AppendLine("}");
                         }
+
+                    if (domain.Events != null)
+                        foreach (var e in domain.Events)
+                        {
+
+                        }
+
                     builder.AppendLine("}");
                 }
                 builder.AppendLine("#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member");
@@ -140,11 +157,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
                 return;
             }
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
         }
 
         public string FormatDocs(string docs)
@@ -301,6 +313,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             public string[] Dependencies { get; set; }
             public ChromiumProtocolDomainType[] Types { get; set; }
             public ChromiumProtocolDomainCommand[] Commands { get; set; }
+            public ChromiumProtocolDomainEvent[] Events { get; set; }
         }
 
         public class ChromiumProtocolDomainType
@@ -333,6 +346,15 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         }
 
         public class ChromiumProtocolDomainCommand
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public bool? Experimental { get; set; }
+            public ChromiumProtocolDomainProperty[] Parameters { get; set; }
+            public ChromiumProtocolDomainProperty[] Returns { get; set; }
+        }
+
+        public class ChromiumProtocolDomainEvent
         {
             public string Name { get; set; }
             public string Description { get; set; }
