@@ -73,6 +73,10 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 builder.AppendLine("public interface IChromiumResponse");
                 builder.AppendLine("{");
                 builder.AppendLine("}");
+                builder.AppendLine("public abstract class ChromiumEvent : System.EventArgs");
+                builder.AppendLine("{");
+                builder.AppendLine("public abstract string InternalName { get; }");
+                builder.AppendLine("}");
                 builder.AppendLine("}");
 
                 foreach (var domain in response.Domains)
@@ -124,6 +128,9 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             builder.AppendLine("/// <summary>");
                             builder.AppendLine($"/// {FormatDocs(command.Description)}");
                             builder.AppendLine("/// </summary>");
+                            builder.AppendLine("/// <remarks>");
+                            builder.AppendLine($"/// Will send the command <c>{domain.Domain}.{command.Name}</c>");
+                            builder.AppendLine("/// </remarks>");
                             if (command.Description?.StartsWith("Deprecated") == true)
                             {
                                 builder.AppendLine($"[System.Obsolete(\"{command.Description.Replace("\n", "\\n")}\")]");
@@ -147,7 +154,18 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     if (domain.Events != null)
                         foreach (var e in domain.Events)
                         {
-
+                            string eventName = char.ToUpper(e.Name[0]) + e.Name.Substring(1);
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine($"/// {FormatDocs(e.Description)}");
+                            builder.AppendLine("/// </summary>");
+                            builder.AppendLine("/// <remarks>");
+                            builder.AppendLine($"/// Matches on the event <c>{domain.Domain}.{e.Name}</c>");
+                            builder.AppendLine("/// </remarks>");
+                            builder.AppendLine($"public class {eventName}EventArgs : ChromiumEvent");
+                            builder.AppendLine("{");
+                            builder.AppendLine($"public override string InternalName {{ get; }} = \"{domain.Domain}.{e.Name}\";");
+                            builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
+                            builder.AppendLine("}");
                         }
 
                     builder.AppendLine("}");
@@ -159,6 +177,11 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             }
         }
 
+        /// <summary>
+        /// <c></c>
+        /// </summary>
+        /// <param name="docs"></param>
+        /// <returns></returns>
         public string FormatDocs(string docs)
         {
             return docs?.Replace("\n", "\n/// ").Replace("<", "&lt;").Replace(">", "&gt;");
@@ -180,7 +203,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
 
@@ -360,7 +383,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             public string Description { get; set; }
             public bool? Experimental { get; set; }
             public ChromiumProtocolDomainProperty[] Parameters { get; set; }
-            public ChromiumProtocolDomainProperty[] Returns { get; set; }
         }
     }
 }

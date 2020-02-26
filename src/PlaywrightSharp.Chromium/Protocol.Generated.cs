@@ -18,6 +18,10 @@ namespace Playwright.Chromium.Protocol
     public interface IChromiumResponse
     {
     }
+    public abstract class ChromiumEvent : System.EventArgs
+    {
+        public abstract string InternalName { get; }
+    }
 }
 namespace Playwright.Chromium.Protocol.Accessibility
 {
@@ -289,6 +293,9 @@ namespace Playwright.Chromium.Protocol.Accessibility
     /// <summary>
     /// Disables the accessibility domain.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Accessibility.disable</c>
+    /// </remarks>
     public class AccessibilityDisableRequest : IChromiumRequest<AccessibilityDisableResponse>
     {
         public string Command { get; } = "Accessibility.disable";
@@ -303,6 +310,9 @@ namespace Playwright.Chromium.Protocol.Accessibility
     /// Enables the accessibility domain which causes `AXNodeId`s to remain consistent between method calls.
     /// This turns on accessibility for the page, which can impact performance until accessibility is disabled.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Accessibility.enable</c>
+    /// </remarks>
     public class AccessibilityEnableRequest : IChromiumRequest<AccessibilityEnableResponse>
     {
         public string Command { get; } = "Accessibility.enable";
@@ -316,6 +326,9 @@ namespace Playwright.Chromium.Protocol.Accessibility
     /// <summary>
     /// Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Accessibility.getPartialAXTree</c>
+    /// </remarks>
     public class AccessibilityGetPartialAXTreeRequest : IChromiumRequest<AccessibilityGetPartialAXTreeResponse>
     {
         public string Command { get; } = "Accessibility.getPartialAXTree";
@@ -350,6 +363,9 @@ namespace Playwright.Chromium.Protocol.Accessibility
     /// <summary>
     /// Fetches the entire accessibility tree
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Accessibility.getFullAXTree</c>
+    /// </remarks>
     public class AccessibilityGetFullAXTreeRequest : IChromiumRequest<AccessibilityGetFullAXTreeResponse>
     {
         public string Command { get; } = "Accessibility.getFullAXTree";
@@ -491,6 +507,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Disables animation domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.disable</c>
+    /// </remarks>
     public class AnimationDisableRequest : IChromiumRequest<AnimationDisableResponse>
     {
         public string Command { get; } = "Animation.disable";
@@ -504,6 +523,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Enables animation domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.enable</c>
+    /// </remarks>
     public class AnimationEnableRequest : IChromiumRequest<AnimationEnableResponse>
     {
         public string Command { get; } = "Animation.enable";
@@ -517,6 +539,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Returns the current time of the an animation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.getCurrentTime</c>
+    /// </remarks>
     public class AnimationGetCurrentTimeRequest : IChromiumRequest<AnimationGetCurrentTimeResponse>
     {
         public string Command { get; } = "Animation.getCurrentTime";
@@ -538,6 +563,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Gets the playback rate of the document timeline.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.getPlaybackRate</c>
+    /// </remarks>
     public class AnimationGetPlaybackRateRequest : IChromiumRequest<AnimationGetPlaybackRateResponse>
     {
         public string Command { get; } = "Animation.getPlaybackRate";
@@ -555,6 +583,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Releases a set of animations to no longer be manipulated.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.releaseAnimations</c>
+    /// </remarks>
     public class AnimationReleaseAnimationsRequest : IChromiumRequest<AnimationReleaseAnimationsResponse>
     {
         public string Command { get; } = "Animation.releaseAnimations";
@@ -572,6 +603,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Gets the remote object of the Animation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.resolveAnimation</c>
+    /// </remarks>
     public class AnimationResolveAnimationRequest : IChromiumRequest<AnimationResolveAnimationResponse>
     {
         public string Command { get; } = "Animation.resolveAnimation";
@@ -593,6 +627,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Seek a set of animations to a particular time within each animation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.seekAnimations</c>
+    /// </remarks>
     public class AnimationSeekAnimationsRequest : IChromiumRequest<AnimationSeekAnimationsResponse>
     {
         public string Command { get; } = "Animation.seekAnimations";
@@ -614,6 +651,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Sets the paused state of a set of animations.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.setPaused</c>
+    /// </remarks>
     public class AnimationSetPausedRequest : IChromiumRequest<AnimationSetPausedResponse>
     {
         public string Command { get; } = "Animation.setPaused";
@@ -635,6 +675,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Sets the playback rate of the document timeline.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.setPlaybackRate</c>
+    /// </remarks>
     public class AnimationSetPlaybackRateRequest : IChromiumRequest<AnimationSetPlaybackRateResponse>
     {
         public string Command { get; } = "Animation.setPlaybackRate";
@@ -652,6 +695,9 @@ namespace Playwright.Chromium.Protocol.Animation
     /// <summary>
     /// Sets the timing of an animation node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Animation.setTiming</c>
+    /// </remarks>
     public class AnimationSetTimingRequest : IChromiumRequest<AnimationSetTimingResponse>
     {
         public string Command { get; } = "Animation.setTiming";
@@ -673,6 +719,48 @@ namespace Playwright.Chromium.Protocol.Animation
     /// </summary>
     public class AnimationSetTimingResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Event for when an animation has been cancelled.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Animation.animationCanceled</c>
+    /// </remarks>
+    public class AnimationCanceledEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Animation.animationCanceled";
+        /// <summary>
+        /// Id of the animation that was cancelled.
+        /// </summary>
+        public string Id { get; set; }
+    }
+    /// <summary>
+    /// Event for each animation that has been created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Animation.animationCreated</c>
+    /// </remarks>
+    public class AnimationCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Animation.animationCreated";
+        /// <summary>
+        /// Id of the animation that was created.
+        /// </summary>
+        public string Id { get; set; }
+    }
+    /// <summary>
+    /// Event for animation that has been started.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Animation.animationStarted</c>
+    /// </remarks>
+    public class AnimationStartedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Animation.animationStarted";
+        /// <summary>
+        /// Animation that was started.
+        /// </summary>
+        public Animation Animation { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.ApplicationCache
@@ -742,6 +830,9 @@ namespace Playwright.Chromium.Protocol.ApplicationCache
     /// <summary>
     /// Enables application cache domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ApplicationCache.enable</c>
+    /// </remarks>
     public class ApplicationCacheEnableRequest : IChromiumRequest<ApplicationCacheEnableResponse>
     {
         public string Command { get; } = "ApplicationCache.enable";
@@ -755,6 +846,9 @@ namespace Playwright.Chromium.Protocol.ApplicationCache
     /// <summary>
     /// Returns relevant application cache data for the document in given frame.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ApplicationCache.getApplicationCacheForFrame</c>
+    /// </remarks>
     public class ApplicationCacheGetApplicationCacheForFrameRequest : IChromiumRequest<ApplicationCacheGetApplicationCacheForFrameResponse>
     {
         public string Command { get; } = "ApplicationCache.getApplicationCacheForFrame";
@@ -777,6 +871,9 @@ namespace Playwright.Chromium.Protocol.ApplicationCache
     /// Returns array of frame identifiers with manifest urls for each frame containing a document
     /// associated with some application cache.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ApplicationCache.getFramesWithManifests</c>
+    /// </remarks>
     public class ApplicationCacheGetFramesWithManifestsRequest : IChromiumRequest<ApplicationCacheGetFramesWithManifestsResponse>
     {
         public string Command { get; } = "ApplicationCache.getFramesWithManifests";
@@ -795,6 +892,9 @@ namespace Playwright.Chromium.Protocol.ApplicationCache
     /// <summary>
     /// Returns manifest URL for document in the given frame.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ApplicationCache.getManifestForFrame</c>
+    /// </remarks>
     public class ApplicationCacheGetManifestForFrameRequest : IChromiumRequest<ApplicationCacheGetManifestForFrameResponse>
     {
         public string Command { get; } = "ApplicationCache.getManifestForFrame";
@@ -813,6 +913,42 @@ namespace Playwright.Chromium.Protocol.ApplicationCache
         /// </summary>
         public string ManifestURL { get; set; }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>ApplicationCache.applicationCacheStatusUpdated</c>
+    /// </remarks>
+    public class ApplicationCacheStatusUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "ApplicationCache.applicationCacheStatusUpdated";
+        /// <summary>
+        /// Identifier of the frame containing document whose application cache updated status.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.FrameId FrameId { get; set; }
+        /// <summary>
+        /// Manifest URL.
+        /// </summary>
+        public string ManifestURL { get; set; }
+        /// <summary>
+        /// Updated application cache status.
+        /// </summary>
+        public int Status { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>ApplicationCache.networkStateUpdated</c>
+    /// </remarks>
+    public class NetworkStateUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "ApplicationCache.networkStateUpdated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsNowOnline { get; set; }
+    }
 }
 namespace Playwright.Chromium.Protocol.Audits
 {
@@ -820,6 +956,9 @@ namespace Playwright.Chromium.Protocol.Audits
     /// Returns the response body and size if it were re-encoded with the specified settings. Only
     /// applies to images.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Audits.getEncodedResponse</c>
+    /// </remarks>
     public class AuditsGetEncodedResponseRequest : IChromiumRequest<AuditsGetEncodedResponseResponse>
     {
         public string Command { get; } = "Audits.getEncodedResponse";
@@ -926,6 +1065,9 @@ namespace Playwright.Chromium.Protocol.BackgroundService
     /// <summary>
     /// Enables event updates for the service.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>BackgroundService.startObserving</c>
+    /// </remarks>
     public class BackgroundServiceStartObservingRequest : IChromiumRequest<BackgroundServiceStartObservingResponse>
     {
         public string Command { get; } = "BackgroundService.startObserving";
@@ -943,6 +1085,9 @@ namespace Playwright.Chromium.Protocol.BackgroundService
     /// <summary>
     /// Disables event updates for the service.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>BackgroundService.stopObserving</c>
+    /// </remarks>
     public class BackgroundServiceStopObservingRequest : IChromiumRequest<BackgroundServiceStopObservingResponse>
     {
         public string Command { get; } = "BackgroundService.stopObserving";
@@ -960,6 +1105,9 @@ namespace Playwright.Chromium.Protocol.BackgroundService
     /// <summary>
     /// Set the recording state for the service.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>BackgroundService.setRecording</c>
+    /// </remarks>
     public class BackgroundServiceSetRecordingRequest : IChromiumRequest<BackgroundServiceSetRecordingResponse>
     {
         public string Command { get; } = "BackgroundService.setRecording";
@@ -981,6 +1129,9 @@ namespace Playwright.Chromium.Protocol.BackgroundService
     /// <summary>
     /// Clears all stored data for the service.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>BackgroundService.clearEvents</c>
+    /// </remarks>
     public class BackgroundServiceClearEventsRequest : IChromiumRequest<BackgroundServiceClearEventsResponse>
     {
         public string Command { get; } = "BackgroundService.clearEvents";
@@ -994,6 +1145,39 @@ namespace Playwright.Chromium.Protocol.BackgroundService
     /// </summary>
     public class BackgroundServiceClearEventsResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Called when the recording state for the service has been updated.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>BackgroundService.recordingStateChanged</c>
+    /// </remarks>
+    public class RecordingStateChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "BackgroundService.recordingStateChanged";
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsRecording { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public ServiceName Service { get; set; }
+    }
+    /// <summary>
+    /// Called with all existing backgroundServiceEvents when enabled, and all new
+    /// events afterwards if enabled and recording.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>BackgroundService.backgroundServiceEventReceived</c>
+    /// </remarks>
+    public class BackgroundServiceEventReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "BackgroundService.backgroundServiceEventReceived";
+        /// <summary>
+        /// 
+        /// </summary>
+        public BackgroundServiceEvent BackgroundServiceEvent { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Browser
@@ -1161,6 +1345,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Set permission settings for given origin.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.setPermission</c>
+    /// </remarks>
     public class BrowserSetPermissionRequest : IChromiumRequest<BrowserSetPermissionResponse>
     {
         public string Command { get; } = "Browser.setPermission";
@@ -1190,6 +1377,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Grant specific permissions to the given origin and reject all others.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.grantPermissions</c>
+    /// </remarks>
     public class BrowserGrantPermissionsRequest : IChromiumRequest<BrowserGrantPermissionsResponse>
     {
         public string Command { get; } = "Browser.grantPermissions";
@@ -1215,6 +1405,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Reset all permission management for all origins.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.resetPermissions</c>
+    /// </remarks>
     public class BrowserResetPermissionsRequest : IChromiumRequest<BrowserResetPermissionsResponse>
     {
         public string Command { get; } = "Browser.resetPermissions";
@@ -1232,6 +1425,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Close browser gracefully.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.close</c>
+    /// </remarks>
     public class BrowserCloseRequest : IChromiumRequest<BrowserCloseResponse>
     {
         public string Command { get; } = "Browser.close";
@@ -1245,6 +1441,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Crashes browser on the main thread.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.crash</c>
+    /// </remarks>
     public class BrowserCrashRequest : IChromiumRequest<BrowserCrashResponse>
     {
         public string Command { get; } = "Browser.crash";
@@ -1258,6 +1457,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Crashes GPU process.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.crashGpuProcess</c>
+    /// </remarks>
     public class BrowserCrashGpuProcessRequest : IChromiumRequest<BrowserCrashGpuProcessResponse>
     {
         public string Command { get; } = "Browser.crashGpuProcess";
@@ -1271,6 +1473,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Returns version information.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.getVersion</c>
+    /// </remarks>
     public class BrowserGetVersionRequest : IChromiumRequest<BrowserGetVersionResponse>
     {
         public string Command { get; } = "Browser.getVersion";
@@ -1305,6 +1510,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// Returns the command line switches for the browser process if, and only if
     /// --enable-automation is on the commandline.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.getBrowserCommandLine</c>
+    /// </remarks>
     public class BrowserGetBrowserCommandLineRequest : IChromiumRequest<BrowserGetBrowserCommandLineResponse>
     {
         public string Command { get; } = "Browser.getBrowserCommandLine";
@@ -1322,6 +1530,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Get Chrome histograms.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.getHistograms</c>
+    /// </remarks>
     public class BrowserGetHistogramsRequest : IChromiumRequest<BrowserGetHistogramsResponse>
     {
         public string Command { get; } = "Browser.getHistograms";
@@ -1349,6 +1560,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Get a Chrome histogram by name.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.getHistogram</c>
+    /// </remarks>
     public class BrowserGetHistogramRequest : IChromiumRequest<BrowserGetHistogramResponse>
     {
         public string Command { get; } = "Browser.getHistogram";
@@ -1374,6 +1588,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Get position and size of the browser window.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.getWindowBounds</c>
+    /// </remarks>
     public class BrowserGetWindowBoundsRequest : IChromiumRequest<BrowserGetWindowBoundsResponse>
     {
         public string Command { get; } = "Browser.getWindowBounds";
@@ -1396,6 +1613,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Get the browser window that contains the devtools target.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.getWindowForTarget</c>
+    /// </remarks>
     public class BrowserGetWindowForTargetRequest : IChromiumRequest<BrowserGetWindowForTargetResponse>
     {
         public string Command { get; } = "Browser.getWindowForTarget";
@@ -1422,6 +1642,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Set position and/or size of the browser window.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.setWindowBounds</c>
+    /// </remarks>
     public class BrowserSetWindowBoundsRequest : IChromiumRequest<BrowserSetWindowBoundsResponse>
     {
         public string Command { get; } = "Browser.setWindowBounds";
@@ -1444,6 +1667,9 @@ namespace Playwright.Chromium.Protocol.Browser
     /// <summary>
     /// Set dock tile details, platform-specific.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Browser.setDockTile</c>
+    /// </remarks>
     public class BrowserSetDockTileRequest : IChromiumRequest<BrowserSetDockTileResponse>
     {
         public string Command { get; } = "Browser.setDockTile";
@@ -1997,6 +2223,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Inserts a new rule with the given `ruleText` in a stylesheet with given `styleSheetId`, at the
     /// position specified by `location`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.addRule</c>
+    /// </remarks>
     public class CSSAddRuleRequest : IChromiumRequest<CSSAddRuleResponse>
     {
         public string Command { get; } = "CSS.addRule";
@@ -2026,6 +2255,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Returns all class names from specified stylesheet.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.collectClassNames</c>
+    /// </remarks>
     public class CSSCollectClassNamesRequest : IChromiumRequest<CSSCollectClassNamesResponse>
     {
         public string Command { get; } = "CSS.collectClassNames";
@@ -2047,6 +2279,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Creates a new special "via-inspector" stylesheet in the frame with given `frameId`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.createStyleSheet</c>
+    /// </remarks>
     public class CSSCreateStyleSheetRequest : IChromiumRequest<CSSCreateStyleSheetResponse>
     {
         public string Command { get; } = "CSS.createStyleSheet";
@@ -2068,6 +2303,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Disables the CSS agent for the given page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.disable</c>
+    /// </remarks>
     public class CSSDisableRequest : IChromiumRequest<CSSDisableResponse>
     {
         public string Command { get; } = "CSS.disable";
@@ -2082,6 +2320,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Enables the CSS agent for the given page. Clients should not assume that the CSS agent has been
     /// enabled until the result of this command is received.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.enable</c>
+    /// </remarks>
     public class CSSEnableRequest : IChromiumRequest<CSSEnableResponse>
     {
         public string Command { get; } = "CSS.enable";
@@ -2096,6 +2337,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Ensures that the given node will have specified pseudo-classes whenever its style is computed by
     /// the browser.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.forcePseudoState</c>
+    /// </remarks>
     public class CSSForcePseudoStateRequest : IChromiumRequest<CSSForcePseudoStateResponse>
     {
         public string Command { get; } = "CSS.forcePseudoState";
@@ -2117,6 +2361,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getBackgroundColors</c>
+    /// </remarks>
     public class CSSGetBackgroundColorsRequest : IChromiumRequest<CSSGetBackgroundColorsResponse>
     {
         public string Command { get; } = "CSS.getBackgroundColors";
@@ -2151,6 +2398,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Returns the computed style for a DOM node identified by `nodeId`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getComputedStyleForNode</c>
+    /// </remarks>
     public class CSSGetComputedStyleForNodeRequest : IChromiumRequest<CSSGetComputedStyleForNodeResponse>
     {
         public string Command { get; } = "CSS.getComputedStyleForNode";
@@ -2173,6 +2423,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM
     /// attributes) for a DOM node identified by `nodeId`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getInlineStylesForNode</c>
+    /// </remarks>
     public class CSSGetInlineStylesForNodeRequest : IChromiumRequest<CSSGetInlineStylesForNodeResponse>
     {
         public string Command { get; } = "CSS.getInlineStylesForNode";
@@ -2198,6 +2451,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Returns requested styles for a DOM node identified by `nodeId`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getMatchedStylesForNode</c>
+    /// </remarks>
     public class CSSGetMatchedStylesForNodeRequest : IChromiumRequest<CSSGetMatchedStylesForNodeResponse>
     {
         public string Command { get; } = "CSS.getMatchedStylesForNode";
@@ -2239,6 +2495,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Returns all media queries parsed by the rendering engine.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getMediaQueries</c>
+    /// </remarks>
     public class CSSGetMediaQueriesRequest : IChromiumRequest<CSSGetMediaQueriesResponse>
     {
         public string Command { get; } = "CSS.getMediaQueries";
@@ -2257,6 +2516,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Requests information about platform fonts which we used to render child TextNodes in the given
     /// node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getPlatformFontsForNode</c>
+    /// </remarks>
     public class CSSGetPlatformFontsForNodeRequest : IChromiumRequest<CSSGetPlatformFontsForNodeResponse>
     {
         public string Command { get; } = "CSS.getPlatformFontsForNode";
@@ -2278,6 +2540,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Returns the current textual content for a stylesheet.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.getStyleSheetText</c>
+    /// </remarks>
     public class CSSGetStyleSheetTextRequest : IChromiumRequest<CSSGetStyleSheetTextResponse>
     {
         public string Command { get; } = "CSS.getStyleSheetText";
@@ -2300,6 +2565,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Find a rule with the given active property for the given node and set the new value for this
     /// property
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.setEffectivePropertyValueForNode</c>
+    /// </remarks>
     public class CSSSetEffectivePropertyValueForNodeRequest : IChromiumRequest<CSSSetEffectivePropertyValueForNodeResponse>
     {
         public string Command { get; } = "CSS.setEffectivePropertyValueForNode";
@@ -2325,6 +2593,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Modifies the keyframe rule key text.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.setKeyframeKey</c>
+    /// </remarks>
     public class CSSSetKeyframeKeyRequest : IChromiumRequest<CSSSetKeyframeKeyResponse>
     {
         public string Command { get; } = "CSS.setKeyframeKey";
@@ -2354,6 +2625,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Modifies the rule selector.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.setMediaText</c>
+    /// </remarks>
     public class CSSSetMediaTextRequest : IChromiumRequest<CSSSetMediaTextResponse>
     {
         public string Command { get; } = "CSS.setMediaText";
@@ -2383,6 +2657,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Modifies the rule selector.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.setRuleSelector</c>
+    /// </remarks>
     public class CSSSetRuleSelectorRequest : IChromiumRequest<CSSSetRuleSelectorResponse>
     {
         public string Command { get; } = "CSS.setRuleSelector";
@@ -2412,6 +2689,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Sets the new stylesheet text.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.setStyleSheetText</c>
+    /// </remarks>
     public class CSSSetStyleSheetTextRequest : IChromiumRequest<CSSSetStyleSheetTextResponse>
     {
         public string Command { get; } = "CSS.setStyleSheetText";
@@ -2437,6 +2717,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Applies specified style edits one after another in the given order.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.setStyleTexts</c>
+    /// </remarks>
     public class CSSSetStyleTextsRequest : IChromiumRequest<CSSSetStyleTextsResponse>
     {
         public string Command { get; } = "CSS.setStyleTexts";
@@ -2458,6 +2741,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// <summary>
     /// Enables the selector recording.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.startRuleUsageTracking</c>
+    /// </remarks>
     public class CSSStartRuleUsageTrackingRequest : IChromiumRequest<CSSStartRuleUsageTrackingResponse>
     {
         public string Command { get; } = "CSS.startRuleUsageTracking";
@@ -2472,6 +2758,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Stop tracking rule usage and return the list of rules that were used since last call to
     /// `takeCoverageDelta` (or since start of coverage instrumentation)
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.stopRuleUsageTracking</c>
+    /// </remarks>
     public class CSSStopRuleUsageTrackingRequest : IChromiumRequest<CSSStopRuleUsageTrackingResponse>
     {
         public string Command { get; } = "CSS.stopRuleUsageTracking";
@@ -2490,6 +2779,9 @@ namespace Playwright.Chromium.Protocol.CSS
     /// Obtain list of rules that became used since last call to this method (or since start of coverage
     /// instrumentation)
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CSS.takeCoverageDelta</c>
+    /// </remarks>
     public class CSSTakeCoverageDeltaRequest : IChromiumRequest<CSSTakeCoverageDeltaResponse>
     {
         public string Command { get; } = "CSS.takeCoverageDelta";
@@ -2503,6 +2795,74 @@ namespace Playwright.Chromium.Protocol.CSS
         /// 
         /// </summary>
         public RuleUsage[] Coverage { get; set; }
+    }
+    /// <summary>
+    /// Fires whenever a web font is updated.  A non-empty font parameter indicates a successfully loaded
+    /// web font
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>CSS.fontsUpdated</c>
+    /// </remarks>
+    public class FontsUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "CSS.fontsUpdated";
+        /// <summary>
+        /// The web font that has loaded.
+        /// </summary>
+        public FontFace Font { get; set; }
+    }
+    /// <summary>
+    /// Fires whenever a MediaQuery result changes (for example, after a browser window has been
+    /// resized.) The current implementation considers only viewport-dependent media features.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>CSS.mediaQueryResultChanged</c>
+    /// </remarks>
+    public class MediaQueryResultChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "CSS.mediaQueryResultChanged";
+    }
+    /// <summary>
+    /// Fired whenever an active document stylesheet is added.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>CSS.styleSheetAdded</c>
+    /// </remarks>
+    public class StyleSheetAddedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "CSS.styleSheetAdded";
+        /// <summary>
+        /// Added stylesheet metainfo.
+        /// </summary>
+        public CSSStyleSheetHeader Header { get; set; }
+    }
+    /// <summary>
+    /// Fired whenever a stylesheet is changed as a result of the client operation.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>CSS.styleSheetChanged</c>
+    /// </remarks>
+    public class StyleSheetChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "CSS.styleSheetChanged";
+        /// <summary>
+        /// 
+        /// </summary>
+        public StyleSheetId StyleSheetId { get; set; }
+    }
+    /// <summary>
+    /// Fired whenever an active document stylesheet is removed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>CSS.styleSheetRemoved</c>
+    /// </remarks>
+    public class StyleSheetRemovedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "CSS.styleSheetRemoved";
+        /// <summary>
+        /// Identifier of the removed stylesheet.
+        /// </summary>
+        public StyleSheetId StyleSheetId { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.CacheStorage
@@ -2626,6 +2986,9 @@ namespace Playwright.Chromium.Protocol.CacheStorage
     /// <summary>
     /// Deletes a cache.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CacheStorage.deleteCache</c>
+    /// </remarks>
     public class CacheStorageDeleteCacheRequest : IChromiumRequest<CacheStorageDeleteCacheResponse>
     {
         public string Command { get; } = "CacheStorage.deleteCache";
@@ -2643,6 +3006,9 @@ namespace Playwright.Chromium.Protocol.CacheStorage
     /// <summary>
     /// Deletes a cache entry.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CacheStorage.deleteEntry</c>
+    /// </remarks>
     public class CacheStorageDeleteEntryRequest : IChromiumRequest<CacheStorageDeleteEntryResponse>
     {
         public string Command { get; } = "CacheStorage.deleteEntry";
@@ -2664,6 +3030,9 @@ namespace Playwright.Chromium.Protocol.CacheStorage
     /// <summary>
     /// Requests cache names.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CacheStorage.requestCacheNames</c>
+    /// </remarks>
     public class CacheStorageRequestCacheNamesRequest : IChromiumRequest<CacheStorageRequestCacheNamesResponse>
     {
         public string Command { get; } = "CacheStorage.requestCacheNames";
@@ -2685,6 +3054,9 @@ namespace Playwright.Chromium.Protocol.CacheStorage
     /// <summary>
     /// Fetches cache entry.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CacheStorage.requestCachedResponse</c>
+    /// </remarks>
     public class CacheStorageRequestCachedResponseRequest : IChromiumRequest<CacheStorageRequestCachedResponseResponse>
     {
         public string Command { get; } = "CacheStorage.requestCachedResponse";
@@ -2714,6 +3086,9 @@ namespace Playwright.Chromium.Protocol.CacheStorage
     /// <summary>
     /// Requests data from cache.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>CacheStorage.requestEntries</c>
+    /// </remarks>
     public class CacheStorageRequestEntriesRequest : IChromiumRequest<CacheStorageRequestEntriesResponse>
     {
         public string Command { get; } = "CacheStorage.requestEntries";
@@ -2778,6 +3153,9 @@ namespace Playwright.Chromium.Protocol.Cast
     /// Also starts observing for issue messages. When an issue is added or removed,
     /// an |issueUpdated| event is fired.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Cast.enable</c>
+    /// </remarks>
     public class CastEnableRequest : IChromiumRequest<CastEnableResponse>
     {
         public string Command { get; } = "Cast.enable";
@@ -2795,6 +3173,9 @@ namespace Playwright.Chromium.Protocol.Cast
     /// <summary>
     /// Stops observing for sinks and issues.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Cast.disable</c>
+    /// </remarks>
     public class CastDisableRequest : IChromiumRequest<CastDisableResponse>
     {
         public string Command { get; } = "Cast.disable";
@@ -2809,6 +3190,9 @@ namespace Playwright.Chromium.Protocol.Cast
     /// Sets a sink to be used when the web page requests the browser to choose a
     /// sink via Presentation API, Remote Playback API, or Cast SDK.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Cast.setSinkToUse</c>
+    /// </remarks>
     public class CastSetSinkToUseRequest : IChromiumRequest<CastSetSinkToUseResponse>
     {
         public string Command { get; } = "Cast.setSinkToUse";
@@ -2826,6 +3210,9 @@ namespace Playwright.Chromium.Protocol.Cast
     /// <summary>
     /// Starts mirroring the tab to the sink.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Cast.startTabMirroring</c>
+    /// </remarks>
     public class CastStartTabMirroringRequest : IChromiumRequest<CastStartTabMirroringResponse>
     {
         public string Command { get; } = "Cast.startTabMirroring";
@@ -2843,6 +3230,9 @@ namespace Playwright.Chromium.Protocol.Cast
     /// <summary>
     /// Stops the active Cast session on the sink.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Cast.stopCasting</c>
+    /// </remarks>
     public class CastStopCastingRequest : IChromiumRequest<CastStopCastingResponse>
     {
         public string Command { get; } = "Cast.stopCasting";
@@ -2856,6 +3246,36 @@ namespace Playwright.Chromium.Protocol.Cast
     /// </summary>
     public class CastStopCastingResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// This is fired whenever the list of available sinks changes. A sink is a
+    /// device or a software surface that you can cast to.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Cast.sinksUpdated</c>
+    /// </remarks>
+    public class SinksUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Cast.sinksUpdated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public Sink[] Sinks { get; set; }
+    }
+    /// <summary>
+    /// This is fired whenever the outstanding issue/error message changes.
+    /// |issueMessage| is empty if there is no issue.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Cast.issueUpdated</c>
+    /// </remarks>
+    public class IssueUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Cast.issueUpdated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string IssueMessage { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.DOM
@@ -3176,6 +3596,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Collects class names for the node with given id and all of it's child nodes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.collectClassNamesFromSubtree</c>
+    /// </remarks>
     public class DOMCollectClassNamesFromSubtreeRequest : IChromiumRequest<DOMCollectClassNamesFromSubtreeResponse>
     {
         public string Command { get; } = "DOM.collectClassNamesFromSubtree";
@@ -3198,6 +3621,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Creates a deep copy of the specified node and places it into the target container before the
     /// given anchor.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.copyTo</c>
+    /// </remarks>
     public class DOMCopyToRequest : IChromiumRequest<DOMCopyToResponse>
     {
         public string Command { get; } = "DOM.copyTo";
@@ -3229,6 +3655,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Describes node given its id, does not require domain to be enabled. Does not start tracking any
     /// objects, can be used for automation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.describeNode</c>
+    /// </remarks>
     public class DOMDescribeNodeRequest : IChromiumRequest<DOMDescribeNodeResponse>
     {
         public string Command { get; } = "DOM.describeNode";
@@ -3268,6 +3697,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Disables DOM agent for the given page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.disable</c>
+    /// </remarks>
     public class DOMDisableRequest : IChromiumRequest<DOMDisableResponse>
     {
         public string Command { get; } = "DOM.disable";
@@ -3282,6 +3714,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Discards search results from the session with the given id. `getSearchResults` should no longer
     /// be called for that search.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.discardSearchResults</c>
+    /// </remarks>
     public class DOMDiscardSearchResultsRequest : IChromiumRequest<DOMDiscardSearchResultsResponse>
     {
         public string Command { get; } = "DOM.discardSearchResults";
@@ -3299,6 +3734,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Enables DOM agent for the given page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.enable</c>
+    /// </remarks>
     public class DOMEnableRequest : IChromiumRequest<DOMEnableResponse>
     {
         public string Command { get; } = "DOM.enable";
@@ -3312,6 +3750,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Focuses the given element.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.focus</c>
+    /// </remarks>
     public class DOMFocusRequest : IChromiumRequest<DOMFocusResponse>
     {
         public string Command { get; } = "DOM.focus";
@@ -3337,6 +3778,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns attributes for the specified node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getAttributes</c>
+    /// </remarks>
     public class DOMGetAttributesRequest : IChromiumRequest<DOMGetAttributesResponse>
     {
         public string Command { get; } = "DOM.getAttributes";
@@ -3358,6 +3802,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns boxes for the given node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getBoxModel</c>
+    /// </remarks>
     public class DOMGetBoxModelRequest : IChromiumRequest<DOMGetBoxModelResponse>
     {
         public string Command { get; } = "DOM.getBoxModel";
@@ -3388,6 +3835,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Returns quads that describe node position on the page. This method
     /// might return multiple quads for inline nodes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getContentQuads</c>
+    /// </remarks>
     public class DOMGetContentQuadsRequest : IChromiumRequest<DOMGetContentQuadsResponse>
     {
         public string Command { get; } = "DOM.getContentQuads";
@@ -3417,6 +3867,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns the root DOM node (and optionally the subtree) to the caller.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getDocument</c>
+    /// </remarks>
     public class DOMGetDocumentRequest : IChromiumRequest<DOMGetDocumentResponse>
     {
         public string Command { get; } = "DOM.getDocument";
@@ -3444,6 +3897,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns the root DOM node (and optionally the subtree) to the caller.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getFlattenedDocument</c>
+    /// </remarks>
     public class DOMGetFlattenedDocumentRequest : IChromiumRequest<DOMGetFlattenedDocumentResponse>
     {
         public string Command { get; } = "DOM.getFlattenedDocument";
@@ -3472,6 +3928,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is
     /// either returned or not.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getNodeForLocation</c>
+    /// </remarks>
     public class DOMGetNodeForLocationRequest : IChromiumRequest<DOMGetNodeForLocationResponse>
     {
         public string Command { get; } = "DOM.getNodeForLocation";
@@ -3513,6 +3972,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns node's HTML markup.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getOuterHTML</c>
+    /// </remarks>
     public class DOMGetOuterHTMLRequest : IChromiumRequest<DOMGetOuterHTMLResponse>
     {
         public string Command { get; } = "DOM.getOuterHTML";
@@ -3542,6 +4004,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns the id of the nearest ancestor that is a relayout boundary.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getRelayoutBoundary</c>
+    /// </remarks>
     public class DOMGetRelayoutBoundaryRequest : IChromiumRequest<DOMGetRelayoutBoundaryResponse>
     {
         public string Command { get; } = "DOM.getRelayoutBoundary";
@@ -3564,6 +4029,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Returns search results from given `fromIndex` to given `toIndex` from the search with the given
     /// identifier.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getSearchResults</c>
+    /// </remarks>
     public class DOMGetSearchResultsRequest : IChromiumRequest<DOMGetSearchResultsResponse>
     {
         public string Command { get; } = "DOM.getSearchResults";
@@ -3593,6 +4061,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Hides any highlight.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.hideHighlight</c>
+    /// </remarks>
     public class DOMHideHighlightRequest : IChromiumRequest<DOMHideHighlightResponse>
     {
         public string Command { get; } = "DOM.hideHighlight";
@@ -3606,6 +4077,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Highlights DOM node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.highlightNode</c>
+    /// </remarks>
     public class DOMHighlightNodeRequest : IChromiumRequest<DOMHighlightNodeResponse>
     {
         public string Command { get; } = "DOM.highlightNode";
@@ -3619,6 +4093,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Highlights given rectangle.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.highlightRect</c>
+    /// </remarks>
     public class DOMHighlightRectRequest : IChromiumRequest<DOMHighlightRectResponse>
     {
         public string Command { get; } = "DOM.highlightRect";
@@ -3632,6 +4109,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Marks last undoable state.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.markUndoableState</c>
+    /// </remarks>
     public class DOMMarkUndoableStateRequest : IChromiumRequest<DOMMarkUndoableStateResponse>
     {
         public string Command { get; } = "DOM.markUndoableState";
@@ -3645,6 +4125,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Moves node into the new container, places it before the given anchor.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.moveTo</c>
+    /// </remarks>
     public class DOMMoveToRequest : IChromiumRequest<DOMMoveToResponse>
     {
         public string Command { get; } = "DOM.moveTo";
@@ -3676,6 +4159,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Searches for a given string in the DOM tree. Use `getSearchResults` to access search results or
     /// `cancelSearch` to end this search session.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.performSearch</c>
+    /// </remarks>
     public class DOMPerformSearchRequest : IChromiumRequest<DOMPerformSearchResponse>
     {
         public string Command { get; } = "DOM.performSearch";
@@ -3705,6 +4191,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Requests that the node is sent to the caller given its path. // FIXME, use XPath
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.pushNodeByPathToFrontend</c>
+    /// </remarks>
     public class DOMPushNodeByPathToFrontendRequest : IChromiumRequest<DOMPushNodeByPathToFrontendResponse>
     {
         public string Command { get; } = "DOM.pushNodeByPathToFrontend";
@@ -3726,6 +4215,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Requests that a batch of nodes is sent to the caller given their backend node ids.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.pushNodesByBackendIdsToFrontend</c>
+    /// </remarks>
     public class DOMPushNodesByBackendIdsToFrontendRequest : IChromiumRequest<DOMPushNodesByBackendIdsToFrontendResponse>
     {
         public string Command { get; } = "DOM.pushNodesByBackendIdsToFrontend";
@@ -3748,6 +4240,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Executes `querySelector` on a given node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.querySelector</c>
+    /// </remarks>
     public class DOMQuerySelectorRequest : IChromiumRequest<DOMQuerySelectorResponse>
     {
         public string Command { get; } = "DOM.querySelector";
@@ -3773,6 +4268,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Executes `querySelectorAll` on a given node.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.querySelectorAll</c>
+    /// </remarks>
     public class DOMQuerySelectorAllRequest : IChromiumRequest<DOMQuerySelectorAllResponse>
     {
         public string Command { get; } = "DOM.querySelectorAll";
@@ -3798,6 +4296,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Re-does the last undone action.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.redo</c>
+    /// </remarks>
     public class DOMRedoRequest : IChromiumRequest<DOMRedoResponse>
     {
         public string Command { get; } = "DOM.redo";
@@ -3811,6 +4312,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Removes attribute with given name from an element with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.removeAttribute</c>
+    /// </remarks>
     public class DOMRemoveAttributeRequest : IChromiumRequest<DOMRemoveAttributeResponse>
     {
         public string Command { get; } = "DOM.removeAttribute";
@@ -3832,6 +4336,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Removes node with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.removeNode</c>
+    /// </remarks>
     public class DOMRemoveNodeRequest : IChromiumRequest<DOMRemoveNodeResponse>
     {
         public string Command { get; } = "DOM.removeNode";
@@ -3851,6 +4358,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// `setChildNodes` events where not only immediate children are retrieved, but all children down to
     /// the specified depth.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.requestChildNodes</c>
+    /// </remarks>
     public class DOMRequestChildNodesRequest : IChromiumRequest<DOMRequestChildNodesResponse>
     {
         public string Command { get; } = "DOM.requestChildNodes";
@@ -3880,6 +4390,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// nodes that form the path from the node to the root are also sent to the client as a series of
     /// `setChildNodes` notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.requestNode</c>
+    /// </remarks>
     public class DOMRequestNodeRequest : IChromiumRequest<DOMRequestNodeResponse>
     {
         public string Command { get; } = "DOM.requestNode";
@@ -3901,6 +4414,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Resolves the JavaScript node object for a given NodeId or BackendNodeId.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.resolveNode</c>
+    /// </remarks>
     public class DOMResolveNodeRequest : IChromiumRequest<DOMResolveNodeResponse>
     {
         public string Command { get; } = "DOM.resolveNode";
@@ -3934,6 +4450,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Sets attribute for an element with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setAttributeValue</c>
+    /// </remarks>
     public class DOMSetAttributeValueRequest : IChromiumRequest<DOMSetAttributeValueResponse>
     {
         public string Command { get; } = "DOM.setAttributeValue";
@@ -3960,6 +4479,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Sets attributes on element with given id. This method is useful when user edits some existing
     /// attribute value and types in several attribute name/value pairs.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setAttributesAsText</c>
+    /// </remarks>
     public class DOMSetAttributesAsTextRequest : IChromiumRequest<DOMSetAttributesAsTextResponse>
     {
         public string Command { get; } = "DOM.setAttributesAsText";
@@ -3986,6 +4508,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Sets files for the given file input element.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setFileInputFiles</c>
+    /// </remarks>
     public class DOMSetFileInputFilesRequest : IChromiumRequest<DOMSetFileInputFilesResponse>
     {
         public string Command { get; } = "DOM.setFileInputFiles";
@@ -4015,6 +4540,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Sets if stack traces should be captured for Nodes. See `Node.getNodeStackTraces`. Default is disabled.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setNodeStackTracesEnabled</c>
+    /// </remarks>
     public class DOMSetNodeStackTracesEnabledRequest : IChromiumRequest<DOMSetNodeStackTracesEnabledResponse>
     {
         public string Command { get; } = "DOM.setNodeStackTracesEnabled";
@@ -4032,6 +4560,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Gets stack traces associated with a Node. As of now, only provides stack trace for Node creation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getNodeStackTraces</c>
+    /// </remarks>
     public class DOMGetNodeStackTracesRequest : IChromiumRequest<DOMGetNodeStackTracesResponse>
     {
         public string Command { get; } = "DOM.getNodeStackTraces";
@@ -4054,6 +4585,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Returns file information for the given
     /// File wrapper.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getFileInfo</c>
+    /// </remarks>
     public class DOMGetFileInfoRequest : IChromiumRequest<DOMGetFileInfoResponse>
     {
         public string Command { get; } = "DOM.getFileInfo";
@@ -4076,6 +4610,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// Enables console to refer to the node with given id via $x (see Command Line API for more details
     /// $x functions).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setInspectedNode</c>
+    /// </remarks>
     public class DOMSetInspectedNodeRequest : IChromiumRequest<DOMSetInspectedNodeResponse>
     {
         public string Command { get; } = "DOM.setInspectedNode";
@@ -4093,6 +4630,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Sets node name for a node with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setNodeName</c>
+    /// </remarks>
     public class DOMSetNodeNameRequest : IChromiumRequest<DOMSetNodeNameResponse>
     {
         public string Command { get; } = "DOM.setNodeName";
@@ -4118,6 +4658,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Sets node value for a node with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setNodeValue</c>
+    /// </remarks>
     public class DOMSetNodeValueRequest : IChromiumRequest<DOMSetNodeValueResponse>
     {
         public string Command { get; } = "DOM.setNodeValue";
@@ -4139,6 +4682,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Sets node HTML markup, returns new node id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.setOuterHTML</c>
+    /// </remarks>
     public class DOMSetOuterHTMLRequest : IChromiumRequest<DOMSetOuterHTMLResponse>
     {
         public string Command { get; } = "DOM.setOuterHTML";
@@ -4160,6 +4706,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Undoes the last performed action.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.undo</c>
+    /// </remarks>
     public class DOMUndoRequest : IChromiumRequest<DOMUndoResponse>
     {
         public string Command { get; } = "DOM.undo";
@@ -4173,6 +4722,9 @@ namespace Playwright.Chromium.Protocol.DOM
     /// <summary>
     /// Returns iframe node that owns iframe with the given domain.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOM.getFrameOwner</c>
+    /// </remarks>
     public class DOMGetFrameOwnerRequest : IChromiumRequest<DOMGetFrameOwnerResponse>
     {
         public string Command { get; } = "DOM.getFrameOwner";
@@ -4194,6 +4746,255 @@ namespace Playwright.Chromium.Protocol.DOM
         /// Id of the node at given coordinates, only when enabled and requested document.
         /// </summary>
         public NodeId NodeId { get; set; }
+    }
+    /// <summary>
+    /// Fired when `Element`'s attribute is modified.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.attributeModified</c>
+    /// </remarks>
+    public class AttributeModifiedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.attributeModified";
+        /// <summary>
+        /// Id of the node that has changed.
+        /// </summary>
+        public NodeId NodeId { get; set; }
+        /// <summary>
+        /// Attribute name.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Attribute value.
+        /// </summary>
+        public string Value { get; set; }
+    }
+    /// <summary>
+    /// Fired when `Element`'s attribute is removed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.attributeRemoved</c>
+    /// </remarks>
+    public class AttributeRemovedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.attributeRemoved";
+        /// <summary>
+        /// Id of the node that has changed.
+        /// </summary>
+        public NodeId NodeId { get; set; }
+        /// <summary>
+        /// A ttribute name.
+        /// </summary>
+        public string Name { get; set; }
+    }
+    /// <summary>
+    /// Mirrors `DOMCharacterDataModified` event.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.characterDataModified</c>
+    /// </remarks>
+    public class CharacterDataModifiedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.characterDataModified";
+        /// <summary>
+        /// Id of the node that has changed.
+        /// </summary>
+        public NodeId NodeId { get; set; }
+        /// <summary>
+        /// New text value.
+        /// </summary>
+        public string CharacterData { get; set; }
+    }
+    /// <summary>
+    /// Fired when `Container`'s child node count has changed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.childNodeCountUpdated</c>
+    /// </remarks>
+    public class ChildNodeCountUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.childNodeCountUpdated";
+        /// <summary>
+        /// Id of the node that has changed.
+        /// </summary>
+        public NodeId NodeId { get; set; }
+        /// <summary>
+        /// New node count.
+        /// </summary>
+        public int ChildNodeCount { get; set; }
+    }
+    /// <summary>
+    /// Mirrors `DOMNodeInserted` event.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.childNodeInserted</c>
+    /// </remarks>
+    public class ChildNodeInsertedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.childNodeInserted";
+        /// <summary>
+        /// Id of the node that has changed.
+        /// </summary>
+        public NodeId ParentNodeId { get; set; }
+        /// <summary>
+        /// If of the previous siblint.
+        /// </summary>
+        public NodeId PreviousNodeId { get; set; }
+        /// <summary>
+        /// Inserted node data.
+        /// </summary>
+        public Node Node { get; set; }
+    }
+    /// <summary>
+    /// Mirrors `DOMNodeRemoved` event.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.childNodeRemoved</c>
+    /// </remarks>
+    public class ChildNodeRemovedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.childNodeRemoved";
+        /// <summary>
+        /// Parent id.
+        /// </summary>
+        public NodeId ParentNodeId { get; set; }
+        /// <summary>
+        /// Id of the node that has been removed.
+        /// </summary>
+        public NodeId NodeId { get; set; }
+    }
+    /// <summary>
+    /// Called when distrubution is changed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.distributedNodesUpdated</c>
+    /// </remarks>
+    public class DistributedNodesUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.distributedNodesUpdated";
+        /// <summary>
+        /// Insertion point where distrubuted nodes were updated.
+        /// </summary>
+        public NodeId InsertionPointId { get; set; }
+        /// <summary>
+        /// Distributed nodes for given insertion point.
+        /// </summary>
+        public BackendNode[] DistributedNodes { get; set; }
+    }
+    /// <summary>
+    /// Fired when `Document` has been totally updated. Node ids are no longer valid.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.documentUpdated</c>
+    /// </remarks>
+    public class DocumentUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.documentUpdated";
+    }
+    /// <summary>
+    /// Fired when `Element`'s inline style is modified via a CSS property modification.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.inlineStyleInvalidated</c>
+    /// </remarks>
+    public class InlineStyleInvalidatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.inlineStyleInvalidated";
+        /// <summary>
+        /// Ids of the nodes for which the inline styles have been invalidated.
+        /// </summary>
+        public NodeId[] NodeIds { get; set; }
+    }
+    /// <summary>
+    /// Called when a pseudo element is added to an element.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.pseudoElementAdded</c>
+    /// </remarks>
+    public class PseudoElementAddedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.pseudoElementAdded";
+        /// <summary>
+        /// Pseudo element's parent element id.
+        /// </summary>
+        public NodeId ParentId { get; set; }
+        /// <summary>
+        /// The added pseudo element.
+        /// </summary>
+        public Node PseudoElement { get; set; }
+    }
+    /// <summary>
+    /// Called when a pseudo element is removed from an element.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.pseudoElementRemoved</c>
+    /// </remarks>
+    public class PseudoElementRemovedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.pseudoElementRemoved";
+        /// <summary>
+        /// Pseudo element's parent element id.
+        /// </summary>
+        public NodeId ParentId { get; set; }
+        /// <summary>
+        /// The removed pseudo element id.
+        /// </summary>
+        public NodeId PseudoElementId { get; set; }
+    }
+    /// <summary>
+    /// Fired when backend wants to provide client with the missing DOM structure. This happens upon
+    /// most of the calls requesting node ids.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.setChildNodes</c>
+    /// </remarks>
+    public class SetChildNodesEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.setChildNodes";
+        /// <summary>
+        /// Parent node id to populate with children.
+        /// </summary>
+        public NodeId ParentId { get; set; }
+        /// <summary>
+        /// Child nodes array.
+        /// </summary>
+        public Node[] Nodes { get; set; }
+    }
+    /// <summary>
+    /// Called when shadow root is popped from the element.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.shadowRootPopped</c>
+    /// </remarks>
+    public class ShadowRootPoppedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.shadowRootPopped";
+        /// <summary>
+        /// Host element id.
+        /// </summary>
+        public NodeId HostId { get; set; }
+        /// <summary>
+        /// Shadow root id.
+        /// </summary>
+        public NodeId RootId { get; set; }
+    }
+    /// <summary>
+    /// Called when shadow root is pushed into the element.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOM.shadowRootPushed</c>
+    /// </remarks>
+    public class ShadowRootPushedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOM.shadowRootPushed";
+        /// <summary>
+        /// Host element id.
+        /// </summary>
+        public NodeId HostId { get; set; }
+        /// <summary>
+        /// Shadow root.
+        /// </summary>
+        public Node Root { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.DOMDebugger
@@ -4256,6 +5057,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Returns event listeners of the given object.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.getEventListeners</c>
+    /// </remarks>
     public class DOMDebuggerGetEventListenersRequest : IChromiumRequest<DOMDebuggerGetEventListenersResponse>
     {
         public string Command { get; } = "DOMDebugger.getEventListeners";
@@ -4287,6 +5091,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Removes DOM breakpoint that was set using `setDOMBreakpoint`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.removeDOMBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerRemoveDOMBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveDOMBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
@@ -4308,6 +5115,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Removes breakpoint on particular DOM event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.removeEventListenerBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerRemoveEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveEventListenerBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.removeEventListenerBreakpoint";
@@ -4329,6 +5139,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Removes breakpoint on particular native event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.removeInstrumentationBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerRemoveInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveInstrumentationBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.removeInstrumentationBreakpoint";
@@ -4346,6 +5159,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Removes breakpoint from XMLHttpRequest.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.removeXHRBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerRemoveXHRBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveXHRBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.removeXHRBreakpoint";
@@ -4363,6 +5179,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Sets breakpoint on particular operation with DOM.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.setDOMBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerSetDOMBreakpointRequest : IChromiumRequest<DOMDebuggerSetDOMBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
@@ -4384,6 +5203,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Sets breakpoint on particular DOM event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.setEventListenerBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerSetEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerSetEventListenerBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.setEventListenerBreakpoint";
@@ -4406,6 +5228,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Sets breakpoint on particular native event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.setInstrumentationBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerSetInstrumentationBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.setInstrumentationBreakpoint";
@@ -4423,6 +5248,9 @@ namespace Playwright.Chromium.Protocol.DOMDebugger
     /// <summary>
     /// Sets breakpoint on XMLHttpRequest.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMDebugger.setXHRBreakpoint</c>
+    /// </remarks>
     public class DOMDebuggerSetXHRBreakpointRequest : IChromiumRequest<DOMDebuggerSetXHRBreakpointResponse>
     {
         public string Command { get; } = "DOMDebugger.setXHRBreakpoint";
@@ -4913,6 +5741,9 @@ namespace Playwright.Chromium.Protocol.DOMSnapshot
     /// <summary>
     /// Disables DOM snapshot agent for the given page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMSnapshot.disable</c>
+    /// </remarks>
     public class DOMSnapshotDisableRequest : IChromiumRequest<DOMSnapshotDisableResponse>
     {
         public string Command { get; } = "DOMSnapshot.disable";
@@ -4926,6 +5757,9 @@ namespace Playwright.Chromium.Protocol.DOMSnapshot
     /// <summary>
     /// Enables DOM snapshot agent for the given page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMSnapshot.enable</c>
+    /// </remarks>
     public class DOMSnapshotEnableRequest : IChromiumRequest<DOMSnapshotEnableResponse>
     {
         public string Command { get; } = "DOMSnapshot.enable";
@@ -4942,6 +5776,9 @@ namespace Playwright.Chromium.Protocol.DOMSnapshot
     /// white-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is
     /// flattened.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMSnapshot.getSnapshot</c>
+    /// </remarks>
     public class DOMSnapshotGetSnapshotRequest : IChromiumRequest<DOMSnapshotGetSnapshotResponse>
     {
         public string Command { get; } = "DOMSnapshot.getSnapshot";
@@ -4986,6 +5823,9 @@ namespace Playwright.Chromium.Protocol.DOMSnapshot
     /// white-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is
     /// flattened.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMSnapshot.captureSnapshot</c>
+    /// </remarks>
     public class DOMSnapshotCaptureSnapshotRequest : IChromiumRequest<DOMSnapshotCaptureSnapshotResponse>
     {
         public string Command { get; } = "DOMSnapshot.captureSnapshot";
@@ -5036,6 +5876,9 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMStorage.clear</c>
+    /// </remarks>
     public class DOMStorageClearRequest : IChromiumRequest<DOMStorageClearResponse>
     {
         public string Command { get; } = "DOMStorage.clear";
@@ -5053,6 +5896,9 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// <summary>
     /// Disables storage tracking, prevents storage events from being sent to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMStorage.disable</c>
+    /// </remarks>
     public class DOMStorageDisableRequest : IChromiumRequest<DOMStorageDisableResponse>
     {
         public string Command { get; } = "DOMStorage.disable";
@@ -5066,6 +5912,9 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// <summary>
     /// Enables storage tracking, storage events will now be delivered to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMStorage.enable</c>
+    /// </remarks>
     public class DOMStorageEnableRequest : IChromiumRequest<DOMStorageEnableResponse>
     {
         public string Command { get; } = "DOMStorage.enable";
@@ -5079,6 +5928,9 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMStorage.getDOMStorageItems</c>
+    /// </remarks>
     public class DOMStorageGetDOMStorageItemsRequest : IChromiumRequest<DOMStorageGetDOMStorageItemsResponse>
     {
         public string Command { get; } = "DOMStorage.getDOMStorageItems";
@@ -5100,6 +5952,9 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMStorage.removeDOMStorageItem</c>
+    /// </remarks>
     public class DOMStorageRemoveDOMStorageItemRequest : IChromiumRequest<DOMStorageRemoveDOMStorageItemResponse>
     {
         public string Command { get; } = "DOMStorage.removeDOMStorageItem";
@@ -5121,6 +5976,9 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DOMStorage.setDOMStorageItem</c>
+    /// </remarks>
     public class DOMStorageSetDOMStorageItemRequest : IChromiumRequest<DOMStorageSetDOMStorageItemResponse>
     {
         public string Command { get; } = "DOMStorage.setDOMStorageItem";
@@ -5142,6 +6000,86 @@ namespace Playwright.Chromium.Protocol.DOMStorage
     /// </summary>
     public class DOMStorageSetDOMStorageItemResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOMStorage.domStorageItemAdded</c>
+    /// </remarks>
+    public class DomStorageItemAddedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOMStorage.domStorageItemAdded";
+        /// <summary>
+        /// 
+        /// </summary>
+        public StorageId StorageId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Key { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string NewValue { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOMStorage.domStorageItemRemoved</c>
+    /// </remarks>
+    public class DomStorageItemRemovedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
+        /// <summary>
+        /// 
+        /// </summary>
+        public StorageId StorageId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Key { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOMStorage.domStorageItemUpdated</c>
+    /// </remarks>
+    public class DomStorageItemUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public StorageId StorageId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Key { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string OldValue { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string NewValue { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>DOMStorage.domStorageItemsCleared</c>
+    /// </remarks>
+    public class DomStorageItemsClearedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
+        /// <summary>
+        /// 
+        /// </summary>
+        public StorageId StorageId { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Database
@@ -5209,6 +6147,9 @@ namespace Playwright.Chromium.Protocol.Database
     /// <summary>
     /// Disables database tracking, prevents database events from being sent to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Database.disable</c>
+    /// </remarks>
     public class DatabaseDisableRequest : IChromiumRequest<DatabaseDisableResponse>
     {
         public string Command { get; } = "Database.disable";
@@ -5222,6 +6163,9 @@ namespace Playwright.Chromium.Protocol.Database
     /// <summary>
     /// Enables database tracking, database events will now be delivered to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Database.enable</c>
+    /// </remarks>
     public class DatabaseEnableRequest : IChromiumRequest<DatabaseEnableResponse>
     {
         public string Command { get; } = "Database.enable";
@@ -5235,6 +6179,9 @@ namespace Playwright.Chromium.Protocol.Database
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Database.executeSQL</c>
+    /// </remarks>
     public class DatabaseExecuteSQLRequest : IChromiumRequest<DatabaseExecuteSQLResponse>
     {
         public string Command { get; } = "Database.executeSQL";
@@ -5268,6 +6215,9 @@ namespace Playwright.Chromium.Protocol.Database
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Database.getDatabaseTableNames</c>
+    /// </remarks>
     public class DatabaseGetDatabaseTableNamesRequest : IChromiumRequest<DatabaseGetDatabaseTableNamesResponse>
     {
         public string Command { get; } = "Database.getDatabaseTableNames";
@@ -5286,12 +6236,29 @@ namespace Playwright.Chromium.Protocol.Database
         /// </summary>
         public string[] TableNames { get; set; }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Database.addDatabase</c>
+    /// </remarks>
+    public class AddDatabaseEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Database.addDatabase";
+        /// <summary>
+        /// 
+        /// </summary>
+        public Database Database { get; set; }
+    }
 }
 namespace Playwright.Chromium.Protocol.DeviceOrientation
 {
     /// <summary>
     /// Clears the overridden Device Orientation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DeviceOrientation.clearDeviceOrientationOverride</c>
+    /// </remarks>
     public class DeviceOrientationClearDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationClearDeviceOrientationOverrideResponse>
     {
         public string Command { get; } = "DeviceOrientation.clearDeviceOrientationOverride";
@@ -5305,6 +6272,9 @@ namespace Playwright.Chromium.Protocol.DeviceOrientation
     /// <summary>
     /// Overrides the Device Orientation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>DeviceOrientation.setDeviceOrientationOverride</c>
+    /// </remarks>
     public class DeviceOrientationSetDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationSetDeviceOrientationOverrideResponse>
     {
         public string Command { get; } = "DeviceOrientation.setDeviceOrientationOverride";
@@ -5373,6 +6343,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Tells whether emulation is supported.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.canEmulate</c>
+    /// </remarks>
     public class EmulationCanEmulateRequest : IChromiumRequest<EmulationCanEmulateResponse>
     {
         public string Command { get; } = "Emulation.canEmulate";
@@ -5390,6 +6363,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Clears the overriden device metrics.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.clearDeviceMetricsOverride</c>
+    /// </remarks>
     public class EmulationClearDeviceMetricsOverrideRequest : IChromiumRequest<EmulationClearDeviceMetricsOverrideResponse>
     {
         public string Command { get; } = "Emulation.clearDeviceMetricsOverride";
@@ -5403,6 +6379,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Clears the overriden Geolocation Position and Error.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.clearGeolocationOverride</c>
+    /// </remarks>
     public class EmulationClearGeolocationOverrideRequest : IChromiumRequest<EmulationClearGeolocationOverrideResponse>
     {
         public string Command { get; } = "Emulation.clearGeolocationOverride";
@@ -5416,6 +6395,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Requests that page scale factor is reset to initial values.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.resetPageScaleFactor</c>
+    /// </remarks>
     public class EmulationResetPageScaleFactorRequest : IChromiumRequest<EmulationResetPageScaleFactorResponse>
     {
         public string Command { get; } = "Emulation.resetPageScaleFactor";
@@ -5429,6 +6411,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Enables or disables simulating a focused and active page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setFocusEmulationEnabled</c>
+    /// </remarks>
     public class EmulationSetFocusEmulationEnabledRequest : IChromiumRequest<EmulationSetFocusEmulationEnabledResponse>
     {
         public string Command { get; } = "Emulation.setFocusEmulationEnabled";
@@ -5446,6 +6431,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Enables CPU throttling to emulate slow CPUs.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setCPUThrottlingRate</c>
+    /// </remarks>
     public class EmulationSetCPUThrottlingRateRequest : IChromiumRequest<EmulationSetCPUThrottlingRateResponse>
     {
         public string Command { get; } = "Emulation.setCPUThrottlingRate";
@@ -5464,6 +6452,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// Sets or clears an override of the default background color of the frame. This override is used
     /// if the content does not specify one.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setDefaultBackgroundColorOverride</c>
+    /// </remarks>
     public class EmulationSetDefaultBackgroundColorOverrideRequest : IChromiumRequest<EmulationSetDefaultBackgroundColorOverrideResponse>
     {
         public string Command { get; } = "Emulation.setDefaultBackgroundColorOverride";
@@ -5484,6 +6475,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media
     /// query results).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setDeviceMetricsOverride</c>
+    /// </remarks>
     public class EmulationSetDeviceMetricsOverrideRequest : IChromiumRequest<EmulationSetDeviceMetricsOverrideResponse>
     {
         public string Command { get; } = "Emulation.setDeviceMetricsOverride";
@@ -5547,6 +6541,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setScrollbarsHidden</c>
+    /// </remarks>
     public class EmulationSetScrollbarsHiddenRequest : IChromiumRequest<EmulationSetScrollbarsHiddenResponse>
     {
         public string Command { get; } = "Emulation.setScrollbarsHidden";
@@ -5564,6 +6561,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setDocumentCookieDisabled</c>
+    /// </remarks>
     public class EmulationSetDocumentCookieDisabledRequest : IChromiumRequest<EmulationSetDocumentCookieDisabledResponse>
     {
         public string Command { get; } = "Emulation.setDocumentCookieDisabled";
@@ -5581,6 +6581,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setEmitTouchEventsForMouse</c>
+    /// </remarks>
     public class EmulationSetEmitTouchEventsForMouseRequest : IChromiumRequest<EmulationSetEmitTouchEventsForMouseResponse>
     {
         public string Command { get; } = "Emulation.setEmitTouchEventsForMouse";
@@ -5602,6 +6605,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Emulates the given media type or media feature for CSS media queries.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setEmulatedMedia</c>
+    /// </remarks>
     public class EmulationSetEmulatedMediaRequest : IChromiumRequest<EmulationSetEmulatedMediaResponse>
     {
         public string Command { get; } = "Emulation.setEmulatedMedia";
@@ -5624,6 +6630,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
     /// unavailable.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setGeolocationOverride</c>
+    /// </remarks>
     public class EmulationSetGeolocationOverrideRequest : IChromiumRequest<EmulationSetGeolocationOverrideResponse>
     {
         public string Command { get; } = "Emulation.setGeolocationOverride";
@@ -5649,6 +6658,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Overrides value returned by the javascript navigator object.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setNavigatorOverrides</c>
+    /// </remarks>
     public class EmulationSetNavigatorOverridesRequest : IChromiumRequest<EmulationSetNavigatorOverridesResponse>
     {
         public string Command { get; } = "Emulation.setNavigatorOverrides";
@@ -5666,6 +6678,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Sets a specified page scale factor.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setPageScaleFactor</c>
+    /// </remarks>
     public class EmulationSetPageScaleFactorRequest : IChromiumRequest<EmulationSetPageScaleFactorResponse>
     {
         public string Command { get; } = "Emulation.setPageScaleFactor";
@@ -5683,6 +6698,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Switches script execution in the page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setScriptExecutionDisabled</c>
+    /// </remarks>
     public class EmulationSetScriptExecutionDisabledRequest : IChromiumRequest<EmulationSetScriptExecutionDisabledResponse>
     {
         public string Command { get; } = "Emulation.setScriptExecutionDisabled";
@@ -5700,6 +6718,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Enables touch on platforms which do not support them.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setTouchEmulationEnabled</c>
+    /// </remarks>
     public class EmulationSetTouchEmulationEnabledRequest : IChromiumRequest<EmulationSetTouchEmulationEnabledResponse>
     {
         public string Command { get; } = "Emulation.setTouchEmulationEnabled";
@@ -5722,6 +6743,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// Turns on virtual time for all frames (replacing real-time with a synthetic time source) and sets
     /// the current virtual time policy.  Note this supersedes any previous time budget.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setVirtualTimePolicy</c>
+    /// </remarks>
     public class EmulationSetVirtualTimePolicyRequest : IChromiumRequest<EmulationSetVirtualTimePolicyResponse>
     {
         public string Command { get; } = "Emulation.setVirtualTimePolicy";
@@ -5762,6 +6786,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Overrides default host system timezone with the specified one.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setTimezoneOverride</c>
+    /// </remarks>
     public class EmulationSetTimezoneOverrideRequest : IChromiumRequest<EmulationSetTimezoneOverrideResponse>
     {
         public string Command { get; } = "Emulation.setTimezoneOverride";
@@ -5782,6 +6809,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported
     /// on Android.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setVisibleSize</c>
+    /// </remarks>
     public class EmulationSetVisibleSizeRequest : IChromiumRequest<EmulationSetVisibleSizeResponse>
     {
         public string Command { get; } = "Emulation.setVisibleSize";
@@ -5803,6 +6833,9 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// <summary>
     /// Allows overriding user agent with the given string.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Emulation.setUserAgentOverride</c>
+    /// </remarks>
     public class EmulationSetUserAgentOverrideRequest : IChromiumRequest<EmulationSetUserAgentOverrideResponse>
     {
         public string Command { get; } = "Emulation.setUserAgentOverride";
@@ -5824,6 +6857,16 @@ namespace Playwright.Chromium.Protocol.Emulation
     /// </summary>
     public class EmulationSetUserAgentOverrideResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Notification sent after the virtual time budget for the current VirtualTimePolicy has run out.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Emulation.virtualTimeBudgetExpired</c>
+    /// </remarks>
+    public class VirtualTimeBudgetExpiredEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Emulation.virtualTimeBudgetExpired";
     }
 }
 namespace Playwright.Chromium.Protocol.HeadlessExperimental
@@ -5848,6 +6891,9 @@ namespace Playwright.Chromium.Protocol.HeadlessExperimental
     /// BeginFrameControl. Designed for use with --run-all-compositor-stages-before-draw, see also
     /// https://goo.gl/3zHXhB for more background.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeadlessExperimental.beginFrame</c>
+    /// </remarks>
     public class HeadlessExperimentalBeginFrameRequest : IChromiumRequest<HeadlessExperimentalBeginFrameResponse>
     {
         public string Command { get; } = "HeadlessExperimental.beginFrame";
@@ -5892,6 +6938,9 @@ namespace Playwright.Chromium.Protocol.HeadlessExperimental
     /// <summary>
     /// Disables headless events for the target.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeadlessExperimental.disable</c>
+    /// </remarks>
     public class HeadlessExperimentalDisableRequest : IChromiumRequest<HeadlessExperimentalDisableResponse>
     {
         public string Command { get; } = "HeadlessExperimental.disable";
@@ -5905,6 +6954,9 @@ namespace Playwright.Chromium.Protocol.HeadlessExperimental
     /// <summary>
     /// Enables headless events for the target.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeadlessExperimental.enable</c>
+    /// </remarks>
     public class HeadlessExperimentalEnableRequest : IChromiumRequest<HeadlessExperimentalEnableResponse>
     {
         public string Command { get; } = "HeadlessExperimental.enable";
@@ -5914,6 +6966,22 @@ namespace Playwright.Chromium.Protocol.HeadlessExperimental
     /// </summary>
     public class HeadlessExperimentalEnableResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Issued when the target starts or stops needing BeginFrames.
+    /// Deprecated. Issue beginFrame unconditionally instead and use result from
+    /// beginFrame to detect whether the frames were suppressed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>HeadlessExperimental.needsBeginFramesChanged</c>
+    /// </remarks>
+    public class NeedsBeginFramesChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "HeadlessExperimental.needsBeginFramesChanged";
+        /// <summary>
+        /// True if BeginFrames are needed, false otherwise.
+        /// </summary>
+        public bool NeedsBeginFrames { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.IO
@@ -5945,6 +7013,9 @@ namespace Playwright.Chromium.Protocol.IO
     /// <summary>
     /// Close the stream, discard any temporary backing storage.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IO.close</c>
+    /// </remarks>
     public class IOCloseRequest : IChromiumRequest<IOCloseResponse>
     {
         public string Command { get; } = "IO.close";
@@ -5962,6 +7033,9 @@ namespace Playwright.Chromium.Protocol.IO
     /// <summary>
     /// Read a chunk of the stream
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IO.read</c>
+    /// </remarks>
     public class IOReadRequest : IChromiumRequest<IOReadResponse>
     {
         public string Command { get; } = "IO.read";
@@ -6000,6 +7074,9 @@ namespace Playwright.Chromium.Protocol.IO
     /// <summary>
     /// Return UUID of Blob object specified by a remote object id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IO.resolveBlob</c>
+    /// </remarks>
     public class IOResolveBlobRequest : IChromiumRequest<IOResolveBlobResponse>
     {
         public string Command { get; } = "IO.resolveBlob";
@@ -6171,6 +7248,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Clears all entries from an object store.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.clearObjectStore</c>
+    /// </remarks>
     public class IndexedDBClearObjectStoreRequest : IChromiumRequest<IndexedDBClearObjectStoreResponse>
     {
         public string Command { get; } = "IndexedDB.clearObjectStore";
@@ -6196,6 +7276,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Deletes a database.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.deleteDatabase</c>
+    /// </remarks>
     public class IndexedDBDeleteDatabaseRequest : IChromiumRequest<IndexedDBDeleteDatabaseResponse>
     {
         public string Command { get; } = "IndexedDB.deleteDatabase";
@@ -6217,6 +7300,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Delete a range of entries from an object store
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.deleteObjectStoreEntries</c>
+    /// </remarks>
     public class IndexedDBDeleteObjectStoreEntriesRequest : IChromiumRequest<IndexedDBDeleteObjectStoreEntriesResponse>
     {
         public string Command { get; } = "IndexedDB.deleteObjectStoreEntries";
@@ -6246,6 +7332,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Disables events from backend.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.disable</c>
+    /// </remarks>
     public class IndexedDBDisableRequest : IChromiumRequest<IndexedDBDisableResponse>
     {
         public string Command { get; } = "IndexedDB.disable";
@@ -6259,6 +7348,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Enables events from backend.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.enable</c>
+    /// </remarks>
     public class IndexedDBEnableRequest : IChromiumRequest<IndexedDBEnableResponse>
     {
         public string Command { get; } = "IndexedDB.enable";
@@ -6272,6 +7364,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Requests data from object store or index.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.requestData</c>
+    /// </remarks>
     public class IndexedDBRequestDataRequest : IChromiumRequest<IndexedDBRequestDataResponse>
     {
         public string Command { get; } = "IndexedDB.requestData";
@@ -6321,6 +7416,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Gets metadata of an object store
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.getMetadata</c>
+    /// </remarks>
     public class IndexedDBGetMetadataRequest : IChromiumRequest<IndexedDBGetMetadataResponse>
     {
         public string Command { get; } = "IndexedDB.getMetadata";
@@ -6356,6 +7454,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Requests database with given name in given frame.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.requestDatabase</c>
+    /// </remarks>
     public class IndexedDBRequestDatabaseRequest : IChromiumRequest<IndexedDBRequestDatabaseResponse>
     {
         public string Command { get; } = "IndexedDB.requestDatabase";
@@ -6381,6 +7482,9 @@ namespace Playwright.Chromium.Protocol.IndexedDB
     /// <summary>
     /// Requests database names for given security origin.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>IndexedDB.requestDatabaseNames</c>
+    /// </remarks>
     public class IndexedDBRequestDatabaseNamesRequest : IChromiumRequest<IndexedDBRequestDatabaseNamesResponse>
     {
         public string Command { get; } = "IndexedDB.requestDatabaseNames";
@@ -6473,6 +7577,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Dispatches a key event to the page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.dispatchKeyEvent</c>
+    /// </remarks>
     public class InputDispatchKeyEventRequest : IChromiumRequest<InputDispatchKeyEventResponse>
     {
         public string Command { get; } = "Input.dispatchKeyEvent";
@@ -6548,6 +7655,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// This method emulates inserting text that doesn't come from a key press,
     /// for example an emoji keyboard or an IME.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.insertText</c>
+    /// </remarks>
     public class InputInsertTextRequest : IChromiumRequest<InputInsertTextResponse>
     {
         public string Command { get; } = "Input.insertText";
@@ -6565,6 +7675,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Dispatches a mouse event to the page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.dispatchMouseEvent</c>
+    /// </remarks>
     public class InputDispatchMouseEventRequest : IChromiumRequest<InputDispatchMouseEventResponse>
     {
         public string Command { get; } = "Input.dispatchMouseEvent";
@@ -6625,6 +7738,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Dispatches a touch event to the page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.dispatchTouchEvent</c>
+    /// </remarks>
     public class InputDispatchTouchEventRequest : IChromiumRequest<InputDispatchTouchEventResponse>
     {
         public string Command { get; } = "Input.dispatchTouchEvent";
@@ -6658,6 +7774,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Emulates touch event from the mouse event parameters.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.emulateTouchFromMouseEvent</c>
+    /// </remarks>
     public class InputEmulateTouchFromMouseEventRequest : IChromiumRequest<InputEmulateTouchFromMouseEventResponse>
     {
         public string Command { get; } = "Input.emulateTouchFromMouseEvent";
@@ -6708,6 +7827,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Ignores input events (useful while auditing page).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.setIgnoreInputEvents</c>
+    /// </remarks>
     public class InputSetIgnoreInputEventsRequest : IChromiumRequest<InputSetIgnoreInputEventsResponse>
     {
         public string Command { get; } = "Input.setIgnoreInputEvents";
@@ -6725,6 +7847,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Synthesizes a pinch gesture over a time period by issuing appropriate touch events.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.synthesizePinchGesture</c>
+    /// </remarks>
     public class InputSynthesizePinchGestureRequest : IChromiumRequest<InputSynthesizePinchGestureResponse>
     {
         public string Command { get; } = "Input.synthesizePinchGesture";
@@ -6759,6 +7884,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Synthesizes a scroll gesture over a time period by issuing appropriate touch events.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.synthesizeScrollGesture</c>
+    /// </remarks>
     public class InputSynthesizeScrollGestureRequest : IChromiumRequest<InputSynthesizeScrollGestureResponse>
     {
         public string Command { get; } = "Input.synthesizeScrollGesture";
@@ -6823,6 +7951,9 @@ namespace Playwright.Chromium.Protocol.Input
     /// <summary>
     /// Synthesizes a tap gesture over a time period by issuing appropriate touch events.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Input.synthesizeTapGesture</c>
+    /// </remarks>
     public class InputSynthesizeTapGestureRequest : IChromiumRequest<InputSynthesizeTapGestureResponse>
     {
         public string Command { get; } = "Input.synthesizeTapGesture";
@@ -6860,6 +7991,9 @@ namespace Playwright.Chromium.Protocol.Inspector
     /// <summary>
     /// Disables inspector domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Inspector.disable</c>
+    /// </remarks>
     public class InspectorDisableRequest : IChromiumRequest<InspectorDisableResponse>
     {
         public string Command { get; } = "Inspector.disable";
@@ -6873,6 +8007,9 @@ namespace Playwright.Chromium.Protocol.Inspector
     /// <summary>
     /// Enables inspector domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Inspector.enable</c>
+    /// </remarks>
     public class InspectorEnableRequest : IChromiumRequest<InspectorEnableResponse>
     {
         public string Command { get; } = "Inspector.enable";
@@ -6882,6 +8019,40 @@ namespace Playwright.Chromium.Protocol.Inspector
     /// </summary>
     public class InspectorEnableResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Fired when remote debugging connection is about to be terminated. Contains detach reason.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Inspector.detached</c>
+    /// </remarks>
+    public class DetachedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Inspector.detached";
+        /// <summary>
+        /// The reason why connection has been terminated.
+        /// </summary>
+        public string Reason { get; set; }
+    }
+    /// <summary>
+    /// Fired when debugging target has crashed
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Inspector.targetCrashed</c>
+    /// </remarks>
+    public class TargetCrashedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Inspector.targetCrashed";
+    }
+    /// <summary>
+    /// Fired when debugging target has reloaded after crash
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Inspector.targetReloadedAfterCrash</c>
+    /// </remarks>
+    public class TargetReloadedAfterCrashEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Inspector.targetReloadedAfterCrash";
     }
 }
 namespace Playwright.Chromium.Protocol.LayerTree
@@ -7062,6 +8233,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Provides the reasons why the given layer was composited.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.compositingReasons</c>
+    /// </remarks>
     public class LayerTreeCompositingReasonsRequest : IChromiumRequest<LayerTreeCompositingReasonsResponse>
     {
         public string Command { get; } = "LayerTree.compositingReasons";
@@ -7083,6 +8257,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Disables compositing tree inspection.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.disable</c>
+    /// </remarks>
     public class LayerTreeDisableRequest : IChromiumRequest<LayerTreeDisableResponse>
     {
         public string Command { get; } = "LayerTree.disable";
@@ -7096,6 +8273,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Enables compositing tree inspection.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.enable</c>
+    /// </remarks>
     public class LayerTreeEnableRequest : IChromiumRequest<LayerTreeEnableResponse>
     {
         public string Command { get; } = "LayerTree.enable";
@@ -7109,6 +8289,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Returns the snapshot identifier.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.loadSnapshot</c>
+    /// </remarks>
     public class LayerTreeLoadSnapshotRequest : IChromiumRequest<LayerTreeLoadSnapshotResponse>
     {
         public string Command { get; } = "LayerTree.loadSnapshot";
@@ -7130,6 +8313,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Returns the layer snapshot identifier.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.makeSnapshot</c>
+    /// </remarks>
     public class LayerTreeMakeSnapshotRequest : IChromiumRequest<LayerTreeMakeSnapshotResponse>
     {
         public string Command { get; } = "LayerTree.makeSnapshot";
@@ -7151,6 +8337,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.profileSnapshot</c>
+    /// </remarks>
     public class LayerTreeProfileSnapshotRequest : IChromiumRequest<LayerTreeProfileSnapshotResponse>
     {
         public string Command { get; } = "LayerTree.profileSnapshot";
@@ -7184,6 +8373,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Releases layer snapshot captured by the back-end.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.releaseSnapshot</c>
+    /// </remarks>
     public class LayerTreeReleaseSnapshotRequest : IChromiumRequest<LayerTreeReleaseSnapshotResponse>
     {
         public string Command { get; } = "LayerTree.releaseSnapshot";
@@ -7201,6 +8393,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Replays the layer snapshot and returns the resulting bitmap.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.replaySnapshot</c>
+    /// </remarks>
     public class LayerTreeReplaySnapshotRequest : IChromiumRequest<LayerTreeReplaySnapshotResponse>
     {
         public string Command { get; } = "LayerTree.replaySnapshot";
@@ -7234,6 +8429,9 @@ namespace Playwright.Chromium.Protocol.LayerTree
     /// <summary>
     /// Replays the layer snapshot and returns canvas log.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>LayerTree.snapshotCommandLog</c>
+    /// </remarks>
     public class LayerTreeSnapshotCommandLogRequest : IChromiumRequest<LayerTreeSnapshotCommandLogResponse>
     {
         public string Command { get; } = "LayerTree.snapshotCommandLog";
@@ -7251,6 +8449,38 @@ namespace Playwright.Chromium.Protocol.LayerTree
         /// The array of canvas function calls.
         /// </summary>
         public object[] CommandLog { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>LayerTree.layerPainted</c>
+    /// </remarks>
+    public class LayerPaintedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "LayerTree.layerPainted";
+        /// <summary>
+        /// The id of the painted layer.
+        /// </summary>
+        public LayerId LayerId { get; set; }
+        /// <summary>
+        /// Clip rectangle.
+        /// </summary>
+        public Playwright.Chromium.Protocol.DOM.Rect Clip { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>LayerTree.layerTreeDidChange</c>
+    /// </remarks>
+    public class LayerTreeDidChangeEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "LayerTree.layerTreeDidChange";
+        /// <summary>
+        /// Layer tree, absent if not in the comspositing mode.
+        /// </summary>
+        public Layer[] Layers { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Log
@@ -7318,6 +8548,9 @@ namespace Playwright.Chromium.Protocol.Log
     /// <summary>
     /// Clears the log.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Log.clear</c>
+    /// </remarks>
     public class LogClearRequest : IChromiumRequest<LogClearResponse>
     {
         public string Command { get; } = "Log.clear";
@@ -7331,6 +8564,9 @@ namespace Playwright.Chromium.Protocol.Log
     /// <summary>
     /// Disables log domain, prevents further log entries from being reported to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Log.disable</c>
+    /// </remarks>
     public class LogDisableRequest : IChromiumRequest<LogDisableResponse>
     {
         public string Command { get; } = "Log.disable";
@@ -7345,6 +8581,9 @@ namespace Playwright.Chromium.Protocol.Log
     /// Enables log domain, sends the entries collected so far to the client by means of the
     /// `entryAdded` notification.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Log.enable</c>
+    /// </remarks>
     public class LogEnableRequest : IChromiumRequest<LogEnableResponse>
     {
         public string Command { get; } = "Log.enable";
@@ -7358,6 +8597,9 @@ namespace Playwright.Chromium.Protocol.Log
     /// <summary>
     /// start violation reporting.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Log.startViolationsReport</c>
+    /// </remarks>
     public class LogStartViolationsReportRequest : IChromiumRequest<LogStartViolationsReportResponse>
     {
         public string Command { get; } = "Log.startViolationsReport";
@@ -7375,6 +8617,9 @@ namespace Playwright.Chromium.Protocol.Log
     /// <summary>
     /// Stop violation reporting.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Log.stopViolationsReport</c>
+    /// </remarks>
     public class LogStopViolationsReportRequest : IChromiumRequest<LogStopViolationsReportResponse>
     {
         public string Command { get; } = "Log.stopViolationsReport";
@@ -7384,6 +8629,20 @@ namespace Playwright.Chromium.Protocol.Log
     /// </summary>
     public class LogStopViolationsReportResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Issued when new message was logged.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Log.entryAdded</c>
+    /// </remarks>
+    public class EntryAddedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Log.entryAdded";
+        /// <summary>
+        /// The entry.
+        /// </summary>
+        public LogEntry Entry { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Memory
@@ -7454,6 +8713,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.getDOMCounters</c>
+    /// </remarks>
     public class MemoryGetDOMCountersRequest : IChromiumRequest<MemoryGetDOMCountersResponse>
     {
         public string Command { get; } = "Memory.getDOMCounters";
@@ -7479,6 +8741,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.prepareForLeakDetection</c>
+    /// </remarks>
     public class MemoryPrepareForLeakDetectionRequest : IChromiumRequest<MemoryPrepareForLeakDetectionResponse>
     {
         public string Command { get; } = "Memory.prepareForLeakDetection";
@@ -7492,6 +8757,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// Simulate OomIntervention by purging V8 memory.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.forciblyPurgeJavaScriptMemory</c>
+    /// </remarks>
     public class MemoryForciblyPurgeJavaScriptMemoryRequest : IChromiumRequest<MemoryForciblyPurgeJavaScriptMemoryResponse>
     {
         public string Command { get; } = "Memory.forciblyPurgeJavaScriptMemory";
@@ -7505,6 +8773,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// Enable/disable suppressing memory pressure notifications in all processes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.setPressureNotificationsSuppressed</c>
+    /// </remarks>
     public class MemorySetPressureNotificationsSuppressedRequest : IChromiumRequest<MemorySetPressureNotificationsSuppressedResponse>
     {
         public string Command { get; } = "Memory.setPressureNotificationsSuppressed";
@@ -7522,6 +8793,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// Simulate a memory pressure notification in all processes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.simulatePressureNotification</c>
+    /// </remarks>
     public class MemorySimulatePressureNotificationRequest : IChromiumRequest<MemorySimulatePressureNotificationResponse>
     {
         public string Command { get; } = "Memory.simulatePressureNotification";
@@ -7539,6 +8813,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// Start collecting native memory profile.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.startSampling</c>
+    /// </remarks>
     public class MemoryStartSamplingRequest : IChromiumRequest<MemoryStartSamplingResponse>
     {
         public string Command { get; } = "Memory.startSampling";
@@ -7560,6 +8837,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// <summary>
     /// Stop collecting native memory profile.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.stopSampling</c>
+    /// </remarks>
     public class MemoryStopSamplingRequest : IChromiumRequest<MemoryStopSamplingResponse>
     {
         public string Command { get; } = "Memory.stopSampling";
@@ -7574,6 +8854,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// Retrieve native memory allocations profile
     /// collected since renderer process startup.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.getAllTimeSamplingProfile</c>
+    /// </remarks>
     public class MemoryGetAllTimeSamplingProfileRequest : IChromiumRequest<MemoryGetAllTimeSamplingProfileResponse>
     {
         public string Command { get; } = "Memory.getAllTimeSamplingProfile";
@@ -7592,6 +8875,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// Retrieve native memory allocations profile
     /// collected since browser process startup.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.getBrowserSamplingProfile</c>
+    /// </remarks>
     public class MemoryGetBrowserSamplingProfileRequest : IChromiumRequest<MemoryGetBrowserSamplingProfileResponse>
     {
         public string Command { get; } = "Memory.getBrowserSamplingProfile";
@@ -7610,6 +8896,9 @@ namespace Playwright.Chromium.Protocol.Memory
     /// Retrieve native memory allocations profile collected since last
     /// `startSampling` call.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Memory.getSamplingProfile</c>
+    /// </remarks>
     public class MemoryGetSamplingProfileRequest : IChromiumRequest<MemoryGetSamplingProfileResponse>
     {
         public string Command { get; } = "Memory.getSamplingProfile";
@@ -8615,6 +9904,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Tells whether clearing browser cache is supported.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.canClearBrowserCache</c>
+    /// </remarks>
     public class NetworkCanClearBrowserCacheRequest : IChromiumRequest<NetworkCanClearBrowserCacheResponse>
     {
         public string Command { get; } = "Network.canClearBrowserCache";
@@ -8632,6 +9924,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Tells whether clearing browser cookies is supported.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.canClearBrowserCookies</c>
+    /// </remarks>
     public class NetworkCanClearBrowserCookiesRequest : IChromiumRequest<NetworkCanClearBrowserCookiesResponse>
     {
         public string Command { get; } = "Network.canClearBrowserCookies";
@@ -8649,6 +9944,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Tells whether emulation of network conditions is supported.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.canEmulateNetworkConditions</c>
+    /// </remarks>
     public class NetworkCanEmulateNetworkConditionsRequest : IChromiumRequest<NetworkCanEmulateNetworkConditionsResponse>
     {
         public string Command { get; } = "Network.canEmulateNetworkConditions";
@@ -8666,6 +9964,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Clears browser cache.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.clearBrowserCache</c>
+    /// </remarks>
     public class NetworkClearBrowserCacheRequest : IChromiumRequest<NetworkClearBrowserCacheResponse>
     {
         public string Command { get; } = "Network.clearBrowserCache";
@@ -8679,6 +9980,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Clears browser cookies.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.clearBrowserCookies</c>
+    /// </remarks>
     public class NetworkClearBrowserCookiesRequest : IChromiumRequest<NetworkClearBrowserCookiesResponse>
     {
         public string Command { get; } = "Network.clearBrowserCookies";
@@ -8696,6 +10000,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// event will be sent with the same InterceptionId.
     /// Deprecated, use Fetch.continueRequest, Fetch.fulfillRequest and Fetch.failRequest instead.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.continueInterceptedRequest</c>
+    /// </remarks>
     public class NetworkContinueInterceptedRequestRequest : IChromiumRequest<NetworkContinueInterceptedRequestResponse>
     {
         public string Command { get; } = "Network.continueInterceptedRequest";
@@ -8747,6 +10054,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Deletes browser cookies with matching name and url or domain/path pair.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.deleteCookies</c>
+    /// </remarks>
     public class NetworkDeleteCookiesRequest : IChromiumRequest<NetworkDeleteCookiesResponse>
     {
         public string Command { get; } = "Network.deleteCookies";
@@ -8777,6 +10087,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Disables network tracking, prevents network events from being sent to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.disable</c>
+    /// </remarks>
     public class NetworkDisableRequest : IChromiumRequest<NetworkDisableResponse>
     {
         public string Command { get; } = "Network.disable";
@@ -8790,6 +10103,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Activates emulation of network conditions.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.emulateNetworkConditions</c>
+    /// </remarks>
     public class NetworkEmulateNetworkConditionsRequest : IChromiumRequest<NetworkEmulateNetworkConditionsResponse>
     {
         public string Command { get; } = "Network.emulateNetworkConditions";
@@ -8823,6 +10139,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Enables network tracking, network events will now be delivered to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.enable</c>
+    /// </remarks>
     public class NetworkEnableRequest : IChromiumRequest<NetworkEnableResponse>
     {
         public string Command { get; } = "Network.enable";
@@ -8849,6 +10168,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// Returns all browser cookies. Depending on the backend support, will return detailed cookie
     /// information in the `cookies` field.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.getAllCookies</c>
+    /// </remarks>
     public class NetworkGetAllCookiesRequest : IChromiumRequest<NetworkGetAllCookiesResponse>
     {
         public string Command { get; } = "Network.getAllCookies";
@@ -8866,6 +10188,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Returns the DER-encoded certificate.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.getCertificate</c>
+    /// </remarks>
     public class NetworkGetCertificateRequest : IChromiumRequest<NetworkGetCertificateResponse>
     {
         public string Command { get; } = "Network.getCertificate";
@@ -8888,6 +10213,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// Returns all browser cookies for the current URL. Depending on the backend support, will return
     /// detailed cookie information in the `cookies` field.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.getCookies</c>
+    /// </remarks>
     public class NetworkGetCookiesRequest : IChromiumRequest<NetworkGetCookiesResponse>
     {
         public string Command { get; } = "Network.getCookies";
@@ -8909,6 +10237,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Returns content served for the given request.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.getResponseBody</c>
+    /// </remarks>
     public class NetworkGetResponseBodyRequest : IChromiumRequest<NetworkGetResponseBodyResponse>
     {
         public string Command { get; } = "Network.getResponseBody";
@@ -8934,6 +10265,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Returns post data sent with the request. Returns an error when no data was sent with the request.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.getRequestPostData</c>
+    /// </remarks>
     public class NetworkGetRequestPostDataRequest : IChromiumRequest<NetworkGetRequestPostDataResponse>
     {
         public string Command { get; } = "Network.getRequestPostData";
@@ -8955,6 +10289,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Returns content served for the given currently intercepted request.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.getResponseBodyForInterception</c>
+    /// </remarks>
     public class NetworkGetResponseBodyForInterceptionRequest : IChromiumRequest<NetworkGetResponseBodyForInterceptionResponse>
     {
         public string Command { get; } = "Network.getResponseBodyForInterception";
@@ -8983,6 +10320,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// the response body. The stream only supports sequential read, IO.read will fail if the position
     /// is specified.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.takeResponseBodyForInterceptionAsStream</c>
+    /// </remarks>
     public class NetworkTakeResponseBodyForInterceptionAsStreamRequest : IChromiumRequest<NetworkTakeResponseBodyForInterceptionAsStreamResponse>
     {
         public string Command { get; } = "Network.takeResponseBodyForInterceptionAsStream";
@@ -9006,6 +10346,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// parameters should be identical: method, url, async, request body, extra headers, withCredentials
     /// attribute, user, password.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.replayXHR</c>
+    /// </remarks>
     public class NetworkReplayXHRRequest : IChromiumRequest<NetworkReplayXHRResponse>
     {
         public string Command { get; } = "Network.replayXHR";
@@ -9023,6 +10366,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Searches for given string in response content.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.searchInResponseBody</c>
+    /// </remarks>
     public class NetworkSearchInResponseBodyRequest : IChromiumRequest<NetworkSearchInResponseBodyResponse>
     {
         public string Command { get; } = "Network.searchInResponseBody";
@@ -9056,6 +10402,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Blocks URLs from loading.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setBlockedURLs</c>
+    /// </remarks>
     public class NetworkSetBlockedURLsRequest : IChromiumRequest<NetworkSetBlockedURLsResponse>
     {
         public string Command { get; } = "Network.setBlockedURLs";
@@ -9073,6 +10422,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Toggles ignoring of service worker for each request.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setBypassServiceWorker</c>
+    /// </remarks>
     public class NetworkSetBypassServiceWorkerRequest : IChromiumRequest<NetworkSetBypassServiceWorkerResponse>
     {
         public string Command { get; } = "Network.setBypassServiceWorker";
@@ -9090,6 +10442,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Toggles ignoring cache for each request. If `true`, cache will not be used.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setCacheDisabled</c>
+    /// </remarks>
     public class NetworkSetCacheDisabledRequest : IChromiumRequest<NetworkSetCacheDisabledResponse>
     {
         public string Command { get; } = "Network.setCacheDisabled";
@@ -9107,6 +10462,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setCookie</c>
+    /// </remarks>
     public class NetworkSetCookieRequest : IChromiumRequest<NetworkSetCookieResponse>
     {
         public string Command { get; } = "Network.setCookie";
@@ -9161,6 +10519,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Sets given cookies.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setCookies</c>
+    /// </remarks>
     public class NetworkSetCookiesRequest : IChromiumRequest<NetworkSetCookiesResponse>
     {
         public string Command { get; } = "Network.setCookies";
@@ -9178,6 +10539,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// For testing.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setDataSizeLimitsForTest</c>
+    /// </remarks>
     public class NetworkSetDataSizeLimitsForTestRequest : IChromiumRequest<NetworkSetDataSizeLimitsForTestResponse>
     {
         public string Command { get; } = "Network.setDataSizeLimitsForTest";
@@ -9199,6 +10563,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Specifies whether to always send extra HTTP headers with the requests from this page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setExtraHTTPHeaders</c>
+    /// </remarks>
     public class NetworkSetExtraHTTPHeadersRequest : IChromiumRequest<NetworkSetExtraHTTPHeadersResponse>
     {
         public string Command { get; } = "Network.setExtraHTTPHeaders";
@@ -9217,6 +10584,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// Sets the requests to intercept that match the provided patterns and optionally resource types.
     /// Deprecated, please use Fetch.enable instead.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setRequestInterception</c>
+    /// </remarks>
     public class NetworkSetRequestInterceptionRequest : IChromiumRequest<NetworkSetRequestInterceptionResponse>
     {
         public string Command { get; } = "Network.setRequestInterception";
@@ -9235,6 +10605,9 @@ namespace Playwright.Chromium.Protocol.Network
     /// <summary>
     /// Allows overriding user agent with the given string.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Network.setUserAgentOverride</c>
+    /// </remarks>
     public class NetworkSetUserAgentOverrideRequest : IChromiumRequest<NetworkSetUserAgentOverrideResponse>
     {
         public string Command { get; } = "Network.setUserAgentOverride";
@@ -9256,6 +10629,544 @@ namespace Playwright.Chromium.Protocol.Network
     /// </summary>
     public class NetworkSetUserAgentOverrideResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Fired when data chunk was received over the network.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.dataReceived</c>
+    /// </remarks>
+    public class DataReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.dataReceived";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// Data chunk length.
+        /// </summary>
+        public int DataLength { get; set; }
+        /// <summary>
+        /// Actual bytes received (might be less than dataLength for compressed encodings).
+        /// </summary>
+        public int EncodedDataLength { get; set; }
+    }
+    /// <summary>
+    /// Fired when EventSource message is received.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.eventSourceMessageReceived</c>
+    /// </remarks>
+    public class EventSourceMessageReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.eventSourceMessageReceived";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// Message type.
+        /// </summary>
+        public string EventName { get; set; }
+        /// <summary>
+        /// Message identifier.
+        /// </summary>
+        public string EventId { get; set; }
+        /// <summary>
+        /// Message content.
+        /// </summary>
+        public string Data { get; set; }
+    }
+    /// <summary>
+    /// Fired when HTTP request has failed to load.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.loadingFailed</c>
+    /// </remarks>
+    public class LoadingFailedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.loadingFailed";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// Resource type.
+        /// </summary>
+        public ResourceType Type { get; set; }
+        /// <summary>
+        /// User friendly error message.
+        /// </summary>
+        public string ErrorText { get; set; }
+        /// <summary>
+        /// True if loading was canceled.
+        /// </summary>
+        public bool Canceled { get; set; }
+        /// <summary>
+        /// The reason why loading was blocked, if any.
+        /// </summary>
+        public BlockedReason BlockedReason { get; set; }
+    }
+    /// <summary>
+    /// Fired when HTTP request has finished loading.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.loadingFinished</c>
+    /// </remarks>
+    public class LoadingFinishedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.loadingFinished";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// Total number of bytes received for this request.
+        /// </summary>
+        public double EncodedDataLength { get; set; }
+        /// <summary>
+        /// Set when 1) response was blocked by Cross-Origin Read Blocking and also
+        /// 2) this needs to be reported to the DevTools console.
+        /// </summary>
+        public bool ShouldReportCorbBlocking { get; set; }
+    }
+    /// <summary>
+    /// Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
+    /// mocked.
+    /// Deprecated, use Fetch.requestPaused instead.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.requestIntercepted</c>
+    /// </remarks>
+    public class RequestInterceptedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.requestIntercepted";
+        /// <summary>
+        /// Each request the page makes will have a unique id, however if any redirects are encountered
+        /// while processing that fetch, they will be reported with the same id as the original fetch.
+        /// Likewise if HTTP authentication is needed then the same fetch id will be used.
+        /// </summary>
+        public InterceptionId InterceptionId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Request Request { get; set; }
+        /// <summary>
+        /// The id of the frame that initiated the request.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.FrameId FrameId { get; set; }
+        /// <summary>
+        /// How the requested resource will be used.
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// Whether this is a navigation request, which can abort the navigation completely.
+        /// </summary>
+        public bool IsNavigationRequest { get; set; }
+        /// <summary>
+        /// Set if the request is a navigation that will result in a download.
+        /// Only present after response is received from the server (i.e. HeadersReceived stage).
+        /// </summary>
+        public bool IsDownload { get; set; }
+        /// <summary>
+        /// Redirect location, only sent if a redirect was intercepted.
+        /// </summary>
+        public string RedirectUrl { get; set; }
+        /// <summary>
+        /// Details of the Authorization Challenge encountered. If this is set then
+        /// continueInterceptedRequest must contain an authChallengeResponse.
+        /// </summary>
+        public AuthChallenge AuthChallenge { get; set; }
+        /// <summary>
+        /// Response error if intercepted at response stage or if redirect occurred while intercepting
+        /// request.
+        /// </summary>
+        public ErrorReason ResponseErrorReason { get; set; }
+        /// <summary>
+        /// Response code if intercepted at response stage or if redirect occurred while intercepting
+        /// request or auth retry occurred.
+        /// </summary>
+        public int ResponseStatusCode { get; set; }
+        /// <summary>
+        /// Response headers if intercepted at the response stage or if redirect occurred while
+        /// intercepting request or auth retry occurred.
+        /// </summary>
+        public Headers ResponseHeaders { get; set; }
+        /// <summary>
+        /// If the intercepted request had a corresponding requestWillBeSent event fired for it, then
+        /// this requestId will be the same as the requestId present in the requestWillBeSent event.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+    }
+    /// <summary>
+    /// Fired if request ended up loading from cache.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.requestServedFromCache</c>
+    /// </remarks>
+    public class RequestServedFromCacheEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.requestServedFromCache";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+    }
+    /// <summary>
+    /// Fired when page is about to send HTTP request.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.requestWillBeSent</c>
+    /// </remarks>
+    public class RequestWillBeSentEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.requestWillBeSent";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Loader identifier. Empty string if the request is fetched from worker.
+        /// </summary>
+        public LoaderId LoaderId { get; set; }
+        /// <summary>
+        /// URL of the document this request is loaded for.
+        /// </summary>
+        public string DocumentURL { get; set; }
+        /// <summary>
+        /// Request data.
+        /// </summary>
+        public Request Request { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public TimeSinceEpoch WallTime { get; set; }
+        /// <summary>
+        /// Request initiator.
+        /// </summary>
+        public Initiator Initiator { get; set; }
+        /// <summary>
+        /// Redirect response data.
+        /// </summary>
+        public Response RedirectResponse { get; set; }
+        /// <summary>
+        /// Type of this resource.
+        /// </summary>
+        public ResourceType Type { get; set; }
+        /// <summary>
+        /// Frame identifier.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.FrameId FrameId { get; set; }
+        /// <summary>
+        /// Whether the request is initiated by a user gesture. Defaults to false.
+        /// </summary>
+        public bool HasUserGesture { get; set; }
+    }
+    /// <summary>
+    /// Fired when resource loading priority is changed
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.resourceChangedPriority</c>
+    /// </remarks>
+    public class ResourceChangedPriorityEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.resourceChangedPriority";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// New priority
+        /// </summary>
+        public ResourcePriority NewPriority { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+    }
+    /// <summary>
+    /// Fired when a signed exchange was received over the network
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.signedExchangeReceived</c>
+    /// </remarks>
+    public class SignedExchangeReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.signedExchangeReceived";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Information about the signed exchange response.
+        /// </summary>
+        public SignedExchangeInfo Info { get; set; }
+    }
+    /// <summary>
+    /// Fired when HTTP response is available.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.responseReceived</c>
+    /// </remarks>
+    public class ResponseReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.responseReceived";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Loader identifier. Empty string if the request is fetched from worker.
+        /// </summary>
+        public LoaderId LoaderId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// Resource type.
+        /// </summary>
+        public ResourceType Type { get; set; }
+        /// <summary>
+        /// Response data.
+        /// </summary>
+        public Response Response { get; set; }
+        /// <summary>
+        /// Frame identifier.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.FrameId FrameId { get; set; }
+    }
+    /// <summary>
+    /// Fired when WebSocket is closed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketClosed</c>
+    /// </remarks>
+    public class WebSocketClosedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketClosed";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+    }
+    /// <summary>
+    /// Fired upon WebSocket creation.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketCreated</c>
+    /// </remarks>
+    public class WebSocketCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketCreated";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// WebSocket request URL.
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Request initiator.
+        /// </summary>
+        public Initiator Initiator { get; set; }
+    }
+    /// <summary>
+    /// Fired when WebSocket message error occurs.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketFrameError</c>
+    /// </remarks>
+    public class WebSocketFrameErrorEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketFrameError";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// WebSocket error message.
+        /// </summary>
+        public string ErrorMessage { get; set; }
+    }
+    /// <summary>
+    /// Fired when WebSocket message is received.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketFrameReceived</c>
+    /// </remarks>
+    public class WebSocketFrameReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketFrameReceived";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// WebSocket response data.
+        /// </summary>
+        public WebSocketFrame Response { get; set; }
+    }
+    /// <summary>
+    /// Fired when WebSocket message is sent.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketFrameSent</c>
+    /// </remarks>
+    public class WebSocketFrameSentEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketFrameSent";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// WebSocket response data.
+        /// </summary>
+        public WebSocketFrame Response { get; set; }
+    }
+    /// <summary>
+    /// Fired when WebSocket handshake response becomes available.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketHandshakeResponseReceived</c>
+    /// </remarks>
+    public class WebSocketHandshakeResponseReceivedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketHandshakeResponseReceived";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// WebSocket response data.
+        /// </summary>
+        public WebSocketResponse Response { get; set; }
+    }
+    /// <summary>
+    /// Fired when WebSocket is about to initiate handshake.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.webSocketWillSendHandshakeRequest</c>
+    /// </remarks>
+    public class WebSocketWillSendHandshakeRequestEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.webSocketWillSendHandshakeRequest";
+        /// <summary>
+        /// Request identifier.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// Timestamp.
+        /// </summary>
+        public MonotonicTime Timestamp { get; set; }
+        /// <summary>
+        /// UTC Timestamp.
+        /// </summary>
+        public TimeSinceEpoch WallTime { get; set; }
+        /// <summary>
+        /// WebSocket request data.
+        /// </summary>
+        public WebSocketRequest Request { get; set; }
+    }
+    /// <summary>
+    /// Fired when additional information about a requestWillBeSent event is available from the
+    /// network stack. Not every requestWillBeSent event will have an additional
+    /// requestWillBeSentExtraInfo fired for it, and there is no guarantee whether requestWillBeSent
+    /// or requestWillBeSentExtraInfo will be fired first for the same request.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.requestWillBeSentExtraInfo</c>
+    /// </remarks>
+    public class RequestWillBeSentExtraInfoEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.requestWillBeSentExtraInfo";
+        /// <summary>
+        /// Request identifier. Used to match this information to an existing requestWillBeSent event.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// A list of cookies which will not be sent with this request along with corresponding reasons
+        /// for blocking.
+        /// </summary>
+        public BlockedCookieWithReason[] BlockedCookies { get; set; }
+        /// <summary>
+        /// Raw request headers as they will be sent over the wire.
+        /// </summary>
+        public Headers Headers { get; set; }
+    }
+    /// <summary>
+    /// Fired when additional information about a responseReceived event is available from the network
+    /// stack. Not every responseReceived event will have an additional responseReceivedExtraInfo for
+    /// it, and responseReceivedExtraInfo may be fired before or after responseReceived.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Network.responseReceivedExtraInfo</c>
+    /// </remarks>
+    public class ResponseReceivedExtraInfoEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Network.responseReceivedExtraInfo";
+        /// <summary>
+        /// Request identifier. Used to match this information to another responseReceived event.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// A list of cookies which were not stored from the response along with the corresponding
+        /// reasons for blocking. The cookies here may not be valid due to syntax errors, which
+        /// are represented by the invalid cookie line string instead of a proper cookie.
+        /// </summary>
+        public BlockedSetCookieWithReason[] BlockedCookies { get; set; }
+        /// <summary>
+        /// Raw response headers as they were received over the wire.
+        /// </summary>
+        public Headers Headers { get; set; }
+        /// <summary>
+        /// Raw response header text as it was received over the wire. The raw text may not always be
+        /// available, such as in the case of HTTP/2 or QUIC.
+        /// </summary>
+        public string HeadersText { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Overlay
@@ -9328,6 +11239,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Disables domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.disable</c>
+    /// </remarks>
     public class OverlayDisableRequest : IChromiumRequest<OverlayDisableResponse>
     {
         public string Command { get; } = "Overlay.disable";
@@ -9341,6 +11255,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Enables domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.enable</c>
+    /// </remarks>
     public class OverlayEnableRequest : IChromiumRequest<OverlayEnableResponse>
     {
         public string Command { get; } = "Overlay.enable";
@@ -9354,6 +11271,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// For testing.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.getHighlightObjectForTest</c>
+    /// </remarks>
     public class OverlayGetHighlightObjectForTestRequest : IChromiumRequest<OverlayGetHighlightObjectForTestResponse>
     {
         public string Command { get; } = "Overlay.getHighlightObjectForTest";
@@ -9383,6 +11303,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Hides any highlight.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.hideHighlight</c>
+    /// </remarks>
     public class OverlayHideHighlightRequest : IChromiumRequest<OverlayHideHighlightResponse>
     {
         public string Command { get; } = "Overlay.hideHighlight";
@@ -9396,6 +11319,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Highlights owner element of the frame with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.highlightFrame</c>
+    /// </remarks>
     public class OverlayHighlightFrameRequest : IChromiumRequest<OverlayHighlightFrameResponse>
     {
         public string Command { get; } = "Overlay.highlightFrame";
@@ -9422,6 +11348,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or
     /// objectId must be specified.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.highlightNode</c>
+    /// </remarks>
     public class OverlayHighlightNodeRequest : IChromiumRequest<OverlayHighlightNodeResponse>
     {
         public string Command { get; } = "Overlay.highlightNode";
@@ -9455,6 +11384,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.highlightQuad</c>
+    /// </remarks>
     public class OverlayHighlightQuadRequest : IChromiumRequest<OverlayHighlightQuadResponse>
     {
         public string Command { get; } = "Overlay.highlightQuad";
@@ -9480,6 +11412,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.highlightRect</c>
+    /// </remarks>
     public class OverlayHighlightRectRequest : IChromiumRequest<OverlayHighlightRectResponse>
     {
         public string Command { get; } = "Overlay.highlightRect";
@@ -9518,6 +11453,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted.
     /// Backend then generates 'inspectNodeRequested' event upon element selection.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setInspectMode</c>
+    /// </remarks>
     public class OverlaySetInspectModeRequest : IChromiumRequest<OverlaySetInspectModeResponse>
     {
         public string Command { get; } = "Overlay.setInspectMode";
@@ -9540,6 +11478,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Highlights owner element of all frames detected to be ads.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowAdHighlights</c>
+    /// </remarks>
     public class OverlaySetShowAdHighlightsRequest : IChromiumRequest<OverlaySetShowAdHighlightsResponse>
     {
         public string Command { get; } = "Overlay.setShowAdHighlights";
@@ -9557,6 +11498,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setPausedInDebuggerMessage</c>
+    /// </remarks>
     public class OverlaySetPausedInDebuggerMessageRequest : IChromiumRequest<OverlaySetPausedInDebuggerMessageResponse>
     {
         public string Command { get; } = "Overlay.setPausedInDebuggerMessage";
@@ -9574,6 +11518,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Requests that backend shows debug borders on layers
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowDebugBorders</c>
+    /// </remarks>
     public class OverlaySetShowDebugBordersRequest : IChromiumRequest<OverlaySetShowDebugBordersResponse>
     {
         public string Command { get; } = "Overlay.setShowDebugBorders";
@@ -9591,6 +11538,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Requests that backend shows the FPS counter
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowFPSCounter</c>
+    /// </remarks>
     public class OverlaySetShowFPSCounterRequest : IChromiumRequest<OverlaySetShowFPSCounterResponse>
     {
         public string Command { get; } = "Overlay.setShowFPSCounter";
@@ -9608,6 +11558,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Requests that backend shows paint rectangles
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowPaintRects</c>
+    /// </remarks>
     public class OverlaySetShowPaintRectsRequest : IChromiumRequest<OverlaySetShowPaintRectsResponse>
     {
         public string Command { get; } = "Overlay.setShowPaintRects";
@@ -9625,6 +11578,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Requests that backend shows layout shift regions
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowLayoutShiftRegions</c>
+    /// </remarks>
     public class OverlaySetShowLayoutShiftRegionsRequest : IChromiumRequest<OverlaySetShowLayoutShiftRegionsResponse>
     {
         public string Command { get; } = "Overlay.setShowLayoutShiftRegions";
@@ -9642,6 +11598,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Requests that backend shows scroll bottleneck rects
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowScrollBottleneckRects</c>
+    /// </remarks>
     public class OverlaySetShowScrollBottleneckRectsRequest : IChromiumRequest<OverlaySetShowScrollBottleneckRectsResponse>
     {
         public string Command { get; } = "Overlay.setShowScrollBottleneckRects";
@@ -9659,6 +11618,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Requests that backend shows hit-test borders on layers
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowHitTestBorders</c>
+    /// </remarks>
     public class OverlaySetShowHitTestBordersRequest : IChromiumRequest<OverlaySetShowHitTestBordersResponse>
     {
         public string Command { get; } = "Overlay.setShowHitTestBorders";
@@ -9676,6 +11638,9 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// <summary>
     /// Paints viewport size upon main frame resize.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Overlay.setShowViewportSizeOnResize</c>
+    /// </remarks>
     public class OverlaySetShowViewportSizeOnResizeRequest : IChromiumRequest<OverlaySetShowViewportSizeOnResizeResponse>
     {
         public string Command { get; } = "Overlay.setShowViewportSizeOnResize";
@@ -9689,6 +11654,59 @@ namespace Playwright.Chromium.Protocol.Overlay
     /// </summary>
     public class OverlaySetShowViewportSizeOnResizeResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Fired when the node should be inspected. This happens after call to `setInspectMode` or when
+    /// user manually inspects an element.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Overlay.inspectNodeRequested</c>
+    /// </remarks>
+    public class InspectNodeRequestedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Overlay.inspectNodeRequested";
+        /// <summary>
+        /// Id of the node to inspect.
+        /// </summary>
+        public Playwright.Chromium.Protocol.DOM.BackendNodeId BackendNodeId { get; set; }
+    }
+    /// <summary>
+    /// Fired when the node should be highlighted. This happens after call to `setInspectMode`.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Overlay.nodeHighlightRequested</c>
+    /// </remarks>
+    public class NodeHighlightRequestedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Overlay.nodeHighlightRequested";
+        /// <summary>
+        /// 
+        /// </summary>
+        public Playwright.Chromium.Protocol.DOM.NodeId NodeId { get; set; }
+    }
+    /// <summary>
+    /// Fired when user asks to capture screenshot of some area on the page.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Overlay.screenshotRequested</c>
+    /// </remarks>
+    public class ScreenshotRequestedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Overlay.screenshotRequested";
+        /// <summary>
+        /// Viewport to capture, in device independent pixels (dip).
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.Viewport Viewport { get; set; }
+    }
+    /// <summary>
+    /// Fired when user cancels the inspect mode.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Overlay.inspectModeCanceled</c>
+    /// </remarks>
+    public class InspectModeCanceledEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Overlay.inspectModeCanceled";
     }
 }
 namespace Playwright.Chromium.Protocol.Page
@@ -10110,6 +12128,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Deprecated, please use addScriptToEvaluateOnNewDocument instead.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.addScriptToEvaluateOnLoad</c>
+    /// </remarks>
     [System.Obsolete("Deprecated, please use addScriptToEvaluateOnNewDocument instead.")]
     public class PageAddScriptToEvaluateOnLoadRequest : IChromiumRequest<PageAddScriptToEvaluateOnLoadResponse>
     {
@@ -10132,6 +12153,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Evaluates given script in every frame upon creation (before loading frame's scripts).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.addScriptToEvaluateOnNewDocument</c>
+    /// </remarks>
     public class PageAddScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageAddScriptToEvaluateOnNewDocumentResponse>
     {
         public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
@@ -10159,6 +12183,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Brings page to front (activates tab).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.bringToFront</c>
+    /// </remarks>
     public class PageBringToFrontRequest : IChromiumRequest<PageBringToFrontResponse>
     {
         public string Command { get; } = "Page.bringToFront";
@@ -10172,6 +12199,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Capture page screenshot.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.captureScreenshot</c>
+    /// </remarks>
     public class PageCaptureScreenshotRequest : IChromiumRequest<PageCaptureScreenshotResponse>
     {
         public string Command { get; } = "Page.captureScreenshot";
@@ -10206,6 +12236,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// Returns a snapshot of the page as a string. For MHTML format, the serialization includes
     /// iframes, shadow DOM, external resources, and element-inline styles.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.captureSnapshot</c>
+    /// </remarks>
     public class PageCaptureSnapshotRequest : IChromiumRequest<PageCaptureSnapshotResponse>
     {
         public string Command { get; } = "Page.captureSnapshot";
@@ -10227,6 +12260,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Clears the overriden device metrics.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.clearDeviceMetricsOverride</c>
+    /// </remarks>
     public class PageClearDeviceMetricsOverrideRequest : IChromiumRequest<PageClearDeviceMetricsOverrideResponse>
     {
         public string Command { get; } = "Page.clearDeviceMetricsOverride";
@@ -10240,6 +12276,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Clears the overridden Device Orientation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.clearDeviceOrientationOverride</c>
+    /// </remarks>
     public class PageClearDeviceOrientationOverrideRequest : IChromiumRequest<PageClearDeviceOrientationOverrideResponse>
     {
         public string Command { get; } = "Page.clearDeviceOrientationOverride";
@@ -10253,6 +12292,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Clears the overriden Geolocation Position and Error.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.clearGeolocationOverride</c>
+    /// </remarks>
     public class PageClearGeolocationOverrideRequest : IChromiumRequest<PageClearGeolocationOverrideResponse>
     {
         public string Command { get; } = "Page.clearGeolocationOverride";
@@ -10266,6 +12308,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Creates an isolated world for the given frame.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.createIsolatedWorld</c>
+    /// </remarks>
     public class PageCreateIsolatedWorldRequest : IChromiumRequest<PageCreateIsolatedWorldResponse>
     {
         public string Command { get; } = "Page.createIsolatedWorld";
@@ -10296,6 +12341,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Deletes browser cookie with given name, domain and path.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.deleteCookie</c>
+    /// </remarks>
     public class PageDeleteCookieRequest : IChromiumRequest<PageDeleteCookieResponse>
     {
         public string Command { get; } = "Page.deleteCookie";
@@ -10317,6 +12365,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Disables page domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.disable</c>
+    /// </remarks>
     public class PageDisableRequest : IChromiumRequest<PageDisableResponse>
     {
         public string Command { get; } = "Page.disable";
@@ -10330,6 +12381,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Enables page domain notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.enable</c>
+    /// </remarks>
     public class PageEnableRequest : IChromiumRequest<PageEnableResponse>
     {
         public string Command { get; } = "Page.enable";
@@ -10343,6 +12397,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getAppManifest</c>
+    /// </remarks>
     public class PageGetAppManifestRequest : IChromiumRequest<PageGetAppManifestResponse>
     {
         public string Command { get; } = "Page.getAppManifest";
@@ -10368,6 +12425,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getInstallabilityErrors</c>
+    /// </remarks>
     public class PageGetInstallabilityErrorsRequest : IChromiumRequest<PageGetInstallabilityErrorsResponse>
     {
         public string Command { get; } = "Page.getInstallabilityErrors";
@@ -10386,6 +12446,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// Returns all browser cookies. Depending on the backend support, will return detailed cookie
     /// information in the `cookies` field.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getCookies</c>
+    /// </remarks>
     public class PageGetCookiesRequest : IChromiumRequest<PageGetCookiesResponse>
     {
         public string Command { get; } = "Page.getCookies";
@@ -10403,6 +12466,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Returns present frame tree structure.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getFrameTree</c>
+    /// </remarks>
     public class PageGetFrameTreeRequest : IChromiumRequest<PageGetFrameTreeResponse>
     {
         public string Command { get; } = "Page.getFrameTree";
@@ -10420,6 +12486,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Returns metrics relating to the layouting of the page, such as viewport bounds/scale.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getLayoutMetrics</c>
+    /// </remarks>
     public class PageGetLayoutMetricsRequest : IChromiumRequest<PageGetLayoutMetricsResponse>
     {
         public string Command { get; } = "Page.getLayoutMetrics";
@@ -10445,6 +12514,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Returns navigation history for the current page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getNavigationHistory</c>
+    /// </remarks>
     public class PageGetNavigationHistoryRequest : IChromiumRequest<PageGetNavigationHistoryResponse>
     {
         public string Command { get; } = "Page.getNavigationHistory";
@@ -10466,6 +12538,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Resets navigation history for the current page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.resetNavigationHistory</c>
+    /// </remarks>
     public class PageResetNavigationHistoryRequest : IChromiumRequest<PageResetNavigationHistoryResponse>
     {
         public string Command { get; } = "Page.resetNavigationHistory";
@@ -10479,6 +12554,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Returns content of the given resource.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getResourceContent</c>
+    /// </remarks>
     public class PageGetResourceContentRequest : IChromiumRequest<PageGetResourceContentResponse>
     {
         public string Command { get; } = "Page.getResourceContent";
@@ -10508,6 +12586,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Returns present frame / resource tree structure.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getResourceTree</c>
+    /// </remarks>
     public class PageGetResourceTreeRequest : IChromiumRequest<PageGetResourceTreeResponse>
     {
         public string Command { get; } = "Page.getResourceTree";
@@ -10525,6 +12606,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.handleJavaScriptDialog</c>
+    /// </remarks>
     public class PageHandleJavaScriptDialogRequest : IChromiumRequest<PageHandleJavaScriptDialogResponse>
     {
         public string Command { get; } = "Page.handleJavaScriptDialog";
@@ -10547,6 +12631,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Navigates current page to the given URL.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.navigate</c>
+    /// </remarks>
     public class PageNavigateRequest : IChromiumRequest<PageNavigateResponse>
     {
         public string Command { get; } = "Page.navigate";
@@ -10588,6 +12675,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Navigates current page to the given history entry.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.navigateToHistoryEntry</c>
+    /// </remarks>
     public class PageNavigateToHistoryEntryRequest : IChromiumRequest<PageNavigateToHistoryEntryResponse>
     {
         public string Command { get; } = "Page.navigateToHistoryEntry";
@@ -10605,6 +12695,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Print page as PDF.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.printToPDF</c>
+    /// </remarks>
     public class PagePrintToPDFRequest : IChromiumRequest<PagePrintToPDFResponse>
     {
         public string Command { get; } = "Page.printToPDF";
@@ -10701,6 +12794,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Reloads given page optionally ignoring the cache.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.reload</c>
+    /// </remarks>
     public class PageReloadRequest : IChromiumRequest<PageReloadResponse>
     {
         public string Command { get; } = "Page.reload";
@@ -10723,6 +12819,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.removeScriptToEvaluateOnLoad</c>
+    /// </remarks>
     [System.Obsolete("Deprecated, please use removeScriptToEvaluateOnNewDocument instead.")]
     public class PageRemoveScriptToEvaluateOnLoadRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnLoadResponse>
     {
@@ -10741,6 +12840,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Removes given script from the list.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.removeScriptToEvaluateOnNewDocument</c>
+    /// </remarks>
     public class PageRemoveScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnNewDocumentResponse>
     {
         public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
@@ -10758,6 +12860,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Acknowledges that a screencast frame has been received by the frontend.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.screencastFrameAck</c>
+    /// </remarks>
     public class PageScreencastFrameAckRequest : IChromiumRequest<PageScreencastFrameAckResponse>
     {
         public string Command { get; } = "Page.screencastFrameAck";
@@ -10775,6 +12880,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Searches for given string in resource content.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.searchInResource</c>
+    /// </remarks>
     public class PageSearchInResourceRequest : IChromiumRequest<PageSearchInResourceResponse>
     {
         public string Command { get; } = "Page.searchInResource";
@@ -10812,6 +12920,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Enable Chrome's experimental ad filter on all sites.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setAdBlockingEnabled</c>
+    /// </remarks>
     public class PageSetAdBlockingEnabledRequest : IChromiumRequest<PageSetAdBlockingEnabledResponse>
     {
         public string Command { get; } = "Page.setAdBlockingEnabled";
@@ -10829,6 +12940,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Enable page Content Security Policy by-passing.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setBypassCSP</c>
+    /// </remarks>
     public class PageSetBypassCSPRequest : IChromiumRequest<PageSetBypassCSPResponse>
     {
         public string Command { get; } = "Page.setBypassCSP";
@@ -10848,6 +12962,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media
     /// query results).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setDeviceMetricsOverride</c>
+    /// </remarks>
     public class PageSetDeviceMetricsOverrideRequest : IChromiumRequest<PageSetDeviceMetricsOverrideResponse>
     {
         public string Command { get; } = "Page.setDeviceMetricsOverride";
@@ -10910,6 +13027,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Overrides the Device Orientation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setDeviceOrientationOverride</c>
+    /// </remarks>
     public class PageSetDeviceOrientationOverrideRequest : IChromiumRequest<PageSetDeviceOrientationOverrideResponse>
     {
         public string Command { get; } = "Page.setDeviceOrientationOverride";
@@ -10935,6 +13055,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Set generic font families.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setFontFamilies</c>
+    /// </remarks>
     public class PageSetFontFamiliesRequest : IChromiumRequest<PageSetFontFamiliesResponse>
     {
         public string Command { get; } = "Page.setFontFamilies";
@@ -10952,6 +13075,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Set default font sizes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setFontSizes</c>
+    /// </remarks>
     public class PageSetFontSizesRequest : IChromiumRequest<PageSetFontSizesResponse>
     {
         public string Command { get; } = "Page.setFontSizes";
@@ -10969,6 +13095,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Sets given markup as the document's HTML.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setDocumentContent</c>
+    /// </remarks>
     public class PageSetDocumentContentRequest : IChromiumRequest<PageSetDocumentContentResponse>
     {
         public string Command { get; } = "Page.setDocumentContent";
@@ -10990,6 +13119,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Set the behavior when downloading a file.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setDownloadBehavior</c>
+    /// </remarks>
     public class PageSetDownloadBehaviorRequest : IChromiumRequest<PageSetDownloadBehaviorResponse>
     {
         public string Command { get; } = "Page.setDownloadBehavior";
@@ -11013,6 +13145,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
     /// unavailable.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setGeolocationOverride</c>
+    /// </remarks>
     public class PageSetGeolocationOverrideRequest : IChromiumRequest<PageSetGeolocationOverrideResponse>
     {
         public string Command { get; } = "Page.setGeolocationOverride";
@@ -11038,6 +13173,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Controls whether page will emit lifecycle events.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setLifecycleEventsEnabled</c>
+    /// </remarks>
     public class PageSetLifecycleEventsEnabledRequest : IChromiumRequest<PageSetLifecycleEventsEnabledResponse>
     {
         public string Command { get; } = "Page.setLifecycleEventsEnabled";
@@ -11055,6 +13193,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Toggles mouse event-based touch event emulation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setTouchEmulationEnabled</c>
+    /// </remarks>
     public class PageSetTouchEmulationEnabledRequest : IChromiumRequest<PageSetTouchEmulationEnabledResponse>
     {
         public string Command { get; } = "Page.setTouchEmulationEnabled";
@@ -11076,6 +13217,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Starts sending each frame using the `screencastFrame` event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.startScreencast</c>
+    /// </remarks>
     public class PageStartScreencastRequest : IChromiumRequest<PageStartScreencastResponse>
     {
         public string Command { get; } = "Page.startScreencast";
@@ -11109,6 +13253,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Force the page stop all navigations and pending resource fetches.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.stopLoading</c>
+    /// </remarks>
     public class PageStopLoadingRequest : IChromiumRequest<PageStopLoadingResponse>
     {
         public string Command { get; } = "Page.stopLoading";
@@ -11122,6 +13269,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Crashes renderer on the IO thread, generates minidumps.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.crash</c>
+    /// </remarks>
     public class PageCrashRequest : IChromiumRequest<PageCrashResponse>
     {
         public string Command { get; } = "Page.crash";
@@ -11135,6 +13285,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Tries to close page, running its beforeunload hooks, if any.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.close</c>
+    /// </remarks>
     public class PageCloseRequest : IChromiumRequest<PageCloseResponse>
     {
         public string Command { get; } = "Page.close";
@@ -11150,6 +13303,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// It will transition the page to the given state according to:
     /// https://github.com/WICG/web-lifecycle/
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setWebLifecycleState</c>
+    /// </remarks>
     public class PageSetWebLifecycleStateRequest : IChromiumRequest<PageSetWebLifecycleStateResponse>
     {
         public string Command { get; } = "Page.setWebLifecycleState";
@@ -11167,6 +13323,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Stops sending each frame in the `screencastFrame`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.stopScreencast</c>
+    /// </remarks>
     public class PageStopScreencastRequest : IChromiumRequest<PageStopScreencastResponse>
     {
         public string Command { get; } = "Page.stopScreencast";
@@ -11180,6 +13339,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Forces compilation cache to be generated for every subresource script.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setProduceCompilationCache</c>
+    /// </remarks>
     public class PageSetProduceCompilationCacheRequest : IChromiumRequest<PageSetProduceCompilationCacheResponse>
     {
         public string Command { get; } = "Page.setProduceCompilationCache";
@@ -11198,6 +13360,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// Seeds compilation cache for given url. Compilation cache does not survive
     /// cross-process navigation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.addCompilationCache</c>
+    /// </remarks>
     public class PageAddCompilationCacheRequest : IChromiumRequest<PageAddCompilationCacheResponse>
     {
         public string Command { get; } = "Page.addCompilationCache";
@@ -11219,6 +13384,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Clears seeded compilation cache.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.clearCompilationCache</c>
+    /// </remarks>
     public class PageClearCompilationCacheRequest : IChromiumRequest<PageClearCompilationCacheResponse>
     {
         public string Command { get; } = "Page.clearCompilationCache";
@@ -11232,6 +13400,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Generates a report for testing.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.generateTestReport</c>
+    /// </remarks>
     public class PageGenerateTestReportRequest : IChromiumRequest<PageGenerateTestReportResponse>
     {
         public string Command { get; } = "Page.generateTestReport";
@@ -11253,6 +13424,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Pauses page execution. Can be resumed using generic Runtime.runIfWaitingForDebugger.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.waitForDebugger</c>
+    /// </remarks>
     public class PageWaitForDebuggerRequest : IChromiumRequest<PageWaitForDebuggerResponse>
     {
         public string Command { get; } = "Page.waitForDebugger";
@@ -11269,6 +13443,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// Instead, a protocol event `Page.fileChooserOpened` is emitted.
     /// File chooser can be handled with `page.handleFileChooser` command.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.setInterceptFileChooserDialog</c>
+    /// </remarks>
     public class PageSetInterceptFileChooserDialogRequest : IChromiumRequest<PageSetInterceptFileChooserDialogResponse>
     {
         public string Command { get; } = "Page.setInterceptFileChooserDialog";
@@ -11286,6 +13463,9 @@ namespace Playwright.Chromium.Protocol.Page
     /// <summary>
     /// Accepts or cancels an intercepted file chooser dialog.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.handleFileChooser</c>
+    /// </remarks>
     public class PageHandleFileChooserRequest : IChromiumRequest<PageHandleFileChooserResponse>
     {
         public string Command { get; } = "Page.handleFileChooser";
@@ -11303,6 +13483,416 @@ namespace Playwright.Chromium.Protocol.Page
     /// </summary>
     public class PageHandleFileChooserResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.domContentEventFired</c>
+    /// </remarks>
+    public class DomContentEventFiredEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.domContentEventFired";
+        /// <summary>
+        /// 
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.MonotonicTime Timestamp { get; set; }
+    }
+    /// <summary>
+    /// Emitted only when `page.interceptFileChooser` is enabled.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.fileChooserOpened</c>
+    /// </remarks>
+    public class FileChooserOpenedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.fileChooserOpened";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Mode { get; set; }
+    }
+    /// <summary>
+    /// Fired when frame has been attached to its parent.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameAttached</c>
+    /// </remarks>
+    public class FrameAttachedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameAttached";
+        /// <summary>
+        /// Id of the frame that has been attached.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+        /// <summary>
+        /// Parent frame identifier.
+        /// </summary>
+        public FrameId ParentFrameId { get; set; }
+        /// <summary>
+        /// JavaScript stack trace of when frame was attached, only set if frame initiated from script.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.StackTrace Stack { get; set; }
+    }
+    /// <summary>
+    /// Fired when frame no longer has a scheduled navigation.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameClearedScheduledNavigation</c>
+    /// </remarks>
+    public class FrameClearedScheduledNavigationEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameClearedScheduledNavigation";
+        /// <summary>
+        /// Id of the frame that has cleared its scheduled navigation.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+    }
+    /// <summary>
+    /// Fired when frame has been detached from its parent.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameDetached</c>
+    /// </remarks>
+    public class FrameDetachedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameDetached";
+        /// <summary>
+        /// Id of the frame that has been detached.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+    }
+    /// <summary>
+    /// Fired once navigation of the frame has completed. Frame is now associated with the new loader.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameNavigated</c>
+    /// </remarks>
+    public class FrameNavigatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameNavigated";
+        /// <summary>
+        /// Frame object.
+        /// </summary>
+        public Frame Frame { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameResized</c>
+    /// </remarks>
+    public class FrameResizedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameResized";
+    }
+    /// <summary>
+    /// Fired when a renderer-initiated navigation is requested.
+    /// Navigation may still be cancelled after the event is issued.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameRequestedNavigation</c>
+    /// </remarks>
+    public class FrameRequestedNavigationEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameRequestedNavigation";
+        /// <summary>
+        /// Id of the frame that is being navigated.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+        /// <summary>
+        /// The reason for the navigation.
+        /// </summary>
+        public ClientNavigationReason Reason { get; set; }
+        /// <summary>
+        /// The destination URL for the requested navigation.
+        /// </summary>
+        public string Url { get; set; }
+    }
+    /// <summary>
+    /// Fired when frame schedules a potential navigation.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameScheduledNavigation</c>
+    /// </remarks>
+    public class FrameScheduledNavigationEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameScheduledNavigation";
+        /// <summary>
+        /// Id of the frame that has scheduled a navigation.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+        /// <summary>
+        /// Delay (in seconds) until the navigation is scheduled to begin. The navigation is not
+        /// guaranteed to start.
+        /// </summary>
+        public double Delay { get; set; }
+        /// <summary>
+        /// The reason for the navigation.
+        /// </summary>
+        public string Reason { get; set; }
+        /// <summary>
+        /// The destination URL for the scheduled navigation.
+        /// </summary>
+        public string Url { get; set; }
+    }
+    /// <summary>
+    /// Fired when frame has started loading.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameStartedLoading</c>
+    /// </remarks>
+    public class FrameStartedLoadingEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameStartedLoading";
+        /// <summary>
+        /// Id of the frame that has started loading.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+    }
+    /// <summary>
+    /// Fired when frame has stopped loading.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.frameStoppedLoading</c>
+    /// </remarks>
+    public class FrameStoppedLoadingEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.frameStoppedLoading";
+        /// <summary>
+        /// Id of the frame that has stopped loading.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+    }
+    /// <summary>
+    /// Fired when page is about to start a download.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.downloadWillBegin</c>
+    /// </remarks>
+    public class DownloadWillBeginEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.downloadWillBegin";
+        /// <summary>
+        /// Id of the frame that caused download to begin.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+        /// <summary>
+        /// URL of the resource being downloaded.
+        /// </summary>
+        public string Url { get; set; }
+    }
+    /// <summary>
+    /// Fired when interstitial page was hidden
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.interstitialHidden</c>
+    /// </remarks>
+    public class InterstitialHiddenEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.interstitialHidden";
+    }
+    /// <summary>
+    /// Fired when interstitial page was shown
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.interstitialShown</c>
+    /// </remarks>
+    public class InterstitialShownEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.interstitialShown";
+    }
+    /// <summary>
+    /// Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) has been
+    /// closed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.javascriptDialogClosed</c>
+    /// </remarks>
+    public class JavascriptDialogClosedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.javascriptDialogClosed";
+        /// <summary>
+        /// Whether dialog was confirmed.
+        /// </summary>
+        public bool Result { get; set; }
+        /// <summary>
+        /// User input in case of prompt.
+        /// </summary>
+        public string UserInput { get; set; }
+    }
+    /// <summary>
+    /// Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to
+    /// open.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.javascriptDialogOpening</c>
+    /// </remarks>
+    public class JavascriptDialogOpeningEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.javascriptDialogOpening";
+        /// <summary>
+        /// Frame url.
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Message that will be displayed by the dialog.
+        /// </summary>
+        public string Message { get; set; }
+        /// <summary>
+        /// Dialog type.
+        /// </summary>
+        public DialogType Type { get; set; }
+        /// <summary>
+        /// True iff browser is capable showing or acting on the given dialog. When browser has no
+        /// dialog handler for given target, calling alert while Page domain is engaged will stall
+        /// the page execution. Execution can be resumed via calling Page.handleJavaScriptDialog.
+        /// </summary>
+        public bool HasBrowserHandler { get; set; }
+        /// <summary>
+        /// Default dialog prompt.
+        /// </summary>
+        public string DefaultPrompt { get; set; }
+    }
+    /// <summary>
+    /// Fired for top level page lifecycle events such as navigation, load, paint, etc.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.lifecycleEvent</c>
+    /// </remarks>
+    public class LifecycleEventEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.lifecycleEvent";
+        /// <summary>
+        /// Id of the frame.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+        /// <summary>
+        /// Loader identifier. Empty string if the request is fetched from worker.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.LoaderId LoaderId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.MonotonicTime Timestamp { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.loadEventFired</c>
+    /// </remarks>
+    public class LoadEventFiredEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.loadEventFired";
+        /// <summary>
+        /// 
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.MonotonicTime Timestamp { get; set; }
+    }
+    /// <summary>
+    /// Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.navigatedWithinDocument</c>
+    /// </remarks>
+    public class NavigatedWithinDocumentEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.navigatedWithinDocument";
+        /// <summary>
+        /// Id of the frame.
+        /// </summary>
+        public FrameId FrameId { get; set; }
+        /// <summary>
+        /// Frame's new url.
+        /// </summary>
+        public string Url { get; set; }
+    }
+    /// <summary>
+    /// Compressed image data requested by the `startScreencast`.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.screencastFrame</c>
+    /// </remarks>
+    public class ScreencastFrameEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.screencastFrame";
+        /// <summary>
+        /// Base64-encoded compressed image.
+        /// </summary>
+        public byte[] Data { get; set; }
+        /// <summary>
+        /// Screencast frame metadata.
+        /// </summary>
+        public ScreencastFrameMetadata Metadata { get; set; }
+        /// <summary>
+        /// Frame number.
+        /// </summary>
+        public int SessionId { get; set; }
+    }
+    /// <summary>
+    /// Fired when the page with currently enabled screencast was shown or hidden `.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.screencastVisibilityChanged</c>
+    /// </remarks>
+    public class ScreencastVisibilityChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.screencastVisibilityChanged";
+        /// <summary>
+        /// True if the page is visible.
+        /// </summary>
+        public bool Visible { get; set; }
+    }
+    /// <summary>
+    /// Fired when a new window is going to be opened, via window.open(), link click, form submission,
+    /// etc.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.windowOpen</c>
+    /// </remarks>
+    public class WindowOpenEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.windowOpen";
+        /// <summary>
+        /// The URL for the new window.
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Window name.
+        /// </summary>
+        public string WindowName { get; set; }
+        /// <summary>
+        /// An array of enabled window features.
+        /// </summary>
+        public string[] WindowFeatures { get; set; }
+        /// <summary>
+        /// Whether or not it was triggered by user gesture.
+        /// </summary>
+        public bool UserGesture { get; set; }
+    }
+    /// <summary>
+    /// Issued for every compilation cache generated. Is only available
+    /// if Page.setGenerateCompilationCache is enabled.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Page.compilationCacheProduced</c>
+    /// </remarks>
+    public class CompilationCacheProducedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Page.compilationCacheProduced";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Base64-encoded data
+        /// </summary>
+        public byte[] Data { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Performance
@@ -11324,6 +13914,9 @@ namespace Playwright.Chromium.Protocol.Performance
     /// <summary>
     /// Disable collecting and reporting metrics.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Performance.disable</c>
+    /// </remarks>
     public class PerformanceDisableRequest : IChromiumRequest<PerformanceDisableResponse>
     {
         public string Command { get; } = "Performance.disable";
@@ -11337,6 +13930,9 @@ namespace Playwright.Chromium.Protocol.Performance
     /// <summary>
     /// Enable collecting and reporting metrics.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Performance.enable</c>
+    /// </remarks>
     public class PerformanceEnableRequest : IChromiumRequest<PerformanceEnableResponse>
     {
         public string Command { get; } = "Performance.enable";
@@ -11352,6 +13948,9 @@ namespace Playwright.Chromium.Protocol.Performance
     /// Note that this must be called before enabling metrics collection. Calling
     /// this method while metrics collection is enabled returns an error.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Performance.setTimeDomain</c>
+    /// </remarks>
     public class PerformanceSetTimeDomainRequest : IChromiumRequest<PerformanceSetTimeDomainResponse>
     {
         public string Command { get; } = "Performance.setTimeDomain";
@@ -11369,6 +13968,9 @@ namespace Playwright.Chromium.Protocol.Performance
     /// <summary>
     /// Retrieve current values of run-time metrics.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Performance.getMetrics</c>
+    /// </remarks>
     public class PerformanceGetMetricsRequest : IChromiumRequest<PerformanceGetMetricsResponse>
     {
         public string Command { get; } = "Performance.getMetrics";
@@ -11382,6 +13984,24 @@ namespace Playwright.Chromium.Protocol.Performance
         /// Current values for run-time metrics.
         /// </summary>
         public Metric[] Metrics { get; set; }
+    }
+    /// <summary>
+    /// Current values of the metrics.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Performance.metrics</c>
+    /// </remarks>
+    public class MetricsEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Performance.metrics";
+        /// <summary>
+        /// Current values of the metrics.
+        /// </summary>
+        public Metric[] Metrics { get; set; }
+        /// <summary>
+        /// Timestamp title.
+        /// </summary>
+        public string Title { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Security
@@ -11599,6 +14219,9 @@ namespace Playwright.Chromium.Protocol.Security
     /// <summary>
     /// Disables tracking security state changes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Security.disable</c>
+    /// </remarks>
     public class SecurityDisableRequest : IChromiumRequest<SecurityDisableResponse>
     {
         public string Command { get; } = "Security.disable";
@@ -11612,6 +14235,9 @@ namespace Playwright.Chromium.Protocol.Security
     /// <summary>
     /// Enables tracking security state changes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Security.enable</c>
+    /// </remarks>
     public class SecurityEnableRequest : IChromiumRequest<SecurityEnableResponse>
     {
         public string Command { get; } = "Security.enable";
@@ -11625,6 +14251,9 @@ namespace Playwright.Chromium.Protocol.Security
     /// <summary>
     /// Enable/disable whether all certificate errors should be ignored.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Security.setIgnoreCertificateErrors</c>
+    /// </remarks>
     public class SecuritySetIgnoreCertificateErrorsRequest : IChromiumRequest<SecuritySetIgnoreCertificateErrorsResponse>
     {
         public string Command { get; } = "Security.setIgnoreCertificateErrors";
@@ -11642,6 +14271,9 @@ namespace Playwright.Chromium.Protocol.Security
     /// <summary>
     /// Handles a certificate error that fired a certificateError event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Security.handleCertificateError</c>
+    /// </remarks>
     public class SecurityHandleCertificateErrorRequest : IChromiumRequest<SecurityHandleCertificateErrorResponse>
     {
         public string Command { get; } = "Security.handleCertificateError";
@@ -11664,6 +14296,9 @@ namespace Playwright.Chromium.Protocol.Security
     /// Enable/disable overriding certificate errors. If enabled, all certificate error events need to
     /// be handled by the DevTools client and should be answered with `handleCertificateError` commands.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Security.setOverrideCertificateErrors</c>
+    /// </remarks>
     public class SecuritySetOverrideCertificateErrorsRequest : IChromiumRequest<SecuritySetOverrideCertificateErrorsResponse>
     {
         public string Command { get; } = "Security.setOverrideCertificateErrors";
@@ -11677,6 +14312,76 @@ namespace Playwright.Chromium.Protocol.Security
     /// </summary>
     public class SecuritySetOverrideCertificateErrorsResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// There is a certificate error. If overriding certificate errors is enabled, then it should be
+    /// handled with the `handleCertificateError` command. Note: this event does not fire if the
+    /// certificate error has been allowed internally. Only one client per target should override
+    /// certificate errors at the same time.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Security.certificateError</c>
+    /// </remarks>
+    public class CertificateErrorEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Security.certificateError";
+        /// <summary>
+        /// The ID of the event.
+        /// </summary>
+        public int EventId { get; set; }
+        /// <summary>
+        /// The type of the error.
+        /// </summary>
+        public string ErrorType { get; set; }
+        /// <summary>
+        /// The url that was requested.
+        /// </summary>
+        public string RequestURL { get; set; }
+    }
+    /// <summary>
+    /// The security state of the page changed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Security.visibleSecurityStateChanged</c>
+    /// </remarks>
+    public class VisibleSecurityStateChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Security.visibleSecurityStateChanged";
+        /// <summary>
+        /// Security state information about the page.
+        /// </summary>
+        public VisibleSecurityState VisibleSecurityState { get; set; }
+    }
+    /// <summary>
+    /// The security state of the page changed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Security.securityStateChanged</c>
+    /// </remarks>
+    public class SecurityStateChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Security.securityStateChanged";
+        /// <summary>
+        /// Security state.
+        /// </summary>
+        public SecurityState SecurityState { get; set; }
+        /// <summary>
+        /// True if the page was loaded over cryptographic transport such as HTTPS.
+        /// </summary>
+        public bool SchemeIsCryptographic { get; set; }
+        /// <summary>
+        /// List of explanations for the security state. If the overall security state is `insecure` or
+        /// `warning`, at least one corresponding explanation should be included.
+        /// </summary>
+        public SecurityStateExplanation[] Explanations { get; set; }
+        /// <summary>
+        /// Information about insecure content on the page.
+        /// </summary>
+        public InsecureContentStatus InsecureContentStatus { get; set; }
+        /// <summary>
+        /// Overrides user-visible description of the state.
+        /// </summary>
+        public string Summary { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.ServiceWorker
@@ -11821,6 +14526,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.deliverPushMessage</c>
+    /// </remarks>
     public class ServiceWorkerDeliverPushMessageRequest : IChromiumRequest<ServiceWorkerDeliverPushMessageResponse>
     {
         public string Command { get; } = "ServiceWorker.deliverPushMessage";
@@ -11846,6 +14554,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.disable</c>
+    /// </remarks>
     public class ServiceWorkerDisableRequest : IChromiumRequest<ServiceWorkerDisableResponse>
     {
         public string Command { get; } = "ServiceWorker.disable";
@@ -11859,6 +14570,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.dispatchSyncEvent</c>
+    /// </remarks>
     public class ServiceWorkerDispatchSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchSyncEventResponse>
     {
         public string Command { get; } = "ServiceWorker.dispatchSyncEvent";
@@ -11888,6 +14602,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.dispatchPeriodicSyncEvent</c>
+    /// </remarks>
     public class ServiceWorkerDispatchPeriodicSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchPeriodicSyncEventResponse>
     {
         public string Command { get; } = "ServiceWorker.dispatchPeriodicSyncEvent";
@@ -11913,6 +14630,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.enable</c>
+    /// </remarks>
     public class ServiceWorkerEnableRequest : IChromiumRequest<ServiceWorkerEnableResponse>
     {
         public string Command { get; } = "ServiceWorker.enable";
@@ -11926,6 +14646,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.inspectWorker</c>
+    /// </remarks>
     public class ServiceWorkerInspectWorkerRequest : IChromiumRequest<ServiceWorkerInspectWorkerResponse>
     {
         public string Command { get; } = "ServiceWorker.inspectWorker";
@@ -11943,6 +14666,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.setForceUpdateOnPageLoad</c>
+    /// </remarks>
     public class ServiceWorkerSetForceUpdateOnPageLoadRequest : IChromiumRequest<ServiceWorkerSetForceUpdateOnPageLoadResponse>
     {
         public string Command { get; } = "ServiceWorker.setForceUpdateOnPageLoad";
@@ -11960,6 +14686,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.skipWaiting</c>
+    /// </remarks>
     public class ServiceWorkerSkipWaitingRequest : IChromiumRequest<ServiceWorkerSkipWaitingResponse>
     {
         public string Command { get; } = "ServiceWorker.skipWaiting";
@@ -11977,6 +14706,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.startWorker</c>
+    /// </remarks>
     public class ServiceWorkerStartWorkerRequest : IChromiumRequest<ServiceWorkerStartWorkerResponse>
     {
         public string Command { get; } = "ServiceWorker.startWorker";
@@ -11994,6 +14726,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.stopAllWorkers</c>
+    /// </remarks>
     public class ServiceWorkerStopAllWorkersRequest : IChromiumRequest<ServiceWorkerStopAllWorkersResponse>
     {
         public string Command { get; } = "ServiceWorker.stopAllWorkers";
@@ -12007,6 +14742,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.stopWorker</c>
+    /// </remarks>
     public class ServiceWorkerStopWorkerRequest : IChromiumRequest<ServiceWorkerStopWorkerResponse>
     {
         public string Command { get; } = "ServiceWorker.stopWorker";
@@ -12024,6 +14762,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.unregister</c>
+    /// </remarks>
     public class ServiceWorkerUnregisterRequest : IChromiumRequest<ServiceWorkerUnregisterResponse>
     {
         public string Command { get; } = "ServiceWorker.unregister";
@@ -12041,6 +14782,9 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>ServiceWorker.updateRegistration</c>
+    /// </remarks>
     public class ServiceWorkerUpdateRegistrationRequest : IChromiumRequest<ServiceWorkerUpdateRegistrationResponse>
     {
         public string Command { get; } = "ServiceWorker.updateRegistration";
@@ -12054,6 +14798,48 @@ namespace Playwright.Chromium.Protocol.ServiceWorker
     /// </summary>
     public class ServiceWorkerUpdateRegistrationResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>ServiceWorker.workerErrorReported</c>
+    /// </remarks>
+    public class WorkerErrorReportedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "ServiceWorker.workerErrorReported";
+        /// <summary>
+        /// 
+        /// </summary>
+        public ServiceWorkerErrorMessage ErrorMessage { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>ServiceWorker.workerRegistrationUpdated</c>
+    /// </remarks>
+    public class WorkerRegistrationUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "ServiceWorker.workerRegistrationUpdated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public ServiceWorkerRegistration[] Registrations { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>ServiceWorker.workerVersionUpdated</c>
+    /// </remarks>
+    public class WorkerVersionUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "ServiceWorker.workerVersionUpdated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public ServiceWorkerVersion[] Versions { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Storage
@@ -12092,6 +14878,9 @@ namespace Playwright.Chromium.Protocol.Storage
     /// <summary>
     /// Clears storage for origin.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.clearDataForOrigin</c>
+    /// </remarks>
     public class StorageClearDataForOriginRequest : IChromiumRequest<StorageClearDataForOriginResponse>
     {
         public string Command { get; } = "Storage.clearDataForOrigin";
@@ -12113,6 +14902,9 @@ namespace Playwright.Chromium.Protocol.Storage
     /// <summary>
     /// Returns usage and quota in bytes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.getUsageAndQuota</c>
+    /// </remarks>
     public class StorageGetUsageAndQuotaRequest : IChromiumRequest<StorageGetUsageAndQuotaResponse>
     {
         public string Command { get; } = "Storage.getUsageAndQuota";
@@ -12142,6 +14934,9 @@ namespace Playwright.Chromium.Protocol.Storage
     /// <summary>
     /// Registers origin to be notified when an update occurs to its cache storage list.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.trackCacheStorageForOrigin</c>
+    /// </remarks>
     public class StorageTrackCacheStorageForOriginRequest : IChromiumRequest<StorageTrackCacheStorageForOriginResponse>
     {
         public string Command { get; } = "Storage.trackCacheStorageForOrigin";
@@ -12159,6 +14954,9 @@ namespace Playwright.Chromium.Protocol.Storage
     /// <summary>
     /// Registers origin to be notified when an update occurs to its IndexedDB.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.trackIndexedDBForOrigin</c>
+    /// </remarks>
     public class StorageTrackIndexedDBForOriginRequest : IChromiumRequest<StorageTrackIndexedDBForOriginResponse>
     {
         public string Command { get; } = "Storage.trackIndexedDBForOrigin";
@@ -12176,6 +14974,9 @@ namespace Playwright.Chromium.Protocol.Storage
     /// <summary>
     /// Unregisters origin from receiving notifications for cache storage.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.untrackCacheStorageForOrigin</c>
+    /// </remarks>
     public class StorageUntrackCacheStorageForOriginRequest : IChromiumRequest<StorageUntrackCacheStorageForOriginResponse>
     {
         public string Command { get; } = "Storage.untrackCacheStorageForOrigin";
@@ -12193,6 +14994,9 @@ namespace Playwright.Chromium.Protocol.Storage
     /// <summary>
     /// Unregisters origin from receiving notifications for IndexedDB.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.untrackIndexedDBForOrigin</c>
+    /// </remarks>
     public class StorageUntrackIndexedDBForOriginRequest : IChromiumRequest<StorageUntrackIndexedDBForOriginResponse>
     {
         public string Command { get; } = "Storage.untrackIndexedDBForOrigin";
@@ -12206,6 +15010,74 @@ namespace Playwright.Chromium.Protocol.Storage
     /// </summary>
     public class StorageUntrackIndexedDBForOriginResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// A cache's contents have been modified.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Storage.cacheStorageContentUpdated</c>
+    /// </remarks>
+    public class CacheStorageContentUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Storage.cacheStorageContentUpdated";
+        /// <summary>
+        /// Origin to update.
+        /// </summary>
+        public string Origin { get; set; }
+        /// <summary>
+        /// Name of cache in origin.
+        /// </summary>
+        public string CacheName { get; set; }
+    }
+    /// <summary>
+    /// A cache has been added/deleted.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Storage.cacheStorageListUpdated</c>
+    /// </remarks>
+    public class CacheStorageListUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Storage.cacheStorageListUpdated";
+        /// <summary>
+        /// Origin to update.
+        /// </summary>
+        public string Origin { get; set; }
+    }
+    /// <summary>
+    /// The origin's IndexedDB object store has been modified.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Storage.indexedDBContentUpdated</c>
+    /// </remarks>
+    public class IndexedDBContentUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Storage.indexedDBContentUpdated";
+        /// <summary>
+        /// Origin to update.
+        /// </summary>
+        public string Origin { get; set; }
+        /// <summary>
+        /// Database to update.
+        /// </summary>
+        public string DatabaseName { get; set; }
+        /// <summary>
+        /// ObjectStore to update.
+        /// </summary>
+        public string ObjectStoreName { get; set; }
+    }
+    /// <summary>
+    /// The origin's IndexedDB database list has been modified.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Storage.indexedDBListUpdated</c>
+    /// </remarks>
+    public class IndexedDBListUpdatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Storage.indexedDBListUpdated";
+        /// <summary>
+        /// Origin to update.
+        /// </summary>
+        public string Origin { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.SystemInfo
@@ -12403,6 +15275,9 @@ namespace Playwright.Chromium.Protocol.SystemInfo
     /// <summary>
     /// Returns information about the system.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>SystemInfo.getInfo</c>
+    /// </remarks>
     public class SystemInfoGetInfoRequest : IChromiumRequest<SystemInfoGetInfoResponse>
     {
         public string Command { get; } = "SystemInfo.getInfo";
@@ -12435,6 +15310,9 @@ namespace Playwright.Chromium.Protocol.SystemInfo
     /// <summary>
     /// Returns information about all running processes.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>SystemInfo.getProcessInfo</c>
+    /// </remarks>
     public class SystemInfoGetProcessInfoRequest : IChromiumRequest<SystemInfoGetProcessInfoResponse>
     {
         public string Command { get; } = "SystemInfo.getProcessInfo";
@@ -12575,6 +15453,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Activates (focuses) the target.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.activateTarget</c>
+    /// </remarks>
     public class TargetActivateTargetRequest : IChromiumRequest<TargetActivateTargetResponse>
     {
         public string Command { get; } = "Target.activateTarget";
@@ -12592,6 +15473,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Attaches to the target with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.attachToTarget</c>
+    /// </remarks>
     public class TargetAttachToTargetRequest : IChromiumRequest<TargetAttachToTargetResponse>
     {
         public string Command { get; } = "Target.attachToTarget";
@@ -12619,6 +15503,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Attaches to the browser target, only uses flat sessionId mode.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.attachToBrowserTarget</c>
+    /// </remarks>
     public class TargetAttachToBrowserTargetRequest : IChromiumRequest<TargetAttachToBrowserTargetResponse>
     {
         public string Command { get; } = "Target.attachToBrowserTarget";
@@ -12636,6 +15523,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Closes the target. If the target is a page that gets closed too.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.closeTarget</c>
+    /// </remarks>
     public class TargetCloseTargetRequest : IChromiumRequest<TargetCloseTargetResponse>
     {
         public string Command { get; } = "Target.closeTarget";
@@ -12664,6 +15554,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// - `binding.send(json)` - a method to send messages over the remote debugging protocol
     /// - `binding.onmessage = json =&gt; handleMessage(json)` - a callback that will be called for the protocol notifications and command responses.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.exposeDevToolsProtocol</c>
+    /// </remarks>
     public class TargetExposeDevToolsProtocolRequest : IChromiumRequest<TargetExposeDevToolsProtocolResponse>
     {
         public string Command { get; } = "Target.exposeDevToolsProtocol";
@@ -12686,6 +15579,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than
     /// one.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.createBrowserContext</c>
+    /// </remarks>
     public class TargetCreateBrowserContextRequest : IChromiumRequest<TargetCreateBrowserContextResponse>
     {
         public string Command { get; } = "Target.createBrowserContext";
@@ -12703,6 +15599,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Returns all browser contexts created with `Target.createBrowserContext` method.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.getBrowserContexts</c>
+    /// </remarks>
     public class TargetGetBrowserContextsRequest : IChromiumRequest<TargetGetBrowserContextsResponse>
     {
         public string Command { get; } = "Target.getBrowserContexts";
@@ -12720,6 +15619,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Creates a new page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.createTarget</c>
+    /// </remarks>
     public class TargetCreateTargetRequest : IChromiumRequest<TargetCreateTargetResponse>
     {
         public string Command { get; } = "Target.createTarget";
@@ -12767,6 +15669,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Detaches session with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.detachFromTarget</c>
+    /// </remarks>
     public class TargetDetachFromTargetRequest : IChromiumRequest<TargetDetachFromTargetResponse>
     {
         public string Command { get; } = "Target.detachFromTarget";
@@ -12789,6 +15694,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// Deletes a BrowserContext. All the belonging pages will be closed without calling their
     /// beforeunload hooks.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.disposeBrowserContext</c>
+    /// </remarks>
     public class TargetDisposeBrowserContextRequest : IChromiumRequest<TargetDisposeBrowserContextResponse>
     {
         public string Command { get; } = "Target.disposeBrowserContext";
@@ -12806,6 +15714,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Returns information about a target.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.getTargetInfo</c>
+    /// </remarks>
     public class TargetGetTargetInfoRequest : IChromiumRequest<TargetGetTargetInfoResponse>
     {
         public string Command { get; } = "Target.getTargetInfo";
@@ -12827,6 +15738,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// <summary>
     /// Retrieves a list of available targets.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.getTargets</c>
+    /// </remarks>
     public class TargetGetTargetsRequest : IChromiumRequest<TargetGetTargetsResponse>
     {
         public string Command { get; } = "Target.getTargets";
@@ -12846,6 +15760,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// Consider using flat mode instead; see commands attachToTarget, setAutoAttach,
     /// and crbug.com/991325.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.sendMessageToTarget</c>
+    /// </remarks>
     public class TargetSendMessageToTargetRequest : IChromiumRequest<TargetSendMessageToTargetResponse>
     {
         public string Command { get; } = "Target.sendMessageToTarget";
@@ -12873,6 +15790,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// this one. When turned on, attaches to all existing related targets as well. When turned off,
     /// automatically detaches from all currently attached targets.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.setAutoAttach</c>
+    /// </remarks>
     public class TargetSetAutoAttachRequest : IChromiumRequest<TargetSetAutoAttachResponse>
     {
         public string Command { get; } = "Target.setAutoAttach";
@@ -12906,6 +15826,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// Controls whether to discover available targets and notify via
     /// `targetCreated/targetInfoChanged/targetDestroyed` events.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.setDiscoverTargets</c>
+    /// </remarks>
     public class TargetSetDiscoverTargetsRequest : IChromiumRequest<TargetSetDiscoverTargetsResponse>
     {
         public string Command { get; } = "Target.setDiscoverTargets";
@@ -12924,6 +15847,9 @@ namespace Playwright.Chromium.Protocol.Target
     /// Enables target discovery for the specified locations, when `setDiscoverTargets` was set to
     /// `true`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Target.setRemoteLocations</c>
+    /// </remarks>
     public class TargetSetRemoteLocationsRequest : IChromiumRequest<TargetSetRemoteLocationsResponse>
     {
         public string Command { get; } = "Target.setRemoteLocations";
@@ -12938,12 +15864,144 @@ namespace Playwright.Chromium.Protocol.Target
     public class TargetSetRemoteLocationsResponse : IChromiumResponse
     {
     }
+    /// <summary>
+    /// Issued when attached to target because of auto-attach or `attachToTarget` command.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.attachedToTarget</c>
+    /// </remarks>
+    public class AttachedToTargetEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.attachedToTarget";
+        /// <summary>
+        /// Identifier assigned to the session used to send/receive messages.
+        /// </summary>
+        public SessionID SessionId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public TargetInfo TargetInfo { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool WaitingForDebugger { get; set; }
+    }
+    /// <summary>
+    /// Issued when detached from target for any reason (including `detachFromTarget` command). Can be
+    /// issued multiple times per target if multiple sessions have been attached to it.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.detachedFromTarget</c>
+    /// </remarks>
+    public class DetachedFromTargetEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.detachedFromTarget";
+        /// <summary>
+        /// Detached session identifier.
+        /// </summary>
+        public SessionID SessionId { get; set; }
+        /// <summary>
+        /// Deprecated.
+        /// </summary>
+        public TargetID TargetId { get; set; }
+    }
+    /// <summary>
+    /// Notifies about a new protocol message received from the session (as reported in
+    /// `attachedToTarget` event).
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.receivedMessageFromTarget</c>
+    /// </remarks>
+    public class ReceivedMessageFromTargetEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.receivedMessageFromTarget";
+        /// <summary>
+        /// Identifier of a session which sends a message.
+        /// </summary>
+        public SessionID SessionId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Message { get; set; }
+        /// <summary>
+        /// Deprecated.
+        /// </summary>
+        public TargetID TargetId { get; set; }
+    }
+    /// <summary>
+    /// Issued when a possible inspection target is created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.targetCreated</c>
+    /// </remarks>
+    public class TargetCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.targetCreated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public TargetInfo TargetInfo { get; set; }
+    }
+    /// <summary>
+    /// Issued when a target is destroyed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.targetDestroyed</c>
+    /// </remarks>
+    public class TargetDestroyedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.targetDestroyed";
+        /// <summary>
+        /// 
+        /// </summary>
+        public TargetID TargetId { get; set; }
+    }
+    /// <summary>
+    /// Issued when a target has crashed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.targetCrashed</c>
+    /// </remarks>
+    public class TargetCrashedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.targetCrashed";
+        /// <summary>
+        /// 
+        /// </summary>
+        public TargetID TargetId { get; set; }
+        /// <summary>
+        /// Termination status type.
+        /// </summary>
+        public string Status { get; set; }
+        /// <summary>
+        /// Termination error code.
+        /// </summary>
+        public int ErrorCode { get; set; }
+    }
+    /// <summary>
+    /// Issued when some information about a target has changed. This only happens between
+    /// `targetCreated` and `targetDestroyed`.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Target.targetInfoChanged</c>
+    /// </remarks>
+    public class TargetInfoChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Target.targetInfoChanged";
+        /// <summary>
+        /// 
+        /// </summary>
+        public TargetInfo TargetInfo { get; set; }
+    }
 }
 namespace Playwright.Chromium.Protocol.Tethering
 {
     /// <summary>
     /// Request browser port binding.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tethering.bind</c>
+    /// </remarks>
     public class TetheringBindRequest : IChromiumRequest<TetheringBindResponse>
     {
         public string Command { get; } = "Tethering.bind";
@@ -12961,6 +16019,9 @@ namespace Playwright.Chromium.Protocol.Tethering
     /// <summary>
     /// Request browser port unbinding.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tethering.unbind</c>
+    /// </remarks>
     public class TetheringUnbindRequest : IChromiumRequest<TetheringUnbindResponse>
     {
         public string Command { get; } = "Tethering.unbind";
@@ -12974,6 +16035,24 @@ namespace Playwright.Chromium.Protocol.Tethering
     /// </summary>
     public class TetheringUnbindResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Informs that port was successfully bound and got a specified connection id.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Tethering.accepted</c>
+    /// </remarks>
+    public class AcceptedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Tethering.accepted";
+        /// <summary>
+        /// Port number that was successfully bound.
+        /// </summary>
+        public int Port { get; set; }
+        /// <summary>
+        /// Connection id to be used.
+        /// </summary>
+        public string ConnectionId { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Tracing
@@ -13042,6 +16121,9 @@ namespace Playwright.Chromium.Protocol.Tracing
     /// <summary>
     /// Stop trace events collection.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tracing.end</c>
+    /// </remarks>
     public class TracingEndRequest : IChromiumRequest<TracingEndResponse>
     {
         public string Command { get; } = "Tracing.end";
@@ -13055,6 +16137,9 @@ namespace Playwright.Chromium.Protocol.Tracing
     /// <summary>
     /// Gets supported tracing categories.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tracing.getCategories</c>
+    /// </remarks>
     public class TracingGetCategoriesRequest : IChromiumRequest<TracingGetCategoriesResponse>
     {
         public string Command { get; } = "Tracing.getCategories";
@@ -13072,6 +16157,9 @@ namespace Playwright.Chromium.Protocol.Tracing
     /// <summary>
     /// Record a clock sync marker in the trace.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tracing.recordClockSyncMarker</c>
+    /// </remarks>
     public class TracingRecordClockSyncMarkerRequest : IChromiumRequest<TracingRecordClockSyncMarkerResponse>
     {
         public string Command { get; } = "Tracing.recordClockSyncMarker";
@@ -13089,6 +16177,9 @@ namespace Playwright.Chromium.Protocol.Tracing
     /// <summary>
     /// Request a global memory dump.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tracing.requestMemoryDump</c>
+    /// </remarks>
     public class TracingRequestMemoryDumpRequest : IChromiumRequest<TracingRequestMemoryDumpResponse>
     {
         public string Command { get; } = "Tracing.requestMemoryDump";
@@ -13114,6 +16205,9 @@ namespace Playwright.Chromium.Protocol.Tracing
     /// <summary>
     /// Start trace events collection.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Tracing.start</c>
+    /// </remarks>
     public class TracingStartRequest : IChromiumRequest<TracingStartResponse>
     {
         public string Command { get; } = "Tracing.start";
@@ -13154,6 +16248,73 @@ namespace Playwright.Chromium.Protocol.Tracing
     /// </summary>
     public class TracingStartResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Tracing.bufferUsage</c>
+    /// </remarks>
+    public class BufferUsageEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Tracing.bufferUsage";
+        /// <summary>
+        /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
+        /// total size.
+        /// </summary>
+        public double PercentFull { get; set; }
+        /// <summary>
+        /// An approximate number of events in the trace log.
+        /// </summary>
+        public double EventCount { get; set; }
+        /// <summary>
+        /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
+        /// total size.
+        /// </summary>
+        public double Value { get; set; }
+    }
+    /// <summary>
+    /// Contains an bucket of collected trace events. When tracing is stopped collected events will be
+    /// send as a sequence of dataCollected events followed by tracingComplete event.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Tracing.dataCollected</c>
+    /// </remarks>
+    public class DataCollectedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Tracing.dataCollected";
+        /// <summary>
+        /// 
+        /// </summary>
+        public object[] Value { get; set; }
+    }
+    /// <summary>
+    /// Signals that tracing is stopped and there is no trace buffers pending flush, all data were
+    /// delivered via dataCollected events.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Tracing.tracingComplete</c>
+    /// </remarks>
+    public class TracingCompleteEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Tracing.tracingComplete";
+        /// <summary>
+        /// Indicates whether some trace data is known to have been lost, e.g. because the trace ring
+        /// buffer wrapped around.
+        /// </summary>
+        public bool DataLossOccurred { get; set; }
+        /// <summary>
+        /// A handle of the stream that holds resulting trace data.
+        /// </summary>
+        public Playwright.Chromium.Protocol.IO.StreamHandle Stream { get; set; }
+        /// <summary>
+        /// Trace data format of returned stream.
+        /// </summary>
+        public StreamFormat TraceFormat { get; set; }
+        /// <summary>
+        /// Compression format of returned stream.
+        /// </summary>
+        public StreamCompression StreamCompression { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Fetch
@@ -13272,6 +16433,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// <summary>
     /// Disables the fetch domain.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.disable</c>
+    /// </remarks>
     public class FetchDisableRequest : IChromiumRequest<FetchDisableResponse>
     {
         public string Command { get; } = "Fetch.disable";
@@ -13286,6 +16450,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// Enables issuing of requestPaused events. A request will be paused until client
     /// calls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.enable</c>
+    /// </remarks>
     public class FetchEnableRequest : IChromiumRequest<FetchEnableResponse>
     {
         public string Command { get; } = "Fetch.enable";
@@ -13310,6 +16477,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// <summary>
     /// Causes the request to fail with specified reason.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.failRequest</c>
+    /// </remarks>
     public class FetchFailRequestRequest : IChromiumRequest<FetchFailRequestResponse>
     {
         public string Command { get; } = "Fetch.failRequest";
@@ -13331,6 +16501,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// <summary>
     /// Provides response to the request.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.fulfillRequest</c>
+    /// </remarks>
     public class FetchFulfillRequestRequest : IChromiumRequest<FetchFulfillRequestResponse>
     {
         public string Command { get; } = "Fetch.fulfillRequest";
@@ -13372,6 +16545,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// <summary>
     /// Continues the request, optionally modifying some of its parameters.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.continueRequest</c>
+    /// </remarks>
     public class FetchContinueRequestRequest : IChromiumRequest<FetchContinueRequestResponse>
     {
         public string Command { get; } = "Fetch.continueRequest";
@@ -13405,6 +16581,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// <summary>
     /// Continues a request supplying authChallengeResponse following authRequired event.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.continueWithAuth</c>
+    /// </remarks>
     public class FetchContinueWithAuthRequest : IChromiumRequest<FetchContinueWithAuthResponse>
     {
         public string Command { get; } = "Fetch.continueWithAuth";
@@ -13431,6 +16610,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// affect the request or disabling fetch domain before body is received
     /// results in an undefined behavior.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.getResponseBody</c>
+    /// </remarks>
     public class FetchGetResponseBodyRequest : IChromiumRequest<FetchGetResponseBodyResponse>
     {
         public string Command { get; } = "Fetch.getResponseBody";
@@ -13465,6 +16647,9 @@ namespace Playwright.Chromium.Protocol.Fetch
     /// Calling other methods that affect the request or disabling fetch
     /// domain before body is received results in an undefined behavior.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Fetch.takeResponseBodyAsStream</c>
+    /// </remarks>
     public class FetchTakeResponseBodyAsStreamRequest : IChromiumRequest<FetchTakeResponseBodyAsStreamResponse>
     {
         public string Command { get; } = "Fetch.takeResponseBodyAsStream";
@@ -13482,6 +16667,87 @@ namespace Playwright.Chromium.Protocol.Fetch
         /// 
         /// </summary>
         public Playwright.Chromium.Protocol.IO.StreamHandle Stream { get; set; }
+    }
+    /// <summary>
+    /// Issued when the domain is enabled and the request URL matches the
+    /// specified filter. The request is paused until the client responds
+    /// with one of continueRequest, failRequest or fulfillRequest.
+    /// The stage of the request can be determined by presence of responseErrorReason
+    /// and responseStatusCode -- the request is at the response stage if either
+    /// of these fields is present and in the request stage otherwise.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Fetch.requestPaused</c>
+    /// </remarks>
+    public class RequestPausedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Fetch.requestPaused";
+        /// <summary>
+        /// Each request the page makes will have a unique id.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// The details of the request.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.Request Request { get; set; }
+        /// <summary>
+        /// The id of the frame that initiated the request.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.FrameId FrameId { get; set; }
+        /// <summary>
+        /// How the requested resource will be used.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// Response error if intercepted at response stage.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.ErrorReason ResponseErrorReason { get; set; }
+        /// <summary>
+        /// Response code if intercepted at response stage.
+        /// </summary>
+        public int ResponseStatusCode { get; set; }
+        /// <summary>
+        /// Response headers if intercepted at the response stage.
+        /// </summary>
+        public HeaderEntry[] ResponseHeaders { get; set; }
+        /// <summary>
+        /// If the intercepted request had a corresponding Network.requestWillBeSent event fired for it,
+        /// then this networkId will be the same as the requestId present in the requestWillBeSent event.
+        /// </summary>
+        public RequestId NetworkId { get; set; }
+    }
+    /// <summary>
+    /// Issued when the domain is enabled with handleAuthRequests set to true.
+    /// The request is paused until client responds with continueWithAuth.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Fetch.authRequired</c>
+    /// </remarks>
+    public class AuthRequiredEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Fetch.authRequired";
+        /// <summary>
+        /// Each request the page makes will have a unique id.
+        /// </summary>
+        public RequestId RequestId { get; set; }
+        /// <summary>
+        /// The details of the request.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.Request Request { get; set; }
+        /// <summary>
+        /// The id of the frame that initiated the request.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Page.FrameId FrameId { get; set; }
+        /// <summary>
+        /// How the requested resource will be used.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Network.ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// Details of the Authorization Challenge encountered.
+        /// If this is set, client should respond with continueRequest that
+        /// contains AuthChallengeResponse.
+        /// </summary>
+        public AuthChallenge AuthChallenge { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.WebAudio
@@ -13751,6 +17017,9 @@ namespace Playwright.Chromium.Protocol.WebAudio
     /// <summary>
     /// Enables the WebAudio domain and starts sending context lifetime events.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAudio.enable</c>
+    /// </remarks>
     public class WebAudioEnableRequest : IChromiumRequest<WebAudioEnableResponse>
     {
         public string Command { get; } = "WebAudio.enable";
@@ -13764,6 +17033,9 @@ namespace Playwright.Chromium.Protocol.WebAudio
     /// <summary>
     /// Disables the WebAudio domain.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAudio.disable</c>
+    /// </remarks>
     public class WebAudioDisableRequest : IChromiumRequest<WebAudioDisableResponse>
     {
         public string Command { get; } = "WebAudio.disable";
@@ -13777,6 +17049,9 @@ namespace Playwright.Chromium.Protocol.WebAudio
     /// <summary>
     /// Fetch the realtime data from the registered contexts.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAudio.getRealtimeData</c>
+    /// </remarks>
     public class WebAudioGetRealtimeDataRequest : IChromiumRequest<WebAudioGetRealtimeDataResponse>
     {
         public string Command { get; } = "WebAudio.getRealtimeData";
@@ -13794,6 +17069,260 @@ namespace Playwright.Chromium.Protocol.WebAudio
         /// 
         /// </summary>
         public ContextRealtimeData RealtimeData { get; set; }
+    }
+    /// <summary>
+    /// Notifies that a new BaseAudioContext has been created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.contextCreated</c>
+    /// </remarks>
+    public class ContextCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.contextCreated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public BaseAudioContext Context { get; set; }
+    }
+    /// <summary>
+    /// Notifies that an existing BaseAudioContext will be destroyed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.contextWillBeDestroyed</c>
+    /// </remarks>
+    public class ContextWillBeDestroyedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.contextWillBeDestroyed";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+    }
+    /// <summary>
+    /// Notifies that existing BaseAudioContext has changed some properties (id stays the same)..
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.contextChanged</c>
+    /// </remarks>
+    public class ContextChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.contextChanged";
+        /// <summary>
+        /// 
+        /// </summary>
+        public BaseAudioContext Context { get; set; }
+    }
+    /// <summary>
+    /// Notifies that the construction of an AudioListener has finished.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.audioListenerCreated</c>
+    /// </remarks>
+    public class AudioListenerCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.audioListenerCreated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioListener Listener { get; set; }
+    }
+    /// <summary>
+    /// Notifies that a new AudioListener has been created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.audioListenerWillBeDestroyed</c>
+    /// </remarks>
+    public class AudioListenerWillBeDestroyedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.audioListenerWillBeDestroyed";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ListenerId { get; set; }
+    }
+    /// <summary>
+    /// Notifies that a new AudioNode has been created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.audioNodeCreated</c>
+    /// </remarks>
+    public class AudioNodeCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.audioNodeCreated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioNode Node { get; set; }
+    }
+    /// <summary>
+    /// Notifies that an existing AudioNode has been destroyed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.audioNodeWillBeDestroyed</c>
+    /// </remarks>
+    public class AudioNodeWillBeDestroyedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.audioNodeWillBeDestroyed";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId NodeId { get; set; }
+    }
+    /// <summary>
+    /// Notifies that a new AudioParam has been created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.audioParamCreated</c>
+    /// </remarks>
+    public class AudioParamCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.audioParamCreated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioParam Param { get; set; }
+    }
+    /// <summary>
+    /// Notifies that an existing AudioParam has been destroyed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.audioParamWillBeDestroyed</c>
+    /// </remarks>
+    public class AudioParamWillBeDestroyedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.audioParamWillBeDestroyed";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId NodeId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ParamId { get; set; }
+    }
+    /// <summary>
+    /// Notifies that two AudioNodes are connected.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.nodesConnected</c>
+    /// </remarks>
+    public class NodesConnectedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.nodesConnected";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId SourceId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId DestinationId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double SourceOutputIndex { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DestinationInputIndex { get; set; }
+    }
+    /// <summary>
+    /// Notifies that AudioNodes are disconnected. The destination can be null, and it means all the outgoing connections from the source are disconnected.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.nodesDisconnected</c>
+    /// </remarks>
+    public class NodesDisconnectedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.nodesDisconnected";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId SourceId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId DestinationId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double SourceOutputIndex { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DestinationInputIndex { get; set; }
+    }
+    /// <summary>
+    /// Notifies that an AudioNode is connected to an AudioParam.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.nodeParamConnected</c>
+    /// </remarks>
+    public class NodeParamConnectedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.nodeParamConnected";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId SourceId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId DestinationId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double SourceOutputIndex { get; set; }
+    }
+    /// <summary>
+    /// Notifies that an AudioNode is disconnected to an AudioParam.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>WebAudio.nodeParamDisconnected</c>
+    /// </remarks>
+    public class NodeParamDisconnectedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "WebAudio.nodeParamDisconnected";
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId ContextId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId SourceId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public GraphObjectId DestinationId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double SourceOutputIndex { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.WebAuthn
@@ -13911,6 +17440,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// Enable the WebAuthn domain and start intercepting credential storage and
     /// retrieval with a virtual authenticator.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.enable</c>
+    /// </remarks>
     public class WebAuthnEnableRequest : IChromiumRequest<WebAuthnEnableResponse>
     {
         public string Command { get; } = "WebAuthn.enable";
@@ -13924,6 +17456,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Disable the WebAuthn domain.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.disable</c>
+    /// </remarks>
     public class WebAuthnDisableRequest : IChromiumRequest<WebAuthnDisableResponse>
     {
         public string Command { get; } = "WebAuthn.disable";
@@ -13937,6 +17472,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Creates and adds a virtual authenticator.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.addVirtualAuthenticator</c>
+    /// </remarks>
     public class WebAuthnAddVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnAddVirtualAuthenticatorResponse>
     {
         public string Command { get; } = "WebAuthn.addVirtualAuthenticator";
@@ -13958,6 +17496,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Removes the given authenticator.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.removeVirtualAuthenticator</c>
+    /// </remarks>
     public class WebAuthnRemoveVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnRemoveVirtualAuthenticatorResponse>
     {
         public string Command { get; } = "WebAuthn.removeVirtualAuthenticator";
@@ -13975,6 +17516,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Adds the credential to the specified authenticator.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.addCredential</c>
+    /// </remarks>
     public class WebAuthnAddCredentialRequest : IChromiumRequest<WebAuthnAddCredentialResponse>
     {
         public string Command { get; } = "WebAuthn.addCredential";
@@ -13997,6 +17541,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// Returns a single credential stored in the given virtual authenticator that
     /// matches the credential ID.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.getCredential</c>
+    /// </remarks>
     public class WebAuthnGetCredentialRequest : IChromiumRequest<WebAuthnGetCredentialResponse>
     {
         public string Command { get; } = "WebAuthn.getCredential";
@@ -14022,6 +17569,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Returns all the credentials stored in the given virtual authenticator.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.getCredentials</c>
+    /// </remarks>
     public class WebAuthnGetCredentialsRequest : IChromiumRequest<WebAuthnGetCredentialsResponse>
     {
         public string Command { get; } = "WebAuthn.getCredentials";
@@ -14043,6 +17593,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Removes a credential from the authenticator.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.removeCredential</c>
+    /// </remarks>
     public class WebAuthnRemoveCredentialRequest : IChromiumRequest<WebAuthnRemoveCredentialResponse>
     {
         public string Command { get; } = "WebAuthn.removeCredential";
@@ -14064,6 +17617,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// <summary>
     /// Clears all the credentials from the specified device.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.clearCredentials</c>
+    /// </remarks>
     public class WebAuthnClearCredentialsRequest : IChromiumRequest<WebAuthnClearCredentialsResponse>
     {
         public string Command { get; } = "WebAuthn.clearCredentials";
@@ -14082,6 +17638,9 @@ namespace Playwright.Chromium.Protocol.WebAuthn
     /// Sets whether User Verification succeeds or fails for an authenticator.
     /// The default is true.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>WebAuthn.setUserVerified</c>
+    /// </remarks>
     public class WebAuthnSetUserVerifiedRequest : IChromiumRequest<WebAuthnSetUserVerifiedResponse>
     {
         public string Command { get; } = "WebAuthn.setUserVerified";
@@ -14200,6 +17759,9 @@ namespace Playwright.Chromium.Protocol.Media
     /// <summary>
     /// Enables the Media domain
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Media.enable</c>
+    /// </remarks>
     public class MediaEnableRequest : IChromiumRequest<MediaEnableResponse>
     {
         public string Command { get; } = "Media.enable";
@@ -14213,6 +17775,9 @@ namespace Playwright.Chromium.Protocol.Media
     /// <summary>
     /// Disables the Media domain.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Media.disable</c>
+    /// </remarks>
     public class MediaDisableRequest : IChromiumRequest<MediaDisableResponse>
     {
         public string Command { get; } = "Media.disable";
@@ -14222,6 +17787,60 @@ namespace Playwright.Chromium.Protocol.Media
     /// </summary>
     public class MediaDisableResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// This can be called multiple times, and can be used to set / override /
+    /// remove player properties. A null propValue indicates removal.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Media.playerPropertiesChanged</c>
+    /// </remarks>
+    public class PlayerPropertiesChangedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Media.playerPropertiesChanged";
+        /// <summary>
+        /// 
+        /// </summary>
+        public PlayerId PlayerId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public PlayerProperty[] Properties { get; set; }
+    }
+    /// <summary>
+    /// Send events as a list, allowing them to be batched on the browser for less
+    /// congestion. If batched, events must ALWAYS be in chronological order.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Media.playerEventsAdded</c>
+    /// </remarks>
+    public class PlayerEventsAddedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Media.playerEventsAdded";
+        /// <summary>
+        /// 
+        /// </summary>
+        public PlayerId PlayerId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public PlayerEvent[] Events { get; set; }
+    }
+    /// <summary>
+    /// Called whenever a player is created, or when a new agent joins and recieves
+    /// a list of active players. If an agent is restored, it will recieve the full
+    /// list of player ids and all events again.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Media.playersCreated</c>
+    /// </remarks>
+    public class PlayersCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Media.playersCreated";
+        /// <summary>
+        /// 
+        /// </summary>
+        public PlayerId[] Players { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Console
@@ -14259,6 +17878,9 @@ namespace Playwright.Chromium.Protocol.Console
     /// <summary>
     /// Does nothing.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Console.clearMessages</c>
+    /// </remarks>
     public class ConsoleClearMessagesRequest : IChromiumRequest<ConsoleClearMessagesResponse>
     {
         public string Command { get; } = "Console.clearMessages";
@@ -14272,6 +17894,9 @@ namespace Playwright.Chromium.Protocol.Console
     /// <summary>
     /// Disables console domain, prevents further console messages from being reported to the client.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Console.disable</c>
+    /// </remarks>
     public class ConsoleDisableRequest : IChromiumRequest<ConsoleDisableResponse>
     {
         public string Command { get; } = "Console.disable";
@@ -14286,6 +17911,9 @@ namespace Playwright.Chromium.Protocol.Console
     /// Enables console domain, sends the messages collected so far to the client by means of the
     /// `messageAdded` notification.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Console.enable</c>
+    /// </remarks>
     public class ConsoleEnableRequest : IChromiumRequest<ConsoleEnableResponse>
     {
         public string Command { get; } = "Console.enable";
@@ -14295,6 +17923,20 @@ namespace Playwright.Chromium.Protocol.Console
     /// </summary>
     public class ConsoleEnableResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Issued when new console message is added.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Console.messageAdded</c>
+    /// </remarks>
+    public class MessageAddedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Console.messageAdded";
+        /// <summary>
+        /// Console message that has been added.
+        /// </summary>
+        public ConsoleMessage Message { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Debugger
@@ -14484,6 +18126,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Continues execution until specific location is reached.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.continueToLocation</c>
+    /// </remarks>
     public class DebuggerContinueToLocationRequest : IChromiumRequest<DebuggerContinueToLocationResponse>
     {
         public string Command { get; } = "Debugger.continueToLocation";
@@ -14505,6 +18150,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Disables debugger for given page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.disable</c>
+    /// </remarks>
     public class DebuggerDisableRequest : IChromiumRequest<DebuggerDisableResponse>
     {
         public string Command { get; } = "Debugger.disable";
@@ -14519,6 +18167,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// Enables debugger for the given page. Clients should not assume that the debugging has been
     /// enabled until the result for this command is received.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.enable</c>
+    /// </remarks>
     public class DebuggerEnableRequest : IChromiumRequest<DebuggerEnableResponse>
     {
         public string Command { get; } = "Debugger.enable";
@@ -14541,6 +18192,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Evaluates expression on a given call frame.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.evaluateOnCallFrame</c>
+    /// </remarks>
     public class DebuggerEvaluateOnCallFrameRequest : IChromiumRequest<DebuggerEvaluateOnCallFrameResponse>
     {
         public string Command { get; } = "Debugger.evaluateOnCallFrame";
@@ -14602,6 +18256,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// Returns possible locations for breakpoint. scriptId in start and end range locations should be
     /// the same.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.getPossibleBreakpoints</c>
+    /// </remarks>
     public class DebuggerGetPossibleBreakpointsRequest : IChromiumRequest<DebuggerGetPossibleBreakpointsResponse>
     {
         public string Command { get; } = "Debugger.getPossibleBreakpoints";
@@ -14632,6 +18289,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Returns source for the script with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.getScriptSource</c>
+    /// </remarks>
     public class DebuggerGetScriptSourceRequest : IChromiumRequest<DebuggerGetScriptSourceResponse>
     {
         public string Command { get; } = "Debugger.getScriptSource";
@@ -14653,6 +18313,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Returns bytecode for the WebAssembly script with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.getWasmBytecode</c>
+    /// </remarks>
     public class DebuggerGetWasmBytecodeRequest : IChromiumRequest<DebuggerGetWasmBytecodeResponse>
     {
         public string Command { get; } = "Debugger.getWasmBytecode";
@@ -14674,6 +18337,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Returns stack trace with given `stackTraceId`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.getStackTrace</c>
+    /// </remarks>
     public class DebuggerGetStackTraceRequest : IChromiumRequest<DebuggerGetStackTraceResponse>
     {
         public string Command { get; } = "Debugger.getStackTrace";
@@ -14695,6 +18361,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Stops on the next JavaScript statement.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.pause</c>
+    /// </remarks>
     public class DebuggerPauseRequest : IChromiumRequest<DebuggerPauseResponse>
     {
         public string Command { get; } = "Debugger.pause";
@@ -14708,6 +18377,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.pauseOnAsyncCall</c>
+    /// </remarks>
     public class DebuggerPauseOnAsyncCallRequest : IChromiumRequest<DebuggerPauseOnAsyncCallResponse>
     {
         public string Command { get; } = "Debugger.pauseOnAsyncCall";
@@ -14725,6 +18397,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Removes JavaScript breakpoint.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.removeBreakpoint</c>
+    /// </remarks>
     public class DebuggerRemoveBreakpointRequest : IChromiumRequest<DebuggerRemoveBreakpointResponse>
     {
         public string Command { get; } = "Debugger.removeBreakpoint";
@@ -14742,6 +18417,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Restarts particular call frame from the beginning.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.restartFrame</c>
+    /// </remarks>
     public class DebuggerRestartFrameRequest : IChromiumRequest<DebuggerRestartFrameResponse>
     {
         public string Command { get; } = "Debugger.restartFrame";
@@ -14771,6 +18449,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Resumes JavaScript execution.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.resume</c>
+    /// </remarks>
     public class DebuggerResumeRequest : IChromiumRequest<DebuggerResumeResponse>
     {
         public string Command { get; } = "Debugger.resume";
@@ -14784,6 +18465,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Searches for given string in script content.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.searchInContent</c>
+    /// </remarks>
     public class DebuggerSearchInContentRequest : IChromiumRequest<DebuggerSearchInContentResponse>
     {
         public string Command { get; } = "Debugger.searchInContent";
@@ -14817,6 +18501,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Enables or disables async call stacks tracking.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setAsyncCallStackDepth</c>
+    /// </remarks>
     public class DebuggerSetAsyncCallStackDepthRequest : IChromiumRequest<DebuggerSetAsyncCallStackDepthResponse>
     {
         public string Command { get; } = "Debugger.setAsyncCallStackDepth";
@@ -14837,6 +18524,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// scripts with url matching one of the patterns. VM will try to leave blackboxed script by
     /// performing 'step in' several times, finally resorting to 'step out' if unsuccessful.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setBlackboxPatterns</c>
+    /// </remarks>
     public class DebuggerSetBlackboxPatternsRequest : IChromiumRequest<DebuggerSetBlackboxPatternsResponse>
     {
         public string Command { get; } = "Debugger.setBlackboxPatterns";
@@ -14857,6 +18547,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// Positions array contains positions where blackbox state is changed. First interval isn't
     /// blackboxed. Array should be sorted.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setBlackboxedRanges</c>
+    /// </remarks>
     public class DebuggerSetBlackboxedRangesRequest : IChromiumRequest<DebuggerSetBlackboxedRangesResponse>
     {
         public string Command { get; } = "Debugger.setBlackboxedRanges";
@@ -14878,6 +18571,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Sets JavaScript breakpoint at a given location.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setBreakpoint</c>
+    /// </remarks>
     public class DebuggerSetBreakpointRequest : IChromiumRequest<DebuggerSetBreakpointResponse>
     {
         public string Command { get; } = "Debugger.setBreakpoint";
@@ -14908,6 +18604,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Sets instrumentation breakpoint.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setInstrumentationBreakpoint</c>
+    /// </remarks>
     public class DebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DebuggerSetInstrumentationBreakpointResponse>
     {
         public string Command { get; } = "Debugger.setInstrumentationBreakpoint";
@@ -14932,6 +18631,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// `locations` property. Further matching script parsing will result in subsequent
     /// `breakpointResolved` events issued. This logical breakpoint will survive page reloads.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setBreakpointByUrl</c>
+    /// </remarks>
     public class DebuggerSetBreakpointByUrlRequest : IChromiumRequest<DebuggerSetBreakpointByUrlResponse>
     {
         public string Command { get; } = "Debugger.setBreakpointByUrl";
@@ -14981,6 +18683,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// If another function was created from the same source as a given one,
     /// calling it will also trigger the breakpoint.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setBreakpointOnFunctionCall</c>
+    /// </remarks>
     public class DebuggerSetBreakpointOnFunctionCallRequest : IChromiumRequest<DebuggerSetBreakpointOnFunctionCallResponse>
     {
         public string Command { get; } = "Debugger.setBreakpointOnFunctionCall";
@@ -15007,6 +18712,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Activates / deactivates all breakpoints on the page.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setBreakpointsActive</c>
+    /// </remarks>
     public class DebuggerSetBreakpointsActiveRequest : IChromiumRequest<DebuggerSetBreakpointsActiveResponse>
     {
         public string Command { get; } = "Debugger.setBreakpointsActive";
@@ -15025,6 +18733,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or
     /// no exceptions. Initial pause on exceptions state is `none`.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setPauseOnExceptions</c>
+    /// </remarks>
     public class DebuggerSetPauseOnExceptionsRequest : IChromiumRequest<DebuggerSetPauseOnExceptionsResponse>
     {
         public string Command { get; } = "Debugger.setPauseOnExceptions";
@@ -15042,6 +18753,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Changes return value in top frame. Available only at return break position.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setReturnValue</c>
+    /// </remarks>
     public class DebuggerSetReturnValueRequest : IChromiumRequest<DebuggerSetReturnValueResponse>
     {
         public string Command { get; } = "Debugger.setReturnValue";
@@ -15059,6 +18773,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Edits JavaScript source live.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setScriptSource</c>
+    /// </remarks>
     public class DebuggerSetScriptSourceRequest : IChromiumRequest<DebuggerSetScriptSourceResponse>
     {
         public string Command { get; } = "Debugger.setScriptSource";
@@ -15105,6 +18822,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setSkipAllPauses</c>
+    /// </remarks>
     public class DebuggerSetSkipAllPausesRequest : IChromiumRequest<DebuggerSetSkipAllPausesResponse>
     {
         public string Command { get; } = "Debugger.setSkipAllPauses";
@@ -15123,6 +18843,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// Changes value of variable in a callframe. Object-based scopes are not supported and must be
     /// mutated manually.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.setVariableValue</c>
+    /// </remarks>
     public class DebuggerSetVariableValueRequest : IChromiumRequest<DebuggerSetVariableValueResponse>
     {
         public string Command { get; } = "Debugger.setVariableValue";
@@ -15153,6 +18876,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Steps into the function call.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.stepInto</c>
+    /// </remarks>
     public class DebuggerStepIntoRequest : IChromiumRequest<DebuggerStepIntoResponse>
     {
         public string Command { get; } = "Debugger.stepInto";
@@ -15171,6 +18897,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Steps out of the function call.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.stepOut</c>
+    /// </remarks>
     public class DebuggerStepOutRequest : IChromiumRequest<DebuggerStepOutResponse>
     {
         public string Command { get; } = "Debugger.stepOut";
@@ -15184,6 +18913,9 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// <summary>
     /// Steps over the statement.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Debugger.stepOver</c>
+    /// </remarks>
     public class DebuggerStepOverRequest : IChromiumRequest<DebuggerStepOverResponse>
     {
         public string Command { get; } = "Debugger.stepOver";
@@ -15193,6 +18925,209 @@ namespace Playwright.Chromium.Protocol.Debugger
     /// </summary>
     public class DebuggerStepOverResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Fired when breakpoint is resolved to an actual script and location.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Debugger.breakpointResolved</c>
+    /// </remarks>
+    public class BreakpointResolvedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Debugger.breakpointResolved";
+        /// <summary>
+        /// Breakpoint unique identifier.
+        /// </summary>
+        public BreakpointId BreakpointId { get; set; }
+        /// <summary>
+        /// Actual breakpoint location.
+        /// </summary>
+        public Location Location { get; set; }
+    }
+    /// <summary>
+    /// Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Debugger.paused</c>
+    /// </remarks>
+    public class PausedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Debugger.paused";
+        /// <summary>
+        /// Call stack the virtual machine stopped on.
+        /// </summary>
+        public CallFrame[] CallFrames { get; set; }
+        /// <summary>
+        /// Pause reason.
+        /// </summary>
+        public string Reason { get; set; }
+        /// <summary>
+        /// Object containing break-specific auxiliary properties.
+        /// </summary>
+        public object Data { get; set; }
+        /// <summary>
+        /// Hit breakpoints IDs
+        /// </summary>
+        public string[] HitBreakpoints { get; set; }
+        /// <summary>
+        /// Async stack trace, if any.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.StackTrace AsyncStackTrace { get; set; }
+        /// <summary>
+        /// Async stack trace, if any.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.StackTraceId AsyncStackTraceId { get; set; }
+        /// <summary>
+        /// Never present, will be removed.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.StackTraceId AsyncCallStackTraceId { get; set; }
+    }
+    /// <summary>
+    /// Fired when the virtual machine resumed execution.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Debugger.resumed</c>
+    /// </remarks>
+    public class ResumedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Debugger.resumed";
+    }
+    /// <summary>
+    /// Fired when virtual machine fails to parse the script.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Debugger.scriptFailedToParse</c>
+    /// </remarks>
+    public class ScriptFailedToParseEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Debugger.scriptFailedToParse";
+        /// <summary>
+        /// Identifier of the script parsed.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.ScriptId ScriptId { get; set; }
+        /// <summary>
+        /// URL or name of the script parsed (if any).
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Line offset of the script within the resource with given URL (for script tags).
+        /// </summary>
+        public int StartLine { get; set; }
+        /// <summary>
+        /// Column offset of the script within the resource with given URL.
+        /// </summary>
+        public int StartColumn { get; set; }
+        /// <summary>
+        /// Last line of the script.
+        /// </summary>
+        public int EndLine { get; set; }
+        /// <summary>
+        /// Length of the last line of the script.
+        /// </summary>
+        public int EndColumn { get; set; }
+        /// <summary>
+        /// Specifies script creation context.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.ExecutionContextId ExecutionContextId { get; set; }
+        /// <summary>
+        /// Content hash of the script.
+        /// </summary>
+        public string Hash { get; set; }
+        /// <summary>
+        /// Embedder-specific auxiliary data.
+        /// </summary>
+        public object ExecutionContextAuxData { get; set; }
+        /// <summary>
+        /// URL of source map associated with script (if any).
+        /// </summary>
+        public string SourceMapURL { get; set; }
+        /// <summary>
+        /// True, if this script has sourceURL.
+        /// </summary>
+        public bool HasSourceURL { get; set; }
+        /// <summary>
+        /// True, if this script is ES6 module.
+        /// </summary>
+        public bool IsModule { get; set; }
+        /// <summary>
+        /// This script length.
+        /// </summary>
+        public int Length { get; set; }
+        /// <summary>
+        /// JavaScript top stack frame of where the script parsed event was triggered if available.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.StackTrace StackTrace { get; set; }
+    }
+    /// <summary>
+    /// Fired when virtual machine parses script. This event is also fired for all known and uncollected
+    /// scripts upon enabling debugger.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Debugger.scriptParsed</c>
+    /// </remarks>
+    public class ScriptParsedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Debugger.scriptParsed";
+        /// <summary>
+        /// Identifier of the script parsed.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.ScriptId ScriptId { get; set; }
+        /// <summary>
+        /// URL or name of the script parsed (if any).
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Line offset of the script within the resource with given URL (for script tags).
+        /// </summary>
+        public int StartLine { get; set; }
+        /// <summary>
+        /// Column offset of the script within the resource with given URL.
+        /// </summary>
+        public int StartColumn { get; set; }
+        /// <summary>
+        /// Last line of the script.
+        /// </summary>
+        public int EndLine { get; set; }
+        /// <summary>
+        /// Length of the last line of the script.
+        /// </summary>
+        public int EndColumn { get; set; }
+        /// <summary>
+        /// Specifies script creation context.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.ExecutionContextId ExecutionContextId { get; set; }
+        /// <summary>
+        /// Content hash of the script.
+        /// </summary>
+        public string Hash { get; set; }
+        /// <summary>
+        /// Embedder-specific auxiliary data.
+        /// </summary>
+        public object ExecutionContextAuxData { get; set; }
+        /// <summary>
+        /// True, if this script is generated as a result of the live edit operation.
+        /// </summary>
+        public bool IsLiveEdit { get; set; }
+        /// <summary>
+        /// URL of source map associated with script (if any).
+        /// </summary>
+        public string SourceMapURL { get; set; }
+        /// <summary>
+        /// True, if this script has sourceURL.
+        /// </summary>
+        public bool HasSourceURL { get; set; }
+        /// <summary>
+        /// True, if this script is ES6 module.
+        /// </summary>
+        public bool IsModule { get; set; }
+        /// <summary>
+        /// This script length.
+        /// </summary>
+        public int Length { get; set; }
+        /// <summary>
+        /// JavaScript top stack frame of where the script parsed event was triggered if available.
+        /// </summary>
+        public Playwright.Chromium.Protocol.Runtime.StackTrace StackTrace { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.HeapProfiler
@@ -15280,6 +19215,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// Enables console to refer to the node with given id via $x (see Command Line API for more details
     /// $x functions).
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.addInspectedHeapObject</c>
+    /// </remarks>
     public class HeapProfilerAddInspectedHeapObjectRequest : IChromiumRequest<HeapProfilerAddInspectedHeapObjectResponse>
     {
         public string Command { get; } = "HeapProfiler.addInspectedHeapObject";
@@ -15297,6 +19235,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.collectGarbage</c>
+    /// </remarks>
     public class HeapProfilerCollectGarbageRequest : IChromiumRequest<HeapProfilerCollectGarbageResponse>
     {
         public string Command { get; } = "HeapProfiler.collectGarbage";
@@ -15310,6 +19251,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.disable</c>
+    /// </remarks>
     public class HeapProfilerDisableRequest : IChromiumRequest<HeapProfilerDisableResponse>
     {
         public string Command { get; } = "HeapProfiler.disable";
@@ -15323,6 +19267,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.enable</c>
+    /// </remarks>
     public class HeapProfilerEnableRequest : IChromiumRequest<HeapProfilerEnableResponse>
     {
         public string Command { get; } = "HeapProfiler.enable";
@@ -15336,6 +19283,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.getHeapObjectId</c>
+    /// </remarks>
     public class HeapProfilerGetHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetHeapObjectIdResponse>
     {
         public string Command { get; } = "HeapProfiler.getHeapObjectId";
@@ -15357,6 +19307,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.getObjectByHeapObjectId</c>
+    /// </remarks>
     public class HeapProfilerGetObjectByHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetObjectByHeapObjectIdResponse>
     {
         public string Command { get; } = "HeapProfiler.getObjectByHeapObjectId";
@@ -15382,6 +19335,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.getSamplingProfile</c>
+    /// </remarks>
     public class HeapProfilerGetSamplingProfileRequest : IChromiumRequest<HeapProfilerGetSamplingProfileResponse>
     {
         public string Command { get; } = "HeapProfiler.getSamplingProfile";
@@ -15399,6 +19355,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.startSampling</c>
+    /// </remarks>
     public class HeapProfilerStartSamplingRequest : IChromiumRequest<HeapProfilerStartSamplingResponse>
     {
         public string Command { get; } = "HeapProfiler.startSampling";
@@ -15417,6 +19376,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.startTrackingHeapObjects</c>
+    /// </remarks>
     public class HeapProfilerStartTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStartTrackingHeapObjectsResponse>
     {
         public string Command { get; } = "HeapProfiler.startTrackingHeapObjects";
@@ -15434,6 +19396,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.stopSampling</c>
+    /// </remarks>
     public class HeapProfilerStopSamplingRequest : IChromiumRequest<HeapProfilerStopSamplingResponse>
     {
         public string Command { get; } = "HeapProfiler.stopSampling";
@@ -15451,6 +19416,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.stopTrackingHeapObjects</c>
+    /// </remarks>
     public class HeapProfilerStopTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStopTrackingHeapObjectsResponse>
     {
         public string Command { get; } = "HeapProfiler.stopTrackingHeapObjects";
@@ -15469,6 +19437,9 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>HeapProfiler.takeHeapSnapshot</c>
+    /// </remarks>
     public class HeapProfilerTakeHeapSnapshotRequest : IChromiumRequest<HeapProfilerTakeHeapSnapshotResponse>
     {
         public string Command { get; } = "HeapProfiler.takeHeapSnapshot";
@@ -15482,6 +19453,88 @@ namespace Playwright.Chromium.Protocol.HeapProfiler
     /// </summary>
     public class HeapProfilerTakeHeapSnapshotResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>HeapProfiler.addHeapSnapshotChunk</c>
+    /// </remarks>
+    public class AddHeapSnapshotChunkEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "HeapProfiler.addHeapSnapshotChunk";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Chunk { get; set; }
+    }
+    /// <summary>
+    /// If heap objects tracking has been started then backend may send update for one or more fragments
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>HeapProfiler.heapStatsUpdate</c>
+    /// </remarks>
+    public class HeapStatsUpdateEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "HeapProfiler.heapStatsUpdate";
+        /// <summary>
+        /// An array of triplets. Each triplet describes a fragment. The first integer is the fragment
+        /// index, the second integer is a total count of objects for the fragment, the third integer is
+        /// a total size of the objects for the fragment.
+        /// </summary>
+        public int[] StatsUpdate { get; set; }
+    }
+    /// <summary>
+    /// If heap objects tracking has been started then backend regularly sends a current value for last
+    /// seen object id and corresponding timestamp. If the were changes in the heap since last event
+    /// then one or more heapStatsUpdate events will be sent before a new lastSeenObjectId event.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>HeapProfiler.lastSeenObjectId</c>
+    /// </remarks>
+    public class LastSeenObjectIdEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "HeapProfiler.lastSeenObjectId";
+        /// <summary>
+        /// 
+        /// </summary>
+        public int LastSeenObjectId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Timestamp { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>HeapProfiler.reportHeapSnapshotProgress</c>
+    /// </remarks>
+    public class ReportHeapSnapshotProgressEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "HeapProfiler.reportHeapSnapshotProgress";
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Done { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Total { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Finished { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>HeapProfiler.resetProfiles</c>
+    /// </remarks>
+    public class ResetProfilesEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "HeapProfiler.resetProfiles";
     }
 }
 namespace Playwright.Chromium.Protocol.Profiler
@@ -15657,6 +19710,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.disable</c>
+    /// </remarks>
     public class ProfilerDisableRequest : IChromiumRequest<ProfilerDisableResponse>
     {
         public string Command { get; } = "Profiler.disable";
@@ -15670,6 +19726,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.enable</c>
+    /// </remarks>
     public class ProfilerEnableRequest : IChromiumRequest<ProfilerEnableResponse>
     {
         public string Command { get; } = "Profiler.enable";
@@ -15684,6 +19743,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// Collect coverage data for the current isolate. The coverage data may be incomplete due to
     /// garbage collection.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.getBestEffortCoverage</c>
+    /// </remarks>
     public class ProfilerGetBestEffortCoverageRequest : IChromiumRequest<ProfilerGetBestEffortCoverageResponse>
     {
         public string Command { get; } = "Profiler.getBestEffortCoverage";
@@ -15701,6 +19763,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// Changes CPU profiler sampling interval. Must be called before CPU profiles recording started.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.setSamplingInterval</c>
+    /// </remarks>
     public class ProfilerSetSamplingIntervalRequest : IChromiumRequest<ProfilerSetSamplingIntervalResponse>
     {
         public string Command { get; } = "Profiler.setSamplingInterval";
@@ -15718,6 +19783,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.start</c>
+    /// </remarks>
     public class ProfilerStartRequest : IChromiumRequest<ProfilerStartResponse>
     {
         public string Command { get; } = "Profiler.start";
@@ -15733,6 +19801,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// coverage may be incomplete. Enabling prevents running optimized code and resets execution
     /// counters.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.startPreciseCoverage</c>
+    /// </remarks>
     public class ProfilerStartPreciseCoverageRequest : IChromiumRequest<ProfilerStartPreciseCoverageResponse>
     {
         public string Command { get; } = "Profiler.startPreciseCoverage";
@@ -15754,6 +19825,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// Enable type profile.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.startTypeProfile</c>
+    /// </remarks>
     public class ProfilerStartTypeProfileRequest : IChromiumRequest<ProfilerStartTypeProfileResponse>
     {
         public string Command { get; } = "Profiler.startTypeProfile";
@@ -15767,6 +19841,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.stop</c>
+    /// </remarks>
     public class ProfilerStopRequest : IChromiumRequest<ProfilerStopResponse>
     {
         public string Command { get; } = "Profiler.stop";
@@ -15785,6 +19862,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// Disable precise code coverage. Disabling releases unnecessary execution count records and allows
     /// executing optimized code.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.stopPreciseCoverage</c>
+    /// </remarks>
     public class ProfilerStopPreciseCoverageRequest : IChromiumRequest<ProfilerStopPreciseCoverageResponse>
     {
         public string Command { get; } = "Profiler.stopPreciseCoverage";
@@ -15798,6 +19878,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// Disable type profile. Disabling releases type profile data collected so far.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.stopTypeProfile</c>
+    /// </remarks>
     public class ProfilerStopTypeProfileRequest : IChromiumRequest<ProfilerStopTypeProfileResponse>
     {
         public string Command { get; } = "Profiler.stopTypeProfile";
@@ -15812,6 +19895,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// Collect coverage data for the current isolate, and resets execution counters. Precise code
     /// coverage needs to have started.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.takePreciseCoverage</c>
+    /// </remarks>
     public class ProfilerTakePreciseCoverageRequest : IChromiumRequest<ProfilerTakePreciseCoverageResponse>
     {
         public string Command { get; } = "Profiler.takePreciseCoverage";
@@ -15829,6 +19915,9 @@ namespace Playwright.Chromium.Protocol.Profiler
     /// <summary>
     /// Collect type profile.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.takeTypeProfile</c>
+    /// </remarks>
     public class ProfilerTakeTypeProfileRequest : IChromiumRequest<ProfilerTakeTypeProfileResponse>
     {
         public string Command { get; } = "Profiler.takeTypeProfile";
@@ -15842,6 +19931,54 @@ namespace Playwright.Chromium.Protocol.Profiler
         /// Type profile for all scripts since startTypeProfile() was turned on.
         /// </summary>
         public ScriptTypeProfile[] Result { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Profiler.consoleProfileFinished</c>
+    /// </remarks>
+    public class ConsoleProfileFinishedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Profiler.consoleProfileFinished";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
+        /// Location of console.profileEnd().
+        /// </summary>
+        public Playwright.Chromium.Protocol.Debugger.Location Location { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Profile Profile { get; set; }
+        /// <summary>
+        /// Profile title passed as an argument to console.profile().
+        /// </summary>
+        public string Title { get; set; }
+    }
+    /// <summary>
+    /// Sent when new profile recording is started using console.profile() call.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Profiler.consoleProfileStarted</c>
+    /// </remarks>
+    public class ConsoleProfileStartedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Profiler.consoleProfileStarted";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
+        /// Location of console.profile().
+        /// </summary>
+        public Playwright.Chromium.Protocol.Debugger.Location Location { get; set; }
+        /// <summary>
+        /// Profile title passed as an argument to console.profile().
+        /// </summary>
+        public string Title { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Runtime
@@ -16374,6 +20511,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Add handler to promise with given promise object id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.awaitPromise</c>
+    /// </remarks>
     public class RuntimeAwaitPromiseRequest : IChromiumRequest<RuntimeAwaitPromiseResponse>
     {
         public string Command { get; } = "Runtime.awaitPromise";
@@ -16408,6 +20548,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// Calls function with given declaration on the given object. Object group of the result is
     /// inherited from the target object.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.callFunctionOn</c>
+    /// </remarks>
     public class RuntimeCallFunctionOnRequest : IChromiumRequest<RuntimeCallFunctionOnResponse>
     {
         public string Command { get; } = "Runtime.callFunctionOn";
@@ -16475,6 +20618,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Compiles expression.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.compileScript</c>
+    /// </remarks>
     public class RuntimeCompileScriptRequest : IChromiumRequest<RuntimeCompileScriptResponse>
     {
         public string Command { get; } = "Runtime.compileScript";
@@ -16513,6 +20659,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Disables reporting of execution contexts creation.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.disable</c>
+    /// </remarks>
     public class RuntimeDisableRequest : IChromiumRequest<RuntimeDisableResponse>
     {
         public string Command { get; } = "Runtime.disable";
@@ -16526,6 +20675,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Discards collected exceptions and console API calls.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.discardConsoleEntries</c>
+    /// </remarks>
     public class RuntimeDiscardConsoleEntriesRequest : IChromiumRequest<RuntimeDiscardConsoleEntriesResponse>
     {
         public string Command { get; } = "Runtime.discardConsoleEntries";
@@ -16541,6 +20693,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// When the reporting gets enabled the event will be sent immediately for each existing execution
     /// context.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.enable</c>
+    /// </remarks>
     public class RuntimeEnableRequest : IChromiumRequest<RuntimeEnableResponse>
     {
         public string Command { get; } = "Runtime.enable";
@@ -16554,6 +20709,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Evaluates expression on global object.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.evaluate</c>
+    /// </remarks>
     public class RuntimeEvaluateRequest : IChromiumRequest<RuntimeEvaluateResponse>
     {
         public string Command { get; } = "Runtime.evaluate";
@@ -16627,6 +20785,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Returns the isolate id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.getIsolateId</c>
+    /// </remarks>
     public class RuntimeGetIsolateIdRequest : IChromiumRequest<RuntimeGetIsolateIdResponse>
     {
         public string Command { get; } = "Runtime.getIsolateId";
@@ -16645,6 +20806,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// Returns the JavaScript heap usage.
     /// It is the total usage of the corresponding isolate not scoped to a particular Runtime.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.getHeapUsage</c>
+    /// </remarks>
     public class RuntimeGetHeapUsageRequest : IChromiumRequest<RuntimeGetHeapUsageResponse>
     {
         public string Command { get; } = "Runtime.getHeapUsage";
@@ -16667,6 +20831,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// Returns properties of a given object. Object group of the result is inherited from the target
     /// object.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.getProperties</c>
+    /// </remarks>
     public class RuntimeGetPropertiesRequest : IChromiumRequest<RuntimeGetPropertiesResponse>
     {
         public string Command { get; } = "Runtime.getProperties";
@@ -16714,6 +20881,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Returns all let, const and class variables from global scope.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.globalLexicalScopeNames</c>
+    /// </remarks>
     public class RuntimeGlobalLexicalScopeNamesRequest : IChromiumRequest<RuntimeGlobalLexicalScopeNamesResponse>
     {
         public string Command { get; } = "Runtime.globalLexicalScopeNames";
@@ -16735,6 +20905,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.queryObjects</c>
+    /// </remarks>
     public class RuntimeQueryObjectsRequest : IChromiumRequest<RuntimeQueryObjectsResponse>
     {
         public string Command { get; } = "Runtime.queryObjects";
@@ -16760,6 +20933,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Releases remote object with given id.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.releaseObject</c>
+    /// </remarks>
     public class RuntimeReleaseObjectRequest : IChromiumRequest<RuntimeReleaseObjectResponse>
     {
         public string Command { get; } = "Runtime.releaseObject";
@@ -16777,6 +20953,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Releases all remote objects that belong to a given group.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.releaseObjectGroup</c>
+    /// </remarks>
     public class RuntimeReleaseObjectGroupRequest : IChromiumRequest<RuntimeReleaseObjectGroupResponse>
     {
         public string Command { get; } = "Runtime.releaseObjectGroup";
@@ -16794,6 +20973,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Tells inspected instance to run if it was waiting for debugger to attach.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.runIfWaitingForDebugger</c>
+    /// </remarks>
     public class RuntimeRunIfWaitingForDebuggerRequest : IChromiumRequest<RuntimeRunIfWaitingForDebuggerResponse>
     {
         public string Command { get; } = "Runtime.runIfWaitingForDebugger";
@@ -16807,6 +20989,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Runs script with given id in a given context.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.runScript</c>
+    /// </remarks>
     public class RuntimeRunScriptRequest : IChromiumRequest<RuntimeRunScriptResponse>
     {
         public string Command { get; } = "Runtime.runScript";
@@ -16863,6 +21048,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// Enables or disables async call stacks tracking.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.setAsyncCallStackDepth</c>
+    /// </remarks>
     public class RuntimeSetAsyncCallStackDepthRequest : IChromiumRequest<RuntimeSetAsyncCallStackDepthResponse>
     {
         public string Command { get; } = "Runtime.setAsyncCallStackDepth";
@@ -16881,6 +21069,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.setCustomObjectFormatterEnabled</c>
+    /// </remarks>
     public class RuntimeSetCustomObjectFormatterEnabledRequest : IChromiumRequest<RuntimeSetCustomObjectFormatterEnabledResponse>
     {
         public string Command { get; } = "Runtime.setCustomObjectFormatterEnabled";
@@ -16898,6 +21089,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// <summary>
     /// 
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.setMaxCallStackSizeToCapture</c>
+    /// </remarks>
     public class RuntimeSetMaxCallStackSizeToCaptureRequest : IChromiumRequest<RuntimeSetMaxCallStackSizeToCaptureResponse>
     {
         public string Command { get; } = "Runtime.setMaxCallStackSizeToCapture";
@@ -16916,6 +21110,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// Terminate current or next JavaScript execution.
     /// Will cancel the termination when the outer-most script execution ends.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.terminateExecution</c>
+    /// </remarks>
     public class RuntimeTerminateExecutionRequest : IChromiumRequest<RuntimeTerminateExecutionResponse>
     {
         public string Command { get; } = "Runtime.terminateExecution";
@@ -16936,6 +21133,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// in case of any other input, function throws an exception.
     /// Each binding function call produces Runtime.bindingCalled notification.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.addBinding</c>
+    /// </remarks>
     public class RuntimeAddBindingRequest : IChromiumRequest<RuntimeAddBindingResponse>
     {
         public string Command { get; } = "Runtime.addBinding";
@@ -16958,6 +21158,9 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// This method does not remove binding function from global object but
     /// unsubscribes current runtime agent from Runtime.bindingCalled notifications.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Runtime.removeBinding</c>
+    /// </remarks>
     public class RuntimeRemoveBindingRequest : IChromiumRequest<RuntimeRemoveBindingResponse>
     {
         public string Command { get; } = "Runtime.removeBinding";
@@ -16971,6 +21174,159 @@ namespace Playwright.Chromium.Protocol.Runtime
     /// </summary>
     public class RuntimeRemoveBindingResponse : IChromiumResponse
     {
+    }
+    /// <summary>
+    /// Notification is issued every time when binding is called.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.bindingCalled</c>
+    /// </remarks>
+    public class BindingCalledEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.bindingCalled";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Payload { get; set; }
+        /// <summary>
+        /// Identifier of the context where the call was made.
+        /// </summary>
+        public ExecutionContextId ExecutionContextId { get; set; }
+    }
+    /// <summary>
+    /// Issued when console API was called.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.consoleAPICalled</c>
+    /// </remarks>
+    public class ConsoleAPICalledEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.consoleAPICalled";
+        /// <summary>
+        /// Type of the call.
+        /// </summary>
+        public string Type { get; set; }
+        /// <summary>
+        /// Call arguments.
+        /// </summary>
+        public RemoteObject[] Args { get; set; }
+        /// <summary>
+        /// Identifier of the context where the call was made.
+        /// </summary>
+        public ExecutionContextId ExecutionContextId { get; set; }
+        /// <summary>
+        /// Call timestamp.
+        /// </summary>
+        public Timestamp Timestamp { get; set; }
+        /// <summary>
+        /// Stack trace captured when the call was made. The async stack chain is automatically reported for
+        /// the following call types: `assert`, `error`, `trace`, `warning`. For other types the async call
+        /// chain can be retrieved using `Debugger.getStackTrace` and `stackTrace.parentId` field.
+        /// </summary>
+        public StackTrace StackTrace { get; set; }
+        /// <summary>
+        /// Console context descriptor for calls on non-default console context (not console.*):
+        /// 'anonymous#unique-logger-id' for call on unnamed context, 'name#unique-logger-id' for call
+        /// on named context.
+        /// </summary>
+        public string Context { get; set; }
+    }
+    /// <summary>
+    /// Issued when unhandled exception was revoked.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.exceptionRevoked</c>
+    /// </remarks>
+    public class ExceptionRevokedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.exceptionRevoked";
+        /// <summary>
+        /// Reason describing why exception was revoked.
+        /// </summary>
+        public string Reason { get; set; }
+        /// <summary>
+        /// The id of revoked exception, as reported in `exceptionThrown`.
+        /// </summary>
+        public int ExceptionId { get; set; }
+    }
+    /// <summary>
+    /// Issued when exception was thrown and unhandled.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.exceptionThrown</c>
+    /// </remarks>
+    public class ExceptionThrownEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.exceptionThrown";
+        /// <summary>
+        /// Timestamp of the exception.
+        /// </summary>
+        public Timestamp Timestamp { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public ExceptionDetails ExceptionDetails { get; set; }
+    }
+    /// <summary>
+    /// Issued when new execution context is created.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.executionContextCreated</c>
+    /// </remarks>
+    public class ExecutionContextCreatedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.executionContextCreated";
+        /// <summary>
+        /// A newly created execution context.
+        /// </summary>
+        public ExecutionContextDescription Context { get; set; }
+    }
+    /// <summary>
+    /// Issued when execution context is destroyed.
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.executionContextDestroyed</c>
+    /// </remarks>
+    public class ExecutionContextDestroyedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.executionContextDestroyed";
+        /// <summary>
+        /// Id of the destroyed context
+        /// </summary>
+        public ExecutionContextId ExecutionContextId { get; set; }
+    }
+    /// <summary>
+    /// Issued when all executionContexts were cleared in browser
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.executionContextsCleared</c>
+    /// </remarks>
+    public class ExecutionContextsClearedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.executionContextsCleared";
+    }
+    /// <summary>
+    /// Issued when object should be inspected (for example, as a result of inspect() command line API
+    /// call).
+    /// </summary>
+    /// <remarks>
+    /// Matches on the event <c>Runtime.inspectRequested</c>
+    /// </remarks>
+    public class InspectRequestedEventArgs : ChromiumEvent
+    {
+        public override string InternalName { get; } = "Runtime.inspectRequested";
+        /// <summary>
+        /// 
+        /// </summary>
+        public RemoteObject Object { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public object Hints { get; set; }
     }
 }
 namespace Playwright.Chromium.Protocol.Schema
@@ -16992,6 +21348,9 @@ namespace Playwright.Chromium.Protocol.Schema
     /// <summary>
     /// Returns supported domains.
     /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Schema.getDomains</c>
+    /// </remarks>
     public class SchemaGetDomainsRequest : IChromiumRequest<SchemaGetDomainsResponse>
     {
         public string Command { get; } = "Schema.getDomains";
