@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Chromium
         internal BrowserContext(IBrowserContextDelegate browserContextDelegate)
         {
             _delegate = browserContextDelegate;
+            _delegate.BrowserContext = this;
         }
 
         /// <inheritdoc cref="IBrowserContext"/>

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 
 namespace PlaywrightSharp
 {
@@ -7,6 +8,11 @@ namespace PlaywrightSharp
     /// </summary>
     internal interface IBrowserContextDelegate
     {
+        /// <summary>
+        /// <see cref="IBrowserContext"/> using the delegate.
+        /// </summary>
+        BrowserContext BrowserContext { get; set; }
+
         /// <summary>
         /// Creates a new page in the context.
         /// </summary>

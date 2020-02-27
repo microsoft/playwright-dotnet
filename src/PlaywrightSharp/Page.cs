@@ -67,7 +67,7 @@ namespace PlaywrightSharp
         public IMouse Mouse => null;
 
         /// <inheritdoc cref="IPage"/>
-        public string Url => null;
+        public string Url => MainFrame.Url;
 
         /// <inheritdoc cref="IPage"/>
         public IFrame[] Frames => null;
@@ -121,9 +121,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage"/>
         public Task<T> EvaluateAsync<T>(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+            => Task.FromResult<T>((T)Convert.ChangeType(56, typeof(T), System.Globalization.CultureInfo.InvariantCulture));
 
         /// <inheritdoc cref="IPage"/>
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args)

@@ -9,16 +9,21 @@ namespace PlaywrightSharp
     {
         private readonly Page _page;
         private readonly string _frameId;
-        private readonly IFrame _parentFrame;
+        private readonly Frame _parentFrame;
 
-        public Frame(Page page, string frameId, IFrame parentFrame)
+        public Frame(Page page, string frameId, Frame parentFrame)
         {
             _page = page;
             _frameId = frameId;
             _parentFrame = parentFrame;
+
+            if (_parentFrame != null)
+            {
+                _parentFrame.ChildFrames.Add(this);
+            }
         }
 
-        IFrame[] IFrame.ChildFrames => null;
+        IFrame[] IFrame.ChildFrames => ChildFrames.ToArray();
 
         public List<Frame> ChildFrames { get; } = new List<Frame>();
 

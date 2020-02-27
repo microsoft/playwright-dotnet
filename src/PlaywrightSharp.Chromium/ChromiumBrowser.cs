@@ -136,6 +136,8 @@ namespace PlaywrightSharp.Chromium
             return browser;
         }
 
+        internal IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
+
         private async void Session_MessageReceived(object sender, MessageEventArgs e)
         {
             try
@@ -228,7 +230,5 @@ namespace PlaywrightSharp.Chromium
             var target = TargetsMap[e.TargetInfo.TargetId];
             target.TargetInfoChanged(e.TargetInfo);
         }
-
-        private IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
     }
 }

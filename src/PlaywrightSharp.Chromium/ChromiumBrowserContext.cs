@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Messaging.Target;
@@ -26,10 +27,19 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IBrowserContext"/>
         public BrowserContextOptions Options { get; }
 
+        /// <inheritdoc cref="IBrowserContext"/>
+        public BrowserContext BrowserContext { get; set; }
+
         internal ChromiumBrowser Browser { get; }
 
         /// <inheritdoc cref="IBrowserContext"/>
-        public Task<IPage[]> GetPagesAsync() => Task.FromResult<IPage[]>(null);
+        public async Task<IPage[]> GetPagesAsync()
+            => (await Task.WhenAll(Browser.GetAllTargets()
+                .Where(target => target.BrowserContext == BrowserContext && target.Type == TargetType.Page)
+                .Select(t => t.PageAsync()))
+                .ConfigureAwait(false))
+                .Where(p => p != null)
+                .ToArray();
 
         /// <inheritdoc cref="IBrowserContext"/>
         public async Task<IPage> NewPage()
