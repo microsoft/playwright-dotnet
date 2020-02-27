@@ -8,7 +8,7 @@ namespace PlaywrightSharp
 {
     internal class LifecycleWatcher : IDisposable
     {
-        private static readonly Dictionary<WaitUntilNavigation, string> _puppeteerToProtocolLifecycle =
+        private static readonly Dictionary<WaitUntilNavigation, string> _protocolLifecycle =
             new Dictionary<WaitUntilNavigation, string>
             {
                 [WaitUntilNavigation.Load] = "load",
@@ -39,7 +39,7 @@ namespace PlaywrightSharp
 
             _expectedLifecycle = (_options.WaitUntil ?? _defaultWaitUntil).Select(w =>
             {
-                string protocolEvent = _puppeteerToProtocolLifecycle.GetValueOrDefault(w);
+                string protocolEvent = _protocolLifecycle.GetValueOrDefault(w);
 
                 if (protocolEvent == null)
                 {
