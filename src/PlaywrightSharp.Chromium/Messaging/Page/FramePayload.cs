@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Chromium.Messaging.Page
+namespace PlaywrightSharp.Chromium.Messaging.Page
 {
     internal class FramePayload
     {

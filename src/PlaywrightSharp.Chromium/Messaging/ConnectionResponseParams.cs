@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Chromium.Messaging
+namespace PlaywrightSharp.Chromium.Messaging
 {
     internal class ConnectionResponseParams
     {
