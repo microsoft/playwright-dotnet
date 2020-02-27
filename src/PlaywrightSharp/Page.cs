@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
 
@@ -52,6 +53,21 @@ namespace PlaywrightSharp
         public event EventHandler DOMContentLoaded;
 
         /// <inheritdoc cref="IPage"/>
+        public event EventHandler<ResponseEventArgs> Response;
+
+        /// <inheritdoc cref="IPage"/>
+        public event EventHandler<FileChooserEventArgs> FileChooser;
+
+        /// <inheritdoc cref="IPage"/>
+        public event EventHandler Close;
+
+        /// <inheritdoc cref="IPage"/>
+        public event EventHandler<ErrorEventArgs> Error;
+
+        /// <inheritdoc cref="IPage"/>
+        public event EventHandler<PageErrorEventArgs> PageError;
+
+        /// <inheritdoc cref="IPage"/>
         public IFrame MainFrame => FrameManager.MainFrame;
 
         /// <inheritdoc cref="IPage"/>
@@ -80,6 +96,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage"/>
         public int DefaultNavigationTimeout { get; set; }
+
+        /// <inheritdoc cref="IPage"/>
+        public bool IsClosed => false;
 
         internal FrameManager FrameManager { get; }
 
@@ -315,7 +334,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage"/>
-        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null)
+        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
             throw new NotImplementedException();
         }
@@ -352,6 +371,84 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage"/>
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<string> GetTitleAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<IPage> GetOpenerAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task FillAsync(string selector, string text, FillOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<string[]> SelectAsync(string selector, params string[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<string[]> SelectAsync(string selector, params SelectOption[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<string> GetContentAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<IElementHandle[]> QuerySelectorAllAsync(string selector)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage"/>
+        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)
         {
             throw new NotImplementedException();
         }

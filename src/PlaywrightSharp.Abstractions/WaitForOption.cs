@@ -1,9 +1,11 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="ClickOptions.WaitFor"/>.
+    /// Wait for options for <see cref="ClickOptions.WaitFor"/>.
     /// </summary>
-    public enum WaitForClickOption
+    /// <seealso cref="ClickOptions.WaitFor"/>
+    /// <seealso cref="FillOptions.WaitFor"/>
+    public enum WaitForOption
     {
         /// <summary>
         /// Wait for visible

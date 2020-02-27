@@ -171,5 +171,10 @@ namespace PlaywrightSharp
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<IFrameExecutionContext> GetUtilityContextAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
