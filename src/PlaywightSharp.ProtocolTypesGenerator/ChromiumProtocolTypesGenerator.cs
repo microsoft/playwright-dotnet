@@ -113,7 +113,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                         builder.AppendLine("/// <summary>");
                         builder.AppendLine($"/// {FormatDocs(type.Description)}");
                         builder.AppendLine("/// </summary>");
-                        builder.AppendLine($"public enum {type.Id}");
+                        builder.AppendLine($"internal enum {type.Id}");
                         builder.AppendLine("{");
                         builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
                         builder.AppendLine("}");
@@ -160,7 +160,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     {
                         builder.AppendLine($"[System.Obsolete(\"{command.Description.Replace("\n", "\\n")}\")]");
                     }
-                    builder.AppendLine($"public class {baseName}Request : IChromiumRequest<{baseName}Response>");
+                    builder.AppendLine($"internal class {baseName}Request : IChromiumRequest<{baseName}Response>");
                     builder.AppendLine("{");
                     builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
                     builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     builder.AppendLine("/// <summary>");
                     builder.AppendLine($"/// Response from <see cref=\"{baseName}Request\"/>");
                     builder.AppendLine("/// </summary>");
-                    builder.AppendLine($"public class {baseName}Response : IChromiumResponse");
+                    builder.AppendLine($"internal class {baseName}Response : IChromiumResponse");
                     builder.AppendLine("{");
                     builder.AppendJoin("\n", NormalizeProperties(command.Returns));
                     builder.AppendLine("}");
@@ -189,7 +189,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     builder.AppendLine("/// <remarks>");
                     builder.AppendLine($"/// Matches on the event <c>{domain.Domain}.{e.Name}</c>");
                     builder.AppendLine("/// </remarks>");
-                    builder.AppendLine($"public class {domain.Domain}{eventName}EventArgs : ChromiumEvent");
+                    builder.AppendLine($"internal class {domain.Domain}{eventName}EventArgs : ChromiumEvent");
                     builder.AppendLine("{");
                     builder.AppendLine($"public override string InternalName {{ get; }} = \"{domain.Domain}.{e.Name}\";");
                     builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
@@ -245,7 +245,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     .AppendLine("/// <summary>")
                     .AppendLine($"/// {FormatDocs(property.Description)}")
                     .AppendLine("/// </summary>")
-                    .Append("public ")
+                    .Append("internal ")
                     .Append(GetTypeOfProperty(property))
                     .Append($" {char.ToUpper(property.Name[0])}{property.Name.Substring(1)} ")
                     .Append("{ get; set; }");
@@ -292,7 +292,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 return builder.ToString();
             });
 
-        public string GenerateIdType(string name, string rawType) => @$"public readonly struct {name} : System.IComparable<{name}>, System.IEquatable<{name}>
+        public string GenerateIdType(string name, string rawType) => @$"internal readonly struct {name} : System.IComparable<{name}>, System.IEquatable<{name}>
         {{
             public {rawType} Value {{ get; }}
 
