@@ -22,7 +22,9 @@ namespace PlaywrightSharp.Helpers
             }
             else if (!string.IsNullOrEmpty(options.BrowserWSEndpoint))
             {
+#pragma warning disable CA2000 // Call dispose, this is a false alarm.
                 transport = await WebSocketTransport.CreateAsync(options).ConfigureAwait(false);
+#pragma warning restore CA2000
             }
 
             return SlowMoTransport.Wrap(transport, options.SlowMo);

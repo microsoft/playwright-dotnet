@@ -44,6 +44,11 @@ namespace PlaywrightSharp
         bool Detached { get; }
 
         /// <summary>
+        /// FrameID.
+        /// </summary>
+        string Id { get; set; }
+
+        /// <summary>
         /// Gets the frame's utility execution context.
         /// </summary>
         /// <returns>A <see cref="Task{IFrameExecutionContext}"/> that completes when the frame execution context is resolved, yielding the <see cref="IFrameExecutionContext"/>.</returns>
