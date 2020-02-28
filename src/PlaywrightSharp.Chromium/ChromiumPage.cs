@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
-using PlaywrightSharp.Chromium.Messaging.Emulation;
-using PlaywrightSharp.Chromium.Messaging.Page;
-using PlaywrightSharp.Chromium.Messaging.Security;
+using PlaywrightSharp.Chromium.Protocol.Emulation;
+using PlaywrightSharp.Chromium.Protocol.Log;
+using PlaywrightSharp.Chromium.Protocol.Page;
+using PlaywrightSharp.Chromium.Protocol.Runtime;
+using PlaywrightSharp.Chromium.Protocol.Security;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -34,7 +36,7 @@ namespace PlaywrightSharp.Chromium
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
-            var response = await _client.SendAsync<PageNavigateResponse>("Page.navigate", new PageNavigateRequest
+            var response = await _client.SendAsync(new PageNavigateRequest
             {
                 Url = url,
                 Referrer = referrer ?? string.Empty,
@@ -60,19 +62,19 @@ namespace PlaywrightSharp.Chromium
 
         internal async Task InitializeAsync()
         {
-            var getFrameTreeTask = _client.SendAsync<PageGetFrameTreeResponse>("Page.getFrameTree");
+            var getFrameTreeTask = _client.SendAsync(new PageGetFrameTreeRequest());
 
             await Task.WhenAll(
-                _client.SendAsync("Page.enable"),
+                _client.SendAsync(new PageEnableRequest()),
                 getFrameTreeTask).ConfigureAwait(false);
 
             HandleFrameTree(getFrameTreeTask.Result.FrameTree);
 
             var tasks = new List<Task>
             {
-               _client.SendAsync("Log.enable", null),
-               _client.SendAsync("Page.setLifecycleEventsEnabled", new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
-               _client.SendAsync("Runtime.enable").ContinueWith(t => EnsureIsolatedWorldAsync(), TaskScheduler.Default),
+               _client.SendAsync(new LogEnableRequest()),
+               _client.SendAsync(new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
+               _client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(), TaskScheduler.Default),
                _networkManager.InitializeAsync(),
             };
 
@@ -82,12 +84,12 @@ namespace PlaywrightSharp.Chromium
 
                 if (options.BypassCSP)
                 {
-                    tasks.Add(_client.SendAsync("Page.setBypassCSP", new PageSetBypassCSPRequest { Enabled = true }));
+                    tasks.Add(_client.SendAsync(new PageSetBypassCSPRequest { Enabled = true }));
                 }
 
                 if (options.IgnoreHTTPSErrors)
                 {
-                    tasks.Add(_client.SendAsync("Security.setIgnoreCertificateErrors", new SecuritySetIgnoreCertificateErrorsRequest { Ignore = true }));
+                    tasks.Add(_client.SendAsync(new SecuritySetIgnoreCertificateErrorsRequest { Ignore = true }));
                 }
 
                 if (options.Viewport != null)
@@ -97,7 +99,7 @@ namespace PlaywrightSharp.Chromium
 
                 if (!options.JavaScriptEnabled)
                 {
-                    tasks.Add(_client.SendAsync("Emulation.setScriptExecutionDisabled", new EmulationSetScriptExecutionDisabledRequest { Value = true }));
+                    tasks.Add(_client.SendAsync(new EmulationSetScriptExecutionDisabledRequest { Value = true }));
                 }
 
                 if (options.UserAgent != null)
@@ -112,7 +114,12 @@ namespace PlaywrightSharp.Chromium
 
                 if (options.Geolocation != null)
                 {
-                    tasks.Add(_client.SendAsync("Emulation.setGeolocationOverride", options.Geolocation));
+                    tasks.Add(_client.SendAsync(new EmulationSetGeolocationOverrideRequest
+                    {
+                        Accuracy = (double)options.Geolocation.Accuracy,
+                        Latitude = (double)options.Geolocation.Latitude,
+                        Longitude = (double)options.Geolocation.Longitude,
+                    }));
                 }
             }
 
@@ -126,13 +133,13 @@ namespace PlaywrightSharp.Chromium
                 switch (e.MessageID)
                 {
                     case "Page.frameAttached":
-                        OnFrameAttached(e.MessageData?.ToObject<PageFrameAttachedResponse>());
+                        OnFrameAttached(e.MessageData?.ToObject<PageFrameAttachedEventArgs>());
                         break;
                     case "Page.frameNavigated":
-                        OnFrameNavigated(e.MessageData?.ToObject<PageFrameNavigatedResponse>().Frame, false);
+                        OnFrameNavigated(e.MessageData?.ToObject<PageFrameNavigatedEventArgs>()?.Frame, false);
                         break;
                     case "Page.lifecycleEvent":
-                        OnLifecycleEvent(e.MessageData?.ToObject<PageLifecycleEventResponse>());
+                        OnLifecycleEvent(e.MessageData?.ToObject<PageLifecycleEventEventArgs>());
                         break;
                 }
             }
@@ -151,7 +158,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void OnLifecycleEvent(PageLifecycleEventResponse e)
+        private void OnLifecycleEvent(PageLifecycleEventEventArgs e)
         {
             if (e.Name == "load")
             {
@@ -163,8 +170,8 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void OnFrameNavigated(FramePayload payload, bool initial)
-            => Page.FrameManager.FrameCommittedNewDocumentNavigation(payload.Id, payload.Url, payload.Name ?? string.Empty, payload.LoaderId, initial);
+        private void OnFrameNavigated(Protocol.Page.Frame frame, bool initial)
+            => Page.FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
 
         private Task EnsureIsolatedWorldAsync() => Task.CompletedTask;
 
@@ -173,7 +180,7 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
-        private void HandleFrameTree(PageGetFrameTreeItem frameTree)
+        private void HandleFrameTree(Protocol.Page.FrameTree frameTree)
         {
             OnFrameAttached(frameTree.Frame.Id, frameTree.Frame.ParentId ?? string.Empty);
             OnFrameNavigated(frameTree.Frame, true);
@@ -187,7 +194,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void OnFrameAttached(PageFrameAttachedResponse e) => OnFrameAttached(e.FrameId, e.ParentFrameId);
+        private void OnFrameAttached(PageFrameAttachedEventArgs e) => OnFrameAttached(e.FrameId, e.ParentFrameId);
 
         private void OnFrameAttached(string frameId, string parentFrameId) => Page.FrameManager.FrameAttached(frameId, parentFrameId);
     }

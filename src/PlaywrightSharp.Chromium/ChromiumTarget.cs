@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
-using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Chromium
                 TaskScheduler.Default);
 
             CloseTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            IsInitialized = TargetInfo.Type != TargetType.Page || !string.IsNullOrEmpty(TargetInfo.Url);
+            IsInitialized = Type != TargetType.Page || !string.IsNullOrEmpty(TargetInfo.Url);
 
             if (IsInitialized)
             {
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Chromium
         public string Url => TargetInfo.Url;
 
         /// <inheritdoc cref="ITarget"/>
-        public TargetType Type => TargetInfo.Type;
+        public TargetType Type => TargetInfo.GetTargetType();
 
         internal bool IsInitialized { get; set; }
 
@@ -95,7 +95,7 @@ namespace PlaywrightSharp.Chromium
         /// <returns>A <see cref="Task"/> that completes when the worker is resolved, yielding the <see cref="Worker"/>.</returns>
         public Task<Worker> WorkerAsync()
         {
-            if (TargetInfo.Type != TargetType.ServiceWorker && TargetInfo.Type != TargetType.SharedWorker)
+            if (Type != TargetType.ServiceWorker && Type != TargetType.SharedWorker)
             {
                 return Task.FromResult<Worker>(null);
             }
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Chromium
 
         internal async Task<IPage> PageAsync()
         {
-            if ((TargetInfo.Type == TargetType.Page || TargetInfo.Type == TargetType.BackgroundPage) && PageTask == null)
+            if ((Type == TargetType.Page || Type == TargetType.BackgroundPage) && PageTask == null)
             {
                 PageTask = CreatePageAsync();
             }
@@ -122,7 +122,7 @@ namespace PlaywrightSharp.Chromium
         {
             TargetInfo = targetInfo;
 
-            if (!IsInitialized && (TargetInfo.Type != TargetType.Page || !string.IsNullOrEmpty(TargetInfo.Url)))
+            if (!IsInitialized && (Type != TargetType.Page || !string.IsNullOrEmpty(TargetInfo.Url)))
             {
                 IsInitialized = true;
                 _initializedTaskWrapper.TrySetResult(true);
@@ -145,16 +145,16 @@ namespace PlaywrightSharp.Chromium
             {
                 if (e.MessageID == "Target.attachedToTarget")
                 {
-                    var response = e.MessageData.Value.ToObject<TargetAttachToTargetResponse>();
-                    if (response.TargetInfo.Type != TargetType.ServiceWorker)
+                    var response = e.MessageData.Value.ToObject<TargetAttachedToTargetEventArgs>();
+                    if (response.TargetInfo.GetTargetType() != TargetType.ServiceWorker)
                     {
-                        _ = client.SendAsync("Target.detachFromTarget", new TargetDetachFromTargetRequest { SessionId = response.SessionId });
+                        _ = client.SendAsync(new TargetDetachFromTargetRequest { SessionId = response.SessionId });
                     }
                 }
             };
 
             await chromiumPage.InitializeAsync().ConfigureAwait(false);
-            await client.SendAsync("Target.setAutoAttach", new TargetSetAutoAttachRequest
+            await client.SendAsync(new TargetSetAutoAttachRequest
             {
                 AutoAttach = true,
                 WaitForDebuggerOnStart = false,

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
-using PlaywrightSharp.Chromium.Messaging.Browser;
+using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 
@@ -202,7 +202,7 @@ namespace PlaywrightSharp.Chromium
                     }
 
                     var transport = await BrowserHelper.CreateTransportAsync(browserApp.ConnectOptions).ConfigureAwait(false);
-                    await transport.SendAsync("Browser.close", new BrowserCloseRequest { Id = ChromiumConnection.BrowserCloseMessageId }).ConfigureAwait(false);
+                    await transport.SendAsync(new BrowserCloseRequest().Command).ConfigureAwait(false);
                 },
                 (exitCode) =>
                 {

@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging;
-using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -67,9 +67,9 @@ namespace PlaywrightSharp.Chromium
 
         internal Task<ChromiumSession> GetSessionAsync(string sessionId) => _asyncSessions.GetItemAsync(sessionId);
 
-        internal async Task<ChromiumSession> CreateSessionAsync(TargetInfo targetInfo)
+        internal async Task<ChromiumSession> CreateSessionAsync(Protocol.Target.TargetInfo targetInfo)
         {
-            string sessionId = (await RootSession.SendAsync<TargetAttachToTargetResponse>("Target.attachToTarget", new TargetAttachToTargetRequest
+            string sessionId = (await RootSession.SendAsync(new TargetAttachToTargetRequest
             {
                 TargetId = targetInfo.TargetId,
                 Flatten = true,

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
-using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -129,9 +129,9 @@ namespace PlaywrightSharp.Chromium
         {
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
             var connection = new ChromiumConnection(transport);
-            var response = await connection.RootSession.SendAsync<TargetGetBrowserContextsResponse>("Target.getBrowserContexts").ConfigureAwait(false);
+            var response = await connection.RootSession.SendAsync(new TargetGetBrowserContextsRequest()).ConfigureAwait(false);
             var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);
-            await connection.RootSession.SendAsync("Target.setDiscoverTargets", new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
+            await connection.RootSession.SendAsync(new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
             await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
             return browser;
         }
@@ -145,15 +145,15 @@ namespace PlaywrightSharp.Chromium
                 switch (e.MessageID)
                 {
                     case "Target.targetCreated":
-                        await CreateTargetAsync(e.MessageData?.ToObject<TargetCreatedResponse>()).ConfigureAwait(false);
+                        await CreateTargetAsync(e.MessageData?.ToObject<TargetTargetCreatedEventArgs>()).ConfigureAwait(false);
                         return;
 
                     case "Target.targetDestroyed":
-                        await DestroyTargetAsync(e.MessageData?.ToObject<TargetDestroyedResponse>()).ConfigureAwait(false);
+                        await DestroyTargetAsync(e.MessageData?.ToObject<TargetTargetDestroyedEventArgs>()).ConfigureAwait(false);
                         return;
 
                     case "Target.targetInfoChanged":
-                        ChangeTargetInfo(e.MessageData?.ToObject<TargetCreatedResponse>());
+                        ChangeTargetInfo(e.MessageData?.ToObject<TargetTargetCreatedEventArgs>());
                         return;
                 }
             }
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private async Task CreateTargetAsync(TargetCreatedResponse e)
+        private async Task CreateTargetAsync(TargetTargetCreatedEventArgs e)
         {
             var targetInfo = e.TargetInfo;
             string browserContextId = targetInfo.BrowserContextId;
@@ -201,7 +201,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private async Task DestroyTargetAsync(TargetDestroyedResponse e)
+        private async Task DestroyTargetAsync(TargetTargetDestroyedEventArgs e)
         {
             if (!TargetsMap.ContainsKey(e.TargetId))
             {
@@ -220,7 +220,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void ChangeTargetInfo(TargetCreatedResponse e)
+        private void ChangeTargetInfo(TargetTargetCreatedEventArgs e)
         {
             if (!TargetsMap.ContainsKey(e.TargetInfo.TargetId))
             {
