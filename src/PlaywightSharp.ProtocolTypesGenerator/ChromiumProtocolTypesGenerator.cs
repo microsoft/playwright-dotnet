@@ -26,7 +26,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
             if (revision.Local && File.Exists(output))
             {
-                // return;
+                return;
             }
 
             using (var process = Process.Start(revision.ExecutablePath, "--remote-debugging-port=9222 --headless"))
@@ -90,9 +90,24 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                         string itemType = ConvertJsToCsharp(type?.Items?.Type);
                         if (itemType != null)
                         {
-                            knownTypes.Add(type.Id, itemType + "[]");
-                            knownTypes.Add($"{domain.Domain}.{type.Id}", itemType + "[]");
+                            knownTypes[type.Id] = itemType + "[]";
+                            knownTypes[$"{domain.Domain}.{type.Id}"] = itemType + "[]";
                         }
+                    }
+                    else if (type.Type == "string")
+                    {
+                        knownTypes[type.Id] = "string";
+                        knownTypes[$"{domain.Domain}.{type.Id}"] = "string";
+                    }
+                    else if (type.Type == "integer")
+                    {
+                        knownTypes[type.Id] = "int";
+                        knownTypes[$"{domain.Domain}.{type.Id}"] = "int";
+                    }
+                    else if (type.Type == "number")
+                    {
+                        knownTypes[type.Id] = "long";
+                        knownTypes[$"{domain.Domain}.{type.Id}"] = "long";
                     }
                 }
             }
@@ -105,99 +120,102 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
         private void GenerateTypes(StringBuilder builder, ChromiumProtocolDomain domain)
         {
-            if (domain.Types != null)
-                foreach (var type in domain.Types)
+            if (domain.Types == null)
+            {
+                return;
+            }
+
+            foreach (var type in domain.Types)
+            {
+                if (type.Enum != null)
                 {
-                    if (type.Enum != null)
-                    {
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine($"/// {FormatDocs(type.Description)}");
-                        builder.AppendLine("/// </summary>");
-                        builder.AppendLine($"internal enum {type.Id}");
-                        builder.AppendLine("{");
-                        builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
-                        builder.AppendLine("}");
-                    }
-                    else if (type.Type == "string")
-                    {
-                        builder.AppendLine(GenerateIdType(type.Id, "string"));
-                    }
-                    else if (type.Type == "integer")
-                    {
-                        builder.AppendLine(GenerateIdType(type.Id, "int"));
-                    }
-                    else if (type.Type == "number")
-                    {
-                        builder.AppendLine(GenerateIdType(type.Id, "long"));
-                    }
-                    else if (type.Type == "object")
-                    {
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine($"/// {FormatDocs(type.Description)}");
-                        builder.AppendLine("/// </summary>");
-                        builder.AppendLine($"public class {type.Id}");
-                        builder.AppendLine("{");
-                        builder.AppendJoin("\n", NormalizeProperties(type.Properties));
-                        builder.AppendLine("}");
-                    }
+                    builder.AppendLine("/// <summary>");
+                    builder.AppendLine($"/// {FormatDocs(type.Description)}");
+                    builder.AppendLine("/// </summary>");
+                    builder.AppendLine($"internal enum {type.Id}");
+                    builder.AppendLine("{");
+                    builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
+                    builder.AppendLine("}");
                 }
+                else if (type.Type == "object")
+                {
+                    builder.AppendLine("/// <summary>");
+                    builder.AppendLine($"/// {FormatDocs(type.Description)}");
+                    builder.AppendLine("/// </summary>");
+                    builder.AppendLine($"public class {type.Id}");
+                    builder.AppendLine("{");
+                    builder.AppendJoin("\n", NormalizeProperties(type.Properties));
+                    builder.AppendLine("}");
+                }
+            }
         }
 
         private void GenerateCommands(StringBuilder builder, ChromiumProtocolDomain domain)
         {
-            if (domain.Commands != null)
-                foreach (var command in domain.Commands)
-                {
-                    // request
-                    string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0])}{command.Name.Substring(1)}";
-                    builder.AppendLine("/// <summary>");
-                    builder.AppendLine($"/// {FormatDocs(command.Description)}");
-                    builder.AppendLine("/// </summary>");
-                    builder.AppendLine("/// <remarks>");
-                    builder.AppendLine($"/// Will send the command <c>{domain.Domain}.{command.Name}</c>");
-                    builder.AppendLine("/// </remarks>");
-                    if (command.Description?.StartsWith("Deprecated") == true)
-                    {
-                        builder.AppendLine($"[System.Obsolete(\"{command.Description.Replace("\n", "\\n")}\")]");
-                    }
-                    builder.AppendLine($"internal class {baseName}Request : IChromiumRequest<{baseName}Response>");
-                    builder.AppendLine("{");
-                    builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
-                    builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
-                    builder.AppendLine("}");
+            if (domain.Commands == null)
+            {
+                return;
+            }
 
-                    // response
-                    builder.AppendLine("/// <summary>");
-                    builder.AppendLine($"/// Response from <see cref=\"{baseName}Request\"/>");
-                    builder.AppendLine("/// </summary>");
-                    builder.AppendLine($"internal class {baseName}Response : IChromiumResponse");
-                    builder.AppendLine("{");
-                    builder.AppendJoin("\n", NormalizeProperties(command.Returns));
-                    builder.AppendLine("}");
+            foreach (var command in domain.Commands)
+            {
+                // request
+                string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0])}{command.Name.Substring(1)}";
+                builder.AppendLine("/// <summary>");
+                builder.AppendLine($"/// {FormatDocs(command.Description)}");
+                builder.AppendLine("/// </summary>");
+                builder.AppendLine("/// <remarks>");
+                builder.AppendLine($"/// Will send the command <c>{domain.Domain}.{command.Name}</c>");
+                builder.AppendLine("/// </remarks>");
+                if (command.Description?.StartsWith("Deprecated") == true)
+                {
+                    builder.AppendLine($"[System.Obsolete(\"{command.Description.Replace("\n", "\\n")}\")]");
                 }
+                builder.AppendLine($"internal class {baseName}Request : IChromiumRequest<{baseName}Response>");
+                builder.AppendLine("{");
+                builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
+                builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
+                builder.AppendLine("}");
+
+                // response
+                builder.AppendLine("/// <summary>");
+                builder.AppendLine($"/// Response from <see cref=\"{baseName}Request\"/>");
+                builder.AppendLine("/// </summary>");
+                builder.AppendLine($"internal class {baseName}Response : IChromiumResponse");
+                builder.AppendLine("{");
+                builder.AppendJoin("\n", NormalizeProperties(command.Returns));
+                builder.AppendLine("}");
+            }
         }
 
         private void GenerateEvents(StringBuilder builder, ChromiumProtocolDomain domain)
         {
-            if (domain.Events != null)
-                foreach (var e in domain.Events)
-                {
-                    string eventName = char.ToUpper(e.Name[0]) + e.Name.Substring(1);
-                    builder.AppendLine("/// <summary>");
-                    builder.AppendLine($"/// {FormatDocs(e.Description)}");
-                    builder.AppendLine("/// </summary>");
-                    builder.AppendLine("/// <remarks>");
-                    builder.AppendLine($"/// Matches on the event <c>{domain.Domain}.{e.Name}</c>");
-                    builder.AppendLine("/// </remarks>");
-                    builder.AppendLine($"internal class {domain.Domain}{eventName}EventArgs : ChromiumEvent");
-                    builder.AppendLine("{");
-                    builder.AppendLine($"public override string InternalName {{ get; }} = \"{domain.Domain}.{e.Name}\";");
-                    builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
-                    builder.AppendLine("}");
-                }
+            if (domain.Events == null)
+            {
+                return;
+            }
+
+            foreach (var e in domain.Events)
+            {
+                string eventName = char.ToUpper(e.Name[0]) + e.Name.Substring(1);
+                builder.AppendLine("/// <summary>");
+                builder.AppendLine($"/// {FormatDocs(e.Description)}");
+                builder.AppendLine("/// </summary>");
+                builder.AppendLine("/// <remarks>");
+                builder.AppendLine($"/// Matches on the event <c>{domain.Domain}.{e.Name}</c>");
+                builder.AppendLine("/// </remarks>");
+                builder.Append("internal class ").Append(domain.Domain).Append(eventName).AppendLine("EventArgs : ChromiumEvent");
+                builder.AppendLine("{");
+                builder.AppendLine($"public override string InternalName {{ get; }} = \"{domain.Domain}.{e.Name}\";");
+                builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
+                builder.AppendLine("}");
+            }
         }
 
-        public string FormatDocs(string docs) => docs?.Replace("\n", "\n/// ").Replace("<", "&lt;").Replace(">", "&gt;");
+        public string FormatDocs(string docs) => docs?
+            .Replace("\n", "\n/// ", StringComparison.OrdinalIgnoreCase)
+            .Replace("<", "&lt;", StringComparison.OrdinalIgnoreCase)
+            .Replace(">", "&gt;", StringComparison.OrdinalIgnoreCase);
 
         public string GetTypeOfProperty(ChromiumProtocolDomainProperty property)
         {
@@ -205,6 +223,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             {
                 return ConvertRefToCsharp(property.Ref);
             }
+
             try
             {
                 return property.Type switch
