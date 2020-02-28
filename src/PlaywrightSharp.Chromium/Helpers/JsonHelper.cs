@@ -6,19 +6,24 @@ namespace PlaywrightSharp.Chromium.Helpers
 {
     internal static class JsonHelper
     {
+        private static JsonSerializerOptions _defaultChromiumJsonSerializerOptions;
+
         public static JsonSerializerOptions DefaultChromiumJsonSerializerOptions
         {
             get
             {
-                var options = new JsonSerializerOptions
+                if (_defaultChromiumJsonSerializerOptions == null)
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    IgnoreNullValues = true,
-                };
+                    _defaultChromiumJsonSerializerOptions = new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        IgnoreNullValues = true,
+                    };
 
-                options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                    _defaultChromiumJsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                }
 
-                return options;
+                return _defaultChromiumJsonSerializerOptions;
             }
         }
     }

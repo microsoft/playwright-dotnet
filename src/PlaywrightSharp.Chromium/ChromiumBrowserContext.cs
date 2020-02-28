@@ -12,6 +12,10 @@ namespace PlaywrightSharp
         private readonly ChromiumSession _client;
         private readonly string _contextId;
 
+        internal ChromiumBrowserContext(ChromiumSession client, ChromiumBrowser chromiumBrowser) : this(client, chromiumBrowser, null, null)
+        {
+        }
+
         internal ChromiumBrowserContext(
             ChromiumSession client,
             ChromiumBrowser chromiumBrowser,
@@ -34,12 +38,16 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IBrowserContext"/>
         public async Task<IPage[]> GetPagesAsync()
-            => (await Task.WhenAll(Browser.GetAllTargets()
+        {
+            var pageTasks =
+                Browser.GetAllTargets()
                 .Where(target => target.BrowserContext == BrowserContext && target.Type == TargetType.Page)
-                .Select(t => t.PageAsync()))
-                .ConfigureAwait(false))
-                .Where(p => p != null)
-                .ToArray();
+                .Select(t => t.PageAsync());
+
+            var pages = await Task.WhenAll(pageTasks).ConfigureAwait(false);
+
+            return pages.Where(p => p != null).ToArray();
+        }
 
         /// <inheritdoc cref="IBrowserContext"/>
         public async Task<IPage> NewPage()

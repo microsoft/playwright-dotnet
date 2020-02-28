@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Chromium
             _browserContextIds = browserContextIds;
             _session = connection.RootSession;
 
-            DefaultContext = new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, null, null));
+            DefaultContext = new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this));
 
             _contexts = browserContextIds.ToDictionary(
                 contextId => contextId,

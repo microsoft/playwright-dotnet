@@ -1,118 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <OutputType>Library</OutputType>
-    <ReleaseVersion>0.0.0</ReleaseVersion>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net471'">
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="wwwroot\beforeunload.html" />
-    <Content Remove="wwwroot\consolelog.html" />
-    <Content Remove="wwwroot\csp.html" />
-    <Content Remove="wwwroot\deep-shadow.html" />
-    <Content Remove="wwwroot\dynamic-oopif.html" />
-    <Content Remove="wwwroot\detect-touch.html" />
-    <Content Remove="wwwroot\empty.html" />
-    <Content Remove="wwwroot\error.html" />
-    <Content Remove="wwwroot\file-to-upload.txt" />
-    <Content Remove="wwwroot\global-var.html" />
-    <Content Remove="wwwroot\historyapi.html" />
-    <Content Remove="wwwroot\grid.html" />
-    <Content Remove="wwwroot\injectedstyle.css" />
-    <Content Remove="wwwroot\injectedfile.js" />
-    <Content Remove="wwwroot\mobile.html" />
-    <Content Remove="wwwroot\modernizr.js" />
-    <Content Remove="wwwroot\networkidle-frame.html" />
-    <Content Remove="wwwroot\networkidle.html" />
-    <Content Remove="wwwroot\networkidle.js" />
-    <Content Remove="wwwroot\one-style.css" />
-    <Content Remove="wwwroot\offscreenbuttons.html" />
-    <Content Remove="wwwroot\one-style.html" />
-    <Content Remove="wwwroot\overflow.html" />
-    <Content Remove="wwwroot\playground.html" />
-    <Content Remove="wwwroot\playwrightweb.html" />
-    <Content Remove="wwwroot\pptr.png" />
-    <Content Remove="wwwroot\redirectloop1.html" />
-    <Content Remove="wwwroot\resetcss.html" />
-    <Content Remove="wwwroot\redirectloop2.html" />
-    <Content Remove="wwwroot\self-request.html" />
-    <Content Remove="wwwroot\shadow.html" />
-    <Content Remove="wwwroot\simple.json" />
-    <Content Remove="wwwroot\tamperable.html" />
-    <Content Remove="wwwroot\title.html" />
-    <Content Remove="wwwroot\wrappedlink.html" />
-    <Content Remove="wwwroot\cached\one-style.css" />
-    <Content Remove="wwwroot\cached\one-style.html" />
-    <Content Remove="wwwroot\csscoverage\stylesheet2.css" />
-    <Content Remove="wwwroot\csscoverage\unused.html" />
-    <Content Remove="wwwroot\csscoverage\stylesheet1.css" />
-    <Content Remove="wwwroot\csscoverage\Dosis-Regular.ttf" />
-    <Content Remove="wwwroot\csscoverage\media.html" />
-    <Content Remove="wwwroot\csscoverage\sourceurl.html" />
-    <Content Remove="wwwroot\csscoverage\involved.html" />
-    <Content Remove="wwwroot\csscoverage\OFL.txt" />
-    <Content Remove="wwwroot\csscoverage\simple.html" />
-    <Content Remove="wwwroot\csscoverage\multiple.html" />
-    <Content Remove="wwwroot\digits\8.png" />
-    <Content Remove="wwwroot\digits\9.png" />
-    <Content Remove="wwwroot\digits\4.png" />
-    <Content Remove="wwwroot\digits\7.png" />
-    <Content Remove="wwwroot\digits\5.png" />
-    <Content Remove="wwwroot\digits\6.png" />
-    <Content Remove="wwwroot\digits\3.png" />
-    <Content Remove="wwwroot\digits\0.png" />
-    <Content Remove="wwwroot\digits\1.png" />
-    <Content Remove="wwwroot\digits\2.png" />
-    <Content Remove="wwwroot\es6\es6import.js" />
-    <Content Remove="wwwroot\es6\.eslintrc" />
-    <Content Remove="wwwroot\es6\es6module.js" />
-    <Content Remove="wwwroot\es6\es6pathimport.js" />
-    <Content Remove="wwwroot\frames\frameset.html" />
-    <Content Remove="wwwroot\frames\nested-frames.html" />
-    <Content Remove="wwwroot\frames\two-frames.html" />
-    <Content Remove="wwwroot\frames\script.js" />
-    <Content Remove="wwwroot\frames\frame.html" />
-    <Content Remove="wwwroot\frames\style.css" />
-    <Content Remove="wwwroot\frames\one-frame.html" />
-    <Content Remove="wwwroot\input\select.html" />
-    <Content Remove="wwwroot\input\textarea.html" />
-    <Content Remove="wwwroot\input\scrollable.html" />
-    <Content Remove="wwwroot\input\checkbox.html" />
-    <Content Remove="wwwroot\input\button.html" />
-    <Content Remove="wwwroot\input\touches.html" />
-    <Content Remove="wwwroot\input\keyboard.html" />
-    <Content Remove="wwwroot\input\rotatedButton.html" />
-    <Content Remove="wwwroot\input\mouse-helper.js" />
-    <Content Remove="wwwroot\input\fileupload.html" />
-    <Content Remove="wwwroot\jscoverage\eval.html" />
-    <Content Remove="wwwroot\jscoverage\unused.html" />
-    <Content Remove="wwwroot\jscoverage\script1.js" />
-    <Content Remove="wwwroot\jscoverage\involved.html" />
-    <Content Remove="wwwroot\jscoverage\ranges.html" />
-    <Content Remove="wwwroot\jscoverage\sourceurl.html" />
-    <Content Remove="wwwroot\jscoverage\multiple.html" />
-    <Content Remove="wwwroot\jscoverage\script2.js" />
-    <Content Remove="wwwroot\jscoverage\simple.html" />
-    <Content Remove="wwwroot\popup\popup.html" />
-    <Content Remove="wwwroot\popup\window-open.html" />
-    <Content Remove="wwwroot\screenshots\webgl.html" />
-    <Content Remove="wwwroot\screenshots\canvas.html" />
-    <Content Remove="wwwroot\screenshots\translateZ.html" />
-    <Content Remove="wwwroot\screenshots\controls.html" />
-    <Content Remove="wwwroot\serviceworkers\empty\sw.html" />
-    <Content Remove="wwwroot\serviceworkers\empty\sw.js" />
-    <Content Remove="wwwroot\serviceworkers\fetch\sw.html" />
-    <Content Remove="wwwroot\serviceworkers\fetch\style.css" />
-    <Content Remove="wwwroot\serviceworkers\fetch\sw.js" />
-    <Content Remove="wwwroot\simple-extension\manifest.json" />
-    <Content Remove="wwwroot\simple-extension\index.js" />
-    <Content Remove="wwwroot\simple-extension\content-script.js" />
-    <Content Remove="wwwroot\wasm\table2.wasm" />
-    <Content Remove="wwwroot\wasm\table2.html" />
-    <Content Remove="wwwroot\worker\worker.js" />
-    <Content Remove="wwwroot\worker\worker.html" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <OutputType>Library</OutputType>
+        <ReleaseVersion>0.0.0</ReleaseVersion>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net471'">
+        <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    </PropertyGroup>
 </Project>
