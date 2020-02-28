@@ -3,9 +3,8 @@ namespace PlaywrightSharp
     /// <summary>
     /// Optional waiting parameters.
     /// </summary>
-    /// <seealso cref="IPage.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
-    /// <seealso cref="IFrame.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
-    public class WaitForSelectorOptions
+    /// <seealso cref="IPage.FillAsync(string, string, FillOptions)"/>
+    public class FillOptions
     {
         /// <summary>
         /// Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
