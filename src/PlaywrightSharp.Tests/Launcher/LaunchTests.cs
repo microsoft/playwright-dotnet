@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
             using var browser = await Playwright.LaunchAsync(TestConstants.DefaultBrowserOptions);
-            using var page = await browser.DefaultContext.NewPageAsync();
+            var page = await browser.DefaultContext.NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
             var exception = await Assert.ThrowsAsync<TargetClosedException>(() => neverResolves);

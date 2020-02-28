@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace PlaywrightSharp
 {
@@ -15,7 +16,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Wait for an URL matching this expression.
         /// </summary>
-        public string UrlRegEx { get; set; }
+        public Regex UrlRegEx { get; set; }
 
         /// <summary>
         /// Function that will check for the URL match.

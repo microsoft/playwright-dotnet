@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
 
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);
 
-            var browser = await Playwright.ConnectAsync(browserApp.GetConnectOptions());
+            var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             Assert.NotNull(browserApp.WebSocketEndpoint);
             var page = await browser.DefaultContext.NewPageAsync();
             Assert.Equal(121, await page.EvaluateAsync<int>("11 * 11"));

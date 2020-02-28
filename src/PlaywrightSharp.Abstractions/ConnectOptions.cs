@@ -29,5 +29,11 @@ namespace PlaywrightSharp
         /// Whether the transport should enqueue messages or not.
         /// </summary>
         public bool EnqueueTransportMessages { get; set; }
+
+        /// <summary>
+        /// Clones the <see cref="ConnectOptions"/>.
+        /// </summary>
+        /// <returns>A copy of the current <see cref="ConnectOptions"/>.</returns>
+        public ConnectOptions Clone() => (ConnectOptions)MemberwiseClone();
     }
 }

@@ -13,8 +13,6 @@ namespace PlaywrightSharp.Chromium
     {
         private static int _processCount;
 
-        private readonly string _chromiumExecutable;
-        private readonly List<string> _chromiumArgs;
         private readonly TempDirectory _tempUserDataDir;
         private readonly Func<Task> _attemptToGracefullyCloseFunc;
         private readonly Action<int> _onKill;
@@ -30,8 +28,6 @@ namespace PlaywrightSharp.Chromium
             Func<Task> attemptToGracefullyCloseFunc,
             Action<int> onKill)
         {
-            _chromiumExecutable = chromiumExecutable;
-            _chromiumArgs = chromiumArgs;
             _tempUserDataDir = tempUserDataDir;
 
             Timeout = timeout;
@@ -58,6 +54,11 @@ namespace PlaywrightSharp.Chromium
         public Process Process { get; }
 
         public int Timeout { get; }
+
+        /// <summary>
+        /// Gets Chromium endpoint.
+        /// </summary>
+        public string Endpoint => _startCompletionSource.Task.IsCompleted ? _startCompletionSource.Task.Result : null;
 
         /// <inheritdoc />
         public void Dispose()
@@ -309,7 +310,7 @@ namespace PlaywrightSharp.Chromium
                     }
 
                     void OnProcessExitedWhileStarting(object sender, EventArgs e)
-                        => p._startCompletionSource.TrySetException(new PlaywrightSharpException($"Failed to launch Chromium! {output}"));
+                        => p._startCompletionSource.TrySetException(new MessageException($"Failed to launch Chromium! {output}"));
                     void OnProcessExited(object sender, EventArgs e) => Exited.EnterFrom(p, p._currentState);
 
                     p.Process.ErrorDataReceived += OnProcessDataReceivedWhileStarting;
@@ -328,7 +329,7 @@ namespace PlaywrightSharp.Chromium
                         {
                             cts = new CancellationTokenSource(timeout);
                             cts.Token.Register(() => p._startCompletionSource.TrySetException(
-                                new PlaywrightSharpException($"Timed out after {timeout} ms while trying to connect to Chromium!")));
+                                new MessageException($"Timed out after {timeout} ms while trying to connect to Chromium!")));
                         }
 
                         try
