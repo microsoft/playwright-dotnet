@@ -173,6 +173,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 }
                 builder.AppendLine($"internal class {baseName}Request : IChromiumRequest<{baseName}Response>");
                 builder.AppendLine("{");
+                builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
                 builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
                 builder.AppendLine("}");
@@ -264,7 +265,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     .AppendLine("/// <summary>")
                     .AppendLine($"/// {FormatDocs(property.Description)}")
                     .AppendLine("/// </summary>")
-                    .Append("internal ")
+                    .Append("public ")
                     .Append(GetTypeOfProperty(property))
                     .Append($" {char.ToUpper(property.Name[0])}{property.Name.Substring(1)} ")
                     .Append("{ get; set; }");

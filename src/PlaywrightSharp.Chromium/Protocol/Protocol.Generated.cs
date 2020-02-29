@@ -68,39 +68,39 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// What type of source this is.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// The value of this property source.
         /// </summary>
-        internal AXValue Value { get; set; }
+        public AXValue Value { get; set; }
         /// <summary>
         /// The name of the relevant attribute, if any.
         /// </summary>
-        internal string Attribute { get; set; }
+        public string Attribute { get; set; }
         /// <summary>
         /// The value of the relevant attribute, if any.
         /// </summary>
-        internal AXValue AttributeValue { get; set; }
+        public AXValue AttributeValue { get; set; }
         /// <summary>
         /// Whether this source is superseded by a higher priority source.
         /// </summary>
-        internal bool Superseded { get; set; }
+        public bool Superseded { get; set; }
         /// <summary>
         /// The native markup source for this value, e.g. a &lt;label&gt; element.
         /// </summary>
-        internal string NativeSource { get; set; }
+        public string NativeSource { get; set; }
         /// <summary>
         /// The value, such as a node or node list, of the native source.
         /// </summary>
-        internal AXValue NativeSourceValue { get; set; }
+        public AXValue NativeSourceValue { get; set; }
         /// <summary>
         /// Whether the value for this property is invalid.
         /// </summary>
-        internal bool Invalid { get; set; }
+        public bool Invalid { get; set; }
         /// <summary>
         /// Reason for the value being invalid, if it is.
         /// </summary>
-        internal string InvalidReason { get; set; }
+        public string InvalidReason { get; set; }
     }
     /// <summary>
     /// 
@@ -110,15 +110,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// The BackendNodeId of the related DOM node.
         /// </summary>
-        internal int BackendDOMNodeId { get; set; }
+        public int BackendDOMNodeId { get; set; }
         /// <summary>
         /// The IDRef value provided, if any.
         /// </summary>
-        internal string Idref { get; set; }
+        public string Idref { get; set; }
         /// <summary>
         /// The text alternative of this node in the current context.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// 
@@ -128,11 +128,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// The name of this property.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// The value of this property.
         /// </summary>
-        internal AXValue Value { get; set; }
+        public AXValue Value { get; set; }
     }
     /// <summary>
     /// A single computed AX property.
@@ -142,19 +142,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// The type of this value.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// The computed value of this property.
         /// </summary>
-        internal object Value { get; set; }
+        public object Value { get; set; }
         /// <summary>
         /// One or more related nodes, if applicable.
         /// </summary>
-        internal AXRelatedNode[] RelatedNodes { get; set; }
+        public AXRelatedNode[] RelatedNodes { get; set; }
         /// <summary>
         /// The sources which contributed to the computation of this property.
         /// </summary>
-        internal AXValueSource[] Sources { get; set; }
+        public AXValueSource[] Sources { get; set; }
     }
     /// <summary>
     /// Values of AXProperty name:
@@ -214,43 +214,43 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// Unique identifier for this node.
         /// </summary>
-        internal string NodeId { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// Whether this node is ignored for accessibility
         /// </summary>
-        internal bool Ignored { get; set; }
+        public bool Ignored { get; set; }
         /// <summary>
         /// Collection of reasons why this node is hidden.
         /// </summary>
-        internal AXProperty[] IgnoredReasons { get; set; }
+        public AXProperty[] IgnoredReasons { get; set; }
         /// <summary>
         /// This `Node`'s role, whether explicit or implicit.
         /// </summary>
-        internal AXValue Role { get; set; }
+        public AXValue Role { get; set; }
         /// <summary>
         /// The accessible name for this `Node`.
         /// </summary>
-        internal AXValue Name { get; set; }
+        public AXValue Name { get; set; }
         /// <summary>
         /// The accessible description for this `Node`.
         /// </summary>
-        internal AXValue Description { get; set; }
+        public AXValue Description { get; set; }
         /// <summary>
         /// The value for this `Node`.
         /// </summary>
-        internal AXValue Value { get; set; }
+        public AXValue Value { get; set; }
         /// <summary>
         /// All other properties
         /// </summary>
-        internal AXProperty[] Properties { get; set; }
+        public AXProperty[] Properties { get; set; }
         /// <summary>
         /// IDs for each of this node's child nodes.
         /// </summary>
-        internal string[] ChildIds { get; set; }
+        public string[] ChildIds { get; set; }
         /// <summary>
         /// The backend ID for the associated DOM node, if any.
         /// </summary>
-        internal int BackendDOMNodeId { get; set; }
+        public int BackendDOMNodeId { get; set; }
     }
     /// <summary>
     /// Disables the accessibility domain.
@@ -300,19 +300,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// Identifier of the node to get the partial accessibility tree for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node to get the partial accessibility tree for.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper to get the partial accessibility tree for.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// Whether to fetch this nodes ancestors, siblings and children. Defaults to true.
         /// </summary>
-        internal bool FetchRelatives { get; set; }
+        public bool FetchRelatives { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AccessibilityGetPartialAXTreeRequest"/>
@@ -323,7 +323,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// The `Accessibility.AXNode` for this DOM node, if it exists, plus its ancestors, siblings and
         /// children, if requested.
         /// </summary>
-        internal AXNode[] Nodes { get; set; }
+        public AXNode[] Nodes { get; set; }
     }
     /// <summary>
     /// Fetches the entire accessibility tree
@@ -344,7 +344,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
         /// <summary>
         /// 
         /// </summary>
-        internal AXNode[] Nodes { get; set; }
+        public AXNode[] Nodes { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Animation
@@ -357,44 +357,44 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// `Animation`'s id.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// `Animation`'s name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// `Animation`'s internal paused state.
         /// </summary>
-        internal bool PausedState { get; set; }
+        public bool PausedState { get; set; }
         /// <summary>
         /// `Animation`'s play state.
         /// </summary>
-        internal string PlayState { get; set; }
+        public string PlayState { get; set; }
         /// <summary>
         /// `Animation`'s playback rate.
         /// </summary>
-        internal double PlaybackRate { get; set; }
+        public double PlaybackRate { get; set; }
         /// <summary>
         /// `Animation`'s start time.
         /// </summary>
-        internal double StartTime { get; set; }
+        public double StartTime { get; set; }
         /// <summary>
         /// `Animation`'s current time.
         /// </summary>
-        internal double CurrentTime { get; set; }
+        public double CurrentTime { get; set; }
         /// <summary>
         /// Animation type of `Animation`.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// `Animation`'s source animation node.
         /// </summary>
-        internal AnimationEffect Source { get; set; }
+        public AnimationEffect Source { get; set; }
         /// <summary>
         /// A unique ID for `Animation` representing the sources that triggered this CSS
         /// animation/transition.
         /// </summary>
-        internal string CssId { get; set; }
+        public string CssId { get; set; }
     }
     /// <summary>
     /// AnimationEffect instance
@@ -404,43 +404,43 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// `AnimationEffect`'s delay.
         /// </summary>
-        internal double Delay { get; set; }
+        public double Delay { get; set; }
         /// <summary>
         /// `AnimationEffect`'s end delay.
         /// </summary>
-        internal double EndDelay { get; set; }
+        public double EndDelay { get; set; }
         /// <summary>
         /// `AnimationEffect`'s iteration start.
         /// </summary>
-        internal double IterationStart { get; set; }
+        public double IterationStart { get; set; }
         /// <summary>
         /// `AnimationEffect`'s iterations.
         /// </summary>
-        internal double Iterations { get; set; }
+        public double Iterations { get; set; }
         /// <summary>
         /// `AnimationEffect`'s iteration duration.
         /// </summary>
-        internal double Duration { get; set; }
+        public double Duration { get; set; }
         /// <summary>
         /// `AnimationEffect`'s playback direction.
         /// </summary>
-        internal string Direction { get; set; }
+        public string Direction { get; set; }
         /// <summary>
         /// `AnimationEffect`'s fill mode.
         /// </summary>
-        internal string Fill { get; set; }
+        public string Fill { get; set; }
         /// <summary>
         /// `AnimationEffect`'s target node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// `AnimationEffect`'s keyframes.
         /// </summary>
-        internal KeyframesRule KeyframesRule { get; set; }
+        public KeyframesRule KeyframesRule { get; set; }
         /// <summary>
         /// `AnimationEffect`'s timing function.
         /// </summary>
-        internal string Easing { get; set; }
+        public string Easing { get; set; }
     }
     /// <summary>
     /// Keyframes Rule
@@ -450,11 +450,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// CSS keyframed animation's name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// List of animation keyframes.
         /// </summary>
-        internal KeyframeStyle[] Keyframes { get; set; }
+        public KeyframeStyle[] Keyframes { get; set; }
     }
     /// <summary>
     /// Keyframe Style
@@ -464,11 +464,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Keyframe's time offset.
         /// </summary>
-        internal string Offset { get; set; }
+        public string Offset { get; set; }
         /// <summary>
         /// `AnimationEffect`'s timing function.
         /// </summary>
-        internal string Easing { get; set; }
+        public string Easing { get; set; }
     }
     /// <summary>
     /// Disables animation domain notifications.
@@ -517,7 +517,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Id of animation.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationGetCurrentTimeRequest"/>
@@ -527,7 +527,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Current time of the page.
         /// </summary>
-        internal double CurrentTime { get; set; }
+        public double CurrentTime { get; set; }
     }
     /// <summary>
     /// Gets the playback rate of the document timeline.
@@ -548,7 +548,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Playback rate for animations on page.
         /// </summary>
-        internal double PlaybackRate { get; set; }
+        public double PlaybackRate { get; set; }
     }
     /// <summary>
     /// Releases a set of animations to no longer be manipulated.
@@ -563,7 +563,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// List of animation ids to seek.
         /// </summary>
-        internal string[] Animations { get; set; }
+        public string[] Animations { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationReleaseAnimationsRequest"/>
@@ -584,7 +584,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Animation id.
         /// </summary>
-        internal string AnimationId { get; set; }
+        public string AnimationId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationResolveAnimationRequest"/>
@@ -594,7 +594,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Corresponding remote object.
         /// </summary>
-        internal Runtime.RemoteObject RemoteObject { get; set; }
+        public Runtime.RemoteObject RemoteObject { get; set; }
     }
     /// <summary>
     /// Seek a set of animations to a particular time within each animation.
@@ -609,11 +609,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// List of animation ids to seek.
         /// </summary>
-        internal string[] Animations { get; set; }
+        public string[] Animations { get; set; }
         /// <summary>
         /// Set the current time of each animation.
         /// </summary>
-        internal double CurrentTime { get; set; }
+        public double CurrentTime { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationSeekAnimationsRequest"/>
@@ -634,11 +634,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Animations to set the pause state of.
         /// </summary>
-        internal string[] Animations { get; set; }
+        public string[] Animations { get; set; }
         /// <summary>
         /// Paused state to set to.
         /// </summary>
-        internal bool Paused { get; set; }
+        public bool Paused { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationSetPausedRequest"/>
@@ -659,7 +659,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Playback rate for animations on page
         /// </summary>
-        internal double PlaybackRate { get; set; }
+        public double PlaybackRate { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationSetPlaybackRateRequest"/>
@@ -680,15 +680,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Animation id.
         /// </summary>
-        internal string AnimationId { get; set; }
+        public string AnimationId { get; set; }
         /// <summary>
         /// Duration of the animation.
         /// </summary>
-        internal double Duration { get; set; }
+        public double Duration { get; set; }
         /// <summary>
         /// Delay of the animation.
         /// </summary>
-        internal double Delay { get; set; }
+        public double Delay { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AnimationSetTimingRequest"/>
@@ -708,7 +708,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Id of the animation that was cancelled.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
     }
     /// <summary>
     /// Event for each animation that has been created.
@@ -722,7 +722,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Id of the animation that was created.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
     }
     /// <summary>
     /// Event for animation that has been started.
@@ -736,7 +736,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
         /// <summary>
         /// Animation that was started.
         /// </summary>
-        internal Animation Animation { get; set; }
+        public Animation Animation { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
@@ -749,15 +749,15 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Resource url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Resource size.
         /// </summary>
-        internal int Size { get; set; }
+        public int Size { get; set; }
         /// <summary>
         /// Resource type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
     }
     /// <summary>
     /// Detailed application cache information.
@@ -767,23 +767,23 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Manifest URL.
         /// </summary>
-        internal string ManifestURL { get; set; }
+        public string ManifestURL { get; set; }
         /// <summary>
         /// Application cache size.
         /// </summary>
-        internal double Size { get; set; }
+        public double Size { get; set; }
         /// <summary>
         /// Application cache creation time.
         /// </summary>
-        internal double CreationTime { get; set; }
+        public double CreationTime { get; set; }
         /// <summary>
         /// Application cache update time.
         /// </summary>
-        internal double UpdateTime { get; set; }
+        public double UpdateTime { get; set; }
         /// <summary>
         /// Application cache resources.
         /// </summary>
-        internal ApplicationCacheResource[] Resources { get; set; }
+        public ApplicationCacheResource[] Resources { get; set; }
     }
     /// <summary>
     /// Frame identifier - manifest URL pair.
@@ -793,15 +793,15 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Frame identifier.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Manifest URL.
         /// </summary>
-        internal string ManifestURL { get; set; }
+        public string ManifestURL { get; set; }
         /// <summary>
         /// Application cache status.
         /// </summary>
-        internal int Status { get; set; }
+        public int Status { get; set; }
     }
     /// <summary>
     /// Enables application cache domain notifications.
@@ -833,7 +833,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Identifier of the frame containing document whose application cache is retrieved.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ApplicationCacheGetApplicationCacheForFrameRequest"/>
@@ -843,7 +843,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Relevant application cache data for the document in given frame.
         /// </summary>
-        internal ApplicationCache ApplicationCache { get; set; }
+        public ApplicationCache ApplicationCache { get; set; }
     }
     /// <summary>
     /// Returns array of frame identifiers with manifest urls for each frame containing a document
@@ -866,7 +866,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// Array of frame identifiers with manifest urls for each frame containing a document
         /// associated with some application cache.
         /// </summary>
-        internal FrameWithManifest[] FrameIds { get; set; }
+        public FrameWithManifest[] FrameIds { get; set; }
     }
     /// <summary>
     /// Returns manifest URL for document in the given frame.
@@ -881,7 +881,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Identifier of the frame containing document whose manifest is retrieved.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ApplicationCacheGetManifestForFrameRequest"/>
@@ -891,7 +891,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Manifest URL for document in the given frame.
         /// </summary>
-        internal string ManifestURL { get; set; }
+        public string ManifestURL { get; set; }
     }
     /// <summary>
     /// 
@@ -905,15 +905,15 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// Identifier of the frame containing document whose application cache updated status.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Manifest URL.
         /// </summary>
-        internal string ManifestURL { get; set; }
+        public string ManifestURL { get; set; }
         /// <summary>
         /// Updated application cache status.
         /// </summary>
-        internal int Status { get; set; }
+        public int Status { get; set; }
     }
     /// <summary>
     /// 
@@ -927,7 +927,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
         /// <summary>
         /// 
         /// </summary>
-        internal bool IsNowOnline { get; set; }
+        public bool IsNowOnline { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Audits
@@ -946,19 +946,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Audits
         /// <summary>
         /// Identifier of the network request to get content for.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// The encoding to use.
         /// </summary>
-        internal string Encoding { get; set; }
+        public string Encoding { get; set; }
         /// <summary>
         /// The quality of the encoding (0-1). (defaults to 1)
         /// </summary>
-        internal double Quality { get; set; }
+        public double Quality { get; set; }
         /// <summary>
         /// Whether to only return the size information (defaults to false).
         /// </summary>
-        internal bool SizeOnly { get; set; }
+        public bool SizeOnly { get; set; }
     }
     /// <summary>
     /// Response from <see cref="AuditsGetEncodedResponseRequest"/>
@@ -968,15 +968,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Audits
         /// <summary>
         /// The encoded body as a base64 string. Omitted if sizeOnly is true.
         /// </summary>
-        internal byte[] Body { get; set; }
+        public byte[] Body { get; set; }
         /// <summary>
         /// Size before re-encoding.
         /// </summary>
-        internal int OriginalSize { get; set; }
+        public int OriginalSize { get; set; }
         /// <summary>
         /// Size after re-encoding.
         /// </summary>
-        internal int EncodedSize { get; set; }
+        public int EncodedSize { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
@@ -1003,11 +1003,11 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// 
@@ -1017,31 +1017,31 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// Timestamp of the event (in seconds).
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// The origin this event belongs to.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// The Service Worker ID that initiated the event.
         /// </summary>
-        internal string ServiceWorkerRegistrationId { get; set; }
+        public string ServiceWorkerRegistrationId { get; set; }
         /// <summary>
         /// The Background Service this event belongs to.
         /// </summary>
-        internal string Service { get; set; }
+        public string Service { get; set; }
         /// <summary>
         /// A description of the event.
         /// </summary>
-        internal string EventName { get; set; }
+        public string EventName { get; set; }
         /// <summary>
         /// An identifier that groups related events together.
         /// </summary>
-        internal string InstanceId { get; set; }
+        public string InstanceId { get; set; }
         /// <summary>
         /// A list of event-specific information.
         /// </summary>
-        internal EventMetadata[] EventMetadata { get; set; }
+        public EventMetadata[] EventMetadata { get; set; }
     }
     /// <summary>
     /// Enables event updates for the service.
@@ -1056,7 +1056,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal string Service { get; set; }
+        public string Service { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BackgroundServiceStartObservingRequest"/>
@@ -1077,7 +1077,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal string Service { get; set; }
+        public string Service { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BackgroundServiceStopObservingRequest"/>
@@ -1098,11 +1098,11 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal bool ShouldRecord { get; set; }
+        public bool ShouldRecord { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Service { get; set; }
+        public string Service { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BackgroundServiceSetRecordingRequest"/>
@@ -1123,7 +1123,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal string Service { get; set; }
+        public string Service { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BackgroundServiceClearEventsRequest"/>
@@ -1143,11 +1143,11 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal bool IsRecording { get; set; }
+        public bool IsRecording { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Service { get; set; }
+        public string Service { get; set; }
     }
     /// <summary>
     /// Called with all existing backgroundServiceEvents when enabled, and all new
@@ -1162,7 +1162,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
         /// <summary>
         /// 
         /// </summary>
-        internal BackgroundServiceEvent BackgroundServiceEvent { get; set; }
+        public BackgroundServiceEvent BackgroundServiceEvent { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Browser
@@ -1185,23 +1185,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// The offset from the left edge of the screen to the window in pixels.
         /// </summary>
-        internal int Left { get; set; }
+        public int Left { get; set; }
         /// <summary>
         /// The offset from the top edge of the screen to the window in pixels.
         /// </summary>
-        internal int Top { get; set; }
+        public int Top { get; set; }
         /// <summary>
         /// The window width in pixels.
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// The window height in pixels.
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// The window state. Default to normal.
         /// </summary>
-        internal string WindowState { get; set; }
+        public string WindowState { get; set; }
     }
     /// <summary>
     /// 
@@ -1248,20 +1248,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// Name of permission.
         /// See https://cs.chromium.org/chromium/src/third_party/blink/renderer/modules/permissions/permission_descriptor.idl for valid permission names.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// For "midi" permission, may also specify sysex control.
         /// </summary>
-        internal bool Sysex { get; set; }
+        public bool Sysex { get; set; }
         /// <summary>
         /// For "push" permission, may specify userVisibleOnly.
         /// Note that userVisibleOnly = true is the only currently supported type.
         /// </summary>
-        internal bool UserVisibleOnly { get; set; }
+        public bool UserVisibleOnly { get; set; }
         /// <summary>
         /// For "wake-lock" permission, must specify type as either "screen" or "system".
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
     }
     /// <summary>
     /// Chrome histogram bucket.
@@ -1271,15 +1271,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Minimum value (inclusive).
         /// </summary>
-        internal int Low { get; set; }
+        public int Low { get; set; }
         /// <summary>
         /// Maximum value (exclusive).
         /// </summary>
-        internal int High { get; set; }
+        public int High { get; set; }
         /// <summary>
         /// Number of samples.
         /// </summary>
-        internal int Count { get; set; }
+        public int Count { get; set; }
     }
     /// <summary>
     /// Chrome histogram.
@@ -1289,19 +1289,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Sum of sample values.
         /// </summary>
-        internal int Sum { get; set; }
+        public int Sum { get; set; }
         /// <summary>
         /// Total number of samples.
         /// </summary>
-        internal int Count { get; set; }
+        public int Count { get; set; }
         /// <summary>
         /// Buckets.
         /// </summary>
-        internal Bucket[] Buckets { get; set; }
+        public Bucket[] Buckets { get; set; }
     }
     /// <summary>
     /// Set permission settings for given origin.
@@ -1316,19 +1316,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Origin the permission applies to.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Descriptor of permission to override.
         /// </summary>
-        internal PermissionDescriptor Permission { get; set; }
+        public PermissionDescriptor Permission { get; set; }
         /// <summary>
         /// Setting of the permission.
         /// </summary>
-        internal string Setting { get; set; }
+        public string Setting { get; set; }
         /// <summary>
         /// Context to override. When omitted, default browser context is used.
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserSetPermissionRequest"/>
@@ -1349,15 +1349,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// 
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string[] Permissions { get; set; }
+        public string[] Permissions { get; set; }
         /// <summary>
         /// BrowserContext to override permissions. When omitted, default browser context is used.
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserGrantPermissionsRequest"/>
@@ -1378,7 +1378,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// BrowserContext to reset permissions. When omitted, default browser context is used.
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserResetPermissionsRequest"/>
@@ -1456,23 +1456,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Protocol version.
         /// </summary>
-        internal string ProtocolVersion { get; set; }
+        public string ProtocolVersion { get; set; }
         /// <summary>
         /// Product name.
         /// </summary>
-        internal string Product { get; set; }
+        public string Product { get; set; }
         /// <summary>
         /// Product revision.
         /// </summary>
-        internal string Revision { get; set; }
+        public string Revision { get; set; }
         /// <summary>
         /// User-Agent.
         /// </summary>
-        internal string UserAgent { get; set; }
+        public string UserAgent { get; set; }
         /// <summary>
         /// V8 version.
         /// </summary>
-        internal string JsVersion { get; set; }
+        public string JsVersion { get; set; }
     }
     /// <summary>
     /// Returns the command line switches for the browser process if, and only if
@@ -1494,7 +1494,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Commandline parameters
         /// </summary>
-        internal string[] Arguments { get; set; }
+        public string[] Arguments { get; set; }
     }
     /// <summary>
     /// Get Chrome histograms.
@@ -1511,11 +1511,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// substring in their name are extracted. An empty or absent query returns
         /// all histograms.
         /// </summary>
-        internal string Query { get; set; }
+        public string Query { get; set; }
         /// <summary>
         /// If true, retrieve delta since last call.
         /// </summary>
-        internal bool Delta { get; set; }
+        public bool Delta { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserGetHistogramsRequest"/>
@@ -1525,7 +1525,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Histograms.
         /// </summary>
-        internal Histogram[] Histograms { get; set; }
+        public Histogram[] Histograms { get; set; }
     }
     /// <summary>
     /// Get a Chrome histogram by name.
@@ -1540,11 +1540,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Requested histogram name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// If true, retrieve delta since last call.
         /// </summary>
-        internal bool Delta { get; set; }
+        public bool Delta { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserGetHistogramRequest"/>
@@ -1554,7 +1554,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Histogram.
         /// </summary>
-        internal Histogram Histogram { get; set; }
+        public Histogram Histogram { get; set; }
     }
     /// <summary>
     /// Get position and size of the browser window.
@@ -1569,7 +1569,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Browser window id.
         /// </summary>
-        internal int WindowId { get; set; }
+        public int WindowId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserGetWindowBoundsRequest"/>
@@ -1580,7 +1580,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// Bounds information of the window. When window state is 'minimized', the restored window
         /// position and size are returned.
         /// </summary>
-        internal Bounds Bounds { get; set; }
+        public Bounds Bounds { get; set; }
     }
     /// <summary>
     /// Get the browser window that contains the devtools target.
@@ -1595,7 +1595,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Devtools agent host id. If called as a part of the session, associated targetId is used.
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserGetWindowForTargetRequest"/>
@@ -1605,12 +1605,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Browser window id.
         /// </summary>
-        internal int WindowId { get; set; }
+        public int WindowId { get; set; }
         /// <summary>
         /// Bounds information of the window. When window state is 'minimized', the restored window
         /// position and size are returned.
         /// </summary>
-        internal Bounds Bounds { get; set; }
+        public Bounds Bounds { get; set; }
     }
     /// <summary>
     /// Set position and/or size of the browser window.
@@ -1625,12 +1625,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// Browser window id.
         /// </summary>
-        internal int WindowId { get; set; }
+        public int WindowId { get; set; }
         /// <summary>
         /// New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined
         /// with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged.
         /// </summary>
-        internal Bounds Bounds { get; set; }
+        public Bounds Bounds { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserSetWindowBoundsRequest"/>
@@ -1651,11 +1651,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// <summary>
         /// 
         /// </summary>
-        internal string BadgeLabel { get; set; }
+        public string BadgeLabel { get; set; }
         /// <summary>
         /// Png encoded image.
         /// </summary>
-        internal byte[] Image { get; set; }
+        public byte[] Image { get; set; }
     }
     /// <summary>
     /// Response from <see cref="BrowserSetDockTileRequest"/>
@@ -1686,11 +1686,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Pseudo element type.
         /// </summary>
-        internal string PseudoType { get; set; }
+        public string PseudoType { get; set; }
         /// <summary>
         /// Matches of CSS rules applicable to the pseudo style.
         /// </summary>
-        internal RuleMatch[] Matches { get; set; }
+        public RuleMatch[] Matches { get; set; }
     }
     /// <summary>
     /// Inherited CSS rule collection from ancestor node.
@@ -1700,11 +1700,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The ancestor node's inline style, if any, in the style inheritance chain.
         /// </summary>
-        internal CSSStyle InlineStyle { get; set; }
+        public CSSStyle InlineStyle { get; set; }
         /// <summary>
         /// Matches of CSS rules matching the ancestor node in the style inheritance chain.
         /// </summary>
-        internal RuleMatch[] MatchedCSSRules { get; set; }
+        public RuleMatch[] MatchedCSSRules { get; set; }
     }
     /// <summary>
     /// Match data for a CSS rule.
@@ -1714,11 +1714,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// CSS rule in the match.
         /// </summary>
-        internal CSSRule Rule { get; set; }
+        public CSSRule Rule { get; set; }
         /// <summary>
         /// Matching selector indices in the rule's selectorList selectors (0-based).
         /// </summary>
-        internal int[] MatchingSelectors { get; set; }
+        public int[] MatchingSelectors { get; set; }
     }
     /// <summary>
     /// Data for a simple selector (these are delimited by commas in a selector list).
@@ -1728,11 +1728,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Value text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Value range in the underlying resource (if available).
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
     }
     /// <summary>
     /// Selector list data.
@@ -1742,11 +1742,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Selectors in the list.
         /// </summary>
-        internal Value[] Selectors { get; set; }
+        public Value[] Selectors { get; set; }
         /// <summary>
         /// Rule selector text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// CSS stylesheet metainformation.
@@ -1756,64 +1756,64 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The stylesheet identifier.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// Owner frame identifier.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Stylesheet resource URL.
         /// </summary>
-        internal string SourceURL { get; set; }
+        public string SourceURL { get; set; }
         /// <summary>
         /// URL of source map associated with the stylesheet (if any).
         /// </summary>
-        internal string SourceMapURL { get; set; }
+        public string SourceMapURL { get; set; }
         /// <summary>
         /// Stylesheet origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Stylesheet title.
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
         /// <summary>
         /// The backend id for the owner node of the stylesheet.
         /// </summary>
-        internal int OwnerNode { get; set; }
+        public int OwnerNode { get; set; }
         /// <summary>
         /// Denotes whether the stylesheet is disabled.
         /// </summary>
-        internal bool Disabled { get; set; }
+        public bool Disabled { get; set; }
         /// <summary>
         /// Whether the sourceURL field value comes from the sourceURL comment.
         /// </summary>
-        internal bool HasSourceURL { get; set; }
+        public bool HasSourceURL { get; set; }
         /// <summary>
         /// Whether this stylesheet is created for STYLE tag by parser. This flag is not set for
         /// document.written STYLE tags.
         /// </summary>
-        internal bool IsInline { get; set; }
+        public bool IsInline { get; set; }
         /// <summary>
         /// Line offset of the stylesheet within the resource (zero based).
         /// </summary>
-        internal double StartLine { get; set; }
+        public double StartLine { get; set; }
         /// <summary>
         /// Column offset of the stylesheet within the resource (zero based).
         /// </summary>
-        internal double StartColumn { get; set; }
+        public double StartColumn { get; set; }
         /// <summary>
         /// Size of the content (in characters).
         /// </summary>
-        internal double Length { get; set; }
+        public double Length { get; set; }
         /// <summary>
         /// Line offset of the end of the stylesheet within the resource (zero based).
         /// </summary>
-        internal double EndLine { get; set; }
+        public double EndLine { get; set; }
         /// <summary>
         /// Column offset of the end of the stylesheet within the resource (zero based).
         /// </summary>
-        internal double EndColumn { get; set; }
+        public double EndColumn { get; set; }
     }
     /// <summary>
     /// CSS rule representation.
@@ -1824,24 +1824,24 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// The css style sheet identifier (absent for user agent stylesheet and user-specified
         /// stylesheet rules) this rule came from.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// Rule selector data.
         /// </summary>
-        internal SelectorList SelectorList { get; set; }
+        public SelectorList SelectorList { get; set; }
         /// <summary>
         /// Parent stylesheet's origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Associated style declaration.
         /// </summary>
-        internal CSSStyle Style { get; set; }
+        public CSSStyle Style { get; set; }
         /// <summary>
         /// Media list array (for rules involving media queries). The array enumerates media queries
         /// starting with the innermost one, going outwards.
         /// </summary>
-        internal CSSMedia[] Media { get; set; }
+        public CSSMedia[] Media { get; set; }
     }
     /// <summary>
     /// CSS coverage information.
@@ -1852,19 +1852,19 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// The css style sheet identifier (absent for user agent stylesheet and user-specified
         /// stylesheet rules) this rule came from.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// Offset of the start of the rule (including selector) from the beginning of the stylesheet.
         /// </summary>
-        internal double StartOffset { get; set; }
+        public double StartOffset { get; set; }
         /// <summary>
         /// Offset of the end of the rule body from the beginning of the stylesheet.
         /// </summary>
-        internal double EndOffset { get; set; }
+        public double EndOffset { get; set; }
         /// <summary>
         /// Indicates whether the rule was actually used by some element in the page.
         /// </summary>
-        internal bool Used { get; set; }
+        public bool Used { get; set; }
     }
     /// <summary>
     /// Text range within a resource. All numbers are zero-based.
@@ -1874,19 +1874,19 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Start line of range.
         /// </summary>
-        internal int StartLine { get; set; }
+        public int StartLine { get; set; }
         /// <summary>
         /// Start column of range (inclusive).
         /// </summary>
-        internal int StartColumn { get; set; }
+        public int StartColumn { get; set; }
         /// <summary>
         /// End line of range
         /// </summary>
-        internal int EndLine { get; set; }
+        public int EndLine { get; set; }
         /// <summary>
         /// End column of range (exclusive).
         /// </summary>
-        internal int EndColumn { get; set; }
+        public int EndColumn { get; set; }
     }
     /// <summary>
     /// 
@@ -1896,15 +1896,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Shorthand name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Shorthand value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// Whether the property has "!important" annotation (implies `false` if absent).
         /// </summary>
-        internal bool Important { get; set; }
+        public bool Important { get; set; }
     }
     /// <summary>
     /// 
@@ -1914,11 +1914,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Computed style property name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Computed style property value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// CSS style representation.
@@ -1929,23 +1929,23 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// The css style sheet identifier (absent for user agent stylesheet and user-specified
         /// stylesheet rules) this rule came from.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// CSS properties in the style.
         /// </summary>
-        internal CSSProperty[] CssProperties { get; set; }
+        public CSSProperty[] CssProperties { get; set; }
         /// <summary>
         /// Computed values for all shorthands found in the style.
         /// </summary>
-        internal ShorthandEntry[] ShorthandEntries { get; set; }
+        public ShorthandEntry[] ShorthandEntries { get; set; }
         /// <summary>
         /// Style declaration text (if available).
         /// </summary>
-        internal string CssText { get; set; }
+        public string CssText { get; set; }
         /// <summary>
         /// Style declaration range in the enclosing stylesheet (if available).
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
     }
     /// <summary>
     /// CSS property declaration data.
@@ -1955,35 +1955,35 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The property name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// The property value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// Whether the property has "!important" annotation (implies `false` if absent).
         /// </summary>
-        internal bool Important { get; set; }
+        public bool Important { get; set; }
         /// <summary>
         /// Whether the property is implicit (implies `false` if absent).
         /// </summary>
-        internal bool Implicit { get; set; }
+        public bool Implicit { get; set; }
         /// <summary>
         /// The full property text as specified in the style.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Whether the property is understood by the browser (implies `true` if absent).
         /// </summary>
-        internal bool ParsedOk { get; set; }
+        public bool ParsedOk { get; set; }
         /// <summary>
         /// Whether the property is disabled by the user (present for source-based properties only).
         /// </summary>
-        internal bool Disabled { get; set; }
+        public bool Disabled { get; set; }
         /// <summary>
         /// The entire property range in the enclosing style declaration (if available).
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
     }
     /// <summary>
     /// CSS media rule descriptor.
@@ -1993,31 +1993,31 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Media query text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Source of the media query: "mediaRule" if specified by a @media rule, "importRule" if
         /// specified by an @import rule, "linkedSheet" if specified by a "media" attribute in a linked
         /// stylesheet's LINK tag, "inlineSheet" if specified by a "media" attribute in an inline
         /// stylesheet's STYLE tag.
         /// </summary>
-        internal string Source { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// URL of the document containing the media query description.
         /// </summary>
-        internal string SourceURL { get; set; }
+        public string SourceURL { get; set; }
         /// <summary>
         /// The associated rule (@media or @import) header range in the enclosing stylesheet (if
         /// available).
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
         /// <summary>
         /// Identifier of the stylesheet containing this object (if exists).
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// Array of media queries.
         /// </summary>
-        internal MediaQuery[] MediaList { get; set; }
+        public MediaQuery[] MediaList { get; set; }
     }
     /// <summary>
     /// Media query descriptor.
@@ -2027,11 +2027,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Array of media query expressions.
         /// </summary>
-        internal MediaQueryExpression[] Expressions { get; set; }
+        public MediaQueryExpression[] Expressions { get; set; }
         /// <summary>
         /// Whether the media query condition is satisfied.
         /// </summary>
-        internal bool Active { get; set; }
+        public bool Active { get; set; }
     }
     /// <summary>
     /// Media query expression descriptor.
@@ -2041,23 +2041,23 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Media query expression value.
         /// </summary>
-        internal double Value { get; set; }
+        public double Value { get; set; }
         /// <summary>
         /// Media query expression units.
         /// </summary>
-        internal string Unit { get; set; }
+        public string Unit { get; set; }
         /// <summary>
         /// Media query expression feature.
         /// </summary>
-        internal string Feature { get; set; }
+        public string Feature { get; set; }
         /// <summary>
         /// The associated range of the value text in the enclosing stylesheet (if available).
         /// </summary>
-        internal SourceRange ValueRange { get; set; }
+        public SourceRange ValueRange { get; set; }
         /// <summary>
         /// Computed length of media query expression (if applicable).
         /// </summary>
-        internal double ComputedLength { get; set; }
+        public double ComputedLength { get; set; }
     }
     /// <summary>
     /// Information about amount of glyphs that were rendered with given font.
@@ -2067,15 +2067,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Font's family name reported by platform.
         /// </summary>
-        internal string FamilyName { get; set; }
+        public string FamilyName { get; set; }
         /// <summary>
         /// Indicates if the font was downloaded or resolved locally.
         /// </summary>
-        internal bool IsCustomFont { get; set; }
+        public bool IsCustomFont { get; set; }
         /// <summary>
         /// Amount of glyphs that were rendered with this font.
         /// </summary>
-        internal double GlyphCount { get; set; }
+        public double GlyphCount { get; set; }
     }
     /// <summary>
     /// Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions
@@ -2085,35 +2085,35 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The font-family.
         /// </summary>
-        internal string FontFamily { get; set; }
+        public string FontFamily { get; set; }
         /// <summary>
         /// The font-style.
         /// </summary>
-        internal string FontStyle { get; set; }
+        public string FontStyle { get; set; }
         /// <summary>
         /// The font-variant.
         /// </summary>
-        internal string FontVariant { get; set; }
+        public string FontVariant { get; set; }
         /// <summary>
         /// The font-weight.
         /// </summary>
-        internal string FontWeight { get; set; }
+        public string FontWeight { get; set; }
         /// <summary>
         /// The font-stretch.
         /// </summary>
-        internal string FontStretch { get; set; }
+        public string FontStretch { get; set; }
         /// <summary>
         /// The unicode-range.
         /// </summary>
-        internal string UnicodeRange { get; set; }
+        public string UnicodeRange { get; set; }
         /// <summary>
         /// The src.
         /// </summary>
-        internal string Src { get; set; }
+        public string Src { get; set; }
         /// <summary>
         /// The resolved platform font family
         /// </summary>
-        internal string PlatformFontFamily { get; set; }
+        public string PlatformFontFamily { get; set; }
     }
     /// <summary>
     /// CSS keyframes rule representation.
@@ -2123,11 +2123,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Animation name.
         /// </summary>
-        internal Value AnimationName { get; set; }
+        public Value AnimationName { get; set; }
         /// <summary>
         /// List of keyframes.
         /// </summary>
-        internal CSSKeyframeRule[] Keyframes { get; set; }
+        public CSSKeyframeRule[] Keyframes { get; set; }
     }
     /// <summary>
     /// CSS keyframe rule representation.
@@ -2138,19 +2138,19 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// The css style sheet identifier (absent for user agent stylesheet and user-specified
         /// stylesheet rules) this rule came from.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// Parent stylesheet's origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Associated key text.
         /// </summary>
-        internal Value KeyText { get; set; }
+        public Value KeyText { get; set; }
         /// <summary>
         /// Associated style declaration.
         /// </summary>
-        internal CSSStyle Style { get; set; }
+        public CSSStyle Style { get; set; }
     }
     /// <summary>
     /// A descriptor of operation to mutate style declaration text.
@@ -2160,15 +2160,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The css style sheet identifier.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// The range of the style text in the enclosing stylesheet.
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
         /// <summary>
         /// New style text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// Inserts a new rule with the given `ruleText` in a stylesheet with given `styleSheetId`, at the
@@ -2184,15 +2184,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The css style sheet identifier where a new rule should be inserted.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// The text of a new rule.
         /// </summary>
-        internal string RuleText { get; set; }
+        public string RuleText { get; set; }
         /// <summary>
         /// Text position of a new rule in the target style sheet.
         /// </summary>
-        internal SourceRange Location { get; set; }
+        public SourceRange Location { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSAddRuleRequest"/>
@@ -2202,7 +2202,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The newly created rule.
         /// </summary>
-        internal CSSRule Rule { get; set; }
+        public CSSRule Rule { get; set; }
     }
     /// <summary>
     /// Returns all class names from specified stylesheet.
@@ -2217,7 +2217,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSCollectClassNamesRequest"/>
@@ -2227,7 +2227,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Class name list.
         /// </summary>
-        internal string[] ClassNames { get; set; }
+        public string[] ClassNames { get; set; }
     }
     /// <summary>
     /// Creates a new special "via-inspector" stylesheet in the frame with given `frameId`.
@@ -2242,7 +2242,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Identifier of the frame where "via-inspector" stylesheet should be created.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSCreateStyleSheetRequest"/>
@@ -2252,7 +2252,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Identifier of the created "via-inspector" stylesheet.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
     }
     /// <summary>
     /// Disables the CSS agent for the given page.
@@ -2303,11 +2303,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The element id for which to force the pseudo state.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Element pseudo classes to force when computing the element's style.
         /// </summary>
-        internal string[] ForcedPseudoClasses { get; set; }
+        public string[] ForcedPseudoClasses { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSForcePseudoStateRequest"/>
@@ -2328,7 +2328,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Id of the node to get background colors for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSGetBackgroundColorsRequest"/>
@@ -2342,16 +2342,16 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// of the color stops. For anything more complicated, this will be an empty array. Images will
         /// be ignored (as if the image had failed to load).
         /// </summary>
-        internal string[] BackgroundColors { get; set; }
+        public string[] BackgroundColors { get; set; }
         /// <summary>
         /// The computed font size for this node, as a CSS computed value string (e.g. '12px').
         /// </summary>
-        internal string ComputedFontSize { get; set; }
+        public string ComputedFontSize { get; set; }
         /// <summary>
         /// The computed font weight for this node, as a CSS computed value string (e.g. 'normal' or
         /// '100').
         /// </summary>
-        internal string ComputedFontWeight { get; set; }
+        public string ComputedFontWeight { get; set; }
     }
     /// <summary>
     /// Returns the computed style for a DOM node identified by `nodeId`.
@@ -2366,7 +2366,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
@@ -2376,7 +2376,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Computed style for the specified DOM node.
         /// </summary>
-        internal CSSComputedStyleProperty[] ComputedStyle { get; set; }
+        public CSSComputedStyleProperty[] ComputedStyle { get; set; }
     }
     /// <summary>
     /// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM
@@ -2392,7 +2392,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
@@ -2402,11 +2402,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Inline style for the specified DOM node.
         /// </summary>
-        internal CSSStyle InlineStyle { get; set; }
+        public CSSStyle InlineStyle { get; set; }
         /// <summary>
         /// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
         /// </summary>
-        internal CSSStyle AttributesStyle { get; set; }
+        public CSSStyle AttributesStyle { get; set; }
     }
     /// <summary>
     /// Returns requested styles for a DOM node identified by `nodeId`.
@@ -2421,7 +2421,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
@@ -2431,27 +2431,27 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Inline style for the specified DOM node.
         /// </summary>
-        internal CSSStyle InlineStyle { get; set; }
+        public CSSStyle InlineStyle { get; set; }
         /// <summary>
         /// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
         /// </summary>
-        internal CSSStyle AttributesStyle { get; set; }
+        public CSSStyle AttributesStyle { get; set; }
         /// <summary>
         /// CSS rules matching this node, from all applicable stylesheets.
         /// </summary>
-        internal RuleMatch[] MatchedCSSRules { get; set; }
+        public RuleMatch[] MatchedCSSRules { get; set; }
         /// <summary>
         /// Pseudo style matches for this node.
         /// </summary>
-        internal PseudoElementMatches[] PseudoElements { get; set; }
+        public PseudoElementMatches[] PseudoElements { get; set; }
         /// <summary>
         /// A chain of inherited styles (from the immediate node parent up to the DOM tree root).
         /// </summary>
-        internal InheritedStyleEntry[] Inherited { get; set; }
+        public InheritedStyleEntry[] Inherited { get; set; }
         /// <summary>
         /// A list of CSS keyframed animations matching this node.
         /// </summary>
-        internal CSSKeyframesRule[] CssKeyframesRules { get; set; }
+        public CSSKeyframesRule[] CssKeyframesRules { get; set; }
     }
     /// <summary>
     /// Returns all media queries parsed by the rendering engine.
@@ -2472,7 +2472,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal CSSMedia[] Medias { get; set; }
+        public CSSMedia[] Medias { get; set; }
     }
     /// <summary>
     /// Requests information about platform fonts which we used to render child TextNodes in the given
@@ -2488,7 +2488,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSGetPlatformFontsForNodeRequest"/>
@@ -2498,7 +2498,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Usage statistics for every employed platform font.
         /// </summary>
-        internal PlatformFontUsage[] Fonts { get; set; }
+        public PlatformFontUsage[] Fonts { get; set; }
     }
     /// <summary>
     /// Returns the current textual content for a stylesheet.
@@ -2513,7 +2513,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSGetStyleSheetTextRequest"/>
@@ -2523,7 +2523,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The stylesheet text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// Find a rule with the given active property for the given node and set the new value for this
@@ -2539,15 +2539,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The element id for which to set property.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string PropertyName { get; set; }
+        public string PropertyName { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSSetEffectivePropertyValueForNodeRequest"/>
@@ -2568,15 +2568,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string KeyText { get; set; }
+        public string KeyText { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSSetKeyframeKeyRequest"/>
@@ -2586,7 +2586,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The resulting key text after modification.
         /// </summary>
-        internal Value KeyText { get; set; }
+        public Value KeyText { get; set; }
     }
     /// <summary>
     /// Modifies the rule selector.
@@ -2601,15 +2601,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSSetMediaTextRequest"/>
@@ -2619,7 +2619,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The resulting CSS media rule after modification.
         /// </summary>
-        internal CSSMedia Media { get; set; }
+        public CSSMedia Media { get; set; }
     }
     /// <summary>
     /// Modifies the rule selector.
@@ -2634,15 +2634,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal SourceRange Range { get; set; }
+        public SourceRange Range { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Selector { get; set; }
+        public string Selector { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSSetRuleSelectorRequest"/>
@@ -2652,7 +2652,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The resulting selector list after modification.
         /// </summary>
-        internal SelectorList SelectorList { get; set; }
+        public SelectorList SelectorList { get; set; }
     }
     /// <summary>
     /// Sets the new stylesheet text.
@@ -2667,11 +2667,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSSetStyleSheetTextRequest"/>
@@ -2681,7 +2681,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// URL of source map associated with script (if any).
         /// </summary>
-        internal string SourceMapURL { get; set; }
+        public string SourceMapURL { get; set; }
     }
     /// <summary>
     /// Applies specified style edits one after another in the given order.
@@ -2696,7 +2696,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal StyleDeclarationEdit[] Edits { get; set; }
+        public StyleDeclarationEdit[] Edits { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CSSSetStyleTextsRequest"/>
@@ -2706,7 +2706,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The resulting styles after modification.
         /// </summary>
-        internal CSSStyle[] Styles { get; set; }
+        public CSSStyle[] Styles { get; set; }
     }
     /// <summary>
     /// Enables the selector recording.
@@ -2745,7 +2745,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal RuleUsage[] RuleUsage { get; set; }
+        public RuleUsage[] RuleUsage { get; set; }
     }
     /// <summary>
     /// Obtain list of rules that became used since last call to this method (or since start of coverage
@@ -2767,7 +2767,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal RuleUsage[] Coverage { get; set; }
+        public RuleUsage[] Coverage { get; set; }
     }
     /// <summary>
     /// Fires whenever a web font is updated.  A non-empty font parameter indicates a successfully loaded
@@ -2782,7 +2782,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// The web font that has loaded.
         /// </summary>
-        internal FontFace Font { get; set; }
+        public FontFace Font { get; set; }
     }
     /// <summary>
     /// Fires whenever a MediaQuery result changes (for example, after a browser window has been
@@ -2807,7 +2807,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Added stylesheet metainfo.
         /// </summary>
-        internal CSSStyleSheetHeader Header { get; set; }
+        public CSSStyleSheetHeader Header { get; set; }
     }
     /// <summary>
     /// Fired whenever a stylesheet is changed as a result of the client operation.
@@ -2821,7 +2821,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// 
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
     }
     /// <summary>
     /// Fired whenever an active document stylesheet is removed.
@@ -2835,7 +2835,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// <summary>
         /// Identifier of the removed stylesheet.
         /// </summary>
-        internal string StyleSheetId { get; set; }
+        public string StyleSheetId { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
@@ -2860,35 +2860,35 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Request URL.
         /// </summary>
-        internal string RequestURL { get; set; }
+        public string RequestURL { get; set; }
         /// <summary>
         /// Request method.
         /// </summary>
-        internal string RequestMethod { get; set; }
+        public string RequestMethod { get; set; }
         /// <summary>
         /// Request headers
         /// </summary>
-        internal Header[] RequestHeaders { get; set; }
+        public Header[] RequestHeaders { get; set; }
         /// <summary>
         /// Number of seconds since epoch.
         /// </summary>
-        internal double ResponseTime { get; set; }
+        public double ResponseTime { get; set; }
         /// <summary>
         /// HTTP response status code.
         /// </summary>
-        internal int ResponseStatus { get; set; }
+        public int ResponseStatus { get; set; }
         /// <summary>
         /// HTTP response status text.
         /// </summary>
-        internal string ResponseStatusText { get; set; }
+        public string ResponseStatusText { get; set; }
         /// <summary>
         /// HTTP response type
         /// </summary>
-        internal string ResponseType { get; set; }
+        public string ResponseType { get; set; }
         /// <summary>
         /// Response headers
         /// </summary>
-        internal Header[] ResponseHeaders { get; set; }
+        public Header[] ResponseHeaders { get; set; }
     }
     /// <summary>
     /// Cache identifier.
@@ -2898,15 +2898,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// An opaque unique id of the cache.
         /// </summary>
-        internal string CacheId { get; set; }
+        public string CacheId { get; set; }
         /// <summary>
         /// Security origin of the cache.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// The name of the cache.
         /// </summary>
-        internal string CacheName { get; set; }
+        public string CacheName { get; set; }
     }
     /// <summary>
     /// 
@@ -2916,11 +2916,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Cached response
@@ -2930,7 +2930,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Entry content, base64-encoded.
         /// </summary>
-        internal byte[] Body { get; set; }
+        public byte[] Body { get; set; }
     }
     /// <summary>
     /// Deletes a cache.
@@ -2945,7 +2945,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Id of cache for deletion.
         /// </summary>
-        internal string CacheId { get; set; }
+        public string CacheId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CacheStorageDeleteCacheRequest"/>
@@ -2966,11 +2966,11 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Id of cache where the entry will be deleted.
         /// </summary>
-        internal string CacheId { get; set; }
+        public string CacheId { get; set; }
         /// <summary>
         /// URL spec of the request.
         /// </summary>
-        internal string Request { get; set; }
+        public string Request { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CacheStorageDeleteEntryRequest"/>
@@ -2991,7 +2991,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CacheStorageRequestCacheNamesRequest"/>
@@ -3001,7 +3001,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Caches for the security origin.
         /// </summary>
-        internal Cache[] Caches { get; set; }
+        public Cache[] Caches { get; set; }
     }
     /// <summary>
     /// Fetches cache entry.
@@ -3016,15 +3016,15 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Id of cache that contains the entry.
         /// </summary>
-        internal string CacheId { get; set; }
+        public string CacheId { get; set; }
         /// <summary>
         /// URL spec of the request.
         /// </summary>
-        internal string RequestURL { get; set; }
+        public string RequestURL { get; set; }
         /// <summary>
         /// headers of the request.
         /// </summary>
-        internal Header[] RequestHeaders { get; set; }
+        public Header[] RequestHeaders { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CacheStorageRequestCachedResponseRequest"/>
@@ -3034,7 +3034,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Response read from the cache.
         /// </summary>
-        internal CachedResponse Response { get; set; }
+        public CachedResponse Response { get; set; }
     }
     /// <summary>
     /// Requests data from cache.
@@ -3049,19 +3049,19 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// ID of cache to get entries from.
         /// </summary>
-        internal string CacheId { get; set; }
+        public string CacheId { get; set; }
         /// <summary>
         /// Number of records to skip.
         /// </summary>
-        internal int SkipCount { get; set; }
+        public int SkipCount { get; set; }
         /// <summary>
         /// Number of records to fetch.
         /// </summary>
-        internal int PageSize { get; set; }
+        public int PageSize { get; set; }
         /// <summary>
         /// If present, only return the entries containing this substring in the path
         /// </summary>
-        internal string PathFilter { get; set; }
+        public string PathFilter { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CacheStorageRequestEntriesRequest"/>
@@ -3071,12 +3071,12 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
         /// <summary>
         /// Array of object store data entries.
         /// </summary>
-        internal DataEntry[] CacheDataEntries { get; set; }
+        public DataEntry[] CacheDataEntries { get; set; }
         /// <summary>
         /// Count of returned entries from this storage. If pathFilter is empty, it
         /// is the count of all entries from this storage.
         /// </summary>
-        internal double ReturnCount { get; set; }
+        public double ReturnCount { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Cast
@@ -3089,16 +3089,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// Text describing the current session. Present only if there is an active
         /// session on the sink.
         /// </summary>
-        internal string Session { get; set; }
+        public string Session { get; set; }
     }
     /// <summary>
     /// Starts observing for sinks that can be used for tab mirroring, and if set,
@@ -3117,7 +3117,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal string PresentationUrl { get; set; }
+        public string PresentationUrl { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CastEnableRequest"/>
@@ -3156,7 +3156,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal string SinkName { get; set; }
+        public string SinkName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CastSetSinkToUseRequest"/>
@@ -3177,7 +3177,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal string SinkName { get; set; }
+        public string SinkName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CastStartTabMirroringRequest"/>
@@ -3198,7 +3198,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal string SinkName { get; set; }
+        public string SinkName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="CastStopCastingRequest"/>
@@ -3219,7 +3219,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal Sink[] Sinks { get; set; }
+        public Sink[] Sinks { get; set; }
     }
     /// <summary>
     /// This is fired whenever the outstanding issue/error message changes.
@@ -3234,7 +3234,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
         /// <summary>
         /// 
         /// </summary>
-        internal string IssueMessage { get; set; }
+        public string IssueMessage { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.DOM
@@ -3247,15 +3247,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// `Node`'s nodeType.
         /// </summary>
-        internal int NodeType { get; set; }
+        public int NodeType { get; set; }
         /// <summary>
         /// `Node`'s nodeName.
         /// </summary>
-        internal string NodeName { get; set; }
+        public string NodeName { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
     }
     /// <summary>
     /// Pseudo element type.
@@ -3298,115 +3298,115 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// will only push node with given `id` once. It is aware of all requested nodes and will only
         /// fire DOM events for nodes known to the client.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// The id of the parent node if any.
         /// </summary>
-        internal int ParentId { get; set; }
+        public int ParentId { get; set; }
         /// <summary>
         /// The BackendNodeId for this node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// `Node`'s nodeType.
         /// </summary>
-        internal int NodeType { get; set; }
+        public int NodeType { get; set; }
         /// <summary>
         /// `Node`'s nodeName.
         /// </summary>
-        internal string NodeName { get; set; }
+        public string NodeName { get; set; }
         /// <summary>
         /// `Node`'s localName.
         /// </summary>
-        internal string LocalName { get; set; }
+        public string LocalName { get; set; }
         /// <summary>
         /// `Node`'s nodeValue.
         /// </summary>
-        internal string NodeValue { get; set; }
+        public string NodeValue { get; set; }
         /// <summary>
         /// Child count for `Container` nodes.
         /// </summary>
-        internal int ChildNodeCount { get; set; }
+        public int ChildNodeCount { get; set; }
         /// <summary>
         /// Child nodes of this node when requested with children.
         /// </summary>
-        internal Node[] Children { get; set; }
+        public Node[] Children { get; set; }
         /// <summary>
         /// Attributes of the `Element` node in the form of flat array `[name1, value1, name2, value2]`.
         /// </summary>
-        internal string[] Attributes { get; set; }
+        public string[] Attributes { get; set; }
         /// <summary>
         /// Document URL that `Document` or `FrameOwner` node points to.
         /// </summary>
-        internal string DocumentURL { get; set; }
+        public string DocumentURL { get; set; }
         /// <summary>
         /// Base URL that `Document` or `FrameOwner` node uses for URL completion.
         /// </summary>
-        internal string BaseURL { get; set; }
+        public string BaseURL { get; set; }
         /// <summary>
         /// `DocumentType`'s publicId.
         /// </summary>
-        internal string PublicId { get; set; }
+        public string PublicId { get; set; }
         /// <summary>
         /// `DocumentType`'s systemId.
         /// </summary>
-        internal string SystemId { get; set; }
+        public string SystemId { get; set; }
         /// <summary>
         /// `DocumentType`'s internalSubset.
         /// </summary>
-        internal string InternalSubset { get; set; }
+        public string InternalSubset { get; set; }
         /// <summary>
         /// `Document`'s XML version in case of XML documents.
         /// </summary>
-        internal string XmlVersion { get; set; }
+        public string XmlVersion { get; set; }
         /// <summary>
         /// `Attr`'s name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// `Attr`'s value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// Pseudo element type for this node.
         /// </summary>
-        internal string PseudoType { get; set; }
+        public string PseudoType { get; set; }
         /// <summary>
         /// Shadow root type.
         /// </summary>
-        internal string ShadowRootType { get; set; }
+        public string ShadowRootType { get; set; }
         /// <summary>
         /// Frame ID for frame owner elements.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Content document for frame owner elements.
         /// </summary>
-        internal Node ContentDocument { get; set; }
+        public Node ContentDocument { get; set; }
         /// <summary>
         /// Shadow root list for given element host.
         /// </summary>
-        internal Node[] ShadowRoots { get; set; }
+        public Node[] ShadowRoots { get; set; }
         /// <summary>
         /// Content document fragment for template elements.
         /// </summary>
-        internal Node TemplateContent { get; set; }
+        public Node TemplateContent { get; set; }
         /// <summary>
         /// Pseudo elements associated with this node.
         /// </summary>
-        internal Node[] PseudoElements { get; set; }
+        public Node[] PseudoElements { get; set; }
         /// <summary>
         /// Import document for the HTMLImport links.
         /// </summary>
-        internal Node ImportedDocument { get; set; }
+        public Node ImportedDocument { get; set; }
         /// <summary>
         /// Distributed nodes for given insertion point.
         /// </summary>
-        internal BackendNode[] DistributedNodes { get; set; }
+        public BackendNode[] DistributedNodes { get; set; }
         /// <summary>
         /// Whether the node is SVG.
         /// </summary>
-        internal bool IsSVG { get; set; }
+        public bool IsSVG { get; set; }
     }
     /// <summary>
     /// A structure holding an RGBA color.
@@ -3416,19 +3416,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// The red component, in the [0-255] range.
         /// </summary>
-        internal int R { get; set; }
+        public int R { get; set; }
         /// <summary>
         /// The green component, in the [0-255] range.
         /// </summary>
-        internal int G { get; set; }
+        public int G { get; set; }
         /// <summary>
         /// The blue component, in the [0-255] range.
         /// </summary>
-        internal int B { get; set; }
+        public int B { get; set; }
         /// <summary>
         /// The alpha component, in the [0-1] range (default: 1).
         /// </summary>
-        internal double A { get; set; }
+        public double A { get; set; }
     }
     /// <summary>
     /// Box model.
@@ -3438,31 +3438,31 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Content box
         /// </summary>
-        internal double[] Content { get; set; }
+        public double[] Content { get; set; }
         /// <summary>
         /// Padding box
         /// </summary>
-        internal double[] Padding { get; set; }
+        public double[] Padding { get; set; }
         /// <summary>
         /// Border box
         /// </summary>
-        internal double[] Border { get; set; }
+        public double[] Border { get; set; }
         /// <summary>
         /// Margin box
         /// </summary>
-        internal double[] Margin { get; set; }
+        public double[] Margin { get; set; }
         /// <summary>
         /// Node width
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Node height
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// Shape outside coordinates
         /// </summary>
-        internal ShapeOutsideInfo ShapeOutside { get; set; }
+        public ShapeOutsideInfo ShapeOutside { get; set; }
     }
     /// <summary>
     /// CSS Shape Outside details.
@@ -3472,15 +3472,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Shape bounds
         /// </summary>
-        internal double[] Bounds { get; set; }
+        public double[] Bounds { get; set; }
         /// <summary>
         /// Shape coordinate details
         /// </summary>
-        internal object[] Shape { get; set; }
+        public object[] Shape { get; set; }
         /// <summary>
         /// Margin shape bounds
         /// </summary>
-        internal object[] MarginShape { get; set; }
+        public object[] MarginShape { get; set; }
     }
     /// <summary>
     /// Rectangle.
@@ -3490,19 +3490,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// X coordinate
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y coordinate
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// Rectangle width
         /// </summary>
-        internal double Width { get; set; }
+        public double Width { get; set; }
         /// <summary>
         /// Rectangle height
         /// </summary>
-        internal double Height { get; set; }
+        public double Height { get; set; }
     }
     /// <summary>
     /// Collects class names for the node with given id and all of it's child nodes.
@@ -3517,7 +3517,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to collect class names.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMCollectClassNamesFromSubtreeRequest"/>
@@ -3527,7 +3527,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Class name list.
         /// </summary>
-        internal string[] ClassNames { get; set; }
+        public string[] ClassNames { get; set; }
     }
     /// <summary>
     /// Creates a deep copy of the specified node and places it into the target container before the
@@ -3543,16 +3543,16 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to copy.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Id of the element to drop the copy into.
         /// </summary>
-        internal int TargetNodeId { get; set; }
+        public int TargetNodeId { get; set; }
         /// <summary>
         /// Drop the copy before this node (if absent, the copy becomes the last child of
         /// `targetNodeId`).
         /// </summary>
-        internal int InsertBeforeNodeId { get; set; }
+        public int InsertBeforeNodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMCopyToRequest"/>
@@ -3562,7 +3562,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node clone.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Describes node given its id, does not require domain to be enabled. Does not start tracking any
@@ -3578,25 +3578,25 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Identifier of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
         /// entire subtree or provide an integer larger than 0.
         /// </summary>
-        internal int Depth { get; set; }
+        public int Depth { get; set; }
         /// <summary>
         /// Whether or not iframes and shadow roots should be traversed when returning the subtree
         /// (default is false).
         /// </summary>
-        internal bool Pierce { get; set; }
+        public bool Pierce { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDescribeNodeRequest"/>
@@ -3606,7 +3606,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Node description.
         /// </summary>
-        internal Node Node { get; set; }
+        public Node Node { get; set; }
     }
     /// <summary>
     /// Disables DOM agent for the given page.
@@ -3639,7 +3639,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Unique search session identifier.
         /// </summary>
-        internal string SearchId { get; set; }
+        public string SearchId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDiscardSearchResultsRequest"/>
@@ -3677,15 +3677,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Identifier of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMFocusRequest"/>
@@ -3706,7 +3706,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to retrieve attibutes for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetAttributesRequest"/>
@@ -3716,7 +3716,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// An interleaved array of node attribute names and values.
         /// </summary>
-        internal string[] Attributes { get; set; }
+        public string[] Attributes { get; set; }
     }
     /// <summary>
     /// Returns boxes for the given node.
@@ -3731,15 +3731,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Identifier of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetBoxModelRequest"/>
@@ -3749,7 +3749,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Box model for the node.
         /// </summary>
-        internal BoxModel Model { get; set; }
+        public BoxModel Model { get; set; }
     }
     /// <summary>
     /// Returns quads that describe node position on the page. This method
@@ -3765,15 +3765,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Identifier of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetContentQuadsRequest"/>
@@ -3783,7 +3783,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Quads that describe node layout relative to viewport.
         /// </summary>
-        internal double[][] Quads { get; set; }
+        public double[][] Quads { get; set; }
     }
     /// <summary>
     /// Returns the root DOM node (and optionally the subtree) to the caller.
@@ -3799,12 +3799,12 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
         /// entire subtree or provide an integer larger than 0.
         /// </summary>
-        internal int Depth { get; set; }
+        public int Depth { get; set; }
         /// <summary>
         /// Whether or not iframes and shadow roots should be traversed when returning the subtree
         /// (default is false).
         /// </summary>
-        internal bool Pierce { get; set; }
+        public bool Pierce { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetDocumentRequest"/>
@@ -3814,7 +3814,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Resulting node.
         /// </summary>
-        internal Node Root { get; set; }
+        public Node Root { get; set; }
     }
     /// <summary>
     /// Returns the root DOM node (and optionally the subtree) to the caller.
@@ -3830,12 +3830,12 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
         /// entire subtree or provide an integer larger than 0.
         /// </summary>
-        internal int Depth { get; set; }
+        public int Depth { get; set; }
         /// <summary>
         /// Whether or not iframes and shadow roots should be traversed when returning the subtree
         /// (default is false).
         /// </summary>
-        internal bool Pierce { get; set; }
+        public bool Pierce { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetFlattenedDocumentRequest"/>
@@ -3845,7 +3845,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Resulting node.
         /// </summary>
-        internal Node[] Nodes { get; set; }
+        public Node[] Nodes { get; set; }
     }
     /// <summary>
     /// Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is
@@ -3861,19 +3861,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// X coordinate.
         /// </summary>
-        internal int X { get; set; }
+        public int X { get; set; }
         /// <summary>
         /// Y coordinate.
         /// </summary>
-        internal int Y { get; set; }
+        public int Y { get; set; }
         /// <summary>
         /// False to skip to the nearest non-UA shadow root ancestor (default: false).
         /// </summary>
-        internal bool IncludeUserAgentShadowDOM { get; set; }
+        public bool IncludeUserAgentShadowDOM { get; set; }
         /// <summary>
         /// Whether to ignore pointer-events: none on elements and hit test them.
         /// </summary>
-        internal bool IgnorePointerEventsNone { get; set; }
+        public bool IgnorePointerEventsNone { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetNodeForLocationRequest"/>
@@ -3883,15 +3883,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Resulting node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// Frame this node belongs to.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Id of the node at given coordinates, only when enabled and requested document.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Returns node's HTML markup.
@@ -3906,15 +3906,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Identifier of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetOuterHTMLRequest"/>
@@ -3924,7 +3924,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Outer HTML markup.
         /// </summary>
-        internal string OuterHTML { get; set; }
+        public string OuterHTML { get; set; }
     }
     /// <summary>
     /// Returns the id of the nearest ancestor that is a relayout boundary.
@@ -3939,7 +3939,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetRelayoutBoundaryRequest"/>
@@ -3949,7 +3949,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Relayout boundary node id for the given node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Returns search results from given `fromIndex` to given `toIndex` from the search with the given
@@ -3965,15 +3965,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Unique search session identifier.
         /// </summary>
-        internal string SearchId { get; set; }
+        public string SearchId { get; set; }
         /// <summary>
         /// Start index of the search result to be returned.
         /// </summary>
-        internal int FromIndex { get; set; }
+        public int FromIndex { get; set; }
         /// <summary>
         /// End index of the search result to be returned.
         /// </summary>
-        internal int ToIndex { get; set; }
+        public int ToIndex { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetSearchResultsRequest"/>
@@ -3983,7 +3983,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Ids of the search result nodes.
         /// </summary>
-        internal int[] NodeIds { get; set; }
+        public int[] NodeIds { get; set; }
     }
     /// <summary>
     /// Hides any highlight.
@@ -4066,16 +4066,16 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to move.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Id of the element to drop the moved node into.
         /// </summary>
-        internal int TargetNodeId { get; set; }
+        public int TargetNodeId { get; set; }
         /// <summary>
         /// Drop node before this one (if absent, the moved node becomes the last child of
         /// `targetNodeId`).
         /// </summary>
-        internal int InsertBeforeNodeId { get; set; }
+        public int InsertBeforeNodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMMoveToRequest"/>
@@ -4085,7 +4085,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// New id of the moved node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Searches for a given string in the DOM tree. Use `getSearchResults` to access search results or
@@ -4101,11 +4101,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Plain text or query selector or XPath search query.
         /// </summary>
-        internal string Query { get; set; }
+        public string Query { get; set; }
         /// <summary>
         /// True to search in user agent shadow DOM.
         /// </summary>
-        internal bool IncludeUserAgentShadowDOM { get; set; }
+        public bool IncludeUserAgentShadowDOM { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMPerformSearchRequest"/>
@@ -4115,11 +4115,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Unique search session identifier.
         /// </summary>
-        internal string SearchId { get; set; }
+        public string SearchId { get; set; }
         /// <summary>
         /// Number of search results.
         /// </summary>
-        internal int ResultCount { get; set; }
+        public int ResultCount { get; set; }
     }
     /// <summary>
     /// Requests that the node is sent to the caller given its path. // FIXME, use XPath
@@ -4134,7 +4134,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Path to node in the proprietary format.
         /// </summary>
-        internal string Path { get; set; }
+        public string Path { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMPushNodeByPathToFrontendRequest"/>
@@ -4144,7 +4144,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node for given path.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Requests that a batch of nodes is sent to the caller given their backend node ids.
@@ -4159,7 +4159,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// The array of backend node ids.
         /// </summary>
-        internal int[] BackendNodeIds { get; set; }
+        public int[] BackendNodeIds { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMPushNodesByBackendIdsToFrontendRequest"/>
@@ -4170,7 +4170,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// The array of ids of pushed nodes that correspond to the backend ids specified in
         /// backendNodeIds.
         /// </summary>
-        internal int[] NodeIds { get; set; }
+        public int[] NodeIds { get; set; }
     }
     /// <summary>
     /// Executes `querySelector` on a given node.
@@ -4185,11 +4185,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to query upon.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Selector string.
         /// </summary>
-        internal string Selector { get; set; }
+        public string Selector { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMQuerySelectorRequest"/>
@@ -4199,7 +4199,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Query selector result.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Executes `querySelectorAll` on a given node.
@@ -4214,11 +4214,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to query upon.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Selector string.
         /// </summary>
-        internal string Selector { get; set; }
+        public string Selector { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMQuerySelectorAllRequest"/>
@@ -4228,7 +4228,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Query selector result.
         /// </summary>
-        internal int[] NodeIds { get; set; }
+        public int[] NodeIds { get; set; }
     }
     /// <summary>
     /// Re-does the last undone action.
@@ -4260,11 +4260,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the element to remove attribute from.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Name of the attribute to remove.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMRemoveAttributeRequest"/>
@@ -4285,7 +4285,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to remove.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMRemoveNodeRequest"/>
@@ -4308,17 +4308,17 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to get children for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
         /// entire subtree or provide an integer larger than 0.
         /// </summary>
-        internal int Depth { get; set; }
+        public int Depth { get; set; }
         /// <summary>
         /// Whether or not iframes and shadow roots should be traversed when returning the sub-tree
         /// (default is false).
         /// </summary>
-        internal bool Pierce { get; set; }
+        public bool Pierce { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMRequestChildNodesRequest"/>
@@ -4341,7 +4341,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// JavaScript object id to convert into node.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMRequestNodeRequest"/>
@@ -4351,7 +4351,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Node id for given object.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Resolves the JavaScript node object for a given NodeId or BackendNodeId.
@@ -4366,19 +4366,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to resolve.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Backend identifier of the node to resolve.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// Symbolic group name that can be used to release multiple objects.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
         /// <summary>
         /// Execution context in which to resolve the node.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMResolveNodeRequest"/>
@@ -4388,7 +4388,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// JavaScript object wrapper for given node.
         /// </summary>
-        internal Runtime.RemoteObject Object { get; set; }
+        public Runtime.RemoteObject Object { get; set; }
     }
     /// <summary>
     /// Sets attribute for an element with given id.
@@ -4403,15 +4403,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the element to set attribute for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Attribute name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Attribute value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetAttributeValueRequest"/>
@@ -4433,16 +4433,16 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the element to set attributes for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Text with a number of attributes. Will parse this text using HTML parser.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Attribute name to replace with new attributes derived from text in case text parsed
         /// successfully.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetAttributesAsTextRequest"/>
@@ -4463,19 +4463,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Array of file paths to set.
         /// </summary>
-        internal string[] Files { get; set; }
+        public string[] Files { get; set; }
         /// <summary>
         /// Identifier of the node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetFileInputFilesRequest"/>
@@ -4496,7 +4496,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Enable or disable.
         /// </summary>
-        internal bool Enable { get; set; }
+        public bool Enable { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetNodeStackTracesEnabledRequest"/>
@@ -4517,7 +4517,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to get stack traces for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetNodeStackTracesRequest"/>
@@ -4527,7 +4527,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Creation stack trace, if available.
         /// </summary>
-        internal Runtime.StackTrace Creation { get; set; }
+        public Runtime.StackTrace Creation { get; set; }
     }
     /// <summary>
     /// Returns file information for the given
@@ -4543,7 +4543,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// JavaScript object id of the node wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetFileInfoRequest"/>
@@ -4553,7 +4553,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// 
         /// </summary>
-        internal string Path { get; set; }
+        public string Path { get; set; }
     }
     /// <summary>
     /// Enables console to refer to the node with given id via $x (see Command Line API for more details
@@ -4569,7 +4569,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// DOM node id to be accessible by means of $x command line API.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetInspectedNodeRequest"/>
@@ -4590,11 +4590,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to set name for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// New node's name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetNodeNameRequest"/>
@@ -4604,7 +4604,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// New node's id.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Sets node value for a node with given id.
@@ -4619,11 +4619,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to set value for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// New node's value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetNodeValueRequest"/>
@@ -4644,11 +4644,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node to set markup for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Outer HTML markup to set.
         /// </summary>
-        internal string OuterHTML { get; set; }
+        public string OuterHTML { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSetOuterHTMLRequest"/>
@@ -4686,7 +4686,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// 
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMGetFrameOwnerRequest"/>
@@ -4696,11 +4696,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Resulting node.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// Id of the node at given coordinates, only when enabled and requested document.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Fired when `Element`'s attribute is modified.
@@ -4714,15 +4714,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node that has changed.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Attribute name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Attribute value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Fired when `Element`'s attribute is removed.
@@ -4736,11 +4736,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node that has changed.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// A ttribute name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
     }
     /// <summary>
     /// Mirrors `DOMCharacterDataModified` event.
@@ -4754,11 +4754,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node that has changed.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// New text value.
         /// </summary>
-        internal string CharacterData { get; set; }
+        public string CharacterData { get; set; }
     }
     /// <summary>
     /// Fired when `Container`'s child node count has changed.
@@ -4772,11 +4772,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node that has changed.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// New node count.
         /// </summary>
-        internal int ChildNodeCount { get; set; }
+        public int ChildNodeCount { get; set; }
     }
     /// <summary>
     /// Mirrors `DOMNodeInserted` event.
@@ -4790,15 +4790,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Id of the node that has changed.
         /// </summary>
-        internal int ParentNodeId { get; set; }
+        public int ParentNodeId { get; set; }
         /// <summary>
         /// If of the previous siblint.
         /// </summary>
-        internal int PreviousNodeId { get; set; }
+        public int PreviousNodeId { get; set; }
         /// <summary>
         /// Inserted node data.
         /// </summary>
-        internal Node Node { get; set; }
+        public Node Node { get; set; }
     }
     /// <summary>
     /// Mirrors `DOMNodeRemoved` event.
@@ -4812,11 +4812,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Parent id.
         /// </summary>
-        internal int ParentNodeId { get; set; }
+        public int ParentNodeId { get; set; }
         /// <summary>
         /// Id of the node that has been removed.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Called when distrubution is changed.
@@ -4830,11 +4830,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Insertion point where distrubuted nodes were updated.
         /// </summary>
-        internal int InsertionPointId { get; set; }
+        public int InsertionPointId { get; set; }
         /// <summary>
         /// Distributed nodes for given insertion point.
         /// </summary>
-        internal BackendNode[] DistributedNodes { get; set; }
+        public BackendNode[] DistributedNodes { get; set; }
     }
     /// <summary>
     /// Fired when `Document` has been totally updated. Node ids are no longer valid.
@@ -4858,7 +4858,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Ids of the nodes for which the inline styles have been invalidated.
         /// </summary>
-        internal int[] NodeIds { get; set; }
+        public int[] NodeIds { get; set; }
     }
     /// <summary>
     /// Called when a pseudo element is added to an element.
@@ -4872,11 +4872,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Pseudo element's parent element id.
         /// </summary>
-        internal int ParentId { get; set; }
+        public int ParentId { get; set; }
         /// <summary>
         /// The added pseudo element.
         /// </summary>
-        internal Node PseudoElement { get; set; }
+        public Node PseudoElement { get; set; }
     }
     /// <summary>
     /// Called when a pseudo element is removed from an element.
@@ -4890,11 +4890,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Pseudo element's parent element id.
         /// </summary>
-        internal int ParentId { get; set; }
+        public int ParentId { get; set; }
         /// <summary>
         /// The removed pseudo element id.
         /// </summary>
-        internal int PseudoElementId { get; set; }
+        public int PseudoElementId { get; set; }
     }
     /// <summary>
     /// Fired when backend wants to provide client with the missing DOM structure. This happens upon
@@ -4909,11 +4909,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Parent node id to populate with children.
         /// </summary>
-        internal int ParentId { get; set; }
+        public int ParentId { get; set; }
         /// <summary>
         /// Child nodes array.
         /// </summary>
-        internal Node[] Nodes { get; set; }
+        public Node[] Nodes { get; set; }
     }
     /// <summary>
     /// Called when shadow root is popped from the element.
@@ -4927,11 +4927,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Host element id.
         /// </summary>
-        internal int HostId { get; set; }
+        public int HostId { get; set; }
         /// <summary>
         /// Shadow root id.
         /// </summary>
-        internal int RootId { get; set; }
+        public int RootId { get; set; }
     }
     /// <summary>
     /// Called when shadow root is pushed into the element.
@@ -4945,11 +4945,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         /// <summary>
         /// Host element id.
         /// </summary>
-        internal int HostId { get; set; }
+        public int HostId { get; set; }
         /// <summary>
         /// Shadow root.
         /// </summary>
-        internal Node Root { get; set; }
+        public Node Root { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
@@ -4971,43 +4971,43 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// `EventListener`'s type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// `EventListener`'s useCapture.
         /// </summary>
-        internal bool UseCapture { get; set; }
+        public bool UseCapture { get; set; }
         /// <summary>
         /// `EventListener`'s passive flag.
         /// </summary>
-        internal bool Passive { get; set; }
+        public bool Passive { get; set; }
         /// <summary>
         /// `EventListener`'s once flag.
         /// </summary>
-        internal bool Once { get; set; }
+        public bool Once { get; set; }
         /// <summary>
         /// Script id of the handler code.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// Line number in the script (0-based).
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// Column number in the script (0-based).
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
         /// <summary>
         /// Event handler function value.
         /// </summary>
-        internal Runtime.RemoteObject Handler { get; set; }
+        public Runtime.RemoteObject Handler { get; set; }
         /// <summary>
         /// Event original handler function value.
         /// </summary>
-        internal Runtime.RemoteObject OriginalHandler { get; set; }
+        public Runtime.RemoteObject OriginalHandler { get; set; }
         /// <summary>
         /// Node the listener is added to (if any).
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
     }
     /// <summary>
     /// Returns event listeners of the given object.
@@ -5022,17 +5022,17 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Identifier of the object to return listeners for.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// The maximum depth at which Node children should be retrieved, defaults to 1. Use -1 for the
         /// entire subtree or provide an integer larger than 0.
         /// </summary>
-        internal int Depth { get; set; }
+        public int Depth { get; set; }
         /// <summary>
         /// Whether or not iframes and shadow roots should be traversed when returning the subtree
         /// (default is false). Reports listeners for all contexts if pierce is enabled.
         /// </summary>
-        internal bool Pierce { get; set; }
+        public bool Pierce { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerGetEventListenersRequest"/>
@@ -5042,7 +5042,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Array of relevant listeners.
         /// </summary>
-        internal EventListener[] Listeners { get; set; }
+        public EventListener[] Listeners { get; set; }
     }
     /// <summary>
     /// Removes DOM breakpoint that was set using `setDOMBreakpoint`.
@@ -5057,11 +5057,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Identifier of the node to remove breakpoint from.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Type of the breakpoint to remove.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerRemoveDOMBreakpointRequest"/>
@@ -5082,11 +5082,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Event name.
         /// </summary>
-        internal string EventName { get; set; }
+        public string EventName { get; set; }
         /// <summary>
         /// EventTarget interface name.
         /// </summary>
-        internal string TargetName { get; set; }
+        public string TargetName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerRemoveEventListenerBreakpointRequest"/>
@@ -5107,7 +5107,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Instrumentation name to stop on.
         /// </summary>
-        internal string EventName { get; set; }
+        public string EventName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerRemoveInstrumentationBreakpointRequest"/>
@@ -5128,7 +5128,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Resource URL substring.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerRemoveXHRBreakpointRequest"/>
@@ -5149,11 +5149,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Identifier of the node to set breakpoint on.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Type of the operation to stop upon.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerSetDOMBreakpointRequest"/>
@@ -5174,12 +5174,12 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// DOM Event name to stop on (any DOM event will do).
         /// </summary>
-        internal string EventName { get; set; }
+        public string EventName { get; set; }
         /// <summary>
         /// EventTarget interface name to stop on. If equal to `"*"` or not provided, will stop on any
         /// EventTarget.
         /// </summary>
-        internal string TargetName { get; set; }
+        public string TargetName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerSetEventListenerBreakpointRequest"/>
@@ -5200,7 +5200,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Instrumentation name to stop on.
         /// </summary>
-        internal string EventName { get; set; }
+        public string EventName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerSetInstrumentationBreakpointRequest"/>
@@ -5221,7 +5221,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
         /// <summary>
         /// Resource URL substring. All XHRs having this substring in the URL will get stopped upon.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMDebuggerSetXHRBreakpointRequest"/>
@@ -5240,121 +5240,121 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// `Node`'s nodeType.
         /// </summary>
-        internal int NodeType { get; set; }
+        public int NodeType { get; set; }
         /// <summary>
         /// `Node`'s nodeName.
         /// </summary>
-        internal string NodeName { get; set; }
+        public string NodeName { get; set; }
         /// <summary>
         /// `Node`'s nodeValue.
         /// </summary>
-        internal string NodeValue { get; set; }
+        public string NodeValue { get; set; }
         /// <summary>
         /// Only set for textarea elements, contains the text value.
         /// </summary>
-        internal string TextValue { get; set; }
+        public string TextValue { get; set; }
         /// <summary>
         /// Only set for input elements, contains the input's associated text value.
         /// </summary>
-        internal string InputValue { get; set; }
+        public string InputValue { get; set; }
         /// <summary>
         /// Only set for radio and checkbox input elements, indicates if the element has been checked
         /// </summary>
-        internal bool InputChecked { get; set; }
+        public bool InputChecked { get; set; }
         /// <summary>
         /// Only set for option elements, indicates if the element has been selected
         /// </summary>
-        internal bool OptionSelected { get; set; }
+        public bool OptionSelected { get; set; }
         /// <summary>
         /// `Node`'s id, corresponds to DOM.Node.backendNodeId.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// The indexes of the node's child nodes in the `domNodes` array returned by `getSnapshot`, if
         /// any.
         /// </summary>
-        internal int[] ChildNodeIndexes { get; set; }
+        public int[] ChildNodeIndexes { get; set; }
         /// <summary>
         /// Attributes of an `Element` node.
         /// </summary>
-        internal NameValue[] Attributes { get; set; }
+        public NameValue[] Attributes { get; set; }
         /// <summary>
         /// Indexes of pseudo elements associated with this node in the `domNodes` array returned by
         /// `getSnapshot`, if any.
         /// </summary>
-        internal int[] PseudoElementIndexes { get; set; }
+        public int[] PseudoElementIndexes { get; set; }
         /// <summary>
         /// The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
         /// `getSnapshot`, if any.
         /// </summary>
-        internal int LayoutNodeIndex { get; set; }
+        public int LayoutNodeIndex { get; set; }
         /// <summary>
         /// Document URL that `Document` or `FrameOwner` node points to.
         /// </summary>
-        internal string DocumentURL { get; set; }
+        public string DocumentURL { get; set; }
         /// <summary>
         /// Base URL that `Document` or `FrameOwner` node uses for URL completion.
         /// </summary>
-        internal string BaseURL { get; set; }
+        public string BaseURL { get; set; }
         /// <summary>
         /// Only set for documents, contains the document's content language.
         /// </summary>
-        internal string ContentLanguage { get; set; }
+        public string ContentLanguage { get; set; }
         /// <summary>
         /// Only set for documents, contains the document's character set encoding.
         /// </summary>
-        internal string DocumentEncoding { get; set; }
+        public string DocumentEncoding { get; set; }
         /// <summary>
         /// `DocumentType` node's publicId.
         /// </summary>
-        internal string PublicId { get; set; }
+        public string PublicId { get; set; }
         /// <summary>
         /// `DocumentType` node's systemId.
         /// </summary>
-        internal string SystemId { get; set; }
+        public string SystemId { get; set; }
         /// <summary>
         /// Frame ID for frame owner elements and also for the document node.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// The index of a frame owner element's content document in the `domNodes` array returned by
         /// `getSnapshot`, if any.
         /// </summary>
-        internal int ContentDocumentIndex { get; set; }
+        public int ContentDocumentIndex { get; set; }
         /// <summary>
         /// Type of a pseudo element node.
         /// </summary>
-        internal string PseudoType { get; set; }
+        public string PseudoType { get; set; }
         /// <summary>
         /// Shadow root type.
         /// </summary>
-        internal string ShadowRootType { get; set; }
+        public string ShadowRootType { get; set; }
         /// <summary>
         /// Whether this DOM node responds to mouse clicks. This includes nodes that have had click
         /// event listeners attached via JavaScript as well as anchor tags that naturally navigate when
         /// clicked.
         /// </summary>
-        internal bool IsClickable { get; set; }
+        public bool IsClickable { get; set; }
         /// <summary>
         /// Details of the node's event listeners, if any.
         /// </summary>
-        internal DOMDebugger.EventListener[] EventListeners { get; set; }
+        public DOMDebugger.EventListener[] EventListeners { get; set; }
         /// <summary>
         /// The selected url for nodes with a srcset attribute.
         /// </summary>
-        internal string CurrentSourceURL { get; set; }
+        public string CurrentSourceURL { get; set; }
         /// <summary>
         /// The url of the script (if any) that generates this node.
         /// </summary>
-        internal string OriginURL { get; set; }
+        public string OriginURL { get; set; }
         /// <summary>
         /// Scroll offsets, set when this node is a Document.
         /// </summary>
-        internal double ScrollOffsetX { get; set; }
+        public double ScrollOffsetX { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double ScrollOffsetY { get; set; }
+        public double ScrollOffsetY { get; set; }
     }
     /// <summary>
     /// Details of post layout rendered text positions. The exact layout should not be regarded as
@@ -5365,17 +5365,17 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// The bounding box in document coordinates. Note that scroll offset of the document is ignored.
         /// </summary>
-        internal DOM.Rect BoundingBox { get; set; }
+        public DOM.Rect BoundingBox { get; set; }
         /// <summary>
         /// The starting index in characters, for this post layout textbox substring. Characters that
         /// would be represented as a surrogate pair in UTF-16 have length 2.
         /// </summary>
-        internal int StartCharacterIndex { get; set; }
+        public int StartCharacterIndex { get; set; }
         /// <summary>
         /// The number of characters in this post layout textbox substring. Characters that would be
         /// represented as a surrogate pair in UTF-16 have length 2.
         /// </summary>
-        internal int NumCharacters { get; set; }
+        public int NumCharacters { get; set; }
     }
     /// <summary>
     /// Details of an element in the DOM tree with a LayoutObject.
@@ -5385,33 +5385,33 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// The index of the related DOM node in the `domNodes` array returned by `getSnapshot`.
         /// </summary>
-        internal int DomNodeIndex { get; set; }
+        public int DomNodeIndex { get; set; }
         /// <summary>
         /// The bounding box in document coordinates. Note that scroll offset of the document is ignored.
         /// </summary>
-        internal DOM.Rect BoundingBox { get; set; }
+        public DOM.Rect BoundingBox { get; set; }
         /// <summary>
         /// Contents of the LayoutText, if any.
         /// </summary>
-        internal string LayoutText { get; set; }
+        public string LayoutText { get; set; }
         /// <summary>
         /// The post-layout inline text nodes, if any.
         /// </summary>
-        internal InlineTextBox[] InlineTextNodes { get; set; }
+        public InlineTextBox[] InlineTextNodes { get; set; }
         /// <summary>
         /// Index into the `computedStyles` array returned by `getSnapshot`.
         /// </summary>
-        internal int StyleIndex { get; set; }
+        public int StyleIndex { get; set; }
         /// <summary>
         /// Global paint order index, which is determined by the stacking order of the nodes. Nodes
         /// that are painted together will have the same index. Only provided if includePaintOrder in
         /// getSnapshot was true.
         /// </summary>
-        internal int PaintOrder { get; set; }
+        public int PaintOrder { get; set; }
         /// <summary>
         /// Set to true to indicate the element begins a new stacking context.
         /// </summary>
-        internal bool IsStackingContext { get; set; }
+        public bool IsStackingContext { get; set; }
     }
     /// <summary>
     /// A subset of the full ComputedStyle as defined by the request whitelist.
@@ -5421,7 +5421,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Name/value pairs of computed style properties.
         /// </summary>
-        internal NameValue[] Properties { get; set; }
+        public NameValue[] Properties { get; set; }
     }
     /// <summary>
     /// A name/value pair.
@@ -5431,11 +5431,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Attribute/property name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Attribute/property value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Data that is only present on rare nodes.
@@ -5445,11 +5445,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// 
         /// </summary>
-        internal int[] Index { get; set; }
+        public int[] Index { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int[] Value { get; set; }
+        public int[] Value { get; set; }
     }
     /// <summary>
     /// 
@@ -5459,7 +5459,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// 
         /// </summary>
-        internal int[] Index { get; set; }
+        public int[] Index { get; set; }
     }
     /// <summary>
     /// 
@@ -5469,11 +5469,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// 
         /// </summary>
-        internal int[] Index { get; set; }
+        public int[] Index { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int[] Value { get; set; }
+        public int[] Value { get; set; }
     }
     /// <summary>
     /// Document snapshot.
@@ -5483,63 +5483,63 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Document URL that `Document` or `FrameOwner` node points to.
         /// </summary>
-        internal int DocumentURL { get; set; }
+        public int DocumentURL { get; set; }
         /// <summary>
         /// Document title.
         /// </summary>
-        internal int Title { get; set; }
+        public int Title { get; set; }
         /// <summary>
         /// Base URL that `Document` or `FrameOwner` node uses for URL completion.
         /// </summary>
-        internal int BaseURL { get; set; }
+        public int BaseURL { get; set; }
         /// <summary>
         /// Contains the document's content language.
         /// </summary>
-        internal int ContentLanguage { get; set; }
+        public int ContentLanguage { get; set; }
         /// <summary>
         /// Contains the document's character set encoding.
         /// </summary>
-        internal int EncodingName { get; set; }
+        public int EncodingName { get; set; }
         /// <summary>
         /// `DocumentType` node's publicId.
         /// </summary>
-        internal int PublicId { get; set; }
+        public int PublicId { get; set; }
         /// <summary>
         /// `DocumentType` node's systemId.
         /// </summary>
-        internal int SystemId { get; set; }
+        public int SystemId { get; set; }
         /// <summary>
         /// Frame ID for frame owner elements and also for the document node.
         /// </summary>
-        internal int FrameId { get; set; }
+        public int FrameId { get; set; }
         /// <summary>
         /// A table with dom nodes.
         /// </summary>
-        internal NodeTreeSnapshot Nodes { get; set; }
+        public NodeTreeSnapshot Nodes { get; set; }
         /// <summary>
         /// The nodes in the layout tree.
         /// </summary>
-        internal LayoutTreeSnapshot Layout { get; set; }
+        public LayoutTreeSnapshot Layout { get; set; }
         /// <summary>
         /// The post-layout inline text nodes.
         /// </summary>
-        internal TextBoxSnapshot TextBoxes { get; set; }
+        public TextBoxSnapshot TextBoxes { get; set; }
         /// <summary>
         /// Horizontal scroll offset.
         /// </summary>
-        internal double ScrollOffsetX { get; set; }
+        public double ScrollOffsetX { get; set; }
         /// <summary>
         /// Vertical scroll offset.
         /// </summary>
-        internal double ScrollOffsetY { get; set; }
+        public double ScrollOffsetY { get; set; }
         /// <summary>
         /// Document content width.
         /// </summary>
-        internal double ContentWidth { get; set; }
+        public double ContentWidth { get; set; }
         /// <summary>
         /// Document content height.
         /// </summary>
-        internal double ContentHeight { get; set; }
+        public double ContentHeight { get; set; }
     }
     /// <summary>
     /// Table containing nodes.
@@ -5549,65 +5549,65 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Parent node index.
         /// </summary>
-        internal int[] ParentIndex { get; set; }
+        public int[] ParentIndex { get; set; }
         /// <summary>
         /// `Node`'s nodeType.
         /// </summary>
-        internal int[] NodeType { get; set; }
+        public int[] NodeType { get; set; }
         /// <summary>
         /// `Node`'s nodeName.
         /// </summary>
-        internal int[] NodeName { get; set; }
+        public int[] NodeName { get; set; }
         /// <summary>
         /// `Node`'s nodeValue.
         /// </summary>
-        internal int[] NodeValue { get; set; }
+        public int[] NodeValue { get; set; }
         /// <summary>
         /// `Node`'s id, corresponds to DOM.Node.backendNodeId.
         /// </summary>
-        internal int[] BackendNodeId { get; set; }
+        public int[] BackendNodeId { get; set; }
         /// <summary>
         /// Attributes of an `Element` node. Flatten name, value pairs.
         /// </summary>
-        internal int[][] Attributes { get; set; }
+        public int[][] Attributes { get; set; }
         /// <summary>
         /// Only set for textarea elements, contains the text value.
         /// </summary>
-        internal RareStringData TextValue { get; set; }
+        public RareStringData TextValue { get; set; }
         /// <summary>
         /// Only set for input elements, contains the input's associated text value.
         /// </summary>
-        internal RareStringData InputValue { get; set; }
+        public RareStringData InputValue { get; set; }
         /// <summary>
         /// Only set for radio and checkbox input elements, indicates if the element has been checked
         /// </summary>
-        internal RareBooleanData InputChecked { get; set; }
+        public RareBooleanData InputChecked { get; set; }
         /// <summary>
         /// Only set for option elements, indicates if the element has been selected
         /// </summary>
-        internal RareBooleanData OptionSelected { get; set; }
+        public RareBooleanData OptionSelected { get; set; }
         /// <summary>
         /// The index of the document in the list of the snapshot documents.
         /// </summary>
-        internal RareIntegerData ContentDocumentIndex { get; set; }
+        public RareIntegerData ContentDocumentIndex { get; set; }
         /// <summary>
         /// Type of a pseudo element node.
         /// </summary>
-        internal RareStringData PseudoType { get; set; }
+        public RareStringData PseudoType { get; set; }
         /// <summary>
         /// Whether this DOM node responds to mouse clicks. This includes nodes that have had click
         /// event listeners attached via JavaScript as well as anchor tags that naturally navigate when
         /// clicked.
         /// </summary>
-        internal RareBooleanData IsClickable { get; set; }
+        public RareBooleanData IsClickable { get; set; }
         /// <summary>
         /// The selected url for nodes with a srcset attribute.
         /// </summary>
-        internal RareStringData CurrentSourceURL { get; set; }
+        public RareStringData CurrentSourceURL { get; set; }
         /// <summary>
         /// The url of the script (if any) that generates this node.
         /// </summary>
-        internal RareStringData OriginURL { get; set; }
+        public RareStringData OriginURL { get; set; }
     }
     /// <summary>
     /// Table of details of an element in the DOM tree with a LayoutObject.
@@ -5617,41 +5617,41 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
         /// </summary>
-        internal int[] NodeIndex { get; set; }
+        public int[] NodeIndex { get; set; }
         /// <summary>
         /// Array of indexes specifying computed style strings, filtered according to the `computedStyles` parameter passed to `captureSnapshot`.
         /// </summary>
-        internal int[][] Styles { get; set; }
+        public int[][] Styles { get; set; }
         /// <summary>
         /// The absolute position bounding box.
         /// </summary>
-        internal double[][] Bounds { get; set; }
+        public double[][] Bounds { get; set; }
         /// <summary>
         /// Contents of the LayoutText, if any.
         /// </summary>
-        internal int[] Text { get; set; }
+        public int[] Text { get; set; }
         /// <summary>
         /// Stacking context information.
         /// </summary>
-        internal RareBooleanData StackingContexts { get; set; }
+        public RareBooleanData StackingContexts { get; set; }
         /// <summary>
         /// Global paint order index, which is determined by the stacking order of the nodes. Nodes
         /// that are painted together will have the same index. Only provided if includePaintOrder in
         /// captureSnapshot was true.
         /// </summary>
-        internal int[] PaintOrders { get; set; }
+        public int[] PaintOrders { get; set; }
         /// <summary>
         /// The offset rect of nodes. Only available when includeDOMRects is set to true
         /// </summary>
-        internal double[][] OffsetRects { get; set; }
+        public double[][] OffsetRects { get; set; }
         /// <summary>
         /// The scroll rect of nodes. Only available when includeDOMRects is set to true
         /// </summary>
-        internal double[][] ScrollRects { get; set; }
+        public double[][] ScrollRects { get; set; }
         /// <summary>
         /// The client rect of nodes. Only available when includeDOMRects is set to true
         /// </summary>
-        internal double[][] ClientRects { get; set; }
+        public double[][] ClientRects { get; set; }
     }
     /// <summary>
     /// Table of details of the post layout rendered text positions. The exact layout should not be regarded as
@@ -5662,21 +5662,21 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Index of the layout tree node that owns this box collection.
         /// </summary>
-        internal int[] LayoutIndex { get; set; }
+        public int[] LayoutIndex { get; set; }
         /// <summary>
         /// The absolute position bounding box.
         /// </summary>
-        internal double[][] Bounds { get; set; }
+        public double[][] Bounds { get; set; }
         /// <summary>
         /// The starting index in characters, for this post layout textbox substring. Characters that
         /// would be represented as a surrogate pair in UTF-16 have length 2.
         /// </summary>
-        internal int[] Start { get; set; }
+        public int[] Start { get; set; }
         /// <summary>
         /// The number of characters in this post layout textbox substring. Characters that would be
         /// represented as a surrogate pair in UTF-16 have length 2.
         /// </summary>
-        internal int[] Length { get; set; }
+        public int[] Length { get; set; }
     }
     /// <summary>
     /// Disables DOM snapshot agent for the given page.
@@ -5728,19 +5728,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Whitelist of computed styles to return.
         /// </summary>
-        internal string[] ComputedStyleWhitelist { get; set; }
+        public string[] ComputedStyleWhitelist { get; set; }
         /// <summary>
         /// Whether or not to retrieve details of DOM listeners (default false).
         /// </summary>
-        internal bool IncludeEventListeners { get; set; }
+        public bool IncludeEventListeners { get; set; }
         /// <summary>
         /// Whether to determine and include the paint order index of LayoutTreeNodes (default false).
         /// </summary>
-        internal bool IncludePaintOrder { get; set; }
+        public bool IncludePaintOrder { get; set; }
         /// <summary>
         /// Whether to include UA shadow tree in the snapshot (default false).
         /// </summary>
-        internal bool IncludeUserAgentShadowTree { get; set; }
+        public bool IncludeUserAgentShadowTree { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSnapshotGetSnapshotRequest"/>
@@ -5750,15 +5750,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.
         /// </summary>
-        internal DOMNode[] DomNodes { get; set; }
+        public DOMNode[] DomNodes { get; set; }
         /// <summary>
         /// The nodes in the layout tree.
         /// </summary>
-        internal LayoutTreeNode[] LayoutTreeNodes { get; set; }
+        public LayoutTreeNode[] LayoutTreeNodes { get; set; }
         /// <summary>
         /// Whitelisted ComputedStyle properties for each node in the layout tree.
         /// </summary>
-        internal ComputedStyle[] ComputedStyles { get; set; }
+        public ComputedStyle[] ComputedStyles { get; set; }
     }
     /// <summary>
     /// Returns a document snapshot, including the full DOM tree of the root node (including iframes,
@@ -5776,15 +5776,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// Whitelist of computed styles to return.
         /// </summary>
-        internal string[] ComputedStyles { get; set; }
+        public string[] ComputedStyles { get; set; }
         /// <summary>
         /// Whether to include layout object paint orders into the snapshot.
         /// </summary>
-        internal bool IncludePaintOrder { get; set; }
+        public bool IncludePaintOrder { get; set; }
         /// <summary>
         /// Whether to include DOM rectangles (offsetRects, clientRects, scrollRects) into the snapshot
         /// </summary>
-        internal bool IncludeDOMRects { get; set; }
+        public bool IncludeDOMRects { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMSnapshotCaptureSnapshotRequest"/>
@@ -5794,11 +5794,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
         /// <summary>
         /// The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.
         /// </summary>
-        internal DocumentSnapshot[] Documents { get; set; }
+        public DocumentSnapshot[] Documents { get; set; }
         /// <summary>
         /// Shared string table that all string properties refer to with indexes.
         /// </summary>
-        internal string[] Strings { get; set; }
+        public string[] Strings { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
@@ -5811,11 +5811,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// Security origin for the storage.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Whether the storage is local storage (not session storage).
         /// </summary>
-        internal bool IsLocalStorage { get; set; }
+        public bool IsLocalStorage { get; set; }
     }
     /// <summary>
     /// 
@@ -5830,7 +5830,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMStorageClearRequest"/>
@@ -5885,7 +5885,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMStorageGetDOMStorageItemsRequest"/>
@@ -5895,7 +5895,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal string[][] Entries { get; set; }
+        public string[][] Entries { get; set; }
     }
     /// <summary>
     /// 
@@ -5910,11 +5910,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMStorageRemoveDOMStorageItemRequest"/>
@@ -5935,15 +5935,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DOMStorageSetDOMStorageItemRequest"/>
@@ -5963,15 +5963,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string NewValue { get; set; }
+        public string NewValue { get; set; }
     }
     /// <summary>
     /// 
@@ -5985,11 +5985,11 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
     }
     /// <summary>
     /// 
@@ -6003,19 +6003,19 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string OldValue { get; set; }
+        public string OldValue { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string NewValue { get; set; }
+        public string NewValue { get; set; }
     }
     /// <summary>
     /// 
@@ -6029,7 +6029,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
         /// <summary>
         /// 
         /// </summary>
-        internal StorageId StorageId { get; set; }
+        public StorageId StorageId { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Database
@@ -6042,19 +6042,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// Database ID.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// Database domain.
         /// </summary>
-        internal string Domain { get; set; }
+        public string Domain { get; set; }
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Database version.
         /// </summary>
-        internal string Version { get; set; }
+        public string Version { get; set; }
     }
     /// <summary>
     /// Database error.
@@ -6064,11 +6064,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// Error message.
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// Error code.
         /// </summary>
-        internal int Code { get; set; }
+        public int Code { get; set; }
     }
     /// <summary>
     /// Disables database tracking, prevents database events from being sent to the client.
@@ -6117,11 +6117,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// 
         /// </summary>
-        internal string DatabaseId { get; set; }
+        public string DatabaseId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Query { get; set; }
+        public string Query { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DatabaseExecuteSQLRequest"/>
@@ -6131,15 +6131,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// 
         /// </summary>
-        internal string[] ColumnNames { get; set; }
+        public string[] ColumnNames { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal object[] Values { get; set; }
+        public object[] Values { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal Error SqlError { get; set; }
+        public Error SqlError { get; set; }
     }
     /// <summary>
     /// 
@@ -6154,7 +6154,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// 
         /// </summary>
-        internal string DatabaseId { get; set; }
+        public string DatabaseId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DatabaseGetDatabaseTableNamesRequest"/>
@@ -6164,7 +6164,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// 
         /// </summary>
-        internal string[] TableNames { get; set; }
+        public string[] TableNames { get; set; }
     }
     /// <summary>
     /// 
@@ -6178,7 +6178,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
         /// <summary>
         /// 
         /// </summary>
-        internal Database Database { get; set; }
+        public Database Database { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
@@ -6213,15 +6213,15 @@ namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
         /// <summary>
         /// Mock alpha
         /// </summary>
-        internal double Alpha { get; set; }
+        public double Alpha { get; set; }
         /// <summary>
         /// Mock beta
         /// </summary>
-        internal double Beta { get; set; }
+        public double Beta { get; set; }
         /// <summary>
         /// Mock gamma
         /// </summary>
-        internal double Gamma { get; set; }
+        public double Gamma { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DeviceOrientationSetDeviceOrientationOverrideRequest"/>
@@ -6240,11 +6240,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Orientation type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Orientation angle.
         /// </summary>
-        internal int Angle { get; set; }
+        public int Angle { get; set; }
     }
     /// <summary>
     /// 
@@ -6254,11 +6254,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// advance: If the scheduler runs out of immediate work, the virtual time base may fast forward to
@@ -6291,7 +6291,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// True if emulation is supported.
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
     }
     /// <summary>
     /// Clears the overriden device metrics.
@@ -6357,7 +6357,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Whether to enable to disable focus emulation.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetFocusEmulationEnabledRequest"/>
@@ -6378,7 +6378,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
         /// </summary>
-        internal double Rate { get; set; }
+        public double Rate { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetCPUThrottlingRateRequest"/>
@@ -6401,7 +6401,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// RGBA of the default background color. If not specified, any existing override will be
         /// cleared.
         /// </summary>
-        internal DOM.RGBA Color { get; set; }
+        public DOM.RGBA Color { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetDefaultBackgroundColorOverrideRequest"/>
@@ -6424,53 +6424,53 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// Overriding device scale factor value. 0 disables the override.
         /// </summary>
-        internal double DeviceScaleFactor { get; set; }
+        public double DeviceScaleFactor { get; set; }
         /// <summary>
         /// Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
         /// autosizing and more.
         /// </summary>
-        internal bool Mobile { get; set; }
+        public bool Mobile { get; set; }
         /// <summary>
         /// Scale to apply to resulting view image.
         /// </summary>
-        internal double Scale { get; set; }
+        public double Scale { get; set; }
         /// <summary>
         /// Overriding screen width value in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int ScreenWidth { get; set; }
+        public int ScreenWidth { get; set; }
         /// <summary>
         /// Overriding screen height value in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int ScreenHeight { get; set; }
+        public int ScreenHeight { get; set; }
         /// <summary>
         /// Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int PositionX { get; set; }
+        public int PositionX { get; set; }
         /// <summary>
         /// Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int PositionY { get; set; }
+        public int PositionY { get; set; }
         /// <summary>
         /// Do not set visible view size, rely upon explicit setVisibleSize call.
         /// </summary>
-        internal bool DontSetVisibleSize { get; set; }
+        public bool DontSetVisibleSize { get; set; }
         /// <summary>
         /// Screen orientation override.
         /// </summary>
-        internal ScreenOrientation ScreenOrientation { get; set; }
+        public ScreenOrientation ScreenOrientation { get; set; }
         /// <summary>
         /// If set, the visible area of the page will be overridden to this viewport. This viewport
         /// change is not observed by the page, e.g. viewport-relative elements do not change positions.
         /// </summary>
-        internal Page.Viewport Viewport { get; set; }
+        public Page.Viewport Viewport { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetDeviceMetricsOverrideRequest"/>
@@ -6491,7 +6491,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Whether scrollbars should be always hidden.
         /// </summary>
-        internal bool Hidden { get; set; }
+        public bool Hidden { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetScrollbarsHiddenRequest"/>
@@ -6512,7 +6512,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Whether document.coookie API should be disabled.
         /// </summary>
-        internal bool Disabled { get; set; }
+        public bool Disabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetDocumentCookieDisabledRequest"/>
@@ -6533,11 +6533,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Whether touch emulation based on mouse input should be enabled.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
         /// <summary>
         /// Touch/gesture events configuration. Default: current platform.
         /// </summary>
-        internal string Configuration { get; set; }
+        public string Configuration { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetEmitTouchEventsForMouseRequest"/>
@@ -6558,11 +6558,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Media type to emulate. Empty string disables the override.
         /// </summary>
-        internal string Media { get; set; }
+        public string Media { get; set; }
         /// <summary>
         /// Media features to emulate.
         /// </summary>
-        internal MediaFeature[] Features { get; set; }
+        public MediaFeature[] Features { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetEmulatedMediaRequest"/>
@@ -6584,15 +6584,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Mock latitude
         /// </summary>
-        internal double Latitude { get; set; }
+        public double Latitude { get; set; }
         /// <summary>
         /// Mock longitude
         /// </summary>
-        internal double Longitude { get; set; }
+        public double Longitude { get; set; }
         /// <summary>
         /// Mock accuracy
         /// </summary>
-        internal double Accuracy { get; set; }
+        public double Accuracy { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetGeolocationOverrideRequest"/>
@@ -6613,7 +6613,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// The platform navigator.platform should return.
         /// </summary>
-        internal string Platform { get; set; }
+        public string Platform { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetNavigatorOverridesRequest"/>
@@ -6634,7 +6634,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Page scale factor.
         /// </summary>
-        internal double PageScaleFactor { get; set; }
+        public double PageScaleFactor { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetPageScaleFactorRequest"/>
@@ -6655,7 +6655,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Whether script execution should be disabled in the page.
         /// </summary>
-        internal bool Value { get; set; }
+        public bool Value { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetScriptExecutionDisabledRequest"/>
@@ -6676,11 +6676,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Whether the touch event emulation should be enabled.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
         /// <summary>
         /// Maximum touch points supported. Defaults to one.
         /// </summary>
-        internal int MaxTouchPoints { get; set; }
+        public int MaxTouchPoints { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetTouchEmulationEnabledRequest"/>
@@ -6702,26 +6702,26 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// 
         /// </summary>
-        internal string Policy { get; set; }
+        public string Policy { get; set; }
         /// <summary>
         /// If set, after this many virtual milliseconds have elapsed virtual time will be paused and a
         /// virtualTimeBudgetExpired event is sent.
         /// </summary>
-        internal double Budget { get; set; }
+        public double Budget { get; set; }
         /// <summary>
         /// If set this specifies the maximum number of tasks that can be run before virtual is forced
         /// forwards to prevent deadlock.
         /// </summary>
-        internal int MaxVirtualTimeTaskStarvationCount { get; set; }
+        public int MaxVirtualTimeTaskStarvationCount { get; set; }
         /// <summary>
         /// If set the virtual time policy change should be deferred until any frame starts navigating.
         /// Note any previous deferred policy change is superseded.
         /// </summary>
-        internal bool WaitForNavigation { get; set; }
+        public bool WaitForNavigation { get; set; }
         /// <summary>
         /// If set, base::Time::Now will be overriden to initially return this value.
         /// </summary>
-        internal long InitialVirtualTime { get; set; }
+        public long InitialVirtualTime { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetVirtualTimePolicyRequest"/>
@@ -6731,7 +6731,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Absolute timestamp at which virtual time was first enabled (up time in milliseconds).
         /// </summary>
-        internal double VirtualTimeTicksBase { get; set; }
+        public double VirtualTimeTicksBase { get; set; }
     }
     /// <summary>
     /// Overrides default host system timezone with the specified one.
@@ -6747,7 +6747,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// The timezone identifier. If empty, disables the override and
         /// restores default host system timezone.
         /// </summary>
-        internal string TimezoneId { get; set; }
+        public string TimezoneId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetTimezoneOverrideRequest"/>
@@ -6770,11 +6770,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// Frame width (DIP).
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Frame height (DIP).
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetVisibleSizeRequest"/>
@@ -6795,15 +6795,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
         /// <summary>
         /// User agent to use.
         /// </summary>
-        internal string UserAgent { get; set; }
+        public string UserAgent { get; set; }
         /// <summary>
         /// Browser langugage to emulate.
         /// </summary>
-        internal string AcceptLanguage { get; set; }
+        public string AcceptLanguage { get; set; }
         /// <summary>
         /// The platform navigator.platform should return.
         /// </summary>
-        internal string Platform { get; set; }
+        public string Platform { get; set; }
     }
     /// <summary>
     /// Response from <see cref="EmulationSetUserAgentOverrideRequest"/>
@@ -6832,11 +6832,11 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
         /// <summary>
         /// Image compression format (defaults to png).
         /// </summary>
-        internal string Format { get; set; }
+        public string Format { get; set; }
         /// <summary>
         /// Compression quality from range [0..100] (jpeg only).
         /// </summary>
-        internal int Quality { get; set; }
+        public int Quality { get; set; }
     }
     /// <summary>
     /// Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures a
@@ -6855,24 +6855,24 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
         /// Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,
         /// the current time will be used.
         /// </summary>
-        internal double FrameTimeTicks { get; set; }
+        public double FrameTimeTicks { get; set; }
         /// <summary>
         /// The interval between BeginFrames that is reported to the compositor, in milliseconds.
         /// Defaults to a 60 frames/second interval, i.e. about 16.666 milliseconds.
         /// </summary>
-        internal double Interval { get; set; }
+        public double Interval { get; set; }
         /// <summary>
         /// Whether updates should not be committed and drawn onto the display. False by default. If
         /// true, only side effects of the BeginFrame will be run, such as layout and animations, but
         /// any visual updates may not be visible on the display or in screenshots.
         /// </summary>
-        internal bool NoDisplayUpdates { get; set; }
+        public bool NoDisplayUpdates { get; set; }
         /// <summary>
         /// If set, a screenshot of the frame will be captured and returned in the response. Otherwise,
         /// no screenshot will be captured. Note that capturing a screenshot can fail, for example,
         /// during renderer initialization. In such a case, no screenshot data will be returned.
         /// </summary>
-        internal ScreenshotParams Screenshot { get; set; }
+        public ScreenshotParams Screenshot { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeadlessExperimentalBeginFrameRequest"/>
@@ -6883,11 +6883,11 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
         /// Whether the BeginFrame resulted in damage and, thus, a new frame was committed to the
         /// display. Reported for diagnostic uses, may be removed in the future.
         /// </summary>
-        internal bool HasDamage { get; set; }
+        public bool HasDamage { get; set; }
         /// <summary>
         /// Base64-encoded image data of the screenshot, if one was requested and successfully taken.
         /// </summary>
-        internal byte[] ScreenshotData { get; set; }
+        public byte[] ScreenshotData { get; set; }
     }
     /// <summary>
     /// Disables headless events for the target.
@@ -6937,7 +6937,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
         /// <summary>
         /// True if BeginFrames are needed, false otherwise.
         /// </summary>
-        internal bool NeedsBeginFrames { get; set; }
+        public bool NeedsBeginFrames { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.IO
@@ -6955,7 +6955,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
         /// <summary>
         /// Handle of the stream to close.
         /// </summary>
-        internal string Handle { get; set; }
+        public string Handle { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IOCloseRequest"/>
@@ -6976,16 +6976,16 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
         /// <summary>
         /// Handle of the stream to read.
         /// </summary>
-        internal string Handle { get; set; }
+        public string Handle { get; set; }
         /// <summary>
         /// Seek to the specified offset before reading (if not specificed, proceed with offset
         /// following the last read). Some types of streams may only support sequential reads.
         /// </summary>
-        internal int Offset { get; set; }
+        public int Offset { get; set; }
         /// <summary>
         /// Maximum number of bytes to read (left upon the agent discretion if not specified).
         /// </summary>
-        internal int Size { get; set; }
+        public int Size { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IOReadRequest"/>
@@ -6995,15 +6995,15 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
         /// <summary>
         /// Set if the data is base64-encoded
         /// </summary>
-        internal bool Base64Encoded { get; set; }
+        public bool Base64Encoded { get; set; }
         /// <summary>
         /// Data that were read.
         /// </summary>
-        internal string Data { get; set; }
+        public string Data { get; set; }
         /// <summary>
         /// Set if the end-of-file condition occured while reading.
         /// </summary>
-        internal bool Eof { get; set; }
+        public bool Eof { get; set; }
     }
     /// <summary>
     /// Return UUID of Blob object specified by a remote object id.
@@ -7018,7 +7018,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
         /// <summary>
         /// Object id of a Blob object wrapper.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IOResolveBlobRequest"/>
@@ -7028,7 +7028,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
         /// <summary>
         /// UUID of the specified Blob.
         /// </summary>
-        internal string Uuid { get; set; }
+        public string Uuid { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
@@ -7041,16 +7041,16 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Database version (type is not 'integer', as the standard
         /// requires the version number to be 'unsigned long long')
         /// </summary>
-        internal double Version { get; set; }
+        public double Version { get; set; }
         /// <summary>
         /// Object stores in this database.
         /// </summary>
-        internal ObjectStore[] ObjectStores { get; set; }
+        public ObjectStore[] ObjectStores { get; set; }
     }
     /// <summary>
     /// Object store.
@@ -7060,19 +7060,19 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Object store name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Object store key path.
         /// </summary>
-        internal KeyPath KeyPath { get; set; }
+        public KeyPath KeyPath { get; set; }
         /// <summary>
         /// If true, object store has auto increment flag set.
         /// </summary>
-        internal bool AutoIncrement { get; set; }
+        public bool AutoIncrement { get; set; }
         /// <summary>
         /// Indexes in this object store.
         /// </summary>
-        internal ObjectStoreIndex[] Indexes { get; set; }
+        public ObjectStoreIndex[] Indexes { get; set; }
     }
     /// <summary>
     /// Object store index.
@@ -7082,19 +7082,19 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Index name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Index key path.
         /// </summary>
-        internal KeyPath KeyPath { get; set; }
+        public KeyPath KeyPath { get; set; }
         /// <summary>
         /// If true, index is unique.
         /// </summary>
-        internal bool Unique { get; set; }
+        public bool Unique { get; set; }
         /// <summary>
         /// If true, index allows multiple entries for a key.
         /// </summary>
-        internal bool MultiEntry { get; set; }
+        public bool MultiEntry { get; set; }
     }
     /// <summary>
     /// Key.
@@ -7104,23 +7104,23 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Key type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Number value.
         /// </summary>
-        internal double Number { get; set; }
+        public double Number { get; set; }
         /// <summary>
         /// String value.
         /// </summary>
-        internal string String { get; set; }
+        public string String { get; set; }
         /// <summary>
         /// Date value.
         /// </summary>
-        internal double Date { get; set; }
+        public double Date { get; set; }
         /// <summary>
         /// Array value.
         /// </summary>
-        internal Key[] Array { get; set; }
+        public Key[] Array { get; set; }
     }
     /// <summary>
     /// Key range.
@@ -7130,19 +7130,19 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Lower bound.
         /// </summary>
-        internal Key Lower { get; set; }
+        public Key Lower { get; set; }
         /// <summary>
         /// Upper bound.
         /// </summary>
-        internal Key Upper { get; set; }
+        public Key Upper { get; set; }
         /// <summary>
         /// If true lower bound is open.
         /// </summary>
-        internal bool LowerOpen { get; set; }
+        public bool LowerOpen { get; set; }
         /// <summary>
         /// If true upper bound is open.
         /// </summary>
-        internal bool UpperOpen { get; set; }
+        public bool UpperOpen { get; set; }
     }
     /// <summary>
     /// Data entry.
@@ -7152,15 +7152,15 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Key object.
         /// </summary>
-        internal Runtime.RemoteObject Key { get; set; }
+        public Runtime.RemoteObject Key { get; set; }
         /// <summary>
         /// Primary key object.
         /// </summary>
-        internal Runtime.RemoteObject PrimaryKey { get; set; }
+        public Runtime.RemoteObject PrimaryKey { get; set; }
         /// <summary>
         /// Value object.
         /// </summary>
-        internal Runtime.RemoteObject Value { get; set; }
+        public Runtime.RemoteObject Value { get; set; }
     }
     /// <summary>
     /// Key path.
@@ -7170,15 +7170,15 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Key path type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// String value.
         /// </summary>
-        internal string String { get; set; }
+        public string String { get; set; }
         /// <summary>
         /// Array value.
         /// </summary>
-        internal string[] Array { get; set; }
+        public string[] Array { get; set; }
     }
     /// <summary>
     /// Clears all entries from an object store.
@@ -7193,15 +7193,15 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
         /// <summary>
         /// Object store name.
         /// </summary>
-        internal string ObjectStoreName { get; set; }
+        public string ObjectStoreName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBClearObjectStoreRequest"/>
@@ -7222,11 +7222,11 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBDeleteDatabaseRequest"/>
@@ -7247,19 +7247,19 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// 
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ObjectStoreName { get; set; }
+        public string ObjectStoreName { get; set; }
         /// <summary>
         /// Range of entry keys to delete
         /// </summary>
-        internal KeyRange KeyRange { get; set; }
+        public KeyRange KeyRange { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBDeleteObjectStoreEntriesRequest"/>
@@ -7314,31 +7314,31 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
         /// <summary>
         /// Object store name.
         /// </summary>
-        internal string ObjectStoreName { get; set; }
+        public string ObjectStoreName { get; set; }
         /// <summary>
         /// Index name, empty string for object store data requests.
         /// </summary>
-        internal string IndexName { get; set; }
+        public string IndexName { get; set; }
         /// <summary>
         /// Number of records to skip.
         /// </summary>
-        internal int SkipCount { get; set; }
+        public int SkipCount { get; set; }
         /// <summary>
         /// Number of records to fetch.
         /// </summary>
-        internal int PageSize { get; set; }
+        public int PageSize { get; set; }
         /// <summary>
         /// Key range.
         /// </summary>
-        internal KeyRange KeyRange { get; set; }
+        public KeyRange KeyRange { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBRequestDataRequest"/>
@@ -7348,11 +7348,11 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Array of object store data entries.
         /// </summary>
-        internal DataEntry[] ObjectStoreDataEntries { get; set; }
+        public DataEntry[] ObjectStoreDataEntries { get; set; }
         /// <summary>
         /// If true, there are more entries to fetch in the given range.
         /// </summary>
-        internal bool HasMore { get; set; }
+        public bool HasMore { get; set; }
     }
     /// <summary>
     /// Gets metadata of an object store
@@ -7367,15 +7367,15 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
         /// <summary>
         /// Object store name.
         /// </summary>
-        internal string ObjectStoreName { get; set; }
+        public string ObjectStoreName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBGetMetadataRequest"/>
@@ -7385,13 +7385,13 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// the entries count
         /// </summary>
-        internal double EntriesCount { get; set; }
+        public double EntriesCount { get; set; }
         /// <summary>
         /// the current value of key generator, to become the next inserted
         /// key into the object store. Valid if objectStore.autoIncrement
         /// is true.
         /// </summary>
-        internal double KeyGeneratorValue { get; set; }
+        public double KeyGeneratorValue { get; set; }
     }
     /// <summary>
     /// Requests database with given name in given frame.
@@ -7406,11 +7406,11 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Database name.
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBRequestDatabaseRequest"/>
@@ -7420,7 +7420,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Database with an array of object stores.
         /// </summary>
-        internal DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }
+        public DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }
     }
     /// <summary>
     /// Requests database names for given security origin.
@@ -7435,7 +7435,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="IndexedDBRequestDatabaseNamesRequest"/>
@@ -7445,7 +7445,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
         /// <summary>
         /// Database names for origin.
         /// </summary>
-        internal string[] DatabaseNames { get; set; }
+        public string[] DatabaseNames { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Input
@@ -7458,32 +7458,32 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
         /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// X radius of the touch area (default: 1.0).
         /// </summary>
-        internal double RadiusX { get; set; }
+        public double RadiusX { get; set; }
         /// <summary>
         /// Y radius of the touch area (default: 1.0).
         /// </summary>
-        internal double RadiusY { get; set; }
+        public double RadiusY { get; set; }
         /// <summary>
         /// Rotation angle (default: 0.0).
         /// </summary>
-        internal double RotationAngle { get; set; }
+        public double RotationAngle { get; set; }
         /// <summary>
         /// Force (default: 1.0).
         /// </summary>
-        internal double Force { get; set; }
+        public double Force { get; set; }
         /// <summary>
         /// Identifier used to track touch sources between events, must be unique within an event.
         /// </summary>
-        internal double Id { get; set; }
+        public double Id { get; set; }
     }
     /// <summary>
     /// 
@@ -7507,64 +7507,64 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// Type of the key event.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
         /// (default: 0).
         /// </summary>
-        internal int Modifiers { get; set; }
+        public int Modifiers { get; set; }
         /// <summary>
         /// Time at which the event occurred.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Text as generated by processing a virtual key code with a keyboard layout. Not needed for
         /// for `keyUp` and `rawKeyDown` events (default: "")
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Text that would have been generated by the keyboard if no modifiers were pressed (except for
         /// shift). Useful for shortcut (accelerator) key handling (default: "").
         /// </summary>
-        internal string UnmodifiedText { get; set; }
+        public string UnmodifiedText { get; set; }
         /// <summary>
         /// Unique key identifier (e.g., 'U+0041') (default: "").
         /// </summary>
-        internal string KeyIdentifier { get; set; }
+        public string KeyIdentifier { get; set; }
         /// <summary>
         /// Unique DOM defined string value for each physical key (e.g., 'KeyA') (default: "").
         /// </summary>
-        internal string Code { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// Unique DOM defined string value describing the meaning of the key in the context of active
         /// modifiers, keyboard layout, etc (e.g., 'AltGr') (default: "").
         /// </summary>
-        internal string Key { get; set; }
+        public string Key { get; set; }
         /// <summary>
         /// Windows virtual key code (default: 0).
         /// </summary>
-        internal int WindowsVirtualKeyCode { get; set; }
+        public int WindowsVirtualKeyCode { get; set; }
         /// <summary>
         /// Native virtual key code (default: 0).
         /// </summary>
-        internal int NativeVirtualKeyCode { get; set; }
+        public int NativeVirtualKeyCode { get; set; }
         /// <summary>
         /// Whether the event was generated from auto repeat (default: false).
         /// </summary>
-        internal bool AutoRepeat { get; set; }
+        public bool AutoRepeat { get; set; }
         /// <summary>
         /// Whether the event was generated from the keypad (default: false).
         /// </summary>
-        internal bool IsKeypad { get; set; }
+        public bool IsKeypad { get; set; }
         /// <summary>
         /// Whether the event was a system key event (default: false).
         /// </summary>
-        internal bool IsSystemKey { get; set; }
+        public bool IsSystemKey { get; set; }
         /// <summary>
         /// Whether the event was from the left or right side of the keyboard. 1=Left, 2=Right (default:
         /// 0).
         /// </summary>
-        internal int Location { get; set; }
+        public int Location { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputDispatchKeyEventRequest"/>
@@ -7586,7 +7586,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// The text to insert.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputInsertTextRequest"/>
@@ -7607,50 +7607,50 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// Type of the mouse event.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
         /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
         /// (default: 0).
         /// </summary>
-        internal int Modifiers { get; set; }
+        public int Modifiers { get; set; }
         /// <summary>
         /// Time at which the event occurred.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Mouse button (default: "none").
         /// </summary>
-        internal string Button { get; set; }
+        public string Button { get; set; }
         /// <summary>
         /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
         /// Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
         /// </summary>
-        internal int Buttons { get; set; }
+        public int Buttons { get; set; }
         /// <summary>
         /// Number of times the mouse button was clicked (default: 0).
         /// </summary>
-        internal int ClickCount { get; set; }
+        public int ClickCount { get; set; }
         /// <summary>
         /// X delta in CSS pixels for mouse wheel event (default: 0).
         /// </summary>
-        internal double DeltaX { get; set; }
+        public double DeltaX { get; set; }
         /// <summary>
         /// Y delta in CSS pixels for mouse wheel event (default: 0).
         /// </summary>
-        internal double DeltaY { get; set; }
+        public double DeltaY { get; set; }
         /// <summary>
         /// Pointer type (default: "mouse").
         /// </summary>
-        internal string PointerType { get; set; }
+        public string PointerType { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputDispatchMouseEventRequest"/>
@@ -7672,22 +7672,22 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// Type of the touch event. TouchEnd and TouchCancel must not contain any touch points, while
         /// TouchStart and TouchMove must contains at least one.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Active touch points on the touch device. One event per any changed point (compared to
         /// previous touch event in a sequence) is generated, emulating pressing/moving/releasing points
         /// one by one.
         /// </summary>
-        internal TouchPoint[] TouchPoints { get; set; }
+        public TouchPoint[] TouchPoints { get; set; }
         /// <summary>
         /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
         /// (default: 0).
         /// </summary>
-        internal int Modifiers { get; set; }
+        public int Modifiers { get; set; }
         /// <summary>
         /// Time at which the event occurred.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputDispatchTouchEventRequest"/>
@@ -7708,40 +7708,40 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// Type of the mouse event.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// X coordinate of the mouse pointer in DIP.
         /// </summary>
-        internal int X { get; set; }
+        public int X { get; set; }
         /// <summary>
         /// Y coordinate of the mouse pointer in DIP.
         /// </summary>
-        internal int Y { get; set; }
+        public int Y { get; set; }
         /// <summary>
         /// Mouse button.
         /// </summary>
-        internal string Button { get; set; }
+        public string Button { get; set; }
         /// <summary>
         /// Time at which the event occurred (default: current time).
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// X delta in DIP for mouse wheel event (default: 0).
         /// </summary>
-        internal double DeltaX { get; set; }
+        public double DeltaX { get; set; }
         /// <summary>
         /// Y delta in DIP for mouse wheel event (default: 0).
         /// </summary>
-        internal double DeltaY { get; set; }
+        public double DeltaY { get; set; }
         /// <summary>
         /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
         /// (default: 0).
         /// </summary>
-        internal int Modifiers { get; set; }
+        public int Modifiers { get; set; }
         /// <summary>
         /// Number of times the mouse button was clicked (default: 0).
         /// </summary>
-        internal int ClickCount { get; set; }
+        public int ClickCount { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputEmulateTouchFromMouseEventRequest"/>
@@ -7762,7 +7762,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// Ignores input events processing when set to true.
         /// </summary>
-        internal bool Ignore { get; set; }
+        public bool Ignore { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputSetIgnoreInputEventsRequest"/>
@@ -7783,24 +7783,24 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// X coordinate of the start of the gesture in CSS pixels.
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y coordinate of the start of the gesture in CSS pixels.
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// Relative scale factor after zooming (&gt;1.0 zooms in, &lt;1.0 zooms out).
         /// </summary>
-        internal double ScaleFactor { get; set; }
+        public double ScaleFactor { get; set; }
         /// <summary>
         /// Relative pointer speed in pixels per second (default: 800).
         /// </summary>
-        internal int RelativeSpeed { get; set; }
+        public int RelativeSpeed { get; set; }
         /// <summary>
         /// Which type of input events to be generated (default: 'default', which queries the platform
         /// for the preferred input type).
         /// </summary>
-        internal string GestureSourceType { get; set; }
+        public string GestureSourceType { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputSynthesizePinchGestureRequest"/>
@@ -7821,54 +7821,54 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// X coordinate of the start of the gesture in CSS pixels.
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y coordinate of the start of the gesture in CSS pixels.
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// The distance to scroll along the X axis (positive to scroll left).
         /// </summary>
-        internal double XDistance { get; set; }
+        public double XDistance { get; set; }
         /// <summary>
         /// The distance to scroll along the Y axis (positive to scroll up).
         /// </summary>
-        internal double YDistance { get; set; }
+        public double YDistance { get; set; }
         /// <summary>
         /// The number of additional pixels to scroll back along the X axis, in addition to the given
         /// distance.
         /// </summary>
-        internal double XOverscroll { get; set; }
+        public double XOverscroll { get; set; }
         /// <summary>
         /// The number of additional pixels to scroll back along the Y axis, in addition to the given
         /// distance.
         /// </summary>
-        internal double YOverscroll { get; set; }
+        public double YOverscroll { get; set; }
         /// <summary>
         /// Prevent fling (default: true).
         /// </summary>
-        internal bool PreventFling { get; set; }
+        public bool PreventFling { get; set; }
         /// <summary>
         /// Swipe speed in pixels per second (default: 800).
         /// </summary>
-        internal int Speed { get; set; }
+        public int Speed { get; set; }
         /// <summary>
         /// Which type of input events to be generated (default: 'default', which queries the platform
         /// for the preferred input type).
         /// </summary>
-        internal string GestureSourceType { get; set; }
+        public string GestureSourceType { get; set; }
         /// <summary>
         /// The number of times to repeat the gesture (default: 0).
         /// </summary>
-        internal int RepeatCount { get; set; }
+        public int RepeatCount { get; set; }
         /// <summary>
         /// The number of milliseconds delay between each repeat. (default: 250).
         /// </summary>
-        internal int RepeatDelayMs { get; set; }
+        public int RepeatDelayMs { get; set; }
         /// <summary>
         /// The name of the interaction markers to generate, if not empty (default: "").
         /// </summary>
-        internal string InteractionMarkerName { get; set; }
+        public string InteractionMarkerName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputSynthesizeScrollGestureRequest"/>
@@ -7889,24 +7889,24 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// X coordinate of the start of the gesture in CSS pixels.
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y coordinate of the start of the gesture in CSS pixels.
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// Duration between touchdown and touchup events in ms (default: 50).
         /// </summary>
-        internal int Duration { get; set; }
+        public int Duration { get; set; }
         /// <summary>
         /// Number of times to perform the tap (e.g. 2 for double tap, default: 1).
         /// </summary>
-        internal int TapCount { get; set; }
+        public int TapCount { get; set; }
         /// <summary>
         /// Which type of input events to be generated (default: 'default', which queries the platform
         /// for the preferred input type).
         /// </summary>
-        internal string GestureSourceType { get; set; }
+        public string GestureSourceType { get; set; }
     }
     /// <summary>
     /// Response from <see cref="InputSynthesizeTapGestureRequest"/>
@@ -7963,7 +7963,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
         /// <summary>
         /// The reason why connection has been terminated.
         /// </summary>
-        internal string Reason { get; set; }
+        public string Reason { get; set; }
     }
     /// <summary>
     /// Fired when debugging target has crashed
@@ -7996,11 +7996,11 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// Rectangle itself.
         /// </summary>
-        internal DOM.Rect Rect { get; set; }
+        public DOM.Rect Rect { get; set; }
         /// <summary>
         /// Reason for rectangle to force scrolling on the main thread
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
     }
     /// <summary>
     /// Sticky position constraints.
@@ -8010,19 +8010,19 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// Layout rectangle of the sticky element before being shifted
         /// </summary>
-        internal DOM.Rect StickyBoxRect { get; set; }
+        public DOM.Rect StickyBoxRect { get; set; }
         /// <summary>
         /// Layout rectangle of the containing block of the sticky element
         /// </summary>
-        internal DOM.Rect ContainingBlockRect { get; set; }
+        public DOM.Rect ContainingBlockRect { get; set; }
         /// <summary>
         /// The nearest sticky layer that shifts the sticky box
         /// </summary>
-        internal string NearestLayerShiftingStickyBox { get; set; }
+        public string NearestLayerShiftingStickyBox { get; set; }
         /// <summary>
         /// The nearest sticky layer that shifts the containing block
         /// </summary>
-        internal string NearestLayerShiftingContainingBlock { get; set; }
+        public string NearestLayerShiftingContainingBlock { get; set; }
     }
     /// <summary>
     /// Serialized fragment of layer picture along with its offset within the layer.
@@ -8032,15 +8032,15 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// Offset from owning layer left boundary
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Offset from owning layer top boundary
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// Base64-encoded snapshot data.
         /// </summary>
-        internal byte[] Picture { get; set; }
+        public byte[] Picture { get; set; }
     }
     /// <summary>
     /// Information about a compositing layer.
@@ -8050,68 +8050,68 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The unique id for this layer.
         /// </summary>
-        internal string LayerId { get; set; }
+        public string LayerId { get; set; }
         /// <summary>
         /// The id of parent (not present for root).
         /// </summary>
-        internal string ParentLayerId { get; set; }
+        public string ParentLayerId { get; set; }
         /// <summary>
         /// The backend id for the node associated with this layer.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// Offset from parent layer, X coordinate.
         /// </summary>
-        internal double OffsetX { get; set; }
+        public double OffsetX { get; set; }
         /// <summary>
         /// Offset from parent layer, Y coordinate.
         /// </summary>
-        internal double OffsetY { get; set; }
+        public double OffsetY { get; set; }
         /// <summary>
         /// Layer width.
         /// </summary>
-        internal double Width { get; set; }
+        public double Width { get; set; }
         /// <summary>
         /// Layer height.
         /// </summary>
-        internal double Height { get; set; }
+        public double Height { get; set; }
         /// <summary>
         /// Transformation matrix for layer, default is identity matrix
         /// </summary>
-        internal double[] Transform { get; set; }
+        public double[] Transform { get; set; }
         /// <summary>
         /// Transform anchor point X, absent if no transform specified
         /// </summary>
-        internal double AnchorX { get; set; }
+        public double AnchorX { get; set; }
         /// <summary>
         /// Transform anchor point Y, absent if no transform specified
         /// </summary>
-        internal double AnchorY { get; set; }
+        public double AnchorY { get; set; }
         /// <summary>
         /// Transform anchor point Z, absent if no transform specified
         /// </summary>
-        internal double AnchorZ { get; set; }
+        public double AnchorZ { get; set; }
         /// <summary>
         /// Indicates how many time this layer has painted.
         /// </summary>
-        internal int PaintCount { get; set; }
+        public int PaintCount { get; set; }
         /// <summary>
         /// Indicates whether this layer hosts any content, rather than being used for
         /// transform/scrolling purposes only.
         /// </summary>
-        internal bool DrawsContent { get; set; }
+        public bool DrawsContent { get; set; }
         /// <summary>
         /// Set if layer is not visible.
         /// </summary>
-        internal bool Invisible { get; set; }
+        public bool Invisible { get; set; }
         /// <summary>
         /// Rectangles scrolling on main thread only.
         /// </summary>
-        internal ScrollRect[] ScrollRects { get; set; }
+        public ScrollRect[] ScrollRects { get; set; }
         /// <summary>
         /// Sticky position constraint information
         /// </summary>
-        internal StickyPositionConstraint StickyPositionConstraint { get; set; }
+        public StickyPositionConstraint StickyPositionConstraint { get; set; }
     }
     /// <summary>
     /// Provides the reasons why the given layer was composited.
@@ -8126,7 +8126,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer for which we want to get the reasons it was composited.
         /// </summary>
-        internal string LayerId { get; set; }
+        public string LayerId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeCompositingReasonsRequest"/>
@@ -8136,7 +8136,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// A list of strings specifying reasons for the given layer to become composited.
         /// </summary>
-        internal string[] CompositingReasons { get; set; }
+        public string[] CompositingReasons { get; set; }
     }
     /// <summary>
     /// Disables compositing tree inspection.
@@ -8185,7 +8185,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// An array of tiles composing the snapshot.
         /// </summary>
-        internal PictureTile[] Tiles { get; set; }
+        public PictureTile[] Tiles { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeLoadSnapshotRequest"/>
@@ -8195,7 +8195,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the snapshot.
         /// </summary>
-        internal string SnapshotId { get; set; }
+        public string SnapshotId { get; set; }
     }
     /// <summary>
     /// Returns the layer snapshot identifier.
@@ -8210,7 +8210,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer.
         /// </summary>
-        internal string LayerId { get; set; }
+        public string LayerId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeMakeSnapshotRequest"/>
@@ -8220,7 +8220,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer snapshot.
         /// </summary>
-        internal string SnapshotId { get; set; }
+        public string SnapshotId { get; set; }
     }
     /// <summary>
     /// 
@@ -8235,19 +8235,19 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer snapshot.
         /// </summary>
-        internal string SnapshotId { get; set; }
+        public string SnapshotId { get; set; }
         /// <summary>
         /// The maximum number of times to replay the snapshot (1, if not specified).
         /// </summary>
-        internal int MinRepeatCount { get; set; }
+        public int MinRepeatCount { get; set; }
         /// <summary>
         /// The minimum duration (in seconds) to replay the snapshot.
         /// </summary>
-        internal double MinDuration { get; set; }
+        public double MinDuration { get; set; }
         /// <summary>
         /// The clip rectangle to apply when replaying the snapshot.
         /// </summary>
-        internal DOM.Rect ClipRect { get; set; }
+        public DOM.Rect ClipRect { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeProfileSnapshotRequest"/>
@@ -8257,7 +8257,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The array of paint profiles, one per run.
         /// </summary>
-        internal double[][] Timings { get; set; }
+        public double[][] Timings { get; set; }
     }
     /// <summary>
     /// Releases layer snapshot captured by the back-end.
@@ -8272,7 +8272,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer snapshot.
         /// </summary>
-        internal string SnapshotId { get; set; }
+        public string SnapshotId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeReleaseSnapshotRequest"/>
@@ -8293,19 +8293,19 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer snapshot.
         /// </summary>
-        internal string SnapshotId { get; set; }
+        public string SnapshotId { get; set; }
         /// <summary>
         /// The first step to replay from (replay from the very start if not specified).
         /// </summary>
-        internal int FromStep { get; set; }
+        public int FromStep { get; set; }
         /// <summary>
         /// The last step to replay to (replay till the end if not specified).
         /// </summary>
-        internal int ToStep { get; set; }
+        public int ToStep { get; set; }
         /// <summary>
         /// The scale to apply while replaying (defaults to 1).
         /// </summary>
-        internal double Scale { get; set; }
+        public double Scale { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeReplaySnapshotRequest"/>
@@ -8315,7 +8315,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// A data: URL for resulting image.
         /// </summary>
-        internal string DataURL { get; set; }
+        public string DataURL { get; set; }
     }
     /// <summary>
     /// Replays the layer snapshot and returns canvas log.
@@ -8330,7 +8330,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the layer snapshot.
         /// </summary>
-        internal string SnapshotId { get; set; }
+        public string SnapshotId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LayerTreeSnapshotCommandLogRequest"/>
@@ -8340,7 +8340,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The array of canvas function calls.
         /// </summary>
-        internal object[] CommandLog { get; set; }
+        public object[] CommandLog { get; set; }
     }
     /// <summary>
     /// 
@@ -8354,11 +8354,11 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// The id of the painted layer.
         /// </summary>
-        internal string LayerId { get; set; }
+        public string LayerId { get; set; }
         /// <summary>
         /// Clip rectangle.
         /// </summary>
-        internal DOM.Rect Clip { get; set; }
+        public DOM.Rect Clip { get; set; }
     }
     /// <summary>
     /// 
@@ -8372,7 +8372,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
         /// <summary>
         /// Layer tree, absent if not in the comspositing mode.
         /// </summary>
-        internal Layer[] Layers { get; set; }
+        public Layer[] Layers { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Log
@@ -8385,43 +8385,43 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
         /// <summary>
         /// Log entry source.
         /// </summary>
-        internal string Source { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// Log entry severity.
         /// </summary>
-        internal string Level { get; set; }
+        public string Level { get; set; }
         /// <summary>
         /// Logged text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Timestamp when this entry was added.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// URL of the resource if known.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Line number in the resource.
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// JavaScript stack trace.
         /// </summary>
-        internal Runtime.StackTrace StackTrace { get; set; }
+        public Runtime.StackTrace StackTrace { get; set; }
         /// <summary>
         /// Identifier of the network request associated with this entry.
         /// </summary>
-        internal string NetworkRequestId { get; set; }
+        public string NetworkRequestId { get; set; }
         /// <summary>
         /// Identifier of the worker associated with this entry.
         /// </summary>
-        internal string WorkerId { get; set; }
+        public string WorkerId { get; set; }
         /// <summary>
         /// Call arguments.
         /// </summary>
-        internal Runtime.RemoteObject[] Args { get; set; }
+        public Runtime.RemoteObject[] Args { get; set; }
     }
     /// <summary>
     /// Violation configuration setting.
@@ -8431,11 +8431,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
         /// <summary>
         /// Violation type.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Time threshold to trigger upon.
         /// </summary>
-        internal double Threshold { get; set; }
+        public double Threshold { get; set; }
     }
     /// <summary>
     /// Clears the log.
@@ -8502,7 +8502,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
         /// <summary>
         /// Configuration for violations.
         /// </summary>
-        internal ViolationSetting[] Config { get; set; }
+        public ViolationSetting[] Config { get; set; }
     }
     /// <summary>
     /// Response from <see cref="LogStartViolationsReportRequest"/>
@@ -8539,7 +8539,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
         /// <summary>
         /// The entry.
         /// </summary>
-        internal LogEntry Entry { get; set; }
+        public LogEntry Entry { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Memory
@@ -8560,15 +8560,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// Size of the sampled allocation.
         /// </summary>
-        internal double Size { get; set; }
+        public double Size { get; set; }
         /// <summary>
         /// Total bytes attributed to this sample.
         /// </summary>
-        internal double Total { get; set; }
+        public double Total { get; set; }
         /// <summary>
         /// Execution stack at the point of allocation.
         /// </summary>
-        internal string[] Stack { get; set; }
+        public string[] Stack { get; set; }
     }
     /// <summary>
     /// Array of heap profile samples.
@@ -8578,11 +8578,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// 
         /// </summary>
-        internal SamplingProfileNode[] Samples { get; set; }
+        public SamplingProfileNode[] Samples { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal Module[] Modules { get; set; }
+        public Module[] Modules { get; set; }
     }
     /// <summary>
     /// Executable module information
@@ -8592,20 +8592,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// Name of the module.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// UUID of the module.
         /// </summary>
-        internal string Uuid { get; set; }
+        public string Uuid { get; set; }
         /// <summary>
         /// Base address where the module is loaded into memory. Encoded as a decimal
         /// or hexadecimal (0x prefixed) string.
         /// </summary>
-        internal string BaseAddress { get; set; }
+        public string BaseAddress { get; set; }
         /// <summary>
         /// Size of the module in bytes.
         /// </summary>
-        internal double Size { get; set; }
+        public double Size { get; set; }
     }
     /// <summary>
     /// 
@@ -8626,15 +8626,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// 
         /// </summary>
-        internal int Documents { get; set; }
+        public int Documents { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int Nodes { get; set; }
+        public int Nodes { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int JsEventListeners { get; set; }
+        public int JsEventListeners { get; set; }
     }
     /// <summary>
     /// 
@@ -8683,7 +8683,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// If true, memory pressure notifications will be suppressed.
         /// </summary>
-        internal bool Suppressed { get; set; }
+        public bool Suppressed { get; set; }
     }
     /// <summary>
     /// Response from <see cref="MemorySetPressureNotificationsSuppressedRequest"/>
@@ -8704,7 +8704,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// Memory pressure level of the notification.
         /// </summary>
-        internal string Level { get; set; }
+        public string Level { get; set; }
     }
     /// <summary>
     /// Response from <see cref="MemorySimulatePressureNotificationRequest"/>
@@ -8725,11 +8725,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// Average number of bytes between samples.
         /// </summary>
-        internal int SamplingInterval { get; set; }
+        public int SamplingInterval { get; set; }
         /// <summary>
         /// Do not randomize intervals between samples.
         /// </summary>
-        internal bool SuppressRandomness { get; set; }
+        public bool SuppressRandomness { get; set; }
     }
     /// <summary>
     /// Response from <see cref="MemoryStartSamplingRequest"/>
@@ -8774,7 +8774,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// 
         /// </summary>
-        internal SamplingProfile Profile { get; set; }
+        public SamplingProfile Profile { get; set; }
     }
     /// <summary>
     /// Retrieve native memory allocations profile
@@ -8796,7 +8796,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// 
         /// </summary>
-        internal SamplingProfile Profile { get; set; }
+        public SamplingProfile Profile { get; set; }
     }
     /// <summary>
     /// Retrieve native memory allocations profile collected since last
@@ -8818,7 +8818,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
         /// <summary>
         /// 
         /// </summary>
-        internal SamplingProfile Profile { get; set; }
+        public SamplingProfile Profile { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Network
@@ -8906,67 +8906,67 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// Timing's requestTime is a baseline in seconds, while the other numbers are ticks in
         /// milliseconds relatively to this requestTime.
         /// </summary>
-        internal double RequestTime { get; set; }
+        public double RequestTime { get; set; }
         /// <summary>
         /// Started resolving proxy.
         /// </summary>
-        internal double ProxyStart { get; set; }
+        public double ProxyStart { get; set; }
         /// <summary>
         /// Finished resolving proxy.
         /// </summary>
-        internal double ProxyEnd { get; set; }
+        public double ProxyEnd { get; set; }
         /// <summary>
         /// Started DNS address resolve.
         /// </summary>
-        internal double DnsStart { get; set; }
+        public double DnsStart { get; set; }
         /// <summary>
         /// Finished DNS address resolve.
         /// </summary>
-        internal double DnsEnd { get; set; }
+        public double DnsEnd { get; set; }
         /// <summary>
         /// Started connecting to the remote host.
         /// </summary>
-        internal double ConnectStart { get; set; }
+        public double ConnectStart { get; set; }
         /// <summary>
         /// Connected to the remote host.
         /// </summary>
-        internal double ConnectEnd { get; set; }
+        public double ConnectEnd { get; set; }
         /// <summary>
         /// Started SSL handshake.
         /// </summary>
-        internal double SslStart { get; set; }
+        public double SslStart { get; set; }
         /// <summary>
         /// Finished SSL handshake.
         /// </summary>
-        internal double SslEnd { get; set; }
+        public double SslEnd { get; set; }
         /// <summary>
         /// Started running ServiceWorker.
         /// </summary>
-        internal double WorkerStart { get; set; }
+        public double WorkerStart { get; set; }
         /// <summary>
         /// Finished Starting ServiceWorker.
         /// </summary>
-        internal double WorkerReady { get; set; }
+        public double WorkerReady { get; set; }
         /// <summary>
         /// Started sending request.
         /// </summary>
-        internal double SendStart { get; set; }
+        public double SendStart { get; set; }
         /// <summary>
         /// Finished sending request.
         /// </summary>
-        internal double SendEnd { get; set; }
+        public double SendEnd { get; set; }
         /// <summary>
         /// Time the server started pushing request.
         /// </summary>
-        internal double PushStart { get; set; }
+        public double PushStart { get; set; }
         /// <summary>
         /// Time the server finished pushing request.
         /// </summary>
-        internal double PushEnd { get; set; }
+        public double PushEnd { get; set; }
         /// <summary>
         /// Finished receiving response headers.
         /// </summary>
-        internal double ReceiveHeadersEnd { get; set; }
+        public double ReceiveHeadersEnd { get; set; }
     }
     /// <summary>
     /// Loading priority of a resource request.
@@ -8987,43 +8987,43 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request URL (without fragment).
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Fragment of the requested URL starting with hash, if present.
         /// </summary>
-        internal string UrlFragment { get; set; }
+        public string UrlFragment { get; set; }
         /// <summary>
         /// HTTP request method.
         /// </summary>
-        internal string Method { get; set; }
+        public string Method { get; set; }
         /// <summary>
         /// HTTP request headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
         /// <summary>
         /// HTTP POST request data.
         /// </summary>
-        internal string PostData { get; set; }
+        public string PostData { get; set; }
         /// <summary>
         /// True when the request has POST data. Note that postData might still be omitted when this flag is true when the data is too long.
         /// </summary>
-        internal bool HasPostData { get; set; }
+        public bool HasPostData { get; set; }
         /// <summary>
         /// The mixed content type of the request.
         /// </summary>
-        internal string MixedContentType { get; set; }
+        public string MixedContentType { get; set; }
         /// <summary>
         /// Priority of the resource request at the time request is sent.
         /// </summary>
-        internal string InitialPriority { get; set; }
+        public string InitialPriority { get; set; }
         /// <summary>
         /// The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/
         /// </summary>
-        internal string ReferrerPolicy { get; set; }
+        public string ReferrerPolicy { get; set; }
         /// <summary>
         /// Whether is loaded via link preload.
         /// </summary>
-        internal bool IsLinkPreload { get; set; }
+        public bool IsLinkPreload { get; set; }
     }
     /// <summary>
     /// Details of a signed certificate timestamp (SCT).
@@ -9033,35 +9033,35 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Validation status.
         /// </summary>
-        internal string Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// Origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Log name / description.
         /// </summary>
-        internal string LogDescription { get; set; }
+        public string LogDescription { get; set; }
         /// <summary>
         /// Log ID.
         /// </summary>
-        internal string LogId { get; set; }
+        public string LogId { get; set; }
         /// <summary>
         /// Issuance date.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Hash algorithm.
         /// </summary>
-        internal string HashAlgorithm { get; set; }
+        public string HashAlgorithm { get; set; }
         /// <summary>
         /// Signature algorithm.
         /// </summary>
-        internal string SignatureAlgorithm { get; set; }
+        public string SignatureAlgorithm { get; set; }
         /// <summary>
         /// Signature data.
         /// </summary>
-        internal string SignatureData { get; set; }
+        public string SignatureData { get; set; }
     }
     /// <summary>
     /// Security details about a request.
@@ -9071,55 +9071,55 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Protocol name (e.g. "TLS 1.2" or "QUIC").
         /// </summary>
-        internal string Protocol { get; set; }
+        public string Protocol { get; set; }
         /// <summary>
         /// Key Exchange used by the connection, or the empty string if not applicable.
         /// </summary>
-        internal string KeyExchange { get; set; }
+        public string KeyExchange { get; set; }
         /// <summary>
         /// (EC)DH group used by the connection, if applicable.
         /// </summary>
-        internal string KeyExchangeGroup { get; set; }
+        public string KeyExchangeGroup { get; set; }
         /// <summary>
         /// Cipher name.
         /// </summary>
-        internal string Cipher { get; set; }
+        public string Cipher { get; set; }
         /// <summary>
         /// TLS MAC. Note that AEAD ciphers do not have separate MACs.
         /// </summary>
-        internal string Mac { get; set; }
+        public string Mac { get; set; }
         /// <summary>
         /// Certificate ID value.
         /// </summary>
-        internal int CertificateId { get; set; }
+        public int CertificateId { get; set; }
         /// <summary>
         /// Certificate subject name.
         /// </summary>
-        internal string SubjectName { get; set; }
+        public string SubjectName { get; set; }
         /// <summary>
         /// Subject Alternative Name (SAN) DNS names and IP addresses.
         /// </summary>
-        internal string[] SanList { get; set; }
+        public string[] SanList { get; set; }
         /// <summary>
         /// Name of the issuing CA.
         /// </summary>
-        internal string Issuer { get; set; }
+        public string Issuer { get; set; }
         /// <summary>
         /// Certificate valid from date.
         /// </summary>
-        internal long ValidFrom { get; set; }
+        public long ValidFrom { get; set; }
         /// <summary>
         /// Certificate valid to (expiration) date
         /// </summary>
-        internal long ValidTo { get; set; }
+        public long ValidTo { get; set; }
         /// <summary>
         /// List of signed certificate timestamps (SCTs).
         /// </summary>
-        internal SignedCertificateTimestamp[] SignedCertificateTimestampList { get; set; }
+        public SignedCertificateTimestamp[] SignedCertificateTimestampList { get; set; }
         /// <summary>
         /// Whether the request complied with Certificate Transparency policy
         /// </summary>
-        internal string CertificateTransparencyCompliance { get; set; }
+        public string CertificateTransparencyCompliance { get; set; }
     }
     /// <summary>
     /// Whether the request complied with Certificate Transparency policy.
@@ -9152,83 +9152,83 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Response URL. This URL can be different from CachedResource.url in case of redirect.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// HTTP response status code.
         /// </summary>
-        internal int Status { get; set; }
+        public int Status { get; set; }
         /// <summary>
         /// HTTP response status text.
         /// </summary>
-        internal string StatusText { get; set; }
+        public string StatusText { get; set; }
         /// <summary>
         /// HTTP response headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
         /// <summary>
         /// HTTP response headers text.
         /// </summary>
-        internal string HeadersText { get; set; }
+        public string HeadersText { get; set; }
         /// <summary>
         /// Resource mimeType as determined by the browser.
         /// </summary>
-        internal string MimeType { get; set; }
+        public string MimeType { get; set; }
         /// <summary>
         /// Refined HTTP request headers that were actually transmitted over the network.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
         /// <summary>
         /// HTTP request headers text.
         /// </summary>
-        internal string RequestHeadersText { get; set; }
+        public string RequestHeadersText { get; set; }
         /// <summary>
         /// Specifies whether physical connection was actually reused for this request.
         /// </summary>
-        internal bool ConnectionReused { get; set; }
+        public bool ConnectionReused { get; set; }
         /// <summary>
         /// Physical connection id that was actually used for this request.
         /// </summary>
-        internal double ConnectionId { get; set; }
+        public double ConnectionId { get; set; }
         /// <summary>
         /// Remote IP address.
         /// </summary>
-        internal string RemoteIPAddress { get; set; }
+        public string RemoteIPAddress { get; set; }
         /// <summary>
         /// Remote port.
         /// </summary>
-        internal int RemotePort { get; set; }
+        public int RemotePort { get; set; }
         /// <summary>
         /// Specifies that the request was served from the disk cache.
         /// </summary>
-        internal bool FromDiskCache { get; set; }
+        public bool FromDiskCache { get; set; }
         /// <summary>
         /// Specifies that the request was served from the ServiceWorker.
         /// </summary>
-        internal bool FromServiceWorker { get; set; }
+        public bool FromServiceWorker { get; set; }
         /// <summary>
         /// Specifies that the request was served from the prefetch cache.
         /// </summary>
-        internal bool FromPrefetchCache { get; set; }
+        public bool FromPrefetchCache { get; set; }
         /// <summary>
         /// Total number of bytes received for this request so far.
         /// </summary>
-        internal double EncodedDataLength { get; set; }
+        public double EncodedDataLength { get; set; }
         /// <summary>
         /// Timing information for the given request.
         /// </summary>
-        internal ResourceTiming Timing { get; set; }
+        public ResourceTiming Timing { get; set; }
         /// <summary>
         /// Protocol used to fetch this request.
         /// </summary>
-        internal string Protocol { get; set; }
+        public string Protocol { get; set; }
         /// <summary>
         /// Security state of the request resource.
         /// </summary>
-        internal string SecurityState { get; set; }
+        public string SecurityState { get; set; }
         /// <summary>
         /// Security details for the request.
         /// </summary>
-        internal SecurityDetails SecurityDetails { get; set; }
+        public SecurityDetails SecurityDetails { get; set; }
     }
     /// <summary>
     /// WebSocket request data.
@@ -9238,7 +9238,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// HTTP request headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
     }
     /// <summary>
     /// WebSocket response data.
@@ -9248,27 +9248,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// HTTP response status code.
         /// </summary>
-        internal int Status { get; set; }
+        public int Status { get; set; }
         /// <summary>
         /// HTTP response status text.
         /// </summary>
-        internal string StatusText { get; set; }
+        public string StatusText { get; set; }
         /// <summary>
         /// HTTP response headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
         /// <summary>
         /// HTTP response headers text.
         /// </summary>
-        internal string HeadersText { get; set; }
+        public string HeadersText { get; set; }
         /// <summary>
         /// HTTP request headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
         /// <summary>
         /// HTTP request headers text.
         /// </summary>
-        internal string RequestHeadersText { get; set; }
+        public string RequestHeadersText { get; set; }
     }
     /// <summary>
     /// WebSocket message data. This represents an entire WebSocket message, not just a fragmented frame as the name suggests.
@@ -9278,17 +9278,17 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// WebSocket message opcode.
         /// </summary>
-        internal double Opcode { get; set; }
+        public double Opcode { get; set; }
         /// <summary>
         /// WebSocket message mask.
         /// </summary>
-        internal bool Mask { get; set; }
+        public bool Mask { get; set; }
         /// <summary>
         /// WebSocket message payload data.
         /// If the opcode is 1, this is a text message and payloadData is a UTF-8 string.
         /// If the opcode isn't 1, then payloadData is a base64 encoded string representing binary data.
         /// </summary>
-        internal string PayloadData { get; set; }
+        public string PayloadData { get; set; }
     }
     /// <summary>
     /// Information about the cached resource.
@@ -9298,19 +9298,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Resource URL. This is the url of the original network request.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Type of this resource.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Cached response data.
         /// </summary>
-        internal Response Response { get; set; }
+        public Response Response { get; set; }
         /// <summary>
         /// Cached response body size.
         /// </summary>
-        internal double BodySize { get; set; }
+        public double BodySize { get; set; }
     }
     /// <summary>
     /// Information about the request initiator.
@@ -9320,20 +9320,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Type of this initiator.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Initiator JavaScript stack trace, set for Script only.
         /// </summary>
-        internal Runtime.StackTrace Stack { get; set; }
+        public Runtime.StackTrace Stack { get; set; }
         /// <summary>
         /// Initiator URL, set for Parser type or for Script type (when script is importing module) or for SignedExchange type.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Initiator line number, set for Parser type or for Script type (when script is importing
         /// module) (0-based).
         /// </summary>
-        internal double LineNumber { get; set; }
+        public double LineNumber { get; set; }
     }
     /// <summary>
     /// Cookie object
@@ -9343,43 +9343,43 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Cookie name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Cookie value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// Cookie domain.
         /// </summary>
-        internal string Domain { get; set; }
+        public string Domain { get; set; }
         /// <summary>
         /// Cookie path.
         /// </summary>
-        internal string Path { get; set; }
+        public string Path { get; set; }
         /// <summary>
         /// Cookie expiration date as the number of seconds since the UNIX epoch.
         /// </summary>
-        internal double Expires { get; set; }
+        public double Expires { get; set; }
         /// <summary>
         /// Cookie size.
         /// </summary>
-        internal int Size { get; set; }
+        public int Size { get; set; }
         /// <summary>
         /// True if cookie is http-only.
         /// </summary>
-        internal bool HttpOnly { get; set; }
+        public bool HttpOnly { get; set; }
         /// <summary>
         /// True if cookie is secure.
         /// </summary>
-        internal bool Secure { get; set; }
+        public bool Secure { get; set; }
         /// <summary>
         /// True in case of session cookie.
         /// </summary>
-        internal bool Session { get; set; }
+        public bool Session { get; set; }
         /// <summary>
         /// Cookie SameSite type.
         /// </summary>
-        internal string SameSite { get; set; }
+        public string SameSite { get; set; }
     }
     /// <summary>
     /// Types of reasons why a cookie may not be stored from a response.
@@ -9424,18 +9424,18 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// The reason(s) this cookie was blocked.
         /// </summary>
-        internal string[] BlockedReasons { get; set; }
+        public string[] BlockedReasons { get; set; }
         /// <summary>
         /// The string representing this individual cookie as it would appear in the header.
         /// This is not the entire "cookie" or "set-cookie" header which could have multiple cookies.
         /// </summary>
-        internal string CookieLine { get; set; }
+        public string CookieLine { get; set; }
         /// <summary>
         /// The cookie object which represents the cookie which was not stored. It is optional because
         /// sometimes complete cookie information is not available, such as in the case of parsing
         /// errors.
         /// </summary>
-        internal Cookie Cookie { get; set; }
+        public Cookie Cookie { get; set; }
     }
     /// <summary>
     /// A cookie with was not sent with a request with the corresponding reason.
@@ -9445,11 +9445,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// The reason(s) the cookie was blocked.
         /// </summary>
-        internal string[] BlockedReasons { get; set; }
+        public string[] BlockedReasons { get; set; }
         /// <summary>
         /// The cookie object representing the cookie which was not sent.
         /// </summary>
-        internal Cookie Cookie { get; set; }
+        public Cookie Cookie { get; set; }
     }
     /// <summary>
     /// Cookie parameter object
@@ -9459,40 +9459,40 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Cookie name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Cookie value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// The request-URI to associate with the setting of the cookie. This value can affect the
         /// default domain and path values of the created cookie.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Cookie domain.
         /// </summary>
-        internal string Domain { get; set; }
+        public string Domain { get; set; }
         /// <summary>
         /// Cookie path.
         /// </summary>
-        internal string Path { get; set; }
+        public string Path { get; set; }
         /// <summary>
         /// True if cookie is secure.
         /// </summary>
-        internal bool Secure { get; set; }
+        public bool Secure { get; set; }
         /// <summary>
         /// True if cookie is http-only.
         /// </summary>
-        internal bool HttpOnly { get; set; }
+        public bool HttpOnly { get; set; }
         /// <summary>
         /// Cookie SameSite type.
         /// </summary>
-        internal string SameSite { get; set; }
+        public string SameSite { get; set; }
         /// <summary>
         /// Cookie expiration date, session cookie if not set
         /// </summary>
-        internal long Expires { get; set; }
+        public long Expires { get; set; }
     }
     /// <summary>
     /// Authorization challenge for HTTP status code 401 or 407.
@@ -9502,19 +9502,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Source of the authentication challenge.
         /// </summary>
-        internal string Source { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// Origin of the challenger.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// The authentication scheme used, such as basic or digest
         /// </summary>
-        internal string Scheme { get; set; }
+        public string Scheme { get; set; }
         /// <summary>
         /// The realm of the challenge. May be empty.
         /// </summary>
-        internal string Realm { get; set; }
+        public string Realm { get; set; }
     }
     /// <summary>
     /// Response to an AuthChallenge.
@@ -9526,17 +9526,17 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// deferring to the default behavior of the net stack, which will likely either the Cancel
         /// authentication or display a popup dialog box.
         /// </summary>
-        internal string Response { get; set; }
+        public string Response { get; set; }
         /// <summary>
         /// The username to provide, possibly empty. Should only be set if response is
         /// ProvideCredentials.
         /// </summary>
-        internal string Username { get; set; }
+        public string Username { get; set; }
         /// <summary>
         /// The password to provide, possibly empty. Should only be set if response is
         /// ProvideCredentials.
         /// </summary>
-        internal string Password { get; set; }
+        public string Password { get; set; }
     }
     /// <summary>
     /// Stages of the interception to begin intercepting. Request will intercept before the request is
@@ -9556,15 +9556,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// Wildcards ('*' -&gt; zero or more, '?' -&gt; exactly one) are allowed. Escape character is
         /// backslash. Omitting is equivalent to "*".
         /// </summary>
-        internal string UrlPattern { get; set; }
+        public string UrlPattern { get; set; }
         /// <summary>
         /// If set, only requests for matching resource types will be intercepted.
         /// </summary>
-        internal string ResourceType { get; set; }
+        public string ResourceType { get; set; }
         /// <summary>
         /// Stage at wich to begin intercepting requests. Default is Request.
         /// </summary>
-        internal string InterceptionStage { get; set; }
+        public string InterceptionStage { get; set; }
     }
     /// <summary>
     /// Information about a signed exchange signature.
@@ -9575,39 +9575,39 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Signed exchange signature label.
         /// </summary>
-        internal string Label { get; set; }
+        public string Label { get; set; }
         /// <summary>
         /// The hex string of signed exchange signature.
         /// </summary>
-        internal string Signature { get; set; }
+        public string Signature { get; set; }
         /// <summary>
         /// Signed exchange signature integrity.
         /// </summary>
-        internal string Integrity { get; set; }
+        public string Integrity { get; set; }
         /// <summary>
         /// Signed exchange signature cert Url.
         /// </summary>
-        internal string CertUrl { get; set; }
+        public string CertUrl { get; set; }
         /// <summary>
         /// The hex string of signed exchange signature cert sha256.
         /// </summary>
-        internal string CertSha256 { get; set; }
+        public string CertSha256 { get; set; }
         /// <summary>
         /// Signed exchange signature validity Url.
         /// </summary>
-        internal string ValidityUrl { get; set; }
+        public string ValidityUrl { get; set; }
         /// <summary>
         /// Signed exchange signature date.
         /// </summary>
-        internal int Date { get; set; }
+        public int Date { get; set; }
         /// <summary>
         /// Signed exchange signature expires.
         /// </summary>
-        internal int Expires { get; set; }
+        public int Expires { get; set; }
         /// <summary>
         /// The encoded certificates.
         /// </summary>
-        internal string[] Certificates { get; set; }
+        public string[] Certificates { get; set; }
     }
     /// <summary>
     /// Information about a signed exchange header.
@@ -9618,23 +9618,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Signed exchange request URL.
         /// </summary>
-        internal string RequestUrl { get; set; }
+        public string RequestUrl { get; set; }
         /// <summary>
         /// Signed exchange response code.
         /// </summary>
-        internal int ResponseCode { get; set; }
+        public int ResponseCode { get; set; }
         /// <summary>
         /// Signed exchange response headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
         /// <summary>
         /// Signed exchange response signature.
         /// </summary>
-        internal SignedExchangeSignature[] Signatures { get; set; }
+        public SignedExchangeSignature[] Signatures { get; set; }
         /// <summary>
         /// Signed exchange header integrity hash in the form of "sha256-&lt;base64-hash-value&gt;".
         /// </summary>
-        internal string HeaderIntegrity { get; set; }
+        public string HeaderIntegrity { get; set; }
     }
     /// <summary>
     /// Field type for a signed exchange related error.
@@ -9656,15 +9656,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Error message.
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// The index of the signature which caused the error.
         /// </summary>
-        internal int SignatureIndex { get; set; }
+        public int SignatureIndex { get; set; }
         /// <summary>
         /// The field which caused the error.
         /// </summary>
-        internal string ErrorField { get; set; }
+        public string ErrorField { get; set; }
     }
     /// <summary>
     /// Information about a signed exchange response.
@@ -9674,19 +9674,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// The outer response of signed HTTP exchange which was received from network.
         /// </summary>
-        internal Response OuterResponse { get; set; }
+        public Response OuterResponse { get; set; }
         /// <summary>
         /// Information about the signed exchange header.
         /// </summary>
-        internal SignedExchangeHeader Header { get; set; }
+        public SignedExchangeHeader Header { get; set; }
         /// <summary>
         /// Security details for the signed exchange header.
         /// </summary>
-        internal SecurityDetails SecurityDetails { get; set; }
+        public SecurityDetails SecurityDetails { get; set; }
         /// <summary>
         /// Errors occurred while handling the signed exchagne.
         /// </summary>
-        internal SignedExchangeError[] Errors { get; set; }
+        public SignedExchangeError[] Errors { get; set; }
     }
     /// <summary>
     /// Tells whether clearing browser cache is supported.
@@ -9707,7 +9707,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// True if browser cache can be cleared.
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
     }
     /// <summary>
     /// Tells whether clearing browser cookies is supported.
@@ -9728,7 +9728,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// True if browser cookies can be cleared.
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
     }
     /// <summary>
     /// Tells whether emulation of network conditions is supported.
@@ -9749,7 +9749,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// True if emulation of network conditions is supported.
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
     }
     /// <summary>
     /// Clears browser cache.
@@ -9802,41 +9802,41 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// 
         /// </summary>
-        internal string InterceptionId { get; set; }
+        public string InterceptionId { get; set; }
         /// <summary>
         /// If set this causes the request to fail with the given reason. Passing `Aborted` for requests
         /// marked with `isNavigationRequest` also cancels the navigation. Must not be set in response
         /// to an authChallenge.
         /// </summary>
-        internal string ErrorReason { get; set; }
+        public string ErrorReason { get; set; }
         /// <summary>
         /// If set the requests completes using with the provided base64 encoded raw response, including
         /// HTTP status line and headers etc... Must not be set in response to an authChallenge.
         /// </summary>
-        internal byte[] RawResponse { get; set; }
+        public byte[] RawResponse { get; set; }
         /// <summary>
         /// If set the request url will be modified in a way that's not observable by page. Must not be
         /// set in response to an authChallenge.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// If set this allows the request method to be overridden. Must not be set in response to an
         /// authChallenge.
         /// </summary>
-        internal string Method { get; set; }
+        public string Method { get; set; }
         /// <summary>
         /// If set this allows postData to be set. Must not be set in response to an authChallenge.
         /// </summary>
-        internal string PostData { get; set; }
+        public string PostData { get; set; }
         /// <summary>
         /// If set this allows the request headers to be changed. Must not be set in response to an
         /// authChallenge.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
         /// <summary>
         /// Response to a requestIntercepted with an authChallenge. Must not be set otherwise.
         /// </summary>
-        internal AuthChallengeResponse AuthChallengeResponse { get; set; }
+        public AuthChallengeResponse AuthChallengeResponse { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkContinueInterceptedRequestRequest"/>
@@ -9857,20 +9857,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Name of the cookies to remove.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// If specified, deletes all the cookies with the given name where domain and path match
         /// provided URL.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// If specified, deletes only cookies with the exact domain.
         /// </summary>
-        internal string Domain { get; set; }
+        public string Domain { get; set; }
         /// <summary>
         /// If specified, deletes only cookies with the exact path.
         /// </summary>
-        internal string Path { get; set; }
+        public string Path { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkDeleteCookiesRequest"/>
@@ -9908,23 +9908,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// True to emulate internet disconnection.
         /// </summary>
-        internal bool Offline { get; set; }
+        public bool Offline { get; set; }
         /// <summary>
         /// Minimum latency from request sent to response headers received (ms).
         /// </summary>
-        internal double Latency { get; set; }
+        public double Latency { get; set; }
         /// <summary>
         /// Maximal aggregated download throughput (bytes/sec). -1 disables download throttling.
         /// </summary>
-        internal double DownloadThroughput { get; set; }
+        public double DownloadThroughput { get; set; }
         /// <summary>
         /// Maximal aggregated upload throughput (bytes/sec).  -1 disables upload throttling.
         /// </summary>
-        internal double UploadThroughput { get; set; }
+        public double UploadThroughput { get; set; }
         /// <summary>
         /// Connection type if known.
         /// </summary>
-        internal string ConnectionType { get; set; }
+        public string ConnectionType { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkEmulateNetworkConditionsRequest"/>
@@ -9945,15 +9945,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Buffer size in bytes to use when preserving network payloads (XHRs, etc).
         /// </summary>
-        internal int MaxTotalBufferSize { get; set; }
+        public int MaxTotalBufferSize { get; set; }
         /// <summary>
         /// Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc).
         /// </summary>
-        internal int MaxResourceBufferSize { get; set; }
+        public int MaxResourceBufferSize { get; set; }
         /// <summary>
         /// Longest post body size (in bytes) that would be included in requestWillBeSent notification
         /// </summary>
-        internal int MaxPostDataSize { get; set; }
+        public int MaxPostDataSize { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkEnableRequest"/>
@@ -9981,7 +9981,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Array of cookie objects.
         /// </summary>
-        internal Cookie[] Cookies { get; set; }
+        public Cookie[] Cookies { get; set; }
     }
     /// <summary>
     /// Returns the DER-encoded certificate.
@@ -9996,7 +9996,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Origin to get certificate for.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkGetCertificateRequest"/>
@@ -10006,7 +10006,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// 
         /// </summary>
-        internal string[] TableNames { get; set; }
+        public string[] TableNames { get; set; }
     }
     /// <summary>
     /// Returns all browser cookies for the current URL. Depending on the backend support, will return
@@ -10022,7 +10022,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// The list of URLs for which applicable cookies will be fetched
         /// </summary>
-        internal string[] Urls { get; set; }
+        public string[] Urls { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkGetCookiesRequest"/>
@@ -10032,7 +10032,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Array of cookie objects.
         /// </summary>
-        internal Cookie[] Cookies { get; set; }
+        public Cookie[] Cookies { get; set; }
     }
     /// <summary>
     /// Returns content served for the given request.
@@ -10047,7 +10047,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Identifier of the network request to get content for.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkGetResponseBodyRequest"/>
@@ -10057,11 +10057,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Response body.
         /// </summary>
-        internal string Body { get; set; }
+        public string Body { get; set; }
         /// <summary>
         /// True, if content was sent as base64.
         /// </summary>
-        internal bool Base64Encoded { get; set; }
+        public bool Base64Encoded { get; set; }
     }
     /// <summary>
     /// Returns post data sent with the request. Returns an error when no data was sent with the request.
@@ -10076,7 +10076,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Identifier of the network request to get content for.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkGetRequestPostDataRequest"/>
@@ -10086,7 +10086,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request body string, omitting files from multipart requests
         /// </summary>
-        internal string PostData { get; set; }
+        public string PostData { get; set; }
     }
     /// <summary>
     /// Returns content served for the given currently intercepted request.
@@ -10101,7 +10101,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Identifier for the intercepted request to get body for.
         /// </summary>
-        internal string InterceptionId { get; set; }
+        public string InterceptionId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkGetResponseBodyForInterceptionRequest"/>
@@ -10111,11 +10111,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Response body.
         /// </summary>
-        internal string Body { get; set; }
+        public string Body { get; set; }
         /// <summary>
         /// True, if content was sent as base64.
         /// </summary>
-        internal bool Base64Encoded { get; set; }
+        public bool Base64Encoded { get; set; }
     }
     /// <summary>
     /// Returns a handle to the stream representing the response body. Note that after this command,
@@ -10133,7 +10133,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// 
         /// </summary>
-        internal string InterceptionId { get; set; }
+        public string InterceptionId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkTakeResponseBodyForInterceptionAsStreamRequest"/>
@@ -10143,7 +10143,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// 
         /// </summary>
-        internal string Stream { get; set; }
+        public string Stream { get; set; }
     }
     /// <summary>
     /// This method sends a new XMLHttpRequest which is identical to the original one. The following
@@ -10160,7 +10160,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Identifier of XHR to replay.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkReplayXHRRequest"/>
@@ -10181,19 +10181,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Identifier of the network response to search.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// String to search for.
         /// </summary>
-        internal string Query { get; set; }
+        public string Query { get; set; }
         /// <summary>
         /// If true, search is case sensitive.
         /// </summary>
-        internal bool CaseSensitive { get; set; }
+        public bool CaseSensitive { get; set; }
         /// <summary>
         /// If true, treats string parameter as regex.
         /// </summary>
-        internal bool IsRegex { get; set; }
+        public bool IsRegex { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSearchInResponseBodyRequest"/>
@@ -10203,7 +10203,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// List of search matches.
         /// </summary>
-        internal Debugger.SearchMatch[] Result { get; set; }
+        public Debugger.SearchMatch[] Result { get; set; }
     }
     /// <summary>
     /// Blocks URLs from loading.
@@ -10218,7 +10218,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// URL patterns to block. Wildcards ('*') are allowed.
         /// </summary>
-        internal string[] Urls { get; set; }
+        public string[] Urls { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetBlockedURLsRequest"/>
@@ -10239,7 +10239,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Bypass service worker and load from network.
         /// </summary>
-        internal bool Bypass { get; set; }
+        public bool Bypass { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetBypassServiceWorkerRequest"/>
@@ -10260,7 +10260,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Cache disabled state.
         /// </summary>
-        internal bool CacheDisabled { get; set; }
+        public bool CacheDisabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetCacheDisabledRequest"/>
@@ -10281,40 +10281,40 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Cookie name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Cookie value.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// The request-URI to associate with the setting of the cookie. This value can affect the
         /// default domain and path values of the created cookie.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Cookie domain.
         /// </summary>
-        internal string Domain { get; set; }
+        public string Domain { get; set; }
         /// <summary>
         /// Cookie path.
         /// </summary>
-        internal string Path { get; set; }
+        public string Path { get; set; }
         /// <summary>
         /// True if cookie is secure.
         /// </summary>
-        internal bool Secure { get; set; }
+        public bool Secure { get; set; }
         /// <summary>
         /// True if cookie is http-only.
         /// </summary>
-        internal bool HttpOnly { get; set; }
+        public bool HttpOnly { get; set; }
         /// <summary>
         /// Cookie SameSite type.
         /// </summary>
-        internal string SameSite { get; set; }
+        public string SameSite { get; set; }
         /// <summary>
         /// Cookie expiration date, session cookie if not set
         /// </summary>
-        internal long Expires { get; set; }
+        public long Expires { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetCookieRequest"/>
@@ -10324,7 +10324,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// True if successfully set cookie.
         /// </summary>
-        internal bool Success { get; set; }
+        public bool Success { get; set; }
     }
     /// <summary>
     /// Sets given cookies.
@@ -10339,7 +10339,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Cookies to be set.
         /// </summary>
-        internal CookieParam[] Cookies { get; set; }
+        public CookieParam[] Cookies { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetCookiesRequest"/>
@@ -10360,11 +10360,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Maximum total buffer size.
         /// </summary>
-        internal int MaxTotalSize { get; set; }
+        public int MaxTotalSize { get; set; }
         /// <summary>
         /// Maximum per-resource size.
         /// </summary>
-        internal int MaxResourceSize { get; set; }
+        public int MaxResourceSize { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetDataSizeLimitsForTestRequest"/>
@@ -10385,7 +10385,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Map with extra HTTP headers.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetExtraHTTPHeadersRequest"/>
@@ -10408,7 +10408,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// Requests matching any of these patterns will be forwarded and wait for the corresponding
         /// continueInterceptedRequest call.
         /// </summary>
-        internal RequestPattern[] Patterns { get; set; }
+        public RequestPattern[] Patterns { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetRequestInterceptionRequest"/>
@@ -10429,15 +10429,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// User agent to use.
         /// </summary>
-        internal string UserAgent { get; set; }
+        public string UserAgent { get; set; }
         /// <summary>
         /// Browser langugage to emulate.
         /// </summary>
-        internal string AcceptLanguage { get; set; }
+        public string AcceptLanguage { get; set; }
         /// <summary>
         /// The platform navigator.platform should return.
         /// </summary>
-        internal string Platform { get; set; }
+        public string Platform { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetUserAgentOverrideRequest"/>
@@ -10457,19 +10457,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Data chunk length.
         /// </summary>
-        internal int DataLength { get; set; }
+        public int DataLength { get; set; }
         /// <summary>
         /// Actual bytes received (might be less than dataLength for compressed encodings).
         /// </summary>
-        internal int EncodedDataLength { get; set; }
+        public int EncodedDataLength { get; set; }
     }
     /// <summary>
     /// Fired when EventSource message is received.
@@ -10483,23 +10483,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Message type.
         /// </summary>
-        internal string EventName { get; set; }
+        public string EventName { get; set; }
         /// <summary>
         /// Message identifier.
         /// </summary>
-        internal string EventId { get; set; }
+        public string EventId { get; set; }
         /// <summary>
         /// Message content.
         /// </summary>
-        internal string Data { get; set; }
+        public string Data { get; set; }
     }
     /// <summary>
     /// Fired when HTTP request has failed to load.
@@ -10513,27 +10513,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Resource type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// User friendly error message.
         /// </summary>
-        internal string ErrorText { get; set; }
+        public string ErrorText { get; set; }
         /// <summary>
         /// True if loading was canceled.
         /// </summary>
-        internal bool Canceled { get; set; }
+        public bool Canceled { get; set; }
         /// <summary>
         /// The reason why loading was blocked, if any.
         /// </summary>
-        internal string BlockedReason { get; set; }
+        public string BlockedReason { get; set; }
     }
     /// <summary>
     /// Fired when HTTP request has finished loading.
@@ -10547,20 +10547,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Total number of bytes received for this request.
         /// </summary>
-        internal double EncodedDataLength { get; set; }
+        public double EncodedDataLength { get; set; }
         /// <summary>
         /// Set when 1) response was blocked by Cross-Origin Read Blocking and also
         /// 2) this needs to be reported to the DevTools console.
         /// </summary>
-        internal bool ShouldReportCorbBlocking { get; set; }
+        public bool ShouldReportCorbBlocking { get; set; }
     }
     /// <summary>
     /// Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
@@ -10578,57 +10578,57 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// while processing that fetch, they will be reported with the same id as the original fetch.
         /// Likewise if HTTP authentication is needed then the same fetch id will be used.
         /// </summary>
-        internal string InterceptionId { get; set; }
+        public string InterceptionId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal Request Request { get; set; }
+        public Request Request { get; set; }
         /// <summary>
         /// The id of the frame that initiated the request.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// How the requested resource will be used.
         /// </summary>
-        internal string ResourceType { get; set; }
+        public string ResourceType { get; set; }
         /// <summary>
         /// Whether this is a navigation request, which can abort the navigation completely.
         /// </summary>
-        internal bool IsNavigationRequest { get; set; }
+        public bool IsNavigationRequest { get; set; }
         /// <summary>
         /// Set if the request is a navigation that will result in a download.
         /// Only present after response is received from the server (i.e. HeadersReceived stage).
         /// </summary>
-        internal bool IsDownload { get; set; }
+        public bool IsDownload { get; set; }
         /// <summary>
         /// Redirect location, only sent if a redirect was intercepted.
         /// </summary>
-        internal string RedirectUrl { get; set; }
+        public string RedirectUrl { get; set; }
         /// <summary>
         /// Details of the Authorization Challenge encountered. If this is set then
         /// continueInterceptedRequest must contain an authChallengeResponse.
         /// </summary>
-        internal AuthChallenge AuthChallenge { get; set; }
+        public AuthChallenge AuthChallenge { get; set; }
         /// <summary>
         /// Response error if intercepted at response stage or if redirect occurred while intercepting
         /// request.
         /// </summary>
-        internal string ResponseErrorReason { get; set; }
+        public string ResponseErrorReason { get; set; }
         /// <summary>
         /// Response code if intercepted at response stage or if redirect occurred while intercepting
         /// request or auth retry occurred.
         /// </summary>
-        internal int ResponseStatusCode { get; set; }
+        public int ResponseStatusCode { get; set; }
         /// <summary>
         /// Response headers if intercepted at the response stage or if redirect occurred while
         /// intercepting request or auth retry occurred.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
         /// <summary>
         /// If the intercepted request had a corresponding requestWillBeSent event fired for it, then
         /// this requestId will be the same as the requestId present in the requestWillBeSent event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Fired if request ended up loading from cache.
@@ -10642,7 +10642,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Fired when page is about to send HTTP request.
@@ -10656,47 +10656,47 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Loader identifier. Empty string if the request is fetched from worker.
         /// </summary>
-        internal string LoaderId { get; set; }
+        public string LoaderId { get; set; }
         /// <summary>
         /// URL of the document this request is loaded for.
         /// </summary>
-        internal string DocumentURL { get; set; }
+        public string DocumentURL { get; set; }
         /// <summary>
         /// Request data.
         /// </summary>
-        internal Request Request { get; set; }
+        public Request Request { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long WallTime { get; set; }
+        public long WallTime { get; set; }
         /// <summary>
         /// Request initiator.
         /// </summary>
-        internal Initiator Initiator { get; set; }
+        public Initiator Initiator { get; set; }
         /// <summary>
         /// Redirect response data.
         /// </summary>
-        internal Response RedirectResponse { get; set; }
+        public Response RedirectResponse { get; set; }
         /// <summary>
         /// Type of this resource.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Frame identifier.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Whether the request is initiated by a user gesture. Defaults to false.
         /// </summary>
-        internal bool HasUserGesture { get; set; }
+        public bool HasUserGesture { get; set; }
     }
     /// <summary>
     /// Fired when resource loading priority is changed
@@ -10710,15 +10710,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// New priority
         /// </summary>
-        internal string NewPriority { get; set; }
+        public string NewPriority { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// Fired when a signed exchange was received over the network
@@ -10732,11 +10732,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Information about the signed exchange response.
         /// </summary>
-        internal SignedExchangeInfo Info { get; set; }
+        public SignedExchangeInfo Info { get; set; }
     }
     /// <summary>
     /// Fired when HTTP response is available.
@@ -10750,27 +10750,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Loader identifier. Empty string if the request is fetched from worker.
         /// </summary>
-        internal string LoaderId { get; set; }
+        public string LoaderId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Resource type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Response data.
         /// </summary>
-        internal Response Response { get; set; }
+        public Response Response { get; set; }
         /// <summary>
         /// Frame identifier.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Fired when WebSocket is closed.
@@ -10784,11 +10784,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// Fired upon WebSocket creation.
@@ -10802,15 +10802,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// WebSocket request URL.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Request initiator.
         /// </summary>
-        internal Initiator Initiator { get; set; }
+        public Initiator Initiator { get; set; }
     }
     /// <summary>
     /// Fired when WebSocket message error occurs.
@@ -10824,15 +10824,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// WebSocket error message.
         /// </summary>
-        internal string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
     }
     /// <summary>
     /// Fired when WebSocket message is received.
@@ -10846,15 +10846,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// WebSocket response data.
         /// </summary>
-        internal WebSocketFrame Response { get; set; }
+        public WebSocketFrame Response { get; set; }
     }
     /// <summary>
     /// Fired when WebSocket message is sent.
@@ -10868,15 +10868,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// WebSocket response data.
         /// </summary>
-        internal WebSocketFrame Response { get; set; }
+        public WebSocketFrame Response { get; set; }
     }
     /// <summary>
     /// Fired when WebSocket handshake response becomes available.
@@ -10890,15 +10890,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// WebSocket response data.
         /// </summary>
-        internal WebSocketResponse Response { get; set; }
+        public WebSocketResponse Response { get; set; }
     }
     /// <summary>
     /// Fired when WebSocket is about to initiate handshake.
@@ -10912,19 +10912,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// UTC Timestamp.
         /// </summary>
-        internal long WallTime { get; set; }
+        public long WallTime { get; set; }
         /// <summary>
         /// WebSocket request data.
         /// </summary>
-        internal WebSocketRequest Request { get; set; }
+        public WebSocketRequest Request { get; set; }
     }
     /// <summary>
     /// Fired when additional information about a requestWillBeSent event is available from the
@@ -10941,16 +10941,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier. Used to match this information to an existing requestWillBeSent event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// A list of cookies which will not be sent with this request along with corresponding reasons
         /// for blocking.
         /// </summary>
-        internal BlockedCookieWithReason[] BlockedCookies { get; set; }
+        public BlockedCookieWithReason[] BlockedCookies { get; set; }
         /// <summary>
         /// Raw request headers as they will be sent over the wire.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
     }
     /// <summary>
     /// Fired when additional information about a responseReceived event is available from the network
@@ -10966,22 +10966,22 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// <summary>
         /// Request identifier. Used to match this information to another responseReceived event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// A list of cookies which were not stored from the response along with the corresponding
         /// reasons for blocking. The cookies here may not be valid due to syntax errors, which
         /// are represented by the invalid cookie line string instead of a proper cookie.
         /// </summary>
-        internal BlockedSetCookieWithReason[] BlockedCookies { get; set; }
+        public BlockedSetCookieWithReason[] BlockedCookies { get; set; }
         /// <summary>
         /// Raw response headers as they were received over the wire.
         /// </summary>
-        internal System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
         /// <summary>
         /// Raw response header text as it was received over the wire. The raw text may not always be
         /// available, such as in the case of HTTP/2 or QUIC.
         /// </summary>
-        internal string HeadersText { get; set; }
+        public string HeadersText { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Overlay
@@ -10994,51 +10994,51 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Whether the node info tooltip should be shown (default: false).
         /// </summary>
-        internal bool ShowInfo { get; set; }
+        public bool ShowInfo { get; set; }
         /// <summary>
         /// Whether the node styles in the tooltip (default: false).
         /// </summary>
-        internal bool ShowStyles { get; set; }
+        public bool ShowStyles { get; set; }
         /// <summary>
         /// Whether the rulers should be shown (default: false).
         /// </summary>
-        internal bool ShowRulers { get; set; }
+        public bool ShowRulers { get; set; }
         /// <summary>
         /// Whether the extension lines from node to the rulers should be shown (default: false).
         /// </summary>
-        internal bool ShowExtensionLines { get; set; }
+        public bool ShowExtensionLines { get; set; }
         /// <summary>
         /// The content box highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA ContentColor { get; set; }
+        public DOM.RGBA ContentColor { get; set; }
         /// <summary>
         /// The padding highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA PaddingColor { get; set; }
+        public DOM.RGBA PaddingColor { get; set; }
         /// <summary>
         /// The border highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA BorderColor { get; set; }
+        public DOM.RGBA BorderColor { get; set; }
         /// <summary>
         /// The margin highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA MarginColor { get; set; }
+        public DOM.RGBA MarginColor { get; set; }
         /// <summary>
         /// The event target element highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA EventTargetColor { get; set; }
+        public DOM.RGBA EventTargetColor { get; set; }
         /// <summary>
         /// The shape outside fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA ShapeColor { get; set; }
+        public DOM.RGBA ShapeColor { get; set; }
         /// <summary>
         /// The shape margin fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA ShapeMarginColor { get; set; }
+        public DOM.RGBA ShapeMarginColor { get; set; }
         /// <summary>
         /// The grid layout color (default: transparent).
         /// </summary>
-        internal DOM.RGBA CssGridColor { get; set; }
+        public DOM.RGBA CssGridColor { get; set; }
     }
     /// <summary>
     /// 
@@ -11098,15 +11098,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Id of the node to get highlight object for.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Whether to include distance info.
         /// </summary>
-        internal bool IncludeDistance { get; set; }
+        public bool IncludeDistance { get; set; }
         /// <summary>
         /// Whether to include style info.
         /// </summary>
-        internal bool IncludeStyle { get; set; }
+        public bool IncludeStyle { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlayGetHighlightObjectForTestRequest"/>
@@ -11116,7 +11116,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Highlight data for the node.
         /// </summary>
-        internal object Highlight { get; set; }
+        public object Highlight { get; set; }
     }
     /// <summary>
     /// Hides any highlight.
@@ -11148,15 +11148,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Identifier of the frame to highlight.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// The content box highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA ContentColor { get; set; }
+        public DOM.RGBA ContentColor { get; set; }
         /// <summary>
         /// The content box highlight outline color (default: transparent).
         /// </summary>
-        internal DOM.RGBA ContentOutlineColor { get; set; }
+        public DOM.RGBA ContentOutlineColor { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlayHighlightFrameRequest"/>
@@ -11178,23 +11178,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// A descriptor for the highlight appearance.
         /// </summary>
-        internal HighlightConfig HighlightConfig { get; set; }
+        public HighlightConfig HighlightConfig { get; set; }
         /// <summary>
         /// Identifier of the node to highlight.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Identifier of the backend node to highlight.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
         /// <summary>
         /// JavaScript object id of the node to be highlighted.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// Selectors to highlight relevant nodes.
         /// </summary>
-        internal string Selector { get; set; }
+        public string Selector { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlayHighlightNodeRequest"/>
@@ -11215,15 +11215,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Quad to highlight
         /// </summary>
-        internal double[] Quad { get; set; }
+        public double[] Quad { get; set; }
         /// <summary>
         /// The highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA Color { get; set; }
+        public DOM.RGBA Color { get; set; }
         /// <summary>
         /// The highlight outline color (default: transparent).
         /// </summary>
-        internal DOM.RGBA OutlineColor { get; set; }
+        public DOM.RGBA OutlineColor { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlayHighlightQuadRequest"/>
@@ -11244,27 +11244,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// X coordinate
         /// </summary>
-        internal int X { get; set; }
+        public int X { get; set; }
         /// <summary>
         /// Y coordinate
         /// </summary>
-        internal int Y { get; set; }
+        public int Y { get; set; }
         /// <summary>
         /// Rectangle width
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Rectangle height
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// The highlight fill color (default: transparent).
         /// </summary>
-        internal DOM.RGBA Color { get; set; }
+        public DOM.RGBA Color { get; set; }
         /// <summary>
         /// The highlight outline color (default: transparent).
         /// </summary>
-        internal DOM.RGBA OutlineColor { get; set; }
+        public DOM.RGBA OutlineColor { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlayHighlightRectRequest"/>
@@ -11286,12 +11286,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Set an inspection mode.
         /// </summary>
-        internal string Mode { get; set; }
+        public string Mode { get; set; }
         /// <summary>
         /// A descriptor for the highlight appearance of hovered-over nodes. May be omitted if `enabled
         /// == false`.
         /// </summary>
-        internal HighlightConfig HighlightConfig { get; set; }
+        public HighlightConfig HighlightConfig { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetInspectModeRequest"/>
@@ -11312,7 +11312,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing ad highlights
         /// </summary>
-        internal bool Show { get; set; }
+        public bool Show { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowAdHighlightsRequest"/>
@@ -11333,7 +11333,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// The message to display, also triggers resume and step over controls.
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetPausedInDebuggerMessageRequest"/>
@@ -11354,7 +11354,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing debug borders
         /// </summary>
-        internal bool Show { get; set; }
+        public bool Show { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowDebugBordersRequest"/>
@@ -11375,7 +11375,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing the FPS counter
         /// </summary>
-        internal bool Show { get; set; }
+        public bool Show { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowFPSCounterRequest"/>
@@ -11396,7 +11396,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing paint rectangles
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowPaintRectsRequest"/>
@@ -11417,7 +11417,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing layout shift regions
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowLayoutShiftRegionsRequest"/>
@@ -11438,7 +11438,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing scroll bottleneck rects
         /// </summary>
-        internal bool Show { get; set; }
+        public bool Show { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowScrollBottleneckRectsRequest"/>
@@ -11459,7 +11459,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// True for showing hit-test borders
         /// </summary>
-        internal bool Show { get; set; }
+        public bool Show { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowHitTestBordersRequest"/>
@@ -11480,7 +11480,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Whether to paint size or not.
         /// </summary>
-        internal bool Show { get; set; }
+        public bool Show { get; set; }
     }
     /// <summary>
     /// Response from <see cref="OverlaySetShowViewportSizeOnResizeRequest"/>
@@ -11501,7 +11501,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Id of the node to inspect.
         /// </summary>
-        internal int BackendNodeId { get; set; }
+        public int BackendNodeId { get; set; }
     }
     /// <summary>
     /// Fired when the node should be highlighted. This happens after call to `setInspectMode`.
@@ -11515,7 +11515,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// 
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
     }
     /// <summary>
     /// Fired when user asks to capture screenshot of some area on the page.
@@ -11529,7 +11529,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
         /// <summary>
         /// Viewport to capture, in device independent pixels (dip).
         /// </summary>
-        internal Page.Viewport Viewport { get; set; }
+        public Page.Viewport Viewport { get; set; }
     }
     /// <summary>
     /// Fired when user cancels the inspect mode.
@@ -11552,39 +11552,39 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame unique identifier.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// Parent frame identifier.
         /// </summary>
-        internal string ParentId { get; set; }
+        public string ParentId { get; set; }
         /// <summary>
         /// Identifier of the loader associated with this frame.
         /// </summary>
-        internal string LoaderId { get; set; }
+        public string LoaderId { get; set; }
         /// <summary>
         /// Frame's name as specified in the tag.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Frame document's URL without fragment.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Frame document's URL fragment including the '#'.
         /// </summary>
-        internal string UrlFragment { get; set; }
+        public string UrlFragment { get; set; }
         /// <summary>
         /// Frame document's security origin.
         /// </summary>
-        internal string SecurityOrigin { get; set; }
+        public string SecurityOrigin { get; set; }
         /// <summary>
         /// Frame document's mimeType as determined by the browser.
         /// </summary>
-        internal string MimeType { get; set; }
+        public string MimeType { get; set; }
         /// <summary>
         /// If the frame failed to load, this contains the URL that could not be loaded. Note that unlike url above, this URL may contain a fragment.
         /// </summary>
-        internal string UnreachableUrl { get; set; }
+        public string UnreachableUrl { get; set; }
     }
     /// <summary>
     /// Information about the Resource on the page.
@@ -11594,31 +11594,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Resource URL.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Type of this resource.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Resource mimeType as determined by the browser.
         /// </summary>
-        internal string MimeType { get; set; }
+        public string MimeType { get; set; }
         /// <summary>
         /// last-modified timestamp as reported by server.
         /// </summary>
-        internal long LastModified { get; set; }
+        public long LastModified { get; set; }
         /// <summary>
         /// Resource content size.
         /// </summary>
-        internal double ContentSize { get; set; }
+        public double ContentSize { get; set; }
         /// <summary>
         /// True if the resource failed to load.
         /// </summary>
-        internal bool Failed { get; set; }
+        public bool Failed { get; set; }
         /// <summary>
         /// True if the resource was canceled during loading.
         /// </summary>
-        internal bool Canceled { get; set; }
+        public bool Canceled { get; set; }
     }
     /// <summary>
     /// Information about the Frame hierarchy along with their cached resources.
@@ -11628,15 +11628,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame information for this tree item.
         /// </summary>
-        internal Frame Frame { get; set; }
+        public Frame Frame { get; set; }
         /// <summary>
         /// Child frames.
         /// </summary>
-        internal FrameResourceTree[] ChildFrames { get; set; }
+        public FrameResourceTree[] ChildFrames { get; set; }
         /// <summary>
         /// Information about frame resources.
         /// </summary>
-        internal FrameResource[] Resources { get; set; }
+        public FrameResource[] Resources { get; set; }
     }
     /// <summary>
     /// Information about the Frame hierarchy.
@@ -11646,11 +11646,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame information for this tree item.
         /// </summary>
-        internal Frame Frame { get; set; }
+        public Frame Frame { get; set; }
         /// <summary>
         /// Child frames.
         /// </summary>
-        internal FrameTree[] ChildFrames { get; set; }
+        public FrameTree[] ChildFrames { get; set; }
     }
     /// <summary>
     /// Transition type.
@@ -11679,23 +11679,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Unique id of the navigation history entry.
         /// </summary>
-        internal int Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// URL of the navigation history entry.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// URL that the user typed in the url bar.
         /// </summary>
-        internal string UserTypedURL { get; set; }
+        public string UserTypedURL { get; set; }
         /// <summary>
         /// Title of the navigation history entry.
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
         /// <summary>
         /// Transition type.
         /// </summary>
-        internal string TransitionType { get; set; }
+        public string TransitionType { get; set; }
     }
     /// <summary>
     /// Screencast frame metadata.
@@ -11705,31 +11705,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Top offset in DIP.
         /// </summary>
-        internal double OffsetTop { get; set; }
+        public double OffsetTop { get; set; }
         /// <summary>
         /// Page scale factor.
         /// </summary>
-        internal double PageScaleFactor { get; set; }
+        public double PageScaleFactor { get; set; }
         /// <summary>
         /// Device screen width in DIP.
         /// </summary>
-        internal double DeviceWidth { get; set; }
+        public double DeviceWidth { get; set; }
         /// <summary>
         /// Device screen height in DIP.
         /// </summary>
-        internal double DeviceHeight { get; set; }
+        public double DeviceHeight { get; set; }
         /// <summary>
         /// Position of horizontal scroll in CSS pixels.
         /// </summary>
-        internal double ScrollOffsetX { get; set; }
+        public double ScrollOffsetX { get; set; }
         /// <summary>
         /// Position of vertical scroll in CSS pixels.
         /// </summary>
-        internal double ScrollOffsetY { get; set; }
+        public double ScrollOffsetY { get; set; }
         /// <summary>
         /// Frame swap timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// Javascript dialog type.
@@ -11749,19 +11749,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Error message.
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// If criticial, this is a non-recoverable parse error.
         /// </summary>
-        internal int Critical { get; set; }
+        public int Critical { get; set; }
         /// <summary>
         /// Error line.
         /// </summary>
-        internal int Line { get; set; }
+        public int Line { get; set; }
         /// <summary>
         /// Error column.
         /// </summary>
-        internal int Column { get; set; }
+        public int Column { get; set; }
     }
     /// <summary>
     /// Layout viewport position and dimensions.
@@ -11771,19 +11771,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Horizontal offset relative to the document (CSS pixels).
         /// </summary>
-        internal int PageX { get; set; }
+        public int PageX { get; set; }
         /// <summary>
         /// Vertical offset relative to the document (CSS pixels).
         /// </summary>
-        internal int PageY { get; set; }
+        public int PageY { get; set; }
         /// <summary>
         /// Width (CSS pixels), excludes scrollbar if present.
         /// </summary>
-        internal int ClientWidth { get; set; }
+        public int ClientWidth { get; set; }
         /// <summary>
         /// Height (CSS pixels), excludes scrollbar if present.
         /// </summary>
-        internal int ClientHeight { get; set; }
+        public int ClientHeight { get; set; }
     }
     /// <summary>
     /// Visual viewport position, dimensions, and scale.
@@ -11793,35 +11793,35 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Horizontal offset relative to the layout viewport (CSS pixels).
         /// </summary>
-        internal double OffsetX { get; set; }
+        public double OffsetX { get; set; }
         /// <summary>
         /// Vertical offset relative to the layout viewport (CSS pixels).
         /// </summary>
-        internal double OffsetY { get; set; }
+        public double OffsetY { get; set; }
         /// <summary>
         /// Horizontal offset relative to the document (CSS pixels).
         /// </summary>
-        internal double PageX { get; set; }
+        public double PageX { get; set; }
         /// <summary>
         /// Vertical offset relative to the document (CSS pixels).
         /// </summary>
-        internal double PageY { get; set; }
+        public double PageY { get; set; }
         /// <summary>
         /// Width (CSS pixels), excludes scrollbar if present.
         /// </summary>
-        internal double ClientWidth { get; set; }
+        public double ClientWidth { get; set; }
         /// <summary>
         /// Height (CSS pixels), excludes scrollbar if present.
         /// </summary>
-        internal double ClientHeight { get; set; }
+        public double ClientHeight { get; set; }
         /// <summary>
         /// Scale relative to the ideal viewport (size at width=device-width).
         /// </summary>
-        internal double Scale { get; set; }
+        public double Scale { get; set; }
         /// <summary>
         /// Page zoom factor (CSS to device independent pixels ratio).
         /// </summary>
-        internal double Zoom { get; set; }
+        public double Zoom { get; set; }
     }
     /// <summary>
     /// Viewport for capturing screenshot.
@@ -11831,23 +11831,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// X offset in device independent pixels (dip).
         /// </summary>
-        internal double X { get; set; }
+        public double X { get; set; }
         /// <summary>
         /// Y offset in device independent pixels (dip).
         /// </summary>
-        internal double Y { get; set; }
+        public double Y { get; set; }
         /// <summary>
         /// Rectangle width in device independent pixels (dip).
         /// </summary>
-        internal double Width { get; set; }
+        public double Width { get; set; }
         /// <summary>
         /// Rectangle height in device independent pixels (dip).
         /// </summary>
-        internal double Height { get; set; }
+        public double Height { get; set; }
         /// <summary>
         /// Page scale factor.
         /// </summary>
-        internal double Scale { get; set; }
+        public double Scale { get; set; }
     }
     /// <summary>
     /// Generic font families collection.
@@ -11857,31 +11857,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// The standard font-family.
         /// </summary>
-        internal string Standard { get; set; }
+        public string Standard { get; set; }
         /// <summary>
         /// The fixed font-family.
         /// </summary>
-        internal string Fixed { get; set; }
+        public string Fixed { get; set; }
         /// <summary>
         /// The serif font-family.
         /// </summary>
-        internal string Serif { get; set; }
+        public string Serif { get; set; }
         /// <summary>
         /// The sansSerif font-family.
         /// </summary>
-        internal string SansSerif { get; set; }
+        public string SansSerif { get; set; }
         /// <summary>
         /// The cursive font-family.
         /// </summary>
-        internal string Cursive { get; set; }
+        public string Cursive { get; set; }
         /// <summary>
         /// The fantasy font-family.
         /// </summary>
-        internal string Fantasy { get; set; }
+        public string Fantasy { get; set; }
         /// <summary>
         /// The pictograph font-family.
         /// </summary>
-        internal string Pictograph { get; set; }
+        public string Pictograph { get; set; }
     }
     /// <summary>
     /// Default font sizes.
@@ -11891,11 +11891,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Default standard font size.
         /// </summary>
-        internal int Standard { get; set; }
+        public int Standard { get; set; }
         /// <summary>
         /// Default fixed font size.
         /// </summary>
-        internal int Fixed { get; set; }
+        public int Fixed { get; set; }
     }
     /// <summary>
     /// 
@@ -11924,7 +11924,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string ScriptSource { get; set; }
+        public string ScriptSource { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageAddScriptToEvaluateOnLoadRequest"/>
@@ -11934,7 +11934,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Identifier of the added script.
         /// </summary>
-        internal string Identifier { get; set; }
+        public string Identifier { get; set; }
     }
     /// <summary>
     /// Evaluates given script in every frame upon creation (before loading frame's scripts).
@@ -11949,13 +11949,13 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Source { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// If specified, creates an isolated world with the given name and evaluates given script in it.
         /// This world name will be used as the ExecutionContextDescription::name when the corresponding
         /// event is emitted.
         /// </summary>
-        internal string WorldName { get; set; }
+        public string WorldName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageAddScriptToEvaluateOnNewDocumentRequest"/>
@@ -11965,7 +11965,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Identifier of the added script.
         /// </summary>
-        internal string Identifier { get; set; }
+        public string Identifier { get; set; }
     }
     /// <summary>
     /// Brings page to front (activates tab).
@@ -11997,19 +11997,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Image compression format (defaults to png).
         /// </summary>
-        internal string Format { get; set; }
+        public string Format { get; set; }
         /// <summary>
         /// Compression quality from range [0..100] (jpeg only).
         /// </summary>
-        internal int Quality { get; set; }
+        public int Quality { get; set; }
         /// <summary>
         /// Capture the screenshot of a given region only.
         /// </summary>
-        internal Viewport Clip { get; set; }
+        public Viewport Clip { get; set; }
         /// <summary>
         /// Capture the screenshot from the surface, rather than the view. Defaults to true.
         /// </summary>
-        internal bool FromSurface { get; set; }
+        public bool FromSurface { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageCaptureScreenshotRequest"/>
@@ -12019,7 +12019,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Base64-encoded image data.
         /// </summary>
-        internal byte[] Data { get; set; }
+        public byte[] Data { get; set; }
     }
     /// <summary>
     /// Returns a snapshot of the page as a string. For MHTML format, the serialization includes
@@ -12035,7 +12035,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Format (defaults to mhtml).
         /// </summary>
-        internal string Format { get; set; }
+        public string Format { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageCaptureSnapshotRequest"/>
@@ -12045,7 +12045,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Serialized page data.
         /// </summary>
-        internal string Data { get; set; }
+        public string Data { get; set; }
     }
     /// <summary>
     /// Clears the overriden device metrics.
@@ -12111,16 +12111,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame in which the isolated world should be created.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// An optional name which is reported in the Execution Context.
         /// </summary>
-        internal string WorldName { get; set; }
+        public string WorldName { get; set; }
         /// <summary>
         /// Whether or not universal access should be granted to the isolated world. This is a powerful
         /// option, use with caution.
         /// </summary>
-        internal bool GrantUniveralAccess { get; set; }
+        public bool GrantUniveralAccess { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageCreateIsolatedWorldRequest"/>
@@ -12130,7 +12130,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Execution context of the isolated world.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Deletes browser cookie with given name, domain and path.
@@ -12145,11 +12145,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Name of the cookie to remove.
         /// </summary>
-        internal string CookieName { get; set; }
+        public string CookieName { get; set; }
         /// <summary>
         /// URL to match cooke domain and path.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageDeleteCookieRequest"/>
@@ -12210,15 +12210,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Manifest location.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal AppManifestError[] Errors { get; set; }
+        public AppManifestError[] Errors { get; set; }
         /// <summary>
         /// Manifest content.
         /// </summary>
-        internal string Data { get; set; }
+        public string Data { get; set; }
     }
     /// <summary>
     /// 
@@ -12239,7 +12239,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string[] Errors { get; set; }
+        public string[] Errors { get; set; }
     }
     /// <summary>
     /// Returns all browser cookies. Depending on the backend support, will return detailed cookie
@@ -12261,7 +12261,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Array of cookie objects.
         /// </summary>
-        internal Network.Cookie[] Cookies { get; set; }
+        public Network.Cookie[] Cookies { get; set; }
     }
     /// <summary>
     /// Returns present frame tree structure.
@@ -12282,7 +12282,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Present frame tree structure.
         /// </summary>
-        internal FrameTree FrameTree { get; set; }
+        public FrameTree FrameTree { get; set; }
     }
     /// <summary>
     /// Returns metrics relating to the layouting of the page, such as viewport bounds/scale.
@@ -12303,15 +12303,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Metrics relating to the layout viewport.
         /// </summary>
-        internal LayoutViewport LayoutViewport { get; set; }
+        public LayoutViewport LayoutViewport { get; set; }
         /// <summary>
         /// Metrics relating to the visual viewport.
         /// </summary>
-        internal VisualViewport VisualViewport { get; set; }
+        public VisualViewport VisualViewport { get; set; }
         /// <summary>
         /// Size of scrollable area.
         /// </summary>
-        internal DOM.Rect ContentSize { get; set; }
+        public DOM.Rect ContentSize { get; set; }
     }
     /// <summary>
     /// Returns navigation history for the current page.
@@ -12332,11 +12332,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Index of the current navigation history entry.
         /// </summary>
-        internal int CurrentIndex { get; set; }
+        public int CurrentIndex { get; set; }
         /// <summary>
         /// Array of navigation history entries.
         /// </summary>
-        internal NavigationEntry[] Entries { get; set; }
+        public NavigationEntry[] Entries { get; set; }
     }
     /// <summary>
     /// Resets navigation history for the current page.
@@ -12368,11 +12368,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame id to get resource for.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// URL of the resource to get content for.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageGetResourceContentRequest"/>
@@ -12382,11 +12382,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Resource content.
         /// </summary>
-        internal string Content { get; set; }
+        public string Content { get; set; }
         /// <summary>
         /// True, if content was served as base64.
         /// </summary>
-        internal bool Base64Encoded { get; set; }
+        public bool Base64Encoded { get; set; }
     }
     /// <summary>
     /// Returns present frame / resource tree structure.
@@ -12407,7 +12407,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Present frame / resource tree structure.
         /// </summary>
-        internal FrameResourceTree FrameTree { get; set; }
+        public FrameResourceTree FrameTree { get; set; }
     }
     /// <summary>
     /// Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
@@ -12422,12 +12422,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Whether to accept or dismiss the dialog.
         /// </summary>
-        internal bool Accept { get; set; }
+        public bool Accept { get; set; }
         /// <summary>
         /// The text to enter into the dialog prompt before accepting. Used only if this is a prompt
         /// dialog.
         /// </summary>
-        internal string PromptText { get; set; }
+        public string PromptText { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageHandleJavaScriptDialogRequest"/>
@@ -12448,19 +12448,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// URL to navigate the page to.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Referrer URL.
         /// </summary>
-        internal string Referrer { get; set; }
+        public string Referrer { get; set; }
         /// <summary>
         /// Intended transition type.
         /// </summary>
-        internal string TransitionType { get; set; }
+        public string TransitionType { get; set; }
         /// <summary>
         /// Frame id to navigate, if not specified navigates the top frame.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageNavigateRequest"/>
@@ -12470,15 +12470,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame id that has navigated (or failed to navigate)
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Loader identifier.
         /// </summary>
-        internal string LoaderId { get; set; }
+        public string LoaderId { get; set; }
         /// <summary>
         /// User friendly error message, present if and only if navigation has failed.
         /// </summary>
-        internal string ErrorText { get; set; }
+        public string ErrorText { get; set; }
     }
     /// <summary>
     /// Navigates current page to the given history entry.
@@ -12493,7 +12493,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Unique id of the entry to navigate to.
         /// </summary>
-        internal int EntryId { get; set; }
+        public int EntryId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageNavigateToHistoryEntryRequest"/>
@@ -12514,53 +12514,53 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Paper orientation. Defaults to false.
         /// </summary>
-        internal bool Landscape { get; set; }
+        public bool Landscape { get; set; }
         /// <summary>
         /// Display header and footer. Defaults to false.
         /// </summary>
-        internal bool DisplayHeaderFooter { get; set; }
+        public bool DisplayHeaderFooter { get; set; }
         /// <summary>
         /// Print background graphics. Defaults to false.
         /// </summary>
-        internal bool PrintBackground { get; set; }
+        public bool PrintBackground { get; set; }
         /// <summary>
         /// Scale of the webpage rendering. Defaults to 1.
         /// </summary>
-        internal double Scale { get; set; }
+        public double Scale { get; set; }
         /// <summary>
         /// Paper width in inches. Defaults to 8.5 inches.
         /// </summary>
-        internal double PaperWidth { get; set; }
+        public double PaperWidth { get; set; }
         /// <summary>
         /// Paper height in inches. Defaults to 11 inches.
         /// </summary>
-        internal double PaperHeight { get; set; }
+        public double PaperHeight { get; set; }
         /// <summary>
         /// Top margin in inches. Defaults to 1cm (~0.4 inches).
         /// </summary>
-        internal double MarginTop { get; set; }
+        public double MarginTop { get; set; }
         /// <summary>
         /// Bottom margin in inches. Defaults to 1cm (~0.4 inches).
         /// </summary>
-        internal double MarginBottom { get; set; }
+        public double MarginBottom { get; set; }
         /// <summary>
         /// Left margin in inches. Defaults to 1cm (~0.4 inches).
         /// </summary>
-        internal double MarginLeft { get; set; }
+        public double MarginLeft { get; set; }
         /// <summary>
         /// Right margin in inches. Defaults to 1cm (~0.4 inches).
         /// </summary>
-        internal double MarginRight { get; set; }
+        public double MarginRight { get; set; }
         /// <summary>
         /// Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means
         /// print all pages.
         /// </summary>
-        internal string PageRanges { get; set; }
+        public string PageRanges { get; set; }
         /// <summary>
         /// Whether to silently ignore invalid but successfully parsed page ranges, such as '3-2'.
         /// Defaults to false.
         /// </summary>
-        internal bool IgnoreInvalidPageRanges { get; set; }
+        public bool IgnoreInvalidPageRanges { get; set; }
         /// <summary>
         /// HTML template for the print header. Should be valid HTML markup with following
         /// classes used to inject printing values into them:
@@ -12572,20 +12572,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// 
         /// For example, `&lt;span class=title&gt;&lt;/span&gt;` would generate span containing the title.
         /// </summary>
-        internal string HeaderTemplate { get; set; }
+        public string HeaderTemplate { get; set; }
         /// <summary>
         /// HTML template for the print footer. Should use the same format as the `headerTemplate`.
         /// </summary>
-        internal string FooterTemplate { get; set; }
+        public string FooterTemplate { get; set; }
         /// <summary>
         /// Whether or not to prefer page size as defined by css. Defaults to false,
         /// in which case the content will be scaled to fit the paper size.
         /// </summary>
-        internal bool PreferCSSPageSize { get; set; }
+        public bool PreferCSSPageSize { get; set; }
         /// <summary>
         /// return as stream
         /// </summary>
-        internal string TransferMode { get; set; }
+        public string TransferMode { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PagePrintToPDFRequest"/>
@@ -12595,11 +12595,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Base64-encoded pdf data. Empty if |returnAsStream| is specified.
         /// </summary>
-        internal byte[] Data { get; set; }
+        public byte[] Data { get; set; }
         /// <summary>
         /// A handle of the stream that holds resulting PDF data.
         /// </summary>
-        internal string Stream { get; set; }
+        public string Stream { get; set; }
     }
     /// <summary>
     /// Reloads given page optionally ignoring the cache.
@@ -12614,12 +12614,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// If true, browser cache is ignored (as if the user pressed Shift+refresh).
         /// </summary>
-        internal bool IgnoreCache { get; set; }
+        public bool IgnoreCache { get; set; }
         /// <summary>
         /// If set, the script will be injected into all frames of the inspected page after reload.
         /// Argument will be ignored if reloading dataURL origin.
         /// </summary>
-        internal string ScriptToEvaluateOnLoad { get; set; }
+        public string ScriptToEvaluateOnLoad { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageReloadRequest"/>
@@ -12641,7 +12641,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Identifier { get; set; }
+        public string Identifier { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageRemoveScriptToEvaluateOnLoadRequest"/>
@@ -12662,7 +12662,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Identifier { get; set; }
+        public string Identifier { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageRemoveScriptToEvaluateOnNewDocumentRequest"/>
@@ -12683,7 +12683,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame number.
         /// </summary>
-        internal int SessionId { get; set; }
+        public int SessionId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageScreencastFrameAckRequest"/>
@@ -12704,23 +12704,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame id for resource to search in.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// URL of the resource to search in.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// String to search for.
         /// </summary>
-        internal string Query { get; set; }
+        public string Query { get; set; }
         /// <summary>
         /// If true, search is case sensitive.
         /// </summary>
-        internal bool CaseSensitive { get; set; }
+        public bool CaseSensitive { get; set; }
         /// <summary>
         /// If true, treats string parameter as regex.
         /// </summary>
-        internal bool IsRegex { get; set; }
+        public bool IsRegex { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSearchInResourceRequest"/>
@@ -12730,7 +12730,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// List of search matches.
         /// </summary>
-        internal Debugger.SearchMatch[] Result { get; set; }
+        public Debugger.SearchMatch[] Result { get; set; }
     }
     /// <summary>
     /// Enable Chrome's experimental ad filter on all sites.
@@ -12745,7 +12745,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Whether to block ads.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetAdBlockingEnabledRequest"/>
@@ -12766,7 +12766,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Whether to bypass page CSP.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetBypassCSPRequest"/>
@@ -12789,52 +12789,52 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// Overriding device scale factor value. 0 disables the override.
         /// </summary>
-        internal double DeviceScaleFactor { get; set; }
+        public double DeviceScaleFactor { get; set; }
         /// <summary>
         /// Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
         /// autosizing and more.
         /// </summary>
-        internal bool Mobile { get; set; }
+        public bool Mobile { get; set; }
         /// <summary>
         /// Scale to apply to resulting view image.
         /// </summary>
-        internal double Scale { get; set; }
+        public double Scale { get; set; }
         /// <summary>
         /// Overriding screen width value in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int ScreenWidth { get; set; }
+        public int ScreenWidth { get; set; }
         /// <summary>
         /// Overriding screen height value in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int ScreenHeight { get; set; }
+        public int ScreenHeight { get; set; }
         /// <summary>
         /// Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int PositionX { get; set; }
+        public int PositionX { get; set; }
         /// <summary>
         /// Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
         /// </summary>
-        internal int PositionY { get; set; }
+        public int PositionY { get; set; }
         /// <summary>
         /// Do not set visible view size, rely upon explicit setVisibleSize call.
         /// </summary>
-        internal bool DontSetVisibleSize { get; set; }
+        public bool DontSetVisibleSize { get; set; }
         /// <summary>
         /// Screen orientation override.
         /// </summary>
-        internal Emulation.ScreenOrientation ScreenOrientation { get; set; }
+        public Emulation.ScreenOrientation ScreenOrientation { get; set; }
         /// <summary>
         /// The viewport dimensions and scale. If not set, the override is cleared.
         /// </summary>
-        internal Viewport Viewport { get; set; }
+        public Viewport Viewport { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetDeviceMetricsOverrideRequest"/>
@@ -12855,15 +12855,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Mock alpha
         /// </summary>
-        internal double Alpha { get; set; }
+        public double Alpha { get; set; }
         /// <summary>
         /// Mock beta
         /// </summary>
-        internal double Beta { get; set; }
+        public double Beta { get; set; }
         /// <summary>
         /// Mock gamma
         /// </summary>
-        internal double Gamma { get; set; }
+        public double Gamma { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetDeviceOrientationOverrideRequest"/>
@@ -12884,7 +12884,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Specifies font families to set. If a font family is not specified, it won't be changed.
         /// </summary>
-        internal FontFamilies FontFamilies { get; set; }
+        public FontFamilies FontFamilies { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetFontFamiliesRequest"/>
@@ -12905,7 +12905,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Specifies font sizes to set. If a font size is not specified, it won't be changed.
         /// </summary>
-        internal FontSizes FontSizes { get; set; }
+        public FontSizes FontSizes { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetFontSizesRequest"/>
@@ -12926,11 +12926,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame id to set HTML for.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// HTML content to set.
         /// </summary>
-        internal string Html { get; set; }
+        public string Html { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetDocumentContentRequest"/>
@@ -12952,11 +12952,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// Whether to allow all or deny all download requests, or use default Chrome behavior if
         /// available (otherwise deny).
         /// </summary>
-        internal string Behavior { get; set; }
+        public string Behavior { get; set; }
         /// <summary>
         /// The default path to save downloaded files to. This is requred if behavior is set to 'allow'
         /// </summary>
-        internal string DownloadPath { get; set; }
+        public string DownloadPath { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetDownloadBehaviorRequest"/>
@@ -12978,15 +12978,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Mock latitude
         /// </summary>
-        internal double Latitude { get; set; }
+        public double Latitude { get; set; }
         /// <summary>
         /// Mock longitude
         /// </summary>
-        internal double Longitude { get; set; }
+        public double Longitude { get; set; }
         /// <summary>
         /// Mock accuracy
         /// </summary>
-        internal double Accuracy { get; set; }
+        public double Accuracy { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetGeolocationOverrideRequest"/>
@@ -13007,7 +13007,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// If true, starts emitting lifecycle events.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetLifecycleEventsEnabledRequest"/>
@@ -13028,11 +13028,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Whether the touch event emulation should be enabled.
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
         /// <summary>
         /// Touch/gesture events configuration. Default: current platform.
         /// </summary>
-        internal string Configuration { get; set; }
+        public string Configuration { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetTouchEmulationEnabledRequest"/>
@@ -13053,23 +13053,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Image compression format.
         /// </summary>
-        internal string Format { get; set; }
+        public string Format { get; set; }
         /// <summary>
         /// Compression quality from range [0..100].
         /// </summary>
-        internal int Quality { get; set; }
+        public int Quality { get; set; }
         /// <summary>
         /// Maximum screenshot width.
         /// </summary>
-        internal int MaxWidth { get; set; }
+        public int MaxWidth { get; set; }
         /// <summary>
         /// Maximum screenshot height.
         /// </summary>
-        internal int MaxHeight { get; set; }
+        public int MaxHeight { get; set; }
         /// <summary>
         /// Send every n-th frame.
         /// </summary>
-        internal int EveryNthFrame { get; set; }
+        public int EveryNthFrame { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageStartScreencastRequest"/>
@@ -13143,7 +13143,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Target lifecycle state
         /// </summary>
-        internal string State { get; set; }
+        public string State { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetWebLifecycleStateRequest"/>
@@ -13181,7 +13181,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetProduceCompilationCacheRequest"/>
@@ -13203,11 +13203,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Base64-encoded data
         /// </summary>
-        internal byte[] Data { get; set; }
+        public byte[] Data { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageAddCompilationCacheRequest"/>
@@ -13245,11 +13245,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Message to be displayed in the report.
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// Specifies the endpoint group to deliver the report to.
         /// </summary>
-        internal string Group { get; set; }
+        public string Group { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageGenerateTestReportRequest"/>
@@ -13290,7 +13290,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageSetInterceptFileChooserDialogRequest"/>
@@ -13311,11 +13311,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Action { get; set; }
+        public string Action { get; set; }
         /// <summary>
         /// Array of absolute file paths to set, only respected with `accept` action.
         /// </summary>
-        internal string[] Files { get; set; }
+        public string[] Files { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PageHandleFileChooserRequest"/>
@@ -13335,7 +13335,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// Emitted only when `page.interceptFileChooser` is enabled.
@@ -13349,7 +13349,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Mode { get; set; }
+        public string Mode { get; set; }
     }
     /// <summary>
     /// Fired when frame has been attached to its parent.
@@ -13363,15 +13363,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that has been attached.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Parent frame identifier.
         /// </summary>
-        internal string ParentFrameId { get; set; }
+        public string ParentFrameId { get; set; }
         /// <summary>
         /// JavaScript stack trace of when frame was attached, only set if frame initiated from script.
         /// </summary>
-        internal Runtime.StackTrace Stack { get; set; }
+        public Runtime.StackTrace Stack { get; set; }
     }
     /// <summary>
     /// Fired when frame no longer has a scheduled navigation.
@@ -13385,7 +13385,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that has cleared its scheduled navigation.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Fired when frame has been detached from its parent.
@@ -13399,7 +13399,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that has been detached.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Fired once navigation of the frame has completed. Frame is now associated with the new loader.
@@ -13413,7 +13413,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame object.
         /// </summary>
-        internal Frame Frame { get; set; }
+        public Frame Frame { get; set; }
     }
     /// <summary>
     /// 
@@ -13438,15 +13438,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that is being navigated.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// The reason for the navigation.
         /// </summary>
-        internal string Reason { get; set; }
+        public string Reason { get; set; }
         /// <summary>
         /// The destination URL for the requested navigation.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Fired when frame schedules a potential navigation.
@@ -13460,20 +13460,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that has scheduled a navigation.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Delay (in seconds) until the navigation is scheduled to begin. The navigation is not
         /// guaranteed to start.
         /// </summary>
-        internal double Delay { get; set; }
+        public double Delay { get; set; }
         /// <summary>
         /// The reason for the navigation.
         /// </summary>
-        internal string Reason { get; set; }
+        public string Reason { get; set; }
         /// <summary>
         /// The destination URL for the scheduled navigation.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Fired when frame has started loading.
@@ -13487,7 +13487,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that has started loading.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Fired when frame has stopped loading.
@@ -13501,7 +13501,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that has stopped loading.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
     }
     /// <summary>
     /// Fired when page is about to start a download.
@@ -13515,11 +13515,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame that caused download to begin.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// URL of the resource being downloaded.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Fired when interstitial page was hidden
@@ -13554,11 +13554,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Whether dialog was confirmed.
         /// </summary>
-        internal bool Result { get; set; }
+        public bool Result { get; set; }
         /// <summary>
         /// User input in case of prompt.
         /// </summary>
-        internal string UserInput { get; set; }
+        public string UserInput { get; set; }
     }
     /// <summary>
     /// Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to
@@ -13573,25 +13573,25 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Frame url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Message that will be displayed by the dialog.
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// Dialog type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// True iff browser is capable showing or acting on the given dialog. When browser has no
         /// dialog handler for given target, calling alert while Page domain is engaged will stall
         /// the page execution. Execution can be resumed via calling Page.handleJavaScriptDialog.
         /// </summary>
-        internal bool HasBrowserHandler { get; set; }
+        public bool HasBrowserHandler { get; set; }
         /// <summary>
         /// Default dialog prompt.
         /// </summary>
-        internal string DefaultPrompt { get; set; }
+        public string DefaultPrompt { get; set; }
     }
     /// <summary>
     /// Fired for top level page lifecycle events such as navigation, load, paint, etc.
@@ -13605,19 +13605,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Loader identifier. Empty string if the request is fetched from worker.
         /// </summary>
-        internal string LoaderId { get; set; }
+        public string LoaderId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// 
@@ -13631,7 +13631,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
     /// <summary>
     /// Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.
@@ -13645,11 +13645,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Id of the frame.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// Frame's new url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
     }
     /// <summary>
     /// Compressed image data requested by the `startScreencast`.
@@ -13663,15 +13663,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// Base64-encoded compressed image.
         /// </summary>
-        internal byte[] Data { get; set; }
+        public byte[] Data { get; set; }
         /// <summary>
         /// Screencast frame metadata.
         /// </summary>
-        internal ScreencastFrameMetadata Metadata { get; set; }
+        public ScreencastFrameMetadata Metadata { get; set; }
         /// <summary>
         /// Frame number.
         /// </summary>
-        internal int SessionId { get; set; }
+        public int SessionId { get; set; }
     }
     /// <summary>
     /// Fired when the page with currently enabled screencast was shown or hidden `.
@@ -13685,7 +13685,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// True if the page is visible.
         /// </summary>
-        internal bool Visible { get; set; }
+        public bool Visible { get; set; }
     }
     /// <summary>
     /// Fired when a new window is going to be opened, via window.open(), link click, form submission,
@@ -13700,19 +13700,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// The URL for the new window.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Window name.
         /// </summary>
-        internal string WindowName { get; set; }
+        public string WindowName { get; set; }
         /// <summary>
         /// An array of enabled window features.
         /// </summary>
-        internal string[] WindowFeatures { get; set; }
+        public string[] WindowFeatures { get; set; }
         /// <summary>
         /// Whether or not it was triggered by user gesture.
         /// </summary>
-        internal bool UserGesture { get; set; }
+        public bool UserGesture { get; set; }
     }
     /// <summary>
     /// Issued for every compilation cache generated. Is only available
@@ -13727,11 +13727,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// <summary>
         /// 
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Base64-encoded data
         /// </summary>
-        internal byte[] Data { get; set; }
+        public byte[] Data { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Performance
@@ -13744,11 +13744,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
         /// <summary>
         /// Metric name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Metric value.
         /// </summary>
-        internal double Value { get; set; }
+        public double Value { get; set; }
     }
     /// <summary>
     /// Disable collecting and reporting metrics.
@@ -13799,7 +13799,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
         /// <summary>
         /// Time domain
         /// </summary>
-        internal string TimeDomain { get; set; }
+        public string TimeDomain { get; set; }
     }
     /// <summary>
     /// Response from <see cref="PerformanceSetTimeDomainRequest"/>
@@ -13826,7 +13826,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
         /// <summary>
         /// Current values for run-time metrics.
         /// </summary>
-        internal Metric[] Metrics { get; set; }
+        public Metric[] Metrics { get; set; }
     }
     /// <summary>
     /// Current values of the metrics.
@@ -13840,11 +13840,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
         /// <summary>
         /// Current values of the metrics.
         /// </summary>
-        internal Metric[] Metrics { get; set; }
+        public Metric[] Metrics { get; set; }
         /// <summary>
         /// Timestamp title.
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Security
@@ -13878,67 +13878,67 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// Protocol name (e.g. "TLS 1.2" or "QUIC").
         /// </summary>
-        internal string Protocol { get; set; }
+        public string Protocol { get; set; }
         /// <summary>
         /// Key Exchange used by the connection, or the empty string if not applicable.
         /// </summary>
-        internal string KeyExchange { get; set; }
+        public string KeyExchange { get; set; }
         /// <summary>
         /// (EC)DH group used by the connection, if applicable.
         /// </summary>
-        internal string KeyExchangeGroup { get; set; }
+        public string KeyExchangeGroup { get; set; }
         /// <summary>
         /// Cipher name.
         /// </summary>
-        internal string Cipher { get; set; }
+        public string Cipher { get; set; }
         /// <summary>
         /// TLS MAC. Note that AEAD ciphers do not have separate MACs.
         /// </summary>
-        internal string Mac { get; set; }
+        public string Mac { get; set; }
         /// <summary>
         /// Page certificate.
         /// </summary>
-        internal string[] Certificate { get; set; }
+        public string[] Certificate { get; set; }
         /// <summary>
         /// Certificate subject name.
         /// </summary>
-        internal string SubjectName { get; set; }
+        public string SubjectName { get; set; }
         /// <summary>
         /// Name of the issuing CA.
         /// </summary>
-        internal string Issuer { get; set; }
+        public string Issuer { get; set; }
         /// <summary>
         /// Certificate valid from date.
         /// </summary>
-        internal long ValidFrom { get; set; }
+        public long ValidFrom { get; set; }
         /// <summary>
         /// Certificate valid to (expiration) date
         /// </summary>
-        internal long ValidTo { get; set; }
+        public long ValidTo { get; set; }
         /// <summary>
         /// True if the certificate uses a weak signature aglorithm.
         /// </summary>
-        internal bool CertifcateHasWeakSignature { get; set; }
+        public bool CertifcateHasWeakSignature { get; set; }
         /// <summary>
         /// True if modern SSL
         /// </summary>
-        internal bool ModernSSL { get; set; }
+        public bool ModernSSL { get; set; }
         /// <summary>
         /// True if the connection is using an obsolete SSL protocol.
         /// </summary>
-        internal bool ObsoleteSslProtocol { get; set; }
+        public bool ObsoleteSslProtocol { get; set; }
         /// <summary>
         /// True if the connection is using an obsolete SSL key exchange.
         /// </summary>
-        internal bool ObsoleteSslKeyExchange { get; set; }
+        public bool ObsoleteSslKeyExchange { get; set; }
         /// <summary>
         /// True if the connection is using an obsolete SSL cipher.
         /// </summary>
-        internal bool ObsoleteSslCipher { get; set; }
+        public bool ObsoleteSslCipher { get; set; }
         /// <summary>
         /// True if the connection is using an obsolete SSL signature.
         /// </summary>
-        internal bool ObsoleteSslSignature { get; set; }
+        public bool ObsoleteSslSignature { get; set; }
     }
     /// <summary>
     /// Security state information about the page.
@@ -13948,15 +13948,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// The security level of the page.
         /// </summary>
-        internal string SecurityState { get; set; }
+        public string SecurityState { get; set; }
         /// <summary>
         /// Security state details about the page certificate.
         /// </summary>
-        internal CertificateSecurityState CertificateSecurityState { get; set; }
+        public CertificateSecurityState CertificateSecurityState { get; set; }
         /// <summary>
         /// Array of security state issues ids.
         /// </summary>
-        internal string[] SecurityStateIssueIds { get; set; }
+        public string[] SecurityStateIssueIds { get; set; }
     }
     /// <summary>
     /// An explanation of an factor contributing to the security state.
@@ -13966,31 +13966,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// Security state representing the severity of the factor being explained.
         /// </summary>
-        internal string SecurityState { get; set; }
+        public string SecurityState { get; set; }
         /// <summary>
         /// Title describing the type of factor.
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
         /// <summary>
         /// Short phrase describing the type of factor.
         /// </summary>
-        internal string Summary { get; set; }
+        public string Summary { get; set; }
         /// <summary>
         /// Full text explanation of the factor.
         /// </summary>
-        internal string Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// The type of mixed content described by the explanation.
         /// </summary>
-        internal string MixedContentType { get; set; }
+        public string MixedContentType { get; set; }
         /// <summary>
         /// Page certificate.
         /// </summary>
-        internal string[] Certificate { get; set; }
+        public string[] Certificate { get; set; }
         /// <summary>
         /// Recommendations to fix any issues.
         /// </summary>
-        internal string[] Recommendations { get; set; }
+        public string[] Recommendations { get; set; }
     }
     /// <summary>
     /// Information about insecure content on the page.
@@ -14000,31 +14000,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// Always false.
         /// </summary>
-        internal bool RanMixedContent { get; set; }
+        public bool RanMixedContent { get; set; }
         /// <summary>
         /// Always false.
         /// </summary>
-        internal bool DisplayedMixedContent { get; set; }
+        public bool DisplayedMixedContent { get; set; }
         /// <summary>
         /// Always false.
         /// </summary>
-        internal bool ContainedMixedForm { get; set; }
+        public bool ContainedMixedForm { get; set; }
         /// <summary>
         /// Always false.
         /// </summary>
-        internal bool RanContentWithCertErrors { get; set; }
+        public bool RanContentWithCertErrors { get; set; }
         /// <summary>
         /// Always false.
         /// </summary>
-        internal bool DisplayedContentWithCertErrors { get; set; }
+        public bool DisplayedContentWithCertErrors { get; set; }
         /// <summary>
         /// Always set to unknown.
         /// </summary>
-        internal string RanInsecureContentStyle { get; set; }
+        public string RanInsecureContentStyle { get; set; }
         /// <summary>
         /// Always set to unknown.
         /// </summary>
-        internal string DisplayedInsecureContentStyle { get; set; }
+        public string DisplayedInsecureContentStyle { get; set; }
     }
     /// <summary>
     /// The action to take when a certificate error occurs. continue will continue processing the
@@ -14082,7 +14082,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// If true, all certificate errors will be ignored.
         /// </summary>
-        internal bool Ignore { get; set; }
+        public bool Ignore { get; set; }
     }
     /// <summary>
     /// Response from <see cref="SecuritySetIgnoreCertificateErrorsRequest"/>
@@ -14103,11 +14103,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// The ID of the event.
         /// </summary>
-        internal int EventId { get; set; }
+        public int EventId { get; set; }
         /// <summary>
         /// The action to take on the certificate error.
         /// </summary>
-        internal string Action { get; set; }
+        public string Action { get; set; }
     }
     /// <summary>
     /// Response from <see cref="SecurityHandleCertificateErrorRequest"/>
@@ -14129,7 +14129,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// If true, certificate errors will be overridden.
         /// </summary>
-        internal bool Override { get; set; }
+        public bool Override { get; set; }
     }
     /// <summary>
     /// Response from <see cref="SecuritySetOverrideCertificateErrorsRequest"/>
@@ -14152,15 +14152,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// The ID of the event.
         /// </summary>
-        internal int EventId { get; set; }
+        public int EventId { get; set; }
         /// <summary>
         /// The type of the error.
         /// </summary>
-        internal string ErrorType { get; set; }
+        public string ErrorType { get; set; }
         /// <summary>
         /// The url that was requested.
         /// </summary>
-        internal string RequestURL { get; set; }
+        public string RequestURL { get; set; }
     }
     /// <summary>
     /// The security state of the page changed.
@@ -14174,7 +14174,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// Security state information about the page.
         /// </summary>
-        internal VisibleSecurityState VisibleSecurityState { get; set; }
+        public VisibleSecurityState VisibleSecurityState { get; set; }
     }
     /// <summary>
     /// The security state of the page changed.
@@ -14188,24 +14188,24 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// <summary>
         /// Security state.
         /// </summary>
-        internal string SecurityState { get; set; }
+        public string SecurityState { get; set; }
         /// <summary>
         /// True if the page was loaded over cryptographic transport such as HTTPS.
         /// </summary>
-        internal bool SchemeIsCryptographic { get; set; }
+        public bool SchemeIsCryptographic { get; set; }
         /// <summary>
         /// List of explanations for the security state. If the overall security state is `insecure` or
         /// `warning`, at least one corresponding explanation should be included.
         /// </summary>
-        internal SecurityStateExplanation[] Explanations { get; set; }
+        public SecurityStateExplanation[] Explanations { get; set; }
         /// <summary>
         /// Information about insecure content on the page.
         /// </summary>
-        internal InsecureContentStatus InsecureContentStatus { get; set; }
+        public InsecureContentStatus InsecureContentStatus { get; set; }
         /// <summary>
         /// Overrides user-visible description of the state.
         /// </summary>
-        internal string Summary { get; set; }
+        public string Summary { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
@@ -14218,15 +14218,15 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string RegistrationId { get; set; }
+        public string RegistrationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ScopeURL { get; set; }
+        public string ScopeURL { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
     }
     /// <summary>
     /// 
@@ -14258,40 +14258,40 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string VersionId { get; set; }
+        public string VersionId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string RegistrationId { get; set; }
+        public string RegistrationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ScriptURL { get; set; }
+        public string ScriptURL { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string RunningStatus { get; set; }
+        public string RunningStatus { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// The Last-Modified header value of the main script.
         /// </summary>
-        internal double ScriptLastModified { get; set; }
+        public double ScriptLastModified { get; set; }
         /// <summary>
         /// The time at which the response headers of the main script were received from the server.
         /// For cached script it is the last time the cache entry was validated.
         /// </summary>
-        internal double ScriptResponseTime { get; set; }
+        public double ScriptResponseTime { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string[] ControlledClients { get; set; }
+        public string[] ControlledClients { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// ServiceWorker error message.
@@ -14301,27 +14301,27 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string RegistrationId { get; set; }
+        public string RegistrationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string VersionId { get; set; }
+        public string VersionId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string SourceURL { get; set; }
+        public string SourceURL { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
     }
     /// <summary>
     /// 
@@ -14336,15 +14336,15 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string RegistrationId { get; set; }
+        public string RegistrationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Data { get; set; }
+        public string Data { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerDeliverPushMessageRequest"/>
@@ -14382,19 +14382,19 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string RegistrationId { get; set; }
+        public string RegistrationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Tag { get; set; }
+        public string Tag { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal bool LastChance { get; set; }
+        public bool LastChance { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerDispatchSyncEventRequest"/>
@@ -14415,15 +14415,15 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string RegistrationId { get; set; }
+        public string RegistrationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Tag { get; set; }
+        public string Tag { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerDispatchPeriodicSyncEventRequest"/>
@@ -14461,7 +14461,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string VersionId { get; set; }
+        public string VersionId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerInspectWorkerRequest"/>
@@ -14482,7 +14482,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal bool ForceUpdateOnPageLoad { get; set; }
+        public bool ForceUpdateOnPageLoad { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerSetForceUpdateOnPageLoadRequest"/>
@@ -14503,7 +14503,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string ScopeURL { get; set; }
+        public string ScopeURL { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerSkipWaitingRequest"/>
@@ -14524,7 +14524,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string ScopeURL { get; set; }
+        public string ScopeURL { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerStartWorkerRequest"/>
@@ -14562,7 +14562,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string VersionId { get; set; }
+        public string VersionId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerStopWorkerRequest"/>
@@ -14583,7 +14583,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string ScopeURL { get; set; }
+        public string ScopeURL { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerUnregisterRequest"/>
@@ -14604,7 +14604,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal string ScopeURL { get; set; }
+        public string ScopeURL { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ServiceWorkerUpdateRegistrationRequest"/>
@@ -14624,7 +14624,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal ServiceWorkerErrorMessage ErrorMessage { get; set; }
+        public ServiceWorkerErrorMessage ErrorMessage { get; set; }
     }
     /// <summary>
     /// 
@@ -14638,7 +14638,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal ServiceWorkerRegistration[] Registrations { get; set; }
+        public ServiceWorkerRegistration[] Registrations { get; set; }
     }
     /// <summary>
     /// 
@@ -14652,7 +14652,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
         /// <summary>
         /// 
         /// </summary>
-        internal ServiceWorkerVersion[] Versions { get; set; }
+        public ServiceWorkerVersion[] Versions { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Storage
@@ -14682,11 +14682,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Name of storage type.
         /// </summary>
-        internal string StorageType { get; set; }
+        public string StorageType { get; set; }
         /// <summary>
         /// Storage usage (bytes).
         /// </summary>
-        internal double Usage { get; set; }
+        public double Usage { get; set; }
     }
     /// <summary>
     /// Clears storage for origin.
@@ -14701,11 +14701,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Comma separated list of StorageType to clear.
         /// </summary>
-        internal string StorageTypes { get; set; }
+        public string StorageTypes { get; set; }
     }
     /// <summary>
     /// Response from <see cref="StorageClearDataForOriginRequest"/>
@@ -14726,7 +14726,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="StorageGetUsageAndQuotaRequest"/>
@@ -14736,15 +14736,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Storage usage (bytes).
         /// </summary>
-        internal double Usage { get; set; }
+        public double Usage { get; set; }
         /// <summary>
         /// Storage quota (bytes).
         /// </summary>
-        internal double Quota { get; set; }
+        public double Quota { get; set; }
         /// <summary>
         /// Storage usage per type (bytes).
         /// </summary>
-        internal UsageForType[] UsageBreakdown { get; set; }
+        public UsageForType[] UsageBreakdown { get; set; }
     }
     /// <summary>
     /// Registers origin to be notified when an update occurs to its cache storage list.
@@ -14759,7 +14759,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="StorageTrackCacheStorageForOriginRequest"/>
@@ -14780,7 +14780,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="StorageTrackIndexedDBForOriginRequest"/>
@@ -14801,7 +14801,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="StorageUntrackCacheStorageForOriginRequest"/>
@@ -14822,7 +14822,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Security origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// Response from <see cref="StorageUntrackIndexedDBForOriginRequest"/>
@@ -14842,11 +14842,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Origin to update.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Name of cache in origin.
         /// </summary>
-        internal string CacheName { get; set; }
+        public string CacheName { get; set; }
     }
     /// <summary>
     /// A cache has been added/deleted.
@@ -14860,7 +14860,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Origin to update.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
     /// <summary>
     /// The origin's IndexedDB object store has been modified.
@@ -14874,15 +14874,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Origin to update.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Database to update.
         /// </summary>
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
         /// <summary>
         /// ObjectStore to update.
         /// </summary>
-        internal string ObjectStoreName { get; set; }
+        public string ObjectStoreName { get; set; }
     }
     /// <summary>
     /// The origin's IndexedDB database list has been modified.
@@ -14896,7 +14896,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
         /// <summary>
         /// Origin to update.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
@@ -14909,35 +14909,35 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// PCI ID of the GPU vendor, if available; 0 otherwise.
         /// </summary>
-        internal double VendorId { get; set; }
+        public double VendorId { get; set; }
         /// <summary>
         /// PCI ID of the GPU device, if available; 0 otherwise.
         /// </summary>
-        internal double DeviceId { get; set; }
+        public double DeviceId { get; set; }
         /// <summary>
         /// Sub sys ID of the GPU, only available on Windows.
         /// </summary>
-        internal double SubSysId { get; set; }
+        public double SubSysId { get; set; }
         /// <summary>
         /// Revision of the GPU, only available on Windows.
         /// </summary>
-        internal double Revision { get; set; }
+        public double Revision { get; set; }
         /// <summary>
         /// String description of the GPU vendor, if the PCI ID is not available.
         /// </summary>
-        internal string VendorString { get; set; }
+        public string VendorString { get; set; }
         /// <summary>
         /// String description of the GPU device, if the PCI ID is not available.
         /// </summary>
-        internal string DeviceString { get; set; }
+        public string DeviceString { get; set; }
         /// <summary>
         /// String description of the GPU driver vendor.
         /// </summary>
-        internal string DriverVendor { get; set; }
+        public string DriverVendor { get; set; }
         /// <summary>
         /// String description of the GPU driver version.
         /// </summary>
-        internal string DriverVersion { get; set; }
+        public string DriverVersion { get; set; }
     }
     /// <summary>
     /// Describes the width and height dimensions of an entity.
@@ -14947,11 +14947,11 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// Width in pixels.
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Height in pixels.
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
     }
     /// <summary>
     /// Describes a supported video decoding profile with its associated minimum and
@@ -14962,15 +14962,15 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// Video codec profile that is supported, e.g. VP9 Profile 2.
         /// </summary>
-        internal string Profile { get; set; }
+        public string Profile { get; set; }
         /// <summary>
         /// Maximum video dimensions in pixels supported for this |profile|.
         /// </summary>
-        internal Size MaxResolution { get; set; }
+        public Size MaxResolution { get; set; }
         /// <summary>
         /// Minimum video dimensions in pixels supported for this |profile|.
         /// </summary>
-        internal Size MinResolution { get; set; }
+        public Size MinResolution { get; set; }
     }
     /// <summary>
     /// Describes a supported video encoding profile with its associated maximum
@@ -14981,21 +14981,21 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// Video codec profile that is supported, e.g H264 Main.
         /// </summary>
-        internal string Profile { get; set; }
+        public string Profile { get; set; }
         /// <summary>
         /// Maximum video dimensions in pixels supported for this |profile|.
         /// </summary>
-        internal Size MaxResolution { get; set; }
+        public Size MaxResolution { get; set; }
         /// <summary>
         /// Maximum encoding framerate in frames per second supported for this
         /// |profile|, as fraction's numerator and denominator, e.g. 24/1 fps,
         /// 24000/1001 fps, etc.
         /// </summary>
-        internal int MaxFramerateNumerator { get; set; }
+        public int MaxFramerateNumerator { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int MaxFramerateDenominator { get; set; }
+        public int MaxFramerateDenominator { get; set; }
     }
     /// <summary>
     /// YUV subsampling type of the pixels of a given image.
@@ -15024,19 +15024,19 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// Image coded, e.g. Jpeg.
         /// </summary>
-        internal string ImageType { get; set; }
+        public string ImageType { get; set; }
         /// <summary>
         /// Maximum supported dimensions of the image in pixels.
         /// </summary>
-        internal Size MaxDimensions { get; set; }
+        public Size MaxDimensions { get; set; }
         /// <summary>
         /// Minimum supported dimensions of the image in pixels.
         /// </summary>
-        internal Size MinDimensions { get; set; }
+        public Size MinDimensions { get; set; }
         /// <summary>
         /// Optional array of supported subsampling formats, e.g. 4:2:0, if known.
         /// </summary>
-        internal string[] Subsamplings { get; set; }
+        public string[] Subsamplings { get; set; }
     }
     /// <summary>
     /// Provides information about the GPU(s) on the system.
@@ -15046,31 +15046,31 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// The graphics devices on the system. Element 0 is the primary GPU.
         /// </summary>
-        internal GPUDevice[] Devices { get; set; }
+        public GPUDevice[] Devices { get; set; }
         /// <summary>
         /// An optional dictionary of additional GPU related attributes.
         /// </summary>
-        internal object AuxAttributes { get; set; }
+        public object AuxAttributes { get; set; }
         /// <summary>
         /// An optional dictionary of graphics features and their status.
         /// </summary>
-        internal object FeatureStatus { get; set; }
+        public object FeatureStatus { get; set; }
         /// <summary>
         /// An optional array of GPU driver bug workarounds.
         /// </summary>
-        internal string[] DriverBugWorkarounds { get; set; }
+        public string[] DriverBugWorkarounds { get; set; }
         /// <summary>
         /// Supported accelerated video decoding capabilities.
         /// </summary>
-        internal VideoDecodeAcceleratorCapability[] VideoDecoding { get; set; }
+        public VideoDecodeAcceleratorCapability[] VideoDecoding { get; set; }
         /// <summary>
         /// Supported accelerated video encoding capabilities.
         /// </summary>
-        internal VideoEncodeAcceleratorCapability[] VideoEncoding { get; set; }
+        public VideoEncodeAcceleratorCapability[] VideoEncoding { get; set; }
         /// <summary>
         /// Supported accelerated image decoding capabilities.
         /// </summary>
-        internal ImageDecodeAcceleratorCapability[] ImageDecoding { get; set; }
+        public ImageDecodeAcceleratorCapability[] ImageDecoding { get; set; }
     }
     /// <summary>
     /// Represents process info.
@@ -15080,16 +15080,16 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// Specifies process type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Specifies process id.
         /// </summary>
-        internal int Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Specifies cumulative CPU usage in seconds across all threads of the
         /// process since the process start.
         /// </summary>
-        internal double CpuTime { get; set; }
+        public double CpuTime { get; set; }
     }
     /// <summary>
     /// Returns information about the system.
@@ -15110,22 +15110,22 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// Information about the GPUs on the system.
         /// </summary>
-        internal GPUInfo Gpu { get; set; }
+        public GPUInfo Gpu { get; set; }
         /// <summary>
         /// A platform-dependent description of the model of the machine. On Mac OS, this is, for
         /// example, 'MacBookPro'. Will be the empty string if not supported.
         /// </summary>
-        internal string ModelName { get; set; }
+        public string ModelName { get; set; }
         /// <summary>
         /// A platform-dependent description of the version of the machine. On Mac OS, this is, for
         /// example, '10.1'. Will be the empty string if not supported.
         /// </summary>
-        internal string ModelVersion { get; set; }
+        public string ModelVersion { get; set; }
         /// <summary>
         /// The command line string used to launch the browser. Will be the empty string if not
         /// supported.
         /// </summary>
-        internal string CommandLine { get; set; }
+        public string CommandLine { get; set; }
     }
     /// <summary>
     /// Returns information about all running processes.
@@ -15146,7 +15146,7 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
         /// <summary>
         /// An array of process info blocks.
         /// </summary>
-        internal ProcessInfo[] ProcessInfo { get; set; }
+        public ProcessInfo[] ProcessInfo { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Target
@@ -15159,31 +15159,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Whether the target has an attached client.
         /// </summary>
-        internal bool Attached { get; set; }
+        public bool Attached { get; set; }
         /// <summary>
         /// Opener target Id
         /// </summary>
-        internal string OpenerId { get; set; }
+        public string OpenerId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
     }
     /// <summary>
     /// 
@@ -15193,11 +15193,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string Host { get; set; }
+        public string Host { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int Port { get; set; }
+        public int Port { get; set; }
     }
     /// <summary>
     /// Activates (focuses) the target.
@@ -15212,7 +15212,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetActivateTargetRequest"/>
@@ -15233,13 +15233,13 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
         /// <summary>
         /// Enables "flat" access to the session via specifying sessionId attribute in the commands.
         /// We plan to make this the default, deprecate non-flattened mode,
         /// and eventually retire it. See crbug.com/991325.
         /// </summary>
-        internal bool Flatten { get; set; }
+        public bool Flatten { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetAttachToTargetRequest"/>
@@ -15249,7 +15249,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Id assigned to the session.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
     }
     /// <summary>
     /// Attaches to the browser target, only uses flat sessionId mode.
@@ -15270,7 +15270,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Id assigned to the session.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
     }
     /// <summary>
     /// Closes the target. If the target is a page that gets closed too.
@@ -15285,7 +15285,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetCloseTargetRequest"/>
@@ -15295,7 +15295,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal bool Success { get; set; }
+        public bool Success { get; set; }
     }
     /// <summary>
     /// Inject object to the target's main frame that provides a communication
@@ -15317,11 +15317,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
         /// <summary>
         /// Binding name, 'cdp' if not specified.
         /// </summary>
-        internal string BindingName { get; set; }
+        public string BindingName { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetExposeDevToolsProtocolRequest"/>
@@ -15349,7 +15349,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// The id of the context created.
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
     }
     /// <summary>
     /// Returns all browser contexts created with `Target.createBrowserContext` method.
@@ -15370,7 +15370,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// An array of browser context ids.
         /// </summary>
-        internal string[] BrowserContextIds { get; set; }
+        public string[] BrowserContextIds { get; set; }
     }
     /// <summary>
     /// Creates a new page.
@@ -15385,33 +15385,33 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// The initial URL the page will be navigated to.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Frame width in DIP (headless chrome only).
         /// </summary>
-        internal int Width { get; set; }
+        public int Width { get; set; }
         /// <summary>
         /// Frame height in DIP (headless chrome only).
         /// </summary>
-        internal int Height { get; set; }
+        public int Height { get; set; }
         /// <summary>
         /// The browser context to create the page in.
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
         /// <summary>
         /// Whether BeginFrames for this target will be controlled via DevTools (headless chrome only,
         /// not supported on MacOS yet, false by default).
         /// </summary>
-        internal bool EnableBeginFrameControl { get; set; }
+        public bool EnableBeginFrameControl { get; set; }
         /// <summary>
         /// Whether to create a new Window or Tab (chrome-only, false by default).
         /// </summary>
-        internal bool NewWindow { get; set; }
+        public bool NewWindow { get; set; }
         /// <summary>
         /// Whether to create the target in background or foreground (chrome-only,
         /// false by default).
         /// </summary>
-        internal bool Background { get; set; }
+        public bool Background { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetCreateTargetRequest"/>
@@ -15421,7 +15421,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// The id of the page opened.
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Detaches session with given id.
@@ -15436,11 +15436,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Session to detach.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
         /// <summary>
         /// Deprecated.
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetDetachFromTargetRequest"/>
@@ -15462,7 +15462,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string BrowserContextId { get; set; }
+        public string BrowserContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetDisposeBrowserContextRequest"/>
@@ -15483,7 +15483,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetGetTargetInfoRequest"/>
@@ -15493,7 +15493,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal TargetInfo TargetInfo { get; set; }
+        public TargetInfo TargetInfo { get; set; }
     }
     /// <summary>
     /// Retrieves a list of available targets.
@@ -15514,7 +15514,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// The list of targets.
         /// </summary>
-        internal TargetInfo[] TargetInfos { get; set; }
+        public TargetInfo[] TargetInfos { get; set; }
     }
     /// <summary>
     /// Sends protocol message over session with given id.
@@ -15531,15 +15531,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// Identifier of the session.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
         /// <summary>
         /// Deprecated.
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetSendMessageToTargetRequest"/>
@@ -15562,22 +15562,22 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Whether to auto-attach to related targets.
         /// </summary>
-        internal bool AutoAttach { get; set; }
+        public bool AutoAttach { get; set; }
         /// <summary>
         /// Whether to pause new targets when attaching to them. Use `Runtime.runIfWaitingForDebugger`
         /// to run paused targets.
         /// </summary>
-        internal bool WaitForDebuggerOnStart { get; set; }
+        public bool WaitForDebuggerOnStart { get; set; }
         /// <summary>
         /// Enables "flat" access to the session via specifying sessionId attribute in the commands.
         /// We plan to make this the default, deprecate non-flattened mode,
         /// and eventually retire it. See crbug.com/991325.
         /// </summary>
-        internal bool Flatten { get; set; }
+        public bool Flatten { get; set; }
         /// <summary>
         /// Auto-attach to the targets created via window.open from current target.
         /// </summary>
-        internal bool WindowOpen { get; set; }
+        public bool WindowOpen { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetSetAutoAttachRequest"/>
@@ -15599,7 +15599,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Whether to discover available targets.
         /// </summary>
-        internal bool Discover { get; set; }
+        public bool Discover { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetSetDiscoverTargetsRequest"/>
@@ -15621,7 +15621,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// List of remote locations.
         /// </summary>
-        internal RemoteLocation[] Locations { get; set; }
+        public RemoteLocation[] Locations { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TargetSetRemoteLocationsRequest"/>
@@ -15641,15 +15641,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Identifier assigned to the session used to send/receive messages.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal TargetInfo TargetInfo { get; set; }
+        public TargetInfo TargetInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal bool WaitingForDebugger { get; set; }
+        public bool WaitingForDebugger { get; set; }
     }
     /// <summary>
     /// Issued when detached from target for any reason (including `detachFromTarget` command). Can be
@@ -15664,11 +15664,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Detached session identifier.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
         /// <summary>
         /// Deprecated.
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Notifies about a new protocol message received from the session (as reported in
@@ -15683,15 +15683,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// Identifier of a session which sends a message.
         /// </summary>
-        internal string SessionId { get; set; }
+        public string SessionId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Message { get; set; }
+        public string Message { get; set; }
         /// <summary>
         /// Deprecated.
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Issued when a possible inspection target is created.
@@ -15705,7 +15705,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal TargetInfo TargetInfo { get; set; }
+        public TargetInfo TargetInfo { get; set; }
     }
     /// <summary>
     /// Issued when a target is destroyed.
@@ -15719,7 +15719,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
     }
     /// <summary>
     /// Issued when a target has crashed.
@@ -15733,15 +15733,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetId { get; set; }
+        public string TargetId { get; set; }
         /// <summary>
         /// Termination status type.
         /// </summary>
-        internal string Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// Termination error code.
         /// </summary>
-        internal int ErrorCode { get; set; }
+        public int ErrorCode { get; set; }
     }
     /// <summary>
     /// Issued when some information about a target has changed. This only happens between
@@ -15756,7 +15756,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
         /// <summary>
         /// 
         /// </summary>
-        internal TargetInfo TargetInfo { get; set; }
+        public TargetInfo TargetInfo { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Tethering
@@ -15774,7 +15774,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
         /// <summary>
         /// Port number to bind.
         /// </summary>
-        internal int Port { get; set; }
+        public int Port { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TetheringBindRequest"/>
@@ -15795,7 +15795,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
         /// <summary>
         /// Port number to unbind.
         /// </summary>
-        internal int Port { get; set; }
+        public int Port { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TetheringUnbindRequest"/>
@@ -15815,11 +15815,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
         /// <summary>
         /// Port number that was successfully bound.
         /// </summary>
-        internal int Port { get; set; }
+        public int Port { get; set; }
         /// <summary>
         /// Connection id to be used.
         /// </summary>
-        internal string ConnectionId { get; set; }
+        public string ConnectionId { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Tracing
@@ -15838,35 +15838,35 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// Controls how the trace buffer stores data.
         /// </summary>
-        internal string RecordMode { get; set; }
+        public string RecordMode { get; set; }
         /// <summary>
         /// Turns on JavaScript stack sampling.
         /// </summary>
-        internal bool EnableSampling { get; set; }
+        public bool EnableSampling { get; set; }
         /// <summary>
         /// Turns on system tracing.
         /// </summary>
-        internal bool EnableSystrace { get; set; }
+        public bool EnableSystrace { get; set; }
         /// <summary>
         /// Turns on argument filter.
         /// </summary>
-        internal bool EnableArgumentFilter { get; set; }
+        public bool EnableArgumentFilter { get; set; }
         /// <summary>
         /// Included category filters.
         /// </summary>
-        internal string[] IncludedCategories { get; set; }
+        public string[] IncludedCategories { get; set; }
         /// <summary>
         /// Excluded category filters.
         /// </summary>
-        internal string[] ExcludedCategories { get; set; }
+        public string[] ExcludedCategories { get; set; }
         /// <summary>
         /// Configuration to synthesize the delays in tracing.
         /// </summary>
-        internal string[] SyntheticDelays { get; set; }
+        public string[] SyntheticDelays { get; set; }
         /// <summary>
         /// Configuration for memory dump triggers. Used only when "memory-infra" category is enabled.
         /// </summary>
-        internal MemoryDumpConfig MemoryDumpConfig { get; set; }
+        public MemoryDumpConfig MemoryDumpConfig { get; set; }
     }
     /// <summary>
     /// Data format of a trace. Can be either the legacy JSON format or the
@@ -15921,7 +15921,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// A list of supported tracing categories.
         /// </summary>
-        internal string[] Categories { get; set; }
+        public string[] Categories { get; set; }
     }
     /// <summary>
     /// Record a clock sync marker in the trace.
@@ -15936,7 +15936,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// The ID of this clock sync marker
         /// </summary>
-        internal string SyncId { get; set; }
+        public string SyncId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TracingRecordClockSyncMarkerRequest"/>
@@ -15957,7 +15957,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// Enables more deterministic results by forcing garbage collection
         /// </summary>
-        internal bool Deterministic { get; set; }
+        public bool Deterministic { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TracingRequestMemoryDumpRequest"/>
@@ -15967,11 +15967,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// GUID of the resulting global memory dump.
         /// </summary>
-        internal string DumpGuid { get; set; }
+        public string DumpGuid { get; set; }
         /// <summary>
         /// True iff the global memory dump succeeded.
         /// </summary>
-        internal bool Success { get; set; }
+        public bool Success { get; set; }
     }
     /// <summary>
     /// Start trace events collection.
@@ -15986,34 +15986,34 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// Category/tag filter
         /// </summary>
-        internal string Categories { get; set; }
+        public string Categories { get; set; }
         /// <summary>
         /// Tracing options
         /// </summary>
-        internal string Options { get; set; }
+        public string Options { get; set; }
         /// <summary>
         /// If set, the agent will issue bufferUsage events at this interval, specified in milliseconds
         /// </summary>
-        internal double BufferUsageReportingInterval { get; set; }
+        public double BufferUsageReportingInterval { get; set; }
         /// <summary>
         /// Whether to report trace events as series of dataCollected events or to save trace to a
         /// stream (defaults to `ReportEvents`).
         /// </summary>
-        internal string TransferMode { get; set; }
+        public string TransferMode { get; set; }
         /// <summary>
         /// Trace data format to use. This only applies when using `ReturnAsStream`
         /// transfer mode (defaults to `json`).
         /// </summary>
-        internal string StreamFormat { get; set; }
+        public string StreamFormat { get; set; }
         /// <summary>
         /// Compression format to use. This only applies when using `ReturnAsStream`
         /// transfer mode (defaults to `none`)
         /// </summary>
-        internal string StreamCompression { get; set; }
+        public string StreamCompression { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal TraceConfig TraceConfig { get; set; }
+        public TraceConfig TraceConfig { get; set; }
     }
     /// <summary>
     /// Response from <see cref="TracingStartRequest"/>
@@ -16034,16 +16034,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
         /// total size.
         /// </summary>
-        internal double PercentFull { get; set; }
+        public double PercentFull { get; set; }
         /// <summary>
         /// An approximate number of events in the trace log.
         /// </summary>
-        internal double EventCount { get; set; }
+        public double EventCount { get; set; }
         /// <summary>
         /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
         /// total size.
         /// </summary>
-        internal double Value { get; set; }
+        public double Value { get; set; }
     }
     /// <summary>
     /// Contains an bucket of collected trace events. When tracing is stopped collected events will be
@@ -16058,7 +16058,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// <summary>
         /// 
         /// </summary>
-        internal object[] Value { get; set; }
+        public object[] Value { get; set; }
     }
     /// <summary>
     /// Signals that tracing is stopped and there is no trace buffers pending flush, all data were
@@ -16074,19 +16074,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
         /// Indicates whether some trace data is known to have been lost, e.g. because the trace ring
         /// buffer wrapped around.
         /// </summary>
-        internal bool DataLossOccurred { get; set; }
+        public bool DataLossOccurred { get; set; }
         /// <summary>
         /// A handle of the stream that holds resulting trace data.
         /// </summary>
-        internal string Stream { get; set; }
+        public string Stream { get; set; }
         /// <summary>
         /// Trace data format of returned stream.
         /// </summary>
-        internal string TraceFormat { get; set; }
+        public string TraceFormat { get; set; }
         /// <summary>
         /// Compression format of returned stream.
         /// </summary>
-        internal string StreamCompression { get; set; }
+        public string StreamCompression { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Fetch
@@ -16110,15 +16110,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// Wildcards ('*' -&gt; zero or more, '?' -&gt; exactly one) are allowed. Escape character is
         /// backslash. Omitting is equivalent to "*".
         /// </summary>
-        internal string UrlPattern { get; set; }
+        public string UrlPattern { get; set; }
         /// <summary>
         /// If set, only requests for matching resource types will be intercepted.
         /// </summary>
-        internal string ResourceType { get; set; }
+        public string ResourceType { get; set; }
         /// <summary>
         /// Stage at wich to begin intercepting requests. Default is Request.
         /// </summary>
-        internal string RequestStage { get; set; }
+        public string RequestStage { get; set; }
     }
     /// <summary>
     /// Response HTTP header entry
@@ -16128,11 +16128,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Authorization challenge for HTTP status code 401 or 407.
@@ -16142,19 +16142,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// Source of the authentication challenge.
         /// </summary>
-        internal string Source { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// Origin of the challenger.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// The authentication scheme used, such as basic or digest
         /// </summary>
-        internal string Scheme { get; set; }
+        public string Scheme { get; set; }
         /// <summary>
         /// The realm of the challenge. May be empty.
         /// </summary>
-        internal string Realm { get; set; }
+        public string Realm { get; set; }
     }
     /// <summary>
     /// Response to an AuthChallenge.
@@ -16166,17 +16166,17 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// deferring to the default behavior of the net stack, which will likely either the Cancel
         /// authentication or display a popup dialog box.
         /// </summary>
-        internal string Response { get; set; }
+        public string Response { get; set; }
         /// <summary>
         /// The username to provide, possibly empty. Should only be set if response is
         /// ProvideCredentials.
         /// </summary>
-        internal string Username { get; set; }
+        public string Username { get; set; }
         /// <summary>
         /// The password to provide, possibly empty. Should only be set if response is
         /// ProvideCredentials.
         /// </summary>
-        internal string Password { get; set; }
+        public string Password { get; set; }
     }
     /// <summary>
     /// Disables the fetch domain.
@@ -16211,12 +16211,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// fetchRequested event and will be paused until clients response. If not set,
         /// all requests will be affected.
         /// </summary>
-        internal RequestPattern[] Patterns { get; set; }
+        public RequestPattern[] Patterns { get; set; }
         /// <summary>
         /// If true, authRequired events will be issued and requests will be paused
         /// expecting a call to continueWithAuth.
         /// </summary>
-        internal bool HandleAuthRequests { get; set; }
+        public bool HandleAuthRequests { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchEnableRequest"/>
@@ -16237,11 +16237,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// An id the client received in requestPaused event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Causes the request to fail with the given reason.
         /// </summary>
-        internal string ErrorReason { get; set; }
+        public string ErrorReason { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchFailRequestRequest"/>
@@ -16262,31 +16262,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// An id the client received in requestPaused event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// An HTTP response code.
         /// </summary>
-        internal int ResponseCode { get; set; }
+        public int ResponseCode { get; set; }
         /// <summary>
         /// Response headers.
         /// </summary>
-        internal HeaderEntry[] ResponseHeaders { get; set; }
+        public HeaderEntry[] ResponseHeaders { get; set; }
         /// <summary>
         /// Alternative way of specifying response headers as a \0-separated
         /// series of name: value pairs. Prefer the above method unless you
         /// need to represent some non-UTF8 values that can't be transmitted
         /// over the protocol as text.
         /// </summary>
-        internal byte[] BinaryResponseHeaders { get; set; }
+        public byte[] BinaryResponseHeaders { get; set; }
         /// <summary>
         /// A response body.
         /// </summary>
-        internal byte[] Body { get; set; }
+        public byte[] Body { get; set; }
         /// <summary>
         /// A textual representation of responseCode.
         /// If absent, a standard phrase matching responseCode is used.
         /// </summary>
-        internal string ResponsePhrase { get; set; }
+        public string ResponsePhrase { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchFulfillRequestRequest"/>
@@ -16307,23 +16307,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// An id the client received in requestPaused event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// If set, the request url will be modified in a way that's not observable by page.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// If set, the request method is overridden.
         /// </summary>
-        internal string Method { get; set; }
+        public string Method { get; set; }
         /// <summary>
         /// If set, overrides the post data in the request.
         /// </summary>
-        internal string PostData { get; set; }
+        public string PostData { get; set; }
         /// <summary>
         /// If set, overrides the request headrts.
         /// </summary>
-        internal HeaderEntry[] Headers { get; set; }
+        public HeaderEntry[] Headers { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchContinueRequestRequest"/>
@@ -16344,11 +16344,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// An id the client received in authRequired event.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Response to  with an authChallenge.
         /// </summary>
-        internal AuthChallengeResponse AuthChallengeResponse { get; set; }
+        public AuthChallengeResponse AuthChallengeResponse { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchContinueWithAuthRequest"/>
@@ -16374,7 +16374,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// Identifier for the intercepted request to get body for.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchGetResponseBodyRequest"/>
@@ -16384,11 +16384,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// Response body.
         /// </summary>
-        internal string Body { get; set; }
+        public string Body { get; set; }
         /// <summary>
         /// True, if content was sent as base64.
         /// </summary>
-        internal bool Base64Encoded { get; set; }
+        public bool Base64Encoded { get; set; }
     }
     /// <summary>
     /// Returns a handle to the stream representing the response body.
@@ -16412,7 +16412,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// 
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="FetchTakeResponseBodyAsStreamRequest"/>
@@ -16422,7 +16422,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// 
         /// </summary>
-        internal string Stream { get; set; }
+        public string Stream { get; set; }
     }
     /// <summary>
     /// Issued when the domain is enabled and the request URL matches the
@@ -16441,36 +16441,36 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// Each request the page makes will have a unique id.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// The details of the request.
         /// </summary>
-        internal Network.Request Request { get; set; }
+        public Network.Request Request { get; set; }
         /// <summary>
         /// The id of the frame that initiated the request.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// How the requested resource will be used.
         /// </summary>
-        internal string ResourceType { get; set; }
+        public string ResourceType { get; set; }
         /// <summary>
         /// Response error if intercepted at response stage.
         /// </summary>
-        internal string ResponseErrorReason { get; set; }
+        public string ResponseErrorReason { get; set; }
         /// <summary>
         /// Response code if intercepted at response stage.
         /// </summary>
-        internal int ResponseStatusCode { get; set; }
+        public int ResponseStatusCode { get; set; }
         /// <summary>
         /// Response headers if intercepted at the response stage.
         /// </summary>
-        internal HeaderEntry[] ResponseHeaders { get; set; }
+        public HeaderEntry[] ResponseHeaders { get; set; }
         /// <summary>
         /// If the intercepted request had a corresponding Network.requestWillBeSent event fired for it,
         /// then this networkId will be the same as the requestId present in the requestWillBeSent event.
         /// </summary>
-        internal string NetworkId { get; set; }
+        public string NetworkId { get; set; }
     }
     /// <summary>
     /// Issued when the domain is enabled with handleAuthRequests set to true.
@@ -16485,25 +16485,25 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
         /// <summary>
         /// Each request the page makes will have a unique id.
         /// </summary>
-        internal string RequestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// The details of the request.
         /// </summary>
-        internal Network.Request Request { get; set; }
+        public Network.Request Request { get; set; }
         /// <summary>
         /// The id of the frame that initiated the request.
         /// </summary>
-        internal string FrameId { get; set; }
+        public string FrameId { get; set; }
         /// <summary>
         /// How the requested resource will be used.
         /// </summary>
-        internal string ResourceType { get; set; }
+        public string ResourceType { get; set; }
         /// <summary>
         /// Details of the Authorization Challenge encountered.
         /// If this is set, client should respond with continueRequest that
         /// contains AuthChallengeResponse.
         /// </summary>
-        internal AuthChallenge AuthChallenge { get; set; }
+        public AuthChallenge AuthChallenge { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.WebAudio
@@ -16558,21 +16558,21 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// The current context time in second in BaseAudioContext.
         /// </summary>
-        internal double CurrentTime { get; set; }
+        public double CurrentTime { get; set; }
         /// <summary>
         /// The time spent on rendering graph divided by render qunatum duration,
         /// and multiplied by 100. 100 means the audio renderer reached the full
         /// capacity and glitch may occur.
         /// </summary>
-        internal double RenderCapacity { get; set; }
+        public double RenderCapacity { get; set; }
         /// <summary>
         /// A running mean of callback interval.
         /// </summary>
-        internal double CallbackIntervalMean { get; set; }
+        public double CallbackIntervalMean { get; set; }
         /// <summary>
         /// A running variance of callback interval.
         /// </summary>
-        internal double CallbackIntervalVariance { get; set; }
+        public double CallbackIntervalVariance { get; set; }
     }
     /// <summary>
     /// Protocol object for BaseAudioContext
@@ -16582,31 +16582,31 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextType { get; set; }
+        public string ContextType { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextState { get; set; }
+        public string ContextState { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal ContextRealtimeData RealtimeData { get; set; }
+        public ContextRealtimeData RealtimeData { get; set; }
         /// <summary>
         /// Platform-dependent callback buffer size.
         /// </summary>
-        internal double CallbackBufferSize { get; set; }
+        public double CallbackBufferSize { get; set; }
         /// <summary>
         /// Number of output channels supported by audio hardware in use.
         /// </summary>
-        internal double MaxOutputChannelCount { get; set; }
+        public double MaxOutputChannelCount { get; set; }
         /// <summary>
         /// Context sample rate.
         /// </summary>
-        internal double SampleRate { get; set; }
+        public double SampleRate { get; set; }
     }
     /// <summary>
     /// Protocol object for AudioListner
@@ -16616,11 +16616,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ListenerId { get; set; }
+        public string ListenerId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
     }
     /// <summary>
     /// Protocol object for AudioNode
@@ -16630,35 +16630,35 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string NodeId { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string NodeType { get; set; }
+        public string NodeType { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double NumberOfInputs { get; set; }
+        public double NumberOfInputs { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double NumberOfOutputs { get; set; }
+        public double NumberOfOutputs { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double ChannelCount { get; set; }
+        public double ChannelCount { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ChannelCountMode { get; set; }
+        public string ChannelCountMode { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ChannelInterpretation { get; set; }
+        public string ChannelInterpretation { get; set; }
     }
     /// <summary>
     /// Protocol object for AudioParam
@@ -16668,35 +16668,35 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ParamId { get; set; }
+        public string ParamId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string NodeId { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ParamType { get; set; }
+        public string ParamType { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Rate { get; set; }
+        public string Rate { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double DefaultValue { get; set; }
+        public double DefaultValue { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double MinValue { get; set; }
+        public double MinValue { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double MaxValue { get; set; }
+        public double MaxValue { get; set; }
     }
     /// <summary>
     /// Enables the WebAudio domain and starts sending context lifetime events.
@@ -16745,7 +16745,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAudioGetRealtimeDataRequest"/>
@@ -16755,7 +16755,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal ContextRealtimeData RealtimeData { get; set; }
+        public ContextRealtimeData RealtimeData { get; set; }
     }
     /// <summary>
     /// Notifies that a new BaseAudioContext has been created.
@@ -16769,7 +16769,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal BaseAudioContext Context { get; set; }
+        public BaseAudioContext Context { get; set; }
     }
     /// <summary>
     /// Notifies that an existing BaseAudioContext will be destroyed.
@@ -16783,7 +16783,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
     }
     /// <summary>
     /// Notifies that existing BaseAudioContext has changed some properties (id stays the same)..
@@ -16797,7 +16797,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal BaseAudioContext Context { get; set; }
+        public BaseAudioContext Context { get; set; }
     }
     /// <summary>
     /// Notifies that the construction of an AudioListener has finished.
@@ -16811,7 +16811,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal AudioListener Listener { get; set; }
+        public AudioListener Listener { get; set; }
     }
     /// <summary>
     /// Notifies that a new AudioListener has been created.
@@ -16825,11 +16825,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ListenerId { get; set; }
+        public string ListenerId { get; set; }
     }
     /// <summary>
     /// Notifies that a new AudioNode has been created.
@@ -16843,7 +16843,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal AudioNode Node { get; set; }
+        public AudioNode Node { get; set; }
     }
     /// <summary>
     /// Notifies that an existing AudioNode has been destroyed.
@@ -16857,11 +16857,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string NodeId { get; set; }
+        public string NodeId { get; set; }
     }
     /// <summary>
     /// Notifies that a new AudioParam has been created.
@@ -16875,7 +16875,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal AudioParam Param { get; set; }
+        public AudioParam Param { get; set; }
     }
     /// <summary>
     /// Notifies that an existing AudioParam has been destroyed.
@@ -16889,15 +16889,15 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string NodeId { get; set; }
+        public string NodeId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string ParamId { get; set; }
+        public string ParamId { get; set; }
     }
     /// <summary>
     /// Notifies that two AudioNodes are connected.
@@ -16911,23 +16911,23 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string SourceId { get; set; }
+        public string SourceId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string DestinationId { get; set; }
+        public string DestinationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double SourceOutputIndex { get; set; }
+        public double SourceOutputIndex { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double DestinationInputIndex { get; set; }
+        public double DestinationInputIndex { get; set; }
     }
     /// <summary>
     /// Notifies that AudioNodes are disconnected. The destination can be null, and it means all the outgoing connections from the source are disconnected.
@@ -16941,23 +16941,23 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string SourceId { get; set; }
+        public string SourceId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string DestinationId { get; set; }
+        public string DestinationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double SourceOutputIndex { get; set; }
+        public double SourceOutputIndex { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double DestinationInputIndex { get; set; }
+        public double DestinationInputIndex { get; set; }
     }
     /// <summary>
     /// Notifies that an AudioNode is connected to an AudioParam.
@@ -16971,19 +16971,19 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string SourceId { get; set; }
+        public string SourceId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string DestinationId { get; set; }
+        public string DestinationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double SourceOutputIndex { get; set; }
+        public double SourceOutputIndex { get; set; }
     }
     /// <summary>
     /// Notifies that an AudioNode is disconnected to an AudioParam.
@@ -16997,19 +16997,19 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
         /// <summary>
         /// 
         /// </summary>
-        internal string ContextId { get; set; }
+        public string ContextId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string SourceId { get; set; }
+        public string SourceId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string DestinationId { get; set; }
+        public string DestinationId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double SourceOutputIndex { get; set; }
+        public double SourceOutputIndex { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
@@ -17041,29 +17041,29 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string Protocol { get; set; }
+        public string Protocol { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Transport { get; set; }
+        public string Transport { get; set; }
         /// <summary>
         /// Defaults to false.
         /// </summary>
-        internal bool HasResidentKey { get; set; }
+        public bool HasResidentKey { get; set; }
         /// <summary>
         /// Defaults to false.
         /// </summary>
-        internal bool HasUserVerification { get; set; }
+        public bool HasUserVerification { get; set; }
         /// <summary>
         /// If set to true, tests of user presence will succeed immediately.
         /// Otherwise, they will not be resolved. Defaults to true.
         /// </summary>
-        internal bool AutomaticPresenceSimulation { get; set; }
+        public bool AutomaticPresenceSimulation { get; set; }
         /// <summary>
         /// Sets whether User Verification succeeds or fails for an authenticator.
         /// Defaults to false.
         /// </summary>
-        internal bool IsUserVerified { get; set; }
+        public bool IsUserVerified { get; set; }
     }
     /// <summary>
     /// 
@@ -17073,31 +17073,31 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal byte[] CredentialId { get; set; }
+        public byte[] CredentialId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal bool IsResidentCredential { get; set; }
+        public bool IsResidentCredential { get; set; }
         /// <summary>
         /// Relying Party ID the credential is scoped to. Must be set when adding a
         /// credential.
         /// </summary>
-        internal string RpId { get; set; }
+        public string RpId { get; set; }
         /// <summary>
         /// The ECDSA P-256 private key in PKCS#8 format.
         /// </summary>
-        internal byte[] PrivateKey { get; set; }
+        public byte[] PrivateKey { get; set; }
         /// <summary>
         /// An opaque byte sequence with a maximum size of 64 bytes mapping the
         /// credential to a specific user.
         /// </summary>
-        internal byte[] UserHandle { get; set; }
+        public byte[] UserHandle { get; set; }
         /// <summary>
         /// Signature counter. This is incremented by one for each successful
         /// assertion.
         /// See https://w3c.github.io/webauthn/#signature-counter
         /// </summary>
-        internal int SignCount { get; set; }
+        public int SignCount { get; set; }
     }
     /// <summary>
     /// Enable the WebAuthn domain and start intercepting credential storage and
@@ -17147,7 +17147,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal VirtualAuthenticatorOptions Options { get; set; }
+        public VirtualAuthenticatorOptions Options { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnAddVirtualAuthenticatorRequest"/>
@@ -17157,7 +17157,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
     }
     /// <summary>
     /// Removes the given authenticator.
@@ -17172,7 +17172,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnRemoveVirtualAuthenticatorRequest"/>
@@ -17193,11 +17193,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal Credential Credential { get; set; }
+        public Credential Credential { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnAddCredentialRequest"/>
@@ -17219,11 +17219,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal byte[] CredentialId { get; set; }
+        public byte[] CredentialId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnGetCredentialRequest"/>
@@ -17233,7 +17233,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal Credential Credential { get; set; }
+        public Credential Credential { get; set; }
     }
     /// <summary>
     /// Returns all the credentials stored in the given virtual authenticator.
@@ -17248,7 +17248,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnGetCredentialsRequest"/>
@@ -17258,7 +17258,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal Credential[] Credentials { get; set; }
+        public Credential[] Credentials { get; set; }
     }
     /// <summary>
     /// Removes a credential from the authenticator.
@@ -17273,11 +17273,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal byte[] CredentialId { get; set; }
+        public byte[] CredentialId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnRemoveCredentialRequest"/>
@@ -17298,7 +17298,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnClearCredentialsRequest"/>
@@ -17320,11 +17320,11 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
         /// <summary>
         /// 
         /// </summary>
-        internal string AuthenticatorId { get; set; }
+        public string AuthenticatorId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal bool IsUserVerified { get; set; }
+        public bool IsUserVerified { get; set; }
     }
     /// <summary>
     /// Response from <see cref="WebAuthnSetUserVerifiedRequest"/>
@@ -17343,11 +17343,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Break out events into different types
@@ -17366,20 +17366,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
         /// <summary>
         /// 
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Events are timestamped relative to the start of the player creation
         /// not relative to the start of playback.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
     }
     /// <summary>
     /// Enables the Media domain
@@ -17428,11 +17428,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
         /// <summary>
         /// 
         /// </summary>
-        internal string PlayerId { get; set; }
+        public string PlayerId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal PlayerProperty[] Properties { get; set; }
+        public PlayerProperty[] Properties { get; set; }
     }
     /// <summary>
     /// Send events as a list, allowing them to be batched on the browser for less
@@ -17447,11 +17447,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
         /// <summary>
         /// 
         /// </summary>
-        internal string PlayerId { get; set; }
+        public string PlayerId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal PlayerEvent[] Events { get; set; }
+        public PlayerEvent[] Events { get; set; }
     }
     /// <summary>
     /// Called whenever a player is created, or when a new agent joins and recieves
@@ -17467,7 +17467,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
         /// <summary>
         /// 
         /// </summary>
-        internal string[] Players { get; set; }
+        public string[] Players { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Console
@@ -17480,27 +17480,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
         /// <summary>
         /// Message source.
         /// </summary>
-        internal string Source { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// Message severity.
         /// </summary>
-        internal string Level { get; set; }
+        public string Level { get; set; }
         /// <summary>
         /// Message text.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// URL of the message origin.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Line number in the resource that generated this message (1-based).
         /// </summary>
-        internal int Line { get; set; }
+        public int Line { get; set; }
         /// <summary>
         /// Column number in the resource that generated this message (1-based).
         /// </summary>
-        internal int Column { get; set; }
+        public int Column { get; set; }
     }
     /// <summary>
     /// Does nothing.
@@ -17566,7 +17566,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
         /// <summary>
         /// Console message that has been added.
         /// </summary>
-        internal ConsoleMessage Message { get; set; }
+        public ConsoleMessage Message { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Debugger
@@ -17579,15 +17579,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Script identifier as reported in the `Debugger.scriptParsed`.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// Line number in the script (0-based).
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// Column number in the script (0-based).
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
     }
     /// <summary>
     /// Location in the source code.
@@ -17597,11 +17597,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// 
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
     }
     /// <summary>
     /// JavaScript call frame. Array of call frames form the call stack.
@@ -17611,35 +17611,35 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Call frame identifier. This identifier is only valid while the virtual machine is paused.
         /// </summary>
-        internal string CallFrameId { get; set; }
+        public string CallFrameId { get; set; }
         /// <summary>
         /// Name of the JavaScript function called on this call frame.
         /// </summary>
-        internal string FunctionName { get; set; }
+        public string FunctionName { get; set; }
         /// <summary>
         /// Location in the source code.
         /// </summary>
-        internal Location FunctionLocation { get; set; }
+        public Location FunctionLocation { get; set; }
         /// <summary>
         /// Location in the source code.
         /// </summary>
-        internal Location Location { get; set; }
+        public Location Location { get; set; }
         /// <summary>
         /// JavaScript script name or url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Scope chain for this call frame.
         /// </summary>
-        internal Scope[] ScopeChain { get; set; }
+        public Scope[] ScopeChain { get; set; }
         /// <summary>
         /// `this` object for this call frame.
         /// </summary>
-        internal Runtime.RemoteObject This { get; set; }
+        public Runtime.RemoteObject This { get; set; }
         /// <summary>
         /// The value being returned, if the function is at return point.
         /// </summary>
-        internal Runtime.RemoteObject ReturnValue { get; set; }
+        public Runtime.RemoteObject ReturnValue { get; set; }
     }
     /// <summary>
     /// Scope description.
@@ -17649,25 +17649,25 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Scope type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Object representing the scope. For `global` and `with` scopes it represents the actual
         /// object; for the rest of the scopes, it is artificial transient object enumerating scope
         /// variables as its properties.
         /// </summary>
-        internal Runtime.RemoteObject Object { get; set; }
+        public Runtime.RemoteObject Object { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Location in the source code where scope starts
         /// </summary>
-        internal Location StartLocation { get; set; }
+        public Location StartLocation { get; set; }
         /// <summary>
         /// Location in the source code where scope ends
         /// </summary>
-        internal Location EndLocation { get; set; }
+        public Location EndLocation { get; set; }
     }
     /// <summary>
     /// Search match for resource.
@@ -17677,11 +17677,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Line number in resource content.
         /// </summary>
-        internal double LineNumber { get; set; }
+        public double LineNumber { get; set; }
         /// <summary>
         /// Line with match content.
         /// </summary>
-        internal string LineContent { get; set; }
+        public string LineContent { get; set; }
     }
     /// <summary>
     /// 
@@ -17691,19 +17691,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Script identifier as reported in the `Debugger.scriptParsed`.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// Line number in the script (0-based).
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// Column number in the script (0-based).
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
     }
     /// <summary>
     /// Continues execution until specific location is reached.
@@ -17718,11 +17718,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Location to continue to.
         /// </summary>
-        internal Location Location { get; set; }
+        public Location Location { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string TargetCallFrames { get; set; }
+        public string TargetCallFrames { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerContinueToLocationRequest"/>
@@ -17762,7 +17762,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// The maximum size in bytes of collected scripts (not referenced by other heap objects)
         /// the debugger can hold. Puts no limit if paramter is omitted.
         /// </summary>
-        internal double MaxScriptsCacheSize { get; set; }
+        public double MaxScriptsCacheSize { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerEnableRequest"/>
@@ -17772,7 +17772,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Unique identifier of the debugger.
         /// </summary>
-        internal string DebuggerId { get; set; }
+        public string DebuggerId { get; set; }
     }
     /// <summary>
     /// Evaluates expression on a given call frame.
@@ -17787,42 +17787,42 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Call frame identifier to evaluate on.
         /// </summary>
-        internal string CallFrameId { get; set; }
+        public string CallFrameId { get; set; }
         /// <summary>
         /// Expression to evaluate.
         /// </summary>
-        internal string Expression { get; set; }
+        public string Expression { get; set; }
         /// <summary>
         /// String object group name to put result into (allows rapid releasing resulting object handles
         /// using `releaseObjectGroup`).
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
         /// <summary>
         /// Specifies whether command line API should be available to the evaluated expression, defaults
         /// to false.
         /// </summary>
-        internal bool IncludeCommandLineAPI { get; set; }
+        public bool IncludeCommandLineAPI { get; set; }
         /// <summary>
         /// In silent mode exceptions thrown during evaluation are not reported and do not pause
         /// execution. Overrides `setPauseOnException` state.
         /// </summary>
-        internal bool Silent { get; set; }
+        public bool Silent { get; set; }
         /// <summary>
         /// Whether the result is expected to be a JSON object that should be sent by value.
         /// </summary>
-        internal bool ReturnByValue { get; set; }
+        public bool ReturnByValue { get; set; }
         /// <summary>
         /// Whether preview should be generated for the result.
         /// </summary>
-        internal bool GeneratePreview { get; set; }
+        public bool GeneratePreview { get; set; }
         /// <summary>
         /// Whether to throw an exception if side effect cannot be ruled out during evaluation.
         /// </summary>
-        internal bool ThrowOnSideEffect { get; set; }
+        public bool ThrowOnSideEffect { get; set; }
         /// <summary>
         /// Terminate execution after timing out (number of milliseconds).
         /// </summary>
-        internal long Timeout { get; set; }
+        public long Timeout { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
@@ -17832,11 +17832,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Object wrapper for the evaluation result.
         /// </summary>
-        internal Runtime.RemoteObject Result { get; set; }
+        public Runtime.RemoteObject Result { get; set; }
         /// <summary>
         /// Exception details.
         /// </summary>
-        internal Runtime.ExceptionDetails ExceptionDetails { get; set; }
+        public Runtime.ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Returns possible locations for breakpoint. scriptId in start and end range locations should be
@@ -17852,16 +17852,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Start of range to search possible breakpoint locations in.
         /// </summary>
-        internal Location Start { get; set; }
+        public Location Start { get; set; }
         /// <summary>
         /// End of range to search possible breakpoint locations in (excluding). When not specified, end
         /// of scripts is used as end of range.
         /// </summary>
-        internal Location End { get; set; }
+        public Location End { get; set; }
         /// <summary>
         /// Only consider locations which are in the same (non-nested) function as start.
         /// </summary>
-        internal bool RestrictToFunction { get; set; }
+        public bool RestrictToFunction { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerGetPossibleBreakpointsRequest"/>
@@ -17871,7 +17871,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// List of the possible breakpoint locations.
         /// </summary>
-        internal BreakLocation[] Locations { get; set; }
+        public BreakLocation[] Locations { get; set; }
     }
     /// <summary>
     /// Returns source for the script with given id.
@@ -17886,7 +17886,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the script to get source for.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerGetScriptSourceRequest"/>
@@ -17896,7 +17896,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Script source.
         /// </summary>
-        internal string ScriptSource { get; set; }
+        public string ScriptSource { get; set; }
     }
     /// <summary>
     /// Returns bytecode for the WebAssembly script with given id.
@@ -17911,7 +17911,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the Wasm script to get source for.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerGetWasmBytecodeRequest"/>
@@ -17921,7 +17921,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Script source.
         /// </summary>
-        internal byte[] Bytecode { get; set; }
+        public byte[] Bytecode { get; set; }
     }
     /// <summary>
     /// Returns stack trace with given `stackTraceId`.
@@ -17936,7 +17936,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// 
         /// </summary>
-        internal Runtime.StackTraceId StackTraceId { get; set; }
+        public Runtime.StackTraceId StackTraceId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerGetStackTraceRequest"/>
@@ -17946,7 +17946,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// 
         /// </summary>
-        internal Runtime.StackTrace StackTrace { get; set; }
+        public Runtime.StackTrace StackTrace { get; set; }
     }
     /// <summary>
     /// Stops on the next JavaScript statement.
@@ -17978,7 +17978,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Debugger will pause when async call with given stack trace is started.
         /// </summary>
-        internal Runtime.StackTraceId ParentStackTraceId { get; set; }
+        public Runtime.StackTraceId ParentStackTraceId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerPauseOnAsyncCallRequest"/>
@@ -17999,7 +17999,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// 
         /// </summary>
-        internal string BreakpointId { get; set; }
+        public string BreakpointId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerRemoveBreakpointRequest"/>
@@ -18020,7 +18020,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Call frame identifier to evaluate on.
         /// </summary>
-        internal string CallFrameId { get; set; }
+        public string CallFrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerRestartFrameRequest"/>
@@ -18030,15 +18030,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// New stack trace.
         /// </summary>
-        internal CallFrame[] CallFrames { get; set; }
+        public CallFrame[] CallFrames { get; set; }
         /// <summary>
         /// Async stack trace, if any.
         /// </summary>
-        internal Runtime.StackTrace AsyncStackTrace { get; set; }
+        public Runtime.StackTrace AsyncStackTrace { get; set; }
         /// <summary>
         /// Async stack trace, if any.
         /// </summary>
-        internal Runtime.StackTraceId AsyncStackTraceId { get; set; }
+        public Runtime.StackTraceId AsyncStackTraceId { get; set; }
     }
     /// <summary>
     /// Resumes JavaScript execution.
@@ -18070,19 +18070,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the script to search in.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// String to search for.
         /// </summary>
-        internal string Query { get; set; }
+        public string Query { get; set; }
         /// <summary>
         /// If true, search is case sensitive.
         /// </summary>
-        internal bool CaseSensitive { get; set; }
+        public bool CaseSensitive { get; set; }
         /// <summary>
         /// If true, treats string parameter as regex.
         /// </summary>
-        internal bool IsRegex { get; set; }
+        public bool IsRegex { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSearchInContentRequest"/>
@@ -18092,7 +18092,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// List of search matches.
         /// </summary>
-        internal SearchMatch[] Result { get; set; }
+        public SearchMatch[] Result { get; set; }
     }
     /// <summary>
     /// Enables or disables async call stacks tracking.
@@ -18108,7 +18108,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
         /// call stacks (default).
         /// </summary>
-        internal int MaxDepth { get; set; }
+        public int MaxDepth { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetAsyncCallStackDepthRequest"/>
@@ -18131,7 +18131,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Array of regexps that will be used to check script url for blackbox state.
         /// </summary>
-        internal string[] Patterns { get; set; }
+        public string[] Patterns { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetBlackboxPatternsRequest"/>
@@ -18155,11 +18155,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the script.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal ScriptPosition[] Positions { get; set; }
+        public ScriptPosition[] Positions { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetBlackboxedRangesRequest"/>
@@ -18180,12 +18180,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Location to set breakpoint in.
         /// </summary>
-        internal Location Location { get; set; }
+        public Location Location { get; set; }
         /// <summary>
         /// Expression to use as a breakpoint condition. When specified, debugger will only stop on the
         /// breakpoint if this expression evaluates to true.
         /// </summary>
-        internal string Condition { get; set; }
+        public string Condition { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetBreakpointRequest"/>
@@ -18195,11 +18195,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the created breakpoint for further reference.
         /// </summary>
-        internal string BreakpointId { get; set; }
+        public string BreakpointId { get; set; }
         /// <summary>
         /// Location this breakpoint resolved into.
         /// </summary>
-        internal Location ActualLocation { get; set; }
+        public Location ActualLocation { get; set; }
     }
     /// <summary>
     /// Sets instrumentation breakpoint.
@@ -18214,7 +18214,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Instrumentation name.
         /// </summary>
-        internal string Instrumentation { get; set; }
+        public string Instrumentation { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetInstrumentationBreakpointRequest"/>
@@ -18224,7 +18224,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the created breakpoint for further reference.
         /// </summary>
-        internal string BreakpointId { get; set; }
+        public string BreakpointId { get; set; }
     }
     /// <summary>
     /// Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this
@@ -18242,29 +18242,29 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Line number to set breakpoint at.
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// URL of the resources to set breakpoint on.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Regex pattern for the URLs of the resources to set breakpoints on. Either `url` or
         /// `urlRegex` must be specified.
         /// </summary>
-        internal string UrlRegex { get; set; }
+        public string UrlRegex { get; set; }
         /// <summary>
         /// Script hash of the resources to set breakpoint on.
         /// </summary>
-        internal string ScriptHash { get; set; }
+        public string ScriptHash { get; set; }
         /// <summary>
         /// Offset in the line to set breakpoint at.
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
         /// <summary>
         /// Expression to use as a breakpoint condition. When specified, debugger will only stop on the
         /// breakpoint if this expression evaluates to true.
         /// </summary>
-        internal string Condition { get; set; }
+        public string Condition { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetBreakpointByUrlRequest"/>
@@ -18274,11 +18274,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the created breakpoint for further reference.
         /// </summary>
-        internal string BreakpointId { get; set; }
+        public string BreakpointId { get; set; }
         /// <summary>
         /// List of the locations this breakpoint resolved into upon addition.
         /// </summary>
-        internal Location[] Locations { get; set; }
+        public Location[] Locations { get; set; }
     }
     /// <summary>
     /// Sets JavaScript breakpoint before each call to the given function.
@@ -18295,12 +18295,12 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Function object id.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// Expression to use as a breakpoint condition. When specified, debugger will
         /// stop on the breakpoint if this expression evaluates to true.
         /// </summary>
-        internal string Condition { get; set; }
+        public string Condition { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetBreakpointOnFunctionCallRequest"/>
@@ -18310,7 +18310,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the created breakpoint for further reference.
         /// </summary>
-        internal string BreakpointId { get; set; }
+        public string BreakpointId { get; set; }
     }
     /// <summary>
     /// Activates / deactivates all breakpoints on the page.
@@ -18325,7 +18325,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// New value for breakpoints active state.
         /// </summary>
-        internal bool Active { get; set; }
+        public bool Active { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
@@ -18347,7 +18347,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Pause on exceptions mode.
         /// </summary>
-        internal string State { get; set; }
+        public string State { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetPauseOnExceptionsRequest"/>
@@ -18368,7 +18368,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// New return value.
         /// </summary>
-        internal Runtime.CallArgument NewValue { get; set; }
+        public Runtime.CallArgument NewValue { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetReturnValueRequest"/>
@@ -18389,16 +18389,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Id of the script to edit.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// New content of the script.
         /// </summary>
-        internal string ScriptSource { get; set; }
+        public string ScriptSource { get; set; }
         /// <summary>
         /// If true the change will not actually be applied. Dry run may be used to get result
         /// description without actually modifying the code.
         /// </summary>
-        internal bool DryRun { get; set; }
+        public bool DryRun { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetScriptSourceRequest"/>
@@ -18408,23 +18408,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// New stack trace in case editing has happened while VM was stopped.
         /// </summary>
-        internal CallFrame[] CallFrames { get; set; }
+        public CallFrame[] CallFrames { get; set; }
         /// <summary>
         /// Whether current call stack  was modified after applying the changes.
         /// </summary>
-        internal bool StackChanged { get; set; }
+        public bool StackChanged { get; set; }
         /// <summary>
         /// Async stack trace, if any.
         /// </summary>
-        internal Runtime.StackTrace AsyncStackTrace { get; set; }
+        public Runtime.StackTrace AsyncStackTrace { get; set; }
         /// <summary>
         /// Async stack trace, if any.
         /// </summary>
-        internal Runtime.StackTraceId AsyncStackTraceId { get; set; }
+        public Runtime.StackTraceId AsyncStackTraceId { get; set; }
         /// <summary>
         /// Exception details if any.
         /// </summary>
-        internal Runtime.ExceptionDetails ExceptionDetails { get; set; }
+        public Runtime.ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
@@ -18439,7 +18439,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// New value for skip pauses state.
         /// </summary>
-        internal bool Skip { get; set; }
+        public bool Skip { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetSkipAllPausesRequest"/>
@@ -18462,19 +18462,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// 0-based number of scope as was listed in scope chain. Only 'local', 'closure' and 'catch'
         /// scope types are allowed. Other scopes could be manipulated manually.
         /// </summary>
-        internal int ScopeNumber { get; set; }
+        public int ScopeNumber { get; set; }
         /// <summary>
         /// Variable name.
         /// </summary>
-        internal string VariableName { get; set; }
+        public string VariableName { get; set; }
         /// <summary>
         /// New variable value.
         /// </summary>
-        internal Runtime.CallArgument NewValue { get; set; }
+        public Runtime.CallArgument NewValue { get; set; }
         /// <summary>
         /// Id of callframe that holds variable.
         /// </summary>
-        internal string CallFrameId { get; set; }
+        public string CallFrameId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerSetVariableValueRequest"/>
@@ -18496,7 +18496,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// Debugger will pause on the execution of the first async task which was scheduled
         /// before next pause.
         /// </summary>
-        internal bool BreakOnAsyncCall { get; set; }
+        public bool BreakOnAsyncCall { get; set; }
     }
     /// <summary>
     /// Response from <see cref="DebuggerStepIntoRequest"/>
@@ -18550,11 +18550,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Breakpoint unique identifier.
         /// </summary>
-        internal string BreakpointId { get; set; }
+        public string BreakpointId { get; set; }
         /// <summary>
         /// Actual breakpoint location.
         /// </summary>
-        internal Location Location { get; set; }
+        public Location Location { get; set; }
     }
     /// <summary>
     /// Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
@@ -18568,31 +18568,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Call stack the virtual machine stopped on.
         /// </summary>
-        internal CallFrame[] CallFrames { get; set; }
+        public CallFrame[] CallFrames { get; set; }
         /// <summary>
         /// Pause reason.
         /// </summary>
-        internal string Reason { get; set; }
+        public string Reason { get; set; }
         /// <summary>
         /// Object containing break-specific auxiliary properties.
         /// </summary>
-        internal object Data { get; set; }
+        public object Data { get; set; }
         /// <summary>
         /// Hit breakpoints IDs
         /// </summary>
-        internal string[] HitBreakpoints { get; set; }
+        public string[] HitBreakpoints { get; set; }
         /// <summary>
         /// Async stack trace, if any.
         /// </summary>
-        internal Runtime.StackTrace AsyncStackTrace { get; set; }
+        public Runtime.StackTrace AsyncStackTrace { get; set; }
         /// <summary>
         /// Async stack trace, if any.
         /// </summary>
-        internal Runtime.StackTraceId AsyncStackTraceId { get; set; }
+        public Runtime.StackTraceId AsyncStackTraceId { get; set; }
         /// <summary>
         /// Never present, will be removed.
         /// </summary>
-        internal Runtime.StackTraceId AsyncCallStackTraceId { get; set; }
+        public Runtime.StackTraceId AsyncCallStackTraceId { get; set; }
     }
     /// <summary>
     /// Fired when the virtual machine resumed execution.
@@ -18616,59 +18616,59 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Identifier of the script parsed.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// URL or name of the script parsed (if any).
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Line offset of the script within the resource with given URL (for script tags).
         /// </summary>
-        internal int StartLine { get; set; }
+        public int StartLine { get; set; }
         /// <summary>
         /// Column offset of the script within the resource with given URL.
         /// </summary>
-        internal int StartColumn { get; set; }
+        public int StartColumn { get; set; }
         /// <summary>
         /// Last line of the script.
         /// </summary>
-        internal int EndLine { get; set; }
+        public int EndLine { get; set; }
         /// <summary>
         /// Length of the last line of the script.
         /// </summary>
-        internal int EndColumn { get; set; }
+        public int EndColumn { get; set; }
         /// <summary>
         /// Specifies script creation context.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
         /// <summary>
         /// Content hash of the script.
         /// </summary>
-        internal string Hash { get; set; }
+        public string Hash { get; set; }
         /// <summary>
         /// Embedder-specific auxiliary data.
         /// </summary>
-        internal object ExecutionContextAuxData { get; set; }
+        public object ExecutionContextAuxData { get; set; }
         /// <summary>
         /// URL of source map associated with script (if any).
         /// </summary>
-        internal string SourceMapURL { get; set; }
+        public string SourceMapURL { get; set; }
         /// <summary>
         /// True, if this script has sourceURL.
         /// </summary>
-        internal bool HasSourceURL { get; set; }
+        public bool HasSourceURL { get; set; }
         /// <summary>
         /// True, if this script is ES6 module.
         /// </summary>
-        internal bool IsModule { get; set; }
+        public bool IsModule { get; set; }
         /// <summary>
         /// This script length.
         /// </summary>
-        internal int Length { get; set; }
+        public int Length { get; set; }
         /// <summary>
         /// JavaScript top stack frame of where the script parsed event was triggered if available.
         /// </summary>
-        internal Runtime.StackTrace StackTrace { get; set; }
+        public Runtime.StackTrace StackTrace { get; set; }
     }
     /// <summary>
     /// Fired when virtual machine parses script. This event is also fired for all known and uncollected
@@ -18683,63 +18683,63 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
         /// <summary>
         /// Identifier of the script parsed.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// URL or name of the script parsed (if any).
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Line offset of the script within the resource with given URL (for script tags).
         /// </summary>
-        internal int StartLine { get; set; }
+        public int StartLine { get; set; }
         /// <summary>
         /// Column offset of the script within the resource with given URL.
         /// </summary>
-        internal int StartColumn { get; set; }
+        public int StartColumn { get; set; }
         /// <summary>
         /// Last line of the script.
         /// </summary>
-        internal int EndLine { get; set; }
+        public int EndLine { get; set; }
         /// <summary>
         /// Length of the last line of the script.
         /// </summary>
-        internal int EndColumn { get; set; }
+        public int EndColumn { get; set; }
         /// <summary>
         /// Specifies script creation context.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
         /// <summary>
         /// Content hash of the script.
         /// </summary>
-        internal string Hash { get; set; }
+        public string Hash { get; set; }
         /// <summary>
         /// Embedder-specific auxiliary data.
         /// </summary>
-        internal object ExecutionContextAuxData { get; set; }
+        public object ExecutionContextAuxData { get; set; }
         /// <summary>
         /// True, if this script is generated as a result of the live edit operation.
         /// </summary>
-        internal bool IsLiveEdit { get; set; }
+        public bool IsLiveEdit { get; set; }
         /// <summary>
         /// URL of source map associated with script (if any).
         /// </summary>
-        internal string SourceMapURL { get; set; }
+        public string SourceMapURL { get; set; }
         /// <summary>
         /// True, if this script has sourceURL.
         /// </summary>
-        internal bool HasSourceURL { get; set; }
+        public bool HasSourceURL { get; set; }
         /// <summary>
         /// True, if this script is ES6 module.
         /// </summary>
-        internal bool IsModule { get; set; }
+        public bool IsModule { get; set; }
         /// <summary>
         /// This script length.
         /// </summary>
-        internal int Length { get; set; }
+        public int Length { get; set; }
         /// <summary>
         /// JavaScript top stack frame of where the script parsed event was triggered if available.
         /// </summary>
-        internal Runtime.StackTrace StackTrace { get; set; }
+        public Runtime.StackTrace StackTrace { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
@@ -18752,19 +18752,19 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Function location.
         /// </summary>
-        internal Runtime.CallFrame CallFrame { get; set; }
+        public Runtime.CallFrame CallFrame { get; set; }
         /// <summary>
         /// Allocations size in bytes for the node excluding children.
         /// </summary>
-        internal double SelfSize { get; set; }
+        public double SelfSize { get; set; }
         /// <summary>
         /// Node id. Ids are unique across all profiles collected between startSampling and stopSampling.
         /// </summary>
-        internal int Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Child nodes.
         /// </summary>
-        internal SamplingHeapProfileNode[] Children { get; set; }
+        public SamplingHeapProfileNode[] Children { get; set; }
     }
     /// <summary>
     /// A single sample from a sampling profile.
@@ -18774,16 +18774,16 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Allocation size in bytes attributed to the sample.
         /// </summary>
-        internal double Size { get; set; }
+        public double Size { get; set; }
         /// <summary>
         /// Id of the corresponding profile tree node.
         /// </summary>
-        internal int NodeId { get; set; }
+        public int NodeId { get; set; }
         /// <summary>
         /// Time-ordered sample ordinal number. It is unique across all profiles retrieved
         /// between startSampling and stopSampling.
         /// </summary>
-        internal double Ordinal { get; set; }
+        public double Ordinal { get; set; }
     }
     /// <summary>
     /// Sampling profile.
@@ -18793,11 +18793,11 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// 
         /// </summary>
-        internal SamplingHeapProfileNode Head { get; set; }
+        public SamplingHeapProfileNode Head { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal SamplingHeapProfileSample[] Samples { get; set; }
+        public SamplingHeapProfileSample[] Samples { get; set; }
     }
     /// <summary>
     /// Enables console to refer to the node with given id via $x (see Command Line API for more details
@@ -18813,7 +18813,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Heap snapshot object id to be accessible by means of $x command line API.
         /// </summary>
-        internal string HeapObjectId { get; set; }
+        public string HeapObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerAddInspectedHeapObjectRequest"/>
@@ -18885,7 +18885,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Identifier of the object to get heap object id for.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerGetHeapObjectIdRequest"/>
@@ -18895,7 +18895,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Id of the heap snapshot object corresponding to the passed remote object id.
         /// </summary>
-        internal string HeapSnapshotObjectId { get; set; }
+        public string HeapSnapshotObjectId { get; set; }
     }
     /// <summary>
     /// 
@@ -18910,11 +18910,11 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// 
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// Symbolic group name that can be used to release multiple objects.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerGetObjectByHeapObjectIdRequest"/>
@@ -18924,7 +18924,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Evaluation result.
         /// </summary>
-        internal Runtime.RemoteObject Result { get; set; }
+        public Runtime.RemoteObject Result { get; set; }
     }
     /// <summary>
     /// 
@@ -18945,7 +18945,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Return the sampling profile being collected.
         /// </summary>
-        internal SamplingHeapProfile Profile { get; set; }
+        public SamplingHeapProfile Profile { get; set; }
     }
     /// <summary>
     /// 
@@ -18961,7 +18961,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// Average sample interval in bytes. Poisson distribution is used for the intervals. The
         /// default value is 32768 bytes.
         /// </summary>
-        internal double SamplingInterval { get; set; }
+        public double SamplingInterval { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerStartSamplingRequest"/>
@@ -18982,7 +18982,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// 
         /// </summary>
-        internal bool TrackAllocations { get; set; }
+        public bool TrackAllocations { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerStartTrackingHeapObjectsRequest"/>
@@ -19009,7 +19009,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// Recorded sampling heap profile.
         /// </summary>
-        internal SamplingHeapProfile Profile { get; set; }
+        public SamplingHeapProfile Profile { get; set; }
     }
     /// <summary>
     /// 
@@ -19025,7 +19025,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken
         /// when the tracking is stopped.
         /// </summary>
-        internal bool ReportProgress { get; set; }
+        public bool ReportProgress { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerStopTrackingHeapObjectsRequest"/>
@@ -19046,7 +19046,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken.
         /// </summary>
-        internal bool ReportProgress { get; set; }
+        public bool ReportProgress { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerTakeHeapSnapshotRequest"/>
@@ -19066,7 +19066,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// 
         /// </summary>
-        internal string Chunk { get; set; }
+        public string Chunk { get; set; }
     }
     /// <summary>
     /// If heap objects tracking has been started then backend may send update for one or more fragments
@@ -19082,7 +19082,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// index, the second integer is a total count of objects for the fragment, the third integer is
         /// a total size of the objects for the fragment.
         /// </summary>
-        internal int[] StatsUpdate { get; set; }
+        public int[] StatsUpdate { get; set; }
     }
     /// <summary>
     /// If heap objects tracking has been started then backend regularly sends a current value for last
@@ -19098,11 +19098,11 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// 
         /// </summary>
-        internal int LastSeenObjectId { get; set; }
+        public int LastSeenObjectId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal double Timestamp { get; set; }
+        public double Timestamp { get; set; }
     }
     /// <summary>
     /// 
@@ -19116,15 +19116,15 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// <summary>
         /// 
         /// </summary>
-        internal int Done { get; set; }
+        public int Done { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int Total { get; set; }
+        public int Total { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal bool Finished { get; set; }
+        public bool Finished { get; set; }
     }
     /// <summary>
     /// 
@@ -19147,28 +19147,28 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Unique id of the node.
         /// </summary>
-        internal int Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Function location.
         /// </summary>
-        internal Runtime.CallFrame CallFrame { get; set; }
+        public Runtime.CallFrame CallFrame { get; set; }
         /// <summary>
         /// Number of samples where this node was on top of the call stack.
         /// </summary>
-        internal int HitCount { get; set; }
+        public int HitCount { get; set; }
         /// <summary>
         /// Child node ids.
         /// </summary>
-        internal int[] Children { get; set; }
+        public int[] Children { get; set; }
         /// <summary>
         /// The reason of being not optimized. The function may be deoptimized or marked as don't
         /// optimize.
         /// </summary>
-        internal string DeoptReason { get; set; }
+        public string DeoptReason { get; set; }
         /// <summary>
         /// An array of source position ticks.
         /// </summary>
-        internal PositionTickInfo[] PositionTicks { get; set; }
+        public PositionTickInfo[] PositionTicks { get; set; }
     }
     /// <summary>
     /// Profile.
@@ -19178,24 +19178,24 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// The list of profile nodes. First item is the root node.
         /// </summary>
-        internal ProfileNode[] Nodes { get; set; }
+        public ProfileNode[] Nodes { get; set; }
         /// <summary>
         /// Profiling start timestamp in microseconds.
         /// </summary>
-        internal double StartTime { get; set; }
+        public double StartTime { get; set; }
         /// <summary>
         /// Profiling end timestamp in microseconds.
         /// </summary>
-        internal double EndTime { get; set; }
+        public double EndTime { get; set; }
         /// <summary>
         /// Ids of samples top nodes.
         /// </summary>
-        internal int[] Samples { get; set; }
+        public int[] Samples { get; set; }
         /// <summary>
         /// Time intervals between adjacent samples in microseconds. The first delta is relative to the
         /// profile startTime.
         /// </summary>
-        internal int[] TimeDeltas { get; set; }
+        public int[] TimeDeltas { get; set; }
     }
     /// <summary>
     /// Specifies a number of samples attributed to a certain source position.
@@ -19205,11 +19205,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Source line number (1-based).
         /// </summary>
-        internal int Line { get; set; }
+        public int Line { get; set; }
         /// <summary>
         /// Number of samples attributed to the source line.
         /// </summary>
-        internal int Ticks { get; set; }
+        public int Ticks { get; set; }
     }
     /// <summary>
     /// Coverage data for a source range.
@@ -19219,15 +19219,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// JavaScript script source offset for the range start.
         /// </summary>
-        internal int StartOffset { get; set; }
+        public int StartOffset { get; set; }
         /// <summary>
         /// JavaScript script source offset for the range end.
         /// </summary>
-        internal int EndOffset { get; set; }
+        public int EndOffset { get; set; }
         /// <summary>
         /// Collected execution count of the source range.
         /// </summary>
-        internal int Count { get; set; }
+        public int Count { get; set; }
     }
     /// <summary>
     /// Coverage data for a JavaScript function.
@@ -19237,15 +19237,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// JavaScript function name.
         /// </summary>
-        internal string FunctionName { get; set; }
+        public string FunctionName { get; set; }
         /// <summary>
         /// Source ranges inside the function with coverage data.
         /// </summary>
-        internal CoverageRange[] Ranges { get; set; }
+        public CoverageRange[] Ranges { get; set; }
         /// <summary>
         /// Whether coverage data for this function has block granularity.
         /// </summary>
-        internal bool IsBlockCoverage { get; set; }
+        public bool IsBlockCoverage { get; set; }
     }
     /// <summary>
     /// Coverage data for a JavaScript script.
@@ -19255,15 +19255,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// JavaScript script id.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// JavaScript script name or url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Functions contained in the script that has coverage data.
         /// </summary>
-        internal FunctionCoverage[] Functions { get; set; }
+        public FunctionCoverage[] Functions { get; set; }
     }
     /// <summary>
     /// Describes a type collected during runtime.
@@ -19273,7 +19273,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Name of a type collected with type profiling.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
     }
     /// <summary>
     /// Source offset and types for a parameter or return value.
@@ -19283,11 +19283,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Source offset of the parameter or end of function for return values.
         /// </summary>
-        internal int Offset { get; set; }
+        public int Offset { get; set; }
         /// <summary>
         /// The types for this parameter or return value.
         /// </summary>
-        internal TypeObject[] Types { get; set; }
+        public TypeObject[] Types { get; set; }
     }
     /// <summary>
     /// Type profile data collected during runtime for a JavaScript script.
@@ -19297,15 +19297,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// JavaScript script id.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// JavaScript script name or url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// Type profile entries for parameters and return values of the functions in the script.
         /// </summary>
-        internal TypeProfileEntry[] Entries { get; set; }
+        public TypeProfileEntry[] Entries { get; set; }
     }
     /// <summary>
     /// 
@@ -19361,7 +19361,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Coverage data for the current isolate.
         /// </summary>
-        internal ScriptCoverage[] Result { get; set; }
+        public ScriptCoverage[] Result { get; set; }
     }
     /// <summary>
     /// Changes CPU profiler sampling interval. Must be called before CPU profiles recording started.
@@ -19376,7 +19376,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// New sampling interval in microseconds.
         /// </summary>
-        internal int Interval { get; set; }
+        public int Interval { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ProfilerSetSamplingIntervalRequest"/>
@@ -19416,11 +19416,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Collect accurate call counts beyond simple 'covered' or 'not covered'.
         /// </summary>
-        internal bool CallCount { get; set; }
+        public bool CallCount { get; set; }
         /// <summary>
         /// Collect block-based coverage.
         /// </summary>
-        internal bool Detailed { get; set; }
+        public bool Detailed { get; set; }
     }
     /// <summary>
     /// Response from <see cref="ProfilerStartPreciseCoverageRequest"/>
@@ -19464,7 +19464,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Recorded profile.
         /// </summary>
-        internal Profile Profile { get; set; }
+        public Profile Profile { get; set; }
     }
     /// <summary>
     /// Disable precise code coverage. Disabling releases unnecessary execution count records and allows
@@ -19521,7 +19521,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Coverage data for the current isolate.
         /// </summary>
-        internal ScriptCoverage[] Result { get; set; }
+        public ScriptCoverage[] Result { get; set; }
     }
     /// <summary>
     /// Collect type profile.
@@ -19542,7 +19542,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// Type profile for all scripts since startTypeProfile() was turned on.
         /// </summary>
-        internal ScriptTypeProfile[] Result { get; set; }
+        public ScriptTypeProfile[] Result { get; set; }
     }
     /// <summary>
     /// 
@@ -19556,19 +19556,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// 
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// Location of console.profileEnd().
         /// </summary>
-        internal Debugger.Location Location { get; set; }
+        public Debugger.Location Location { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal Profile Profile { get; set; }
+        public Profile Profile { get; set; }
         /// <summary>
         /// Profile title passed as an argument to console.profile().
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
     }
     /// <summary>
     /// Sent when new profile recording is started using console.profile() call.
@@ -19582,15 +19582,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// <summary>
         /// 
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// Location of console.profile().
         /// </summary>
-        internal Debugger.Location Location { get; set; }
+        public Debugger.Location Location { get; set; }
         /// <summary>
         /// Profile title passed as an argument to console.profile().
         /// </summary>
-        internal string Title { get; set; }
+        public string Title { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Runtime
@@ -19603,40 +19603,40 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Object type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Object subtype hint. Specified for `object` type values only.
         /// </summary>
-        internal string Subtype { get; set; }
+        public string Subtype { get; set; }
         /// <summary>
         /// Object class (constructor) name. Specified for `object` type values only.
         /// </summary>
-        internal string ClassName { get; set; }
+        public string ClassName { get; set; }
         /// <summary>
         /// Remote object value in case of primitive values or JSON values (if it was requested).
         /// </summary>
-        internal object Value { get; set; }
+        public object Value { get; set; }
         /// <summary>
         /// Primitive value which can not be JSON-stringified does not have `value`, but gets this
         /// property.
         /// </summary>
-        internal string UnserializableValue { get; set; }
+        public string UnserializableValue { get; set; }
         /// <summary>
         /// String representation of the object.
         /// </summary>
-        internal string Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// Unique object identifier (for non-primitive values).
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// Preview containing abbreviated property values. Specified for `object` type values only.
         /// </summary>
-        internal ObjectPreview Preview { get; set; }
+        public ObjectPreview Preview { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal CustomPreview CustomPreview { get; set; }
+        public CustomPreview CustomPreview { get; set; }
     }
     /// <summary>
     /// 
@@ -19647,13 +19647,13 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// The JSON-stringified result of formatter.header(object, config) call.
         /// It contains json ML array that represents RemoteObject.
         /// </summary>
-        internal string Header { get; set; }
+        public string Header { get; set; }
         /// <summary>
         /// If formatter returns true as a result of formatter.hasBody call then bodyGetterId will
         /// contain RemoteObjectId for the function that returns result of formatter.body(object, config) call.
         /// The result value is json ML array.
         /// </summary>
-        internal string BodyGetterId { get; set; }
+        public string BodyGetterId { get; set; }
     }
     /// <summary>
     /// Object containing abbreviated remote object value.
@@ -19663,27 +19663,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Object type.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Object subtype hint. Specified for `object` type values only.
         /// </summary>
-        internal string Subtype { get; set; }
+        public string Subtype { get; set; }
         /// <summary>
         /// String representation of the object.
         /// </summary>
-        internal string Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// True iff some of the properties or entries of the original object did not fit.
         /// </summary>
-        internal bool Overflow { get; set; }
+        public bool Overflow { get; set; }
         /// <summary>
         /// List of the properties.
         /// </summary>
-        internal PropertyPreview[] Properties { get; set; }
+        public PropertyPreview[] Properties { get; set; }
         /// <summary>
         /// List of the entries. Specified for `map` and `set` subtype values only.
         /// </summary>
-        internal EntryPreview[] Entries { get; set; }
+        public EntryPreview[] Entries { get; set; }
     }
     /// <summary>
     /// 
@@ -19693,23 +19693,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Property name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Object type. Accessor means that the property itself is an accessor property.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// User-friendly property value string.
         /// </summary>
-        internal string Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
         /// Nested value preview.
         /// </summary>
-        internal ObjectPreview ValuePreview { get; set; }
+        public ObjectPreview ValuePreview { get; set; }
         /// <summary>
         /// Object subtype hint. Specified for `object` type values only.
         /// </summary>
-        internal string Subtype { get; set; }
+        public string Subtype { get; set; }
     }
     /// <summary>
     /// 
@@ -19719,11 +19719,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Preview of the key. Specified for map-like collection entries.
         /// </summary>
-        internal ObjectPreview Key { get; set; }
+        public ObjectPreview Key { get; set; }
         /// <summary>
         /// Preview of the value.
         /// </summary>
-        internal ObjectPreview Value { get; set; }
+        public ObjectPreview Value { get; set; }
     }
     /// <summary>
     /// Object property descriptor.
@@ -19733,47 +19733,47 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Property name or symbol description.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// The value associated with the property.
         /// </summary>
-        internal RemoteObject Value { get; set; }
+        public RemoteObject Value { get; set; }
         /// <summary>
         /// True if the value associated with the property may be changed (data descriptors only).
         /// </summary>
-        internal bool Writable { get; set; }
+        public bool Writable { get; set; }
         /// <summary>
         /// A function which serves as a getter for the property, or `undefined` if there is no getter
         /// (accessor descriptors only).
         /// </summary>
-        internal RemoteObject Get { get; set; }
+        public RemoteObject Get { get; set; }
         /// <summary>
         /// A function which serves as a setter for the property, or `undefined` if there is no setter
         /// (accessor descriptors only).
         /// </summary>
-        internal RemoteObject Set { get; set; }
+        public RemoteObject Set { get; set; }
         /// <summary>
         /// True if the type of this property descriptor may be changed and if the property may be
         /// deleted from the corresponding object.
         /// </summary>
-        internal bool Configurable { get; set; }
+        public bool Configurable { get; set; }
         /// <summary>
         /// True if this property shows up during enumeration of the properties on the corresponding
         /// object.
         /// </summary>
-        internal bool Enumerable { get; set; }
+        public bool Enumerable { get; set; }
         /// <summary>
         /// True if the result was thrown during the evaluation.
         /// </summary>
-        internal bool WasThrown { get; set; }
+        public bool WasThrown { get; set; }
         /// <summary>
         /// True if the property is owned for the object.
         /// </summary>
-        internal bool IsOwn { get; set; }
+        public bool IsOwn { get; set; }
         /// <summary>
         /// Property symbol object, if the property is of the `symbol` type.
         /// </summary>
-        internal RemoteObject Symbol { get; set; }
+        public RemoteObject Symbol { get; set; }
     }
     /// <summary>
     /// Object internal property descriptor. This property isn't normally visible in JavaScript code.
@@ -19783,11 +19783,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Conventional property name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// The value associated with the property.
         /// </summary>
-        internal RemoteObject Value { get; set; }
+        public RemoteObject Value { get; set; }
     }
     /// <summary>
     /// Object private field descriptor.
@@ -19797,11 +19797,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Private property name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// The value associated with the private property.
         /// </summary>
-        internal RemoteObject Value { get; set; }
+        public RemoteObject Value { get; set; }
     }
     /// <summary>
     /// Represents function call argument. Either remote object id `objectId`, primitive `value`,
@@ -19812,15 +19812,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Primitive value or serializable javascript object.
         /// </summary>
-        internal object Value { get; set; }
+        public object Value { get; set; }
         /// <summary>
         /// Primitive value which can not be JSON-stringified.
         /// </summary>
-        internal string UnserializableValue { get; set; }
+        public string UnserializableValue { get; set; }
         /// <summary>
         /// Remote object handle.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Description of an isolated world.
@@ -19831,19 +19831,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// Unique id of the execution context. It can be used to specify in which execution context
         /// script evaluation should be performed.
         /// </summary>
-        internal int Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Execution context origin.
         /// </summary>
-        internal string Origin { get; set; }
+        public string Origin { get; set; }
         /// <summary>
         /// Human readable name describing given context.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Embedder-specific auxiliary data.
         /// </summary>
-        internal object AuxData { get; set; }
+        public object AuxData { get; set; }
     }
     /// <summary>
     /// Detailed information about exception (or error) that was thrown during script compilation or
@@ -19854,39 +19854,39 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Exception id.
         /// </summary>
-        internal int ExceptionId { get; set; }
+        public int ExceptionId { get; set; }
         /// <summary>
         /// Exception text, which should be used together with exception object when available.
         /// </summary>
-        internal string Text { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Line number of the exception location (0-based).
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// Column number of the exception location (0-based).
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
         /// <summary>
         /// Script ID of the exception location.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// URL of the exception location, to be used when the script was not reported.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// JavaScript stack trace if available.
         /// </summary>
-        internal StackTrace StackTrace { get; set; }
+        public StackTrace StackTrace { get; set; }
         /// <summary>
         /// Exception object if available.
         /// </summary>
-        internal RemoteObject Exception { get; set; }
+        public RemoteObject Exception { get; set; }
         /// <summary>
         /// Identifier of the context where exception happened.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Stack entry for runtime errors and assertions.
@@ -19896,23 +19896,23 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// JavaScript function name.
         /// </summary>
-        internal string FunctionName { get; set; }
+        public string FunctionName { get; set; }
         /// <summary>
         /// JavaScript script id.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// JavaScript script name or url.
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
         /// <summary>
         /// JavaScript script line number (0-based).
         /// </summary>
-        internal int LineNumber { get; set; }
+        public int LineNumber { get; set; }
         /// <summary>
         /// JavaScript script column number (0-based).
         /// </summary>
-        internal int ColumnNumber { get; set; }
+        public int ColumnNumber { get; set; }
     }
     /// <summary>
     /// Call frames for assertions or error messages.
@@ -19923,19 +19923,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// String label of this stack trace. For async traces this may be a name of the function that
         /// initiated the async call.
         /// </summary>
-        internal string Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// JavaScript function name.
         /// </summary>
-        internal CallFrame[] CallFrames { get; set; }
+        public CallFrame[] CallFrames { get; set; }
         /// <summary>
         /// Asynchronous JavaScript stack trace that preceded this stack, if available.
         /// </summary>
-        internal StackTrace Parent { get; set; }
+        public StackTrace Parent { get; set; }
         /// <summary>
         /// Asynchronous JavaScript stack trace that preceded this stack, if available.
         /// </summary>
-        internal StackTraceId ParentId { get; set; }
+        public StackTraceId ParentId { get; set; }
     }
     /// <summary>
     /// If `debuggerId` is set stack trace comes from another debugger and can be resolved there. This
@@ -19946,11 +19946,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string DebuggerId { get; set; }
+        public string DebuggerId { get; set; }
     }
     /// <summary>
     /// Add handler to promise with given promise object id.
@@ -19965,15 +19965,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Identifier of the promise.
         /// </summary>
-        internal string PromiseObjectId { get; set; }
+        public string PromiseObjectId { get; set; }
         /// <summary>
         /// Whether the result is expected to be a JSON object that should be sent by value.
         /// </summary>
-        internal bool ReturnByValue { get; set; }
+        public bool ReturnByValue { get; set; }
         /// <summary>
         /// Whether preview should be generated for the result.
         /// </summary>
-        internal bool GeneratePreview { get; set; }
+        public bool GeneratePreview { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeAwaitPromiseRequest"/>
@@ -19983,11 +19983,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Promise result. Will contain rejected value if promise was rejected.
         /// </summary>
-        internal RemoteObject Result { get; set; }
+        public RemoteObject Result { get; set; }
         /// <summary>
         /// Exception details if stack strace is available.
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Calls function with given declaration on the given object. Object group of the result is
@@ -20003,49 +20003,49 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Declaration of the function to call.
         /// </summary>
-        internal string FunctionDeclaration { get; set; }
+        public string FunctionDeclaration { get; set; }
         /// <summary>
         /// Identifier of the object to call function on. Either objectId or executionContextId should
         /// be specified.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// Call arguments. All call arguments must belong to the same JavaScript world as the target
         /// object.
         /// </summary>
-        internal CallArgument[] Arguments { get; set; }
+        public CallArgument[] Arguments { get; set; }
         /// <summary>
         /// In silent mode exceptions thrown during evaluation are not reported and do not pause
         /// execution. Overrides `setPauseOnException` state.
         /// </summary>
-        internal bool Silent { get; set; }
+        public bool Silent { get; set; }
         /// <summary>
         /// Whether the result is expected to be a JSON object which should be sent by value.
         /// </summary>
-        internal bool ReturnByValue { get; set; }
+        public bool ReturnByValue { get; set; }
         /// <summary>
         /// Whether preview should be generated for the result.
         /// </summary>
-        internal bool GeneratePreview { get; set; }
+        public bool GeneratePreview { get; set; }
         /// <summary>
         /// Whether execution should be treated as initiated by user in the UI.
         /// </summary>
-        internal bool UserGesture { get; set; }
+        public bool UserGesture { get; set; }
         /// <summary>
         /// Whether execution should `await` for resulting value and return once awaited promise is
         /// resolved.
         /// </summary>
-        internal bool AwaitPromise { get; set; }
+        public bool AwaitPromise { get; set; }
         /// <summary>
         /// Specifies execution context which global object will be used to call function on. Either
         /// executionContextId or objectId should be specified.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
         /// <summary>
         /// Symbolic group name that can be used to release multiple objects. If objectGroup is not
         /// specified and objectId is, objectGroup will be inherited from object.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeCallFunctionOnRequest"/>
@@ -20055,11 +20055,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Call result.
         /// </summary>
-        internal RemoteObject Result { get; set; }
+        public RemoteObject Result { get; set; }
         /// <summary>
         /// Exception details.
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Compiles expression.
@@ -20074,20 +20074,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Expression to compile.
         /// </summary>
-        internal string Expression { get; set; }
+        public string Expression { get; set; }
         /// <summary>
         /// Source url to be set for the script.
         /// </summary>
-        internal string SourceURL { get; set; }
+        public string SourceURL { get; set; }
         /// <summary>
         /// Specifies whether the compiled script should be persisted.
         /// </summary>
-        internal bool PersistScript { get; set; }
+        public bool PersistScript { get; set; }
         /// <summary>
         /// Specifies in which execution context to perform script run. If the parameter is omitted the
         /// evaluation will be performed in the context of the inspected page.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeCompileScriptRequest"/>
@@ -20097,11 +20097,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Id of the script.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// Exception details.
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Disables reporting of execution contexts creation.
@@ -20169,55 +20169,55 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Expression to evaluate.
         /// </summary>
-        internal string Expression { get; set; }
+        public string Expression { get; set; }
         /// <summary>
         /// Symbolic group name that can be used to release multiple objects.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
         /// <summary>
         /// Determines whether Command Line API should be available during the evaluation.
         /// </summary>
-        internal bool IncludeCommandLineAPI { get; set; }
+        public bool IncludeCommandLineAPI { get; set; }
         /// <summary>
         /// In silent mode exceptions thrown during evaluation are not reported and do not pause
         /// execution. Overrides `setPauseOnException` state.
         /// </summary>
-        internal bool Silent { get; set; }
+        public bool Silent { get; set; }
         /// <summary>
         /// Specifies in which execution context to perform evaluation. If the parameter is omitted the
         /// evaluation will be performed in the context of the inspected page.
         /// </summary>
-        internal int ContextId { get; set; }
+        public int ContextId { get; set; }
         /// <summary>
         /// Whether the result is expected to be a JSON object that should be sent by value.
         /// </summary>
-        internal bool ReturnByValue { get; set; }
+        public bool ReturnByValue { get; set; }
         /// <summary>
         /// Whether preview should be generated for the result.
         /// </summary>
-        internal bool GeneratePreview { get; set; }
+        public bool GeneratePreview { get; set; }
         /// <summary>
         /// Whether execution should be treated as initiated by user in the UI.
         /// </summary>
-        internal bool UserGesture { get; set; }
+        public bool UserGesture { get; set; }
         /// <summary>
         /// Whether execution should `await` for resulting value and return once awaited promise is
         /// resolved.
         /// </summary>
-        internal bool AwaitPromise { get; set; }
+        public bool AwaitPromise { get; set; }
         /// <summary>
         /// Whether to throw an exception if side effect cannot be ruled out during evaluation.
         /// This implies `disableBreaks` below.
         /// </summary>
-        internal bool ThrowOnSideEffect { get; set; }
+        public bool ThrowOnSideEffect { get; set; }
         /// <summary>
         /// Terminate execution after timing out (number of milliseconds).
         /// </summary>
-        internal long Timeout { get; set; }
+        public long Timeout { get; set; }
         /// <summary>
         /// Disable breakpoints during execution.
         /// </summary>
-        internal bool DisableBreaks { get; set; }
+        public bool DisableBreaks { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeEvaluateRequest"/>
@@ -20227,11 +20227,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Evaluation result.
         /// </summary>
-        internal RemoteObject Result { get; set; }
+        public RemoteObject Result { get; set; }
         /// <summary>
         /// Exception details.
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Returns the isolate id.
@@ -20252,7 +20252,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// The isolate id.
         /// </summary>
-        internal string Id { get; set; }
+        public string Id { get; set; }
     }
     /// <summary>
     /// Returns the JavaScript heap usage.
@@ -20274,11 +20274,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Used heap size in bytes.
         /// </summary>
-        internal double UsedSize { get; set; }
+        public double UsedSize { get; set; }
         /// <summary>
         /// Allocated heap size in bytes.
         /// </summary>
-        internal double TotalSize { get; set; }
+        public double TotalSize { get; set; }
     }
     /// <summary>
     /// Returns properties of a given object. Object group of the result is inherited from the target
@@ -20294,21 +20294,21 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Identifier of the object to return properties for.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
         /// <summary>
         /// If true, returns properties belonging only to the element itself, not to its prototype
         /// chain.
         /// </summary>
-        internal bool OwnProperties { get; set; }
+        public bool OwnProperties { get; set; }
         /// <summary>
         /// If true, returns accessor properties (with getter/setter) only; internal properties are not
         /// returned either.
         /// </summary>
-        internal bool AccessorPropertiesOnly { get; set; }
+        public bool AccessorPropertiesOnly { get; set; }
         /// <summary>
         /// Whether preview should be generated for the results.
         /// </summary>
-        internal bool GeneratePreview { get; set; }
+        public bool GeneratePreview { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeGetPropertiesRequest"/>
@@ -20318,19 +20318,19 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Object properties.
         /// </summary>
-        internal PropertyDescriptor[] Result { get; set; }
+        public PropertyDescriptor[] Result { get; set; }
         /// <summary>
         /// Internal object properties (only of the element itself).
         /// </summary>
-        internal InternalPropertyDescriptor[] InternalProperties { get; set; }
+        public InternalPropertyDescriptor[] InternalProperties { get; set; }
         /// <summary>
         /// Object private properties.
         /// </summary>
-        internal PrivatePropertyDescriptor[] PrivateProperties { get; set; }
+        public PrivatePropertyDescriptor[] PrivateProperties { get; set; }
         /// <summary>
         /// Exception details.
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Returns all let, const and class variables from global scope.
@@ -20345,7 +20345,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Specifies in which execution context to lookup global scope variables.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeGlobalLexicalScopeNamesRequest"/>
@@ -20355,7 +20355,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal string[] Names { get; set; }
+        public string[] Names { get; set; }
     }
     /// <summary>
     /// 
@@ -20370,11 +20370,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Identifier of the prototype to return objects for.
         /// </summary>
-        internal string PrototypeObjectId { get; set; }
+        public string PrototypeObjectId { get; set; }
         /// <summary>
         /// Symbolic group name that can be used to release the results.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeQueryObjectsRequest"/>
@@ -20384,7 +20384,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Array with objects.
         /// </summary>
-        internal RemoteObject Objects { get; set; }
+        public RemoteObject Objects { get; set; }
     }
     /// <summary>
     /// Releases remote object with given id.
@@ -20399,7 +20399,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Identifier of the object to release.
         /// </summary>
-        internal string ObjectId { get; set; }
+        public string ObjectId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeReleaseObjectRequest"/>
@@ -20420,7 +20420,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Symbolic object group name.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeReleaseObjectGroupRequest"/>
@@ -20458,38 +20458,38 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Id of the script to run.
         /// </summary>
-        internal string ScriptId { get; set; }
+        public string ScriptId { get; set; }
         /// <summary>
         /// Specifies in which execution context to perform script run. If the parameter is omitted the
         /// evaluation will be performed in the context of the inspected page.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
         /// <summary>
         /// Symbolic group name that can be used to release multiple objects.
         /// </summary>
-        internal string ObjectGroup { get; set; }
+        public string ObjectGroup { get; set; }
         /// <summary>
         /// In silent mode exceptions thrown during evaluation are not reported and do not pause
         /// execution. Overrides `setPauseOnException` state.
         /// </summary>
-        internal bool Silent { get; set; }
+        public bool Silent { get; set; }
         /// <summary>
         /// Determines whether Command Line API should be available during the evaluation.
         /// </summary>
-        internal bool IncludeCommandLineAPI { get; set; }
+        public bool IncludeCommandLineAPI { get; set; }
         /// <summary>
         /// Whether the result is expected to be a JSON object which should be sent by value.
         /// </summary>
-        internal bool ReturnByValue { get; set; }
+        public bool ReturnByValue { get; set; }
         /// <summary>
         /// Whether preview should be generated for the result.
         /// </summary>
-        internal bool GeneratePreview { get; set; }
+        public bool GeneratePreview { get; set; }
         /// <summary>
         /// Whether execution should `await` for resulting value and return once awaited promise is
         /// resolved.
         /// </summary>
-        internal bool AwaitPromise { get; set; }
+        public bool AwaitPromise { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeRunScriptRequest"/>
@@ -20499,11 +20499,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Run result.
         /// </summary>
-        internal RemoteObject Result { get; set; }
+        public RemoteObject Result { get; set; }
         /// <summary>
         /// Exception details.
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Enables or disables async call stacks tracking.
@@ -20519,7 +20519,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
         /// call stacks (default).
         /// </summary>
-        internal int MaxDepth { get; set; }
+        public int MaxDepth { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeSetAsyncCallStackDepthRequest"/>
@@ -20540,7 +20540,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal bool Enabled { get; set; }
+        public bool Enabled { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeSetCustomObjectFormatterEnabledRequest"/>
@@ -20561,7 +20561,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal int Size { get; set; }
+        public int Size { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeSetMaxCallStackSizeToCaptureRequest"/>
@@ -20607,11 +20607,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeAddBindingRequest"/>
@@ -20633,7 +20633,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeRemoveBindingRequest"/>
@@ -20653,15 +20653,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal string Payload { get; set; }
+        public string Payload { get; set; }
         /// <summary>
         /// Identifier of the context where the call was made.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Issued when console API was called.
@@ -20675,31 +20675,31 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Type of the call.
         /// </summary>
-        internal string Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Call arguments.
         /// </summary>
-        internal RemoteObject[] Args { get; set; }
+        public RemoteObject[] Args { get; set; }
         /// <summary>
         /// Identifier of the context where the call was made.
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
         /// <summary>
         /// Call timestamp.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// Stack trace captured when the call was made. The async stack chain is automatically reported for
         /// the following call types: `assert`, `error`, `trace`, `warning`. For other types the async call
         /// chain can be retrieved using `Debugger.getStackTrace` and `stackTrace.parentId` field.
         /// </summary>
-        internal StackTrace StackTrace { get; set; }
+        public StackTrace StackTrace { get; set; }
         /// <summary>
         /// Console context descriptor for calls on non-default console context (not console.*):
         /// 'anonymous#unique-logger-id' for call on unnamed context, 'name#unique-logger-id' for call
         /// on named context.
         /// </summary>
-        internal string Context { get; set; }
+        public string Context { get; set; }
     }
     /// <summary>
     /// Issued when unhandled exception was revoked.
@@ -20713,11 +20713,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Reason describing why exception was revoked.
         /// </summary>
-        internal string Reason { get; set; }
+        public string Reason { get; set; }
         /// <summary>
         /// The id of revoked exception, as reported in `exceptionThrown`.
         /// </summary>
-        internal int ExceptionId { get; set; }
+        public int ExceptionId { get; set; }
     }
     /// <summary>
     /// Issued when exception was thrown and unhandled.
@@ -20731,11 +20731,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Timestamp of the exception.
         /// </summary>
-        internal long Timestamp { get; set; }
+        public long Timestamp { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal ExceptionDetails ExceptionDetails { get; set; }
+        public ExceptionDetails ExceptionDetails { get; set; }
     }
     /// <summary>
     /// Issued when new execution context is created.
@@ -20749,7 +20749,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// A newly created execution context.
         /// </summary>
-        internal ExecutionContextDescription Context { get; set; }
+        public ExecutionContextDescription Context { get; set; }
     }
     /// <summary>
     /// Issued when execution context is destroyed.
@@ -20763,7 +20763,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// Id of the destroyed context
         /// </summary>
-        internal int ExecutionContextId { get; set; }
+        public int ExecutionContextId { get; set; }
     }
     /// <summary>
     /// Issued when all executionContexts were cleared in browser
@@ -20788,11 +20788,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// <summary>
         /// 
         /// </summary>
-        internal RemoteObject Object { get; set; }
+        public RemoteObject Object { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        internal object Hints { get; set; }
+        public object Hints { get; set; }
     }
 }
 namespace PlaywrightSharp.Chromium.Protocol.Schema
@@ -20805,11 +20805,11 @@ namespace PlaywrightSharp.Chromium.Protocol.Schema
         /// <summary>
         /// Domain name.
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Domain version.
         /// </summary>
-        internal string Version { get; set; }
+        public string Version { get; set; }
     }
     /// <summary>
     /// Returns supported domains.
@@ -20830,7 +20830,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Schema
         /// <summary>
         /// List of supported domains.
         /// </summary>
-        internal Domain[] Domains { get; set; }
+        public Domain[] Domains { get; set; }
     }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
