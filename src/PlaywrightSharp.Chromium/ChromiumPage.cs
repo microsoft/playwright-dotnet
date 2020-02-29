@@ -133,13 +133,13 @@ namespace PlaywrightSharp.Chromium
                 switch (e.MessageID)
                 {
                     case "Page.frameAttached":
-                        OnFrameAttached(e.MessageData?.ToObject<PageFrameAttachedEventArgs>());
+                        OnFrameAttached(e.MessageData?.ToObject<PageFrameAttachedChromiumEvent>());
                         break;
                     case "Page.frameNavigated":
-                        OnFrameNavigated(e.MessageData?.ToObject<PageFrameNavigatedEventArgs>()?.Frame, false);
+                        OnFrameNavigated(e.MessageData?.ToObject<PageFrameNavigatedChromiumEvent>()?.Frame, false);
                         break;
                     case "Page.lifecycleEvent":
-                        OnLifecycleEvent(e.MessageData?.ToObject<PageLifecycleEventEventArgs>());
+                        OnLifecycleEvent(e.MessageData?.ToObject<PageLifecycleEventChromiumEvent>());
                         break;
                 }
             }
@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void OnLifecycleEvent(PageLifecycleEventEventArgs e)
+        private void OnLifecycleEvent(PageLifecycleEventChromiumEvent e)
         {
             if (e.Name == "load")
             {
@@ -194,7 +194,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void OnFrameAttached(PageFrameAttachedEventArgs e) => OnFrameAttached(e.FrameId, e.ParentFrameId);
+        private void OnFrameAttached(PageFrameAttachedChromiumEvent e) => OnFrameAttached(e.FrameId, e.ParentFrameId);
 
         private void OnFrameAttached(string frameId, string parentFrameId) => Page.FrameManager.FrameAttached(frameId, parentFrameId);
     }

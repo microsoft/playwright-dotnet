@@ -145,15 +145,15 @@ namespace PlaywrightSharp.Chromium
                 switch (e.MessageID)
                 {
                     case "Target.targetCreated":
-                        await CreateTargetAsync(e.MessageData?.ToObject<TargetTargetCreatedEventArgs>()).ConfigureAwait(false);
+                        await CreateTargetAsync(e.MessageData?.ToObject<TargetTargetCreatedChromiumEvent>()).ConfigureAwait(false);
                         return;
 
                     case "Target.targetDestroyed":
-                        await DestroyTargetAsync(e.MessageData?.ToObject<TargetTargetDestroyedEventArgs>()).ConfigureAwait(false);
+                        await DestroyTargetAsync(e.MessageData?.ToObject<TargetTargetDestroyedChromiumEvent>()).ConfigureAwait(false);
                         return;
 
                     case "Target.targetInfoChanged":
-                        ChangeTargetInfo(e.MessageData?.ToObject<TargetTargetCreatedEventArgs>());
+                        ChangeTargetInfo(e.MessageData?.ToObject<TargetTargetCreatedChromiumEvent>());
                         return;
                 }
             }
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private async Task CreateTargetAsync(TargetTargetCreatedEventArgs e)
+        private async Task CreateTargetAsync(TargetTargetCreatedChromiumEvent e)
         {
             var targetInfo = e.TargetInfo;
             string browserContextId = targetInfo.BrowserContextId;
@@ -201,7 +201,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private async Task DestroyTargetAsync(TargetTargetDestroyedEventArgs e)
+        private async Task DestroyTargetAsync(TargetTargetDestroyedChromiumEvent e)
         {
             if (!TargetsMap.ContainsKey(e.TargetId))
             {
@@ -220,7 +220,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void ChangeTargetInfo(TargetTargetCreatedEventArgs e)
+        private void ChangeTargetInfo(TargetTargetCreatedChromiumEvent e)
         {
             if (!TargetsMap.ContainsKey(e.TargetInfo.TargetId))
             {

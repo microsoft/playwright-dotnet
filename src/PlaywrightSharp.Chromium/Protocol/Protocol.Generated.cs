@@ -688,7 +688,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// <remarks>
     /// Matches on the event <c>Animation.animationCanceled</c>
     /// </remarks>
-    internal class AnimationAnimationCanceledEventArgs : ChromiumEvent
+    internal class AnimationAnimationCanceledChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Animation.animationCanceled";
         /// <summary>
@@ -702,7 +702,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// <remarks>
     /// Matches on the event <c>Animation.animationCreated</c>
     /// </remarks>
-    internal class AnimationAnimationCreatedEventArgs : ChromiumEvent
+    internal class AnimationAnimationCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Animation.animationCreated";
         /// <summary>
@@ -716,7 +716,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// <remarks>
     /// Matches on the event <c>Animation.animationStarted</c>
     /// </remarks>
-    internal class AnimationAnimationStartedEventArgs : ChromiumEvent
+    internal class AnimationAnimationStartedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Animation.animationStarted";
         /// <summary>
@@ -881,7 +881,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
     /// <remarks>
     /// Matches on the event <c>ApplicationCache.applicationCacheStatusUpdated</c>
     /// </remarks>
-    internal class ApplicationCacheApplicationCacheStatusUpdatedEventArgs : ChromiumEvent
+    internal class ApplicationCacheApplicationCacheStatusUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "ApplicationCache.applicationCacheStatusUpdated";
         /// <summary>
@@ -903,7 +903,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
     /// <remarks>
     /// Matches on the event <c>ApplicationCache.networkStateUpdated</c>
     /// </remarks>
-    internal class ApplicationCacheNetworkStateUpdatedEventArgs : ChromiumEvent
+    internal class ApplicationCacheNetworkStateUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "ApplicationCache.networkStateUpdated";
         /// <summary>
@@ -1114,7 +1114,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
     /// <remarks>
     /// Matches on the event <c>BackgroundService.recordingStateChanged</c>
     /// </remarks>
-    internal class BackgroundServiceRecordingStateChangedEventArgs : ChromiumEvent
+    internal class BackgroundServiceRecordingStateChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "BackgroundService.recordingStateChanged";
         /// <summary>
@@ -1133,7 +1133,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
     /// <remarks>
     /// Matches on the event <c>BackgroundService.backgroundServiceEventReceived</c>
     /// </remarks>
-    internal class BackgroundServiceBackgroundServiceEventReceivedEventArgs : ChromiumEvent
+    internal class BackgroundServiceBackgroundServiceEventReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "BackgroundService.backgroundServiceEventReceived";
         /// <summary>
@@ -2717,7 +2717,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// <remarks>
     /// Matches on the event <c>CSS.fontsUpdated</c>
     /// </remarks>
-    internal class CSSFontsUpdatedEventArgs : ChromiumEvent
+    internal class CSSFontsUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "CSS.fontsUpdated";
         /// <summary>
@@ -2732,7 +2732,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// <remarks>
     /// Matches on the event <c>CSS.mediaQueryResultChanged</c>
     /// </remarks>
-    internal class CSSMediaQueryResultChangedEventArgs : ChromiumEvent
+    internal class CSSMediaQueryResultChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "CSS.mediaQueryResultChanged";
     }
@@ -2742,7 +2742,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// <remarks>
     /// Matches on the event <c>CSS.styleSheetAdded</c>
     /// </remarks>
-    internal class CSSStyleSheetAddedEventArgs : ChromiumEvent
+    internal class CSSStyleSheetAddedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "CSS.styleSheetAdded";
         /// <summary>
@@ -2756,7 +2756,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// <remarks>
     /// Matches on the event <c>CSS.styleSheetChanged</c>
     /// </remarks>
-    internal class CSSStyleSheetChangedEventArgs : ChromiumEvent
+    internal class CSSStyleSheetChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "CSS.styleSheetChanged";
         /// <summary>
@@ -2770,7 +2770,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// <remarks>
     /// Matches on the event <c>CSS.styleSheetRemoved</c>
     /// </remarks>
-    internal class CSSStyleSheetRemovedEventArgs : ChromiumEvent
+    internal class CSSStyleSheetRemovedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "CSS.styleSheetRemoved";
         /// <summary>
@@ -3144,7 +3144,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// <remarks>
     /// Matches on the event <c>Cast.sinksUpdated</c>
     /// </remarks>
-    internal class CastSinksUpdatedEventArgs : ChromiumEvent
+    internal class CastSinksUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Cast.sinksUpdated";
         /// <summary>
@@ -3159,7 +3159,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// <remarks>
     /// Matches on the event <c>Cast.issueUpdated</c>
     /// </remarks>
-    internal class CastIssueUpdatedEventArgs : ChromiumEvent
+    internal class CastIssueUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Cast.issueUpdated";
         /// <summary>
@@ -4595,7 +4595,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.attributeModified</c>
     /// </remarks>
-    internal class DOMAttributeModifiedEventArgs : ChromiumEvent
+    internal class DOMAttributeModifiedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.attributeModified";
         /// <summary>
@@ -4617,7 +4617,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.attributeRemoved</c>
     /// </remarks>
-    internal class DOMAttributeRemovedEventArgs : ChromiumEvent
+    internal class DOMAttributeRemovedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.attributeRemoved";
         /// <summary>
@@ -4635,7 +4635,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.characterDataModified</c>
     /// </remarks>
-    internal class DOMCharacterDataModifiedEventArgs : ChromiumEvent
+    internal class DOMCharacterDataModifiedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.characterDataModified";
         /// <summary>
@@ -4653,7 +4653,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.childNodeCountUpdated</c>
     /// </remarks>
-    internal class DOMChildNodeCountUpdatedEventArgs : ChromiumEvent
+    internal class DOMChildNodeCountUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.childNodeCountUpdated";
         /// <summary>
@@ -4671,7 +4671,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.childNodeInserted</c>
     /// </remarks>
-    internal class DOMChildNodeInsertedEventArgs : ChromiumEvent
+    internal class DOMChildNodeInsertedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.childNodeInserted";
         /// <summary>
@@ -4693,7 +4693,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.childNodeRemoved</c>
     /// </remarks>
-    internal class DOMChildNodeRemovedEventArgs : ChromiumEvent
+    internal class DOMChildNodeRemovedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.childNodeRemoved";
         /// <summary>
@@ -4711,7 +4711,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.distributedNodesUpdated</c>
     /// </remarks>
-    internal class DOMDistributedNodesUpdatedEventArgs : ChromiumEvent
+    internal class DOMDistributedNodesUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.distributedNodesUpdated";
         /// <summary>
@@ -4729,7 +4729,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.documentUpdated</c>
     /// </remarks>
-    internal class DOMDocumentUpdatedEventArgs : ChromiumEvent
+    internal class DOMDocumentUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.documentUpdated";
     }
@@ -4739,7 +4739,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.inlineStyleInvalidated</c>
     /// </remarks>
-    internal class DOMInlineStyleInvalidatedEventArgs : ChromiumEvent
+    internal class DOMInlineStyleInvalidatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.inlineStyleInvalidated";
         /// <summary>
@@ -4753,7 +4753,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.pseudoElementAdded</c>
     /// </remarks>
-    internal class DOMPseudoElementAddedEventArgs : ChromiumEvent
+    internal class DOMPseudoElementAddedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.pseudoElementAdded";
         /// <summary>
@@ -4771,7 +4771,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.pseudoElementRemoved</c>
     /// </remarks>
-    internal class DOMPseudoElementRemovedEventArgs : ChromiumEvent
+    internal class DOMPseudoElementRemovedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.pseudoElementRemoved";
         /// <summary>
@@ -4790,7 +4790,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.setChildNodes</c>
     /// </remarks>
-    internal class DOMSetChildNodesEventArgs : ChromiumEvent
+    internal class DOMSetChildNodesChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.setChildNodes";
         /// <summary>
@@ -4808,7 +4808,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.shadowRootPopped</c>
     /// </remarks>
-    internal class DOMShadowRootPoppedEventArgs : ChromiumEvent
+    internal class DOMShadowRootPoppedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.shadowRootPopped";
         /// <summary>
@@ -4826,7 +4826,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// <remarks>
     /// Matches on the event <c>DOM.shadowRootPushed</c>
     /// </remarks>
-    internal class DOMShadowRootPushedEventArgs : ChromiumEvent
+    internal class DOMShadowRootPushedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOM.shadowRootPushed";
         /// <summary>
@@ -5825,7 +5825,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// <remarks>
     /// Matches on the event <c>DOMStorage.domStorageItemAdded</c>
     /// </remarks>
-    internal class DOMStorageDomStorageItemAddedEventArgs : ChromiumEvent
+    internal class DOMStorageDomStorageItemAddedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOMStorage.domStorageItemAdded";
         /// <summary>
@@ -5847,7 +5847,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// <remarks>
     /// Matches on the event <c>DOMStorage.domStorageItemRemoved</c>
     /// </remarks>
-    internal class DOMStorageDomStorageItemRemovedEventArgs : ChromiumEvent
+    internal class DOMStorageDomStorageItemRemovedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
         /// <summary>
@@ -5865,7 +5865,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// <remarks>
     /// Matches on the event <c>DOMStorage.domStorageItemUpdated</c>
     /// </remarks>
-    internal class DOMStorageDomStorageItemUpdatedEventArgs : ChromiumEvent
+    internal class DOMStorageDomStorageItemUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
         /// <summary>
@@ -5891,7 +5891,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// <remarks>
     /// Matches on the event <c>DOMStorage.domStorageItemsCleared</c>
     /// </remarks>
-    internal class DOMStorageDomStorageItemsClearedEventArgs : ChromiumEvent
+    internal class DOMStorageDomStorageItemsClearedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
         /// <summary>
@@ -6036,7 +6036,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
     /// <remarks>
     /// Matches on the event <c>Database.addDatabase</c>
     /// </remarks>
-    internal class DatabaseAddDatabaseEventArgs : ChromiumEvent
+    internal class DatabaseAddDatabaseChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Database.addDatabase";
         /// <summary>
@@ -6658,7 +6658,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// <remarks>
     /// Matches on the event <c>Emulation.virtualTimeBudgetExpired</c>
     /// </remarks>
-    internal class EmulationVirtualTimeBudgetExpiredEventArgs : ChromiumEvent
+    internal class EmulationVirtualTimeBudgetExpiredChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Emulation.virtualTimeBudgetExpired";
     }
@@ -6769,7 +6769,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
     /// <remarks>
     /// Matches on the event <c>HeadlessExperimental.needsBeginFramesChanged</c>
     /// </remarks>
-    internal class HeadlessExperimentalNeedsBeginFramesChangedEventArgs : ChromiumEvent
+    internal class HeadlessExperimentalNeedsBeginFramesChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "HeadlessExperimental.needsBeginFramesChanged";
         /// <summary>
@@ -7772,7 +7772,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
     /// <remarks>
     /// Matches on the event <c>Inspector.detached</c>
     /// </remarks>
-    internal class InspectorDetachedEventArgs : ChromiumEvent
+    internal class InspectorDetachedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Inspector.detached";
         /// <summary>
@@ -7786,7 +7786,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
     /// <remarks>
     /// Matches on the event <c>Inspector.targetCrashed</c>
     /// </remarks>
-    internal class InspectorTargetCrashedEventArgs : ChromiumEvent
+    internal class InspectorTargetCrashedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Inspector.targetCrashed";
     }
@@ -7796,7 +7796,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
     /// <remarks>
     /// Matches on the event <c>Inspector.targetReloadedAfterCrash</c>
     /// </remarks>
-    internal class InspectorTargetReloadedAfterCrashEventArgs : ChromiumEvent
+    internal class InspectorTargetReloadedAfterCrashChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Inspector.targetReloadedAfterCrash";
     }
@@ -8154,7 +8154,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// <remarks>
     /// Matches on the event <c>LayerTree.layerPainted</c>
     /// </remarks>
-    internal class LayerTreeLayerPaintedEventArgs : ChromiumEvent
+    internal class LayerTreeLayerPaintedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "LayerTree.layerPainted";
         /// <summary>
@@ -8172,7 +8172,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// <remarks>
     /// Matches on the event <c>LayerTree.layerTreeDidChange</c>
     /// </remarks>
-    internal class LayerTreeLayerTreeDidChangeEventArgs : ChromiumEvent
+    internal class LayerTreeLayerTreeDidChangeChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "LayerTree.layerTreeDidChange";
         /// <summary>
@@ -8334,7 +8334,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
     /// <remarks>
     /// Matches on the event <c>Log.entryAdded</c>
     /// </remarks>
-    internal class LogEntryAddedEventArgs : ChromiumEvent
+    internal class LogEntryAddedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Log.entryAdded";
         /// <summary>
@@ -10214,7 +10214,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.dataReceived</c>
     /// </remarks>
-    internal class NetworkDataReceivedEventArgs : ChromiumEvent
+    internal class NetworkDataReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.dataReceived";
         /// <summary>
@@ -10240,7 +10240,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.eventSourceMessageReceived</c>
     /// </remarks>
-    internal class NetworkEventSourceMessageReceivedEventArgs : ChromiumEvent
+    internal class NetworkEventSourceMessageReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.eventSourceMessageReceived";
         /// <summary>
@@ -10270,7 +10270,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.loadingFailed</c>
     /// </remarks>
-    internal class NetworkLoadingFailedEventArgs : ChromiumEvent
+    internal class NetworkLoadingFailedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.loadingFailed";
         /// <summary>
@@ -10304,7 +10304,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.loadingFinished</c>
     /// </remarks>
-    internal class NetworkLoadingFinishedEventArgs : ChromiumEvent
+    internal class NetworkLoadingFinishedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.loadingFinished";
         /// <summary>
@@ -10333,7 +10333,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.requestIntercepted</c>
     /// </remarks>
-    internal class NetworkRequestInterceptedEventArgs : ChromiumEvent
+    internal class NetworkRequestInterceptedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.requestIntercepted";
         /// <summary>
@@ -10399,7 +10399,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.requestServedFromCache</c>
     /// </remarks>
-    internal class NetworkRequestServedFromCacheEventArgs : ChromiumEvent
+    internal class NetworkRequestServedFromCacheChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.requestServedFromCache";
         /// <summary>
@@ -10413,7 +10413,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.requestWillBeSent</c>
     /// </remarks>
-    internal class NetworkRequestWillBeSentEventArgs : ChromiumEvent
+    internal class NetworkRequestWillBeSentChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.requestWillBeSent";
         /// <summary>
@@ -10467,7 +10467,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.resourceChangedPriority</c>
     /// </remarks>
-    internal class NetworkResourceChangedPriorityEventArgs : ChromiumEvent
+    internal class NetworkResourceChangedPriorityChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.resourceChangedPriority";
         /// <summary>
@@ -10489,7 +10489,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.signedExchangeReceived</c>
     /// </remarks>
-    internal class NetworkSignedExchangeReceivedEventArgs : ChromiumEvent
+    internal class NetworkSignedExchangeReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.signedExchangeReceived";
         /// <summary>
@@ -10507,7 +10507,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.responseReceived</c>
     /// </remarks>
-    internal class NetworkResponseReceivedEventArgs : ChromiumEvent
+    internal class NetworkResponseReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.responseReceived";
         /// <summary>
@@ -10541,7 +10541,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketClosed</c>
     /// </remarks>
-    internal class NetworkWebSocketClosedEventArgs : ChromiumEvent
+    internal class NetworkWebSocketClosedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketClosed";
         /// <summary>
@@ -10559,7 +10559,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketCreated</c>
     /// </remarks>
-    internal class NetworkWebSocketCreatedEventArgs : ChromiumEvent
+    internal class NetworkWebSocketCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketCreated";
         /// <summary>
@@ -10581,7 +10581,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketFrameError</c>
     /// </remarks>
-    internal class NetworkWebSocketFrameErrorEventArgs : ChromiumEvent
+    internal class NetworkWebSocketFrameErrorChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketFrameError";
         /// <summary>
@@ -10603,7 +10603,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketFrameReceived</c>
     /// </remarks>
-    internal class NetworkWebSocketFrameReceivedEventArgs : ChromiumEvent
+    internal class NetworkWebSocketFrameReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketFrameReceived";
         /// <summary>
@@ -10625,7 +10625,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketFrameSent</c>
     /// </remarks>
-    internal class NetworkWebSocketFrameSentEventArgs : ChromiumEvent
+    internal class NetworkWebSocketFrameSentChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketFrameSent";
         /// <summary>
@@ -10647,7 +10647,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketHandshakeResponseReceived</c>
     /// </remarks>
-    internal class NetworkWebSocketHandshakeResponseReceivedEventArgs : ChromiumEvent
+    internal class NetworkWebSocketHandshakeResponseReceivedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketHandshakeResponseReceived";
         /// <summary>
@@ -10669,7 +10669,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.webSocketWillSendHandshakeRequest</c>
     /// </remarks>
-    internal class NetworkWebSocketWillSendHandshakeRequestEventArgs : ChromiumEvent
+    internal class NetworkWebSocketWillSendHandshakeRequestChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.webSocketWillSendHandshakeRequest";
         /// <summary>
@@ -10698,7 +10698,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.requestWillBeSentExtraInfo</c>
     /// </remarks>
-    internal class NetworkRequestWillBeSentExtraInfoEventArgs : ChromiumEvent
+    internal class NetworkRequestWillBeSentExtraInfoChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.requestWillBeSentExtraInfo";
         /// <summary>
@@ -10723,7 +10723,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// <remarks>
     /// Matches on the event <c>Network.responseReceivedExtraInfo</c>
     /// </remarks>
-    internal class NetworkResponseReceivedExtraInfoEventArgs : ChromiumEvent
+    internal class NetworkResponseReceivedExtraInfoChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Network.responseReceivedExtraInfo";
         /// <summary>
@@ -11240,7 +11240,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// <remarks>
     /// Matches on the event <c>Overlay.inspectNodeRequested</c>
     /// </remarks>
-    internal class OverlayInspectNodeRequestedEventArgs : ChromiumEvent
+    internal class OverlayInspectNodeRequestedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Overlay.inspectNodeRequested";
         /// <summary>
@@ -11254,7 +11254,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// <remarks>
     /// Matches on the event <c>Overlay.nodeHighlightRequested</c>
     /// </remarks>
-    internal class OverlayNodeHighlightRequestedEventArgs : ChromiumEvent
+    internal class OverlayNodeHighlightRequestedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Overlay.nodeHighlightRequested";
         /// <summary>
@@ -11268,7 +11268,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// <remarks>
     /// Matches on the event <c>Overlay.screenshotRequested</c>
     /// </remarks>
-    internal class OverlayScreenshotRequestedEventArgs : ChromiumEvent
+    internal class OverlayScreenshotRequestedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Overlay.screenshotRequested";
         /// <summary>
@@ -11282,7 +11282,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// <remarks>
     /// Matches on the event <c>Overlay.inspectModeCanceled</c>
     /// </remarks>
-    internal class OverlayInspectModeCanceledEventArgs : ChromiumEvent
+    internal class OverlayInspectModeCanceledChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Overlay.inspectModeCanceled";
     }
@@ -13020,7 +13020,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.domContentEventFired</c>
     /// </remarks>
-    internal class PageDomContentEventFiredEventArgs : ChromiumEvent
+    internal class PageDomContentEventFiredChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.domContentEventFired";
         /// <summary>
@@ -13034,7 +13034,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.fileChooserOpened</c>
     /// </remarks>
-    internal class PageFileChooserOpenedEventArgs : ChromiumEvent
+    internal class PageFileChooserOpenedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.fileChooserOpened";
         /// <summary>
@@ -13048,7 +13048,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameAttached</c>
     /// </remarks>
-    internal class PageFrameAttachedEventArgs : ChromiumEvent
+    internal class PageFrameAttachedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameAttached";
         /// <summary>
@@ -13070,7 +13070,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameClearedScheduledNavigation</c>
     /// </remarks>
-    internal class PageFrameClearedScheduledNavigationEventArgs : ChromiumEvent
+    internal class PageFrameClearedScheduledNavigationChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameClearedScheduledNavigation";
         /// <summary>
@@ -13084,7 +13084,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameDetached</c>
     /// </remarks>
-    internal class PageFrameDetachedEventArgs : ChromiumEvent
+    internal class PageFrameDetachedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameDetached";
         /// <summary>
@@ -13098,7 +13098,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameNavigated</c>
     /// </remarks>
-    internal class PageFrameNavigatedEventArgs : ChromiumEvent
+    internal class PageFrameNavigatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameNavigated";
         /// <summary>
@@ -13112,7 +13112,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameResized</c>
     /// </remarks>
-    internal class PageFrameResizedEventArgs : ChromiumEvent
+    internal class PageFrameResizedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameResized";
     }
@@ -13123,7 +13123,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameRequestedNavigation</c>
     /// </remarks>
-    internal class PageFrameRequestedNavigationEventArgs : ChromiumEvent
+    internal class PageFrameRequestedNavigationChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameRequestedNavigation";
         /// <summary>
@@ -13145,7 +13145,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameScheduledNavigation</c>
     /// </remarks>
-    internal class PageFrameScheduledNavigationEventArgs : ChromiumEvent
+    internal class PageFrameScheduledNavigationChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameScheduledNavigation";
         /// <summary>
@@ -13172,7 +13172,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameStartedLoading</c>
     /// </remarks>
-    internal class PageFrameStartedLoadingEventArgs : ChromiumEvent
+    internal class PageFrameStartedLoadingChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameStartedLoading";
         /// <summary>
@@ -13186,7 +13186,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.frameStoppedLoading</c>
     /// </remarks>
-    internal class PageFrameStoppedLoadingEventArgs : ChromiumEvent
+    internal class PageFrameStoppedLoadingChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.frameStoppedLoading";
         /// <summary>
@@ -13200,7 +13200,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.downloadWillBegin</c>
     /// </remarks>
-    internal class PageDownloadWillBeginEventArgs : ChromiumEvent
+    internal class PageDownloadWillBeginChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.downloadWillBegin";
         /// <summary>
@@ -13218,7 +13218,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.interstitialHidden</c>
     /// </remarks>
-    internal class PageInterstitialHiddenEventArgs : ChromiumEvent
+    internal class PageInterstitialHiddenChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.interstitialHidden";
     }
@@ -13228,7 +13228,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.interstitialShown</c>
     /// </remarks>
-    internal class PageInterstitialShownEventArgs : ChromiumEvent
+    internal class PageInterstitialShownChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.interstitialShown";
     }
@@ -13239,7 +13239,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.javascriptDialogClosed</c>
     /// </remarks>
-    internal class PageJavascriptDialogClosedEventArgs : ChromiumEvent
+    internal class PageJavascriptDialogClosedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.javascriptDialogClosed";
         /// <summary>
@@ -13258,7 +13258,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.javascriptDialogOpening</c>
     /// </remarks>
-    internal class PageJavascriptDialogOpeningEventArgs : ChromiumEvent
+    internal class PageJavascriptDialogOpeningChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.javascriptDialogOpening";
         /// <summary>
@@ -13290,7 +13290,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.lifecycleEvent</c>
     /// </remarks>
-    internal class PageLifecycleEventEventArgs : ChromiumEvent
+    internal class PageLifecycleEventChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.lifecycleEvent";
         /// <summary>
@@ -13316,7 +13316,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.loadEventFired</c>
     /// </remarks>
-    internal class PageLoadEventFiredEventArgs : ChromiumEvent
+    internal class PageLoadEventFiredChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.loadEventFired";
         /// <summary>
@@ -13330,7 +13330,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.navigatedWithinDocument</c>
     /// </remarks>
-    internal class PageNavigatedWithinDocumentEventArgs : ChromiumEvent
+    internal class PageNavigatedWithinDocumentChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.navigatedWithinDocument";
         /// <summary>
@@ -13348,7 +13348,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.screencastFrame</c>
     /// </remarks>
-    internal class PageScreencastFrameEventArgs : ChromiumEvent
+    internal class PageScreencastFrameChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.screencastFrame";
         /// <summary>
@@ -13370,7 +13370,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.screencastVisibilityChanged</c>
     /// </remarks>
-    internal class PageScreencastVisibilityChangedEventArgs : ChromiumEvent
+    internal class PageScreencastVisibilityChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.screencastVisibilityChanged";
         /// <summary>
@@ -13385,7 +13385,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.windowOpen</c>
     /// </remarks>
-    internal class PageWindowOpenEventArgs : ChromiumEvent
+    internal class PageWindowOpenChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.windowOpen";
         /// <summary>
@@ -13412,7 +13412,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// <remarks>
     /// Matches on the event <c>Page.compilationCacheProduced</c>
     /// </remarks>
-    internal class PageCompilationCacheProducedEventArgs : ChromiumEvent
+    internal class PageCompilationCacheProducedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Page.compilationCacheProduced";
         /// <summary>
@@ -13521,7 +13521,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
     /// <remarks>
     /// Matches on the event <c>Performance.metrics</c>
     /// </remarks>
-    internal class PerformanceMetricsEventArgs : ChromiumEvent
+    internal class PerformanceMetricsChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Performance.metrics";
         /// <summary>
@@ -13828,7 +13828,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// <remarks>
     /// Matches on the event <c>Security.certificateError</c>
     /// </remarks>
-    internal class SecurityCertificateErrorEventArgs : ChromiumEvent
+    internal class SecurityCertificateErrorChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Security.certificateError";
         /// <summary>
@@ -13850,7 +13850,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// <remarks>
     /// Matches on the event <c>Security.visibleSecurityStateChanged</c>
     /// </remarks>
-    internal class SecurityVisibleSecurityStateChangedEventArgs : ChromiumEvent
+    internal class SecurityVisibleSecurityStateChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Security.visibleSecurityStateChanged";
         /// <summary>
@@ -13864,7 +13864,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// <remarks>
     /// Matches on the event <c>Security.securityStateChanged</c>
     /// </remarks>
-    internal class SecuritySecurityStateChangedEventArgs : ChromiumEvent
+    internal class SecuritySecurityStateChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Security.securityStateChanged";
         /// <summary>
@@ -14287,7 +14287,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// <remarks>
     /// Matches on the event <c>ServiceWorker.workerErrorReported</c>
     /// </remarks>
-    internal class ServiceWorkerWorkerErrorReportedEventArgs : ChromiumEvent
+    internal class ServiceWorkerWorkerErrorReportedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "ServiceWorker.workerErrorReported";
         /// <summary>
@@ -14301,7 +14301,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// <remarks>
     /// Matches on the event <c>ServiceWorker.workerRegistrationUpdated</c>
     /// </remarks>
-    internal class ServiceWorkerWorkerRegistrationUpdatedEventArgs : ChromiumEvent
+    internal class ServiceWorkerWorkerRegistrationUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "ServiceWorker.workerRegistrationUpdated";
         /// <summary>
@@ -14315,7 +14315,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// <remarks>
     /// Matches on the event <c>ServiceWorker.workerVersionUpdated</c>
     /// </remarks>
-    internal class ServiceWorkerWorkerVersionUpdatedEventArgs : ChromiumEvent
+    internal class ServiceWorkerWorkerVersionUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "ServiceWorker.workerVersionUpdated";
         /// <summary>
@@ -14499,7 +14499,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// <remarks>
     /// Matches on the event <c>Storage.cacheStorageContentUpdated</c>
     /// </remarks>
-    internal class StorageCacheStorageContentUpdatedEventArgs : ChromiumEvent
+    internal class StorageCacheStorageContentUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Storage.cacheStorageContentUpdated";
         /// <summary>
@@ -14517,7 +14517,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// <remarks>
     /// Matches on the event <c>Storage.cacheStorageListUpdated</c>
     /// </remarks>
-    internal class StorageCacheStorageListUpdatedEventArgs : ChromiumEvent
+    internal class StorageCacheStorageListUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Storage.cacheStorageListUpdated";
         /// <summary>
@@ -14531,7 +14531,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// <remarks>
     /// Matches on the event <c>Storage.indexedDBContentUpdated</c>
     /// </remarks>
-    internal class StorageIndexedDBContentUpdatedEventArgs : ChromiumEvent
+    internal class StorageIndexedDBContentUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Storage.indexedDBContentUpdated";
         /// <summary>
@@ -14553,7 +14553,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// <remarks>
     /// Matches on the event <c>Storage.indexedDBListUpdated</c>
     /// </remarks>
-    internal class StorageIndexedDBListUpdatedEventArgs : ChromiumEvent
+    internal class StorageIndexedDBListUpdatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Storage.indexedDBListUpdated";
         /// <summary>
@@ -15280,7 +15280,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.attachedToTarget</c>
     /// </remarks>
-    internal class TargetAttachedToTargetEventArgs : ChromiumEvent
+    internal class TargetAttachedToTargetChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.attachedToTarget";
         /// <summary>
@@ -15303,7 +15303,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.detachedFromTarget</c>
     /// </remarks>
-    internal class TargetDetachedFromTargetEventArgs : ChromiumEvent
+    internal class TargetDetachedFromTargetChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.detachedFromTarget";
         /// <summary>
@@ -15322,7 +15322,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.receivedMessageFromTarget</c>
     /// </remarks>
-    internal class TargetReceivedMessageFromTargetEventArgs : ChromiumEvent
+    internal class TargetReceivedMessageFromTargetChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.receivedMessageFromTarget";
         /// <summary>
@@ -15344,7 +15344,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.targetCreated</c>
     /// </remarks>
-    internal class TargetTargetCreatedEventArgs : ChromiumEvent
+    internal class TargetTargetCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.targetCreated";
         /// <summary>
@@ -15358,7 +15358,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.targetDestroyed</c>
     /// </remarks>
-    internal class TargetTargetDestroyedEventArgs : ChromiumEvent
+    internal class TargetTargetDestroyedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.targetDestroyed";
         /// <summary>
@@ -15372,7 +15372,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.targetCrashed</c>
     /// </remarks>
-    internal class TargetTargetCrashedEventArgs : ChromiumEvent
+    internal class TargetTargetCrashedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.targetCrashed";
         /// <summary>
@@ -15395,7 +15395,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// <remarks>
     /// Matches on the event <c>Target.targetInfoChanged</c>
     /// </remarks>
-    internal class TargetTargetInfoChangedEventArgs : ChromiumEvent
+    internal class TargetTargetInfoChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Target.targetInfoChanged";
         /// <summary>
@@ -15452,7 +15452,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
     /// <remarks>
     /// Matches on the event <c>Tethering.accepted</c>
     /// </remarks>
-    internal class TetheringAcceptedEventArgs : ChromiumEvent
+    internal class TetheringAcceptedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Tethering.accepted";
         /// <summary>
@@ -15665,7 +15665,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// <remarks>
     /// Matches on the event <c>Tracing.bufferUsage</c>
     /// </remarks>
-    internal class TracingBufferUsageEventArgs : ChromiumEvent
+    internal class TracingBufferUsageChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Tracing.bufferUsage";
         /// <summary>
@@ -15690,7 +15690,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// <remarks>
     /// Matches on the event <c>Tracing.dataCollected</c>
     /// </remarks>
-    internal class TracingDataCollectedEventArgs : ChromiumEvent
+    internal class TracingDataCollectedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Tracing.dataCollected";
         /// <summary>
@@ -15705,7 +15705,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// <remarks>
     /// Matches on the event <c>Tracing.tracingComplete</c>
     /// </remarks>
-    internal class TracingTracingCompleteEventArgs : ChromiumEvent
+    internal class TracingTracingCompleteChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Tracing.tracingComplete";
         /// <summary>
@@ -16065,7 +16065,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// <remarks>
     /// Matches on the event <c>Fetch.requestPaused</c>
     /// </remarks>
-    internal class FetchRequestPausedEventArgs : ChromiumEvent
+    internal class FetchRequestPausedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Fetch.requestPaused";
         /// <summary>
@@ -16109,7 +16109,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// <remarks>
     /// Matches on the event <c>Fetch.authRequired</c>
     /// </remarks>
-    internal class FetchAuthRequiredEventArgs : ChromiumEvent
+    internal class FetchAuthRequiredChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Fetch.authRequired";
         /// <summary>
@@ -16390,7 +16390,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.contextCreated</c>
     /// </remarks>
-    internal class WebAudioContextCreatedEventArgs : ChromiumEvent
+    internal class WebAudioContextCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.contextCreated";
         /// <summary>
@@ -16404,7 +16404,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.contextWillBeDestroyed</c>
     /// </remarks>
-    internal class WebAudioContextWillBeDestroyedEventArgs : ChromiumEvent
+    internal class WebAudioContextWillBeDestroyedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.contextWillBeDestroyed";
         /// <summary>
@@ -16418,7 +16418,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.contextChanged</c>
     /// </remarks>
-    internal class WebAudioContextChangedEventArgs : ChromiumEvent
+    internal class WebAudioContextChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.contextChanged";
         /// <summary>
@@ -16432,7 +16432,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.audioListenerCreated</c>
     /// </remarks>
-    internal class WebAudioAudioListenerCreatedEventArgs : ChromiumEvent
+    internal class WebAudioAudioListenerCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.audioListenerCreated";
         /// <summary>
@@ -16446,7 +16446,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.audioListenerWillBeDestroyed</c>
     /// </remarks>
-    internal class WebAudioAudioListenerWillBeDestroyedEventArgs : ChromiumEvent
+    internal class WebAudioAudioListenerWillBeDestroyedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.audioListenerWillBeDestroyed";
         /// <summary>
@@ -16464,7 +16464,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.audioNodeCreated</c>
     /// </remarks>
-    internal class WebAudioAudioNodeCreatedEventArgs : ChromiumEvent
+    internal class WebAudioAudioNodeCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.audioNodeCreated";
         /// <summary>
@@ -16478,7 +16478,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.audioNodeWillBeDestroyed</c>
     /// </remarks>
-    internal class WebAudioAudioNodeWillBeDestroyedEventArgs : ChromiumEvent
+    internal class WebAudioAudioNodeWillBeDestroyedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.audioNodeWillBeDestroyed";
         /// <summary>
@@ -16496,7 +16496,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.audioParamCreated</c>
     /// </remarks>
-    internal class WebAudioAudioParamCreatedEventArgs : ChromiumEvent
+    internal class WebAudioAudioParamCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.audioParamCreated";
         /// <summary>
@@ -16510,7 +16510,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.audioParamWillBeDestroyed</c>
     /// </remarks>
-    internal class WebAudioAudioParamWillBeDestroyedEventArgs : ChromiumEvent
+    internal class WebAudioAudioParamWillBeDestroyedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.audioParamWillBeDestroyed";
         /// <summary>
@@ -16532,7 +16532,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.nodesConnected</c>
     /// </remarks>
-    internal class WebAudioNodesConnectedEventArgs : ChromiumEvent
+    internal class WebAudioNodesConnectedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.nodesConnected";
         /// <summary>
@@ -16562,7 +16562,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.nodesDisconnected</c>
     /// </remarks>
-    internal class WebAudioNodesDisconnectedEventArgs : ChromiumEvent
+    internal class WebAudioNodesDisconnectedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.nodesDisconnected";
         /// <summary>
@@ -16592,7 +16592,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.nodeParamConnected</c>
     /// </remarks>
-    internal class WebAudioNodeParamConnectedEventArgs : ChromiumEvent
+    internal class WebAudioNodeParamConnectedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.nodeParamConnected";
         /// <summary>
@@ -16618,7 +16618,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// <remarks>
     /// Matches on the event <c>WebAudio.nodeParamDisconnected</c>
     /// </remarks>
-    internal class WebAudioNodeParamDisconnectedEventArgs : ChromiumEvent
+    internal class WebAudioNodeParamDisconnectedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "WebAudio.nodeParamDisconnected";
         /// <summary>
@@ -17037,7 +17037,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
     /// <remarks>
     /// Matches on the event <c>Media.playerPropertiesChanged</c>
     /// </remarks>
-    internal class MediaPlayerPropertiesChangedEventArgs : ChromiumEvent
+    internal class MediaPlayerPropertiesChangedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Media.playerPropertiesChanged";
         /// <summary>
@@ -17056,7 +17056,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
     /// <remarks>
     /// Matches on the event <c>Media.playerEventsAdded</c>
     /// </remarks>
-    internal class MediaPlayerEventsAddedEventArgs : ChromiumEvent
+    internal class MediaPlayerEventsAddedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Media.playerEventsAdded";
         /// <summary>
@@ -17076,7 +17076,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
     /// <remarks>
     /// Matches on the event <c>Media.playersCreated</c>
     /// </remarks>
-    internal class MediaPlayersCreatedEventArgs : ChromiumEvent
+    internal class MediaPlayersCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Media.playersCreated";
         /// <summary>
@@ -17172,7 +17172,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
     /// <remarks>
     /// Matches on the event <c>Console.messageAdded</c>
     /// </remarks>
-    internal class ConsoleMessageAddedEventArgs : ChromiumEvent
+    internal class ConsoleMessageAddedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Console.messageAdded";
         /// <summary>
@@ -18126,7 +18126,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// <remarks>
     /// Matches on the event <c>Debugger.breakpointResolved</c>
     /// </remarks>
-    internal class DebuggerBreakpointResolvedEventArgs : ChromiumEvent
+    internal class DebuggerBreakpointResolvedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Debugger.breakpointResolved";
         /// <summary>
@@ -18144,7 +18144,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// <remarks>
     /// Matches on the event <c>Debugger.paused</c>
     /// </remarks>
-    internal class DebuggerPausedEventArgs : ChromiumEvent
+    internal class DebuggerPausedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Debugger.paused";
         /// <summary>
@@ -18182,7 +18182,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// <remarks>
     /// Matches on the event <c>Debugger.resumed</c>
     /// </remarks>
-    internal class DebuggerResumedEventArgs : ChromiumEvent
+    internal class DebuggerResumedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Debugger.resumed";
     }
@@ -18192,7 +18192,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// <remarks>
     /// Matches on the event <c>Debugger.scriptFailedToParse</c>
     /// </remarks>
-    internal class DebuggerScriptFailedToParseEventArgs : ChromiumEvent
+    internal class DebuggerScriptFailedToParseChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Debugger.scriptFailedToParse";
         /// <summary>
@@ -18259,7 +18259,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// <remarks>
     /// Matches on the event <c>Debugger.scriptParsed</c>
     /// </remarks>
-    internal class DebuggerScriptParsedEventArgs : ChromiumEvent
+    internal class DebuggerScriptParsedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Debugger.scriptParsed";
         /// <summary>
@@ -18630,7 +18630,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// <remarks>
     /// Matches on the event <c>HeapProfiler.addHeapSnapshotChunk</c>
     /// </remarks>
-    internal class HeapProfilerAddHeapSnapshotChunkEventArgs : ChromiumEvent
+    internal class HeapProfilerAddHeapSnapshotChunkChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "HeapProfiler.addHeapSnapshotChunk";
         /// <summary>
@@ -18644,7 +18644,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// <remarks>
     /// Matches on the event <c>HeapProfiler.heapStatsUpdate</c>
     /// </remarks>
-    internal class HeapProfilerHeapStatsUpdateEventArgs : ChromiumEvent
+    internal class HeapProfilerHeapStatsUpdateChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "HeapProfiler.heapStatsUpdate";
         /// <summary>
@@ -18662,7 +18662,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// <remarks>
     /// Matches on the event <c>HeapProfiler.lastSeenObjectId</c>
     /// </remarks>
-    internal class HeapProfilerLastSeenObjectIdEventArgs : ChromiumEvent
+    internal class HeapProfilerLastSeenObjectIdChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "HeapProfiler.lastSeenObjectId";
         /// <summary>
@@ -18680,7 +18680,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// <remarks>
     /// Matches on the event <c>HeapProfiler.reportHeapSnapshotProgress</c>
     /// </remarks>
-    internal class HeapProfilerReportHeapSnapshotProgressEventArgs : ChromiumEvent
+    internal class HeapProfilerReportHeapSnapshotProgressChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "HeapProfiler.reportHeapSnapshotProgress";
         /// <summary>
@@ -18702,7 +18702,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// <remarks>
     /// Matches on the event <c>HeapProfiler.resetProfiles</c>
     /// </remarks>
-    internal class HeapProfilerResetProfilesEventArgs : ChromiumEvent
+    internal class HeapProfilerResetProfilesChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "HeapProfiler.resetProfiles";
     }
@@ -19108,7 +19108,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// <remarks>
     /// Matches on the event <c>Profiler.consoleProfileFinished</c>
     /// </remarks>
-    internal class ProfilerConsoleProfileFinishedEventArgs : ChromiumEvent
+    internal class ProfilerConsoleProfileFinishedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Profiler.consoleProfileFinished";
         /// <summary>
@@ -19134,7 +19134,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// <remarks>
     /// Matches on the event <c>Profiler.consoleProfileStarted</c>
     /// </remarks>
-    internal class ProfilerConsoleProfileStartedEventArgs : ChromiumEvent
+    internal class ProfilerConsoleProfileStartedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Profiler.consoleProfileStarted";
         /// <summary>
@@ -20183,7 +20183,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.bindingCalled</c>
     /// </remarks>
-    internal class RuntimeBindingCalledEventArgs : ChromiumEvent
+    internal class RuntimeBindingCalledChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.bindingCalled";
         /// <summary>
@@ -20205,7 +20205,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.consoleAPICalled</c>
     /// </remarks>
-    internal class RuntimeConsoleAPICalledEventArgs : ChromiumEvent
+    internal class RuntimeConsoleAPICalledChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.consoleAPICalled";
         /// <summary>
@@ -20243,7 +20243,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.exceptionRevoked</c>
     /// </remarks>
-    internal class RuntimeExceptionRevokedEventArgs : ChromiumEvent
+    internal class RuntimeExceptionRevokedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.exceptionRevoked";
         /// <summary>
@@ -20261,7 +20261,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.exceptionThrown</c>
     /// </remarks>
-    internal class RuntimeExceptionThrownEventArgs : ChromiumEvent
+    internal class RuntimeExceptionThrownChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.exceptionThrown";
         /// <summary>
@@ -20279,7 +20279,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.executionContextCreated</c>
     /// </remarks>
-    internal class RuntimeExecutionContextCreatedEventArgs : ChromiumEvent
+    internal class RuntimeExecutionContextCreatedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.executionContextCreated";
         /// <summary>
@@ -20293,7 +20293,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.executionContextDestroyed</c>
     /// </remarks>
-    internal class RuntimeExecutionContextDestroyedEventArgs : ChromiumEvent
+    internal class RuntimeExecutionContextDestroyedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.executionContextDestroyed";
         /// <summary>
@@ -20307,7 +20307,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.executionContextsCleared</c>
     /// </remarks>
-    internal class RuntimeExecutionContextsClearedEventArgs : ChromiumEvent
+    internal class RuntimeExecutionContextsClearedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.executionContextsCleared";
     }
@@ -20318,7 +20318,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// <remarks>
     /// Matches on the event <c>Runtime.inspectRequested</c>
     /// </remarks>
-    internal class RuntimeInspectRequestedEventArgs : ChromiumEvent
+    internal class RuntimeInspectRequestedChromiumEvent : ChromiumEvent
     {
         public override string InternalName { get; } = "Runtime.inspectRequested";
         /// <summary>
