@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Chromium
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
             var connection = new ChromiumConnection(transport);
             var response = await connection.RootSession.SendAsync(new TargetGetBrowserContextsRequest()).ConfigureAwait(false);
-            var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);
+            var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds ?? Array.Empty<string>());
             await connection.RootSession.SendAsync(new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
             await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
             return browser;

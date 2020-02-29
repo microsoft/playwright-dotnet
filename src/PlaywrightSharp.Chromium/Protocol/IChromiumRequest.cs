@@ -6,7 +6,7 @@ namespace PlaywrightSharp.Chromium.Protocol
     /// Basic structure for sending requests to chromium using the devtools protocol.
     /// </summary>
     /// <typeparam name="TChromiumResponse">The response type.</typeparam>
-    internal interface IChromiumRequest<TChromiumResponse>
+    internal interface IChromiumRequest<out TChromiumResponse>
         where TChromiumResponse : IChromiumResponse
     {
         /// <summary>

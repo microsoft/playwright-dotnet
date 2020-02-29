@@ -15,14 +15,16 @@ namespace PlaywrightSharp.Chromium.Protocol
 
             var types = typeof(DeserializerHelper).Assembly.GetTypes();
 
-            var responses = types.Where(type => type.IsClass && type.IsAssignableFrom(chromiumResponse)).ToDictionary(type => type.Name);
-            var requests = types.Where(type => type.IsClass && type.IsAssignableFrom(chromiumRequest)).ToDictionary(type => type.Name);
+            var responses = types.Where(type => type.IsClass && chromiumResponse.IsAssignableFrom(type)).ToDictionary(type => type.Name);
+            var requests = types.Where(type => type.IsClass && type.GetInterface(chromiumRequest.Name) != null).ToDictionary(type => type.Name);
 
             foreach (string name in responses.Keys)
             {
-                string requestName = name.Replace("Response", "Request");
+                // .Replace doesn't work since the class name might contain the work Response
+                string requestName = name.Substring(0, name.Length - "Response".Length) + "Request";
                 var type = requests[requestName];
-                var request = (IChromiumRequest<IChromiumResponse>)Activator.CreateInstance(type.MakeGenericType(responses[name]));
+
+                var request = (IChromiumRequest<IChromiumResponse>)Activator.CreateInstance(type);
 
                 ChromiumResponseMapper.Add(request.Command, responses[name]);
             }

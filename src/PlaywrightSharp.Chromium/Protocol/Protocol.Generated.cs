@@ -260,6 +260,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
     /// </remarks>
     internal class AccessibilityDisableRequest : IChromiumRequest<AccessibilityDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Accessibility.disable";
     }
     /// <summary>
@@ -277,6 +278,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
     /// </remarks>
     internal class AccessibilityEnableRequest : IChromiumRequest<AccessibilityEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Accessibility.enable";
     }
     /// <summary>
@@ -293,6 +295,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
     /// </remarks>
     internal class AccessibilityGetPartialAXTreeRequest : IChromiumRequest<AccessibilityGetPartialAXTreeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Accessibility.getPartialAXTree";
         /// <summary>
         /// Identifier of the node to get the partial accessibility tree for.
@@ -330,6 +333,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
     /// </remarks>
     internal class AccessibilityGetFullAXTreeRequest : IChromiumRequest<AccessibilityGetFullAXTreeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Accessibility.getFullAXTree";
     }
     /// <summary>
@@ -474,6 +478,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationDisableRequest : IChromiumRequest<AnimationDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.disable";
     }
     /// <summary>
@@ -490,6 +495,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationEnableRequest : IChromiumRequest<AnimationEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.enable";
     }
     /// <summary>
@@ -506,6 +512,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationGetCurrentTimeRequest : IChromiumRequest<AnimationGetCurrentTimeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.getCurrentTime";
         /// <summary>
         /// Id of animation.
@@ -530,6 +537,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationGetPlaybackRateRequest : IChromiumRequest<AnimationGetPlaybackRateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.getPlaybackRate";
     }
     /// <summary>
@@ -550,6 +558,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationReleaseAnimationsRequest : IChromiumRequest<AnimationReleaseAnimationsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.releaseAnimations";
         /// <summary>
         /// List of animation ids to seek.
@@ -570,6 +579,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationResolveAnimationRequest : IChromiumRequest<AnimationResolveAnimationResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.resolveAnimation";
         /// <summary>
         /// Animation id.
@@ -594,6 +604,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationSeekAnimationsRequest : IChromiumRequest<AnimationSeekAnimationsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.seekAnimations";
         /// <summary>
         /// List of animation ids to seek.
@@ -618,6 +629,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationSetPausedRequest : IChromiumRequest<AnimationSetPausedResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.setPaused";
         /// <summary>
         /// Animations to set the pause state of.
@@ -642,6 +654,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationSetPlaybackRateRequest : IChromiumRequest<AnimationSetPlaybackRateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.setPlaybackRate";
         /// <summary>
         /// Playback rate for animations on page
@@ -662,6 +675,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
     /// </remarks>
     internal class AnimationSetTimingRequest : IChromiumRequest<AnimationSetTimingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Animation.setTiming";
         /// <summary>
         /// Animation id.
@@ -797,6 +811,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
     /// </remarks>
     internal class ApplicationCacheEnableRequest : IChromiumRequest<ApplicationCacheEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ApplicationCache.enable";
     }
     /// <summary>
@@ -813,6 +828,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
     /// </remarks>
     internal class ApplicationCacheGetApplicationCacheForFrameRequest : IChromiumRequest<ApplicationCacheGetApplicationCacheForFrameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ApplicationCache.getApplicationCacheForFrame";
         /// <summary>
         /// Identifier of the frame containing document whose application cache is retrieved.
@@ -838,6 +854,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
     /// </remarks>
     internal class ApplicationCacheGetFramesWithManifestsRequest : IChromiumRequest<ApplicationCacheGetFramesWithManifestsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ApplicationCache.getFramesWithManifests";
     }
     /// <summary>
@@ -859,6 +876,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
     /// </remarks>
     internal class ApplicationCacheGetManifestForFrameRequest : IChromiumRequest<ApplicationCacheGetManifestForFrameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ApplicationCache.getManifestForFrame";
         /// <summary>
         /// Identifier of the frame containing document whose manifest is retrieved.
@@ -923,6 +941,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Audits
     /// </remarks>
     internal class AuditsGetEncodedResponseRequest : IChromiumRequest<AuditsGetEncodedResponseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Audits.getEncodedResponse";
         /// <summary>
         /// Identifier of the network request to get content for.
@@ -1032,6 +1051,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
     /// </remarks>
     internal class BackgroundServiceStartObservingRequest : IChromiumRequest<BackgroundServiceStartObservingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "BackgroundService.startObserving";
         /// <summary>
         /// 
@@ -1052,6 +1072,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
     /// </remarks>
     internal class BackgroundServiceStopObservingRequest : IChromiumRequest<BackgroundServiceStopObservingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "BackgroundService.stopObserving";
         /// <summary>
         /// 
@@ -1072,6 +1093,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
     /// </remarks>
     internal class BackgroundServiceSetRecordingRequest : IChromiumRequest<BackgroundServiceSetRecordingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "BackgroundService.setRecording";
         /// <summary>
         /// 
@@ -1096,6 +1118,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
     /// </remarks>
     internal class BackgroundServiceClearEventsRequest : IChromiumRequest<BackgroundServiceClearEventsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "BackgroundService.clearEvents";
         /// <summary>
         /// 
@@ -1288,6 +1311,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserSetPermissionRequest : IChromiumRequest<BrowserSetPermissionResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.setPermission";
         /// <summary>
         /// Origin the permission applies to.
@@ -1320,6 +1344,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGrantPermissionsRequest : IChromiumRequest<BrowserGrantPermissionsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.grantPermissions";
         /// <summary>
         /// 
@@ -1348,6 +1373,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserResetPermissionsRequest : IChromiumRequest<BrowserResetPermissionsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.resetPermissions";
         /// <summary>
         /// BrowserContext to reset permissions. When omitted, default browser context is used.
@@ -1368,6 +1394,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserCloseRequest : IChromiumRequest<BrowserCloseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.close";
     }
     /// <summary>
@@ -1384,6 +1411,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserCrashRequest : IChromiumRequest<BrowserCrashResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.crash";
     }
     /// <summary>
@@ -1400,6 +1428,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserCrashGpuProcessRequest : IChromiumRequest<BrowserCrashGpuProcessResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.crashGpuProcess";
     }
     /// <summary>
@@ -1416,6 +1445,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGetVersionRequest : IChromiumRequest<BrowserGetVersionResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.getVersion";
     }
     /// <summary>
@@ -1453,6 +1483,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGetBrowserCommandLineRequest : IChromiumRequest<BrowserGetBrowserCommandLineResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.getBrowserCommandLine";
     }
     /// <summary>
@@ -1473,6 +1504,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGetHistogramsRequest : IChromiumRequest<BrowserGetHistogramsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.getHistograms";
         /// <summary>
         /// Requested substring in name. Only histograms which have query as a
@@ -1503,6 +1535,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGetHistogramRequest : IChromiumRequest<BrowserGetHistogramResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.getHistogram";
         /// <summary>
         /// Requested histogram name.
@@ -1531,6 +1564,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGetWindowBoundsRequest : IChromiumRequest<BrowserGetWindowBoundsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.getWindowBounds";
         /// <summary>
         /// Browser window id.
@@ -1556,6 +1590,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserGetWindowForTargetRequest : IChromiumRequest<BrowserGetWindowForTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.getWindowForTarget";
         /// <summary>
         /// Devtools agent host id. If called as a part of the session, associated targetId is used.
@@ -1585,6 +1620,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserSetWindowBoundsRequest : IChromiumRequest<BrowserSetWindowBoundsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.setWindowBounds";
         /// <summary>
         /// Browser window id.
@@ -1610,6 +1646,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
     /// </remarks>
     internal class BrowserSetDockTileRequest : IChromiumRequest<BrowserSetDockTileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Browser.setDockTile";
         /// <summary>
         /// 
@@ -2142,6 +2179,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSAddRuleRequest : IChromiumRequest<CSSAddRuleResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.addRule";
         /// <summary>
         /// The css style sheet identifier where a new rule should be inserted.
@@ -2174,6 +2212,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSCollectClassNamesRequest : IChromiumRequest<CSSCollectClassNamesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.collectClassNames";
         /// <summary>
         /// 
@@ -2198,6 +2237,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSCreateStyleSheetRequest : IChromiumRequest<CSSCreateStyleSheetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.createStyleSheet";
         /// <summary>
         /// Identifier of the frame where "via-inspector" stylesheet should be created.
@@ -2222,6 +2262,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSDisableRequest : IChromiumRequest<CSSDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.disable";
     }
     /// <summary>
@@ -2239,6 +2280,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSEnableRequest : IChromiumRequest<CSSEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.enable";
     }
     /// <summary>
@@ -2256,6 +2298,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSForcePseudoStateRequest : IChromiumRequest<CSSForcePseudoStateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.forcePseudoState";
         /// <summary>
         /// The element id for which to force the pseudo state.
@@ -2280,6 +2323,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetBackgroundColorsRequest : IChromiumRequest<CSSGetBackgroundColorsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getBackgroundColors";
         /// <summary>
         /// Id of the node to get background colors for.
@@ -2317,6 +2361,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetComputedStyleForNodeRequest : IChromiumRequest<CSSGetComputedStyleForNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getComputedStyleForNode";
         /// <summary>
         /// 
@@ -2342,6 +2387,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetInlineStylesForNodeRequest : IChromiumRequest<CSSGetInlineStylesForNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getInlineStylesForNode";
         /// <summary>
         /// 
@@ -2370,6 +2416,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetMatchedStylesForNodeRequest : IChromiumRequest<CSSGetMatchedStylesForNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getMatchedStylesForNode";
         /// <summary>
         /// 
@@ -2414,6 +2461,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetMediaQueriesRequest : IChromiumRequest<CSSGetMediaQueriesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getMediaQueries";
     }
     /// <summary>
@@ -2435,6 +2483,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetPlatformFontsForNodeRequest : IChromiumRequest<CSSGetPlatformFontsForNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getPlatformFontsForNode";
         /// <summary>
         /// 
@@ -2459,6 +2508,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSGetStyleSheetTextRequest : IChromiumRequest<CSSGetStyleSheetTextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.getStyleSheetText";
         /// <summary>
         /// 
@@ -2484,6 +2534,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSSetEffectivePropertyValueForNodeRequest : IChromiumRequest<CSSSetEffectivePropertyValueForNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.setEffectivePropertyValueForNode";
         /// <summary>
         /// The element id for which to set property.
@@ -2512,6 +2563,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSSetKeyframeKeyRequest : IChromiumRequest<CSSSetKeyframeKeyResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.setKeyframeKey";
         /// <summary>
         /// 
@@ -2544,6 +2596,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSSetMediaTextRequest : IChromiumRequest<CSSSetMediaTextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.setMediaText";
         /// <summary>
         /// 
@@ -2576,6 +2629,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSSetRuleSelectorRequest : IChromiumRequest<CSSSetRuleSelectorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.setRuleSelector";
         /// <summary>
         /// 
@@ -2608,6 +2662,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSSetStyleSheetTextRequest : IChromiumRequest<CSSSetStyleSheetTextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.setStyleSheetText";
         /// <summary>
         /// 
@@ -2636,6 +2691,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSSetStyleTextsRequest : IChromiumRequest<CSSSetStyleTextsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.setStyleTexts";
         /// <summary>
         /// 
@@ -2660,6 +2716,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSStartRuleUsageTrackingRequest : IChromiumRequest<CSSStartRuleUsageTrackingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.startRuleUsageTracking";
     }
     /// <summary>
@@ -2677,6 +2734,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSStopRuleUsageTrackingRequest : IChromiumRequest<CSSStopRuleUsageTrackingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.stopRuleUsageTracking";
     }
     /// <summary>
@@ -2698,6 +2756,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
     /// </remarks>
     internal class CSSTakeCoverageDeltaRequest : IChromiumRequest<CSSTakeCoverageDeltaResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CSS.takeCoverageDelta";
     }
     /// <summary>
@@ -2881,6 +2940,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
     /// </remarks>
     internal class CacheStorageDeleteCacheRequest : IChromiumRequest<CacheStorageDeleteCacheResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CacheStorage.deleteCache";
         /// <summary>
         /// Id of cache for deletion.
@@ -2901,6 +2961,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
     /// </remarks>
     internal class CacheStorageDeleteEntryRequest : IChromiumRequest<CacheStorageDeleteEntryResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CacheStorage.deleteEntry";
         /// <summary>
         /// Id of cache where the entry will be deleted.
@@ -2925,6 +2986,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
     /// </remarks>
     internal class CacheStorageRequestCacheNamesRequest : IChromiumRequest<CacheStorageRequestCacheNamesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CacheStorage.requestCacheNames";
         /// <summary>
         /// Security origin.
@@ -2949,6 +3011,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
     /// </remarks>
     internal class CacheStorageRequestCachedResponseRequest : IChromiumRequest<CacheStorageRequestCachedResponseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CacheStorage.requestCachedResponse";
         /// <summary>
         /// Id of cache that contains the entry.
@@ -2981,6 +3044,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
     /// </remarks>
     internal class CacheStorageRequestEntriesRequest : IChromiumRequest<CacheStorageRequestEntriesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "CacheStorage.requestEntries";
         /// <summary>
         /// ID of cache to get entries from.
@@ -3048,6 +3112,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// </remarks>
     internal class CastEnableRequest : IChromiumRequest<CastEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Cast.enable";
         /// <summary>
         /// 
@@ -3068,6 +3133,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// </remarks>
     internal class CastDisableRequest : IChromiumRequest<CastDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Cast.disable";
     }
     /// <summary>
@@ -3085,6 +3151,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// </remarks>
     internal class CastSetSinkToUseRequest : IChromiumRequest<CastSetSinkToUseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Cast.setSinkToUse";
         /// <summary>
         /// 
@@ -3105,6 +3172,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// </remarks>
     internal class CastStartTabMirroringRequest : IChromiumRequest<CastStartTabMirroringResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Cast.startTabMirroring";
         /// <summary>
         /// 
@@ -3125,6 +3193,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
     /// </remarks>
     internal class CastStopCastingRequest : IChromiumRequest<CastStopCastingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Cast.stopCasting";
         /// <summary>
         /// 
@@ -3443,6 +3512,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMCollectClassNamesFromSubtreeRequest : IChromiumRequest<DOMCollectClassNamesFromSubtreeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.collectClassNamesFromSubtree";
         /// <summary>
         /// Id of the node to collect class names.
@@ -3468,6 +3538,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMCopyToRequest : IChromiumRequest<DOMCopyToResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.copyTo";
         /// <summary>
         /// Id of the node to copy.
@@ -3502,6 +3573,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMDescribeNodeRequest : IChromiumRequest<DOMDescribeNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.describeNode";
         /// <summary>
         /// Identifier of the node.
@@ -3544,6 +3616,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMDisableRequest : IChromiumRequest<DOMDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.disable";
     }
     /// <summary>
@@ -3561,6 +3634,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMDiscardSearchResultsRequest : IChromiumRequest<DOMDiscardSearchResultsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.discardSearchResults";
         /// <summary>
         /// Unique search session identifier.
@@ -3581,6 +3655,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMEnableRequest : IChromiumRequest<DOMEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.enable";
     }
     /// <summary>
@@ -3597,6 +3672,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMFocusRequest : IChromiumRequest<DOMFocusResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.focus";
         /// <summary>
         /// Identifier of the node.
@@ -3625,6 +3701,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetAttributesRequest : IChromiumRequest<DOMGetAttributesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getAttributes";
         /// <summary>
         /// Id of the node to retrieve attibutes for.
@@ -3649,6 +3726,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetBoxModelRequest : IChromiumRequest<DOMGetBoxModelResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getBoxModel";
         /// <summary>
         /// Identifier of the node.
@@ -3682,6 +3760,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetContentQuadsRequest : IChromiumRequest<DOMGetContentQuadsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getContentQuads";
         /// <summary>
         /// Identifier of the node.
@@ -3714,6 +3793,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetDocumentRequest : IChromiumRequest<DOMGetDocumentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getDocument";
         /// <summary>
         /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
@@ -3744,6 +3824,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetFlattenedDocumentRequest : IChromiumRequest<DOMGetFlattenedDocumentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getFlattenedDocument";
         /// <summary>
         /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
@@ -3775,6 +3856,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetNodeForLocationRequest : IChromiumRequest<DOMGetNodeForLocationResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getNodeForLocation";
         /// <summary>
         /// X coordinate.
@@ -3819,6 +3901,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetOuterHTMLRequest : IChromiumRequest<DOMGetOuterHTMLResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getOuterHTML";
         /// <summary>
         /// Identifier of the node.
@@ -3851,6 +3934,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetRelayoutBoundaryRequest : IChromiumRequest<DOMGetRelayoutBoundaryResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getRelayoutBoundary";
         /// <summary>
         /// Id of the node.
@@ -3876,6 +3960,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetSearchResultsRequest : IChromiumRequest<DOMGetSearchResultsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getSearchResults";
         /// <summary>
         /// Unique search session identifier.
@@ -3908,6 +3993,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMHideHighlightRequest : IChromiumRequest<DOMHideHighlightResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.hideHighlight";
     }
     /// <summary>
@@ -3924,6 +4010,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMHighlightNodeRequest : IChromiumRequest<DOMHighlightNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.highlightNode";
     }
     /// <summary>
@@ -3940,6 +4027,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMHighlightRectRequest : IChromiumRequest<DOMHighlightRectResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.highlightRect";
     }
     /// <summary>
@@ -3956,6 +4044,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMMarkUndoableStateRequest : IChromiumRequest<DOMMarkUndoableStateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.markUndoableState";
     }
     /// <summary>
@@ -3972,6 +4061,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMMoveToRequest : IChromiumRequest<DOMMoveToResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.moveTo";
         /// <summary>
         /// Id of the node to move.
@@ -4006,6 +4096,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMPerformSearchRequest : IChromiumRequest<DOMPerformSearchResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.performSearch";
         /// <summary>
         /// Plain text or query selector or XPath search query.
@@ -4038,6 +4129,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMPushNodeByPathToFrontendRequest : IChromiumRequest<DOMPushNodeByPathToFrontendResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.pushNodeByPathToFrontend";
         /// <summary>
         /// Path to node in the proprietary format.
@@ -4062,6 +4154,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMPushNodesByBackendIdsToFrontendRequest : IChromiumRequest<DOMPushNodesByBackendIdsToFrontendResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.pushNodesByBackendIdsToFrontend";
         /// <summary>
         /// The array of backend node ids.
@@ -4087,6 +4180,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMQuerySelectorRequest : IChromiumRequest<DOMQuerySelectorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.querySelector";
         /// <summary>
         /// Id of the node to query upon.
@@ -4115,6 +4209,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMQuerySelectorAllRequest : IChromiumRequest<DOMQuerySelectorAllResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.querySelectorAll";
         /// <summary>
         /// Id of the node to query upon.
@@ -4143,6 +4238,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMRedoRequest : IChromiumRequest<DOMRedoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.redo";
     }
     /// <summary>
@@ -4159,6 +4255,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMRemoveAttributeRequest : IChromiumRequest<DOMRemoveAttributeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.removeAttribute";
         /// <summary>
         /// Id of the element to remove attribute from.
@@ -4183,6 +4280,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMRemoveNodeRequest : IChromiumRequest<DOMRemoveNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.removeNode";
         /// <summary>
         /// Id of the node to remove.
@@ -4205,6 +4303,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMRequestChildNodesRequest : IChromiumRequest<DOMRequestChildNodesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.requestChildNodes";
         /// <summary>
         /// Id of the node to get children for.
@@ -4237,6 +4336,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMRequestNodeRequest : IChromiumRequest<DOMRequestNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.requestNode";
         /// <summary>
         /// JavaScript object id to convert into node.
@@ -4261,6 +4361,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMResolveNodeRequest : IChromiumRequest<DOMResolveNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.resolveNode";
         /// <summary>
         /// Id of the node to resolve.
@@ -4297,6 +4398,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetAttributeValueRequest : IChromiumRequest<DOMSetAttributeValueResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setAttributeValue";
         /// <summary>
         /// Id of the element to set attribute for.
@@ -4326,6 +4428,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetAttributesAsTextRequest : IChromiumRequest<DOMSetAttributesAsTextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setAttributesAsText";
         /// <summary>
         /// Id of the element to set attributes for.
@@ -4355,6 +4458,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetFileInputFilesRequest : IChromiumRequest<DOMSetFileInputFilesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setFileInputFiles";
         /// <summary>
         /// Array of file paths to set.
@@ -4387,6 +4491,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetNodeStackTracesEnabledRequest : IChromiumRequest<DOMSetNodeStackTracesEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setNodeStackTracesEnabled";
         /// <summary>
         /// Enable or disable.
@@ -4407,6 +4512,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetNodeStackTracesRequest : IChromiumRequest<DOMGetNodeStackTracesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getNodeStackTraces";
         /// <summary>
         /// Id of the node to get stack traces for.
@@ -4432,6 +4538,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetFileInfoRequest : IChromiumRequest<DOMGetFileInfoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getFileInfo";
         /// <summary>
         /// JavaScript object id of the node wrapper.
@@ -4457,6 +4564,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetInspectedNodeRequest : IChromiumRequest<DOMSetInspectedNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setInspectedNode";
         /// <summary>
         /// DOM node id to be accessible by means of $x command line API.
@@ -4477,6 +4585,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetNodeNameRequest : IChromiumRequest<DOMSetNodeNameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setNodeName";
         /// <summary>
         /// Id of the node to set name for.
@@ -4505,6 +4614,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetNodeValueRequest : IChromiumRequest<DOMSetNodeValueResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setNodeValue";
         /// <summary>
         /// Id of the node to set value for.
@@ -4529,6 +4639,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMSetOuterHTMLRequest : IChromiumRequest<DOMSetOuterHTMLResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.setOuterHTML";
         /// <summary>
         /// Id of the node to set markup for.
@@ -4553,6 +4664,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMUndoRequest : IChromiumRequest<DOMUndoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.undo";
     }
     /// <summary>
@@ -4569,6 +4681,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
     /// </remarks>
     internal class DOMGetFrameOwnerRequest : IChromiumRequest<DOMGetFrameOwnerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOM.getFrameOwner";
         /// <summary>
         /// 
@@ -4904,6 +5017,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerGetEventListenersRequest : IChromiumRequest<DOMDebuggerGetEventListenersResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.getEventListeners";
         /// <summary>
         /// Identifier of the object to return listeners for.
@@ -4938,6 +5052,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerRemoveDOMBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveDOMBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
         /// <summary>
         /// Identifier of the node to remove breakpoint from.
@@ -4962,6 +5077,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerRemoveEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveEventListenerBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.removeEventListenerBreakpoint";
         /// <summary>
         /// Event name.
@@ -4986,6 +5102,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerRemoveInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveInstrumentationBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.removeInstrumentationBreakpoint";
         /// <summary>
         /// Instrumentation name to stop on.
@@ -5006,6 +5123,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerRemoveXHRBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveXHRBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.removeXHRBreakpoint";
         /// <summary>
         /// Resource URL substring.
@@ -5026,6 +5144,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerSetDOMBreakpointRequest : IChromiumRequest<DOMDebuggerSetDOMBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
         /// <summary>
         /// Identifier of the node to set breakpoint on.
@@ -5050,6 +5169,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerSetEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerSetEventListenerBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.setEventListenerBreakpoint";
         /// <summary>
         /// DOM Event name to stop on (any DOM event will do).
@@ -5075,6 +5195,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerSetInstrumentationBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.setInstrumentationBreakpoint";
         /// <summary>
         /// Instrumentation name to stop on.
@@ -5095,6 +5216,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
     /// </remarks>
     internal class DOMDebuggerSetXHRBreakpointRequest : IChromiumRequest<DOMDebuggerSetXHRBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMDebugger.setXHRBreakpoint";
         /// <summary>
         /// Resource URL substring. All XHRs having this substring in the URL will get stopped upon.
@@ -5564,6 +5686,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
     /// </remarks>
     internal class DOMSnapshotDisableRequest : IChromiumRequest<DOMSnapshotDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMSnapshot.disable";
     }
     /// <summary>
@@ -5580,6 +5703,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
     /// </remarks>
     internal class DOMSnapshotEnableRequest : IChromiumRequest<DOMSnapshotEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMSnapshot.enable";
     }
     /// <summary>
@@ -5599,6 +5723,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
     /// </remarks>
     internal class DOMSnapshotGetSnapshotRequest : IChromiumRequest<DOMSnapshotGetSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMSnapshot.getSnapshot";
         /// <summary>
         /// Whitelist of computed styles to return.
@@ -5646,6 +5771,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
     /// </remarks>
     internal class DOMSnapshotCaptureSnapshotRequest : IChromiumRequest<DOMSnapshotCaptureSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMSnapshot.captureSnapshot";
         /// <summary>
         /// Whitelist of computed styles to return.
@@ -5699,6 +5825,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// </remarks>
     internal class DOMStorageClearRequest : IChromiumRequest<DOMStorageClearResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMStorage.clear";
         /// <summary>
         /// 
@@ -5719,6 +5846,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// </remarks>
     internal class DOMStorageDisableRequest : IChromiumRequest<DOMStorageDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMStorage.disable";
     }
     /// <summary>
@@ -5735,6 +5863,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// </remarks>
     internal class DOMStorageEnableRequest : IChromiumRequest<DOMStorageEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMStorage.enable";
     }
     /// <summary>
@@ -5751,6 +5880,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// </remarks>
     internal class DOMStorageGetDOMStorageItemsRequest : IChromiumRequest<DOMStorageGetDOMStorageItemsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMStorage.getDOMStorageItems";
         /// <summary>
         /// 
@@ -5775,6 +5905,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// </remarks>
     internal class DOMStorageRemoveDOMStorageItemRequest : IChromiumRequest<DOMStorageRemoveDOMStorageItemResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMStorage.removeDOMStorageItem";
         /// <summary>
         /// 
@@ -5799,6 +5930,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
     /// </remarks>
     internal class DOMStorageSetDOMStorageItemRequest : IChromiumRequest<DOMStorageSetDOMStorageItemResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DOMStorage.setDOMStorageItem";
         /// <summary>
         /// 
@@ -5946,6 +6078,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
     /// </remarks>
     internal class DatabaseDisableRequest : IChromiumRequest<DatabaseDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Database.disable";
     }
     /// <summary>
@@ -5962,6 +6095,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
     /// </remarks>
     internal class DatabaseEnableRequest : IChromiumRequest<DatabaseEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Database.enable";
     }
     /// <summary>
@@ -5978,6 +6112,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
     /// </remarks>
     internal class DatabaseExecuteSQLRequest : IChromiumRequest<DatabaseExecuteSQLResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Database.executeSQL";
         /// <summary>
         /// 
@@ -6014,6 +6149,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
     /// </remarks>
     internal class DatabaseGetDatabaseTableNamesRequest : IChromiumRequest<DatabaseGetDatabaseTableNamesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Database.getDatabaseTableNames";
         /// <summary>
         /// 
@@ -6055,6 +6191,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
     /// </remarks>
     internal class DeviceOrientationClearDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationClearDeviceOrientationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DeviceOrientation.clearDeviceOrientationOverride";
     }
     /// <summary>
@@ -6071,6 +6208,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
     /// </remarks>
     internal class DeviceOrientationSetDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationSetDeviceOrientationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "DeviceOrientation.setDeviceOrientationOverride";
         /// <summary>
         /// Mock alpha
@@ -6142,6 +6280,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationCanEmulateRequest : IChromiumRequest<EmulationCanEmulateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.canEmulate";
     }
     /// <summary>
@@ -6162,6 +6301,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationClearDeviceMetricsOverrideRequest : IChromiumRequest<EmulationClearDeviceMetricsOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.clearDeviceMetricsOverride";
     }
     /// <summary>
@@ -6178,6 +6318,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationClearGeolocationOverrideRequest : IChromiumRequest<EmulationClearGeolocationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.clearGeolocationOverride";
     }
     /// <summary>
@@ -6194,6 +6335,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationResetPageScaleFactorRequest : IChromiumRequest<EmulationResetPageScaleFactorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.resetPageScaleFactor";
     }
     /// <summary>
@@ -6210,6 +6352,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetFocusEmulationEnabledRequest : IChromiumRequest<EmulationSetFocusEmulationEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setFocusEmulationEnabled";
         /// <summary>
         /// Whether to enable to disable focus emulation.
@@ -6230,6 +6373,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetCPUThrottlingRateRequest : IChromiumRequest<EmulationSetCPUThrottlingRateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setCPUThrottlingRate";
         /// <summary>
         /// Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
@@ -6251,6 +6395,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetDefaultBackgroundColorOverrideRequest : IChromiumRequest<EmulationSetDefaultBackgroundColorOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setDefaultBackgroundColorOverride";
         /// <summary>
         /// RGBA of the default background color. If not specified, any existing override will be
@@ -6274,6 +6419,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetDeviceMetricsOverrideRequest : IChromiumRequest<EmulationSetDeviceMetricsOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setDeviceMetricsOverride";
         /// <summary>
         /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
@@ -6340,6 +6486,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetScrollbarsHiddenRequest : IChromiumRequest<EmulationSetScrollbarsHiddenResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setScrollbarsHidden";
         /// <summary>
         /// Whether scrollbars should be always hidden.
@@ -6360,6 +6507,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetDocumentCookieDisabledRequest : IChromiumRequest<EmulationSetDocumentCookieDisabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setDocumentCookieDisabled";
         /// <summary>
         /// Whether document.coookie API should be disabled.
@@ -6380,6 +6528,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetEmitTouchEventsForMouseRequest : IChromiumRequest<EmulationSetEmitTouchEventsForMouseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setEmitTouchEventsForMouse";
         /// <summary>
         /// Whether touch emulation based on mouse input should be enabled.
@@ -6404,6 +6553,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetEmulatedMediaRequest : IChromiumRequest<EmulationSetEmulatedMediaResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setEmulatedMedia";
         /// <summary>
         /// Media type to emulate. Empty string disables the override.
@@ -6429,6 +6579,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetGeolocationOverrideRequest : IChromiumRequest<EmulationSetGeolocationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setGeolocationOverride";
         /// <summary>
         /// Mock latitude
@@ -6457,6 +6608,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetNavigatorOverridesRequest : IChromiumRequest<EmulationSetNavigatorOverridesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setNavigatorOverrides";
         /// <summary>
         /// The platform navigator.platform should return.
@@ -6477,6 +6629,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetPageScaleFactorRequest : IChromiumRequest<EmulationSetPageScaleFactorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setPageScaleFactor";
         /// <summary>
         /// Page scale factor.
@@ -6497,6 +6650,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetScriptExecutionDisabledRequest : IChromiumRequest<EmulationSetScriptExecutionDisabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setScriptExecutionDisabled";
         /// <summary>
         /// Whether script execution should be disabled in the page.
@@ -6517,6 +6671,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetTouchEmulationEnabledRequest : IChromiumRequest<EmulationSetTouchEmulationEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setTouchEmulationEnabled";
         /// <summary>
         /// Whether the touch event emulation should be enabled.
@@ -6542,6 +6697,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetVirtualTimePolicyRequest : IChromiumRequest<EmulationSetVirtualTimePolicyResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setVirtualTimePolicy";
         /// <summary>
         /// 
@@ -6585,6 +6741,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetTimezoneOverrideRequest : IChromiumRequest<EmulationSetTimezoneOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setTimezoneOverride";
         /// <summary>
         /// The timezone identifier. If empty, disables the override and
@@ -6608,6 +6765,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetVisibleSizeRequest : IChromiumRequest<EmulationSetVisibleSizeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setVisibleSize";
         /// <summary>
         /// Frame width (DIP).
@@ -6632,6 +6790,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
     /// </remarks>
     internal class EmulationSetUserAgentOverrideRequest : IChromiumRequest<EmulationSetUserAgentOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Emulation.setUserAgentOverride";
         /// <summary>
         /// User agent to use.
@@ -6690,6 +6849,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
     /// </remarks>
     internal class HeadlessExperimentalBeginFrameRequest : IChromiumRequest<HeadlessExperimentalBeginFrameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeadlessExperimental.beginFrame";
         /// <summary>
         /// Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,
@@ -6737,6 +6897,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
     /// </remarks>
     internal class HeadlessExperimentalDisableRequest : IChromiumRequest<HeadlessExperimentalDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeadlessExperimental.disable";
     }
     /// <summary>
@@ -6753,6 +6914,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
     /// </remarks>
     internal class HeadlessExperimentalEnableRequest : IChromiumRequest<HeadlessExperimentalEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeadlessExperimental.enable";
     }
     /// <summary>
@@ -6788,6 +6950,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
     /// </remarks>
     internal class IOCloseRequest : IChromiumRequest<IOCloseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IO.close";
         /// <summary>
         /// Handle of the stream to close.
@@ -6808,6 +6971,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
     /// </remarks>
     internal class IOReadRequest : IChromiumRequest<IOReadResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IO.read";
         /// <summary>
         /// Handle of the stream to read.
@@ -6849,6 +7013,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
     /// </remarks>
     internal class IOResolveBlobRequest : IChromiumRequest<IOResolveBlobResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IO.resolveBlob";
         /// <summary>
         /// Object id of a Blob object wrapper.
@@ -7023,6 +7188,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBClearObjectStoreRequest : IChromiumRequest<IndexedDBClearObjectStoreResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.clearObjectStore";
         /// <summary>
         /// Security origin.
@@ -7051,6 +7217,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBDeleteDatabaseRequest : IChromiumRequest<IndexedDBDeleteDatabaseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.deleteDatabase";
         /// <summary>
         /// Security origin.
@@ -7075,6 +7242,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBDeleteObjectStoreEntriesRequest : IChromiumRequest<IndexedDBDeleteObjectStoreEntriesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.deleteObjectStoreEntries";
         /// <summary>
         /// 
@@ -7107,6 +7275,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBDisableRequest : IChromiumRequest<IndexedDBDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.disable";
     }
     /// <summary>
@@ -7123,6 +7292,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBEnableRequest : IChromiumRequest<IndexedDBEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.enable";
     }
     /// <summary>
@@ -7139,6 +7309,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBRequestDataRequest : IChromiumRequest<IndexedDBRequestDataResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.requestData";
         /// <summary>
         /// Security origin.
@@ -7191,6 +7362,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBGetMetadataRequest : IChromiumRequest<IndexedDBGetMetadataResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.getMetadata";
         /// <summary>
         /// Security origin.
@@ -7229,6 +7401,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBRequestDatabaseRequest : IChromiumRequest<IndexedDBRequestDatabaseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.requestDatabase";
         /// <summary>
         /// Security origin.
@@ -7257,6 +7430,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
     /// </remarks>
     internal class IndexedDBRequestDatabaseNamesRequest : IChromiumRequest<IndexedDBRequestDatabaseNamesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "IndexedDB.requestDatabaseNames";
         /// <summary>
         /// Security origin.
@@ -7328,6 +7502,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputDispatchKeyEventRequest : IChromiumRequest<InputDispatchKeyEventResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.dispatchKeyEvent";
         /// <summary>
         /// Type of the key event.
@@ -7406,6 +7581,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputInsertTextRequest : IChromiumRequest<InputInsertTextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.insertText";
         /// <summary>
         /// The text to insert.
@@ -7426,6 +7602,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputDispatchMouseEventRequest : IChromiumRequest<InputDispatchMouseEventResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.dispatchMouseEvent";
         /// <summary>
         /// Type of the mouse event.
@@ -7489,6 +7666,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputDispatchTouchEventRequest : IChromiumRequest<InputDispatchTouchEventResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.dispatchTouchEvent";
         /// <summary>
         /// Type of the touch event. TouchEnd and TouchCancel must not contain any touch points, while
@@ -7525,6 +7703,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputEmulateTouchFromMouseEventRequest : IChromiumRequest<InputEmulateTouchFromMouseEventResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.emulateTouchFromMouseEvent";
         /// <summary>
         /// Type of the mouse event.
@@ -7578,6 +7757,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputSetIgnoreInputEventsRequest : IChromiumRequest<InputSetIgnoreInputEventsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.setIgnoreInputEvents";
         /// <summary>
         /// Ignores input events processing when set to true.
@@ -7598,6 +7778,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputSynthesizePinchGestureRequest : IChromiumRequest<InputSynthesizePinchGestureResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.synthesizePinchGesture";
         /// <summary>
         /// X coordinate of the start of the gesture in CSS pixels.
@@ -7635,6 +7816,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputSynthesizeScrollGestureRequest : IChromiumRequest<InputSynthesizeScrollGestureResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.synthesizeScrollGesture";
         /// <summary>
         /// X coordinate of the start of the gesture in CSS pixels.
@@ -7702,6 +7884,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
     /// </remarks>
     internal class InputSynthesizeTapGestureRequest : IChromiumRequest<InputSynthesizeTapGestureResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Input.synthesizeTapGesture";
         /// <summary>
         /// X coordinate of the start of the gesture in CSS pixels.
@@ -7742,6 +7925,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
     /// </remarks>
     internal class InspectorDisableRequest : IChromiumRequest<InspectorDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Inspector.disable";
     }
     /// <summary>
@@ -7758,6 +7942,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
     /// </remarks>
     internal class InspectorEnableRequest : IChromiumRequest<InspectorEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Inspector.enable";
     }
     /// <summary>
@@ -7936,6 +8121,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeCompositingReasonsRequest : IChromiumRequest<LayerTreeCompositingReasonsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.compositingReasons";
         /// <summary>
         /// The id of the layer for which we want to get the reasons it was composited.
@@ -7960,6 +8146,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeDisableRequest : IChromiumRequest<LayerTreeDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.disable";
     }
     /// <summary>
@@ -7976,6 +8163,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeEnableRequest : IChromiumRequest<LayerTreeEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.enable";
     }
     /// <summary>
@@ -7992,6 +8180,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeLoadSnapshotRequest : IChromiumRequest<LayerTreeLoadSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.loadSnapshot";
         /// <summary>
         /// An array of tiles composing the snapshot.
@@ -8016,6 +8205,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeMakeSnapshotRequest : IChromiumRequest<LayerTreeMakeSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.makeSnapshot";
         /// <summary>
         /// The id of the layer.
@@ -8040,6 +8230,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeProfileSnapshotRequest : IChromiumRequest<LayerTreeProfileSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.profileSnapshot";
         /// <summary>
         /// The id of the layer snapshot.
@@ -8076,6 +8267,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeReleaseSnapshotRequest : IChromiumRequest<LayerTreeReleaseSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.releaseSnapshot";
         /// <summary>
         /// The id of the layer snapshot.
@@ -8096,6 +8288,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeReplaySnapshotRequest : IChromiumRequest<LayerTreeReplaySnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.replaySnapshot";
         /// <summary>
         /// The id of the layer snapshot.
@@ -8132,6 +8325,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
     /// </remarks>
     internal class LayerTreeSnapshotCommandLogRequest : IChromiumRequest<LayerTreeSnapshotCommandLogResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "LayerTree.snapshotCommandLog";
         /// <summary>
         /// The id of the layer snapshot.
@@ -8251,6 +8445,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
     /// </remarks>
     internal class LogClearRequest : IChromiumRequest<LogClearResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Log.clear";
     }
     /// <summary>
@@ -8267,6 +8462,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
     /// </remarks>
     internal class LogDisableRequest : IChromiumRequest<LogDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Log.disable";
     }
     /// <summary>
@@ -8284,6 +8480,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
     /// </remarks>
     internal class LogEnableRequest : IChromiumRequest<LogEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Log.enable";
     }
     /// <summary>
@@ -8300,6 +8497,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
     /// </remarks>
     internal class LogStartViolationsReportRequest : IChromiumRequest<LogStartViolationsReportResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Log.startViolationsReport";
         /// <summary>
         /// Configuration for violations.
@@ -8320,6 +8518,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
     /// </remarks>
     internal class LogStopViolationsReportRequest : IChromiumRequest<LogStopViolationsReportResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Log.stopViolationsReport";
     }
     /// <summary>
@@ -8416,6 +8615,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryGetDOMCountersRequest : IChromiumRequest<MemoryGetDOMCountersResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.getDOMCounters";
     }
     /// <summary>
@@ -8444,6 +8644,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryPrepareForLeakDetectionRequest : IChromiumRequest<MemoryPrepareForLeakDetectionResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.prepareForLeakDetection";
     }
     /// <summary>
@@ -8460,6 +8661,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryForciblyPurgeJavaScriptMemoryRequest : IChromiumRequest<MemoryForciblyPurgeJavaScriptMemoryResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.forciblyPurgeJavaScriptMemory";
     }
     /// <summary>
@@ -8476,6 +8678,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemorySetPressureNotificationsSuppressedRequest : IChromiumRequest<MemorySetPressureNotificationsSuppressedResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.setPressureNotificationsSuppressed";
         /// <summary>
         /// If true, memory pressure notifications will be suppressed.
@@ -8496,6 +8699,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemorySimulatePressureNotificationRequest : IChromiumRequest<MemorySimulatePressureNotificationResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.simulatePressureNotification";
         /// <summary>
         /// Memory pressure level of the notification.
@@ -8516,6 +8720,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryStartSamplingRequest : IChromiumRequest<MemoryStartSamplingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.startSampling";
         /// <summary>
         /// Average number of bytes between samples.
@@ -8540,6 +8745,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryStopSamplingRequest : IChromiumRequest<MemoryStopSamplingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.stopSampling";
     }
     /// <summary>
@@ -8557,6 +8763,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryGetAllTimeSamplingProfileRequest : IChromiumRequest<MemoryGetAllTimeSamplingProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.getAllTimeSamplingProfile";
     }
     /// <summary>
@@ -8578,6 +8785,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryGetBrowserSamplingProfileRequest : IChromiumRequest<MemoryGetBrowserSamplingProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.getBrowserSamplingProfile";
     }
     /// <summary>
@@ -8599,6 +8807,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
     /// </remarks>
     internal class MemoryGetSamplingProfileRequest : IChromiumRequest<MemoryGetSamplingProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Memory.getSamplingProfile";
     }
     /// <summary>
@@ -9487,6 +9696,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkCanClearBrowserCacheRequest : IChromiumRequest<NetworkCanClearBrowserCacheResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.canClearBrowserCache";
     }
     /// <summary>
@@ -9507,6 +9717,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkCanClearBrowserCookiesRequest : IChromiumRequest<NetworkCanClearBrowserCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.canClearBrowserCookies";
     }
     /// <summary>
@@ -9527,6 +9738,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkCanEmulateNetworkConditionsRequest : IChromiumRequest<NetworkCanEmulateNetworkConditionsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.canEmulateNetworkConditions";
     }
     /// <summary>
@@ -9547,6 +9759,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkClearBrowserCacheRequest : IChromiumRequest<NetworkClearBrowserCacheResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.clearBrowserCache";
     }
     /// <summary>
@@ -9563,6 +9776,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkClearBrowserCookiesRequest : IChromiumRequest<NetworkClearBrowserCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.clearBrowserCookies";
     }
     /// <summary>
@@ -9583,6 +9797,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkContinueInterceptedRequestRequest : IChromiumRequest<NetworkContinueInterceptedRequestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.continueInterceptedRequest";
         /// <summary>
         /// 
@@ -9637,6 +9852,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkDeleteCookiesRequest : IChromiumRequest<NetworkDeleteCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.deleteCookies";
         /// <summary>
         /// Name of the cookies to remove.
@@ -9670,6 +9886,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkDisableRequest : IChromiumRequest<NetworkDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.disable";
     }
     /// <summary>
@@ -9686,6 +9903,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkEmulateNetworkConditionsRequest : IChromiumRequest<NetworkEmulateNetworkConditionsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.emulateNetworkConditions";
         /// <summary>
         /// True to emulate internet disconnection.
@@ -9722,6 +9940,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkEnableRequest : IChromiumRequest<NetworkEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.enable";
         /// <summary>
         /// Buffer size in bytes to use when preserving network payloads (XHRs, etc).
@@ -9751,6 +9970,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkGetAllCookiesRequest : IChromiumRequest<NetworkGetAllCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.getAllCookies";
     }
     /// <summary>
@@ -9771,6 +9991,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkGetCertificateRequest : IChromiumRequest<NetworkGetCertificateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.getCertificate";
         /// <summary>
         /// Origin to get certificate for.
@@ -9796,6 +10017,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkGetCookiesRequest : IChromiumRequest<NetworkGetCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.getCookies";
         /// <summary>
         /// The list of URLs for which applicable cookies will be fetched
@@ -9820,6 +10042,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkGetResponseBodyRequest : IChromiumRequest<NetworkGetResponseBodyResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.getResponseBody";
         /// <summary>
         /// Identifier of the network request to get content for.
@@ -9848,6 +10071,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkGetRequestPostDataRequest : IChromiumRequest<NetworkGetRequestPostDataResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.getRequestPostData";
         /// <summary>
         /// Identifier of the network request to get content for.
@@ -9872,6 +10096,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkGetResponseBodyForInterceptionRequest : IChromiumRequest<NetworkGetResponseBodyForInterceptionResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.getResponseBodyForInterception";
         /// <summary>
         /// Identifier for the intercepted request to get body for.
@@ -9903,6 +10128,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkTakeResponseBodyForInterceptionAsStreamRequest : IChromiumRequest<NetworkTakeResponseBodyForInterceptionAsStreamResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.takeResponseBodyForInterceptionAsStream";
         /// <summary>
         /// 
@@ -9929,6 +10155,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkReplayXHRRequest : IChromiumRequest<NetworkReplayXHRResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.replayXHR";
         /// <summary>
         /// Identifier of XHR to replay.
@@ -9949,6 +10176,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSearchInResponseBodyRequest : IChromiumRequest<NetworkSearchInResponseBodyResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.searchInResponseBody";
         /// <summary>
         /// Identifier of the network response to search.
@@ -9985,6 +10213,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetBlockedURLsRequest : IChromiumRequest<NetworkSetBlockedURLsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setBlockedURLs";
         /// <summary>
         /// URL patterns to block. Wildcards ('*') are allowed.
@@ -10005,6 +10234,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetBypassServiceWorkerRequest : IChromiumRequest<NetworkSetBypassServiceWorkerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setBypassServiceWorker";
         /// <summary>
         /// Bypass service worker and load from network.
@@ -10025,6 +10255,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetCacheDisabledRequest : IChromiumRequest<NetworkSetCacheDisabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setCacheDisabled";
         /// <summary>
         /// Cache disabled state.
@@ -10045,6 +10276,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetCookieRequest : IChromiumRequest<NetworkSetCookieResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setCookie";
         /// <summary>
         /// Cookie name.
@@ -10102,6 +10334,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetCookiesRequest : IChromiumRequest<NetworkSetCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setCookies";
         /// <summary>
         /// Cookies to be set.
@@ -10122,6 +10355,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetDataSizeLimitsForTestRequest : IChromiumRequest<NetworkSetDataSizeLimitsForTestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setDataSizeLimitsForTest";
         /// <summary>
         /// Maximum total buffer size.
@@ -10146,6 +10380,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetExtraHTTPHeadersRequest : IChromiumRequest<NetworkSetExtraHTTPHeadersResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setExtraHTTPHeaders";
         /// <summary>
         /// Map with extra HTTP headers.
@@ -10167,6 +10402,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetRequestInterceptionRequest : IChromiumRequest<NetworkSetRequestInterceptionResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setRequestInterception";
         /// <summary>
         /// Requests matching any of these patterns will be forwarded and wait for the corresponding
@@ -10188,6 +10424,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     /// </remarks>
     internal class NetworkSetUserAgentOverrideRequest : IChromiumRequest<NetworkSetUserAgentOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Network.setUserAgentOverride";
         /// <summary>
         /// User agent to use.
@@ -10822,6 +11059,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayDisableRequest : IChromiumRequest<OverlayDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.disable";
     }
     /// <summary>
@@ -10838,6 +11076,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayEnableRequest : IChromiumRequest<OverlayEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.enable";
     }
     /// <summary>
@@ -10854,6 +11093,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayGetHighlightObjectForTestRequest : IChromiumRequest<OverlayGetHighlightObjectForTestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.getHighlightObjectForTest";
         /// <summary>
         /// Id of the node to get highlight object for.
@@ -10886,6 +11126,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayHideHighlightRequest : IChromiumRequest<OverlayHideHighlightResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.hideHighlight";
     }
     /// <summary>
@@ -10902,6 +11143,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayHighlightFrameRequest : IChromiumRequest<OverlayHighlightFrameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.highlightFrame";
         /// <summary>
         /// Identifier of the frame to highlight.
@@ -10931,6 +11173,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayHighlightNodeRequest : IChromiumRequest<OverlayHighlightNodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.highlightNode";
         /// <summary>
         /// A descriptor for the highlight appearance.
@@ -10967,6 +11210,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayHighlightQuadRequest : IChromiumRequest<OverlayHighlightQuadResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.highlightQuad";
         /// <summary>
         /// Quad to highlight
@@ -10995,6 +11239,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlayHighlightRectRequest : IChromiumRequest<OverlayHighlightRectResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.highlightRect";
         /// <summary>
         /// X coordinate
@@ -11036,6 +11281,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetInspectModeRequest : IChromiumRequest<OverlaySetInspectModeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setInspectMode";
         /// <summary>
         /// Set an inspection mode.
@@ -11061,6 +11307,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowAdHighlightsRequest : IChromiumRequest<OverlaySetShowAdHighlightsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowAdHighlights";
         /// <summary>
         /// True for showing ad highlights
@@ -11081,6 +11328,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetPausedInDebuggerMessageRequest : IChromiumRequest<OverlaySetPausedInDebuggerMessageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setPausedInDebuggerMessage";
         /// <summary>
         /// The message to display, also triggers resume and step over controls.
@@ -11101,6 +11349,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowDebugBordersRequest : IChromiumRequest<OverlaySetShowDebugBordersResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowDebugBorders";
         /// <summary>
         /// True for showing debug borders
@@ -11121,6 +11370,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowFPSCounterRequest : IChromiumRequest<OverlaySetShowFPSCounterResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowFPSCounter";
         /// <summary>
         /// True for showing the FPS counter
@@ -11141,6 +11391,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowPaintRectsRequest : IChromiumRequest<OverlaySetShowPaintRectsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowPaintRects";
         /// <summary>
         /// True for showing paint rectangles
@@ -11161,6 +11412,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowLayoutShiftRegionsRequest : IChromiumRequest<OverlaySetShowLayoutShiftRegionsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowLayoutShiftRegions";
         /// <summary>
         /// True for showing layout shift regions
@@ -11181,6 +11433,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowScrollBottleneckRectsRequest : IChromiumRequest<OverlaySetShowScrollBottleneckRectsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowScrollBottleneckRects";
         /// <summary>
         /// True for showing scroll bottleneck rects
@@ -11201,6 +11454,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowHitTestBordersRequest : IChromiumRequest<OverlaySetShowHitTestBordersResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowHitTestBorders";
         /// <summary>
         /// True for showing hit-test borders
@@ -11221,6 +11475,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
     /// </remarks>
     internal class OverlaySetShowViewportSizeOnResizeRequest : IChromiumRequest<OverlaySetShowViewportSizeOnResizeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Overlay.setShowViewportSizeOnResize";
         /// <summary>
         /// Whether to paint size or not.
@@ -11664,6 +11919,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     [System.Obsolete("Deprecated, please use addScriptToEvaluateOnNewDocument instead.")]
     internal class PageAddScriptToEvaluateOnLoadRequest : IChromiumRequest<PageAddScriptToEvaluateOnLoadResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.addScriptToEvaluateOnLoad";
         /// <summary>
         /// 
@@ -11688,6 +11944,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageAddScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageAddScriptToEvaluateOnNewDocumentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
         /// <summary>
         /// 
@@ -11718,6 +11975,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageBringToFrontRequest : IChromiumRequest<PageBringToFrontResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.bringToFront";
     }
     /// <summary>
@@ -11734,6 +11992,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageCaptureScreenshotRequest : IChromiumRequest<PageCaptureScreenshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.captureScreenshot";
         /// <summary>
         /// Image compression format (defaults to png).
@@ -11771,6 +12030,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageCaptureSnapshotRequest : IChromiumRequest<PageCaptureSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.captureSnapshot";
         /// <summary>
         /// Format (defaults to mhtml).
@@ -11795,6 +12055,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageClearDeviceMetricsOverrideRequest : IChromiumRequest<PageClearDeviceMetricsOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.clearDeviceMetricsOverride";
     }
     /// <summary>
@@ -11811,6 +12072,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageClearDeviceOrientationOverrideRequest : IChromiumRequest<PageClearDeviceOrientationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.clearDeviceOrientationOverride";
     }
     /// <summary>
@@ -11827,6 +12089,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageClearGeolocationOverrideRequest : IChromiumRequest<PageClearGeolocationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.clearGeolocationOverride";
     }
     /// <summary>
@@ -11843,6 +12106,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageCreateIsolatedWorldRequest : IChromiumRequest<PageCreateIsolatedWorldResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.createIsolatedWorld";
         /// <summary>
         /// Id of the frame in which the isolated world should be created.
@@ -11876,6 +12140,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageDeleteCookieRequest : IChromiumRequest<PageDeleteCookieResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.deleteCookie";
         /// <summary>
         /// Name of the cookie to remove.
@@ -11900,6 +12165,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageDisableRequest : IChromiumRequest<PageDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.disable";
     }
     /// <summary>
@@ -11916,6 +12182,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageEnableRequest : IChromiumRequest<PageEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.enable";
     }
     /// <summary>
@@ -11932,6 +12199,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetAppManifestRequest : IChromiumRequest<PageGetAppManifestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getAppManifest";
     }
     /// <summary>
@@ -11960,6 +12228,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetInstallabilityErrorsRequest : IChromiumRequest<PageGetInstallabilityErrorsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getInstallabilityErrors";
     }
     /// <summary>
@@ -11981,6 +12250,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetCookiesRequest : IChromiumRequest<PageGetCookiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getCookies";
     }
     /// <summary>
@@ -12001,6 +12271,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetFrameTreeRequest : IChromiumRequest<PageGetFrameTreeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getFrameTree";
     }
     /// <summary>
@@ -12021,6 +12292,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetLayoutMetricsRequest : IChromiumRequest<PageGetLayoutMetricsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getLayoutMetrics";
     }
     /// <summary>
@@ -12049,6 +12321,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetNavigationHistoryRequest : IChromiumRequest<PageGetNavigationHistoryResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getNavigationHistory";
     }
     /// <summary>
@@ -12073,6 +12346,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageResetNavigationHistoryRequest : IChromiumRequest<PageResetNavigationHistoryResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.resetNavigationHistory";
     }
     /// <summary>
@@ -12089,6 +12363,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetResourceContentRequest : IChromiumRequest<PageGetResourceContentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getResourceContent";
         /// <summary>
         /// Frame id to get resource for.
@@ -12121,6 +12396,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGetResourceTreeRequest : IChromiumRequest<PageGetResourceTreeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.getResourceTree";
     }
     /// <summary>
@@ -12141,6 +12417,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageHandleJavaScriptDialogRequest : IChromiumRequest<PageHandleJavaScriptDialogResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.handleJavaScriptDialog";
         /// <summary>
         /// Whether to accept or dismiss the dialog.
@@ -12166,6 +12443,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageNavigateRequest : IChromiumRequest<PageNavigateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.navigate";
         /// <summary>
         /// URL to navigate the page to.
@@ -12210,6 +12488,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageNavigateToHistoryEntryRequest : IChromiumRequest<PageNavigateToHistoryEntryResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.navigateToHistoryEntry";
         /// <summary>
         /// Unique id of the entry to navigate to.
@@ -12230,6 +12509,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PagePrintToPDFRequest : IChromiumRequest<PagePrintToPDFResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.printToPDF";
         /// <summary>
         /// Paper orientation. Defaults to false.
@@ -12329,6 +12609,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageReloadRequest : IChromiumRequest<PageReloadResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.reload";
         /// <summary>
         /// If true, browser cache is ignored (as if the user pressed Shift+refresh).
@@ -12355,6 +12636,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     [System.Obsolete("Deprecated, please use removeScriptToEvaluateOnNewDocument instead.")]
     internal class PageRemoveScriptToEvaluateOnLoadRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnLoadResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.removeScriptToEvaluateOnLoad";
         /// <summary>
         /// 
@@ -12375,6 +12657,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageRemoveScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnNewDocumentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
         /// <summary>
         /// 
@@ -12395,6 +12678,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageScreencastFrameAckRequest : IChromiumRequest<PageScreencastFrameAckResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.screencastFrameAck";
         /// <summary>
         /// Frame number.
@@ -12415,6 +12699,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSearchInResourceRequest : IChromiumRequest<PageSearchInResourceResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.searchInResource";
         /// <summary>
         /// Frame id for resource to search in.
@@ -12455,6 +12740,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetAdBlockingEnabledRequest : IChromiumRequest<PageSetAdBlockingEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setAdBlockingEnabled";
         /// <summary>
         /// Whether to block ads.
@@ -12475,6 +12761,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetBypassCSPRequest : IChromiumRequest<PageSetBypassCSPResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setBypassCSP";
         /// <summary>
         /// Whether to bypass page CSP.
@@ -12497,6 +12784,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetDeviceMetricsOverrideRequest : IChromiumRequest<PageSetDeviceMetricsOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setDeviceMetricsOverride";
         /// <summary>
         /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
@@ -12562,6 +12850,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetDeviceOrientationOverrideRequest : IChromiumRequest<PageSetDeviceOrientationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setDeviceOrientationOverride";
         /// <summary>
         /// Mock alpha
@@ -12590,6 +12879,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetFontFamiliesRequest : IChromiumRequest<PageSetFontFamiliesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setFontFamilies";
         /// <summary>
         /// Specifies font families to set. If a font family is not specified, it won't be changed.
@@ -12610,6 +12900,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetFontSizesRequest : IChromiumRequest<PageSetFontSizesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setFontSizes";
         /// <summary>
         /// Specifies font sizes to set. If a font size is not specified, it won't be changed.
@@ -12630,6 +12921,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetDocumentContentRequest : IChromiumRequest<PageSetDocumentContentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setDocumentContent";
         /// <summary>
         /// Frame id to set HTML for.
@@ -12654,6 +12946,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetDownloadBehaviorRequest : IChromiumRequest<PageSetDownloadBehaviorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setDownloadBehavior";
         /// <summary>
         /// Whether to allow all or deny all download requests, or use default Chrome behavior if
@@ -12680,6 +12973,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetGeolocationOverrideRequest : IChromiumRequest<PageSetGeolocationOverrideResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setGeolocationOverride";
         /// <summary>
         /// Mock latitude
@@ -12708,6 +13002,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetLifecycleEventsEnabledRequest : IChromiumRequest<PageSetLifecycleEventsEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setLifecycleEventsEnabled";
         /// <summary>
         /// If true, starts emitting lifecycle events.
@@ -12728,6 +13023,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetTouchEmulationEnabledRequest : IChromiumRequest<PageSetTouchEmulationEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setTouchEmulationEnabled";
         /// <summary>
         /// Whether the touch event emulation should be enabled.
@@ -12752,6 +13048,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageStartScreencastRequest : IChromiumRequest<PageStartScreencastResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.startScreencast";
         /// <summary>
         /// Image compression format.
@@ -12788,6 +13085,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageStopLoadingRequest : IChromiumRequest<PageStopLoadingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.stopLoading";
     }
     /// <summary>
@@ -12804,6 +13102,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageCrashRequest : IChromiumRequest<PageCrashResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.crash";
     }
     /// <summary>
@@ -12820,6 +13119,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageCloseRequest : IChromiumRequest<PageCloseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.close";
     }
     /// <summary>
@@ -12838,6 +13138,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetWebLifecycleStateRequest : IChromiumRequest<PageSetWebLifecycleStateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setWebLifecycleState";
         /// <summary>
         /// Target lifecycle state
@@ -12858,6 +13159,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageStopScreencastRequest : IChromiumRequest<PageStopScreencastResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.stopScreencast";
     }
     /// <summary>
@@ -12874,6 +13176,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetProduceCompilationCacheRequest : IChromiumRequest<PageSetProduceCompilationCacheResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setProduceCompilationCache";
         /// <summary>
         /// 
@@ -12895,6 +13198,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageAddCompilationCacheRequest : IChromiumRequest<PageAddCompilationCacheResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.addCompilationCache";
         /// <summary>
         /// 
@@ -12919,6 +13223,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageClearCompilationCacheRequest : IChromiumRequest<PageClearCompilationCacheResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.clearCompilationCache";
     }
     /// <summary>
@@ -12935,6 +13240,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageGenerateTestReportRequest : IChromiumRequest<PageGenerateTestReportResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.generateTestReport";
         /// <summary>
         /// Message to be displayed in the report.
@@ -12959,6 +13265,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageWaitForDebuggerRequest : IChromiumRequest<PageWaitForDebuggerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.waitForDebugger";
     }
     /// <summary>
@@ -12978,6 +13285,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageSetInterceptFileChooserDialogRequest : IChromiumRequest<PageSetInterceptFileChooserDialogResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.setInterceptFileChooserDialog";
         /// <summary>
         /// 
@@ -12998,6 +13306,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// </remarks>
     internal class PageHandleFileChooserRequest : IChromiumRequest<PageHandleFileChooserResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Page.handleFileChooser";
         /// <summary>
         /// 
@@ -13449,6 +13758,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
     /// </remarks>
     internal class PerformanceDisableRequest : IChromiumRequest<PerformanceDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Performance.disable";
     }
     /// <summary>
@@ -13465,6 +13775,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
     /// </remarks>
     internal class PerformanceEnableRequest : IChromiumRequest<PerformanceEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Performance.enable";
     }
     /// <summary>
@@ -13483,6 +13794,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
     /// </remarks>
     internal class PerformanceSetTimeDomainRequest : IChromiumRequest<PerformanceSetTimeDomainResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Performance.setTimeDomain";
         /// <summary>
         /// Time domain
@@ -13503,6 +13815,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
     /// </remarks>
     internal class PerformanceGetMetricsRequest : IChromiumRequest<PerformanceGetMetricsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Performance.getMetrics";
     }
     /// <summary>
@@ -13730,6 +14043,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// </remarks>
     internal class SecurityDisableRequest : IChromiumRequest<SecurityDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Security.disable";
     }
     /// <summary>
@@ -13746,6 +14060,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// </remarks>
     internal class SecurityEnableRequest : IChromiumRequest<SecurityEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Security.enable";
     }
     /// <summary>
@@ -13762,6 +14077,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// </remarks>
     internal class SecuritySetIgnoreCertificateErrorsRequest : IChromiumRequest<SecuritySetIgnoreCertificateErrorsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Security.setIgnoreCertificateErrors";
         /// <summary>
         /// If true, all certificate errors will be ignored.
@@ -13782,6 +14098,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// </remarks>
     internal class SecurityHandleCertificateErrorRequest : IChromiumRequest<SecurityHandleCertificateErrorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Security.handleCertificateError";
         /// <summary>
         /// The ID of the event.
@@ -13807,6 +14124,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
     /// </remarks>
     internal class SecuritySetOverrideCertificateErrorsRequest : IChromiumRequest<SecuritySetOverrideCertificateErrorsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Security.setOverrideCertificateErrors";
         /// <summary>
         /// If true, certificate errors will be overridden.
@@ -14013,6 +14331,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerDeliverPushMessageRequest : IChromiumRequest<ServiceWorkerDeliverPushMessageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.deliverPushMessage";
         /// <summary>
         /// 
@@ -14041,6 +14360,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerDisableRequest : IChromiumRequest<ServiceWorkerDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.disable";
     }
     /// <summary>
@@ -14057,6 +14377,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerDispatchSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchSyncEventResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.dispatchSyncEvent";
         /// <summary>
         /// 
@@ -14089,6 +14410,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerDispatchPeriodicSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchPeriodicSyncEventResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.dispatchPeriodicSyncEvent";
         /// <summary>
         /// 
@@ -14117,6 +14439,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerEnableRequest : IChromiumRequest<ServiceWorkerEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.enable";
     }
     /// <summary>
@@ -14133,6 +14456,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerInspectWorkerRequest : IChromiumRequest<ServiceWorkerInspectWorkerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.inspectWorker";
         /// <summary>
         /// 
@@ -14153,6 +14477,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerSetForceUpdateOnPageLoadRequest : IChromiumRequest<ServiceWorkerSetForceUpdateOnPageLoadResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.setForceUpdateOnPageLoad";
         /// <summary>
         /// 
@@ -14173,6 +14498,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerSkipWaitingRequest : IChromiumRequest<ServiceWorkerSkipWaitingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.skipWaiting";
         /// <summary>
         /// 
@@ -14193,6 +14519,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerStartWorkerRequest : IChromiumRequest<ServiceWorkerStartWorkerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.startWorker";
         /// <summary>
         /// 
@@ -14213,6 +14540,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerStopAllWorkersRequest : IChromiumRequest<ServiceWorkerStopAllWorkersResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.stopAllWorkers";
     }
     /// <summary>
@@ -14229,6 +14557,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerStopWorkerRequest : IChromiumRequest<ServiceWorkerStopWorkerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.stopWorker";
         /// <summary>
         /// 
@@ -14249,6 +14578,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerUnregisterRequest : IChromiumRequest<ServiceWorkerUnregisterResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.unregister";
         /// <summary>
         /// 
@@ -14269,6 +14599,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
     /// </remarks>
     internal class ServiceWorkerUpdateRegistrationRequest : IChromiumRequest<ServiceWorkerUpdateRegistrationResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "ServiceWorker.updateRegistration";
         /// <summary>
         /// 
@@ -14365,6 +14696,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// </remarks>
     internal class StorageClearDataForOriginRequest : IChromiumRequest<StorageClearDataForOriginResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Storage.clearDataForOrigin";
         /// <summary>
         /// Security origin.
@@ -14389,6 +14721,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// </remarks>
     internal class StorageGetUsageAndQuotaRequest : IChromiumRequest<StorageGetUsageAndQuotaResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Storage.getUsageAndQuota";
         /// <summary>
         /// Security origin.
@@ -14421,6 +14754,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// </remarks>
     internal class StorageTrackCacheStorageForOriginRequest : IChromiumRequest<StorageTrackCacheStorageForOriginResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Storage.trackCacheStorageForOrigin";
         /// <summary>
         /// Security origin.
@@ -14441,6 +14775,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// </remarks>
     internal class StorageTrackIndexedDBForOriginRequest : IChromiumRequest<StorageTrackIndexedDBForOriginResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Storage.trackIndexedDBForOrigin";
         /// <summary>
         /// Security origin.
@@ -14461,6 +14796,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// </remarks>
     internal class StorageUntrackCacheStorageForOriginRequest : IChromiumRequest<StorageUntrackCacheStorageForOriginResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Storage.untrackCacheStorageForOrigin";
         /// <summary>
         /// Security origin.
@@ -14481,6 +14817,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// </remarks>
     internal class StorageUntrackIndexedDBForOriginRequest : IChromiumRequest<StorageUntrackIndexedDBForOriginResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Storage.untrackIndexedDBForOrigin";
         /// <summary>
         /// Security origin.
@@ -14762,6 +15099,7 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
     /// </remarks>
     internal class SystemInfoGetInfoRequest : IChromiumRequest<SystemInfoGetInfoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "SystemInfo.getInfo";
     }
     /// <summary>
@@ -14797,6 +15135,7 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
     /// </remarks>
     internal class SystemInfoGetProcessInfoRequest : IChromiumRequest<SystemInfoGetProcessInfoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "SystemInfo.getProcessInfo";
     }
     /// <summary>
@@ -14868,6 +15207,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetActivateTargetRequest : IChromiumRequest<TargetActivateTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.activateTarget";
         /// <summary>
         /// 
@@ -14888,6 +15228,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetAttachToTargetRequest : IChromiumRequest<TargetAttachToTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.attachToTarget";
         /// <summary>
         /// 
@@ -14918,6 +15259,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetAttachToBrowserTargetRequest : IChromiumRequest<TargetAttachToBrowserTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.attachToBrowserTarget";
     }
     /// <summary>
@@ -14938,6 +15280,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetCloseTargetRequest : IChromiumRequest<TargetCloseTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.closeTarget";
         /// <summary>
         /// 
@@ -14969,6 +15312,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetExposeDevToolsProtocolRequest : IChromiumRequest<TargetExposeDevToolsProtocolResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.exposeDevToolsProtocol";
         /// <summary>
         /// 
@@ -14994,6 +15338,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetCreateBrowserContextRequest : IChromiumRequest<TargetCreateBrowserContextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.createBrowserContext";
     }
     /// <summary>
@@ -15014,6 +15359,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetGetBrowserContextsRequest : IChromiumRequest<TargetGetBrowserContextsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.getBrowserContexts";
     }
     /// <summary>
@@ -15034,6 +15380,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetCreateTargetRequest : IChromiumRequest<TargetCreateTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.createTarget";
         /// <summary>
         /// The initial URL the page will be navigated to.
@@ -15084,6 +15431,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetDetachFromTargetRequest : IChromiumRequest<TargetDetachFromTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.detachFromTarget";
         /// <summary>
         /// Session to detach.
@@ -15109,6 +15457,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetDisposeBrowserContextRequest : IChromiumRequest<TargetDisposeBrowserContextResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.disposeBrowserContext";
         /// <summary>
         /// 
@@ -15129,6 +15478,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetGetTargetInfoRequest : IChromiumRequest<TargetGetTargetInfoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.getTargetInfo";
         /// <summary>
         /// 
@@ -15153,6 +15503,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetGetTargetsRequest : IChromiumRequest<TargetGetTargetsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.getTargets";
     }
     /// <summary>
@@ -15175,6 +15526,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetSendMessageToTargetRequest : IChromiumRequest<TargetSendMessageToTargetResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.sendMessageToTarget";
         /// <summary>
         /// 
@@ -15205,6 +15557,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetSetAutoAttachRequest : IChromiumRequest<TargetSetAutoAttachResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.setAutoAttach";
         /// <summary>
         /// Whether to auto-attach to related targets.
@@ -15241,6 +15594,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetSetDiscoverTargetsRequest : IChromiumRequest<TargetSetDiscoverTargetsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.setDiscoverTargets";
         /// <summary>
         /// Whether to discover available targets.
@@ -15262,6 +15616,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
     /// </remarks>
     internal class TargetSetRemoteLocationsRequest : IChromiumRequest<TargetSetRemoteLocationsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Target.setRemoteLocations";
         /// <summary>
         /// List of remote locations.
@@ -15414,6 +15769,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
     /// </remarks>
     internal class TetheringBindRequest : IChromiumRequest<TetheringBindResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tethering.bind";
         /// <summary>
         /// Port number to bind.
@@ -15434,6 +15790,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
     /// </remarks>
     internal class TetheringUnbindRequest : IChromiumRequest<TetheringUnbindResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tethering.unbind";
         /// <summary>
         /// Port number to unbind.
@@ -15536,6 +15893,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// </remarks>
     internal class TracingEndRequest : IChromiumRequest<TracingEndResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tracing.end";
     }
     /// <summary>
@@ -15552,6 +15910,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// </remarks>
     internal class TracingGetCategoriesRequest : IChromiumRequest<TracingGetCategoriesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tracing.getCategories";
     }
     /// <summary>
@@ -15572,6 +15931,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// </remarks>
     internal class TracingRecordClockSyncMarkerRequest : IChromiumRequest<TracingRecordClockSyncMarkerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tracing.recordClockSyncMarker";
         /// <summary>
         /// The ID of this clock sync marker
@@ -15592,6 +15952,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// </remarks>
     internal class TracingRequestMemoryDumpRequest : IChromiumRequest<TracingRequestMemoryDumpResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tracing.requestMemoryDump";
         /// <summary>
         /// Enables more deterministic results by forcing garbage collection
@@ -15620,6 +15981,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
     /// </remarks>
     internal class TracingStartRequest : IChromiumRequest<TracingStartResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Tracing.start";
         /// <summary>
         /// Category/tag filter
@@ -15824,6 +16186,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchDisableRequest : IChromiumRequest<FetchDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.disable";
     }
     /// <summary>
@@ -15841,6 +16204,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchEnableRequest : IChromiumRequest<FetchEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.enable";
         /// <summary>
         /// If specified, only requests matching any of these patterns will produce
@@ -15868,6 +16232,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchFailRequestRequest : IChromiumRequest<FetchFailRequestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.failRequest";
         /// <summary>
         /// An id the client received in requestPaused event.
@@ -15892,6 +16257,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchFulfillRequestRequest : IChromiumRequest<FetchFulfillRequestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.fulfillRequest";
         /// <summary>
         /// An id the client received in requestPaused event.
@@ -15936,6 +16302,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchContinueRequestRequest : IChromiumRequest<FetchContinueRequestResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.continueRequest";
         /// <summary>
         /// An id the client received in requestPaused event.
@@ -15972,6 +16339,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchContinueWithAuthRequest : IChromiumRequest<FetchContinueWithAuthResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.continueWithAuth";
         /// <summary>
         /// An id the client received in authRequired event.
@@ -16001,6 +16369,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchGetResponseBodyRequest : IChromiumRequest<FetchGetResponseBodyResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.getResponseBody";
         /// <summary>
         /// Identifier for the intercepted request to get body for.
@@ -16038,6 +16407,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
     /// </remarks>
     internal class FetchTakeResponseBodyAsStreamRequest : IChromiumRequest<FetchTakeResponseBodyAsStreamResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Fetch.takeResponseBodyAsStream";
         /// <summary>
         /// 
@@ -16336,6 +16706,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// </remarks>
     internal class WebAudioEnableRequest : IChromiumRequest<WebAudioEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAudio.enable";
     }
     /// <summary>
@@ -16352,6 +16723,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// </remarks>
     internal class WebAudioDisableRequest : IChromiumRequest<WebAudioDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAudio.disable";
     }
     /// <summary>
@@ -16368,6 +16740,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
     /// </remarks>
     internal class WebAudioGetRealtimeDataRequest : IChromiumRequest<WebAudioGetRealtimeDataResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAudio.getRealtimeData";
         /// <summary>
         /// 
@@ -16735,6 +17108,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnEnableRequest : IChromiumRequest<WebAuthnEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.enable";
     }
     /// <summary>
@@ -16751,6 +17125,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnDisableRequest : IChromiumRequest<WebAuthnDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.disable";
     }
     /// <summary>
@@ -16767,6 +17142,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnAddVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnAddVirtualAuthenticatorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.addVirtualAuthenticator";
         /// <summary>
         /// 
@@ -16791,6 +17167,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnRemoveVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnRemoveVirtualAuthenticatorResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.removeVirtualAuthenticator";
         /// <summary>
         /// 
@@ -16811,6 +17188,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnAddCredentialRequest : IChromiumRequest<WebAuthnAddCredentialResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.addCredential";
         /// <summary>
         /// 
@@ -16836,6 +17214,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnGetCredentialRequest : IChromiumRequest<WebAuthnGetCredentialResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.getCredential";
         /// <summary>
         /// 
@@ -16864,6 +17243,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnGetCredentialsRequest : IChromiumRequest<WebAuthnGetCredentialsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.getCredentials";
         /// <summary>
         /// 
@@ -16888,6 +17268,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnRemoveCredentialRequest : IChromiumRequest<WebAuthnRemoveCredentialResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.removeCredential";
         /// <summary>
         /// 
@@ -16912,6 +17293,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnClearCredentialsRequest : IChromiumRequest<WebAuthnClearCredentialsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.clearCredentials";
         /// <summary>
         /// 
@@ -16933,6 +17315,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
     /// </remarks>
     internal class WebAuthnSetUserVerifiedRequest : IChromiumRequest<WebAuthnSetUserVerifiedResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "WebAuthn.setUserVerified";
         /// <summary>
         /// 
@@ -17006,6 +17389,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
     /// </remarks>
     internal class MediaEnableRequest : IChromiumRequest<MediaEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Media.enable";
     }
     /// <summary>
@@ -17022,6 +17406,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
     /// </remarks>
     internal class MediaDisableRequest : IChromiumRequest<MediaDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Media.disable";
     }
     /// <summary>
@@ -17125,6 +17510,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
     /// </remarks>
     internal class ConsoleClearMessagesRequest : IChromiumRequest<ConsoleClearMessagesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Console.clearMessages";
     }
     /// <summary>
@@ -17141,6 +17527,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
     /// </remarks>
     internal class ConsoleDisableRequest : IChromiumRequest<ConsoleDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Console.disable";
     }
     /// <summary>
@@ -17158,6 +17545,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
     /// </remarks>
     internal class ConsoleEnableRequest : IChromiumRequest<ConsoleEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Console.enable";
     }
     /// <summary>
@@ -17325,6 +17713,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerContinueToLocationRequest : IChromiumRequest<DebuggerContinueToLocationResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.continueToLocation";
         /// <summary>
         /// Location to continue to.
@@ -17349,6 +17738,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerDisableRequest : IChromiumRequest<DebuggerDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.disable";
     }
     /// <summary>
@@ -17366,6 +17756,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerEnableRequest : IChromiumRequest<DebuggerEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.enable";
         /// <summary>
         /// The maximum size in bytes of collected scripts (not referenced by other heap objects)
@@ -17391,6 +17782,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerEvaluateOnCallFrameRequest : IChromiumRequest<DebuggerEvaluateOnCallFrameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.evaluateOnCallFrame";
         /// <summary>
         /// Call frame identifier to evaluate on.
@@ -17455,6 +17847,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerGetPossibleBreakpointsRequest : IChromiumRequest<DebuggerGetPossibleBreakpointsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.getPossibleBreakpoints";
         /// <summary>
         /// Start of range to search possible breakpoint locations in.
@@ -17488,6 +17881,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerGetScriptSourceRequest : IChromiumRequest<DebuggerGetScriptSourceResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.getScriptSource";
         /// <summary>
         /// Id of the script to get source for.
@@ -17512,6 +17906,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerGetWasmBytecodeRequest : IChromiumRequest<DebuggerGetWasmBytecodeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.getWasmBytecode";
         /// <summary>
         /// Id of the Wasm script to get source for.
@@ -17536,6 +17931,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerGetStackTraceRequest : IChromiumRequest<DebuggerGetStackTraceResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.getStackTrace";
         /// <summary>
         /// 
@@ -17560,6 +17956,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerPauseRequest : IChromiumRequest<DebuggerPauseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.pause";
     }
     /// <summary>
@@ -17576,6 +17973,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerPauseOnAsyncCallRequest : IChromiumRequest<DebuggerPauseOnAsyncCallResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.pauseOnAsyncCall";
         /// <summary>
         /// Debugger will pause when async call with given stack trace is started.
@@ -17596,6 +17994,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerRemoveBreakpointRequest : IChromiumRequest<DebuggerRemoveBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.removeBreakpoint";
         /// <summary>
         /// 
@@ -17616,6 +18015,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerRestartFrameRequest : IChromiumRequest<DebuggerRestartFrameResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.restartFrame";
         /// <summary>
         /// Call frame identifier to evaluate on.
@@ -17648,6 +18048,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerResumeRequest : IChromiumRequest<DebuggerResumeResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.resume";
     }
     /// <summary>
@@ -17664,6 +18065,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSearchInContentRequest : IChromiumRequest<DebuggerSearchInContentResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.searchInContent";
         /// <summary>
         /// Id of the script to search in.
@@ -17700,6 +18102,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetAsyncCallStackDepthRequest : IChromiumRequest<DebuggerSetAsyncCallStackDepthResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setAsyncCallStackDepth";
         /// <summary>
         /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
@@ -17723,6 +18126,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetBlackboxPatternsRequest : IChromiumRequest<DebuggerSetBlackboxPatternsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setBlackboxPatterns";
         /// <summary>
         /// Array of regexps that will be used to check script url for blackbox state.
@@ -17746,6 +18150,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetBlackboxedRangesRequest : IChromiumRequest<DebuggerSetBlackboxedRangesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setBlackboxedRanges";
         /// <summary>
         /// Id of the script.
@@ -17770,6 +18175,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetBreakpointRequest : IChromiumRequest<DebuggerSetBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setBreakpoint";
         /// <summary>
         /// Location to set breakpoint in.
@@ -17803,6 +18209,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DebuggerSetInstrumentationBreakpointResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setInstrumentationBreakpoint";
         /// <summary>
         /// Instrumentation name.
@@ -17830,6 +18237,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetBreakpointByUrlRequest : IChromiumRequest<DebuggerSetBreakpointByUrlResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setBreakpointByUrl";
         /// <summary>
         /// Line number to set breakpoint at.
@@ -17882,6 +18290,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetBreakpointOnFunctionCallRequest : IChromiumRequest<DebuggerSetBreakpointOnFunctionCallResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setBreakpointOnFunctionCall";
         /// <summary>
         /// Function object id.
@@ -17911,6 +18320,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetBreakpointsActiveRequest : IChromiumRequest<DebuggerSetBreakpointsActiveResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setBreakpointsActive";
         /// <summary>
         /// New value for breakpoints active state.
@@ -17932,6 +18342,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetPauseOnExceptionsRequest : IChromiumRequest<DebuggerSetPauseOnExceptionsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setPauseOnExceptions";
         /// <summary>
         /// Pause on exceptions mode.
@@ -17952,6 +18363,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetReturnValueRequest : IChromiumRequest<DebuggerSetReturnValueResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setReturnValue";
         /// <summary>
         /// New return value.
@@ -17972,6 +18384,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetScriptSourceRequest : IChromiumRequest<DebuggerSetScriptSourceResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setScriptSource";
         /// <summary>
         /// Id of the script to edit.
@@ -18021,6 +18434,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetSkipAllPausesRequest : IChromiumRequest<DebuggerSetSkipAllPausesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setSkipAllPauses";
         /// <summary>
         /// New value for skip pauses state.
@@ -18042,6 +18456,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerSetVariableValueRequest : IChromiumRequest<DebuggerSetVariableValueResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.setVariableValue";
         /// <summary>
         /// 0-based number of scope as was listed in scope chain. Only 'local', 'closure' and 'catch'
@@ -18075,6 +18490,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerStepIntoRequest : IChromiumRequest<DebuggerStepIntoResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.stepInto";
         /// <summary>
         /// Debugger will pause on the execution of the first async task which was scheduled
@@ -18096,6 +18512,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerStepOutRequest : IChromiumRequest<DebuggerStepOutResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.stepOut";
     }
     /// <summary>
@@ -18112,6 +18529,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     /// </remarks>
     internal class DebuggerStepOverRequest : IChromiumRequest<DebuggerStepOverResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Debugger.stepOver";
     }
     /// <summary>
@@ -18390,6 +18808,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerAddInspectedHeapObjectRequest : IChromiumRequest<HeapProfilerAddInspectedHeapObjectResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.addInspectedHeapObject";
         /// <summary>
         /// Heap snapshot object id to be accessible by means of $x command line API.
@@ -18410,6 +18829,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerCollectGarbageRequest : IChromiumRequest<HeapProfilerCollectGarbageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.collectGarbage";
     }
     /// <summary>
@@ -18426,6 +18846,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerDisableRequest : IChromiumRequest<HeapProfilerDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.disable";
     }
     /// <summary>
@@ -18442,6 +18863,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerEnableRequest : IChromiumRequest<HeapProfilerEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.enable";
     }
     /// <summary>
@@ -18458,6 +18880,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerGetHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetHeapObjectIdResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.getHeapObjectId";
         /// <summary>
         /// Identifier of the object to get heap object id for.
@@ -18482,6 +18905,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerGetObjectByHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetObjectByHeapObjectIdResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.getObjectByHeapObjectId";
         /// <summary>
         /// 
@@ -18510,6 +18934,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerGetSamplingProfileRequest : IChromiumRequest<HeapProfilerGetSamplingProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.getSamplingProfile";
     }
     /// <summary>
@@ -18530,6 +18955,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerStartSamplingRequest : IChromiumRequest<HeapProfilerStartSamplingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.startSampling";
         /// <summary>
         /// Average sample interval in bytes. Poisson distribution is used for the intervals. The
@@ -18551,6 +18977,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerStartTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStartTrackingHeapObjectsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.startTrackingHeapObjects";
         /// <summary>
         /// 
@@ -18571,6 +18998,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerStopSamplingRequest : IChromiumRequest<HeapProfilerStopSamplingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.stopSampling";
     }
     /// <summary>
@@ -18591,6 +19019,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerStopTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStopTrackingHeapObjectsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.stopTrackingHeapObjects";
         /// <summary>
         /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken
@@ -18612,6 +19041,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
     /// </remarks>
     internal class HeapProfilerTakeHeapSnapshotRequest : IChromiumRequest<HeapProfilerTakeHeapSnapshotResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "HeapProfiler.takeHeapSnapshot";
         /// <summary>
         /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken.
@@ -18885,6 +19315,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerDisableRequest : IChromiumRequest<ProfilerDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.disable";
     }
     /// <summary>
@@ -18901,6 +19332,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerEnableRequest : IChromiumRequest<ProfilerEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.enable";
     }
     /// <summary>
@@ -18918,6 +19350,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerGetBestEffortCoverageRequest : IChromiumRequest<ProfilerGetBestEffortCoverageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.getBestEffortCoverage";
     }
     /// <summary>
@@ -18938,6 +19371,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerSetSamplingIntervalRequest : IChromiumRequest<ProfilerSetSamplingIntervalResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.setSamplingInterval";
         /// <summary>
         /// New sampling interval in microseconds.
@@ -18958,6 +19392,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerStartRequest : IChromiumRequest<ProfilerStartResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.start";
     }
     /// <summary>
@@ -18976,6 +19411,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerStartPreciseCoverageRequest : IChromiumRequest<ProfilerStartPreciseCoverageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.startPreciseCoverage";
         /// <summary>
         /// Collect accurate call counts beyond simple 'covered' or 'not covered'.
@@ -19000,6 +19436,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerStartTypeProfileRequest : IChromiumRequest<ProfilerStartTypeProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.startTypeProfile";
     }
     /// <summary>
@@ -19016,6 +19453,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerStopRequest : IChromiumRequest<ProfilerStopResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.stop";
     }
     /// <summary>
@@ -19037,6 +19475,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerStopPreciseCoverageRequest : IChromiumRequest<ProfilerStopPreciseCoverageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.stopPreciseCoverage";
     }
     /// <summary>
@@ -19053,6 +19492,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerStopTypeProfileRequest : IChromiumRequest<ProfilerStopTypeProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.stopTypeProfile";
     }
     /// <summary>
@@ -19070,6 +19510,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerTakePreciseCoverageRequest : IChromiumRequest<ProfilerTakePreciseCoverageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.takePreciseCoverage";
     }
     /// <summary>
@@ -19090,6 +19531,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </remarks>
     internal class ProfilerTakeTypeProfileRequest : IChromiumRequest<ProfilerTakeTypeProfileResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Profiler.takeTypeProfile";
     }
     /// <summary>
@@ -19518,6 +19960,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeAwaitPromiseRequest : IChromiumRequest<RuntimeAwaitPromiseResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.awaitPromise";
         /// <summary>
         /// Identifier of the promise.
@@ -19555,6 +19998,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeCallFunctionOnRequest : IChromiumRequest<RuntimeCallFunctionOnResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.callFunctionOn";
         /// <summary>
         /// Declaration of the function to call.
@@ -19625,6 +20069,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeCompileScriptRequest : IChromiumRequest<RuntimeCompileScriptResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.compileScript";
         /// <summary>
         /// Expression to compile.
@@ -19666,6 +20111,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeDisableRequest : IChromiumRequest<RuntimeDisableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.disable";
     }
     /// <summary>
@@ -19682,6 +20128,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeDiscardConsoleEntriesRequest : IChromiumRequest<RuntimeDiscardConsoleEntriesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.discardConsoleEntries";
     }
     /// <summary>
@@ -19700,6 +20147,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeEnableRequest : IChromiumRequest<RuntimeEnableResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.enable";
     }
     /// <summary>
@@ -19716,6 +20164,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeEvaluateRequest : IChromiumRequest<RuntimeEvaluateResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.evaluate";
         /// <summary>
         /// Expression to evaluate.
@@ -19792,6 +20241,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeGetIsolateIdRequest : IChromiumRequest<RuntimeGetIsolateIdResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.getIsolateId";
     }
     /// <summary>
@@ -19813,6 +20263,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeGetHeapUsageRequest : IChromiumRequest<RuntimeGetHeapUsageResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.getHeapUsage";
     }
     /// <summary>
@@ -19838,6 +20289,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeGetPropertiesRequest : IChromiumRequest<RuntimeGetPropertiesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.getProperties";
         /// <summary>
         /// Identifier of the object to return properties for.
@@ -19888,6 +20340,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeGlobalLexicalScopeNamesRequest : IChromiumRequest<RuntimeGlobalLexicalScopeNamesResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.globalLexicalScopeNames";
         /// <summary>
         /// Specifies in which execution context to lookup global scope variables.
@@ -19912,6 +20365,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeQueryObjectsRequest : IChromiumRequest<RuntimeQueryObjectsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.queryObjects";
         /// <summary>
         /// Identifier of the prototype to return objects for.
@@ -19940,6 +20394,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeReleaseObjectRequest : IChromiumRequest<RuntimeReleaseObjectResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.releaseObject";
         /// <summary>
         /// Identifier of the object to release.
@@ -19960,6 +20415,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeReleaseObjectGroupRequest : IChromiumRequest<RuntimeReleaseObjectGroupResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.releaseObjectGroup";
         /// <summary>
         /// Symbolic object group name.
@@ -19980,6 +20436,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeRunIfWaitingForDebuggerRequest : IChromiumRequest<RuntimeRunIfWaitingForDebuggerResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.runIfWaitingForDebugger";
     }
     /// <summary>
@@ -19996,6 +20453,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeRunScriptRequest : IChromiumRequest<RuntimeRunScriptResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.runScript";
         /// <summary>
         /// Id of the script to run.
@@ -20055,6 +20513,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeSetAsyncCallStackDepthRequest : IChromiumRequest<RuntimeSetAsyncCallStackDepthResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.setAsyncCallStackDepth";
         /// <summary>
         /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
@@ -20076,6 +20535,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeSetCustomObjectFormatterEnabledRequest : IChromiumRequest<RuntimeSetCustomObjectFormatterEnabledResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.setCustomObjectFormatterEnabled";
         /// <summary>
         /// 
@@ -20096,6 +20556,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeSetMaxCallStackSizeToCaptureRequest : IChromiumRequest<RuntimeSetMaxCallStackSizeToCaptureResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.setMaxCallStackSizeToCapture";
         /// <summary>
         /// 
@@ -20117,6 +20578,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeTerminateExecutionRequest : IChromiumRequest<RuntimeTerminateExecutionResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.terminateExecution";
     }
     /// <summary>
@@ -20140,6 +20602,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeAddBindingRequest : IChromiumRequest<RuntimeAddBindingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.addBinding";
         /// <summary>
         /// 
@@ -20165,6 +20628,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
     /// </remarks>
     internal class RuntimeRemoveBindingRequest : IChromiumRequest<RuntimeRemoveBindingResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Runtime.removeBinding";
         /// <summary>
         /// 
@@ -20355,6 +20819,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Schema
     /// </remarks>
     internal class SchemaGetDomainsRequest : IChromiumRequest<SchemaGetDomainsResponse>
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Command { get; } = "Schema.getDomains";
     }
     /// <summary>
