@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging;
+using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
@@ -30,7 +31,7 @@ namespace PlaywrightSharp.Chromium
             _asyncSessions = new AsyncDictionaryHelper<string, ChromiumSession>(_sessions, "Session {0} not found");
         }
 
-        public event EventHandler<MessageEventArgs> MessageReceived;
+        public event EventHandler<IChromiumEvent> MessageReceived;
 
         public event EventHandler Disconnected;
 
@@ -117,7 +118,7 @@ namespace PlaywrightSharp.Chromium
         private void ProcessIncomingMessage(ConnectionResponse obj)
         {
             string method = obj.Method;
-            var param = obj.Params?.ToObject<ConnectionResponseParams>();
+            var param = Protocol.ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params);
             ChromiumSession session;
 
             if (obj.Id == BrowserCloseMessageId)
@@ -125,18 +126,18 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            if (method == "Target.attachedToTarget")
+            if (param is TargetAttachedToTargetChromiumEvent targetAttachedToTarget)
             {
-                string sessionId = param.SessionId;
-                session = new ChromiumSession(this, param.TargetInfo.Type, sessionId);
+                string sessionId = targetAttachedToTarget.SessionId;
+                session = new ChromiumSession(this, targetAttachedToTarget.TargetInfo.GetTargetType(), sessionId);
                 _asyncSessions.AddItem(sessionId, session);
 
                 return;
             }
 
-            if (method == "Target.detachedFromTarget")
+            if (param is TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             {
-                string sessionId = param.SessionId;
+                string sessionId = targetDetachedFromTarget.SessionId;
                 if (_sessions.TryRemove(sessionId, out session) && !session.IsClosed)
                 {
                     session.Close("Target.detachedFromTarget");

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
+using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Page;
@@ -132,20 +133,20 @@ namespace PlaywrightSharp.Chromium
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        private void Client_MessageReceived(object sender, MessageEventArgs e)
+        private void Client_MessageReceived(object sender, IChromiumEvent e)
         {
             try
             {
-                switch (e.MessageID)
+                switch (e)
                 {
-                    case "Page.frameAttached":
-                        OnFrameAttached(e.MessageData?.ToObject<PageFrameAttachedChromiumEvent>());
+                    case PageFrameAttachedChromiumEvent pageFrameAttached:
+                        OnFrameAttached(pageFrameAttached);
                         break;
-                    case "Page.frameNavigated":
-                        OnFrameNavigated(e.MessageData?.ToObject<PageFrameNavigatedChromiumEvent>()?.Frame, false);
+                    case PageFrameNavigatedChromiumEvent pageFrameNavigated:
+                        OnFrameNavigated(pageFrameNavigated.Frame, false);
                         break;
-                    case "Page.lifecycleEvent":
-                        OnLifecycleEvent(e.MessageData?.ToObject<PageLifecycleEventChromiumEvent>());
+                    case PageLifecycleEventChromiumEvent pageLifecycleEvent:
+                        OnLifecycleEvent(pageLifecycleEvent);
                         break;
                 }
             }

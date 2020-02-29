@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Chromium
             _sessionId = sessionId;
         }
 
-        public event EventHandler<MessageEventArgs> MessageReceived;
+        public event EventHandler<IChromiumEvent> MessageReceived;
 
         public event EventHandler<EventArgs> Disconnected;
 
@@ -90,20 +90,14 @@ namespace PlaywrightSharp.Chromium
                 }
                 else
                 {
-                    var result = (IChromiumResponse)obj.Result.ToObject(DeserializerHelper.GetRespnseType(callback.Method));
+                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result);
                     callback.TaskWrapper.TrySetResult(result);
                 }
             }
             else
             {
-                string method = obj.Method;
-                var param = obj.Params?.ToObject<ConnectionResponseParams>();
-
-                MessageReceived?.Invoke(this, new MessageEventArgs
-                {
-                    MessageID = method,
-                    MessageData = obj.Params,
-                });
+                var data = ChromiumProtocolTypes.ParseEvent(obj.Params, obj.Method);
+                MessageReceived?.Invoke(this, data);
             }
         }
     }

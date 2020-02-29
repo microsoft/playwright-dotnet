@@ -3,11 +3,11 @@ namespace PlaywrightSharp.Chromium.Protocol
     /// <summary>
     /// Basic class for chromium events.
     /// </summary>
-    internal abstract class ChromiumEvent
+    internal interface IChromiumEvent
     {
         /// <summary>
         /// Gets the name of the event recieved from chromium devtools protocol.
         /// </summary>
-        public abstract string InternalName { get; }
+        string InternalName { get; }
     }
 }

@@ -143,9 +143,8 @@ namespace PlaywrightSharp.Chromium
 
             client.MessageReceived += (sender, e) =>
             {
-                if (e.MessageID == "Target.attachedToTarget")
+                if (e is TargetAttachedToTargetChromiumEvent response)
                 {
-                    var response = e.MessageData.Value.ToObject<TargetAttachedToTargetChromiumEvent>();
                     if (response.TargetInfo.GetTargetType() != TargetType.ServiceWorker)
                     {
                         _ = client.SendAsync(new TargetDetachFromTargetRequest { SessionId = response.SessionId });

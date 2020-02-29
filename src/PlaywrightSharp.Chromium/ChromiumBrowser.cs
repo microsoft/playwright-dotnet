@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
+using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
@@ -138,22 +139,22 @@ namespace PlaywrightSharp.Chromium
 
         internal IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
 
-        private async void Session_MessageReceived(object sender, MessageEventArgs e)
+        private async void Session_MessageReceived(object sender, IChromiumEvent e)
         {
             try
             {
-                switch (e.MessageID)
+                switch (e)
                 {
-                    case "Target.targetCreated":
-                        await CreateTargetAsync(e.MessageData?.ToObject<TargetTargetCreatedChromiumEvent>()).ConfigureAwait(false);
+                    case TargetTargetCreatedChromiumEvent targetCreated:
+                        await CreateTargetAsync(targetCreated).ConfigureAwait(false);
                         return;
 
-                    case "Target.targetDestroyed":
-                        await DestroyTargetAsync(e.MessageData?.ToObject<TargetTargetDestroyedChromiumEvent>()).ConfigureAwait(false);
+                    case TargetTargetDestroyedChromiumEvent targetDestroyed:
+                        await DestroyTargetAsync(targetDestroyed).ConfigureAwait(false);
                         return;
 
-                    case "Target.targetInfoChanged":
-                        ChangeTargetInfo(e.MessageData?.ToObject<TargetTargetInfoChangedChromiumEvent>());
+                    case TargetTargetInfoChangedChromiumEvent targetInfoChanged:
+                        ChangeTargetInfo(targetInfoChanged);
                         return;
                 }
             }
@@ -163,7 +164,7 @@ namespace PlaywrightSharp.Chromium
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types.
             {
-                string message = $"Browser failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
+                string message = $"Browser failed to process {e.InternalName}. {ex.Message}. {ex.StackTrace}";
 
                 // TODO Add Logger _logger.LogError(ex, message);
                 _connection.Close(message);

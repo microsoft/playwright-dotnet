@@ -8,11 +8,11 @@ namespace PlaywrightSharp.Chromium.Messaging
 
         public ConnectionError Error { get; set; }
 
-        public JsonElement Result { get; set; }
+        public string Result { get; set; }
 
         public string Method { get; set; }
 
-        public JsonElement? Params { get; set; }
+        public string Params { get; set; }
 
         public string SessionId { get; set; }
     }
