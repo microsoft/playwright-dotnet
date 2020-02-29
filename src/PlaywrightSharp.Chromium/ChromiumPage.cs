@@ -15,10 +15,15 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IPageDelegate"/>
     internal class ChromiumPage : IPageDelegate
     {
+        private const string UTILITYWORLDNAME = "__playwright_utility_world__";
+        private const string EVALUATIONSCRIPTURL = "__playwright_evaluation_script__";
+
         private readonly ChromiumSession _client;
         private readonly ChromiumBrowser _browser;
         private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
+
+        private readonly ISet<string> _isolatedWorlds;
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
@@ -26,6 +31,7 @@ namespace PlaywrightSharp.Chromium
             _browser = browser;
             _browserContext = browserContext;
             _networkManager = new ChromiumNetworkManager(_client, this);
+            _isolatedWorlds = new HashSet<string>();
             Page = new Page(this, browserContext);
             client.MessageReceived += Client_MessageReceived;
         }
@@ -74,7 +80,7 @@ namespace PlaywrightSharp.Chromium
             {
                _client.SendAsync(new LogEnableRequest()),
                _client.SendAsync(new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
-               _client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(), TaskScheduler.Default),
+               _client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(UTILITYWORLDNAME), TaskScheduler.Default),
                _networkManager.InitializeAsync(),
             };
 
@@ -173,7 +179,26 @@ namespace PlaywrightSharp.Chromium
         private void OnFrameNavigated(Protocol.Page.Frame frame, bool initial)
             => Page.FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
 
-        private Task EnsureIsolatedWorldAsync() => Task.CompletedTask;
+        private async Task EnsureIsolatedWorldAsync(string name)
+        {
+            if (!_isolatedWorlds.Add(name))
+            {
+                return;
+            }
+
+            await _client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            {
+                Source = $"//# sourceURL={EVALUATIONSCRIPTURL}",
+                WorldName = name,
+            }).ConfigureAwait(false);
+
+            await Task.WhenAll(Page.Frames.Select(frame => _client.SendAsync(new PageCreateIsolatedWorldRequest
+            {
+                FrameId = frame.Id,
+                GrantUniveralAccess = true,
+                WorldName = name,
+            })).ToArray()).ConfigureAwait(false);
+        }
 
         private Task EmulateTimezoneAsync(string timezoneId)
         {

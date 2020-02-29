@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Chromium
                         return;
 
                     case "Target.targetInfoChanged":
-                        ChangeTargetInfo(e.MessageData?.ToObject<TargetTargetCreatedChromiumEvent>());
+                        ChangeTargetInfo(e.MessageData?.ToObject<TargetTargetInfoChangedChromiumEvent>());
                         return;
                 }
             }
@@ -220,7 +220,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void ChangeTargetInfo(TargetTargetCreatedChromiumEvent e)
+        private void ChangeTargetInfo(TargetTargetInfoChangedChromiumEvent e)
         {
             if (!TargetsMap.ContainsKey(e.TargetInfo.TargetId))
             {

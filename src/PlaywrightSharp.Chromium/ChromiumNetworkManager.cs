@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Protocol.Network;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -14,7 +15,7 @@ namespace PlaywrightSharp.Chromium
             _chromiumPage = chromiumPage;
         }
 
-        internal Task InitializeAsync() => Task.CompletedTask;
+        internal Task InitializeAsync() => _client.SendAsync(new NetworkEnableRequest());
 
         internal Task SetUserAgentAsync(string userAgent) => Task.CompletedTask;
     }
