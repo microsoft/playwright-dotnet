@@ -94,7 +94,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                             knownTypes[$"{domain.Domain}.{type.Id}"] = itemType + "[]";
                         }
                     }
-                    else if (type.Type == "string")
+                    else if (type.Type == "string" && type.Enum == null)
                     {
                         knownTypes[type.Id] = "string";
                         knownTypes[$"{domain.Domain}.{type.Id}"] = "string";
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     builder.AppendLine("/// <summary>");
                     builder.AppendLine($"/// {FormatDocs(type.Description)}");
                     builder.AppendLine("/// </summary>");
-                    builder.AppendLine($"public class {type.Id}");
+                    builder.AppendLine($"internal class {type.Id}");
                     builder.AppendLine("{");
                     builder.AppendJoin("\n", NormalizeProperties(type.Properties));
                     builder.AppendLine("}");
