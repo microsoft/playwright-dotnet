@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser target events</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true, skipChromium: true)]
         public async Task ShouldWork()
         {
             using var browser = await Playwright.LaunchAsync(TestConstants.DefaultBrowserOptions);
