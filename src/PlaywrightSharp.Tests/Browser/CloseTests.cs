@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Browser
         [Fact]
         public async Task ShouldTerminateNetworkWaiters()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
 
             var newPage = await remote.DefaultContext.NewPageAsync();
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.Browser
         [Fact]
         public async Task ShouldBeAbleToCloseRemoteBrowser()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             var closeTask = new TaskCompletionSource<bool>();
 

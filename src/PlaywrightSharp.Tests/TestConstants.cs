@@ -41,18 +41,26 @@ namespace PlaywrightSharp.Tests
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
         public static readonly string CrossProcessUrl = ServerIpUrl;
 
-        internal static LaunchOptions DefaultBrowserOptions => new LaunchOptions
-        {
-            SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-            Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
-            Timeout = 0,
-            LogProcess = true,
+        internal static LaunchOptions GetDefaultBrowserOptions()
+            => new LaunchOptions
+            {
+                SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
+                Timeout = 0,
+                LogProcess = true,
 #if NETCOREAPP
-            EnqueueTransportMessages = false
+                EnqueueTransportMessages = false
 #else
-            EnqueueTransportMessages = true
+                EnqueueTransportMessages = true
 #endif
-        };
+            };
+
+        public static LaunchOptions GetHeadfulOptions()
+        {
+            var options = GetDefaultBrowserOptions();
+            options.Headless = false;
+            return options;
+        }
 
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
         public static readonly DeviceDescriptor IPhone = null;

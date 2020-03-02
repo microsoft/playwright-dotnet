@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBeAbleToReconnectToADisconnectedBrowser()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             string url = TestConstants.ServerUrl + "/frames/nested-frames.html";
             var page = await browser.DefaultContext.NewPageAsync();
