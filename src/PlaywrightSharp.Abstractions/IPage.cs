@@ -230,7 +230,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets all workers in the page.
         /// </summary>
-        public IWorker[] Workers { get; }
+        IWorker[] Workers { get; }
 
         /// <summary>
         /// Returns page's title.
