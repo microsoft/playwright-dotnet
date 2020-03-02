@@ -206,7 +206,7 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
-        private void HandleFrameTree(Protocol.Page.FrameTree frameTree)
+        private void HandleFrameTree(FrameTree frameTree)
         {
             OnFrameAttached(frameTree.Frame.Id, frameTree.Frame.ParentId ?? string.Empty);
             OnFrameNavigated(frameTree.Frame, true);
