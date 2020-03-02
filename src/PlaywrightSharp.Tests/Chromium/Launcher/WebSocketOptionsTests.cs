@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldSupportTheRemoteDebuggingPortArgument()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = new[] { "--remote-debugging-port=0" };
 
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);

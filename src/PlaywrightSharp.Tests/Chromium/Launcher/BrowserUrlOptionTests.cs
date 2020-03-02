@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldBeAbleToConnectUsingBrowserURLWithAndWithoutTrailingSlash()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldThrowWhenUsingBothBrowserWSEndpointAndBrowserURL()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldThrowWhenTryingToConnectToNonExistingBrowser()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 

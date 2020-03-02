@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Browser
         {
             Server.SetRoute("/one-style.css", context => Task.Delay(10000));
 
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
 
             var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             var page = await remote.DefaultContext.NewPageAsync();
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.Browser
         {
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
 
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             var page = await remote.DefaultContext.NewPageAsync();
             var watchdog = page.WaitForSelectorAsync("div", new WaitForSelectorOptions { Timeout = 60000 });
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Browser
         [Fact]
         public async Task ShouldThrowIfUsedAfterDisconnect()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             var page = await remote.DefaultContext.NewPageAsync();
             await remote.DisconnectAsync();

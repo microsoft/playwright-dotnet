@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldSupportTheWebSocketOption()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             using var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             Assert.Single(await browser.DefaultContext.GetPagesAsync());
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldFireDisconnectedWhenClosingWithWebSocket()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             using var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
             var disconnectedTask = new TaskCompletionSource<bool>();

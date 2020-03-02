@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
         public async Task ShouldWork()
         {
-            var browser = await Playwright.LaunchAsync(TestConstants.DefaultBrowserOptions);
+            var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var events = new List<string>();
             browser.TargetCreated += (sender, e) => events.Add("CREATED: " + e.Target.Url);
             browser.TargetChanged += (sender, e) => events.Add("CHANGED: " + e.Target.Url);

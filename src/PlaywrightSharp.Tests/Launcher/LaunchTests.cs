@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
-            using var browser = await Playwright.LaunchAsync(TestConstants.DefaultBrowserOptions);
+            using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var page = await browser.DefaultContext.NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             options.ExecutablePath = "random-invalid-path";
 
             var exception = await Assert.ThrowsAsync<FileNotFoundException>(() =>
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
-            using var browser = await Playwright.LaunchAsync(TestConstants.DefaultBrowserOptions);
+            using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var pages = (await browser.DefaultContext.GetPagesAsync()).Select(page => page.Url);
             Assert.Equal(new[] { TestConstants.AboutBlank }, pages);
 
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldHaveCustomUrlWhenLaunchingBrowser()
         {
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend(TestConstants.EmptyPage).ToArray();
             using var browser = await Playwright.LaunchAsync(options);
 
@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldReturnChildProcessInstance()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             Assert.True(browserApp.Process.Id > 0);
         }
     }
