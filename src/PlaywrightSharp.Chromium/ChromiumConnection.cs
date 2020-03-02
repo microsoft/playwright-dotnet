@@ -93,13 +93,15 @@ namespace PlaywrightSharp.Chromium
                 {
                     obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultChromiumJsonSerializerOptions);
                 }
-                catch (JsonException)
+                catch (JsonException ex)
                 {
-                    // _logger.LogError(exc, "Failed to deserialize response", response);
+                    // _logger.LogError(ex, "Failed to deserialize response", response);
+                    System.Diagnostics.Debug.WriteLine($"{ex}: Failed to deserialize response {response}");
                     return;
                 }
 
                 // _logger.LogTrace("◀ Receive {Message}", response);
+                System.Diagnostics.Debug.WriteLine($"◀ Receive {response}");
                 ProcessIncomingMessage(obj);
             }
 
@@ -111,16 +113,21 @@ namespace PlaywrightSharp.Chromium
                 string message = $"Connection failed to process {e.Message}. {ex.Message}. {ex.StackTrace}";
 
                 // _logger.LogError(ex, message);
+                System.Diagnostics.Debug.WriteLine(message);
                 Close(message);
             }
         }
 
         private void ProcessIncomingMessage(ConnectionResponse obj)
         {
-            string method = obj.Method;
-            var param = Protocol.ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params);
-            ChromiumSession session;
+            // if params does not exist then it's not an event
+            if (obj.Params.ValueKind != JsonValueKind.Object)
+            {
+                GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
+                return;
+            }
 
+            var param = ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params.GetRawText());
             if (obj.Id == BrowserCloseMessageId)
             {
                 return;
@@ -129,7 +136,7 @@ namespace PlaywrightSharp.Chromium
             if (param is TargetAttachedToTargetChromiumEvent targetAttachedToTarget)
             {
                 string sessionId = targetAttachedToTarget.SessionId;
-                session = new ChromiumSession(this, targetAttachedToTarget.TargetInfo.GetTargetType(), sessionId);
+                ChromiumSession session = new ChromiumSession(this, targetAttachedToTarget.TargetInfo.GetTargetType(), sessionId);
                 _asyncSessions.AddItem(sessionId, session);
 
                 return;
@@ -138,15 +145,15 @@ namespace PlaywrightSharp.Chromium
             if (param is TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             {
                 string sessionId = targetDetachedFromTarget.SessionId;
-                if (_sessions.TryRemove(sessionId, out session) && !session.IsClosed)
+                if (_sessions.TryRemove(sessionId, out var session) && !session.IsClosed)
                 {
-                    session.Close("Target.detachedFromTarget");
+                    session.Close(targetDetachedFromTarget.InternalName);
                 }
 
                 return;
             }
 
-            GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
+            MessageReceived?.Invoke(this, param);
         }
     }
 }

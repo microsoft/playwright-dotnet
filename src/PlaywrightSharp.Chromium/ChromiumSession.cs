@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Concurrent;
-using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging;
 using PlaywrightSharp.Chromium.Protocol;
 
@@ -22,6 +20,8 @@ namespace PlaywrightSharp.Chromium
             _connection = chromiumConnection;
             _targetType = targetType;
             _sessionId = sessionId;
+
+            chromiumConnection.MessageReceived += OnMessageReceived;
         }
 
         public event EventHandler<IChromiumEvent> MessageReceived;
@@ -90,15 +90,15 @@ namespace PlaywrightSharp.Chromium
                 }
                 else
                 {
-                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result);
+                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result.GetRawText());
                     callback.TaskWrapper.TrySetResult(result);
                 }
             }
-            else
-            {
-                var data = ChromiumProtocolTypes.ParseEvent(obj.Params, obj.Method);
-                MessageReceived?.Invoke(this, data);
-            }
+        }
+
+        internal void OnMessageReceived(object sender, IChromiumEvent e)
+        {
+            MessageReceived?.Invoke(this, e);
         }
     }
 }

@@ -38,21 +38,21 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 });
                 process.Kill();
 
-                PrepareArrayTypes(response);
+                this.PrepareArrayTypes(response);
 
                 var builder = new StringBuilder();
-                GenerateConstants(builder);
+                this.GenerateConstants(builder);
 
                 foreach (var domain in response.Domains)
                 {
                     builder.AppendLine($"namespace {NamespacePrefix}.{domain.Domain}");
                     builder.AppendLine("{");
 
-                    GenerateTypes(builder, domain);
+                    this.GenerateTypes(builder, domain);
 
-                    GenerateCommands(builder, domain);
+                    this.GenerateCommands(builder, domain);
 
-                    GenerateEvents(builder, domain);
+                    this.GenerateEvents(builder, domain);
 
                     builder.AppendLine("}");
                 }
@@ -87,35 +87,35 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 {
                     if (type.Type == "array")
                     {
-                        string itemType = ConvertJsToCsharp(type?.Items?.Type);
+                        string itemType = this.ConvertJsToCsharp(type?.Items?.Type);
                         if (itemType != null)
                         {
-                            knownTypes[type.Id] = itemType + "[]";
-                            knownTypes[$"{domain.Domain}.{type.Id}"] = itemType + "[]";
+                            this.knownTypes[type.Id] = itemType + "[]";
+                            this.knownTypes[$"{domain.Domain}.{type.Id}"] = itemType + "[]";
                         }
                     }
                     else if (type.Type == "string" && type.Enum == null)
                     {
-                        knownTypes[type.Id] = "string";
-                        knownTypes[$"{domain.Domain}.{type.Id}"] = "string";
+                        this.knownTypes[type.Id] = "string";
+                        this.knownTypes[$"{domain.Domain}.{type.Id}"] = "string";
                     }
                     else if (type.Type == "integer")
                     {
-                        knownTypes[type.Id] = "int";
-                        knownTypes[$"{domain.Domain}.{type.Id}"] = "int";
+                        this.knownTypes[type.Id] = "int";
+                        this.knownTypes[$"{domain.Domain}.{type.Id}"] = "int";
                     }
                     else if (type.Type == "number")
                     {
-                        knownTypes[type.Id] = "long";
-                        knownTypes[$"{domain.Domain}.{type.Id}"] = "long";
+                        this.knownTypes[type.Id] = "double";
+                        this.knownTypes[$"{domain.Domain}.{type.Id}"] = "double";
                     }
                 }
             }
 
             // work around, too lazy to solve this
-            knownTypes["Headers"] = "System.Collections.Generic.IDictionary<string, string>";
-            knownTypes["ArrayOfStrings"] = "int[]";
-            knownTypes["StringIndex"] = "int";
+            this.knownTypes["Headers"] = "System.Collections.Generic.IDictionary<string, string>";
+            this.knownTypes["ArrayOfStrings"] = "int[]";
+            this.knownTypes["StringIndex"] = "int";
         }
 
         private void GenerateTypes(StringBuilder builder, ChromiumProtocolDomain domain)
@@ -130,21 +130,21 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 if (type.Enum != null)
                 {
                     builder.AppendLine("/// <summary>");
-                    builder.AppendLine($"/// {FormatDocs(type.Description)}");
+                    builder.AppendLine($"/// {this.FormatDocs(type.Description)}");
                     builder.AppendLine("/// </summary>");
                     builder.AppendLine($"internal enum {type.Id}");
                     builder.AppendLine("{");
-                    builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
+                    builder.AppendJoin(",\n", this.NormalizeEnum(type.Enum));
                     builder.AppendLine("}");
                 }
                 else if (type.Type == "object")
                 {
                     builder.AppendLine("/// <summary>");
-                    builder.AppendLine($"/// {FormatDocs(type.Description)}");
+                    builder.AppendLine($"/// {this.FormatDocs(type.Description)}");
                     builder.AppendLine("/// </summary>");
                     builder.AppendLine($"internal class {type.Id}");
                     builder.AppendLine("{");
-                    builder.AppendJoin("\n", NormalizeProperties(type.Properties));
+                    builder.AppendJoin("\n", this.NormalizeProperties(type.Properties));
                     builder.AppendLine("}");
                 }
             }
@@ -162,7 +162,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 // request
                 string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0])}{command.Name.Substring(1)}";
                 builder.AppendLine("/// <summary>");
-                builder.AppendLine($"/// {FormatDocs(command.Description)}");
+                builder.AppendLine($"/// {this.FormatDocs(command.Description)}");
                 builder.AppendLine("/// </summary>");
                 builder.AppendLine("/// <remarks>");
                 builder.AppendLine($"/// Will send the command <c>{domain.Domain}.{command.Name}</c>");
@@ -175,7 +175,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.AppendLine($"public string Command {{ get; }} = \"{domain.Domain}.{command.Name}\";");
-                builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
+                builder.AppendJoin("\n", this.NormalizeProperties(command.Parameters));
                 builder.AppendLine("}");
 
                 // response
@@ -184,7 +184,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 builder.AppendLine("/// </summary>");
                 builder.AppendLine($"internal class {baseName}Response : IChromiumResponse");
                 builder.AppendLine("{");
-                builder.AppendJoin("\n", NormalizeProperties(command.Returns));
+                builder.AppendJoin("\n", this.NormalizeProperties(command.Returns));
                 builder.AppendLine("}");
             }
         }
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             {
                 string eventName = char.ToUpper(e.Name[0]) + e.Name.Substring(1);
                 builder.AppendLine("/// <summary>");
-                builder.AppendLine($"/// {FormatDocs(e.Description)}");
+                builder.AppendLine($"/// {this.FormatDocs(e.Description)}");
                 builder.AppendLine("/// </summary>");
                 builder.AppendLine("/// <remarks>");
                 builder.AppendLine($"/// Matches on the event <c>{domain.Domain}.{e.Name}</c>");
@@ -208,7 +208,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 builder.Append("internal class ").Append(domain.Domain).Append(eventName).AppendLine("ChromiumEvent : IChromiumEvent");
                 builder.AppendLine("{");
                 builder.AppendLine($"public string InternalName {{ get; }} = \"{domain.Domain}.{e.Name}\";");
-                builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
+                builder.AppendJoin("\n", this.NormalizeProperties(e.Parameters));
                 builder.AppendLine("}");
             }
         }
@@ -222,15 +222,15 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         {
             if (property.Ref != null)
             {
-                return ConvertRefToCsharp(property.Ref);
+                return this.ConvertRefToCsharp(property.Ref);
             }
 
             try
             {
                 return property.Type switch
                 {
-                    "array" => ConvertItemsProperty(property.Items),
-                    _ => ConvertJsToCsharp(property.Type)
+                    "array" => this.ConvertItemsProperty(property.Items),
+                    _ => this.ConvertJsToCsharp(property.Type)
                 };
             }
             catch (Exception e)
@@ -239,9 +239,9 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             }
         }
 
-        public string ConvertItemsProperty(ChromiumProtocolDomainItems items) => (items.Type != null ? ConvertJsToCsharp(items.Type) : ConvertRefToCsharp(items.Ref)) + "[]";
+        public string ConvertItemsProperty(ChromiumProtocolDomainItems items) => (items.Type != null ? this.ConvertJsToCsharp(items.Type) : this.ConvertRefToCsharp(items.Ref)) + "[]";
 
-        public string ConvertRefToCsharp(string refValue) => knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
+        public string ConvertRefToCsharp(string refValue) => this.knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
 
         public string ConvertJsToCsharp(string type) => type switch
         {
@@ -263,10 +263,10 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             {
                 var builder = new StringBuilder()
                     .AppendLine("/// <summary>")
-                    .AppendLine($"/// {FormatDocs(property.Description)}")
+                    .AppendLine($"/// {this.FormatDocs(property.Description)}")
                     .AppendLine("/// </summary>")
                     .Append("public ")
-                    .Append(GetTypeOfProperty(property))
+                    .Append(this.GetTypeOfProperty(property))
                     .Append($" {char.ToUpper(property.Name[0])}{property.Name.Substring(1)} ")
                     .Append("{ get; set; }");
 
