@@ -11,7 +11,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets the Worker URL.
         /// </summary>
-        public string Url { get; }
+        string Url { get; }
 
         /// <summary>
         /// Executes a script in the worker context.
