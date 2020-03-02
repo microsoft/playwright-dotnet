@@ -62,14 +62,6 @@ namespace PlaywrightSharp.Tests
             return options;
         }
 
-        public static LaunchOptions GetHeafulOptions()
-        {
-            var option = GetDefaultBrowserOptions();
-            option.Headless = false;
-
-            return option;
-        }
-
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
         public static readonly DeviceDescriptor IPhone = null;
         public static readonly DeviceDescriptor IPhoneLandscape = null;
