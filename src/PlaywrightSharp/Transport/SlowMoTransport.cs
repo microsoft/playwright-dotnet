@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport
@@ -17,22 +16,21 @@ namespace PlaywrightSharp.Transport
             _delegate.Closed += Delegate_Closed;
         }
 
-        /// <inheritdoc cref="IConnectionTransport"/>
+        /// <inheritdoc cref="IConnectionTransport.Closed"/>
         public event EventHandler<TransportClosedEventArgs> Closed;
 
-        /// <inheritdoc cref="IConnectionTransport"/>
+        /// <inheritdoc cref="IConnectionTransport.MessageReceived"/>
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
-        /// <inheritdoc cref="IConnectionTransport"/>
+        /// <inheritdoc cref="IConnectionTransport.SendAsync(string, object)"/>
         public Task SendAsync(string message, object arguments = null) => _delegate.SendAsync(message, arguments);
 
-        /// <inheritdoc cref="IConnectionTransport"/>
+        /// <inheritdoc cref="IConnectionTransport.Close(string)"/>
         public void Close(string closeReason = null)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IConnectionTransport"/>
         internal static IConnectionTransport Wrap(IConnectionTransport transport, int delay) => delay > 0 ? new SlowMoTransport(transport, delay) : transport;
 
         private void Delegate_Closed(object sender, TransportClosedEventArgs e)
