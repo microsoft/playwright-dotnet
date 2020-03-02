@@ -165,7 +165,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
         /// </summary>
-        public event EventHandler<WebsocketEventArgs> Websocket;
+        event EventHandler<WebsocketEventArgs> Websocket;
 
         /// <summary>
         /// Get an indication that the page has been closed.
