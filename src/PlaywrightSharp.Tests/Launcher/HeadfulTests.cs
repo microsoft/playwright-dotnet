@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Launcher
             {
                 return;
             }
-            using var userDataDir = new TempDirectory());
+            using var userDataDir = new TempDirectory();
 
             // Write a cookie in headful chrome
             var headfulOptions = TestConstants.GetHeadfulOptions();
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             var headfulOptions = TestConstants.GetDefaultBrowserOptions();
             headfulOptions.Headless = false;
-            using var browser = await Playwright.LaunchAsync(headfulOptions));
+            using var browser = await Playwright.LaunchAsync(headfulOptions);
             var page = await browser.DefaultContext.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/beforeunload.html");
