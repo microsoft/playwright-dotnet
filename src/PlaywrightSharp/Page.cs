@@ -67,6 +67,15 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.PageError"/>
         public event EventHandler<PageErrorEventArgs> PageError;
 
+        /// <inheritdoc cref="IPage.WorkerCreated"/>
+        public event EventHandler<WorkerEventArgs> WorkerCreated;
+
+        /// <inheritdoc cref="IPage.WorkerDestroyed"/>
+        public event EventHandler<WorkerEventArgs> WorkerDestroyed;
+
+        /// <inheritdoc cref="IPage.Websocket"/>
+        public event EventHandler<WebsocketEventArgs> Websocket;
+
         /// <inheritdoc cref="IPage.MainFrame"/>
         public IFrame MainFrame => FrameManager.MainFrame;
 
@@ -99,6 +108,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.IsClosed"/>
         public bool IsClosed => false;
+
+        /// <inheritdoc cref="IPage.Workers"/>
+        public IWorker[] Workers => null;
 
         internal FrameManager FrameManager { get; }
 
@@ -315,7 +327,7 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.SetViewportAsync(Viewport)"/>
+        /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>
         public Task SetViewportAsync(Viewport viewport)
         {
             throw new NotImplementedException();
@@ -449,6 +461,12 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.AddStyleTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
+        public Task WaitForEvent(PageEvent e)
         {
             throw new NotImplementedException();
         }

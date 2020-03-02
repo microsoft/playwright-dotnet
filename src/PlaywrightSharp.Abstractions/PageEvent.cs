@@ -63,5 +63,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.PageError"/>
         PageError,
+
+        /// <summary>
+        /// Page WorkerCreated event
+        /// </summary>
+        /// <see cref="IPage.WorkerCreated"/>
+        WorkerCreated,
     }
 }
