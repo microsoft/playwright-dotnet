@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using PlaywrightSharp.Chromium.Helpers;
 
 namespace PlaywrightSharp.Chromium.Protocol
 {
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Chromium.Protocol
 
             foreach (string name in responses.Keys)
             {
-                // .Replace doesn't work since the class name might contain the work Response
+                // .Replace doesn't work since the class name might contain the word Response
                 string requestName = name.Substring(0, name.Length - "Response".Length) + "Request";
                 var type = requests[requestName];
 
@@ -40,8 +41,10 @@ namespace PlaywrightSharp.Chromium.Protocol
             }
         }
 
-        public static IChromiumResponse ParseResponse(string command, string json) => (IChromiumResponse)JsonSerializer.Deserialize(json, ChromiumResponseMapper[command]);
+        public static IChromiumResponse ParseResponse(string command, string json)
+            => (IChromiumResponse)JsonSerializer.Deserialize(json, ChromiumResponseMapper[command], JsonHelper.DefaultChromiumJsonSerializerOptions);
 
-        public static IChromiumEvent ParseEvent(string method, string json) => (IChromiumEvent)JsonSerializer.Deserialize(json, ChromiumEventsMapper[method]);
+        public static IChromiumEvent ParseEvent(string method, string json)
+            => (IChromiumEvent)JsonSerializer.Deserialize(json, ChromiumEventsMapper[method], JsonHelper.DefaultChromiumJsonSerializerOptions);
     }
 }

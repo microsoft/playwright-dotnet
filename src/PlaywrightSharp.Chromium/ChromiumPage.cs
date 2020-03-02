@@ -123,9 +123,9 @@ namespace PlaywrightSharp.Chromium
                 {
                     tasks.Add(_client.SendAsync(new EmulationSetGeolocationOverrideRequest
                     {
-                        Accuracy = (double)options.Geolocation.Accuracy,
-                        Latitude = (double)options.Geolocation.Latitude,
-                        Longitude = (double)options.Geolocation.Longitude,
+                        Accuracy = options.Geolocation.Accuracy,
+                        Latitude = options.Geolocation.Latitude,
+                        Longitude = options.Geolocation.Longitude,
                     }));
                 }
             }

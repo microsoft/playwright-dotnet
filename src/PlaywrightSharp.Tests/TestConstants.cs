@@ -28,11 +28,11 @@ namespace PlaywrightSharp.Tests
         public const string HttpsPrefix = "https://localhost:8082";
 
         internal static IBrowserType GetNewBrowserType()
-            => Environment.GetEnvironmentVariable("PRODUCT") switch
+            => Product switch
             {
                 WebkitProduct => null,
                 FirefoxProduct => null,
-                _ => new ChromiumBrowserType(),
+                ChromiumProduct => new ChromiumBrowserType(),
             };
 
 
