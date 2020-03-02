@@ -15,57 +15,57 @@ namespace PlaywrightSharp
         {
         }
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.Url"/>
         public string Url => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.Method"/>
         public HttpMethod Method => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.Headers"/>
         public IDictionary<string, string> Headers => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.PostData"/>
         public string PostData => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.Frame"/>
         public IFrame Frame => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.IsNavigationRequest"/>
         public bool IsNavigationRequest => false;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.ResourceType"/>
         public ResourceType ResourceType => ResourceType.Document;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.RedirectChain"/>
         public IRequest[] RedirectChain => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.Response"/>
         public IResponse Response => null;
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.Failure"/>
         public string Failure => null;
 
         internal string DocumentId { get; set; }
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.AbortAsync(RequestAbortErrorCode)"/>
         public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.ContinueAsync(Payload)"/>
         public Task ContinueAsync(Payload payload = null)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.FulfillAsync(ResponseData)"/>
         public Task FulfillAsync(ResponseData response)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IRequest"/>
+        /// <inheritdoc cref="IRequest.RespondAsync(ResponseData)"/>
         public Task RespondAsync(ResponseData response)
         {
             throw new NotImplementedException();
