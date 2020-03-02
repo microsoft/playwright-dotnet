@@ -160,7 +160,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
         /// </summary>
-        public event EventHandler<WorkerEventArgs> WorkerDestroyed;
+        event EventHandler<WorkerEventArgs> WorkerDestroyed;
 
         /// <summary>
         /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
