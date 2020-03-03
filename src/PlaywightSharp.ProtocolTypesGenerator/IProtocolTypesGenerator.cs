@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp.ProtocolTypesGenerator
 {
-    public interface IProtocolTypesGenerator
+    internal interface IProtocolTypesGenerator
     {
         Task GenerateTypesAsync(RevisionInfo revision);
     }

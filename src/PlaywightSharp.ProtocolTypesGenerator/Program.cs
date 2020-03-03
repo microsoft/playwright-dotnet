@@ -6,18 +6,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
     {
         private static async Task Main(string[] args)
         {
-            IProtocolTypesGenerator[] generators =
+            (IProtocolTypesGenerator, RevisionInfo)[] generators =
             {
-                new ChromiumProtocolTypesGenerator(),
+                (new ChromiumProtocolTypesGenerator(), new RevisionInfo()),
             };
 
-            var revision = new RevisionInfo("test")
-            {
-                ExecutablePath = @"D:\Playground\Playground.cs\ConsoleApp1\ConsoleApp1\.local-chromium\Win64-706915\chrome-win\chrome.exe",
-                Local = true,
-            };
-
-            foreach (var generator in generators)
+            foreach (var (generator, revision) in generators)
             {
                 await generator.GenerateTypesAsync(revision).ConfigureAwait(false);
             }
