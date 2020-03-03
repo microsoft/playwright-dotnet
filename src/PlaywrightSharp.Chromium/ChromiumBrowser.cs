@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
@@ -35,7 +34,7 @@ namespace PlaywrightSharp.Chromium
                 contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
             _session.MessageReceived += Session_MessageReceived;
-            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, new EventArgs());
+            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc cref="IBrowser"/>
