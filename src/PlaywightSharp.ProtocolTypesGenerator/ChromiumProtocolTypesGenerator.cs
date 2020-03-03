@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -160,17 +161,18 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             foreach (var command in domain.Commands)
             {
                 // request
-                string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0])}{command.Name.Substring(1)}";
+                string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0], CultureInfo.InvariantCulture)}{command.Name.Substring(1)}";
                 builder.AppendLine("/// <summary>");
                 builder.Append("/// ").AppendLine(FormatDocs(command.Description));
                 builder.AppendLine("/// </summary>");
                 builder.AppendLine("/// <remarks>");
                 builder.Append("/// Will send the command <c>").Append(domain.Domain).Append('.').Append(command.Name).AppendLine("</c>");
                 builder.AppendLine("/// </remarks>");
-                if (command.Description?.StartsWith("Deprecated") == true)
+                if (command.Description?.StartsWith("Deprecated", StringComparison.OrdinalIgnoreCase) == true)
                 {
-                    builder.Append("[System.Obsolete(\"").Append(command.Description.Replace("\n", "\\n")).AppendLine("\")]");
+                    builder.Append("[System.Obsolete(\"").Append(command.Description.Replace("\n", "\\n", StringComparison.OrdinalIgnoreCase)).AppendLine("\")]");
                 }
+
                 builder.Append("internal class ").Append(baseName).Append("Request : IChromiumRequest<").Append(baseName).AppendLine("Response>");
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
@@ -198,7 +200,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
             foreach (var e in domain.Events)
             {
-                string eventName = char.ToUpper(e.Name[0]) + e.Name.Substring(1);
+                string eventName = char.ToUpper(e.Name[0], CultureInfo.InvariantCulture) + e.Name.Substring(1);
                 builder.AppendLine("/// <summary>");
                 builder.Append("/// ").AppendLine(FormatDocs(e.Description));
                 builder.AppendLine("/// </summary>");
@@ -267,7 +269,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     .AppendLine("/// </summary>")
                     .Append("public ")
                     .Append(GetTypeOfProperty(property))
-                    .Append(' ').Append(char.ToUpper(property.Name[0])).Append(property.Name.Substring(1)).Append(' ')
+                    .Append(' ').Append(char.ToUpper(property.Name[0], CultureInfo.InvariantCulture)).Append(property.Name.Substring(1)).Append(' ')
                     .Append("{ get; set; }");
 
                 return builder.ToString();
@@ -312,6 +314,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 return builder.ToString();
             });
 
+#pragma warning disable CA1812
         public class ChromiumProtocolDomainsContainer
         {
             public ChromiumProtocolDomain[] Domains { get; set; }
@@ -396,5 +399,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
             public ChromiumProtocolDomainProperty[] Parameters { get; set; }
         }
+#pragma warning restore CA1812
     }
 }
