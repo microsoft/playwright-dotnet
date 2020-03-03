@@ -36,13 +36,13 @@ namespace PlaywrightSharp
             _params = paramsGetter;
         }
 
-        /// <inheritdoc cref="IDisposable"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         ~BrowserFetcher() => Dispose(false);
 
-        /// <inheritdoc cref="IBrowserFetcher"/>
+        /// <inheritdoc cref="IBrowserFetcher.DownloadProgressChanged"/>
         public event DownloadProgressChangedEventHandler DownloadProgressChanged;
 
-        /// <inheritdoc cref="IBrowserFetcher"/>
+        /// <inheritdoc cref="IBrowserFetcher.CanDownloadAsync(string)"/>
         public async Task<bool> CanDownloadAsync(string revision)
         {
             try
@@ -61,7 +61,7 @@ namespace PlaywrightSharp
             }
         }
 
-        /// <inheritdoc cref="IBrowserFetcher"/>
+        /// <inheritdoc cref="IBrowserFetcher.DownloadAsync(string)"/>
         public async Task<RevisionInfo> DownloadAsync(string revision = null)
         {
             revision ??= _preferredRevision;
@@ -115,7 +115,7 @@ namespace PlaywrightSharp
             return revisionInfo;
         }
 
-        /// <inheritdoc cref="IBrowserFetcher"/>
+        /// <inheritdoc cref="IBrowserFetcher.GetRevisionInfo(string)"/>
         public IEnumerable<string> GetLocalRevisions()
         {
             var directoryInfo = new DirectoryInfo(_downloadsFolder);
@@ -131,7 +131,7 @@ namespace PlaywrightSharp
             return Array.Empty<string>();
         }
 
-        /// <inheritdoc cref="IBrowserFetcher"/>
+        /// <inheritdoc cref="IBrowserFetcher.GetRevisionInfo(string)"/>
         public RevisionInfo GetRevisionInfo(string revision = null)
         {
             revision ??= _preferredRevision;
@@ -151,7 +151,7 @@ namespace PlaywrightSharp
             return result;
         }
 
-        /// <inheritdoc cref="IBrowserFetcher"/>
+        /// <inheritdoc cref="IBrowserFetcher.Remove(string)"/>
         public void Remove(string revision)
         {
             var directory = new DirectoryInfo(GetFolderPath(revision));
@@ -161,14 +161,14 @@ namespace PlaywrightSharp
             }
         }
 
-        /// <inheritdoc cref="IDisposable"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <inheritdoc cref="IDisposable"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose(bool disposing)
         {
             if (disposing)

@@ -50,13 +50,13 @@ namespace PlaywrightSharp.Tests.Launcher
         [Fact]
         public async Task ShouldFilterOutIgnoredDefaultArguments()
         {
-            string[] defaultArgsWithoutUserDataDir = Playwright.GetDefaultArgs(TestConstants.DefaultBrowserOptions);
+            string[] defaultArgsWithoutUserDataDir = Playwright.GetDefaultArgs(TestConstants.GetDefaultBrowserOptions());
 
-            var withUserDataDirOptions = TestConstants.DefaultBrowserOptions;
+            var withUserDataDirOptions = TestConstants.GetDefaultBrowserOptions();
             withUserDataDirOptions.UserDataDir = "fake-profile";
             string[] defaultArgsWithUserDataDir = Playwright.GetDefaultArgs(withUserDataDirOptions);
 
-            var launchOptions = TestConstants.DefaultBrowserOptions;
+            var launchOptions = TestConstants.GetDefaultBrowserOptions();
             launchOptions.UserDataDir = "fake-profile";
             launchOptions.IgnoreDefaultArgs = true;
             launchOptions.IgnoredDefaultArgs = defaultArgsWithUserDataDir.Where(x => !defaultArgsWithoutUserDataDir.Contains(x)).ToArray();

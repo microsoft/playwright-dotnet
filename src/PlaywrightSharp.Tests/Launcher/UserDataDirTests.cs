@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task UserDataDirOption()
         {
             using var userDataDir = new TempDirectory();
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             options.UserDataDir = userDataDir.Path;
 
             using var browser = await Playwright.LaunchAsync(options);
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task UserDataDirArgument()
         {
             using var userDataDir = new TempDirectory();
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
 
             if (TestConstants.IsFirefox)
             {
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task UserDataDirOptionShouldRestoreState()
         {
             using var userDataDir = new TempDirectory();
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
 
             using (var browser = await Playwright.LaunchAsync(options))
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task UserDataDirOptionShouldRestoreCookies()
         {
             using var userDataDir = new TempDirectory();
-            var options = TestConstants.DefaultBrowserOptions;
+            var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
 
             using (var browser = await Playwright.LaunchAsync(options))
