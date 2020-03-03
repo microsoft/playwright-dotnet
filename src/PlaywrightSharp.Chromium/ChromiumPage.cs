@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
@@ -16,15 +14,14 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IPageDelegate"/>
     internal class ChromiumPage : IPageDelegate
     {
-        private const string UTILITYWORLDNAME = "__playwright_utility_world__";
-        private const string EVALUATIONSCRIPTURL = "__playwright_evaluation_script__";
+        private const string UtilityWorldName = "__playwright_utility_world__";
+        private const string EvaluationScriptUrl = "__playwright_evaluation_script__";
 
         private readonly ChromiumSession _client;
         private readonly ChromiumBrowser _browser;
         private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
-
-        private readonly ISet<string> _isolatedWorlds;
+        private readonly ISet<string> _isolatedWorlds = new HashSet<string>();
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
@@ -32,7 +29,6 @@ namespace PlaywrightSharp.Chromium
             _browser = browser;
             _browserContext = browserContext;
             _networkManager = new ChromiumNetworkManager(_client, this);
-            _isolatedWorlds = new HashSet<string>();
             Page = new Page(this, browserContext);
             client.MessageReceived += Client_MessageReceived;
         }
@@ -81,7 +77,7 @@ namespace PlaywrightSharp.Chromium
             {
                _client.SendAsync(new LogEnableRequest()),
                _client.SendAsync(new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
-               _client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(UTILITYWORLDNAME), TaskScheduler.Default),
+               _client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(UtilityWorldName), TaskScheduler.Default),
                _networkManager.InitializeAsync(),
             };
 
@@ -189,7 +185,7 @@ namespace PlaywrightSharp.Chromium
 
             await _client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
             {
-                Source = $"//# sourceURL={EVALUATIONSCRIPTURL}",
+                Source = $"//# sourceURL={EvaluationScriptUrl}",
                 WorldName = name,
             }).ConfigureAwait(false);
 
