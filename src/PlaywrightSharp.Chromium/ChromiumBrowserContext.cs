@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium;
-using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Chromium.Protocol.Target;
 
 namespace PlaywrightSharp
 {
@@ -62,7 +62,7 @@ namespace PlaywrightSharp
                 createTargetRequest.BrowserContextId = _contextId;
             }
 
-            string targetId = (await _client.SendAsync<TargetCreateTargetResponse>("Target.createTarget", createTargetRequest)
+            string targetId = (await _client.SendAsync(createTargetRequest)
                 .ConfigureAwait(false)).TargetId;
             var target = Browser.TargetsMap[targetId];
             await target.InitializedTask.ConfigureAwait(false);

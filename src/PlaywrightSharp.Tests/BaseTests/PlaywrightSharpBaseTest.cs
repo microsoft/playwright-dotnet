@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBaseTest
     {
         internal string BaseDirectory { get; set; }
+        internal IBrowserType Playwright { get; set; }
 
         internal SimpleServer Server => PlaywrightSharpLoaderFixture.Server;
         internal SimpleServer HttpsServer => PlaywrightSharpLoaderFixture.HttpsServer;
@@ -26,6 +27,7 @@ namespace PlaywrightSharp.Tests.BaseTests
                 dirInfo.Create();
             }
 
+            Playwright = TestConstants.GetNewBrowserType();
             Initialize();
         }
 

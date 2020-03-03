@@ -5,7 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Messaging;
-using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -30,7 +31,7 @@ namespace PlaywrightSharp.Chromium
             _asyncSessions = new AsyncDictionaryHelper<string, ChromiumSession>(_sessions, "Session {0} not found");
         }
 
-        public event EventHandler<MessageEventArgs> MessageReceived;
+        public event EventHandler<IChromiumEvent> MessageReceived;
 
         public event EventHandler Disconnected;
 
@@ -67,9 +68,9 @@ namespace PlaywrightSharp.Chromium
 
         internal Task<ChromiumSession> GetSessionAsync(string sessionId) => _asyncSessions.GetItemAsync(sessionId);
 
-        internal async Task<ChromiumSession> CreateSessionAsync(TargetInfo targetInfo)
+        internal async Task<ChromiumSession> CreateSessionAsync(Protocol.Target.TargetInfo targetInfo)
         {
-            string sessionId = (await RootSession.SendAsync<TargetAttachToTargetResponse>("Target.attachToTarget", new TargetAttachToTargetRequest
+            string sessionId = (await RootSession.SendAsync(new TargetAttachToTargetRequest
             {
                 TargetId = targetInfo.TargetId,
                 Flatten = true,
@@ -92,13 +93,15 @@ namespace PlaywrightSharp.Chromium
                 {
                     obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultChromiumJsonSerializerOptions);
                 }
-                catch (JsonException)
+                catch (JsonException ex)
                 {
-                    // _logger.LogError(exc, "Failed to deserialize response", response);
+                    // _logger.LogError(ex, "Failed to deserialize response", response);
+                    System.Diagnostics.Debug.WriteLine($"{ex}: Failed to deserialize response {response}");
                     return;
                 }
 
                 // _logger.LogTrace("◀ Receive {Message}", response);
+                System.Diagnostics.Debug.WriteLine($"◀ Receive {response}");
                 ProcessIncomingMessage(obj);
             }
 
@@ -110,42 +113,46 @@ namespace PlaywrightSharp.Chromium
                 string message = $"Connection failed to process {e.Message}. {ex.Message}. {ex.StackTrace}";
 
                 // _logger.LogError(ex, message);
+                System.Diagnostics.Debug.WriteLine(message);
                 Close(message);
             }
         }
 
         private void ProcessIncomingMessage(ConnectionResponse obj)
         {
-            string method = obj.Method;
-            var param = obj.Params?.ToObject<ConnectionResponseParams>();
-            ChromiumSession session;
+            if (!obj.Params.HasValue)
+            {
+                GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
+                return;
+            }
 
+            var param = ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
             if (obj.Id == BrowserCloseMessageId)
             {
                 return;
             }
 
-            if (method == "Target.attachedToTarget")
+            if (param is TargetAttachedToTargetChromiumEvent targetAttachedToTarget)
             {
-                string sessionId = param.SessionId;
-                session = new ChromiumSession(this, param.TargetInfo.Type, sessionId);
+                string sessionId = targetAttachedToTarget.SessionId;
+                ChromiumSession session = new ChromiumSession(this, targetAttachedToTarget.TargetInfo.GetTargetType(), sessionId);
                 _asyncSessions.AddItem(sessionId, session);
 
                 return;
             }
 
-            if (method == "Target.detachedFromTarget")
+            if (param is TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             {
-                string sessionId = param.SessionId;
-                if (_sessions.TryRemove(sessionId, out session) && !session.IsClosed)
+                string sessionId = targetDetachedFromTarget.SessionId;
+                if (_sessions.TryRemove(sessionId, out var session) && !session.IsClosed)
                 {
-                    session.Close("Target.detachedFromTarget");
+                    session.Close(targetDetachedFromTarget.InternalName);
                 }
 
                 return;
             }
 
-            GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
+            MessageReceived?.Invoke(this, param);
         }
     }
 }

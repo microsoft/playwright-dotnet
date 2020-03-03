@@ -3,8 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
-using PlaywrightSharp.Chromium.Messaging.Target;
+using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Chromium
                 contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
             _session.MessageReceived += Session_MessageReceived;
-            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, new EventArgs());
+            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc cref="IBrowser"/>
@@ -129,31 +129,31 @@ namespace PlaywrightSharp.Chromium
         {
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
             var connection = new ChromiumConnection(transport);
-            var response = await connection.RootSession.SendAsync<TargetGetBrowserContextsResponse>("Target.getBrowserContexts").ConfigureAwait(false);
+            var response = await connection.RootSession.SendAsync(new TargetGetBrowserContextsRequest()).ConfigureAwait(false);
             var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);
-            await connection.RootSession.SendAsync("Target.setDiscoverTargets", new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
+            await connection.RootSession.SendAsync(new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
             await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
             return browser;
         }
 
         internal IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
 
-        private async void Session_MessageReceived(object sender, MessageEventArgs e)
+        private async void Session_MessageReceived(object sender, IChromiumEvent e)
         {
             try
             {
-                switch (e.MessageID)
+                switch (e)
                 {
-                    case "Target.targetCreated":
-                        await CreateTargetAsync(e.MessageData?.ToObject<TargetCreatedResponse>()).ConfigureAwait(false);
+                    case TargetTargetCreatedChromiumEvent targetCreated:
+                        await CreateTargetAsync(targetCreated).ConfigureAwait(false);
                         return;
 
-                    case "Target.targetDestroyed":
-                        await DestroyTargetAsync(e.MessageData?.ToObject<TargetDestroyedResponse>()).ConfigureAwait(false);
+                    case TargetTargetDestroyedChromiumEvent targetDestroyed:
+                        await DestroyTargetAsync(targetDestroyed).ConfigureAwait(false);
                         return;
 
-                    case "Target.targetInfoChanged":
-                        ChangeTargetInfo(e.MessageData?.ToObject<TargetCreatedResponse>());
+                    case TargetTargetInfoChangedChromiumEvent targetInfoChanged:
+                        ChangeTargetInfo(targetInfoChanged);
                         return;
                 }
             }
@@ -163,14 +163,14 @@ namespace PlaywrightSharp.Chromium
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types.
             {
-                string message = $"Browser failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
+                string message = $"Browser failed to process {e.InternalName}. {ex.Message}. {ex.StackTrace}";
 
                 // TODO Add Logger _logger.LogError(ex, message);
                 _connection.Close(message);
             }
         }
 
-        private async Task CreateTargetAsync(TargetCreatedResponse e)
+        private async Task CreateTargetAsync(TargetTargetCreatedChromiumEvent e)
         {
             var targetInfo = e.TargetInfo;
             string browserContextId = targetInfo.BrowserContextId;
@@ -201,7 +201,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private async Task DestroyTargetAsync(TargetDestroyedResponse e)
+        private async Task DestroyTargetAsync(TargetTargetDestroyedChromiumEvent e)
         {
             if (!TargetsMap.ContainsKey(e.TargetId))
             {
@@ -220,7 +220,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void ChangeTargetInfo(TargetCreatedResponse e)
+        private void ChangeTargetInfo(TargetTargetInfoChangedChromiumEvent e)
         {
             if (!TargetsMap.ContainsKey(e.TargetInfo.TargetId))
             {
