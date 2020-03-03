@@ -2,24 +2,24 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp.ProtocolTypesGenerator
 {
-    class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             IProtocolTypesGenerator[] generators =
             {
-                new ChromiumProtocolTypesGenerator()
+                new ChromiumProtocolTypesGenerator(),
             };
 
             var revision = new RevisionInfo("test")
             {
                 ExecutablePath = @"D:\Playground\Playground.cs\ConsoleApp1\ConsoleApp1\.local-chromium\Win64-706915\chrome-win\chrome.exe",
-                Local = true
+                Local = true,
             };
 
             foreach (var generator in generators)
             {
-                await generator.GenerateTypesAsync(revision);
+                await generator.GenerateTypesAsync(revision).ConfigureAwait(false);
             }
         }
     }
