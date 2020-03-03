@@ -153,6 +153,21 @@ namespace PlaywrightSharp
         event EventHandler<PageErrorEventArgs> PageError;
 
         /// <summary>
+        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is spawned by the page.
+        /// </summary>
+        event EventHandler<WorkerEventArgs> WorkerCreated;
+
+        /// <summary>
+        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
+        /// </summary>
+        event EventHandler<WorkerEventArgs> WorkerDestroyed;
+
+        /// <summary>
+        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
+        /// </summary>
+        event EventHandler<WebsocketEventArgs> Websocket;
+
+        /// <summary>
         /// Get an indication that the page has been closed.
         /// </summary>
         bool IsClosed { get; }
@@ -211,6 +226,11 @@ namespace PlaywrightSharp
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
+
+        /// <summary>
+        /// Gets all workers in the page.
+        /// </summary>
+        IWorker[] Workers { get; }
 
         /// <summary>
         /// Returns page's title.
@@ -389,6 +409,30 @@ namespace PlaywrightSharp
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null);
+
+        /// <summary>
+        /// Waits for event to fire and passes its value into the predicate function.
+        /// </summary>
+        /// <param name="e">Event to wait for.</param>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// // wait for console event:
+        /// var console = await page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+        ///
+        /// // wait for popup event:
+        /// var popup = await page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+        ///
+        /// // wait for dialog event:
+        /// var dialog = await page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+        ///
+        /// // wait for request event:
+        /// var request = await page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
+        Task WaitForEvent(PageEvent e);
 
         /// <summary>
         /// Navigates to an url.
