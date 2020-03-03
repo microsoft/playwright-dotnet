@@ -120,14 +120,13 @@ namespace PlaywrightSharp.Chromium
 
         private void ProcessIncomingMessage(ConnectionResponse obj)
         {
-            // if params does not exist then it's not an event
-            if (obj.Params.ValueKind != JsonValueKind.Object)
+            if (!obj.Params.HasValue)
             {
                 GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
                 return;
             }
 
-            var param = ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params.GetRawText());
+            var param = ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
             if (obj.Id == BrowserCloseMessageId)
             {
                 return;

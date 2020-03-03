@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Chromium
                 }
                 else
                 {
-                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result.GetRawText());
+                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result.Value.GetRawText());
                     callback.TaskWrapper.TrySetResult(result);
                 }
             }
