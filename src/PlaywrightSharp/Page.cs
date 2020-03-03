@@ -393,12 +393,6 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
         public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
         {
@@ -467,6 +461,24 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
         public Task WaitForEvent(PageEvent e)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
+        public Task<IJSHandle> WaitForFunctionAsync(string script, WaitForFunctionOptions options = null, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage.WaitForTimeoutAsync(int)"/>
+        public Task WaitForTimeoutAsync(int timeout)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
         {
             throw new NotImplementedException();
         }
