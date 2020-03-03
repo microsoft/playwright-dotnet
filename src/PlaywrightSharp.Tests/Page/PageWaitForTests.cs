@@ -102,6 +102,9 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Skip = "We don't this test")]
         public void ShouldThrowWhenUnknownYype() { }
 
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>PageWaitFor</playwright-describe>
+        ///<playwright-it>should wait for predicate with arguments</playwright-it>
         [Fact]
         public async Task ShouldWaitForPredicateWithArguments()
             => await Page.WaitForFunctionAsync("(arg1, arg2) => arg1 !== arg2", new WaitForSelectorOptions(), 1, 2);
