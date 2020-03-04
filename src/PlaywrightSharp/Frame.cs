@@ -5,17 +5,26 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    internal class Frame : IFrame
+    internal partial class Frame : IFrame
     {
         private readonly Page _page;
         private readonly string _frameId;
         private readonly Frame _parentFrame;
+        private readonly IDictionary<ContextType, ContextData> _contextData;
+        private bool _detached = false;
 
         public Frame(Page page, string frameId, Frame parentFrame)
         {
             _page = page;
             _frameId = frameId;
             _parentFrame = parentFrame;
+            _contextData = new Dictionary<ContextType, ContextData>
+            {
+                [ContextType.Main] = new ContextData(),
+                [ContextType.Utility] = new ContextData(),
+            };
+            SetContext(ContextType.Main, null);
+            SetContext(ContextType.Utility, null);
 
             if (_parentFrame != null)
             {
@@ -53,9 +62,10 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
+        public async Task<T> EvaluateAsync<T>(string script, params object[] args)
         {
-            throw new System.NotImplementedException();
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            return await context.EvaluateAsync<T>(script, args).ConfigureAwait(false);
         }
 
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
@@ -133,10 +143,6 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil)
             => GoToAsync(url, new GoToOptions { WaitUntil = new[] { waitUntil } });
 
-        public void OnDetached()
-        {
-        }
-
         public Task<IElementHandle> QuerySelectorAsync(string selector)
         {
             throw new System.NotImplementedException();
@@ -172,9 +178,39 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        public Task<IFrameExecutionContext> GetUtilityContextAsync()
+        public Task<IFrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
+
+        public Task<IFrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
+
+        internal void OnDetached()
         {
-            throw new NotImplementedException();
+            _detached = true;
+        }
+
+        private void SetContext(ContextType contextType, IFrameExecutionContext context)
+        {
+            var data = _contextData[contextType];
+            data.Context = context;
+            if (context != null)
+            {
+                data.ContextResolveCallback.Invoke(context);
+
+                // TODO: rerun rerunnableTasks
+            }
+            else
+            {
+                data.ContextResolveCallback = ctx => data.ContextTsc.TrySetResult(ctx);
+            }
+        }
+
+        private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
+        {
+            if (_detached)
+            {
+                throw new PlaywrightSharpException($"Execution Context is not available in detached frame \"{Url}\" (are you trying to evaluate?)");
+            }
+
+            return _contextData[contextType].ContextTask;
         }
     }
 }
