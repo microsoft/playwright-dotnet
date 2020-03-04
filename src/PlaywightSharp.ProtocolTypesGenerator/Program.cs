@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.ProtocolTypesGenerator
@@ -8,7 +9,11 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         {
             (IProtocolTypesGenerator, RevisionInfo)[] generators =
             {
-                (new ChromiumProtocolTypesGenerator(), new RevisionInfo()),
+                (new ChromiumProtocolTypesGenerator(), new RevisionInfo
+                {
+                    ExecutablePath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\PlaywrightSharp.Tests\bin\Debug\netcoreapp3.1\.local-chromium\Win64-733125\chrome-win\chrome.exe"),
+                    Local = true,
+                }),
             };
 
             foreach (var (generator, revision) in generators)
