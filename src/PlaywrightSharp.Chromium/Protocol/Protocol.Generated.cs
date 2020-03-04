@@ -1212,13 +1212,14 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         [System.Runtime.Serialization.EnumMember(Value = "audioCapture")] AudioCapture,
         [System.Runtime.Serialization.EnumMember(Value = "backgroundSync")] BackgroundSync,
         [System.Runtime.Serialization.EnumMember(Value = "backgroundFetch")] BackgroundFetch,
-        [System.Runtime.Serialization.EnumMember(Value = "clipboardRead")] ClipboardRead,
-        [System.Runtime.Serialization.EnumMember(Value = "clipboardWrite")] ClipboardWrite,
+        [System.Runtime.Serialization.EnumMember(Value = "clipboardReadWrite")] ClipboardReadWrite,
+        [System.Runtime.Serialization.EnumMember(Value = "clipboardSanitizedWrite")] ClipboardSanitizedWrite,
         [System.Runtime.Serialization.EnumMember(Value = "durableStorage")] DurableStorage,
         [System.Runtime.Serialization.EnumMember(Value = "flash")] Flash,
         [System.Runtime.Serialization.EnumMember(Value = "geolocation")] Geolocation,
         [System.Runtime.Serialization.EnumMember(Value = "midi")] Midi,
         [System.Runtime.Serialization.EnumMember(Value = "midiSysex")] MidiSysex,
+        [System.Runtime.Serialization.EnumMember(Value = "nfc")] Nfc,
         [System.Runtime.Serialization.EnumMember(Value = "notifications")] Notifications,
         [System.Runtime.Serialization.EnumMember(Value = "paymentHandler")] PaymentHandler,
         [System.Runtime.Serialization.EnumMember(Value = "periodicBackgroundSync")] PeriodicBackgroundSync,
@@ -1262,6 +1263,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
         /// For "wake-lock" permission, must specify type as either "screen" or "system".
         /// </summary>
         public string Type { get; set; }
+        /// <summary>
+        /// For "clipboard" permission, may specify allowWithoutSanitization.
+        /// </summary>
+        public bool AllowWithoutSanitization { get; set; }
     }
     /// <summary>
     /// Chrome histogram bucket.
@@ -2768,6 +2773,10 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
         /// 
         /// </summary>
         public RuleUsage[] Coverage { get; set; }
+        /// <summary>
+        /// Monotonically increasing time, in seconds.
+        /// </summary>
+        public double Timestamp { get; set; }
     }
     /// <summary>
     /// Fires whenever a web font is updated.  A non-empty font parameter indicates a successfully loaded
@@ -3266,6 +3275,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
         [System.Runtime.Serialization.EnumMember(Value = "first-letter")] FirstLetter,
         [System.Runtime.Serialization.EnumMember(Value = "before")] Before,
         [System.Runtime.Serialization.EnumMember(Value = "after")] After,
+        [System.Runtime.Serialization.EnumMember(Value = "marker")] Marker,
         [System.Runtime.Serialization.EnumMember(Value = "backdrop")] Backdrop,
         [System.Runtime.Serialization.EnumMember(Value = "selection")] Selection,
         [System.Runtime.Serialization.EnumMember(Value = "first-line-inherited")] FirstLineInherited,
@@ -7495,6 +7505,18 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         [System.Runtime.Serialization.EnumMember(Value = "mouse")] Mouse
     }
     /// <summary>
+    /// 
+    /// </summary>
+    internal enum MouseButton
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "none")] None,
+        [System.Runtime.Serialization.EnumMember(Value = "left")] Left,
+        [System.Runtime.Serialization.EnumMember(Value = "middle")] Middle,
+        [System.Runtime.Serialization.EnumMember(Value = "right")] Right,
+        [System.Runtime.Serialization.EnumMember(Value = "back")] Back,
+        [System.Runtime.Serialization.EnumMember(Value = "forward")] Forward
+    }
+    /// <summary>
     /// Dispatches a key event to the page.
     /// </summary>
     /// <remarks>
@@ -7629,7 +7651,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// <summary>
         /// Mouse button (default: "none").
         /// </summary>
-        public string Button { get; set; }
+        public MouseButton Button { get; set; }
         /// <summary>
         /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
         /// Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
@@ -7718,9 +7740,9 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
         /// </summary>
         public int Y { get; set; }
         /// <summary>
-        /// Mouse button.
+        /// Mouse button. Only "none", "left", "right" are supported.
         /// </summary>
-        public string Button { get; set; }
+        public MouseButton Button { get; set; }
         /// <summary>
         /// Time at which the event occurred (default: current time).
         /// </summary>
@@ -8894,8 +8916,17 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
     {
         [System.Runtime.Serialization.EnumMember(Value = "Strict")] Strict,
         [System.Runtime.Serialization.EnumMember(Value = "Lax")] Lax,
-        [System.Runtime.Serialization.EnumMember(Value = "Extended")] Extended,
         [System.Runtime.Serialization.EnumMember(Value = "None")] None
+    }
+    /// <summary>
+    /// Represents the cookie's 'Priority' status:
+    /// https://tools.ietf.org/html/draft-west-cookie-priority-00
+    /// </summary>
+    internal enum CookiePriority
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "Low")] Low,
+        [System.Runtime.Serialization.EnumMember(Value = "Medium")] Medium,
+        [System.Runtime.Serialization.EnumMember(Value = "High")] High
     }
     /// <summary>
     /// Timing information for the request.
@@ -9380,6 +9411,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// Cookie SameSite type.
         /// </summary>
         public CookieSameSite SameSite { get; set; }
+        /// <summary>
+        /// Cookie Priority
+        /// </summary>
+        public CookiePriority Priority { get; set; }
     }
     /// <summary>
     /// Types of reasons why a cookie may not be stored from a response.
@@ -9389,7 +9424,6 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         [System.Runtime.Serialization.EnumMember(Value = "SecureOnly")] SecureOnly,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteStrict")] SameSiteStrict,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteLax")] SameSiteLax,
-        [System.Runtime.Serialization.EnumMember(Value = "SameSiteExtended")] SameSiteExtended,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteUnspecifiedTreatedAsLax")] SameSiteUnspecifiedTreatedAsLax,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteNoneInsecure")] SameSiteNoneInsecure,
         [System.Runtime.Serialization.EnumMember(Value = "UserPreferences")] UserPreferences,
@@ -9410,7 +9444,6 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         [System.Runtime.Serialization.EnumMember(Value = "DomainMismatch")] DomainMismatch,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteStrict")] SameSiteStrict,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteLax")] SameSiteLax,
-        [System.Runtime.Serialization.EnumMember(Value = "SameSiteExtended")] SameSiteExtended,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteUnspecifiedTreatedAsLax")] SameSiteUnspecifiedTreatedAsLax,
         [System.Runtime.Serialization.EnumMember(Value = "SameSiteNoneInsecure")] SameSiteNoneInsecure,
         [System.Runtime.Serialization.EnumMember(Value = "UserPreferences")] UserPreferences,
@@ -9493,6 +9526,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// Cookie expiration date, session cookie if not set
         /// </summary>
         public double Expires { get; set; }
+        /// <summary>
+        /// Cookie Priority.
+        /// </summary>
+        public CookiePriority Priority { get; set; }
     }
     /// <summary>
     /// Authorization challenge for HTTP status code 401 or 407.
@@ -10315,6 +10352,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
         /// Cookie expiration date, session cookie if not set
         /// </summary>
         public double Expires { get; set; }
+        /// <summary>
+        /// Cookie Priority type.
+        /// </summary>
+        public CookiePriority Priority { get; set; }
     }
     /// <summary>
     /// Response from <see cref="NetworkSetCookieRequest"/>
@@ -11764,6 +11805,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         public int Column { get; set; }
     }
     /// <summary>
+    /// Parsed app manifest properties.
+    /// </summary>
+    internal class AppManifestParsedProperties
+    {
+        /// <summary>
+        /// Computed scope value
+        /// </summary>
+        public string Scope { get; set; }
+    }
+    /// <summary>
     /// Layout viewport position and dimensions.
     /// </summary>
     internal class LayoutViewport
@@ -12219,6 +12270,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// Manifest content.
         /// </summary>
         public string Data { get; set; }
+        /// <summary>
+        /// Parsed manifest properties
+        /// </summary>
+        public AppManifestParsedProperties Parsed { get; set; }
     }
     /// <summary>
     /// 
@@ -12240,6 +12295,27 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
         /// 
         /// </summary>
         public string[] Errors { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Page.getManifestIcons</c>
+    /// </remarks>
+    internal class PageGetManifestIconsRequest : IChromiumRequest<PageGetManifestIconsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.getManifestIcons";
+    }
+    /// <summary>
+    /// Response from <see cref="PageGetManifestIconsRequest"/>
+    /// </summary>
+    internal class PageGetManifestIconsResponse : IChromiumResponse
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte[] PrimaryIcon { get; set; }
     }
     /// <summary>
     /// Returns all browser cookies. Depending on the backend support, will return detailed cookie
@@ -13278,7 +13354,6 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// Intercept file chooser requests and transfer control to protocol clients.
     /// When file chooser interception is enabled, native file chooser dialog is not shown.
     /// Instead, a protocol event `Page.fileChooserOpened` is emitted.
-    /// File chooser can be handled with `page.handleFileChooser` command.
     /// </summary>
     /// <remarks>
     /// Will send the command <c>Page.setInterceptFileChooserDialog</c>
@@ -13296,31 +13371,6 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     /// Response from <see cref="PageSetInterceptFileChooserDialogRequest"/>
     /// </summary>
     internal class PageSetInterceptFileChooserDialogResponse : IChromiumResponse
-    {
-    }
-    /// <summary>
-    /// Accepts or cancels an intercepted file chooser dialog.
-    /// </summary>
-    /// <remarks>
-    /// Will send the command <c>Page.handleFileChooser</c>
-    /// </remarks>
-    internal class PageHandleFileChooserRequest : IChromiumRequest<PageHandleFileChooserResponse>
-    {
-        [System.Text.Json.Serialization.JsonIgnore]
-        public string Command { get; } = "Page.handleFileChooser";
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Action { get; set; }
-        /// <summary>
-        /// Array of absolute file paths to set, only respected with `accept` action.
-        /// </summary>
-        public string[] Files { get; set; }
-    }
-    /// <summary>
-    /// Response from <see cref="PageHandleFileChooserRequest"/>
-    /// </summary>
-    internal class PageHandleFileChooserResponse : IChromiumResponse
     {
     }
     /// <summary>
@@ -13347,7 +13397,15 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
     {
         public string InternalName { get; } = "Page.fileChooserOpened";
         /// <summary>
-        /// 
+        /// Id of the frame containing input node.
+        /// </summary>
+        public string FrameId { get; set; }
+        /// <summary>
+        /// Input node id.
+        /// </summary>
+        public int BackendNodeId { get; set; }
+        /// <summary>
+        /// Input mode.
         /// </summary>
         public string Mode { get; set; }
     }
@@ -13868,7 +13926,8 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         [System.Runtime.Serialization.EnumMember(Value = "neutral")] Neutral,
         [System.Runtime.Serialization.EnumMember(Value = "insecure")] Insecure,
         [System.Runtime.Serialization.EnumMember(Value = "secure")] Secure,
-        [System.Runtime.Serialization.EnumMember(Value = "info")] Info
+        [System.Runtime.Serialization.EnumMember(Value = "info")] Info,
+        [System.Runtime.Serialization.EnumMember(Value = "insecure-broken")] InsecureBroken
     }
     /// <summary>
     /// Details about the security state of the page certificate.
@@ -13916,9 +13975,17 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// </summary>
         public double ValidTo { get; set; }
         /// <summary>
+        /// The highest priority network error code, if the certificate has an error.
+        /// </summary>
+        public string CertificateNetworkError { get; set; }
+        /// <summary>
         /// True if the certificate uses a weak signature aglorithm.
         /// </summary>
-        public bool CertifcateHasWeakSignature { get; set; }
+        public bool CertificateHasWeakSignature { get; set; }
+        /// <summary>
+        /// True if the certificate has a SHA1 signature in the chain.
+        /// </summary>
+        public bool CertificateHasSha1Signature { get; set; }
         /// <summary>
         /// True if modern SSL
         /// </summary>
@@ -13941,6 +14008,28 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         public bool ObsoleteSslSignature { get; set; }
     }
     /// <summary>
+    /// 
+    /// </summary>
+    internal enum SafetyTipStatus
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "badReputation")] BadReputation,
+        [System.Runtime.Serialization.EnumMember(Value = "lookalike")] Lookalike
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    internal class SafetyTipInfo
+    {
+        /// <summary>
+        /// Describes whether the page triggers any safety tips or reputation warnings. Default is unknown.
+        /// </summary>
+        public SafetyTipStatus SafetyTipStatus { get; set; }
+        /// <summary>
+        /// The URL the safety tip suggested ("Did you mean?"). Only filled in for lookalike matches.
+        /// </summary>
+        public string SafeUrl { get; set; }
+    }
+    /// <summary>
     /// Security state information about the page.
     /// </summary>
     internal class VisibleSecurityState
@@ -13953,6 +14042,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
         /// Security state details about the page certificate.
         /// </summary>
         public CertificateSecurityState CertificateSecurityState { get; set; }
+        /// <summary>
+        /// The type of Safety Tip triggered on the page. Note that this field will be set even if the Safety Tip UI was not actually shown.
+        /// </summary>
+        public SafetyTipInfo SafetyTipInfo { get; set; }
         /// <summary>
         /// Array of security state issues ids.
         /// </summary>
@@ -14711,6 +14804,77 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
     /// Response from <see cref="StorageClearDataForOriginRequest"/>
     /// </summary>
     internal class StorageClearDataForOriginResponse : IChromiumResponse
+    {
+    }
+    /// <summary>
+    /// Returns all browser cookies.
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.getCookies</c>
+    /// </remarks>
+    internal class StorageGetCookiesRequest : IChromiumRequest<StorageGetCookiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Storage.getCookies";
+        /// <summary>
+        /// Browser context to use when called on the browser endpoint.
+        /// </summary>
+        public string BrowserContextId { get; set; }
+    }
+    /// <summary>
+    /// Response from <see cref="StorageGetCookiesRequest"/>
+    /// </summary>
+    internal class StorageGetCookiesResponse : IChromiumResponse
+    {
+        /// <summary>
+        /// Array of cookie objects.
+        /// </summary>
+        public Network.Cookie[] Cookies { get; set; }
+    }
+    /// <summary>
+    /// Sets given cookies.
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.setCookies</c>
+    /// </remarks>
+    internal class StorageSetCookiesRequest : IChromiumRequest<StorageSetCookiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Storage.setCookies";
+        /// <summary>
+        /// Cookies to be set.
+        /// </summary>
+        public Network.CookieParam[] Cookies { get; set; }
+        /// <summary>
+        /// Browser context to use when called on the browser endpoint.
+        /// </summary>
+        public string BrowserContextId { get; set; }
+    }
+    /// <summary>
+    /// Response from <see cref="StorageSetCookiesRequest"/>
+    /// </summary>
+    internal class StorageSetCookiesResponse : IChromiumResponse
+    {
+    }
+    /// <summary>
+    /// Clears cookies.
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Storage.clearCookies</c>
+    /// </remarks>
+    internal class StorageClearCookiesRequest : IChromiumRequest<StorageClearCookiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Storage.clearCookies";
+        /// <summary>
+        /// Browser context to use when called on the browser endpoint.
+        /// </summary>
+        public string BrowserContextId { get; set; }
+    }
+    /// <summary>
+    /// Response from <see cref="StorageClearCookiesRequest"/>
+    /// </summary>
+    internal class StorageClearCookiesResponse : IChromiumResponse
     {
     }
     /// <summary>
@@ -17894,12 +18058,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
     internal class DebuggerGetScriptSourceResponse : IChromiumResponse
     {
         /// <summary>
-        /// Script source.
+        /// Script source (empty in case of Wasm bytecode).
         /// </summary>
         public string ScriptSource { get; set; }
+        /// <summary>
+        /// Wasm bytecode.
+        /// </summary>
+        public byte[] Bytecode { get; set; }
     }
     /// <summary>
-    /// Returns bytecode for the WebAssembly script with given id.
+    /// This command is deprecated. Use getScriptSource instead.
     /// </summary>
     /// <remarks>
     /// Will send the command <c>Debugger.getWasmBytecode</c>
@@ -19026,6 +19194,10 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// when the tracking is stopped.
         /// </summary>
         public bool ReportProgress { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool TreatGlobalObjectsAsRoots { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerStopTrackingHeapObjectsRequest"/>
@@ -19047,6 +19219,10 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
         /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken.
         /// </summary>
         public bool ReportProgress { get; set; }
+        /// <summary>
+        /// If true, a raw snapshot without artifical roots will be generated
+        /// </summary>
+        public bool TreatGlobalObjectsAsRoots { get; set; }
     }
     /// <summary>
     /// Response from <see cref="HeapProfilerTakeHeapSnapshotRequest"/>
@@ -19308,6 +19484,20 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         public TypeProfileEntry[] Entries { get; set; }
     }
     /// <summary>
+    /// Collected counter information.
+    /// </summary>
+    internal class CounterInfo
+    {
+        /// <summary>
+        /// Counter name.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Counter value.
+        /// </summary>
+        public int Value { get; set; }
+    }
+    /// <summary>
     /// 
     /// </summary>
     /// <remarks>
@@ -19427,6 +19617,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
     /// </summary>
     internal class ProfilerStartPreciseCoverageResponse : IChromiumResponse
     {
+        /// <summary>
+        /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
+        /// </summary>
+        public double Timestamp { get; set; }
     }
     /// <summary>
     /// Enable type profile.
@@ -19522,6 +19716,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// Coverage data for the current isolate.
         /// </summary>
         public ScriptCoverage[] Result { get; set; }
+        /// <summary>
+        /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
+        /// </summary>
+        public double Timestamp { get; set; }
     }
     /// <summary>
     /// Collect type profile.
@@ -19543,6 +19741,61 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
         /// Type profile for all scripts since startTypeProfile() was turned on.
         /// </summary>
         public ScriptTypeProfile[] Result { get; set; }
+    }
+    /// <summary>
+    /// Enable run time call stats collection.
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.enableRuntimeCallStats</c>
+    /// </remarks>
+    internal class ProfilerEnableRuntimeCallStatsRequest : IChromiumRequest<ProfilerEnableRuntimeCallStatsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Profiler.enableRuntimeCallStats";
+    }
+    /// <summary>
+    /// Response from <see cref="ProfilerEnableRuntimeCallStatsRequest"/>
+    /// </summary>
+    internal class ProfilerEnableRuntimeCallStatsResponse : IChromiumResponse
+    {
+    }
+    /// <summary>
+    /// Disable run time call stats collection.
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.disableRuntimeCallStats</c>
+    /// </remarks>
+    internal class ProfilerDisableRuntimeCallStatsRequest : IChromiumRequest<ProfilerDisableRuntimeCallStatsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Profiler.disableRuntimeCallStats";
+    }
+    /// <summary>
+    /// Response from <see cref="ProfilerDisableRuntimeCallStatsRequest"/>
+    /// </summary>
+    internal class ProfilerDisableRuntimeCallStatsResponse : IChromiumResponse
+    {
+    }
+    /// <summary>
+    /// Retrieve run time call stats.
+    /// </summary>
+    /// <remarks>
+    /// Will send the command <c>Profiler.getRuntimeCallStats</c>
+    /// </remarks>
+    internal class ProfilerGetRuntimeCallStatsRequest : IChromiumRequest<ProfilerGetRuntimeCallStatsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Profiler.getRuntimeCallStats";
+    }
+    /// <summary>
+    /// Response from <see cref="ProfilerGetRuntimeCallStatsRequest"/>
+    /// </summary>
+    internal class ProfilerGetRuntimeCallStatsResponse : IChromiumResponse
+    {
+        /// <summary>
+        /// Collected counter information.
+        /// </summary>
+        public CounterInfo[] Result { get; set; }
     }
     /// <summary>
     /// 
@@ -19802,6 +20055,16 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// The value associated with the private property.
         /// </summary>
         public RemoteObject Value { get; set; }
+        /// <summary>
+        /// A function which serves as a getter for the private property,
+        /// or `undefined` if there is no getter (accessor descriptors only).
+        /// </summary>
+        public RemoteObject Get { get; set; }
+        /// <summary>
+        /// A function which serves as a setter for the private property,
+        /// or `undefined` if there is no setter (accessor descriptors only).
+        /// </summary>
+        public RemoteObject Set { get; set; }
     }
     /// <summary>
     /// Represents function call argument. Either remote object id `objectId`, primitive `value`,
@@ -20218,6 +20481,10 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
         /// Disable breakpoints during execution.
         /// </summary>
         public bool DisableBreaks { get; set; }
+        /// <summary>
+        /// Reserved flag for future REPL mode support. Setting this flag has currently no effect.
+        /// </summary>
+        public bool ReplMode { get; set; }
     }
     /// <summary>
     /// Response from <see cref="RuntimeEvaluateRequest"/>
