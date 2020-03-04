@@ -11,7 +11,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             {
                 (new ChromiumProtocolTypesGenerator(), new RevisionInfo
                 {
-                    ExecutablePath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\PlaywrightSharp.Tests\bin\Debug\netcoreapp3.1\.local-chromium\Win64-733125\chrome-win\chrome.exe"),
+                    ExecutablePath = Path.Combine(Directory.GetCurrentDirectory(), "..","..","..","..", @"PlaywrightSharp.Tests\bin\Debug\netcoreapp3.1\.local-chromium\Win64-733125\chrome-win\chrome.exe"),
                     Local = true,
                 }),
             };
