@@ -380,6 +380,15 @@ namespace PlaywrightSharp
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
         /// <param name="script">Function to be evaluated in browser context.</param>
+        /// <param name="options">Wait options.</param>
+        /// <param name="args">Arguments to pass to <c>script</c>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string script, WaitForFunctionOptions options = null, params object[] args);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="script">Function to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to <c>script</c>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
         Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args);
@@ -623,13 +632,31 @@ namespace PlaywrightSharp
         Task<string[]> SelectAsync(string selector, params IElementHandle[] values);
 
         /// <summary>
+        /// Waits for a timeout.
+        /// </summary>
+        /// <param name="timeout">Timeout in milliseconds.</param>
+        /// <returns>A <see cref="Task"/> that completes when the timeout is reached.</returns>
+        Task WaitForTimeoutAsync(int timeout);
+
+        /// <summary>
         /// Waits for a selector to be added to the DOM.
         /// </summary>
         /// <param name="selector">A selector of an element to wait for.</param>
         /// <param name="options">Optional waiting parameters.</param>
-        /// <returns>A task that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
+        /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
         Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Waits for a selector to be added to the DOM.
+        /// </summary>
+        /// <param name="selector">A selector of an element to wait for.</param>
+        /// <param name="script">Function to execute when the selector is found.</param>
+        /// <param name="options">Optional waiting parameters.</param>
+        /// <param name="args">Arguments to be passed.</param>
+        /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
+        /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
+        Task<IElementHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForSelectorOptions options = null, params object[] args);
 
         /// <summary>
         /// Executes a script in browser context.
