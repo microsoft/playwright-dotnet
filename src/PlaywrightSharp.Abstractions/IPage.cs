@@ -648,6 +648,17 @@ namespace PlaywrightSharp
         Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
 
         /// <summary>
+        /// Waits for a selector to be added to the DOM.
+        /// </summary>
+        /// <param name="selector">A selector of an element to wait for.</param>
+        /// <param name="script">Function to execute when the selector is found.</param>
+        /// <param name="options">Optional waiting parameters.</param>
+        /// <param name="args">Arguments to be passed.</param>
+        /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
+        /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
+        Task<IElementHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForSelectorOptions options = null, params object[] args);
+
+        /// <summary>
         /// Executes a script in browser context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>

@@ -483,6 +483,12 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IPage.WaitForSelectorEvaluateAsync(string, string, WaitForSelectorOptions, object[])"/>
+        public Task<IElementHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForSelectorOptions options = null, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         internal void OnPopup(object popupPage)
         {
             throw new NotImplementedException();
