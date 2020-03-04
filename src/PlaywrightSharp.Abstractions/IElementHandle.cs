@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -9,6 +10,40 @@ namespace PlaywrightSharp
     /// </summary>
     public interface IElementHandle : IJSHandle
     {
+        /// <summary>
+        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string, DownOptions)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
+        /// </summary>
+        /// <param name="key">Name of key to press, such as <c>ArrowLeft</c>. See <see cref="KeyDefinitions"/> for a list of all key names.</param>
+        /// <param name="options">press options.</param>
+        /// <remarks>
+        /// If <c>key</c> is a single character and no modifier keys besides <c>Shift</c> are being held down, a <c>keypress</c>/<c>input</c> event will also be generated. The <see cref="DownOptions.Text"/> option can be specified to force an input event to be generated.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task PressAsync(string key, PressOptions options = null);
+
+        /// <summary>
+        /// Focuses the element, and sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="options">Type options.</param>
+        /// <remarks>
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IElementHandle.PressAsync(string, PressOptions)"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// elementHandle.TypeAsync("#mytextarea", "Hello"); // Types instantly
+        /// elementHandle.TypeAsync("#mytextarea", "World", new TypeOptions { Delay = 100 }); // Types slower, like a user
+        /// </code>
+        /// An example of typing into a text field and then submitting the form:
+        /// <code>
+        /// var elementHandle = await page.GetElementAsync("input");
+        /// await elementHandle.TypeAsync("some text");
+        /// await elementHandle.PressAsync("Enter");
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task TypeAsync(string text, TypeOptions options = null);
+
         /// <summary>
         /// Takes a screenshot of the element.
         /// </summary>
@@ -84,5 +119,85 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script.</returns>
         Task<JsonElement?> EvaluateAsync(string script, params object[] args);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="filePath">The file paths or files.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(params string[] filePath);
+
+        /// <summary>
+        /// The method runs <c>document.querySelector</c> within the element. If no element matches the selector, the return value resolve to <c>null</c>.
+        /// </summary>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/>.
+        /// </returns>
+        Task<IElementHandle> QuerySelectorAsync(string selector);
+
+        /// <summary>
+        /// The method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element.
+        /// </summary>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an array of <see cref="IElementHandle"/>.
+        /// </returns>
+        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
+
+        /// <summary>
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to <paramref name="script"/>.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="script"/>.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <typeparam name="T">Result type.</typeparam>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="script"/>.
+        /// </summary>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="script"/>.
+        /// </summary>
+        /// <typeparam name="T">Result type.</typeparam>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args);
     }
 }

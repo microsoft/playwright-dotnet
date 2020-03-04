@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
 
@@ -19,7 +20,7 @@ namespace PlaywrightSharp
     /// ]]>
     /// </code>
     /// </example>
-    public interface IPage : IDisposable
+    public interface IPage
     {
         /// <summary>
         /// Raised when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c> or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
@@ -64,6 +65,31 @@ namespace PlaywrightSharp
         event EventHandler<RequestEventArgs> Request;
 
         /// <summary>
+        /// Raised when a <see cref="IResponse"/> is received.
+        /// </summary>
+        /// <example>
+        /// An example of handling <see cref="IResponse"/> event:
+        /// <code>
+        /// <![CDATA[
+        /// var tcs = new TaskCompletionSource<string>();
+        /// page.Response += async(sender, e) =>
+        /// {
+        ///     if (e.Response.Url.Contains("script.js"))
+        ///     {
+        ///         tcs.TrySetResult(await e.Response.TextAsync());
+        ///     }
+        /// };
+        ///
+        /// await Task.WhenAll(
+        ///     page.GoToAsync(TestConstants.ServerUrl + "/grid.html"),
+        ///     tcs.Task);
+        /// Console.WriteLine(await tcs.Task);
+        /// ]]>
+        /// </code>
+        /// </example>
+        event EventHandler<ResponseEventArgs> Response;
+
+        /// <summary>
         /// Raised when a request finishes successfully.
         /// </summary>
         event EventHandler<RequestEventArgs> RequestFinished;
@@ -95,9 +121,56 @@ namespace PlaywrightSharp
         event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <summary>
+        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(string[])"/>.
+        /// </summary>
+        event EventHandler<FileChooserEventArgs> FileChooser;
+
+        /// <summary>
         /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/load"/> event is dispatched.
         /// </summary>
-        public event EventHandler Load;
+        event EventHandler Load;
+
+        /// <summary>
+        /// The JavaScript <c>DOMContentLoaded</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded"/> event
+        /// </summary>
+        event EventHandler DOMContentLoaded;
+
+        /// <summary>
+        /// Raised when the page closes.
+        /// </summary>
+        event EventHandler Close;
+
+        /// <summary>
+        /// Raised when the page crashes.
+        /// </summary>
+#pragma warning disable CA1716 // Identifiers should not match keywords
+        event EventHandler<ErrorEventArgs> Error;
+#pragma warning restore CA1716 // Identifiers should not match keywords
+
+        /// <summary>
+        /// Raised when an uncaught exception happens within the page.
+        /// </summary>
+        event EventHandler<PageErrorEventArgs> PageError;
+
+        /// <summary>
+        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is spawned by the page.
+        /// </summary>
+        event EventHandler<WorkerEventArgs> WorkerCreated;
+
+        /// <summary>
+        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
+        /// </summary>
+        event EventHandler<WorkerEventArgs> WorkerDestroyed;
+
+        /// <summary>
+        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
+        /// </summary>
+        event EventHandler<WebsocketEventArgs> Websocket;
+
+        /// <summary>
+        /// Get an indication that the page has been closed.
+        /// </summary>
+        bool IsClosed { get; }
 
         /// <summary>
         /// Page is guaranteed to have a main frame which persists during navigations.
@@ -153,6 +226,35 @@ namespace PlaywrightSharp
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
+
+        /// <summary>
+        /// Gets all workers in the page.
+        /// </summary>
+        IWorker[] Workers { get; }
+
+        /// <summary>
+        /// Returns page's title.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> the completes when the title is resolved, yielding the page's title.</returns>
+        Task<string> GetTitleAsync();
+
+        /// <summary>
+        /// Returns the opener for popup pages and <c>null</c> for others.
+        /// </summary>
+        /// <remarks>
+        /// If the opener has been closed already the task may resolve to <c>null</c>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// IPage popup;
+        /// page.Popup += (sender, e) => popup = e.Page;
+        /// await page.EvaluateAsync("() => window.open('about:blank')");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the opener is resolved, yielding the opener <see cref="IPage"/>.</returns>
+        Task<IPage> GetOpenerAsync();
 
         /// <summary>
         /// Completes when the page reaches a required load state, load by default.
@@ -259,40 +361,78 @@ namespace PlaywrightSharp
         Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null);
 
         /// <summary>
+        /// Waits for a request.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var firstRequest = await page.WaitForRequestAsync(new Regex("digits\\d\\.png");
+        /// return firstRequest.Url;
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        /// <param name="regex">Pattern to wait for.</param>
+        /// <param name="options">Options.</param>
+        Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="script">Function to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to <c>script</c>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args);
+
+        /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for.</param>
         /// <param name="options">Extra options.</param>
         /// <typeparam name="T">Return type.</typeparam>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// // wait for console event:
+        /// var console = await page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+        ///
+        /// // wait for popup event:
+        /// var popup = await page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+        ///
+        /// // wait for dialog event:
+        /// var dialog = await page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+        ///
+        /// // wait for request event:
+        /// var request = await page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
+        /// ]]>
+        /// </code>
+        /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions options = null);
+        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null);
 
         /// <summary>
-        /// Navigates to an URL.
+        /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
-        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// </returns>
-        /// <remarks>
-        /// <see cref="IPage.GoToAsync(string)"/> will throw an error if:
-        /// * There's an SSL error (e.g. in case of self-signed certificates).
-        /// * Target URL is invalid.
-        /// * The timeout is exceeded during navigation.
-        /// * The remote server does not respond or is unreachable.
-        /// * The main resource failed to load.
-        /// <para/>
-        /// <see cref="IPage.GoToAsync(string)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
-        /// The status code for such responses can be retrieved by calling response.status().
-        /// <para/>
-        /// NOTE <see cref="IPage.GoToAsync(string)"/> either throws an error or returns a main resource response.
-        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
-        /// <para/>
-        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
-        /// <para/>
-        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
-        /// </remarks>
-        Task<IResponse> GoToAsync(string url);
+        /// <param name="e">Event to wait for.</param>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// // wait for console event:
+        /// var console = await page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+        ///
+        /// // wait for popup event:
+        /// var popup = await page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+        ///
+        /// // wait for dialog event:
+        /// var dialog = await page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+        ///
+        /// // wait for request event:
+        /// var request = await page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
+        Task WaitForEvent(PageEvent e);
 
         /// <summary>
         /// Navigates to an url.
@@ -357,7 +497,7 @@ namespace PlaywrightSharp
         Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args);
 
         /// <summary>
-        /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
@@ -366,8 +506,47 @@ namespace PlaywrightSharp
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <typeparam name="T">Result type.</typeparam>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
+        /// </summary>
+        /// <typeparam name="T">Result type.</typeparam>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args);
 
         /// <summary>
         /// <![CDATA[
@@ -379,7 +558,25 @@ namespace PlaywrightSharp
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
-        Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+        Task FillAsync(string selector, string text, FillOptions options = null);
+
+        /// <summary>
+        /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="options">Type options.</param>
+        /// <remarks>
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, PressOptions)"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// await page.TypeAsync("#mytextarea", "Hello"); // Types instantly
+        /// await page.TypeAsync("#mytextarea", "World", new TypeOptions { Delay = 100 }); // Types slower, like a user
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
+        Task TypeAsync(string selector, string text, TypeOptions options = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.
@@ -394,6 +591,36 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to search for element to hover. If there are multiple elements satisfying the selector, the first will be hovered.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered.</returns>
         Task HoverAsync(string selector);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params string[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params SelectOption[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Option elements to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params IElementHandle[] values);
 
         /// <summary>
         /// Waits for a selector to be added to the DOM.
@@ -444,6 +671,12 @@ namespace PlaywrightSharp
         Task SetContentAsync(string html, WaitUntilNavigation waitUntil);
 
         /// <summary>
+        /// Gets the full HTML contents of the page, including the doctype.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding the HTML content.</returns>
+        Task<string> GetContentAsync();
+
+        /// <summary>
         /// Sets extra HTTP headers that will be sent with every request the page initiates.
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
@@ -465,9 +698,18 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/> pointing to the frame element.
+        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle> QuerySelectorAsync(string selector);
+
+        /// <summary>
+        /// The method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an array of <see cref="IElementHandle"/>.
+        /// </returns>
+        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// Executes a script in browser context.
@@ -506,8 +748,15 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>.
         /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the tag is added, yielding the added tag when the script's onload fires or when the script content was injected into frame.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the script's onload fires or when the script content was injected into frame, yielding the added <see cref="IElementHandle"/>.</returns>
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
+
+        /// <summary>
+        /// Adds a <c><![CDATA[<link rel="stylesheet">]]></c> tag into the page with the desired url or a <c><![CDATA[<link rel="stylesheet">]]></c> tag with the content.
+        /// </summary>
+        /// <param name="options">add style tag options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the stylesheet's onload fires or when the CSS content was injected into frame, yieling the added <see cref="IElementHandle"/>.</returns>
+        Task<IElementHandle> AddStyleTagAsync(AddTagOptions options);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to click in the center of the element.

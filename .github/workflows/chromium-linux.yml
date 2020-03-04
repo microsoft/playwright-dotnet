@@ -17,10 +17,10 @@ jobs:
       - name: Setup .NET Core
         run: |
           sudo apt-get update
-          sudo apt-get install apt-transport-https
+          sudo apt-get install libgbm-dev xvfb apt-transport-https
           sudo apt-get update
           sudo apt-get install dotnet-sdk-3.1
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: sudo dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium -c Debug

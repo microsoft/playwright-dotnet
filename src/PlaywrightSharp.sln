@@ -30,6 +30,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp", "Playwrig
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Abstractions", "PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj", "{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.ProtocolTypesGenerator", "PlaywightSharp.ProtocolTypesGenerator\PlaywrightSharp.ProtocolTypesGenerator.csproj", "{1E580718-B961-4E14-9F5A-A74BC54EB0C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +81,7 @@ Global
 		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 		{5ACEC1FF-4820-47AA-8D75-6153F90527F5} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
 		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
+		{1E580718-B961-4E14-9F5A-A74BC54EB0C7} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}

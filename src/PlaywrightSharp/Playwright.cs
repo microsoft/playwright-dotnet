@@ -5,7 +5,8 @@ namespace PlaywrightSharp
     /// <summary>
     /// Main class.
     /// </summary>
-    public class Playwright
+    public static class Playwright
     {
+        internal const int DefaultTimeout = 30_000;
     }
 }

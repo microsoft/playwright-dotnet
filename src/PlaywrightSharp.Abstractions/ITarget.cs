@@ -9,5 +9,10 @@ namespace PlaywrightSharp
         /// Gets the URL.
         /// </summary>
         string Url { get; }
+
+        /// <summary>
+        /// Gets the type. It will be <see cref="ITarget.Type"/>.
+        /// </summary>
+        TargetType Type { get; }
     }
 }

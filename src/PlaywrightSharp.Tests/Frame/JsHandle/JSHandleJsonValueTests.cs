@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldNotWorkWithDates()
         {
             var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
-            var json = await dateHandle.GetJsonValueAsync<object>();
+            object json = await dateHandle.GetJsonValueAsync<object>();
             Assert.Equal(new { }, json);
         }
 

@@ -24,10 +24,16 @@ namespace PlaywrightSharp
     public interface IBrowserContext
     {
         /// <summary>
+        /// Options used to create the context.
+        /// </summary>
+        BrowserContextOptions Options { get; }
+
+        /// <summary>
         /// Creates a new page in the browser context and optionally navigates it to the specified URL.
         /// </summary>
+        /// <param name="url">URL to navigate after the page is created.</param>
         /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created, yielding the new <see cref="IPage"/>.</returns>.
-        Task<IPage> NewPageAsync();
+        Task<IPage> NewPageAsync(string url = null);
 
         /// <summary>
         /// Closes the browser context. All the targets that belong to the browser context will be closed.

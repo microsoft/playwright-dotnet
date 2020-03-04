@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Browser
         [Fact]
         public async Task ShouldSetTheBrowserConnectedState()
         {
-            var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await Playwright.ConnectAsync(new ConnectOptions
             {
                 BrowserWSEndpoint = browserApp.WebSocketEndpoint
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Browser
         [Fact]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
-            var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.DefaultBrowserOptions);
+            var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await Playwright.ConnectAsync(new ConnectOptions
             {
                 BrowserWSEndpoint = browserApp.WebSocketEndpoint

@@ -44,6 +44,17 @@ namespace PlaywrightSharp
         bool Detached { get; }
 
         /// <summary>
+        /// FrameID.
+        /// </summary>
+        string Id { get; set; }
+
+        /// <summary>
+        /// Gets the frame's utility execution context.
+        /// </summary>
+        /// <returns>A <see cref="Task{IFrameExecutionContext}"/> that completes when the frame execution context is resolved, yielding the <see cref="IFrameExecutionContext"/>.</returns>
+        Task<IFrameExecutionContext> GetUtilityContextAsync();
+
+        /// <summary>
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
@@ -209,6 +220,20 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <typeparam name="T">Result type.</typeparam>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args);
 
         /// <summary>
         /// This resolves when the frame navigates to a new URL or reloads.
