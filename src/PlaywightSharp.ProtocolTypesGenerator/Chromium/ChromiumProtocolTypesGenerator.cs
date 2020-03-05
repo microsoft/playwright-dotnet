@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.ProtocolTypesGenerator
+namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
 {
     internal class ChromiumProtocolTypesGenerator : IProtocolTypesGenerator
     {
@@ -288,12 +288,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                         if (char.IsUpper(value[i]))
                         {
                             shouldUppercase = false;
-                            builder.Append(char.ToUpper(value[i]));
+                            builder.Append(char.ToUpper(value[i], CultureInfo.InvariantCulture));
                         }
                         else if (shouldUppercase && char.IsLower(value[i]))
                         {
                             shouldUppercase = false;
-                            builder.Append(char.ToUpper(value[i]));
+                            builder.Append(char.ToUpper(value[i], CultureInfo.InvariantCulture));
                         }
                         else
                         {

@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.ProtocolTypesGenerator.Chromium;
 
 namespace PlaywrightSharp.ProtocolTypesGenerator
 {
@@ -6,14 +8,24 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
     {
         private static async Task Main(string[] args)
         {
-            (IProtocolTypesGenerator, RevisionInfo)[] generators =
+            IBrowserProtocolTypesGenerator[] generators =
             {
-                (new ChromiumProtocolTypesGenerator(), new RevisionInfo()),
+                new ChromiumBrowserProtocolTypesGenerator(),
             };
 
-            foreach (var (generator, revision) in generators)
+            foreach (var generator in generators)
             {
-                await generator.GenerateTypesAsync(revision).ConfigureAwait(false);
+                int percentage = 0;
+                generator.BrowserFetcher.DownloadProgressChanged += (sender, e) =>
+                {
+                    if (percentage != e.ProgressPercentage)
+                    {
+                        percentage = e.ProgressPercentage;
+                        Console.WriteLine($"[{generator.GetType().Name}] downloading browser {percentage}%");
+                    }
+                };
+                var revision = await generator.BrowserFetcher.DownloadAsync().ConfigureAwait(false);
+                await generator.ProtocolTypesGenerator.GenerateTypesAsync(revision).ConfigureAwait(false);
             }
         }
     }
