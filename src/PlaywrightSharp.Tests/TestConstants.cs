@@ -33,6 +33,7 @@ namespace PlaywrightSharp.Tests
                 WebkitProduct => null,
                 FirefoxProduct => null,
                 ChromiumProduct => new ChromiumBrowserType(),
+                _ => throw new ArgumentOutOfRangeException($"product {Product} does not exist")
             };
 
 
