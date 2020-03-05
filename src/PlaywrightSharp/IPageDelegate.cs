@@ -39,5 +39,12 @@ namespace PlaywrightSharp
         /// <param name="viewport">Viewport.</param>
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetViewportAsync(Viewport viewport);
+
+        /// <summary>
+        /// Closes the page.
+        /// </summary>
+        /// <param name="runBeforeUnload">Should run before unload.</param>
+        /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
+        Task ClosePageAsync(bool runBeforeUnload);
     }
 }

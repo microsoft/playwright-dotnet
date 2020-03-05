@@ -8,12 +8,11 @@ namespace PlaywrightSharp.Chromium
 {
     internal class ChromiumSession
     {
-        private readonly ChromiumConnection _connection;
         private readonly TargetType _targetType;
         private readonly string _sessionId;
         private readonly string _closeReason = string.Empty;
-
         private readonly ConcurrentDictionary<int, MessageTask> _callbacks = new ConcurrentDictionary<int, MessageTask>();
+        private ChromiumConnection _connection;
 
         public ChromiumSession(ChromiumConnection chromiumConnection, TargetType targetType, string sessionId)
         {
@@ -73,9 +72,16 @@ namespace PlaywrightSharp.Chromium
             return (TChromiumResponse)result;
         }
 
-        internal void Close(string reason)
+        internal void OnClosed(string reason)
         {
-            throw new NotImplementedException();
+            foreach (var callback in _callbacks)
+            {
+                callback.Value.TaskWrapper.TrySetException(new PlaywrightSharpException($"Protocol error ({callback.Value.Method}): Target closed. {reason}"));
+            }
+
+            _callbacks.Clear();
+            _connection = null;
+            Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
         internal void OnMessage(ConnectionResponse obj)

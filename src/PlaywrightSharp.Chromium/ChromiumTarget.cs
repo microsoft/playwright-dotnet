@@ -130,6 +130,8 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        internal void DidClose() => _page?.DidClose();
+
         private static Task<Worker> WorkerInternalAsync() => Task.FromResult<Worker>(null);
 
         private async Task<Page> CreatePageAsync()

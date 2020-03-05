@@ -10,10 +10,12 @@ namespace PlaywrightSharp.Chromium
     public class ChromiumBrowserApp : IBrowserApp
     {
         private readonly ChromiumProcessManager _processManager;
+        private readonly Func<Task> _gracefullyClose;
 
-        internal ChromiumBrowserApp(ChromiumProcessManager processManager, ConnectOptions options)
+        internal ChromiumBrowserApp(ChromiumProcessManager processManager, Func<Task> gracefullyClose, ConnectOptions options)
         {
             _processManager = processManager;
+            _gracefullyClose = gracefullyClose;
             ConnectOptions = options;
         }
 
@@ -33,10 +35,7 @@ namespace PlaywrightSharp.Chromium
         public Process Process => _processManager.Process;
 
         /// <inheritdoc cref="IBrowserApp"/>
-        public Task CloseAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task CloseAsync() => _gracefullyClose();
 
         /// <inheritdoc cref="IBrowserApp"/>
         public void Dispose()

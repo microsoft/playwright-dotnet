@@ -11,6 +11,9 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IPage"/>
     public class Page : IPage
     {
+        private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
+        private bool _disconnected = false;
+
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
         {
@@ -107,7 +110,7 @@ namespace PlaywrightSharp
         public int DefaultNavigationTimeout { get; set; }
 
         /// <inheritdoc cref="IPage.IsClosed"/>
-        public bool IsClosed => false;
+        public bool IsClosed { get; private set; }
 
         /// <inheritdoc cref="IPage.Workers"/>
         public IWorker[] Workers => null;
@@ -139,9 +142,24 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.CloseAsync(PageCloseOptions)"/>
-        public Task CloseAsync(PageCloseOptions options = null)
+        public async Task CloseAsync(PageCloseOptions options = null)
         {
-            throw new NotImplementedException();
+            if (IsClosed)
+            {
+                return;
+            }
+
+            if (_disconnected)
+            {
+                throw new PlaywrightSharpException("Protocol error: Connection closed. Most likely the page has been closed.");
+            }
+
+            bool runBeforeUnload = options?.RunBeforeUnload ?? false;
+            await Delegate.ClosePageAsync(runBeforeUnload).ConfigureAwait(false);
+            if (!runBeforeUnload)
+            {
+                await _closeTsc.Task.ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc cref="IPage.EmulateMediaAsync(EmulateMedia)"/>
@@ -494,8 +512,18 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        internal void DidDisconnected()
+        internal void DidDisconnected() => _disconnected = true;
+
+        internal void DidClose()
         {
+            if (IsClosed)
+            {
+                throw new PlaywrightSharpException("Page closed twice");
+            }
+
+            IsClosed = true;
+            Close?.Invoke(this, EventArgs.Empty);
+            _closeTsc.TrySetResult(true);
         }
 
         internal void OnDOMContentLoaded() => DOMContentLoaded?.Invoke(this, new EventArgs());

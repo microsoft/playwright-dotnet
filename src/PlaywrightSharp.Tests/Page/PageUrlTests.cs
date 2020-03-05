@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.url</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageUrlTests : PlaywrightSharpPageBaseTest
     {
-        internal PageUrlTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageUrlTests(ITestOutputHelper output) : base(output)
         {
         }
 
