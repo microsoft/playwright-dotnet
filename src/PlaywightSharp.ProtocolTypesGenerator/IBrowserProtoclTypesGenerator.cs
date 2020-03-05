@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.ProtocolTypesGenerator
+namespace PlaywrightSharp.ProtocolTypesGenerator
 {
     internal interface IBrowserProtocolTypesGenerator
     {
