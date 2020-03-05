@@ -83,9 +83,13 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowser"/>
-        public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
+        public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
         {
-            throw new NotImplementedException();
+            string browserContextId = (await _session.SendAsync(new TargetCreateBrowserContextRequest()).ConfigureAwait(false)).BrowserContextId;
+            var context = CreateBrowserContext(browserContextId, options);
+            await context.InitializeAsync().ConfigureAwait(false);
+            _contexts.Add(browserContextId, context);
+            return context;
         }
 
         /// <inheritdoc cref="IBrowser"/>
@@ -137,6 +141,9 @@ namespace PlaywrightSharp.Chromium
         }
 
         internal IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
+
+        internal Task ClosePageAsync(ChromiumPage page)
+            => _session.SendAsync(new TargetCloseTargetRequest { TargetId = page.Target.TargetId });
 
         private async void Session_MessageReceived(object sender, IChromiumEvent e)
         {
@@ -210,6 +217,7 @@ namespace PlaywrightSharp.Chromium
 
             var target = TargetsMap[e.TargetId];
             TargetsMap.Remove(e.TargetId);
+            target.DidClose();
 
             target.CloseTaskWrapper.TrySetResult(true);
 
@@ -229,6 +237,11 @@ namespace PlaywrightSharp.Chromium
 
             var target = TargetsMap[e.TargetInfo.TargetId];
             target.TargetInfoChanged(e.TargetInfo);
+        }
+
+        private BrowserContext CreateBrowserContext(string contextId, BrowserContextOptions options = null)
+        {
+            return new BrowserContext(new ChromiumBrowserContext(_session, this, contextId, options));
         }
     }
 }

@@ -225,7 +225,7 @@ namespace PlaywrightSharp.Chromium
                     SlowMo = options.SlowMo,
                 };
 
-                return new ChromiumBrowserApp(process, connectOptions);
+                return new ChromiumBrowserApp(process, () => Task.CompletedTask, connectOptions);
             }
             catch
             {

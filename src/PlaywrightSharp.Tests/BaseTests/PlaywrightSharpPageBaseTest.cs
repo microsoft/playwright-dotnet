@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Xunit.Abstractions;
+using Xunit;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
@@ -14,13 +15,14 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal IPage Page { get; set; }
 
-        /*
+        /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
             Page = await Context.NewPageAsync();
         }
 
+        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         public override async Task DisposeAsync()
         {
             await Page.CloseAsync();
@@ -41,6 +43,5 @@ namespace PlaywrightSharp.Tests.BaseTests
 
             return wrapper.Task;
         }
-        */
     }
 }

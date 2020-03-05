@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Chromium
@@ -58,14 +59,23 @@ namespace PlaywrightSharp.Chromium
 
         /// <inheritdoc cref="IBrowserContext.SetGeolocationAsync(GeolocationOption)"/>
         public Task SetGeolocationAsync(GeolocationOption geolocation)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _delegate.SetGeolocationAsync(geolocation);
 
         /// <inheritdoc cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/>
-        public Task SetPermissionsAsync(string url, params ContextPermission[] permissions)
+        public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
+            => _delegate.SetPermissionsAsync(origin, permissions);
+
+        internal async Task InitializeAsync()
         {
-            throw new System.NotImplementedException();
+            if (Options?.Permissions?.Count > 0)
+            {
+                await Task.WhenAll(Options.Permissions.Select(permission => SetPermissionsAsync(permission.Key, permission.Value)).ToArray()).ConfigureAwait(false);
+            }
+
+            if (Options?.Geolocation != null)
+            {
+                await SetGeolocationAsync(Options.Geolocation).ConfigureAwait(false);
+            }
         }
     }
 }

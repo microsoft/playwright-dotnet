@@ -17,7 +17,6 @@ namespace PlaywrightSharp.Chromium
         private const string UtilityWorldName = "__playwright_utility_world__";
         private const string EvaluationScriptUrl = "__playwright_evaluation_script__";
 
-        private readonly ChromiumSession _client;
         private readonly ChromiumBrowser _browser;
         private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
@@ -25,10 +24,10 @@ namespace PlaywrightSharp.Chromium
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
-            _client = client;
+            Client = client;
             _browser = browser;
             _browserContext = browserContext;
-            _networkManager = new ChromiumNetworkManager(_client, this);
+            _networkManager = new ChromiumNetworkManager(Client, this);
             Page = new Page(this, browserContext);
             client.MessageReceived += Client_MessageReceived;
         }
@@ -37,9 +36,11 @@ namespace PlaywrightSharp.Chromium
 
         internal Page Page { get; }
 
+        internal ChromiumSession Client { get; }
+
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
-            var response = await _client.SendAsync(new PageNavigateRequest
+            var response = await Client.SendAsync(new PageNavigateRequest
             {
                 Url = url,
                 Referrer = referrer ?? string.Empty,
@@ -63,21 +64,33 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
+        public Task ClosePageAsync(bool runBeforeUnload)
+        {
+            if (runBeforeUnload)
+            {
+                return Client.SendAsync(new PageCloseRequest());
+            }
+            else
+            {
+                return _browser.ClosePageAsync(this);
+            }
+        }
+
         internal async Task InitializeAsync()
         {
-            var getFrameTreeTask = _client.SendAsync(new PageGetFrameTreeRequest());
+            var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
 
             await Task.WhenAll(
-                _client.SendAsync(new PageEnableRequest()),
+                Client.SendAsync(new PageEnableRequest()),
                 getFrameTreeTask).ConfigureAwait(false);
 
             HandleFrameTree(getFrameTreeTask.Result.FrameTree);
 
             var tasks = new List<Task>
             {
-               _client.SendAsync(new LogEnableRequest()),
-               _client.SendAsync(new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
-               _client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(UtilityWorldName), TaskScheduler.Default),
+               Client.SendAsync(new LogEnableRequest()),
+               Client.SendAsync(new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
+               Client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(UtilityWorldName), TaskScheduler.Default),
                _networkManager.InitializeAsync(),
             };
 
@@ -87,12 +100,12 @@ namespace PlaywrightSharp.Chromium
 
                 if (options.BypassCSP)
                 {
-                    tasks.Add(_client.SendAsync(new PageSetBypassCSPRequest { Enabled = true }));
+                    tasks.Add(Client.SendAsync(new PageSetBypassCSPRequest { Enabled = true }));
                 }
 
                 if (options.IgnoreHTTPSErrors)
                 {
-                    tasks.Add(_client.SendAsync(new SecuritySetIgnoreCertificateErrorsRequest { Ignore = true }));
+                    tasks.Add(Client.SendAsync(new SecuritySetIgnoreCertificateErrorsRequest { Ignore = true }));
                 }
 
                 if (options.Viewport != null)
@@ -102,7 +115,7 @@ namespace PlaywrightSharp.Chromium
 
                 if (!options.JavaScriptEnabled)
                 {
-                    tasks.Add(_client.SendAsync(new EmulationSetScriptExecutionDisabledRequest { Value = true }));
+                    tasks.Add(Client.SendAsync(new EmulationSetScriptExecutionDisabledRequest { Value = true }));
                 }
 
                 if (options.UserAgent != null)
@@ -117,7 +130,7 @@ namespace PlaywrightSharp.Chromium
 
                 if (options.Geolocation != null)
                 {
-                    tasks.Add(_client.SendAsync(new EmulationSetGeolocationOverrideRequest
+                    tasks.Add(Client.SendAsync(new EmulationSetGeolocationOverrideRequest
                     {
                         Accuracy = options.Geolocation.Accuracy,
                         Latitude = options.Geolocation.Latitude,
@@ -128,6 +141,8 @@ namespace PlaywrightSharp.Chromium
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
+
+        internal void DidClose() => Page.DidClose();
 
         private void Client_MessageReceived(object sender, IChromiumEvent e)
         {
@@ -149,7 +164,7 @@ namespace PlaywrightSharp.Chromium
 
             // We need to silence exceptions on async void events.
 #pragma warning disable CA1031 // Do not catch general exception types.
-            catch (Exception ex)
+            catch (Exception)
 #pragma warning restore CA1031 // Do not catch general exception types.
             {
                 // TODO Add Logger
@@ -157,7 +172,7 @@ namespace PlaywrightSharp.Chromium
                 var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
                 _logger.LogError(ex, message);
                 */
-                _client.Close(ex.Message);
+                Client.OnClosed();
             }
         }
 
@@ -183,13 +198,13 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            await _client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            await Client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
             {
                 Source = $"//# sourceURL={EvaluationScriptUrl}",
                 WorldName = name,
             }).ConfigureAwait(false);
 
-            await Task.WhenAll(Page.Frames.Select(frame => _client.SendAsync(new PageCreateIsolatedWorldRequest
+            await Task.WhenAll(Page.Frames.Select(frame => Client.SendAsync(new PageCreateIsolatedWorldRequest
             {
                 FrameId = frame.Id,
                 GrantUniveralAccess = true,

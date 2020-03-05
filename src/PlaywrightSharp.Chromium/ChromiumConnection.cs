@@ -146,7 +146,7 @@ namespace PlaywrightSharp.Chromium
                 string sessionId = targetDetachedFromTarget.SessionId;
                 if (_sessions.TryRemove(sessionId, out var session) && !session.IsClosed)
                 {
-                    session.Close(targetDetachedFromTarget.InternalName);
+                    session.OnClosed();
                 }
 
                 return;
