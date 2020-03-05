@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
+    <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
   </ItemGroup>
 
 </Project>
