@@ -13,6 +13,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class UserDataDirTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
@@ -47,19 +49,19 @@ namespace PlaywrightSharp.Tests.Launcher
 
             if (TestConstants.IsFirefox)
             {
-                options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
+                options.Args = options.Args.Concat(new[] { $"--profile=\"{userDataDir}\"" }).ToArray();
             }
             else
             {
-                options.Args = options.Args.Concat(new[] { $"--profile=\"{userDataDir}\"" }).ToArray();
+                options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
             }
 
             using var browser = await Playwright.LaunchAsync(options);
             // Open a page to make sure its functional.
             await browser.DefaultContext.NewPageAsync();
-            Assert.True(Directory.GetFiles(userDataDir.Path).Length > 0);
+            Assert.True(Directory.GetDirectories(userDataDir.Path).Length > 0);
             await browser.CloseAsync();
-            Assert.True(Directory.GetFiles(userDataDir.Path).Length > 0);
+            Assert.True(Directory.GetDirectories(userDataDir.Path).Length > 0);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>

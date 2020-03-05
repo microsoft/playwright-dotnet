@@ -173,10 +173,7 @@ namespace PlaywrightSharp
             => Task.FromResult<T>((T)Convert.ChangeType(56, typeof(T), System.Globalization.CultureInfo.InvariantCulture));
 
         /// <inheritdoc cref="IPage.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => Task.FromResult<JsonElement?>(null);
 
         /// <inheritdoc cref="IPage.EvaluateHandleAsync(string)"/>
         public Task<IJSHandle> EvaluateHandleAsync(string expression)
