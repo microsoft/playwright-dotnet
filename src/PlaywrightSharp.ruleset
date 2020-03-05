@@ -6,6 +6,7 @@
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1128" Action="None" />
     <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA0001" Action="None" />
     <Rule Id="SX1309" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
