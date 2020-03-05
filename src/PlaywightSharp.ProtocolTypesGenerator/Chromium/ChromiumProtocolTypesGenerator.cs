@@ -288,12 +288,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                         if (char.IsUpper(value[i]))
                         {
                             shouldUppercase = false;
-                            builder.Append(char.ToUpper(value[i]));
+                            builder.Append(char.ToUpper(value[i], CultureInfo.InvariantCulture));
                         }
                         else if (shouldUppercase && char.IsLower(value[i]))
                         {
                             shouldUppercase = false;
-                            builder.Append(char.ToUpper(value[i]));
+                            builder.Append(char.ToUpper(value[i], CultureInfo.InvariantCulture));
                         }
                         else
                         {

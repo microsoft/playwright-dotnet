@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunWithWarnings>true</RunWithWarnings>
     <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
