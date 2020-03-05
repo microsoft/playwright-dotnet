@@ -512,10 +512,7 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        internal void DidDisconnected()
-        {
-            _disconnected = true;
-        }
+        internal void DidDisconnected() => _disconnected = true;
 
         internal void DidClose()
         {

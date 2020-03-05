@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Chromium
 
             // We need to silence exceptions on async void events.
 #pragma warning disable CA1031 // Do not catch general exception types.
-            catch (Exception)
+            catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types.
             {
                 // TODO Add Logger
@@ -172,7 +172,7 @@ namespace PlaywrightSharp.Chromium
                 var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
                 _logger.LogError(ex, message);
                 */
-                Client.OnClosed();
+                Client.OnClosed(ex.Message);
             }
         }
 

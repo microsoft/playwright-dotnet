@@ -72,11 +72,11 @@ namespace PlaywrightSharp.Chromium
             return (TChromiumResponse)result;
         }
 
-        internal void OnClosed()
+        internal void OnClosed(string reason)
         {
             foreach (var callback in _callbacks)
             {
-                callback.Value.TaskWrapper.TrySetException(new PlaywrightSharpException($"Protocol error ({callback.Value.Method}): Target closed."));
+                callback.Value.TaskWrapper.TrySetException(new PlaywrightSharpException($"Protocol error ({callback.Value.Method}): Target closed. {reason}"));
             }
 
             _callbacks.Clear();
