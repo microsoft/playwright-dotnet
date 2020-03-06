@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Text.Json;
-using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium.Helpers
 {

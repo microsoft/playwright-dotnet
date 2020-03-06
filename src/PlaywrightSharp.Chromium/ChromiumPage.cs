@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
@@ -21,6 +22,7 @@ namespace PlaywrightSharp.Chromium
         private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
         private readonly ISet<string> _isolatedWorlds = new HashSet<string>();
+        private readonly Dictionary<int, FrameExecutionContext> _contextIdToContext = new Dictionary<int, FrameExecutionContext>();
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
@@ -162,6 +164,9 @@ namespace PlaywrightSharp.Chromium
                     case RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated:
                         OnExecutionContextCreated(runtimeExecutionContextCreated.Context);
                         break;
+                    case RuntimeExecutionContextDestroyedChromiumEvent runtimeExecutionContextDestroyed:
+                        OnExecutionContextDestroyed(runtimeExecutionContextDestroyed.ExecutionContextId);
+                        break;
                 }
             }
 
@@ -179,20 +184,50 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        private void OnExecutionContextDestroyed(int executionContextId)
+        {
+            if (!_contextIdToContext.TryGetValue(executionContextId, out var context))
+            {
+                return;
+            }
+
+            _contextIdToContext.Remove(executionContextId);
+            context.Frame.ContextDestroyed(context);
+        }
+
         private void OnExecutionContextCreated(ExecutionContextDescription contextPayload)
         {
-            var frame = contextPayload.AuxData != null ? Page.FrameManager.GetFrame(contextPayload.AuxData.frameId) : null;
-            if (!frame)
+            var auxData = contextPayload.AuxData?.ToObject<ExecutionContextDescriptionAuxData>();
+            Frame frame = null;
+
+            if (contextPayload.AuxData != null)
+            {
+                Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out frame);
+            }
+
+            if (frame == null)
+            {
                 return;
-            if (contextPayload.auxData && contextPayload.auxData.type === 'isolated')
-                this._isolatedWorlds.add(contextPayload.name);
-            const delegate = new CRExecutionContext(this._client, contextPayload);
-            const context = new dom.FrameExecutionContext(delegate, frame);
-            if (contextPayload.auxData && !!contextPayload.auxData.isDefault)
-                frame._contextCreated('main', context);
-            else if (contextPayload.name === UTILITY_WORLD_NAME)
-                frame._contextCreated('utility', context);
-            this._contextIdToContext.set(contextPayload.id, context);
+            }
+
+            if (auxData != null && auxData.Type == "isolated")
+            {
+                _isolatedWorlds.Add(contextPayload.Name);
+            }
+
+            var executionContextDelegate = new ChromiumExecutionContext(Client, contextPayload);
+            var context = new FrameExecutionContext(executionContextDelegate, frame);
+
+            if (auxData != null && auxData.IsDefault)
+            {
+                frame.ContextCreated(ContextType.Main, context);
+            }
+            else if (contextPayload.Name == UtilityWorldName)
+            {
+                frame.ContextCreated(ContextType.Utility, context);
+            }
+
+            _contextIdToContext[contextPayload.Id] = context;
         }
 
         private void OnLifecycleEvent(PageLifecycleEventChromiumEvent e)

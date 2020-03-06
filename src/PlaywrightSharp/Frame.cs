@@ -11,7 +11,7 @@ namespace PlaywrightSharp
         private readonly string _frameId;
         private readonly Frame _parentFrame;
         private readonly IDictionary<ContextType, ContextData> _contextData;
-        private readonly bool _detached;
+        private readonly bool _detached = false;
 
         public Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -30,26 +30,6 @@ namespace PlaywrightSharp
             if (_parentFrame != null)
             {
                 _parentFrame.ChildFrames.Add(this);
-            }
-        }
-
-        private void SetContext(ContextType contextType, IFrameExecutionContext context)
-        {
-            var data = _contextData[contextType];
-            data.Context = context;
-
-            if (context != null)
-            {
-                data.ContextResolveCallback.Invoke(context);
-
-                foreach (var rerunnableTask in data.RerunnableTasks)
-                {
-                    _ = rerunnableTask.RerunAsync(context);
-                }
-            }
-            else
-            {
-                data.ContextResolveCallback = ctx => data.ContextTsc.TrySetResult(ctx);
             }
         }
 
@@ -87,17 +67,6 @@ namespace PlaywrightSharp
         {
             var context = await GeMainContextAsync().ConfigureAwait(false);
             return await context.EvaluateAsync<T>(script, args).ConfigureAwait(false);
-        }
-
-        private Task<IFrameExecutionContext> GeMainContextAsync() => GetContextAsync(ContextType.Main);
-
-        private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
-        {
-            if (_detached)
-            {
-                throw new PlaywrightSharpException($"Execution Context is not available in detached frame \"{ Url }\" (are you trying to evaluate ?)");
-            }
-            return _contextData[contextType].ContextTask;
         }
 
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
@@ -219,9 +188,10 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        private void ContextCreated(ContextType contextType, FrameExecutionContext context)
+        internal void ContextCreated(ContextType contextType, FrameExecutionContext context)
         {
             var data = _contextData[contextType];
+
             // In case of multiple sessions to the same target, there's a race between
             // connections so we might end up creating multiple isolated worlds.
             // We can use either.
@@ -229,10 +199,11 @@ namespace PlaywrightSharp
             {
                 SetContext(contextType, null);
             }
+
             SetContext(contextType, context);
         }
 
-        private void ContextDestroyed(FrameExecutionContext context)
+        internal void ContextDestroyed(FrameExecutionContext context)
         {
             foreach (var contextType in _contextData.Keys)
             {
@@ -242,6 +213,38 @@ namespace PlaywrightSharp
                     SetContext(contextType, null);
                 }
             }
+        }
+
+        private void SetContext(ContextType contextType, IFrameExecutionContext context)
+        {
+            var data = _contextData[contextType];
+            data.Context = context;
+
+            if (context != null)
+            {
+                data.ContextResolveCallback.Invoke(context);
+
+                foreach (var rerunnableTask in data.RerunnableTasks)
+                {
+                    _ = rerunnableTask.RerunAsync(context);
+                }
+            }
+            else
+            {
+                data.ContextResolveCallback = ctx => data.ContextTsc.TrySetResult(ctx);
+            }
+        }
+
+        private Task<IFrameExecutionContext> GeMainContextAsync() => GetContextAsync(ContextType.Main);
+
+        private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
+        {
+            if (_detached)
+            {
+                throw new PlaywrightSharpException($"Execution Context is not available in detached frame \"{Url}\" (are you trying to evaluate ?)");
+            }
+
+            return _contextData[contextType].ContextTask;
         }
     }
 }

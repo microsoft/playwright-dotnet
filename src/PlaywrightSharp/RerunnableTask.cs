@@ -2,7 +2,7 @@
 
 namespace PlaywrightSharp
 {
-    public class RerunnableTask
+    internal class RerunnableTask
     {
         internal object RerunAsync(IFrameExecutionContext context)
         {
