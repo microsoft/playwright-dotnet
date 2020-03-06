@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.ProtocolTypesGenerator.Chromium;
+using PlaywrightSharp.ProtocolTypesGenerator.Firefox;
 
 namespace PlaywrightSharp.ProtocolTypesGenerator
 {
@@ -11,6 +12,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             IBrowserProtocolTypesGenerator[] generators =
             {
                 new ChromiumBrowserProtocolTypesGenerator(),
+                new FirefoxBrowserProtocolTypesGenerator(),
             };
 
             foreach (var generator in generators)

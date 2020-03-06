@@ -10,12 +10,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Firefox\firefox-protocol.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Firefox\firefox-protocol.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.NodeServices" Version="3.1.2" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
   </ItemGroup>
 
   <Import Project="../Common/Dependencies.props" />
 
   <ItemGroup>
+    <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
   </ItemGroup>
