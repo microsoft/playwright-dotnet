@@ -26,11 +26,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 Directory.CreateDirectory(directory);
             }
 
-            if (revision.Local && File.Exists(output))
-            {
-                return;
-            }
-
             using var process = Process.Start(revision.ExecutablePath, "--remote-debugging-port=9222 --headless");
             using var stream = await _httpClient.GetStreamAsync(new Uri("http://localhost:9222/json/protocol")).ConfigureAwait(false);
             var response = await JsonSerializer.DeserializeAsync<ChromiumProtocolDomainsContainer>(stream, new JsonSerializerOptions
@@ -76,6 +71,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
 //------------------------------------------------------------------------------
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+using System.Text.Json;
 
 ");
         }
@@ -249,8 +246,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 "integer" => "int",
                 "boolean" => "bool",
                 "binary" => "byte[]",
-                "any" => "object",
-                "object" => "object",
+                "any" => "JsonElement?",
+                "object" => "JsonElement?",
                 _ => null
             };
 
