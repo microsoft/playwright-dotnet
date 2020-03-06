@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         /// <summary>
         /// Wait for an error event.
         /// </summary>
-        /// <returns><A <see cref="Task"/> that completes when the error is received</returns>
+        /// <returns>A <see cref="Task"/> that completes when the error is received</returns>
         protected Task WaitForError()
         {
             var wrapper = new TaskCompletionSource<bool>();
