@@ -159,6 +159,9 @@ namespace PlaywrightSharp.Chromium
                     case PageLifecycleEventChromiumEvent pageLifecycleEvent:
                         OnLifecycleEvent(pageLifecycleEvent);
                         break;
+                    case RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated:
+                        OnExecutionContextCreated(runtimeExecutionContextCreated.Context);
+                        break;
                 }
             }
 
@@ -174,6 +177,22 @@ namespace PlaywrightSharp.Chromium
                 */
                 Client.OnClosed(ex.Message);
             }
+        }
+
+        private void OnExecutionContextCreated(ExecutionContextDescription contextPayload)
+        {
+            var frame = contextPayload.AuxData != null ? Page.FrameManager.GetFrame(contextPayload.AuxData.frameId) : null;
+            if (!frame)
+                return;
+            if (contextPayload.auxData && contextPayload.auxData.type === 'isolated')
+                this._isolatedWorlds.add(contextPayload.name);
+            const delegate = new CRExecutionContext(this._client, contextPayload);
+            const context = new dom.FrameExecutionContext(delegate, frame);
+            if (contextPayload.auxData && !!contextPayload.auxData.isDefault)
+                frame._contextCreated('main', context);
+            else if (contextPayload.name === UTILITY_WORLD_NAME)
+                frame._contextCreated('utility', context);
+            this._contextIdToContext.set(contextPayload.id, context);
         }
 
         private void OnLifecycleEvent(PageLifecycleEventChromiumEvent e)

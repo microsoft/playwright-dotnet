@@ -10,6 +10,8 @@ namespace PlaywrightSharp
         private readonly Page _page;
         private readonly string _frameId;
         private readonly Frame _parentFrame;
+        private readonly IDictionary<ContextType, ContextData> _contextData;
+        private readonly bool _detached;
 
         public Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -17,9 +19,37 @@ namespace PlaywrightSharp
             _frameId = frameId;
             _parentFrame = parentFrame;
 
+            _contextData = new Dictionary<ContextType, ContextData>
+            {
+                [ContextType.Main] = new ContextData(),
+                [ContextType.Utility] = new ContextData(),
+            };
+            SetContext(ContextType.Main, null);
+            SetContext(ContextType.Utility, null);
+
             if (_parentFrame != null)
             {
                 _parentFrame.ChildFrames.Add(this);
+            }
+        }
+
+        private void SetContext(ContextType contextType, IFrameExecutionContext context)
+        {
+            var data = _contextData[contextType];
+            data.Context = context;
+
+            if (context != null)
+            {
+                data.ContextResolveCallback.Invoke(context);
+
+                foreach (var rerunnableTask in data.RerunnableTasks)
+                {
+                    _ = rerunnableTask.RerunAsync(context);
+                }
+            }
+            else
+            {
+                data.ContextResolveCallback = ctx => data.ContextTsc.TrySetResult(ctx);
             }
         }
 
@@ -53,9 +83,21 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
+        public async Task<T> EvaluateAsync<T>(string script, params object[] args)
         {
-            throw new System.NotImplementedException();
+            var context = await GeMainContextAsync().ConfigureAwait(false);
+            return await context.EvaluateAsync<T>(script, args).ConfigureAwait(false);
+        }
+
+        private Task<IFrameExecutionContext> GeMainContextAsync() => GetContextAsync(ContextType.Main);
+
+        private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
+        {
+            if (_detached)
+            {
+                throw new PlaywrightSharpException($"Execution Context is not available in detached frame \"{ Url }\" (are you trying to evaluate ?)");
+            }
+            return _contextData[contextType].ContextTask;
         }
 
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
@@ -175,6 +217,31 @@ namespace PlaywrightSharp
         public Task<IFrameExecutionContext> GetUtilityContextAsync()
         {
             throw new NotImplementedException();
+        }
+
+        private void ContextCreated(ContextType contextType, FrameExecutionContext context)
+        {
+            var data = _contextData[contextType];
+            // In case of multiple sessions to the same target, there's a race between
+            // connections so we might end up creating multiple isolated worlds.
+            // We can use either.
+            if (data.Context != null)
+            {
+                SetContext(contextType, null);
+            }
+            SetContext(contextType, context);
+        }
+
+        private void ContextDestroyed(FrameExecutionContext context)
+        {
+            foreach (var contextType in _contextData.Keys)
+            {
+                var data = _contextData[contextType];
+                if (data.Context == context)
+                {
+                    SetContext(contextType, null);
+                }
+            }
         }
     }
 }
