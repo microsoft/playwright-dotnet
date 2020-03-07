@@ -218,17 +218,12 @@ namespace PlaywrightSharp.Chromium
             var auxData = contextPayload.AuxData?.ToObject<ExecutionContextDescriptionAuxData>();
             Frame frame = null;
 
-            if (contextPayload.AuxData != null)
-            {
-                Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out frame);
-            }
-
-            if (frame == null)
+            if (contextPayload.AuxData != null && !Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out frame))
             {
                 return;
             }
 
-            if (auxData != null && auxData.Type == "isolated")
+            if (auxData?.Type == "isolated")
             {
                 _isolatedWorlds.Add(contextPayload.Name);
             }
@@ -236,7 +231,7 @@ namespace PlaywrightSharp.Chromium
             var executionContextDelegate = new ChromiumExecutionContext(Client, contextPayload);
             var context = new FrameExecutionContext(executionContextDelegate, frame);
 
-            if (auxData != null && auxData.IsDefault)
+            if (auxData?.IsDefault == true)
             {
                 frame.ContextCreated(ContextType.Main, context);
             }
