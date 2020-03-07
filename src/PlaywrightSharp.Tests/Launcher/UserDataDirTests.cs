@@ -74,26 +74,23 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.UserDataDir = userDataDir.Path;
 
-            using (var browser = await Playwright.LaunchAsync(options))
-            {
-                var page = await browser.DefaultContext.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
-                await page.EvaluateAsync("localStorage.hey = 'hello'");
-            }
+            var browser = await Playwright.LaunchAsync(options);
 
-            using (var browser2 = await Playwright.LaunchAsync(options))
-            {
-                var page2 = await browser2.DefaultContext.NewPageAsync();
-                await page2.GoToAsync(TestConstants.EmptyPage);
-                Assert.Equal("hello", await page2.EvaluateAsync<string>("localStorage.hey"));
-            }
+            var page = await browser.DefaultContext.NewPageAsync();
+            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.EvaluateAsync("localStorage.hey = 'hello'");
+            await browser.CloseAsync();
 
-            using (var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
-            {
-                var page3 = await browser3.DefaultContext.NewPageAsync();
-                await page3.GoToAsync(TestConstants.EmptyPage);
-                Assert.NotEqual("hello", await page3.EvaluateAsync<string>("localStorage.hey"));
-            }
+            var browser2 = await Playwright.LaunchAsync(options);
+            var page2 = await browser2.DefaultContext.NewPageAsync();
+            await page2.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal("hello", await page2.EvaluateAsync<string>("localStorage.hey"));
+            await browser2.CloseAsync();
+
+            var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page3 = await browser3.DefaultContext.NewPageAsync();
+            await page3.GoToAsync(TestConstants.EmptyPage);
+            await browser3.CloseAsync();
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>

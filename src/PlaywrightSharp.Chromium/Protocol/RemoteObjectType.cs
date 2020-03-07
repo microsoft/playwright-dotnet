@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Chromium.Protocol
+namespace PlaywrightSharp.Chromium.Protocol
 {
     internal static class RemoteObjectType
     {
