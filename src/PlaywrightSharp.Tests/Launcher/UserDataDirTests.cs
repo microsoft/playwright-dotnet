@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             using var userDataDir = new TempDirectory();
             var options = TestConstants.GetDefaultBrowserOptions();
-            options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
+            options.UserDataDir = userDataDir.Path;
 
             using (var browser = await Playwright.LaunchAsync(options))
             {
@@ -86,6 +86,13 @@ namespace PlaywrightSharp.Tests.Launcher
                 var page2 = await browser2.DefaultContext.NewPageAsync();
                 await page2.GoToAsync(TestConstants.EmptyPage);
                 Assert.Equal("hello", await page2.EvaluateAsync<string>("localStorage.hey"));
+            }
+
+            using (var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
+            {
+                var page3 = await browser3.DefaultContext.NewPageAsync();
+                await page3.GoToAsync(TestConstants.EmptyPage);
+                Assert.NotEqual("hello", await page3.EvaluateAsync<string>("localStorage.hey"));
             }
         }
 

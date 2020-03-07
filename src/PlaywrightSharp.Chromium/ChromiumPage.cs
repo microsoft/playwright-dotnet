@@ -78,6 +78,11 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        public Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        {
+            throw new NotImplementedException();
+        }
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -92,9 +97,11 @@ namespace PlaywrightSharp.Chromium
             {
                Client.SendAsync(new LogEnableRequest()),
                Client.SendAsync(new PageSetLifecycleEventsEnabledRequest { Enabled = true }),
-               Client.SendAsync(new RuntimeEnableRequest()).ContinueWith(t => EnsureIsolatedWorldAsync(UtilityWorldName), TaskScheduler.Default),
+               Client.SendAsync(new RuntimeEnableRequest()),
                _networkManager.InitializeAsync(),
             };
+
+            await EnsureIsolatedWorldAsync(UtilityWorldName).ConfigureAwait(false);
 
             if (_browserContext.Options != null)
             {
@@ -165,7 +172,10 @@ namespace PlaywrightSharp.Chromium
                         OnExecutionContextCreated(runtimeExecutionContextCreated.Context);
                         break;
                     case RuntimeExecutionContextDestroyedChromiumEvent runtimeExecutionContextDestroyed:
-                        OnExecutionContextDestroyed(runtimeExecutionContextDestroyed.ExecutionContextId);
+                        OnExecutionContextDestroyed(runtimeExecutionContextDestroyed.ExecutionContextId.Value);
+                        break;
+                    case RuntimeExecutionContextsClearedChromiumEvent runtimeExecutionContextsCleared:
+                        OnExecutionContextsCleared();
                         break;
                 }
             }
@@ -181,6 +191,14 @@ namespace PlaywrightSharp.Chromium
                 _logger.LogError(ex, message);
                 */
                 Client.OnClosed(ex.Message);
+            }
+        }
+
+        private void OnExecutionContextsCleared()
+        {
+            foreach (int contextId in _contextIdToContext.Keys)
+            {
+                OnExecutionContextDestroyed(contextId);
             }
         }
 
@@ -227,7 +245,7 @@ namespace PlaywrightSharp.Chromium
                 frame.ContextCreated(ContextType.Utility, context);
             }
 
-            _contextIdToContext[contextPayload.Id] = context;
+            _contextIdToContext[contextPayload.Id.Value] = context;
         }
 
         private void OnLifecycleEvent(PageLifecycleEventChromiumEvent e)

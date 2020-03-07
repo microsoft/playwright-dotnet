@@ -106,6 +106,13 @@ namespace PlaywrightSharp
             }
         }
 
+        internal IFrame[] GetFrames()
+        {
+            List<Frame> frames = new List<Frame>();
+            CollectFrames(MainFrame, frames);
+            return frames.ToArray();
+        }
+
         private void ClearWebSockets(Frame frame)
         {
         }
@@ -124,6 +131,15 @@ namespace PlaywrightSharp
             frame.OnDetached();
             Frames.TryRemove(frame.Id, out _);
             _page.OnFrameAttached(frame);
+        }
+
+        private void CollectFrames(Frame frame, List<Frame> frames)
+        {
+            frames.Add(frame);
+            foreach (var subframe in frame.ChildFrames)
+            {
+                CollectFrames(subframe, frames);
+            }
         }
     }
 }

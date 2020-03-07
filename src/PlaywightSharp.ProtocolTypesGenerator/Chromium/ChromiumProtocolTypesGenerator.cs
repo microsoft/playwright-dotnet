@@ -99,13 +99,13 @@ using System.Text.Json;
                     }
                     else if (type.Type == "integer")
                     {
-                        _knownTypes[type.Id] = "int";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "int";
+                        _knownTypes[type.Id] = "int?";
+                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "int?";
                     }
                     else if (type.Type == "number")
                     {
-                        _knownTypes[type.Id] = "double";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "double";
+                        _knownTypes[type.Id] = "double?";
+                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "double?";
                     }
                 }
             }
@@ -242,9 +242,9 @@ using System.Text.Json;
             => type switch
             {
                 "string" => "string",
-                "number" => "double",
-                "integer" => "int",
-                "boolean" => "bool",
+                "number" => "double?",
+                "integer" => "int?",
+                "boolean" => "bool?",
                 "binary" => "byte[]",
                 "any" => "JsonElement?",
                 "object" => "JsonElement?",

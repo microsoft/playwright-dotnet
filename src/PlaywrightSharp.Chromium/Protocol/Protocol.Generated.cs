@@ -83,7 +83,7 @@ public AXValue AttributeValue { get; set; }
 /// <summary>
 /// Whether this source is superseded by a higher priority source.
 /// </summary>
-public bool Superseded { get; set; }
+public bool? Superseded { get; set; }
 /// <summary>
 /// The native markup source for this value, e.g. a &lt;label&gt; element.
 /// </summary>
@@ -95,7 +95,7 @@ public AXValue NativeSourceValue { get; set; }
 /// <summary>
 /// Whether the value for this property is invalid.
 /// </summary>
-public bool Invalid { get; set; }
+public bool? Invalid { get; set; }
 /// <summary>
 /// Reason for the value being invalid, if it is.
 /// </summary>
@@ -108,7 +108,7 @@ internal class AXRelatedNode
 /// <summary>
 /// The BackendNodeId of the related DOM node.
 /// </summary>
-public int BackendDOMNodeId { get; set; }
+public int? BackendDOMNodeId { get; set; }
 /// <summary>
 /// The IDRef value provided, if any.
 /// </summary>
@@ -212,7 +212,7 @@ public string NodeId { get; set; }
 /// <summary>
 /// Whether this node is ignored for accessibility
 /// </summary>
-public bool Ignored { get; set; }
+public bool? Ignored { get; set; }
 /// <summary>
 /// Collection of reasons why this node is hidden.
 /// </summary>
@@ -244,7 +244,7 @@ public string[] ChildIds { get; set; }
 /// <summary>
 /// The backend ID for the associated DOM node, if any.
 /// </summary>
-public int BackendDOMNodeId { get; set; }}
+public int? BackendDOMNodeId { get; set; }}
 /// <summary>
 /// Disables the accessibility domain.
 /// </summary>
@@ -293,11 +293,11 @@ public string Command { get; } = "Accessibility.getPartialAXTree";
 /// <summary>
 /// Identifier of the node to get the partial accessibility tree for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node to get the partial accessibility tree for.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper to get the partial accessibility tree for.
 /// </summary>
@@ -305,7 +305,7 @@ public string ObjectId { get; set; }
 /// <summary>
 /// Whether to fetch this nodes ancestors, siblings and children. Defaults to true.
 /// </summary>
-public bool FetchRelatives { get; set; }}
+public bool? FetchRelatives { get; set; }}
 /// <summary>
 /// Response from <see cref="AccessibilityGetPartialAXTreeRequest"/>
 /// </summary>
@@ -355,7 +355,7 @@ public string Name { get; set; }
 /// <summary>
 /// `Animation`'s internal paused state.
 /// </summary>
-public bool PausedState { get; set; }
+public bool? PausedState { get; set; }
 /// <summary>
 /// `Animation`'s play state.
 /// </summary>
@@ -363,15 +363,15 @@ public string PlayState { get; set; }
 /// <summary>
 /// `Animation`'s playback rate.
 /// </summary>
-public double PlaybackRate { get; set; }
+public double? PlaybackRate { get; set; }
 /// <summary>
 /// `Animation`'s start time.
 /// </summary>
-public double StartTime { get; set; }
+public double? StartTime { get; set; }
 /// <summary>
 /// `Animation`'s current time.
 /// </summary>
-public double CurrentTime { get; set; }
+public double? CurrentTime { get; set; }
 /// <summary>
 /// Animation type of `Animation`.
 /// </summary>
@@ -393,23 +393,23 @@ internal class AnimationEffect
 /// <summary>
 /// `AnimationEffect`'s delay.
 /// </summary>
-public double Delay { get; set; }
+public double? Delay { get; set; }
 /// <summary>
 /// `AnimationEffect`'s end delay.
 /// </summary>
-public double EndDelay { get; set; }
+public double? EndDelay { get; set; }
 /// <summary>
 /// `AnimationEffect`'s iteration start.
 /// </summary>
-public double IterationStart { get; set; }
+public double? IterationStart { get; set; }
 /// <summary>
 /// `AnimationEffect`'s iterations.
 /// </summary>
-public double Iterations { get; set; }
+public double? Iterations { get; set; }
 /// <summary>
 /// `AnimationEffect`'s iteration duration.
 /// </summary>
-public double Duration { get; set; }
+public double? Duration { get; set; }
 /// <summary>
 /// `AnimationEffect`'s playback direction.
 /// </summary>
@@ -421,7 +421,7 @@ public string Fill { get; set; }
 /// <summary>
 /// `AnimationEffect`'s target node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// `AnimationEffect`'s keyframes.
 /// </summary>
@@ -512,7 +512,7 @@ internal class AnimationGetCurrentTimeResponse : IChromiumResponse
 /// <summary>
 /// Current time of the page.
 /// </summary>
-public double CurrentTime { get; set; }}
+public double? CurrentTime { get; set; }}
 /// <summary>
 /// Gets the playback rate of the document timeline.
 /// </summary>
@@ -532,7 +532,7 @@ internal class AnimationGetPlaybackRateResponse : IChromiumResponse
 /// <summary>
 /// Playback rate for animations on page.
 /// </summary>
-public double PlaybackRate { get; set; }}
+public double? PlaybackRate { get; set; }}
 /// <summary>
 /// Releases a set of animations to no longer be manipulated.
 /// </summary>
@@ -593,7 +593,7 @@ public string[] Animations { get; set; }
 /// <summary>
 /// Set the current time of each animation.
 /// </summary>
-public double CurrentTime { get; set; }}
+public double? CurrentTime { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSeekAnimationsRequest"/>
 /// </summary>
@@ -617,7 +617,7 @@ public string[] Animations { get; set; }
 /// <summary>
 /// Paused state to set to.
 /// </summary>
-public bool Paused { get; set; }}
+public bool? Paused { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSetPausedRequest"/>
 /// </summary>
@@ -637,7 +637,7 @@ public string Command { get; } = "Animation.setPlaybackRate";
 /// <summary>
 /// Playback rate for animations on page
 /// </summary>
-public double PlaybackRate { get; set; }}
+public double? PlaybackRate { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSetPlaybackRateRequest"/>
 /// </summary>
@@ -661,11 +661,11 @@ public string AnimationId { get; set; }
 /// <summary>
 /// Duration of the animation.
 /// </summary>
-public double Duration { get; set; }
+public double? Duration { get; set; }
 /// <summary>
 /// Delay of the animation.
 /// </summary>
-public double Delay { get; set; }}
+public double? Delay { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSetTimingRequest"/>
 /// </summary>
@@ -726,7 +726,7 @@ public string Url { get; set; }
 /// <summary>
 /// Resource size.
 /// </summary>
-public int Size { get; set; }
+public int? Size { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
@@ -743,15 +743,15 @@ public string ManifestURL { get; set; }
 /// <summary>
 /// Application cache size.
 /// </summary>
-public double Size { get; set; }
+public double? Size { get; set; }
 /// <summary>
 /// Application cache creation time.
 /// </summary>
-public double CreationTime { get; set; }
+public double? CreationTime { get; set; }
 /// <summary>
 /// Application cache update time.
 /// </summary>
-public double UpdateTime { get; set; }
+public double? UpdateTime { get; set; }
 /// <summary>
 /// Application cache resources.
 /// </summary>
@@ -772,7 +772,7 @@ public string ManifestURL { get; set; }
 /// <summary>
 /// Application cache status.
 /// </summary>
-public int Status { get; set; }}
+public int? Status { get; set; }}
 /// <summary>
 /// Enables application cache domain notifications.
 /// </summary>
@@ -878,7 +878,7 @@ public string ManifestURL { get; set; }
 /// <summary>
 /// Updated application cache status.
 /// </summary>
-public int Status { get; set; }}
+public int? Status { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -891,7 +891,7 @@ public string InternalName { get; } = "ApplicationCache.networkStateUpdated";
 /// <summary>
 /// 
 /// </summary>
-public bool IsNowOnline { get; set; }}
+public bool? IsNowOnline { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Audits
 {
@@ -917,11 +917,11 @@ public string Encoding { get; set; }
 /// <summary>
 /// The quality of the encoding (0-1). (defaults to 1)
 /// </summary>
-public double Quality { get; set; }
+public double? Quality { get; set; }
 /// <summary>
 /// Whether to only return the size information (defaults to false).
 /// </summary>
-public bool SizeOnly { get; set; }}
+public bool? SizeOnly { get; set; }}
 /// <summary>
 /// Response from <see cref="AuditsGetEncodedResponseRequest"/>
 /// </summary>
@@ -934,11 +934,11 @@ public byte[] Body { get; set; }
 /// <summary>
 /// Size before re-encoding.
 /// </summary>
-public int OriginalSize { get; set; }
+public int? OriginalSize { get; set; }
 /// <summary>
 /// Size after re-encoding.
 /// </summary>
-public int EncodedSize { get; set; }}
+public int? EncodedSize { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
 {
@@ -976,7 +976,7 @@ internal class BackgroundServiceEvent
 /// <summary>
 /// Timestamp of the event (in seconds).
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// The origin this event belongs to.
 /// </summary>
@@ -1054,7 +1054,7 @@ public string Command { get; } = "BackgroundService.setRecording";
 /// <summary>
 /// 
 /// </summary>
-public bool ShouldRecord { get; set; }
+public bool? ShouldRecord { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -1097,7 +1097,7 @@ public string InternalName { get; } = "BackgroundService.recordingStateChanged";
 /// <summary>
 /// 
 /// </summary>
-public bool IsRecording { get; set; }
+public bool? IsRecording { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -1136,19 +1136,19 @@ internal class Bounds
 /// <summary>
 /// The offset from the left edge of the screen to the window in pixels.
 /// </summary>
-public int Left { get; set; }
+public int? Left { get; set; }
 /// <summary>
 /// The offset from the top edge of the screen to the window in pixels.
 /// </summary>
-public int Top { get; set; }
+public int? Top { get; set; }
 /// <summary>
 /// The window width in pixels.
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// The window height in pixels.
 /// </summary>
-public int Height { get; set; }
+public int? Height { get; set; }
 /// <summary>
 /// The window state. Default to normal.
 /// </summary>
@@ -1201,12 +1201,12 @@ public string Name { get; set; }
 /// <summary>
 /// For "midi" permission, may also specify sysex control.
 /// </summary>
-public bool Sysex { get; set; }
+public bool? Sysex { get; set; }
 /// <summary>
 /// For "push" permission, may specify userVisibleOnly.
 /// Note that userVisibleOnly = true is the only currently supported type.
 /// </summary>
-public bool UserVisibleOnly { get; set; }
+public bool? UserVisibleOnly { get; set; }
 /// <summary>
 /// For "wake-lock" permission, must specify type as either "screen" or "system".
 /// </summary>
@@ -1214,7 +1214,7 @@ public string Type { get; set; }
 /// <summary>
 /// For "clipboard" permission, may specify allowWithoutSanitization.
 /// </summary>
-public bool AllowWithoutSanitization { get; set; }}
+public bool? AllowWithoutSanitization { get; set; }}
 /// <summary>
 /// Chrome histogram bucket.
 /// </summary>
@@ -1223,15 +1223,15 @@ internal class Bucket
 /// <summary>
 /// Minimum value (inclusive).
 /// </summary>
-public int Low { get; set; }
+public int? Low { get; set; }
 /// <summary>
 /// Maximum value (exclusive).
 /// </summary>
-public int High { get; set; }
+public int? High { get; set; }
 /// <summary>
 /// Number of samples.
 /// </summary>
-public int Count { get; set; }}
+public int? Count { get; set; }}
 /// <summary>
 /// Chrome histogram.
 /// </summary>
@@ -1244,11 +1244,11 @@ public string Name { get; set; }
 /// <summary>
 /// Sum of sample values.
 /// </summary>
-public int Sum { get; set; }
+public int? Sum { get; set; }
 /// <summary>
 /// Total number of samples.
 /// </summary>
-public int Count { get; set; }
+public int? Count { get; set; }
 /// <summary>
 /// Buckets.
 /// </summary>
@@ -1460,7 +1460,7 @@ public string Query { get; set; }
 /// <summary>
 /// If true, retrieve delta since last call.
 /// </summary>
-public bool Delta { get; set; }}
+public bool? Delta { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetHistogramsRequest"/>
 /// </summary>
@@ -1487,7 +1487,7 @@ public string Name { get; set; }
 /// <summary>
 /// If true, retrieve delta since last call.
 /// </summary>
-public bool Delta { get; set; }}
+public bool? Delta { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetHistogramRequest"/>
 /// </summary>
@@ -1510,7 +1510,7 @@ public string Command { get; } = "Browser.getWindowBounds";
 /// <summary>
 /// Browser window id.
 /// </summary>
-public int WindowId { get; set; }}
+public int? WindowId { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetWindowBoundsRequest"/>
 /// </summary>
@@ -1543,7 +1543,7 @@ internal class BrowserGetWindowForTargetResponse : IChromiumResponse
 /// <summary>
 /// Browser window id.
 /// </summary>
-public int WindowId { get; set; }
+public int? WindowId { get; set; }
 /// <summary>
 /// Bounds information of the window. When window state is 'minimized', the restored window
 /// position and size are returned.
@@ -1562,7 +1562,7 @@ public string Command { get; } = "Browser.setWindowBounds";
 /// <summary>
 /// Browser window id.
 /// </summary>
-public int WindowId { get; set; }
+public int? WindowId { get; set; }
 /// <summary>
 /// New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined
 /// with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged.
@@ -1650,7 +1650,7 @@ public CSSRule Rule { get; set; }
 /// <summary>
 /// Matching selector indices in the rule's selectorList selectors (0-based).
 /// </summary>
-public int[] MatchingSelectors { get; set; }}
+public int?[] MatchingSelectors { get; set; }}
 /// <summary>
 /// Data for a simple selector (these are delimited by commas in a selector list).
 /// </summary>
@@ -1709,40 +1709,40 @@ public string Title { get; set; }
 /// <summary>
 /// The backend id for the owner node of the stylesheet.
 /// </summary>
-public int OwnerNode { get; set; }
+public int? OwnerNode { get; set; }
 /// <summary>
 /// Denotes whether the stylesheet is disabled.
 /// </summary>
-public bool Disabled { get; set; }
+public bool? Disabled { get; set; }
 /// <summary>
 /// Whether the sourceURL field value comes from the sourceURL comment.
 /// </summary>
-public bool HasSourceURL { get; set; }
+public bool? HasSourceURL { get; set; }
 /// <summary>
 /// Whether this stylesheet is created for STYLE tag by parser. This flag is not set for
 /// document.written STYLE tags.
 /// </summary>
-public bool IsInline { get; set; }
+public bool? IsInline { get; set; }
 /// <summary>
 /// Line offset of the stylesheet within the resource (zero based).
 /// </summary>
-public double StartLine { get; set; }
+public double? StartLine { get; set; }
 /// <summary>
 /// Column offset of the stylesheet within the resource (zero based).
 /// </summary>
-public double StartColumn { get; set; }
+public double? StartColumn { get; set; }
 /// <summary>
 /// Size of the content (in characters).
 /// </summary>
-public double Length { get; set; }
+public double? Length { get; set; }
 /// <summary>
 /// Line offset of the end of the stylesheet within the resource (zero based).
 /// </summary>
-public double EndLine { get; set; }
+public double? EndLine { get; set; }
 /// <summary>
 /// Column offset of the end of the stylesheet within the resource (zero based).
 /// </summary>
-public double EndColumn { get; set; }}
+public double? EndColumn { get; set; }}
 /// <summary>
 /// CSS rule representation.
 /// </summary>
@@ -1783,15 +1783,15 @@ public string StyleSheetId { get; set; }
 /// <summary>
 /// Offset of the start of the rule (including selector) from the beginning of the stylesheet.
 /// </summary>
-public double StartOffset { get; set; }
+public double? StartOffset { get; set; }
 /// <summary>
 /// Offset of the end of the rule body from the beginning of the stylesheet.
 /// </summary>
-public double EndOffset { get; set; }
+public double? EndOffset { get; set; }
 /// <summary>
 /// Indicates whether the rule was actually used by some element in the page.
 /// </summary>
-public bool Used { get; set; }}
+public bool? Used { get; set; }}
 /// <summary>
 /// Text range within a resource. All numbers are zero-based.
 /// </summary>
@@ -1800,19 +1800,19 @@ internal class SourceRange
 /// <summary>
 /// Start line of range.
 /// </summary>
-public int StartLine { get; set; }
+public int? StartLine { get; set; }
 /// <summary>
 /// Start column of range (inclusive).
 /// </summary>
-public int StartColumn { get; set; }
+public int? StartColumn { get; set; }
 /// <summary>
 /// End line of range
 /// </summary>
-public int EndLine { get; set; }
+public int? EndLine { get; set; }
 /// <summary>
 /// End column of range (exclusive).
 /// </summary>
-public int EndColumn { get; set; }}
+public int? EndColumn { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -1829,7 +1829,7 @@ public string Value { get; set; }
 /// <summary>
 /// Whether the property has "!important" annotation (implies `false` if absent).
 /// </summary>
-public bool Important { get; set; }}
+public bool? Important { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -1885,11 +1885,11 @@ public string Value { get; set; }
 /// <summary>
 /// Whether the property has "!important" annotation (implies `false` if absent).
 /// </summary>
-public bool Important { get; set; }
+public bool? Important { get; set; }
 /// <summary>
 /// Whether the property is implicit (implies `false` if absent).
 /// </summary>
-public bool Implicit { get; set; }
+public bool? Implicit { get; set; }
 /// <summary>
 /// The full property text as specified in the style.
 /// </summary>
@@ -1897,11 +1897,11 @@ public string Text { get; set; }
 /// <summary>
 /// Whether the property is understood by the browser (implies `true` if absent).
 /// </summary>
-public bool ParsedOk { get; set; }
+public bool? ParsedOk { get; set; }
 /// <summary>
 /// Whether the property is disabled by the user (present for source-based properties only).
 /// </summary>
-public bool Disabled { get; set; }
+public bool? Disabled { get; set; }
 /// <summary>
 /// The entire property range in the enclosing style declaration (if available).
 /// </summary>
@@ -1951,7 +1951,7 @@ public MediaQueryExpression[] Expressions { get; set; }
 /// <summary>
 /// Whether the media query condition is satisfied.
 /// </summary>
-public bool Active { get; set; }}
+public bool? Active { get; set; }}
 /// <summary>
 /// Media query expression descriptor.
 /// </summary>
@@ -1960,7 +1960,7 @@ internal class MediaQueryExpression
 /// <summary>
 /// Media query expression value.
 /// </summary>
-public double Value { get; set; }
+public double? Value { get; set; }
 /// <summary>
 /// Media query expression units.
 /// </summary>
@@ -1976,7 +1976,7 @@ public SourceRange ValueRange { get; set; }
 /// <summary>
 /// Computed length of media query expression (if applicable).
 /// </summary>
-public double ComputedLength { get; set; }}
+public double? ComputedLength { get; set; }}
 /// <summary>
 /// Information about amount of glyphs that were rendered with given font.
 /// </summary>
@@ -1989,11 +1989,11 @@ public string FamilyName { get; set; }
 /// <summary>
 /// Indicates if the font was downloaded or resolved locally.
 /// </summary>
-public bool IsCustomFont { get; set; }
+public bool? IsCustomFont { get; set; }
 /// <summary>
 /// Amount of glyphs that were rendered with this font.
 /// </summary>
-public double GlyphCount { get; set; }}
+public double? GlyphCount { get; set; }}
 /// <summary>
 /// Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions
 /// </summary>
@@ -2210,7 +2210,7 @@ public string Command { get; } = "CSS.forcePseudoState";
 /// <summary>
 /// The element id for which to force the pseudo state.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Element pseudo classes to force when computing the element's style.
 /// </summary>
@@ -2234,7 +2234,7 @@ public string Command { get; } = "CSS.getBackgroundColors";
 /// <summary>
 /// Id of the node to get background colors for.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetBackgroundColorsRequest"/>
 /// </summary>
@@ -2270,7 +2270,7 @@ public string Command { get; } = "CSS.getComputedStyleForNode";
 /// <summary>
 /// 
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
 /// </summary>
@@ -2294,7 +2294,7 @@ public string Command { get; } = "CSS.getInlineStylesForNode";
 /// <summary>
 /// 
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
 /// </summary>
@@ -2321,7 +2321,7 @@ public string Command { get; } = "CSS.getMatchedStylesForNode";
 /// <summary>
 /// 
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
 /// </summary>
@@ -2385,7 +2385,7 @@ public string Command { get; } = "CSS.getPlatformFontsForNode";
 /// <summary>
 /// 
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetPlatformFontsForNodeRequest"/>
 /// </summary>
@@ -2432,7 +2432,7 @@ public string Command { get; } = "CSS.setEffectivePropertyValueForNode";
 /// <summary>
 /// The element id for which to set property.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -2652,7 +2652,7 @@ public RuleUsage[] Coverage { get; set; }
 /// <summary>
 /// Monotonically increasing time, in seconds.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Fires whenever a web font is updated.  A non-empty font parameter indicates a successfully loaded
 /// web font
@@ -2751,11 +2751,11 @@ public Header[] RequestHeaders { get; set; }
 /// <summary>
 /// Number of seconds since epoch.
 /// </summary>
-public double ResponseTime { get; set; }
+public double? ResponseTime { get; set; }
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int ResponseStatus { get; set; }
+public int? ResponseStatus { get; set; }
 /// <summary>
 /// HTTP response status text.
 /// </summary>
@@ -2922,11 +2922,11 @@ public string CacheId { get; set; }
 /// <summary>
 /// Number of records to skip.
 /// </summary>
-public int SkipCount { get; set; }
+public int? SkipCount { get; set; }
 /// <summary>
 /// Number of records to fetch.
 /// </summary>
-public int PageSize { get; set; }
+public int? PageSize { get; set; }
 /// <summary>
 /// If present, only return the entries containing this substring in the path
 /// </summary>
@@ -2944,7 +2944,7 @@ public DataEntry[] CacheDataEntries { get; set; }
 /// Count of returned entries from this storage. If pathFilter is empty, it
 /// is the count of all entries from this storage.
 /// </summary>
-public double ReturnCount { get; set; }}
+public double? ReturnCount { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Cast
 {
@@ -3107,7 +3107,7 @@ internal class BackendNode
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int NodeType { get; set; }
+public int? NodeType { get; set; }
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
@@ -3115,7 +3115,7 @@ public string NodeName { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int BackendNodeId { get; set; }}
+public int? BackendNodeId { get; set; }}
 /// <summary>
 /// Pseudo element type.
 /// </summary>
@@ -3156,19 +3156,19 @@ internal class Node
 /// will only push node with given `id` once. It is aware of all requested nodes and will only
 /// fire DOM events for nodes known to the client.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// The id of the parent node if any.
 /// </summary>
-public int ParentId { get; set; }
+public int? ParentId { get; set; }
 /// <summary>
 /// The BackendNodeId for this node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int NodeType { get; set; }
+public int? NodeType { get; set; }
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
@@ -3184,7 +3184,7 @@ public string NodeValue { get; set; }
 /// <summary>
 /// Child count for `Container` nodes.
 /// </summary>
-public int ChildNodeCount { get; set; }
+public int? ChildNodeCount { get; set; }
 /// <summary>
 /// Child nodes of this node when requested with children.
 /// </summary>
@@ -3264,7 +3264,7 @@ public BackendNode[] DistributedNodes { get; set; }
 /// <summary>
 /// Whether the node is SVG.
 /// </summary>
-public bool IsSVG { get; set; }}
+public bool? IsSVG { get; set; }}
 /// <summary>
 /// A structure holding an RGBA color.
 /// </summary>
@@ -3273,19 +3273,19 @@ internal class RGBA
 /// <summary>
 /// The red component, in the [0-255] range.
 /// </summary>
-public int R { get; set; }
+public int? R { get; set; }
 /// <summary>
 /// The green component, in the [0-255] range.
 /// </summary>
-public int G { get; set; }
+public int? G { get; set; }
 /// <summary>
 /// The blue component, in the [0-255] range.
 /// </summary>
-public int B { get; set; }
+public int? B { get; set; }
 /// <summary>
 /// The alpha component, in the [0-1] range (default: 1).
 /// </summary>
-public double A { get; set; }}
+public double? A { get; set; }}
 /// <summary>
 /// Box model.
 /// </summary>
@@ -3294,27 +3294,27 @@ internal class BoxModel
 /// <summary>
 /// Content box
 /// </summary>
-public double[] Content { get; set; }
+public double?[] Content { get; set; }
 /// <summary>
 /// Padding box
 /// </summary>
-public double[] Padding { get; set; }
+public double?[] Padding { get; set; }
 /// <summary>
 /// Border box
 /// </summary>
-public double[] Border { get; set; }
+public double?[] Border { get; set; }
 /// <summary>
 /// Margin box
 /// </summary>
-public double[] Margin { get; set; }
+public double?[] Margin { get; set; }
 /// <summary>
 /// Node width
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Node height
 /// </summary>
-public int Height { get; set; }
+public int? Height { get; set; }
 /// <summary>
 /// Shape outside coordinates
 /// </summary>
@@ -3327,7 +3327,7 @@ internal class ShapeOutsideInfo
 /// <summary>
 /// Shape bounds
 /// </summary>
-public double[] Bounds { get; set; }
+public double?[] Bounds { get; set; }
 /// <summary>
 /// Shape coordinate details
 /// </summary>
@@ -3344,19 +3344,19 @@ internal class Rect
 /// <summary>
 /// X coordinate
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y coordinate
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// Rectangle width
 /// </summary>
-public double Width { get; set; }
+public double? Width { get; set; }
 /// <summary>
 /// Rectangle height
 /// </summary>
-public double Height { get; set; }}
+public double? Height { get; set; }}
 /// <summary>
 /// Collects class names for the node with given id and all of it's child nodes.
 /// </summary>
@@ -3370,7 +3370,7 @@ public string Command { get; } = "DOM.collectClassNamesFromSubtree";
 /// <summary>
 /// Id of the node to collect class names.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMCollectClassNamesFromSubtreeRequest"/>
 /// </summary>
@@ -3394,16 +3394,16 @@ public string Command { get; } = "DOM.copyTo";
 /// <summary>
 /// Id of the node to copy.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Id of the element to drop the copy into.
 /// </summary>
-public int TargetNodeId { get; set; }
+public int? TargetNodeId { get; set; }
 /// <summary>
 /// Drop the copy before this node (if absent, the copy becomes the last child of
 /// `targetNodeId`).
 /// </summary>
-public int InsertBeforeNodeId { get; set; }}
+public int? InsertBeforeNodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMCopyToRequest"/>
 /// </summary>
@@ -3412,7 +3412,7 @@ internal class DOMCopyToResponse : IChromiumResponse
 /// <summary>
 /// Id of the node clone.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Describes node given its id, does not require domain to be enabled. Does not start tracking any
 /// objects, can be used for automation.
@@ -3427,11 +3427,11 @@ public string Command { get; } = "DOM.describeNode";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
@@ -3440,12 +3440,12 @@ public string ObjectId { get; set; }
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int Depth { get; set; }
+public int? Depth { get; set; }
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false).
 /// </summary>
-public bool Pierce { get; set; }}
+public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDescribeNodeRequest"/>
 /// </summary>
@@ -3523,11 +3523,11 @@ public string Command { get; } = "DOM.focus";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
@@ -3551,7 +3551,7 @@ public string Command { get; } = "DOM.getAttributes";
 /// <summary>
 /// Id of the node to retrieve attibutes for.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetAttributesRequest"/>
 /// </summary>
@@ -3574,11 +3574,11 @@ public string Command { get; } = "DOM.getBoxModel";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
@@ -3606,11 +3606,11 @@ public string Command { get; } = "DOM.getContentQuads";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
@@ -3623,7 +3623,7 @@ internal class DOMGetContentQuadsResponse : IChromiumResponse
 /// <summary>
 /// Quads that describe node layout relative to viewport.
 /// </summary>
-public double[][] Quads { get; set; }}
+public double?[][] Quads { get; set; }}
 /// <summary>
 /// Returns the root DOM node (and optionally the subtree) to the caller.
 /// </summary>
@@ -3638,12 +3638,12 @@ public string Command { get; } = "DOM.getDocument";
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int Depth { get; set; }
+public int? Depth { get; set; }
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false).
 /// </summary>
-public bool Pierce { get; set; }}
+public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetDocumentRequest"/>
 /// </summary>
@@ -3667,12 +3667,12 @@ public string Command { get; } = "DOM.getFlattenedDocument";
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int Depth { get; set; }
+public int? Depth { get; set; }
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false).
 /// </summary>
-public bool Pierce { get; set; }}
+public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetFlattenedDocumentRequest"/>
 /// </summary>
@@ -3696,19 +3696,19 @@ public string Command { get; } = "DOM.getNodeForLocation";
 /// <summary>
 /// X coordinate.
 /// </summary>
-public int X { get; set; }
+public int? X { get; set; }
 /// <summary>
 /// Y coordinate.
 /// </summary>
-public int Y { get; set; }
+public int? Y { get; set; }
 /// <summary>
 /// False to skip to the nearest non-UA shadow root ancestor (default: false).
 /// </summary>
-public bool IncludeUserAgentShadowDOM { get; set; }
+public bool? IncludeUserAgentShadowDOM { get; set; }
 /// <summary>
 /// Whether to ignore pointer-events: none on elements and hit test them.
 /// </summary>
-public bool IgnorePointerEventsNone { get; set; }}
+public bool? IgnorePointerEventsNone { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetNodeForLocationRequest"/>
 /// </summary>
@@ -3717,7 +3717,7 @@ internal class DOMGetNodeForLocationResponse : IChromiumResponse
 /// <summary>
 /// Resulting node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// Frame this node belongs to.
 /// </summary>
@@ -3725,7 +3725,7 @@ public string FrameId { get; set; }
 /// <summary>
 /// Id of the node at given coordinates, only when enabled and requested document.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Returns node's HTML markup.
 /// </summary>
@@ -3739,11 +3739,11 @@ public string Command { get; } = "DOM.getOuterHTML";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
@@ -3770,7 +3770,7 @@ public string Command { get; } = "DOM.getRelayoutBoundary";
 /// <summary>
 /// Id of the node.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetRelayoutBoundaryRequest"/>
 /// </summary>
@@ -3779,7 +3779,7 @@ internal class DOMGetRelayoutBoundaryResponse : IChromiumResponse
 /// <summary>
 /// Relayout boundary node id for the given node.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Returns search results from given `fromIndex` to given `toIndex` from the search with the given
 /// identifier.
@@ -3798,11 +3798,11 @@ public string SearchId { get; set; }
 /// <summary>
 /// Start index of the search result to be returned.
 /// </summary>
-public int FromIndex { get; set; }
+public int? FromIndex { get; set; }
 /// <summary>
 /// End index of the search result to be returned.
 /// </summary>
-public int ToIndex { get; set; }}
+public int? ToIndex { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetSearchResultsRequest"/>
 /// </summary>
@@ -3811,7 +3811,7 @@ internal class DOMGetSearchResultsResponse : IChromiumResponse
 /// <summary>
 /// Ids of the search result nodes.
 /// </summary>
-public int[] NodeIds { get; set; }}
+public int?[] NodeIds { get; set; }}
 /// <summary>
 /// Hides any highlight.
 /// </summary>
@@ -3893,16 +3893,16 @@ public string Command { get; } = "DOM.moveTo";
 /// <summary>
 /// Id of the node to move.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Id of the element to drop the moved node into.
 /// </summary>
-public int TargetNodeId { get; set; }
+public int? TargetNodeId { get; set; }
 /// <summary>
 /// Drop node before this one (if absent, the moved node becomes the last child of
 /// `targetNodeId`).
 /// </summary>
-public int InsertBeforeNodeId { get; set; }}
+public int? InsertBeforeNodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMMoveToRequest"/>
 /// </summary>
@@ -3911,7 +3911,7 @@ internal class DOMMoveToResponse : IChromiumResponse
 /// <summary>
 /// New id of the moved node.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Searches for a given string in the DOM tree. Use `getSearchResults` to access search results or
 /// `cancelSearch` to end this search session.
@@ -3930,7 +3930,7 @@ public string Query { get; set; }
 /// <summary>
 /// True to search in user agent shadow DOM.
 /// </summary>
-public bool IncludeUserAgentShadowDOM { get; set; }}
+public bool? IncludeUserAgentShadowDOM { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMPerformSearchRequest"/>
 /// </summary>
@@ -3943,7 +3943,7 @@ public string SearchId { get; set; }
 /// <summary>
 /// Number of search results.
 /// </summary>
-public int ResultCount { get; set; }}
+public int? ResultCount { get; set; }}
 /// <summary>
 /// Requests that the node is sent to the caller given its path. // FIXME, use XPath
 /// </summary>
@@ -3966,7 +3966,7 @@ internal class DOMPushNodeByPathToFrontendResponse : IChromiumResponse
 /// <summary>
 /// Id of the node for given path.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Requests that a batch of nodes is sent to the caller given their backend node ids.
 /// </summary>
@@ -3980,7 +3980,7 @@ public string Command { get; } = "DOM.pushNodesByBackendIdsToFrontend";
 /// <summary>
 /// The array of backend node ids.
 /// </summary>
-public int[] BackendNodeIds { get; set; }}
+public int?[] BackendNodeIds { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMPushNodesByBackendIdsToFrontendRequest"/>
 /// </summary>
@@ -3990,7 +3990,7 @@ internal class DOMPushNodesByBackendIdsToFrontendResponse : IChromiumResponse
 /// The array of ids of pushed nodes that correspond to the backend ids specified in
 /// backendNodeIds.
 /// </summary>
-public int[] NodeIds { get; set; }}
+public int?[] NodeIds { get; set; }}
 /// <summary>
 /// Executes `querySelector` on a given node.
 /// </summary>
@@ -4004,7 +4004,7 @@ public string Command { get; } = "DOM.querySelector";
 /// <summary>
 /// Id of the node to query upon.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Selector string.
 /// </summary>
@@ -4017,7 +4017,7 @@ internal class DOMQuerySelectorResponse : IChromiumResponse
 /// <summary>
 /// Query selector result.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Executes `querySelectorAll` on a given node.
 /// </summary>
@@ -4031,7 +4031,7 @@ public string Command { get; } = "DOM.querySelectorAll";
 /// <summary>
 /// Id of the node to query upon.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Selector string.
 /// </summary>
@@ -4044,7 +4044,7 @@ internal class DOMQuerySelectorAllResponse : IChromiumResponse
 /// <summary>
 /// Query selector result.
 /// </summary>
-public int[] NodeIds { get; set; }}
+public int?[] NodeIds { get; set; }}
 /// <summary>
 /// Re-does the last undone action.
 /// </summary>
@@ -4075,7 +4075,7 @@ public string Command { get; } = "DOM.removeAttribute";
 /// <summary>
 /// Id of the element to remove attribute from.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Name of the attribute to remove.
 /// </summary>
@@ -4099,7 +4099,7 @@ public string Command { get; } = "DOM.removeNode";
 /// <summary>
 /// Id of the node to remove.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMRemoveNodeRequest"/>
 /// </summary>
@@ -4121,17 +4121,17 @@ public string Command { get; } = "DOM.requestChildNodes";
 /// <summary>
 /// Id of the node to get children for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int Depth { get; set; }
+public int? Depth { get; set; }
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the sub-tree
 /// (default is false).
 /// </summary>
-public bool Pierce { get; set; }}
+public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMRequestChildNodesRequest"/>
 /// </summary>
@@ -4162,7 +4162,7 @@ internal class DOMRequestNodeResponse : IChromiumResponse
 /// <summary>
 /// Node id for given object.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Resolves the JavaScript node object for a given NodeId or BackendNodeId.
 /// </summary>
@@ -4176,11 +4176,11 @@ public string Command { get; } = "DOM.resolveNode";
 /// <summary>
 /// Id of the node to resolve.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Backend identifier of the node to resolve.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
@@ -4188,7 +4188,7 @@ public string ObjectGroup { get; set; }
 /// <summary>
 /// Execution context in which to resolve the node.
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMResolveNodeRequest"/>
 /// </summary>
@@ -4211,7 +4211,7 @@ public string Command { get; } = "DOM.setAttributeValue";
 /// <summary>
 /// Id of the element to set attribute for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Attribute name.
 /// </summary>
@@ -4240,7 +4240,7 @@ public string Command { get; } = "DOM.setAttributesAsText";
 /// <summary>
 /// Id of the element to set attributes for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Text with a number of attributes. Will parse this text using HTML parser.
 /// </summary>
@@ -4273,11 +4273,11 @@ public string[] Files { get; set; }
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
@@ -4301,7 +4301,7 @@ public string Command { get; } = "DOM.setNodeStackTracesEnabled";
 /// <summary>
 /// Enable or disable.
 /// </summary>
-public bool Enable { get; set; }}
+public bool? Enable { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetNodeStackTracesEnabledRequest"/>
 /// </summary>
@@ -4321,7 +4321,7 @@ public string Command { get; } = "DOM.getNodeStackTraces";
 /// <summary>
 /// Id of the node to get stack traces for.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetNodeStackTracesRequest"/>
 /// </summary>
@@ -4369,7 +4369,7 @@ public string Command { get; } = "DOM.setInspectedNode";
 /// <summary>
 /// DOM node id to be accessible by means of $x command line API.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetInspectedNodeRequest"/>
 /// </summary>
@@ -4389,7 +4389,7 @@ public string Command { get; } = "DOM.setNodeName";
 /// <summary>
 /// Id of the node to set name for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// New node's name.
 /// </summary>
@@ -4402,7 +4402,7 @@ internal class DOMSetNodeNameResponse : IChromiumResponse
 /// <summary>
 /// New node's id.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Sets node value for a node with given id.
 /// </summary>
@@ -4416,7 +4416,7 @@ public string Command { get; } = "DOM.setNodeValue";
 /// <summary>
 /// Id of the node to set value for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// New node's value.
 /// </summary>
@@ -4440,7 +4440,7 @@ public string Command { get; } = "DOM.setOuterHTML";
 /// <summary>
 /// Id of the node to set markup for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Outer HTML markup to set.
 /// </summary>
@@ -4490,11 +4490,11 @@ internal class DOMGetFrameOwnerResponse : IChromiumResponse
 /// <summary>
 /// Resulting node.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// Id of the node at given coordinates, only when enabled and requested document.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Fired when `Element`'s attribute is modified.
 /// </summary>
@@ -4507,7 +4507,7 @@ public string InternalName { get; } = "DOM.attributeModified";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Attribute name.
 /// </summary>
@@ -4528,7 +4528,7 @@ public string InternalName { get; } = "DOM.attributeRemoved";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// A ttribute name.
 /// </summary>
@@ -4545,7 +4545,7 @@ public string InternalName { get; } = "DOM.characterDataModified";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// New text value.
 /// </summary>
@@ -4562,11 +4562,11 @@ public string InternalName { get; } = "DOM.childNodeCountUpdated";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// New node count.
 /// </summary>
-public int ChildNodeCount { get; set; }}
+public int? ChildNodeCount { get; set; }}
 /// <summary>
 /// Mirrors `DOMNodeInserted` event.
 /// </summary>
@@ -4579,11 +4579,11 @@ public string InternalName { get; } = "DOM.childNodeInserted";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int ParentNodeId { get; set; }
+public int? ParentNodeId { get; set; }
 /// <summary>
 /// If of the previous siblint.
 /// </summary>
-public int PreviousNodeId { get; set; }
+public int? PreviousNodeId { get; set; }
 /// <summary>
 /// Inserted node data.
 /// </summary>
@@ -4600,11 +4600,11 @@ public string InternalName { get; } = "DOM.childNodeRemoved";
 /// <summary>
 /// Parent id.
 /// </summary>
-public int ParentNodeId { get; set; }
+public int? ParentNodeId { get; set; }
 /// <summary>
 /// Id of the node that has been removed.
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Called when distrubution is changed.
 /// </summary>
@@ -4617,7 +4617,7 @@ public string InternalName { get; } = "DOM.distributedNodesUpdated";
 /// <summary>
 /// Insertion point where distrubuted nodes were updated.
 /// </summary>
-public int InsertionPointId { get; set; }
+public int? InsertionPointId { get; set; }
 /// <summary>
 /// Distributed nodes for given insertion point.
 /// </summary>
@@ -4644,7 +4644,7 @@ public string InternalName { get; } = "DOM.inlineStyleInvalidated";
 /// <summary>
 /// Ids of the nodes for which the inline styles have been invalidated.
 /// </summary>
-public int[] NodeIds { get; set; }}
+public int?[] NodeIds { get; set; }}
 /// <summary>
 /// Called when a pseudo element is added to an element.
 /// </summary>
@@ -4657,7 +4657,7 @@ public string InternalName { get; } = "DOM.pseudoElementAdded";
 /// <summary>
 /// Pseudo element's parent element id.
 /// </summary>
-public int ParentId { get; set; }
+public int? ParentId { get; set; }
 /// <summary>
 /// The added pseudo element.
 /// </summary>
@@ -4674,11 +4674,11 @@ public string InternalName { get; } = "DOM.pseudoElementRemoved";
 /// <summary>
 /// Pseudo element's parent element id.
 /// </summary>
-public int ParentId { get; set; }
+public int? ParentId { get; set; }
 /// <summary>
 /// The removed pseudo element id.
 /// </summary>
-public int PseudoElementId { get; set; }}
+public int? PseudoElementId { get; set; }}
 /// <summary>
 /// Fired when backend wants to provide client with the missing DOM structure. This happens upon
 /// most of the calls requesting node ids.
@@ -4692,7 +4692,7 @@ public string InternalName { get; } = "DOM.setChildNodes";
 /// <summary>
 /// Parent node id to populate with children.
 /// </summary>
-public int ParentId { get; set; }
+public int? ParentId { get; set; }
 /// <summary>
 /// Child nodes array.
 /// </summary>
@@ -4709,11 +4709,11 @@ public string InternalName { get; } = "DOM.shadowRootPopped";
 /// <summary>
 /// Host element id.
 /// </summary>
-public int HostId { get; set; }
+public int? HostId { get; set; }
 /// <summary>
 /// Shadow root id.
 /// </summary>
-public int RootId { get; set; }}
+public int? RootId { get; set; }}
 /// <summary>
 /// Called when shadow root is pushed into the element.
 /// </summary>
@@ -4726,7 +4726,7 @@ public string InternalName { get; } = "DOM.shadowRootPushed";
 /// <summary>
 /// Host element id.
 /// </summary>
-public int HostId { get; set; }
+public int? HostId { get; set; }
 /// <summary>
 /// Shadow root.
 /// </summary>
@@ -4754,15 +4754,15 @@ public string Type { get; set; }
 /// <summary>
 /// `EventListener`'s useCapture.
 /// </summary>
-public bool UseCapture { get; set; }
+public bool? UseCapture { get; set; }
 /// <summary>
 /// `EventListener`'s passive flag.
 /// </summary>
-public bool Passive { get; set; }
+public bool? Passive { get; set; }
 /// <summary>
 /// `EventListener`'s once flag.
 /// </summary>
-public bool Once { get; set; }
+public bool? Once { get; set; }
 /// <summary>
 /// Script id of the handler code.
 /// </summary>
@@ -4770,11 +4770,11 @@ public string ScriptId { get; set; }
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int ColumnNumber { get; set; }
+public int? ColumnNumber { get; set; }
 /// <summary>
 /// Event handler function value.
 /// </summary>
@@ -4786,7 +4786,7 @@ public Runtime.RemoteObject OriginalHandler { get; set; }
 /// <summary>
 /// Node the listener is added to (if any).
 /// </summary>
-public int BackendNodeId { get; set; }}
+public int? BackendNodeId { get; set; }}
 /// <summary>
 /// Returns event listeners of the given object.
 /// </summary>
@@ -4805,12 +4805,12 @@ public string ObjectId { get; set; }
 /// The maximum depth at which Node children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int Depth { get; set; }
+public int? Depth { get; set; }
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false). Reports listeners for all contexts if pierce is enabled.
 /// </summary>
-public bool Pierce { get; set; }}
+public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerGetEventListenersRequest"/>
 /// </summary>
@@ -4833,7 +4833,7 @@ public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
 /// <summary>
 /// Identifier of the node to remove breakpoint from.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Type of the breakpoint to remove.
 /// </summary>
@@ -4921,7 +4921,7 @@ public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
 /// <summary>
 /// Identifier of the node to set breakpoint on.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Type of the operation to stop upon.
 /// </summary>
@@ -5008,7 +5008,7 @@ internal class DOMNode
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int NodeType { get; set; }
+public int? NodeType { get; set; }
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
@@ -5028,20 +5028,20 @@ public string InputValue { get; set; }
 /// <summary>
 /// Only set for radio and checkbox input elements, indicates if the element has been checked
 /// </summary>
-public bool InputChecked { get; set; }
+public bool? InputChecked { get; set; }
 /// <summary>
 /// Only set for option elements, indicates if the element has been selected
 /// </summary>
-public bool OptionSelected { get; set; }
+public bool? OptionSelected { get; set; }
 /// <summary>
 /// `Node`'s id, corresponds to DOM.Node.backendNodeId.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// The indexes of the node's child nodes in the `domNodes` array returned by `getSnapshot`, if
 /// any.
 /// </summary>
-public int[] ChildNodeIndexes { get; set; }
+public int?[] ChildNodeIndexes { get; set; }
 /// <summary>
 /// Attributes of an `Element` node.
 /// </summary>
@@ -5050,12 +5050,12 @@ public NameValue[] Attributes { get; set; }
 /// Indexes of pseudo elements associated with this node in the `domNodes` array returned by
 /// `getSnapshot`, if any.
 /// </summary>
-public int[] PseudoElementIndexes { get; set; }
+public int?[] PseudoElementIndexes { get; set; }
 /// <summary>
 /// The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
 /// `getSnapshot`, if any.
 /// </summary>
-public int LayoutNodeIndex { get; set; }
+public int? LayoutNodeIndex { get; set; }
 /// <summary>
 /// Document URL that `Document` or `FrameOwner` node points to.
 /// </summary>
@@ -5088,7 +5088,7 @@ public string FrameId { get; set; }
 /// The index of a frame owner element's content document in the `domNodes` array returned by
 /// `getSnapshot`, if any.
 /// </summary>
-public int ContentDocumentIndex { get; set; }
+public int? ContentDocumentIndex { get; set; }
 /// <summary>
 /// Type of a pseudo element node.
 /// </summary>
@@ -5102,7 +5102,7 @@ public DOM.ShadowRootType ShadowRootType { get; set; }
 /// event listeners attached via JavaScript as well as anchor tags that naturally navigate when
 /// clicked.
 /// </summary>
-public bool IsClickable { get; set; }
+public bool? IsClickable { get; set; }
 /// <summary>
 /// Details of the node's event listeners, if any.
 /// </summary>
@@ -5118,11 +5118,11 @@ public string OriginURL { get; set; }
 /// <summary>
 /// Scroll offsets, set when this node is a Document.
 /// </summary>
-public double ScrollOffsetX { get; set; }
+public double? ScrollOffsetX { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double ScrollOffsetY { get; set; }}
+public double? ScrollOffsetY { get; set; }}
 /// <summary>
 /// Details of post layout rendered text positions. The exact layout should not be regarded as
 /// stable and may change between versions.
@@ -5137,12 +5137,12 @@ public DOM.Rect BoundingBox { get; set; }
 /// The starting index in characters, for this post layout textbox substring. Characters that
 /// would be represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int StartCharacterIndex { get; set; }
+public int? StartCharacterIndex { get; set; }
 /// <summary>
 /// The number of characters in this post layout textbox substring. Characters that would be
 /// represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int NumCharacters { get; set; }}
+public int? NumCharacters { get; set; }}
 /// <summary>
 /// Details of an element in the DOM tree with a LayoutObject.
 /// </summary>
@@ -5151,7 +5151,7 @@ internal class LayoutTreeNode
 /// <summary>
 /// The index of the related DOM node in the `domNodes` array returned by `getSnapshot`.
 /// </summary>
-public int DomNodeIndex { get; set; }
+public int? DomNodeIndex { get; set; }
 /// <summary>
 /// The bounding box in document coordinates. Note that scroll offset of the document is ignored.
 /// </summary>
@@ -5167,17 +5167,17 @@ public InlineTextBox[] InlineTextNodes { get; set; }
 /// <summary>
 /// Index into the `computedStyles` array returned by `getSnapshot`.
 /// </summary>
-public int StyleIndex { get; set; }
+public int? StyleIndex { get; set; }
 /// <summary>
 /// Global paint order index, which is determined by the stacking order of the nodes. Nodes
 /// that are painted together will have the same index. Only provided if includePaintOrder in
 /// getSnapshot was true.
 /// </summary>
-public int PaintOrder { get; set; }
+public int? PaintOrder { get; set; }
 /// <summary>
 /// Set to true to indicate the element begins a new stacking context.
 /// </summary>
-public bool IsStackingContext { get; set; }}
+public bool? IsStackingContext { get; set; }}
 /// <summary>
 /// A subset of the full ComputedStyle as defined by the request whitelist.
 /// </summary>
@@ -5208,7 +5208,7 @@ internal class RareStringData
 /// <summary>
 /// 
 /// </summary>
-public int[] Index { get; set; }
+public int?[] Index { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -5221,7 +5221,7 @@ internal class RareBooleanData
 /// <summary>
 /// 
 /// </summary>
-public int[] Index { get; set; }}
+public int?[] Index { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -5230,11 +5230,11 @@ internal class RareIntegerData
 /// <summary>
 /// 
 /// </summary>
-public int[] Index { get; set; }
+public int?[] Index { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int[] Value { get; set; }}
+public int?[] Value { get; set; }}
 /// <summary>
 /// Document snapshot.
 /// </summary>
@@ -5287,19 +5287,19 @@ public TextBoxSnapshot TextBoxes { get; set; }
 /// <summary>
 /// Horizontal scroll offset.
 /// </summary>
-public double ScrollOffsetX { get; set; }
+public double? ScrollOffsetX { get; set; }
 /// <summary>
 /// Vertical scroll offset.
 /// </summary>
-public double ScrollOffsetY { get; set; }
+public double? ScrollOffsetY { get; set; }
 /// <summary>
 /// Document content width.
 /// </summary>
-public double ContentWidth { get; set; }
+public double? ContentWidth { get; set; }
 /// <summary>
 /// Document content height.
 /// </summary>
-public double ContentHeight { get; set; }}
+public double? ContentHeight { get; set; }}
 /// <summary>
 /// Table containing nodes.
 /// </summary>
@@ -5308,11 +5308,11 @@ internal class NodeTreeSnapshot
 /// <summary>
 /// Parent node index.
 /// </summary>
-public int[] ParentIndex { get; set; }
+public int?[] ParentIndex { get; set; }
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int[] NodeType { get; set; }
+public int?[] NodeType { get; set; }
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
@@ -5324,7 +5324,7 @@ public int[] NodeValue { get; set; }
 /// <summary>
 /// `Node`'s id, corresponds to DOM.Node.backendNodeId.
 /// </summary>
-public int[] BackendNodeId { get; set; }
+public int?[] BackendNodeId { get; set; }
 /// <summary>
 /// Attributes of an `Element` node. Flatten name, value pairs.
 /// </summary>
@@ -5375,7 +5375,7 @@ internal class LayoutTreeSnapshot
 /// <summary>
 /// Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
 /// </summary>
-public int[] NodeIndex { get; set; }
+public int?[] NodeIndex { get; set; }
 /// <summary>
 /// Array of indexes specifying computed style strings, filtered according to the `computedStyles` parameter passed to `captureSnapshot`.
 /// </summary>
@@ -5383,7 +5383,7 @@ public int[][] Styles { get; set; }
 /// <summary>
 /// The absolute position bounding box.
 /// </summary>
-public double[][] Bounds { get; set; }
+public double?[][] Bounds { get; set; }
 /// <summary>
 /// Contents of the LayoutText, if any.
 /// </summary>
@@ -5397,19 +5397,19 @@ public RareBooleanData StackingContexts { get; set; }
 /// that are painted together will have the same index. Only provided if includePaintOrder in
 /// captureSnapshot was true.
 /// </summary>
-public int[] PaintOrders { get; set; }
+public int?[] PaintOrders { get; set; }
 /// <summary>
 /// The offset rect of nodes. Only available when includeDOMRects is set to true
 /// </summary>
-public double[][] OffsetRects { get; set; }
+public double?[][] OffsetRects { get; set; }
 /// <summary>
 /// The scroll rect of nodes. Only available when includeDOMRects is set to true
 /// </summary>
-public double[][] ScrollRects { get; set; }
+public double?[][] ScrollRects { get; set; }
 /// <summary>
 /// The client rect of nodes. Only available when includeDOMRects is set to true
 /// </summary>
-public double[][] ClientRects { get; set; }}
+public double?[][] ClientRects { get; set; }}
 /// <summary>
 /// Table of details of the post layout rendered text positions. The exact layout should not be regarded as
 /// stable and may change between versions.
@@ -5419,21 +5419,21 @@ internal class TextBoxSnapshot
 /// <summary>
 /// Index of the layout tree node that owns this box collection.
 /// </summary>
-public int[] LayoutIndex { get; set; }
+public int?[] LayoutIndex { get; set; }
 /// <summary>
 /// The absolute position bounding box.
 /// </summary>
-public double[][] Bounds { get; set; }
+public double?[][] Bounds { get; set; }
 /// <summary>
 /// The starting index in characters, for this post layout textbox substring. Characters that
 /// would be represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int[] Start { get; set; }
+public int?[] Start { get; set; }
 /// <summary>
 /// The number of characters in this post layout textbox substring. Characters that would be
 /// represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int[] Length { get; set; }}
+public int?[] Length { get; set; }}
 /// <summary>
 /// Disables DOM snapshot agent for the given page.
 /// </summary>
@@ -5488,15 +5488,15 @@ public string[] ComputedStyleWhitelist { get; set; }
 /// <summary>
 /// Whether or not to retrieve details of DOM listeners (default false).
 /// </summary>
-public bool IncludeEventListeners { get; set; }
+public bool? IncludeEventListeners { get; set; }
 /// <summary>
 /// Whether to determine and include the paint order index of LayoutTreeNodes (default false).
 /// </summary>
-public bool IncludePaintOrder { get; set; }
+public bool? IncludePaintOrder { get; set; }
 /// <summary>
 /// Whether to include UA shadow tree in the snapshot (default false).
 /// </summary>
-public bool IncludeUserAgentShadowTree { get; set; }}
+public bool? IncludeUserAgentShadowTree { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSnapshotGetSnapshotRequest"/>
 /// </summary>
@@ -5534,11 +5534,11 @@ public string[] ComputedStyles { get; set; }
 /// <summary>
 /// Whether to include layout object paint orders into the snapshot.
 /// </summary>
-public bool IncludePaintOrder { get; set; }
+public bool? IncludePaintOrder { get; set; }
 /// <summary>
 /// Whether to include DOM rectangles (offsetRects, clientRects, scrollRects) into the snapshot
 /// </summary>
-public bool IncludeDOMRects { get; set; }}
+public bool? IncludeDOMRects { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSnapshotCaptureSnapshotRequest"/>
 /// </summary>
@@ -5567,7 +5567,7 @@ public string SecurityOrigin { get; set; }
 /// <summary>
 /// Whether the storage is local storage (not session storage).
 /// </summary>
-public bool IsLocalStorage { get; set; }}
+public bool? IsLocalStorage { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -5809,7 +5809,7 @@ public string Message { get; set; }
 /// <summary>
 /// Error code.
 /// </summary>
-public int Code { get; set; }}
+public int? Code { get; set; }}
 /// <summary>
 /// Disables database tracking, prevents database events from being sent to the client.
 /// </summary>
@@ -5948,15 +5948,15 @@ public string Command { get; } = "DeviceOrientation.setDeviceOrientationOverride
 /// <summary>
 /// Mock alpha
 /// </summary>
-public double Alpha { get; set; }
+public double? Alpha { get; set; }
 /// <summary>
 /// Mock beta
 /// </summary>
-public double Beta { get; set; }
+public double? Beta { get; set; }
 /// <summary>
 /// Mock gamma
 /// </summary>
-public double Gamma { get; set; }}
+public double? Gamma { get; set; }}
 /// <summary>
 /// Response from <see cref="DeviceOrientationSetDeviceOrientationOverrideRequest"/>
 /// </summary>
@@ -5978,7 +5978,7 @@ public string Type { get; set; }
 /// <summary>
 /// Orientation angle.
 /// </summary>
-public int Angle { get; set; }}
+public int? Angle { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -6022,7 +6022,7 @@ internal class EmulationCanEmulateResponse : IChromiumResponse
 /// <summary>
 /// True if emulation is supported.
 /// </summary>
-public bool Result { get; set; }}
+public bool? Result { get; set; }}
 /// <summary>
 /// Clears the overriden device metrics.
 /// </summary>
@@ -6087,7 +6087,7 @@ public string Command { get; } = "Emulation.setFocusEmulationEnabled";
 /// <summary>
 /// Whether to enable to disable focus emulation.
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetFocusEmulationEnabledRequest"/>
 /// </summary>
@@ -6107,7 +6107,7 @@ public string Command { get; } = "Emulation.setCPUThrottlingRate";
 /// <summary>
 /// Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
 /// </summary>
-public double Rate { get; set; }}
+public double? Rate { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetCPUThrottlingRateRequest"/>
 /// </summary>
@@ -6151,44 +6151,44 @@ public string Command { get; } = "Emulation.setDeviceMetricsOverride";
 /// <summary>
 /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int Height { get; set; }
+public int? Height { get; set; }
 /// <summary>
 /// Overriding device scale factor value. 0 disables the override.
 /// </summary>
-public double DeviceScaleFactor { get; set; }
+public double? DeviceScaleFactor { get; set; }
 /// <summary>
 /// Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
 /// autosizing and more.
 /// </summary>
-public bool Mobile { get; set; }
+public bool? Mobile { get; set; }
 /// <summary>
 /// Scale to apply to resulting view image.
 /// </summary>
-public double Scale { get; set; }
+public double? Scale { get; set; }
 /// <summary>
 /// Overriding screen width value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int ScreenWidth { get; set; }
+public int? ScreenWidth { get; set; }
 /// <summary>
 /// Overriding screen height value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int ScreenHeight { get; set; }
+public int? ScreenHeight { get; set; }
 /// <summary>
 /// Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int PositionX { get; set; }
+public int? PositionX { get; set; }
 /// <summary>
 /// Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int PositionY { get; set; }
+public int? PositionY { get; set; }
 /// <summary>
 /// Do not set visible view size, rely upon explicit setVisibleSize call.
 /// </summary>
-public bool DontSetVisibleSize { get; set; }
+public bool? DontSetVisibleSize { get; set; }
 /// <summary>
 /// Screen orientation override.
 /// </summary>
@@ -6217,7 +6217,7 @@ public string Command { get; } = "Emulation.setScrollbarsHidden";
 /// <summary>
 /// Whether scrollbars should be always hidden.
 /// </summary>
-public bool Hidden { get; set; }}
+public bool? Hidden { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetScrollbarsHiddenRequest"/>
 /// </summary>
@@ -6237,7 +6237,7 @@ public string Command { get; } = "Emulation.setDocumentCookieDisabled";
 /// <summary>
 /// Whether document.coookie API should be disabled.
 /// </summary>
-public bool Disabled { get; set; }}
+public bool? Disabled { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetDocumentCookieDisabledRequest"/>
 /// </summary>
@@ -6257,7 +6257,7 @@ public string Command { get; } = "Emulation.setEmitTouchEventsForMouse";
 /// <summary>
 /// Whether touch emulation based on mouse input should be enabled.
 /// </summary>
-public bool Enabled { get; set; }
+public bool? Enabled { get; set; }
 /// <summary>
 /// Touch/gesture events configuration. Default: current platform.
 /// </summary>
@@ -6306,15 +6306,15 @@ public string Command { get; } = "Emulation.setGeolocationOverride";
 /// <summary>
 /// Mock latitude
 /// </summary>
-public double Latitude { get; set; }
+public double? Latitude { get; set; }
 /// <summary>
 /// Mock longitude
 /// </summary>
-public double Longitude { get; set; }
+public double? Longitude { get; set; }
 /// <summary>
 /// Mock accuracy
 /// </summary>
-public double Accuracy { get; set; }}
+public double? Accuracy { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetGeolocationOverrideRequest"/>
 /// </summary>
@@ -6354,7 +6354,7 @@ public string Command { get; } = "Emulation.setPageScaleFactor";
 /// <summary>
 /// Page scale factor.
 /// </summary>
-public double PageScaleFactor { get; set; }}
+public double? PageScaleFactor { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetPageScaleFactorRequest"/>
 /// </summary>
@@ -6374,7 +6374,7 @@ public string Command { get; } = "Emulation.setScriptExecutionDisabled";
 /// <summary>
 /// Whether script execution should be disabled in the page.
 /// </summary>
-public bool Value { get; set; }}
+public bool? Value { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetScriptExecutionDisabledRequest"/>
 /// </summary>
@@ -6394,11 +6394,11 @@ public string Command { get; } = "Emulation.setTouchEmulationEnabled";
 /// <summary>
 /// Whether the touch event emulation should be enabled.
 /// </summary>
-public bool Enabled { get; set; }
+public bool? Enabled { get; set; }
 /// <summary>
 /// Maximum touch points supported. Defaults to one.
 /// </summary>
-public int MaxTouchPoints { get; set; }}
+public int? MaxTouchPoints { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetTouchEmulationEnabledRequest"/>
 /// </summary>
@@ -6424,21 +6424,21 @@ public VirtualTimePolicy Policy { get; set; }
 /// If set, after this many virtual milliseconds have elapsed virtual time will be paused and a
 /// virtualTimeBudgetExpired event is sent.
 /// </summary>
-public double Budget { get; set; }
+public double? Budget { get; set; }
 /// <summary>
 /// If set this specifies the maximum number of tasks that can be run before virtual is forced
 /// forwards to prevent deadlock.
 /// </summary>
-public int MaxVirtualTimeTaskStarvationCount { get; set; }
+public int? MaxVirtualTimeTaskStarvationCount { get; set; }
 /// <summary>
 /// If set the virtual time policy change should be deferred until any frame starts navigating.
 /// Note any previous deferred policy change is superseded.
 /// </summary>
-public bool WaitForNavigation { get; set; }
+public bool? WaitForNavigation { get; set; }
 /// <summary>
 /// If set, base::Time::Now will be overriden to initially return this value.
 /// </summary>
-public double InitialVirtualTime { get; set; }}
+public double? InitialVirtualTime { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetVirtualTimePolicyRequest"/>
 /// </summary>
@@ -6447,7 +6447,7 @@ internal class EmulationSetVirtualTimePolicyResponse : IChromiumResponse
 /// <summary>
 /// Absolute timestamp at which virtual time was first enabled (up time in milliseconds).
 /// </summary>
-public double VirtualTimeTicksBase { get; set; }}
+public double? VirtualTimeTicksBase { get; set; }}
 /// <summary>
 /// Overrides default host system timezone with the specified one.
 /// </summary>
@@ -6484,11 +6484,11 @@ public string Command { get; } = "Emulation.setVisibleSize";
 /// <summary>
 /// Frame width (DIP).
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Frame height (DIP).
 /// </summary>
-public int Height { get; set; }}
+public int? Height { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetVisibleSizeRequest"/>
 /// </summary>
@@ -6548,7 +6548,7 @@ public string Format { get; set; }
 /// <summary>
 /// Compression quality from range [0..100] (jpeg only).
 /// </summary>
-public int Quality { get; set; }}
+public int? Quality { get; set; }}
 /// <summary>
 /// Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures a
 /// screenshot from the resulting frame. Requires that the target was created with enabled
@@ -6566,18 +6566,18 @@ public string Command { get; } = "HeadlessExperimental.beginFrame";
 /// Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,
 /// the current time will be used.
 /// </summary>
-public double FrameTimeTicks { get; set; }
+public double? FrameTimeTicks { get; set; }
 /// <summary>
 /// The interval between BeginFrames that is reported to the compositor, in milliseconds.
 /// Defaults to a 60 frames/second interval, i.e. about 16.666 milliseconds.
 /// </summary>
-public double Interval { get; set; }
+public double? Interval { get; set; }
 /// <summary>
 /// Whether updates should not be committed and drawn onto the display. False by default. If
 /// true, only side effects of the BeginFrame will be run, such as layout and animations, but
 /// any visual updates may not be visible on the display or in screenshots.
 /// </summary>
-public bool NoDisplayUpdates { get; set; }
+public bool? NoDisplayUpdates { get; set; }
 /// <summary>
 /// If set, a screenshot of the frame will be captured and returned in the response. Otherwise,
 /// no screenshot will be captured. Note that capturing a screenshot can fail, for example,
@@ -6593,7 +6593,7 @@ internal class HeadlessExperimentalBeginFrameResponse : IChromiumResponse
 /// Whether the BeginFrame resulted in damage and, thus, a new frame was committed to the
 /// display. Reported for diagnostic uses, may be removed in the future.
 /// </summary>
-public bool HasDamage { get; set; }
+public bool? HasDamage { get; set; }
 /// <summary>
 /// Base64-encoded image data of the screenshot, if one was requested and successfully taken.
 /// </summary>
@@ -6646,7 +6646,7 @@ public string InternalName { get; } = "HeadlessExperimental.needsBeginFramesChan
 /// <summary>
 /// True if BeginFrames are needed, false otherwise.
 /// </summary>
-public bool NeedsBeginFrames { get; set; }}
+public bool? NeedsBeginFrames { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.IO
 {
@@ -6688,11 +6688,11 @@ public string Handle { get; set; }
 /// Seek to the specified offset before reading (if not specificed, proceed with offset
 /// following the last read). Some types of streams may only support sequential reads.
 /// </summary>
-public int Offset { get; set; }
+public int? Offset { get; set; }
 /// <summary>
 /// Maximum number of bytes to read (left upon the agent discretion if not specified).
 /// </summary>
-public int Size { get; set; }}
+public int? Size { get; set; }}
 /// <summary>
 /// Response from <see cref="IOReadRequest"/>
 /// </summary>
@@ -6701,7 +6701,7 @@ internal class IOReadResponse : IChromiumResponse
 /// <summary>
 /// Set if the data is base64-encoded
 /// </summary>
-public bool Base64Encoded { get; set; }
+public bool? Base64Encoded { get; set; }
 /// <summary>
 /// Data that were read.
 /// </summary>
@@ -6709,7 +6709,7 @@ public string Data { get; set; }
 /// <summary>
 /// Set if the end-of-file condition occured while reading.
 /// </summary>
-public bool Eof { get; set; }}
+public bool? Eof { get; set; }}
 /// <summary>
 /// Return UUID of Blob object specified by a remote object id.
 /// </summary>
@@ -6749,7 +6749,7 @@ public string Name { get; set; }
 /// Database version (type is not 'integer', as the standard
 /// requires the version number to be 'unsigned long long')
 /// </summary>
-public double Version { get; set; }
+public double? Version { get; set; }
 /// <summary>
 /// Object stores in this database.
 /// </summary>
@@ -6770,7 +6770,7 @@ public KeyPath KeyPath { get; set; }
 /// <summary>
 /// If true, object store has auto increment flag set.
 /// </summary>
-public bool AutoIncrement { get; set; }
+public bool? AutoIncrement { get; set; }
 /// <summary>
 /// Indexes in this object store.
 /// </summary>
@@ -6791,11 +6791,11 @@ public KeyPath KeyPath { get; set; }
 /// <summary>
 /// If true, index is unique.
 /// </summary>
-public bool Unique { get; set; }
+public bool? Unique { get; set; }
 /// <summary>
 /// If true, index allows multiple entries for a key.
 /// </summary>
-public bool MultiEntry { get; set; }}
+public bool? MultiEntry { get; set; }}
 /// <summary>
 /// Key.
 /// </summary>
@@ -6808,7 +6808,7 @@ public string Type { get; set; }
 /// <summary>
 /// Number value.
 /// </summary>
-public double Number { get; set; }
+public double? Number { get; set; }
 /// <summary>
 /// String value.
 /// </summary>
@@ -6816,7 +6816,7 @@ public string String { get; set; }
 /// <summary>
 /// Date value.
 /// </summary>
-public double Date { get; set; }
+public double? Date { get; set; }
 /// <summary>
 /// Array value.
 /// </summary>
@@ -6837,11 +6837,11 @@ public Key Upper { get; set; }
 /// <summary>
 /// If true lower bound is open.
 /// </summary>
-public bool LowerOpen { get; set; }
+public bool? LowerOpen { get; set; }
 /// <summary>
 /// If true upper bound is open.
 /// </summary>
-public bool UpperOpen { get; set; }}
+public bool? UpperOpen { get; set; }}
 /// <summary>
 /// Data entry.
 /// </summary>
@@ -7023,11 +7023,11 @@ public string IndexName { get; set; }
 /// <summary>
 /// Number of records to skip.
 /// </summary>
-public int SkipCount { get; set; }
+public int? SkipCount { get; set; }
 /// <summary>
 /// Number of records to fetch.
 /// </summary>
-public int PageSize { get; set; }
+public int? PageSize { get; set; }
 /// <summary>
 /// Key range.
 /// </summary>
@@ -7044,7 +7044,7 @@ public DataEntry[] ObjectStoreDataEntries { get; set; }
 /// <summary>
 /// If true, there are more entries to fetch in the given range.
 /// </summary>
-public bool HasMore { get; set; }}
+public bool? HasMore { get; set; }}
 /// <summary>
 /// Gets metadata of an object store
 /// </summary>
@@ -7075,13 +7075,13 @@ internal class IndexedDBGetMetadataResponse : IChromiumResponse
 /// <summary>
 /// the entries count
 /// </summary>
-public double EntriesCount { get; set; }
+public double? EntriesCount { get; set; }
 /// <summary>
 /// the current value of key generator, to become the next inserted
 /// key into the object store. Valid if objectStore.autoIncrement
 /// is true.
 /// </summary>
-public double KeyGeneratorValue { get; set; }}
+public double? KeyGeneratorValue { get; set; }}
 /// <summary>
 /// Requests database with given name in given frame.
 /// </summary>
@@ -7143,32 +7143,32 @@ internal class TouchPoint
 /// <summary>
 /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
 /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// X radius of the touch area (default: 1.0).
 /// </summary>
-public double RadiusX { get; set; }
+public double? RadiusX { get; set; }
 /// <summary>
 /// Y radius of the touch area (default: 1.0).
 /// </summary>
-public double RadiusY { get; set; }
+public double? RadiusY { get; set; }
 /// <summary>
 /// Rotation angle (default: 0.0).
 /// </summary>
-public double RotationAngle { get; set; }
+public double? RotationAngle { get; set; }
 /// <summary>
 /// Force (default: 1.0).
 /// </summary>
-public double Force { get; set; }
+public double? Force { get; set; }
 /// <summary>
 /// Identifier used to track touch sources between events, must be unique within an event.
 /// </summary>
-public double Id { get; set; }}
+public double? Id { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -7206,11 +7206,11 @@ public string Type { get; set; }
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int Modifiers { get; set; }
+public int? Modifiers { get; set; }
 /// <summary>
 /// Time at which the event occurred.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Text as generated by processing a virtual key code with a keyboard layout. Not needed for
 /// for `keyUp` and `rawKeyDown` events (default: "")
@@ -7237,28 +7237,28 @@ public string Key { get; set; }
 /// <summary>
 /// Windows virtual key code (default: 0).
 /// </summary>
-public int WindowsVirtualKeyCode { get; set; }
+public int? WindowsVirtualKeyCode { get; set; }
 /// <summary>
 /// Native virtual key code (default: 0).
 /// </summary>
-public int NativeVirtualKeyCode { get; set; }
+public int? NativeVirtualKeyCode { get; set; }
 /// <summary>
 /// Whether the event was generated from auto repeat (default: false).
 /// </summary>
-public bool AutoRepeat { get; set; }
+public bool? AutoRepeat { get; set; }
 /// <summary>
 /// Whether the event was generated from the keypad (default: false).
 /// </summary>
-public bool IsKeypad { get; set; }
+public bool? IsKeypad { get; set; }
 /// <summary>
 /// Whether the event was a system key event (default: false).
 /// </summary>
-public bool IsSystemKey { get; set; }
+public bool? IsSystemKey { get; set; }
 /// <summary>
 /// Whether the event was from the left or right side of the keyboard. 1=Left, 2=Right (default:
 /// 0).
 /// </summary>
-public int Location { get; set; }}
+public int? Location { get; set; }}
 /// <summary>
 /// Response from <see cref="InputDispatchKeyEventRequest"/>
 /// </summary>
@@ -7303,21 +7303,21 @@ public string Type { get; set; }
 /// <summary>
 /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
 /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int Modifiers { get; set; }
+public int? Modifiers { get; set; }
 /// <summary>
 /// Time at which the event occurred.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Mouse button (default: "none").
 /// </summary>
@@ -7326,19 +7326,19 @@ public MouseButton Button { get; set; }
 /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
 /// Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
 /// </summary>
-public int Buttons { get; set; }
+public int? Buttons { get; set; }
 /// <summary>
 /// Number of times the mouse button was clicked (default: 0).
 /// </summary>
-public int ClickCount { get; set; }
+public int? ClickCount { get; set; }
 /// <summary>
 /// X delta in CSS pixels for mouse wheel event (default: 0).
 /// </summary>
-public double DeltaX { get; set; }
+public double? DeltaX { get; set; }
 /// <summary>
 /// Y delta in CSS pixels for mouse wheel event (default: 0).
 /// </summary>
-public double DeltaY { get; set; }
+public double? DeltaY { get; set; }
 /// <summary>
 /// Pointer type (default: "mouse").
 /// </summary>
@@ -7374,11 +7374,11 @@ public TouchPoint[] TouchPoints { get; set; }
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int Modifiers { get; set; }
+public int? Modifiers { get; set; }
 /// <summary>
 /// Time at which the event occurred.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Response from <see cref="InputDispatchTouchEventRequest"/>
 /// </summary>
@@ -7402,11 +7402,11 @@ public string Type { get; set; }
 /// <summary>
 /// X coordinate of the mouse pointer in DIP.
 /// </summary>
-public int X { get; set; }
+public int? X { get; set; }
 /// <summary>
 /// Y coordinate of the mouse pointer in DIP.
 /// </summary>
-public int Y { get; set; }
+public int? Y { get; set; }
 /// <summary>
 /// Mouse button. Only "none", "left", "right" are supported.
 /// </summary>
@@ -7414,24 +7414,24 @@ public MouseButton Button { get; set; }
 /// <summary>
 /// Time at which the event occurred (default: current time).
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// X delta in DIP for mouse wheel event (default: 0).
 /// </summary>
-public double DeltaX { get; set; }
+public double? DeltaX { get; set; }
 /// <summary>
 /// Y delta in DIP for mouse wheel event (default: 0).
 /// </summary>
-public double DeltaY { get; set; }
+public double? DeltaY { get; set; }
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int Modifiers { get; set; }
+public int? Modifiers { get; set; }
 /// <summary>
 /// Number of times the mouse button was clicked (default: 0).
 /// </summary>
-public int ClickCount { get; set; }}
+public int? ClickCount { get; set; }}
 /// <summary>
 /// Response from <see cref="InputEmulateTouchFromMouseEventRequest"/>
 /// </summary>
@@ -7451,7 +7451,7 @@ public string Command { get; } = "Input.setIgnoreInputEvents";
 /// <summary>
 /// Ignores input events processing when set to true.
 /// </summary>
-public bool Ignore { get; set; }}
+public bool? Ignore { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSetIgnoreInputEventsRequest"/>
 /// </summary>
@@ -7471,19 +7471,19 @@ public string Command { get; } = "Input.synthesizePinchGesture";
 /// <summary>
 /// X coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// Relative scale factor after zooming (&gt;1.0 zooms in, &lt;1.0 zooms out).
 /// </summary>
-public double ScaleFactor { get; set; }
+public double? ScaleFactor { get; set; }
 /// <summary>
 /// Relative pointer speed in pixels per second (default: 800).
 /// </summary>
-public int RelativeSpeed { get; set; }
+public int? RelativeSpeed { get; set; }
 /// <summary>
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
@@ -7508,37 +7508,37 @@ public string Command { get; } = "Input.synthesizeScrollGesture";
 /// <summary>
 /// X coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// The distance to scroll along the X axis (positive to scroll left).
 /// </summary>
-public double XDistance { get; set; }
+public double? XDistance { get; set; }
 /// <summary>
 /// The distance to scroll along the Y axis (positive to scroll up).
 /// </summary>
-public double YDistance { get; set; }
+public double? YDistance { get; set; }
 /// <summary>
 /// The number of additional pixels to scroll back along the X axis, in addition to the given
 /// distance.
 /// </summary>
-public double XOverscroll { get; set; }
+public double? XOverscroll { get; set; }
 /// <summary>
 /// The number of additional pixels to scroll back along the Y axis, in addition to the given
 /// distance.
 /// </summary>
-public double YOverscroll { get; set; }
+public double? YOverscroll { get; set; }
 /// <summary>
 /// Prevent fling (default: true).
 /// </summary>
-public bool PreventFling { get; set; }
+public bool? PreventFling { get; set; }
 /// <summary>
 /// Swipe speed in pixels per second (default: 800).
 /// </summary>
-public int Speed { get; set; }
+public int? Speed { get; set; }
 /// <summary>
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
@@ -7547,11 +7547,11 @@ public GestureSourceType GestureSourceType { get; set; }
 /// <summary>
 /// The number of times to repeat the gesture (default: 0).
 /// </summary>
-public int RepeatCount { get; set; }
+public int? RepeatCount { get; set; }
 /// <summary>
 /// The number of milliseconds delay between each repeat. (default: 250).
 /// </summary>
-public int RepeatDelayMs { get; set; }
+public int? RepeatDelayMs { get; set; }
 /// <summary>
 /// The name of the interaction markers to generate, if not empty (default: "").
 /// </summary>
@@ -7575,19 +7575,19 @@ public string Command { get; } = "Input.synthesizeTapGesture";
 /// <summary>
 /// X coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// Duration between touchdown and touchup events in ms (default: 50).
 /// </summary>
-public int Duration { get; set; }
+public int? Duration { get; set; }
 /// <summary>
 /// Number of times to perform the tap (e.g. 2 for double tap, default: 1).
 /// </summary>
-public int TapCount { get; set; }
+public int? TapCount { get; set; }
 /// <summary>
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
@@ -7714,11 +7714,11 @@ internal class PictureTile
 /// <summary>
 /// Offset from owning layer left boundary
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Offset from owning layer top boundary
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// Base64-encoded snapshot data.
 /// </summary>
@@ -7739,52 +7739,52 @@ public string ParentLayerId { get; set; }
 /// <summary>
 /// The backend id for the node associated with this layer.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// Offset from parent layer, X coordinate.
 /// </summary>
-public double OffsetX { get; set; }
+public double? OffsetX { get; set; }
 /// <summary>
 /// Offset from parent layer, Y coordinate.
 /// </summary>
-public double OffsetY { get; set; }
+public double? OffsetY { get; set; }
 /// <summary>
 /// Layer width.
 /// </summary>
-public double Width { get; set; }
+public double? Width { get; set; }
 /// <summary>
 /// Layer height.
 /// </summary>
-public double Height { get; set; }
+public double? Height { get; set; }
 /// <summary>
 /// Transformation matrix for layer, default is identity matrix
 /// </summary>
-public double[] Transform { get; set; }
+public double?[] Transform { get; set; }
 /// <summary>
 /// Transform anchor point X, absent if no transform specified
 /// </summary>
-public double AnchorX { get; set; }
+public double? AnchorX { get; set; }
 /// <summary>
 /// Transform anchor point Y, absent if no transform specified
 /// </summary>
-public double AnchorY { get; set; }
+public double? AnchorY { get; set; }
 /// <summary>
 /// Transform anchor point Z, absent if no transform specified
 /// </summary>
-public double AnchorZ { get; set; }
+public double? AnchorZ { get; set; }
 /// <summary>
 /// Indicates how many time this layer has painted.
 /// </summary>
-public int PaintCount { get; set; }
+public int? PaintCount { get; set; }
 /// <summary>
 /// Indicates whether this layer hosts any content, rather than being used for
 /// transform/scrolling purposes only.
 /// </summary>
-public bool DrawsContent { get; set; }
+public bool? DrawsContent { get; set; }
 /// <summary>
 /// Set if layer is not visible.
 /// </summary>
-public bool Invisible { get; set; }
+public bool? Invisible { get; set; }
 /// <summary>
 /// Rectangles scrolling on main thread only.
 /// </summary>
@@ -7913,11 +7913,11 @@ public string SnapshotId { get; set; }
 /// <summary>
 /// The maximum number of times to replay the snapshot (1, if not specified).
 /// </summary>
-public int MinRepeatCount { get; set; }
+public int? MinRepeatCount { get; set; }
 /// <summary>
 /// The minimum duration (in seconds) to replay the snapshot.
 /// </summary>
-public double MinDuration { get; set; }
+public double? MinDuration { get; set; }
 /// <summary>
 /// The clip rectangle to apply when replaying the snapshot.
 /// </summary>
@@ -7930,7 +7930,7 @@ internal class LayerTreeProfileSnapshotResponse : IChromiumResponse
 /// <summary>
 /// The array of paint profiles, one per run.
 /// </summary>
-public double[][] Timings { get; set; }}
+public double?[][] Timings { get; set; }}
 /// <summary>
 /// Releases layer snapshot captured by the back-end.
 /// </summary>
@@ -7968,15 +7968,15 @@ public string SnapshotId { get; set; }
 /// <summary>
 /// The first step to replay from (replay from the very start if not specified).
 /// </summary>
-public int FromStep { get; set; }
+public int? FromStep { get; set; }
 /// <summary>
 /// The last step to replay to (replay till the end if not specified).
 /// </summary>
-public int ToStep { get; set; }
+public int? ToStep { get; set; }
 /// <summary>
 /// The scale to apply while replaying (defaults to 1).
 /// </summary>
-public double Scale { get; set; }}
+public double? Scale { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeReplaySnapshotRequest"/>
 /// </summary>
@@ -8062,7 +8062,7 @@ public string Text { get; set; }
 /// <summary>
 /// Timestamp when this entry was added.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// URL of the resource if known.
 /// </summary>
@@ -8070,7 +8070,7 @@ public string Url { get; set; }
 /// <summary>
 /// Line number in the resource.
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// JavaScript stack trace.
 /// </summary>
@@ -8099,7 +8099,7 @@ public string Name { get; set; }
 /// <summary>
 /// Time threshold to trigger upon.
 /// </summary>
-public double Threshold { get; set; }}
+public double? Threshold { get; set; }}
 /// <summary>
 /// Clears the log.
 /// </summary>
@@ -8220,11 +8220,11 @@ internal class SamplingProfileNode
 /// <summary>
 /// Size of the sampled allocation.
 /// </summary>
-public double Size { get; set; }
+public double? Size { get; set; }
 /// <summary>
 /// Total bytes attributed to this sample.
 /// </summary>
-public double Total { get; set; }
+public double? Total { get; set; }
 /// <summary>
 /// Execution stack at the point of allocation.
 /// </summary>
@@ -8263,7 +8263,7 @@ public string BaseAddress { get; set; }
 /// <summary>
 /// Size of the module in bytes.
 /// </summary>
-public double Size { get; set; }}
+public double? Size { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -8283,15 +8283,15 @@ internal class MemoryGetDOMCountersResponse : IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public int Documents { get; set; }
+public int? Documents { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int Nodes { get; set; }
+public int? Nodes { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int JsEventListeners { get; set; }}
+public int? JsEventListeners { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -8339,7 +8339,7 @@ public string Command { get; } = "Memory.setPressureNotificationsSuppressed";
 /// <summary>
 /// If true, memory pressure notifications will be suppressed.
 /// </summary>
-public bool Suppressed { get; set; }}
+public bool? Suppressed { get; set; }}
 /// <summary>
 /// Response from <see cref="MemorySetPressureNotificationsSuppressedRequest"/>
 /// </summary>
@@ -8379,11 +8379,11 @@ public string Command { get; } = "Memory.startSampling";
 /// <summary>
 /// Average number of bytes between samples.
 /// </summary>
-public int SamplingInterval { get; set; }
+public int? SamplingInterval { get; set; }
 /// <summary>
 /// Do not randomize intervals between samples.
 /// </summary>
-public bool SuppressRandomness { get; set; }}
+public bool? SuppressRandomness { get; set; }}
 /// <summary>
 /// Response from <see cref="MemoryStartSamplingRequest"/>
 /// </summary>
@@ -8560,67 +8560,67 @@ internal class ResourceTiming
 /// Timing's requestTime is a baseline in seconds, while the other numbers are ticks in
 /// milliseconds relatively to this requestTime.
 /// </summary>
-public double RequestTime { get; set; }
+public double? RequestTime { get; set; }
 /// <summary>
 /// Started resolving proxy.
 /// </summary>
-public double ProxyStart { get; set; }
+public double? ProxyStart { get; set; }
 /// <summary>
 /// Finished resolving proxy.
 /// </summary>
-public double ProxyEnd { get; set; }
+public double? ProxyEnd { get; set; }
 /// <summary>
 /// Started DNS address resolve.
 /// </summary>
-public double DnsStart { get; set; }
+public double? DnsStart { get; set; }
 /// <summary>
 /// Finished DNS address resolve.
 /// </summary>
-public double DnsEnd { get; set; }
+public double? DnsEnd { get; set; }
 /// <summary>
 /// Started connecting to the remote host.
 /// </summary>
-public double ConnectStart { get; set; }
+public double? ConnectStart { get; set; }
 /// <summary>
 /// Connected to the remote host.
 /// </summary>
-public double ConnectEnd { get; set; }
+public double? ConnectEnd { get; set; }
 /// <summary>
 /// Started SSL handshake.
 /// </summary>
-public double SslStart { get; set; }
+public double? SslStart { get; set; }
 /// <summary>
 /// Finished SSL handshake.
 /// </summary>
-public double SslEnd { get; set; }
+public double? SslEnd { get; set; }
 /// <summary>
 /// Started running ServiceWorker.
 /// </summary>
-public double WorkerStart { get; set; }
+public double? WorkerStart { get; set; }
 /// <summary>
 /// Finished Starting ServiceWorker.
 /// </summary>
-public double WorkerReady { get; set; }
+public double? WorkerReady { get; set; }
 /// <summary>
 /// Started sending request.
 /// </summary>
-public double SendStart { get; set; }
+public double? SendStart { get; set; }
 /// <summary>
 /// Finished sending request.
 /// </summary>
-public double SendEnd { get; set; }
+public double? SendEnd { get; set; }
 /// <summary>
 /// Time the server started pushing request.
 /// </summary>
-public double PushStart { get; set; }
+public double? PushStart { get; set; }
 /// <summary>
 /// Time the server finished pushing request.
 /// </summary>
-public double PushEnd { get; set; }
+public double? PushEnd { get; set; }
 /// <summary>
 /// Finished receiving response headers.
 /// </summary>
-public double ReceiveHeadersEnd { get; set; }}
+public double? ReceiveHeadersEnd { get; set; }}
 /// <summary>
 /// Loading priority of a resource request.
 /// </summary>
@@ -8659,7 +8659,7 @@ public string PostData { get; set; }
 /// <summary>
 /// True when the request has POST data. Note that postData might still be omitted when this flag is true when the data is too long.
 /// </summary>
-public bool HasPostData { get; set; }
+public bool? HasPostData { get; set; }
 /// <summary>
 /// The mixed content type of the request.
 /// </summary>
@@ -8675,7 +8675,7 @@ public string ReferrerPolicy { get; set; }
 /// <summary>
 /// Whether is loaded via link preload.
 /// </summary>
-public bool IsLinkPreload { get; set; }}
+public bool? IsLinkPreload { get; set; }}
 /// <summary>
 /// Details of a signed certificate timestamp (SCT).
 /// </summary>
@@ -8700,7 +8700,7 @@ public string LogId { get; set; }
 /// <summary>
 /// Issuance date.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Hash algorithm.
 /// </summary>
@@ -8741,7 +8741,7 @@ public string Mac { get; set; }
 /// <summary>
 /// Certificate ID value.
 /// </summary>
-public int CertificateId { get; set; }
+public int? CertificateId { get; set; }
 /// <summary>
 /// Certificate subject name.
 /// </summary>
@@ -8757,11 +8757,11 @@ public string Issuer { get; set; }
 /// <summary>
 /// Certificate valid from date.
 /// </summary>
-public double ValidFrom { get; set; }
+public double? ValidFrom { get; set; }
 /// <summary>
 /// Certificate valid to (expiration) date
 /// </summary>
-public double ValidTo { get; set; }
+public double? ValidTo { get; set; }
 /// <summary>
 /// List of signed certificate timestamps (SCTs).
 /// </summary>
@@ -8803,7 +8803,7 @@ public string Url { get; set; }
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int Status { get; set; }
+public int? Status { get; set; }
 /// <summary>
 /// HTTP response status text.
 /// </summary>
@@ -8831,11 +8831,11 @@ public string RequestHeadersText { get; set; }
 /// <summary>
 /// Specifies whether physical connection was actually reused for this request.
 /// </summary>
-public bool ConnectionReused { get; set; }
+public bool? ConnectionReused { get; set; }
 /// <summary>
 /// Physical connection id that was actually used for this request.
 /// </summary>
-public double ConnectionId { get; set; }
+public double? ConnectionId { get; set; }
 /// <summary>
 /// Remote IP address.
 /// </summary>
@@ -8843,23 +8843,23 @@ public string RemoteIPAddress { get; set; }
 /// <summary>
 /// Remote port.
 /// </summary>
-public int RemotePort { get; set; }
+public int? RemotePort { get; set; }
 /// <summary>
 /// Specifies that the request was served from the disk cache.
 /// </summary>
-public bool FromDiskCache { get; set; }
+public bool? FromDiskCache { get; set; }
 /// <summary>
 /// Specifies that the request was served from the ServiceWorker.
 /// </summary>
-public bool FromServiceWorker { get; set; }
+public bool? FromServiceWorker { get; set; }
 /// <summary>
 /// Specifies that the request was served from the prefetch cache.
 /// </summary>
-public bool FromPrefetchCache { get; set; }
+public bool? FromPrefetchCache { get; set; }
 /// <summary>
 /// Total number of bytes received for this request so far.
 /// </summary>
-public double EncodedDataLength { get; set; }
+public double? EncodedDataLength { get; set; }
 /// <summary>
 /// Timing information for the given request.
 /// </summary>
@@ -8893,7 +8893,7 @@ internal class WebSocketResponse
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int Status { get; set; }
+public int? Status { get; set; }
 /// <summary>
 /// HTTP response status text.
 /// </summary>
@@ -8922,11 +8922,11 @@ internal class WebSocketFrame
 /// <summary>
 /// WebSocket message opcode.
 /// </summary>
-public double Opcode { get; set; }
+public double? Opcode { get; set; }
 /// <summary>
 /// WebSocket message mask.
 /// </summary>
-public bool Mask { get; set; }
+public bool? Mask { get; set; }
 /// <summary>
 /// WebSocket message payload data.
 /// If the opcode is 1, this is a text message and payloadData is a UTF-8 string.
@@ -8953,7 +8953,7 @@ public Response Response { get; set; }
 /// <summary>
 /// Cached response body size.
 /// </summary>
-public double BodySize { get; set; }}
+public double? BodySize { get; set; }}
 /// <summary>
 /// Information about the request initiator.
 /// </summary>
@@ -8975,7 +8975,7 @@ public string Url { get; set; }
 /// Initiator line number, set for Parser type or for Script type (when script is importing
 /// module) (0-based).
 /// </summary>
-public double LineNumber { get; set; }}
+public double? LineNumber { get; set; }}
 /// <summary>
 /// Cookie object
 /// </summary>
@@ -9000,23 +9000,23 @@ public string Path { get; set; }
 /// <summary>
 /// Cookie expiration date as the number of seconds since the UNIX epoch.
 /// </summary>
-public double Expires { get; set; }
+public double? Expires { get; set; }
 /// <summary>
 /// Cookie size.
 /// </summary>
-public int Size { get; set; }
+public int? Size { get; set; }
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool HttpOnly { get; set; }
+public bool? HttpOnly { get; set; }
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool Secure { get; set; }
+public bool? Secure { get; set; }
 /// <summary>
 /// True in case of session cookie.
 /// </summary>
-public bool Session { get; set; }
+public bool? Session { get; set; }
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
@@ -9118,11 +9118,11 @@ public string Path { get; set; }
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool Secure { get; set; }
+public bool? Secure { get; set; }
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool HttpOnly { get; set; }
+public bool? HttpOnly { get; set; }
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
@@ -9130,7 +9130,7 @@ public CookieSameSite SameSite { get; set; }
 /// <summary>
 /// Cookie expiration date, session cookie if not set
 /// </summary>
-public double Expires { get; set; }
+public double? Expires { get; set; }
 /// <summary>
 /// Cookie Priority.
 /// </summary>
@@ -9236,11 +9236,11 @@ public string ValidityUrl { get; set; }
 /// <summary>
 /// Signed exchange signature date.
 /// </summary>
-public int Date { get; set; }
+public int? Date { get; set; }
 /// <summary>
 /// Signed exchange signature expires.
 /// </summary>
-public int Expires { get; set; }
+public int? Expires { get; set; }
 /// <summary>
 /// The encoded certificates.
 /// </summary>
@@ -9258,7 +9258,7 @@ public string RequestUrl { get; set; }
 /// <summary>
 /// Signed exchange response code.
 /// </summary>
-public int ResponseCode { get; set; }
+public int? ResponseCode { get; set; }
 /// <summary>
 /// Signed exchange response headers.
 /// </summary>
@@ -9294,7 +9294,7 @@ public string Message { get; set; }
 /// <summary>
 /// The index of the signature which caused the error.
 /// </summary>
-public int SignatureIndex { get; set; }
+public int? SignatureIndex { get; set; }
 /// <summary>
 /// The field which caused the error.
 /// </summary>
@@ -9339,7 +9339,7 @@ internal class NetworkCanClearBrowserCacheResponse : IChromiumResponse
 /// <summary>
 /// True if browser cache can be cleared.
 /// </summary>
-public bool Result { get; set; }}
+public bool? Result { get; set; }}
 /// <summary>
 /// Tells whether clearing browser cookies is supported.
 /// </summary>
@@ -9359,7 +9359,7 @@ internal class NetworkCanClearBrowserCookiesResponse : IChromiumResponse
 /// <summary>
 /// True if browser cookies can be cleared.
 /// </summary>
-public bool Result { get; set; }}
+public bool? Result { get; set; }}
 /// <summary>
 /// Tells whether emulation of network conditions is supported.
 /// </summary>
@@ -9379,7 +9379,7 @@ internal class NetworkCanEmulateNetworkConditionsResponse : IChromiumResponse
 /// <summary>
 /// True if emulation of network conditions is supported.
 /// </summary>
-public bool Result { get; set; }}
+public bool? Result { get; set; }}
 /// <summary>
 /// Clears browser cache.
 /// </summary>
@@ -9535,19 +9535,19 @@ public string Command { get; } = "Network.emulateNetworkConditions";
 /// <summary>
 /// True to emulate internet disconnection.
 /// </summary>
-public bool Offline { get; set; }
+public bool? Offline { get; set; }
 /// <summary>
 /// Minimum latency from request sent to response headers received (ms).
 /// </summary>
-public double Latency { get; set; }
+public double? Latency { get; set; }
 /// <summary>
 /// Maximal aggregated download throughput (bytes/sec). -1 disables download throttling.
 /// </summary>
-public double DownloadThroughput { get; set; }
+public double? DownloadThroughput { get; set; }
 /// <summary>
 /// Maximal aggregated upload throughput (bytes/sec).  -1 disables upload throttling.
 /// </summary>
-public double UploadThroughput { get; set; }
+public double? UploadThroughput { get; set; }
 /// <summary>
 /// Connection type if known.
 /// </summary>
@@ -9571,15 +9571,15 @@ public string Command { get; } = "Network.enable";
 /// <summary>
 /// Buffer size in bytes to use when preserving network payloads (XHRs, etc).
 /// </summary>
-public int MaxTotalBufferSize { get; set; }
+public int? MaxTotalBufferSize { get; set; }
 /// <summary>
 /// Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc).
 /// </summary>
-public int MaxResourceBufferSize { get; set; }
+public int? MaxResourceBufferSize { get; set; }
 /// <summary>
 /// Longest post body size (in bytes) that would be included in requestWillBeSent notification
 /// </summary>
-public int MaxPostDataSize { get; set; }}
+public int? MaxPostDataSize { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkEnableRequest"/>
 /// </summary>
@@ -9680,7 +9680,7 @@ public string Body { get; set; }
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool Base64Encoded { get; set; }}
+public bool? Base64Encoded { get; set; }}
 /// <summary>
 /// Returns post data sent with the request. Returns an error when no data was sent with the request.
 /// </summary>
@@ -9730,7 +9730,7 @@ public string Body { get; set; }
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool Base64Encoded { get; set; }}
+public bool? Base64Encoded { get; set; }}
 /// <summary>
 /// Returns a handle to the stream representing the response body. Note that after this command,
 /// the intercepted request can't be continued as is -- you either need to cancel it or to provide
@@ -9800,11 +9800,11 @@ public string Query { get; set; }
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool CaseSensitive { get; set; }
+public bool? CaseSensitive { get; set; }
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool IsRegex { get; set; }}
+public bool? IsRegex { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSearchInResponseBodyRequest"/>
 /// </summary>
@@ -9847,7 +9847,7 @@ public string Command { get; } = "Network.setBypassServiceWorker";
 /// <summary>
 /// Bypass service worker and load from network.
 /// </summary>
-public bool Bypass { get; set; }}
+public bool? Bypass { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetBypassServiceWorkerRequest"/>
 /// </summary>
@@ -9867,7 +9867,7 @@ public string Command { get; } = "Network.setCacheDisabled";
 /// <summary>
 /// Cache disabled state.
 /// </summary>
-public bool CacheDisabled { get; set; }}
+public bool? CacheDisabled { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetCacheDisabledRequest"/>
 /// </summary>
@@ -9908,11 +9908,11 @@ public string Path { get; set; }
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool Secure { get; set; }
+public bool? Secure { get; set; }
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool HttpOnly { get; set; }
+public bool? HttpOnly { get; set; }
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
@@ -9920,7 +9920,7 @@ public CookieSameSite SameSite { get; set; }
 /// <summary>
 /// Cookie expiration date, session cookie if not set
 /// </summary>
-public double Expires { get; set; }
+public double? Expires { get; set; }
 /// <summary>
 /// Cookie Priority type.
 /// </summary>
@@ -9933,7 +9933,7 @@ internal class NetworkSetCookieResponse : IChromiumResponse
 /// <summary>
 /// True if successfully set cookie.
 /// </summary>
-public bool Success { get; set; }}
+public bool? Success { get; set; }}
 /// <summary>
 /// Sets given cookies.
 /// </summary>
@@ -9967,11 +9967,11 @@ public string Command { get; } = "Network.setDataSizeLimitsForTest";
 /// <summary>
 /// Maximum total buffer size.
 /// </summary>
-public int MaxTotalSize { get; set; }
+public int? MaxTotalSize { get; set; }
 /// <summary>
 /// Maximum per-resource size.
 /// </summary>
-public int MaxResourceSize { get; set; }}
+public int? MaxResourceSize { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetDataSizeLimitsForTestRequest"/>
 /// </summary>
@@ -10064,15 +10064,15 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Data chunk length.
 /// </summary>
-public int DataLength { get; set; }
+public int? DataLength { get; set; }
 /// <summary>
 /// Actual bytes received (might be less than dataLength for compressed encodings).
 /// </summary>
-public int EncodedDataLength { get; set; }}
+public int? EncodedDataLength { get; set; }}
 /// <summary>
 /// Fired when EventSource message is received.
 /// </summary>
@@ -10089,7 +10089,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Message type.
 /// </summary>
@@ -10118,7 +10118,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
@@ -10130,7 +10130,7 @@ public string ErrorText { get; set; }
 /// <summary>
 /// True if loading was canceled.
 /// </summary>
-public bool Canceled { get; set; }
+public bool? Canceled { get; set; }
 /// <summary>
 /// The reason why loading was blocked, if any.
 /// </summary>
@@ -10151,16 +10151,16 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Total number of bytes received for this request.
 /// </summary>
-public double EncodedDataLength { get; set; }
+public double? EncodedDataLength { get; set; }
 /// <summary>
 /// Set when 1) response was blocked by Cross-Origin Read Blocking and also
 /// 2) this needs to be reported to the DevTools console.
 /// </summary>
-public bool ShouldReportCorbBlocking { get; set; }}
+public bool? ShouldReportCorbBlocking { get; set; }}
 /// <summary>
 /// Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
 /// mocked.
@@ -10193,12 +10193,12 @@ public ResourceType ResourceType { get; set; }
 /// <summary>
 /// Whether this is a navigation request, which can abort the navigation completely.
 /// </summary>
-public bool IsNavigationRequest { get; set; }
+public bool? IsNavigationRequest { get; set; }
 /// <summary>
 /// Set if the request is a navigation that will result in a download.
 /// Only present after response is received from the server (i.e. HeadersReceived stage).
 /// </summary>
-public bool IsDownload { get; set; }
+public bool? IsDownload { get; set; }
 /// <summary>
 /// Redirect location, only sent if a redirect was intercepted.
 /// </summary>
@@ -10217,7 +10217,7 @@ public ErrorReason ResponseErrorReason { get; set; }
 /// Response code if intercepted at response stage or if redirect occurred while intercepting
 /// request or auth retry occurred.
 /// </summary>
-public int ResponseStatusCode { get; set; }
+public int? ResponseStatusCode { get; set; }
 /// <summary>
 /// Response headers if intercepted at the response stage or if redirect occurred while
 /// intercepting request or auth retry occurred.
@@ -10269,11 +10269,11 @@ public Request Request { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double WallTime { get; set; }
+public double? WallTime { get; set; }
 /// <summary>
 /// Request initiator.
 /// </summary>
@@ -10293,7 +10293,7 @@ public string FrameId { get; set; }
 /// <summary>
 /// Whether the request is initiated by a user gesture. Defaults to false.
 /// </summary>
-public bool HasUserGesture { get; set; }}
+public bool? HasUserGesture { get; set; }}
 /// <summary>
 /// Fired when resource loading priority is changed
 /// </summary>
@@ -10314,7 +10314,7 @@ public ResourcePriority NewPriority { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Fired when a signed exchange was received over the network
 /// </summary>
@@ -10352,7 +10352,7 @@ public string LoaderId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
@@ -10381,7 +10381,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Fired upon WebSocket creation.
 /// </summary>
@@ -10419,7 +10419,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// WebSocket error message.
 /// </summary>
@@ -10440,7 +10440,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// WebSocket response data.
 /// </summary>
@@ -10461,7 +10461,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// WebSocket response data.
 /// </summary>
@@ -10482,7 +10482,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// WebSocket response data.
 /// </summary>
@@ -10503,11 +10503,11 @@ public string RequestId { get; set; }
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// UTC Timestamp.
 /// </summary>
-public double WallTime { get; set; }
+public double? WallTime { get; set; }
 /// <summary>
 /// WebSocket request data.
 /// </summary>
@@ -10578,19 +10578,19 @@ internal class HighlightConfig
 /// <summary>
 /// Whether the node info tooltip should be shown (default: false).
 /// </summary>
-public bool ShowInfo { get; set; }
+public bool? ShowInfo { get; set; }
 /// <summary>
 /// Whether the node styles in the tooltip (default: false).
 /// </summary>
-public bool ShowStyles { get; set; }
+public bool? ShowStyles { get; set; }
 /// <summary>
 /// Whether the rulers should be shown (default: false).
 /// </summary>
-public bool ShowRulers { get; set; }
+public bool? ShowRulers { get; set; }
 /// <summary>
 /// Whether the extension lines from node to the rulers should be shown (default: false).
 /// </summary>
-public bool ShowExtensionLines { get; set; }
+public bool? ShowExtensionLines { get; set; }
 /// <summary>
 /// The content box highlight fill color (default: transparent).
 /// </summary>
@@ -10680,15 +10680,15 @@ public string Command { get; } = "Overlay.getHighlightObjectForTest";
 /// <summary>
 /// Id of the node to get highlight object for.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Whether to include distance info.
 /// </summary>
-public bool IncludeDistance { get; set; }
+public bool? IncludeDistance { get; set; }
 /// <summary>
 /// Whether to include style info.
 /// </summary>
-public bool IncludeStyle { get; set; }}
+public bool? IncludeStyle { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlayGetHighlightObjectForTestRequest"/>
 /// </summary>
@@ -10761,11 +10761,11 @@ public HighlightConfig HighlightConfig { get; set; }
 /// <summary>
 /// Identifier of the node to highlight.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Identifier of the backend node to highlight.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// JavaScript object id of the node to be highlighted.
 /// </summary>
@@ -10793,7 +10793,7 @@ public string Command { get; } = "Overlay.highlightQuad";
 /// <summary>
 /// Quad to highlight
 /// </summary>
-public double[] Quad { get; set; }
+public double?[] Quad { get; set; }
 /// <summary>
 /// The highlight fill color (default: transparent).
 /// </summary>
@@ -10821,19 +10821,19 @@ public string Command { get; } = "Overlay.highlightRect";
 /// <summary>
 /// X coordinate
 /// </summary>
-public int X { get; set; }
+public int? X { get; set; }
 /// <summary>
 /// Y coordinate
 /// </summary>
-public int Y { get; set; }
+public int? Y { get; set; }
 /// <summary>
 /// Rectangle width
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Rectangle height
 /// </summary>
-public int Height { get; set; }
+public int? Height { get; set; }
 /// <summary>
 /// The highlight fill color (default: transparent).
 /// </summary>
@@ -10887,7 +10887,7 @@ public string Command { get; } = "Overlay.setShowAdHighlights";
 /// <summary>
 /// True for showing ad highlights
 /// </summary>
-public bool Show { get; set; }}
+public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowAdHighlightsRequest"/>
 /// </summary>
@@ -10927,7 +10927,7 @@ public string Command { get; } = "Overlay.setShowDebugBorders";
 /// <summary>
 /// True for showing debug borders
 /// </summary>
-public bool Show { get; set; }}
+public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowDebugBordersRequest"/>
 /// </summary>
@@ -10947,7 +10947,7 @@ public string Command { get; } = "Overlay.setShowFPSCounter";
 /// <summary>
 /// True for showing the FPS counter
 /// </summary>
-public bool Show { get; set; }}
+public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowFPSCounterRequest"/>
 /// </summary>
@@ -10967,7 +10967,7 @@ public string Command { get; } = "Overlay.setShowPaintRects";
 /// <summary>
 /// True for showing paint rectangles
 /// </summary>
-public bool Result { get; set; }}
+public bool? Result { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowPaintRectsRequest"/>
 /// </summary>
@@ -10987,7 +10987,7 @@ public string Command { get; } = "Overlay.setShowLayoutShiftRegions";
 /// <summary>
 /// True for showing layout shift regions
 /// </summary>
-public bool Result { get; set; }}
+public bool? Result { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowLayoutShiftRegionsRequest"/>
 /// </summary>
@@ -11007,7 +11007,7 @@ public string Command { get; } = "Overlay.setShowScrollBottleneckRects";
 /// <summary>
 /// True for showing scroll bottleneck rects
 /// </summary>
-public bool Show { get; set; }}
+public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowScrollBottleneckRectsRequest"/>
 /// </summary>
@@ -11027,7 +11027,7 @@ public string Command { get; } = "Overlay.setShowHitTestBorders";
 /// <summary>
 /// True for showing hit-test borders
 /// </summary>
-public bool Show { get; set; }}
+public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowHitTestBordersRequest"/>
 /// </summary>
@@ -11047,7 +11047,7 @@ public string Command { get; } = "Overlay.setShowViewportSizeOnResize";
 /// <summary>
 /// Whether to paint size or not.
 /// </summary>
-public bool Show { get; set; }}
+public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowViewportSizeOnResizeRequest"/>
 /// </summary>
@@ -11067,7 +11067,7 @@ public string InternalName { get; } = "Overlay.inspectNodeRequested";
 /// <summary>
 /// Id of the node to inspect.
 /// </summary>
-public int BackendNodeId { get; set; }}
+public int? BackendNodeId { get; set; }}
 /// <summary>
 /// Fired when the node should be highlighted. This happens after call to `setInspectMode`.
 /// </summary>
@@ -11080,7 +11080,7 @@ public string InternalName { get; } = "Overlay.nodeHighlightRequested";
 /// <summary>
 /// 
 /// </summary>
-public int NodeId { get; set; }}
+public int? NodeId { get; set; }}
 /// <summary>
 /// Fired when user asks to capture screenshot of some area on the page.
 /// </summary>
@@ -11168,19 +11168,19 @@ public string MimeType { get; set; }
 /// <summary>
 /// last-modified timestamp as reported by server.
 /// </summary>
-public double LastModified { get; set; }
+public double? LastModified { get; set; }
 /// <summary>
 /// Resource content size.
 /// </summary>
-public double ContentSize { get; set; }
+public double? ContentSize { get; set; }
 /// <summary>
 /// True if the resource failed to load.
 /// </summary>
-public bool Failed { get; set; }
+public bool? Failed { get; set; }
 /// <summary>
 /// True if the resource was canceled during loading.
 /// </summary>
-public bool Canceled { get; set; }}
+public bool? Canceled { get; set; }}
 /// <summary>
 /// Information about the Frame hierarchy along with their cached resources.
 /// </summary>
@@ -11237,7 +11237,7 @@ internal class NavigationEntry
 /// <summary>
 /// Unique id of the navigation history entry.
 /// </summary>
-public int Id { get; set; }
+public int? Id { get; set; }
 /// <summary>
 /// URL of the navigation history entry.
 /// </summary>
@@ -11262,31 +11262,31 @@ internal class ScreencastFrameMetadata
 /// <summary>
 /// Top offset in DIP.
 /// </summary>
-public double OffsetTop { get; set; }
+public double? OffsetTop { get; set; }
 /// <summary>
 /// Page scale factor.
 /// </summary>
-public double PageScaleFactor { get; set; }
+public double? PageScaleFactor { get; set; }
 /// <summary>
 /// Device screen width in DIP.
 /// </summary>
-public double DeviceWidth { get; set; }
+public double? DeviceWidth { get; set; }
 /// <summary>
 /// Device screen height in DIP.
 /// </summary>
-public double DeviceHeight { get; set; }
+public double? DeviceHeight { get; set; }
 /// <summary>
 /// Position of horizontal scroll in CSS pixels.
 /// </summary>
-public double ScrollOffsetX { get; set; }
+public double? ScrollOffsetX { get; set; }
 /// <summary>
 /// Position of vertical scroll in CSS pixels.
 /// </summary>
-public double ScrollOffsetY { get; set; }
+public double? ScrollOffsetY { get; set; }
 /// <summary>
 /// Frame swap timestamp.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Javascript dialog type.
 /// </summary>
@@ -11308,15 +11308,15 @@ public string Message { get; set; }
 /// <summary>
 /// If criticial, this is a non-recoverable parse error.
 /// </summary>
-public int Critical { get; set; }
+public int? Critical { get; set; }
 /// <summary>
 /// Error line.
 /// </summary>
-public int Line { get; set; }
+public int? Line { get; set; }
 /// <summary>
 /// Error column.
 /// </summary>
-public int Column { get; set; }}
+public int? Column { get; set; }}
 /// <summary>
 /// Parsed app manifest properties.
 /// </summary>
@@ -11334,19 +11334,19 @@ internal class LayoutViewport
 /// <summary>
 /// Horizontal offset relative to the document (CSS pixels).
 /// </summary>
-public int PageX { get; set; }
+public int? PageX { get; set; }
 /// <summary>
 /// Vertical offset relative to the document (CSS pixels).
 /// </summary>
-public int PageY { get; set; }
+public int? PageY { get; set; }
 /// <summary>
 /// Width (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public int ClientWidth { get; set; }
+public int? ClientWidth { get; set; }
 /// <summary>
 /// Height (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public int ClientHeight { get; set; }}
+public int? ClientHeight { get; set; }}
 /// <summary>
 /// Visual viewport position, dimensions, and scale.
 /// </summary>
@@ -11355,35 +11355,35 @@ internal class VisualViewport
 /// <summary>
 /// Horizontal offset relative to the layout viewport (CSS pixels).
 /// </summary>
-public double OffsetX { get; set; }
+public double? OffsetX { get; set; }
 /// <summary>
 /// Vertical offset relative to the layout viewport (CSS pixels).
 /// </summary>
-public double OffsetY { get; set; }
+public double? OffsetY { get; set; }
 /// <summary>
 /// Horizontal offset relative to the document (CSS pixels).
 /// </summary>
-public double PageX { get; set; }
+public double? PageX { get; set; }
 /// <summary>
 /// Vertical offset relative to the document (CSS pixels).
 /// </summary>
-public double PageY { get; set; }
+public double? PageY { get; set; }
 /// <summary>
 /// Width (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public double ClientWidth { get; set; }
+public double? ClientWidth { get; set; }
 /// <summary>
 /// Height (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public double ClientHeight { get; set; }
+public double? ClientHeight { get; set; }
 /// <summary>
 /// Scale relative to the ideal viewport (size at width=device-width).
 /// </summary>
-public double Scale { get; set; }
+public double? Scale { get; set; }
 /// <summary>
 /// Page zoom factor (CSS to device independent pixels ratio).
 /// </summary>
-public double Zoom { get; set; }}
+public double? Zoom { get; set; }}
 /// <summary>
 /// Viewport for capturing screenshot.
 /// </summary>
@@ -11392,23 +11392,23 @@ internal class Viewport
 /// <summary>
 /// X offset in device independent pixels (dip).
 /// </summary>
-public double X { get; set; }
+public double? X { get; set; }
 /// <summary>
 /// Y offset in device independent pixels (dip).
 /// </summary>
-public double Y { get; set; }
+public double? Y { get; set; }
 /// <summary>
 /// Rectangle width in device independent pixels (dip).
 /// </summary>
-public double Width { get; set; }
+public double? Width { get; set; }
 /// <summary>
 /// Rectangle height in device independent pixels (dip).
 /// </summary>
-public double Height { get; set; }
+public double? Height { get; set; }
 /// <summary>
 /// Page scale factor.
 /// </summary>
-public double Scale { get; set; }}
+public double? Scale { get; set; }}
 /// <summary>
 /// Generic font families collection.
 /// </summary>
@@ -11450,11 +11450,11 @@ internal class FontSizes
 /// <summary>
 /// Default standard font size.
 /// </summary>
-public int Standard { get; set; }
+public int? Standard { get; set; }
 /// <summary>
 /// Default fixed font size.
 /// </summary>
-public int Fixed { get; set; }}
+public int? Fixed { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -11554,7 +11554,7 @@ public string Format { get; set; }
 /// <summary>
 /// Compression quality from range [0..100] (jpeg only).
 /// </summary>
-public int Quality { get; set; }
+public int? Quality { get; set; }
 /// <summary>
 /// Capture the screenshot of a given region only.
 /// </summary>
@@ -11562,7 +11562,7 @@ public Viewport Clip { get; set; }
 /// <summary>
 /// Capture the screenshot from the surface, rather than the view. Defaults to true.
 /// </summary>
-public bool FromSurface { get; set; }}
+public bool? FromSurface { get; set; }}
 /// <summary>
 /// Response from <see cref="PageCaptureScreenshotRequest"/>
 /// </summary>
@@ -11669,7 +11669,7 @@ public string WorldName { get; set; }
 /// Whether or not universal access should be granted to the isolated world. This is a powerful
 /// option, use with caution.
 /// </summary>
-public bool GrantUniveralAccess { get; set; }}
+public bool? GrantUniveralAccess { get; set; }}
 /// <summary>
 /// Response from <see cref="PageCreateIsolatedWorldRequest"/>
 /// </summary>
@@ -11678,7 +11678,7 @@ internal class PageCreateIsolatedWorldResponse : IChromiumResponse
 /// <summary>
 /// Execution context of the isolated world.
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Deletes browser cookie with given name, domain and path.
 /// </summary>
@@ -11897,7 +11897,7 @@ internal class PageGetNavigationHistoryResponse : IChromiumResponse
 /// <summary>
 /// Index of the current navigation history entry.
 /// </summary>
-public int CurrentIndex { get; set; }
+public int? CurrentIndex { get; set; }
 /// <summary>
 /// Array of navigation history entries.
 /// </summary>
@@ -11949,7 +11949,7 @@ public string Content { get; set; }
 /// <summary>
 /// True, if content was served as base64.
 /// </summary>
-public bool Base64Encoded { get; set; }}
+public bool? Base64Encoded { get; set; }}
 /// <summary>
 /// Returns present frame / resource tree structure.
 /// </summary>
@@ -11983,7 +11983,7 @@ public string Command { get; } = "Page.handleJavaScriptDialog";
 /// <summary>
 /// Whether to accept or dismiss the dialog.
 /// </summary>
-public bool Accept { get; set; }
+public bool? Accept { get; set; }
 /// <summary>
 /// The text to enter into the dialog prompt before accepting. Used only if this is a prompt
 /// dialog.
@@ -12051,7 +12051,7 @@ public string Command { get; } = "Page.navigateToHistoryEntry";
 /// <summary>
 /// Unique id of the entry to navigate to.
 /// </summary>
-public int EntryId { get; set; }}
+public int? EntryId { get; set; }}
 /// <summary>
 /// Response from <see cref="PageNavigateToHistoryEntryRequest"/>
 /// </summary>
@@ -12071,43 +12071,43 @@ public string Command { get; } = "Page.printToPDF";
 /// <summary>
 /// Paper orientation. Defaults to false.
 /// </summary>
-public bool Landscape { get; set; }
+public bool? Landscape { get; set; }
 /// <summary>
 /// Display header and footer. Defaults to false.
 /// </summary>
-public bool DisplayHeaderFooter { get; set; }
+public bool? DisplayHeaderFooter { get; set; }
 /// <summary>
 /// Print background graphics. Defaults to false.
 /// </summary>
-public bool PrintBackground { get; set; }
+public bool? PrintBackground { get; set; }
 /// <summary>
 /// Scale of the webpage rendering. Defaults to 1.
 /// </summary>
-public double Scale { get; set; }
+public double? Scale { get; set; }
 /// <summary>
 /// Paper width in inches. Defaults to 8.5 inches.
 /// </summary>
-public double PaperWidth { get; set; }
+public double? PaperWidth { get; set; }
 /// <summary>
 /// Paper height in inches. Defaults to 11 inches.
 /// </summary>
-public double PaperHeight { get; set; }
+public double? PaperHeight { get; set; }
 /// <summary>
 /// Top margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double MarginTop { get; set; }
+public double? MarginTop { get; set; }
 /// <summary>
 /// Bottom margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double MarginBottom { get; set; }
+public double? MarginBottom { get; set; }
 /// <summary>
 /// Left margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double MarginLeft { get; set; }
+public double? MarginLeft { get; set; }
 /// <summary>
 /// Right margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double MarginRight { get; set; }
+public double? MarginRight { get; set; }
 /// <summary>
 /// Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means
 /// print all pages.
@@ -12117,7 +12117,7 @@ public string PageRanges { get; set; }
 /// Whether to silently ignore invalid but successfully parsed page ranges, such as '3-2'.
 /// Defaults to false.
 /// </summary>
-public bool IgnoreInvalidPageRanges { get; set; }
+public bool? IgnoreInvalidPageRanges { get; set; }
 /// <summary>
 /// HTML template for the print header. Should be valid HTML markup with following
 /// classes used to inject printing values into them:
@@ -12138,7 +12138,7 @@ public string FooterTemplate { get; set; }
 /// Whether or not to prefer page size as defined by css. Defaults to false,
 /// in which case the content will be scaled to fit the paper size.
 /// </summary>
-public bool PreferCSSPageSize { get; set; }
+public bool? PreferCSSPageSize { get; set; }
 /// <summary>
 /// return as stream
 /// </summary>
@@ -12169,7 +12169,7 @@ public string Command { get; } = "Page.reload";
 /// <summary>
 /// If true, browser cache is ignored (as if the user pressed Shift+refresh).
 /// </summary>
-public bool IgnoreCache { get; set; }
+public bool? IgnoreCache { get; set; }
 /// <summary>
 /// If set, the script will be injected into all frames of the inspected page after reload.
 /// Argument will be ignored if reloading dataURL origin.
@@ -12235,7 +12235,7 @@ public string Command { get; } = "Page.screencastFrameAck";
 /// <summary>
 /// Frame number.
 /// </summary>
-public int SessionId { get; set; }}
+public int? SessionId { get; set; }}
 /// <summary>
 /// Response from <see cref="PageScreencastFrameAckRequest"/>
 /// </summary>
@@ -12267,11 +12267,11 @@ public string Query { get; set; }
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool CaseSensitive { get; set; }
+public bool? CaseSensitive { get; set; }
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool IsRegex { get; set; }}
+public bool? IsRegex { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSearchInResourceRequest"/>
 /// </summary>
@@ -12294,7 +12294,7 @@ public string Command { get; } = "Page.setAdBlockingEnabled";
 /// <summary>
 /// Whether to block ads.
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetAdBlockingEnabledRequest"/>
 /// </summary>
@@ -12314,7 +12314,7 @@ public string Command { get; } = "Page.setBypassCSP";
 /// <summary>
 /// Whether to bypass page CSP.
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetBypassCSPRequest"/>
 /// </summary>
@@ -12336,44 +12336,44 @@ public string Command { get; } = "Page.setDeviceMetricsOverride";
 /// <summary>
 /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int Height { get; set; }
+public int? Height { get; set; }
 /// <summary>
 /// Overriding device scale factor value. 0 disables the override.
 /// </summary>
-public double DeviceScaleFactor { get; set; }
+public double? DeviceScaleFactor { get; set; }
 /// <summary>
 /// Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
 /// autosizing and more.
 /// </summary>
-public bool Mobile { get; set; }
+public bool? Mobile { get; set; }
 /// <summary>
 /// Scale to apply to resulting view image.
 /// </summary>
-public double Scale { get; set; }
+public double? Scale { get; set; }
 /// <summary>
 /// Overriding screen width value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int ScreenWidth { get; set; }
+public int? ScreenWidth { get; set; }
 /// <summary>
 /// Overriding screen height value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int ScreenHeight { get; set; }
+public int? ScreenHeight { get; set; }
 /// <summary>
 /// Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int PositionX { get; set; }
+public int? PositionX { get; set; }
 /// <summary>
 /// Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int PositionY { get; set; }
+public int? PositionY { get; set; }
 /// <summary>
 /// Do not set visible view size, rely upon explicit setVisibleSize call.
 /// </summary>
-public bool DontSetVisibleSize { get; set; }
+public bool? DontSetVisibleSize { get; set; }
 /// <summary>
 /// Screen orientation override.
 /// </summary>
@@ -12401,15 +12401,15 @@ public string Command { get; } = "Page.setDeviceOrientationOverride";
 /// <summary>
 /// Mock alpha
 /// </summary>
-public double Alpha { get; set; }
+public double? Alpha { get; set; }
 /// <summary>
 /// Mock beta
 /// </summary>
-public double Beta { get; set; }
+public double? Beta { get; set; }
 /// <summary>
 /// Mock gamma
 /// </summary>
-public double Gamma { get; set; }}
+public double? Gamma { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetDeviceOrientationOverrideRequest"/>
 /// </summary>
@@ -12519,15 +12519,15 @@ public string Command { get; } = "Page.setGeolocationOverride";
 /// <summary>
 /// Mock latitude
 /// </summary>
-public double Latitude { get; set; }
+public double? Latitude { get; set; }
 /// <summary>
 /// Mock longitude
 /// </summary>
-public double Longitude { get; set; }
+public double? Longitude { get; set; }
 /// <summary>
 /// Mock accuracy
 /// </summary>
-public double Accuracy { get; set; }}
+public double? Accuracy { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetGeolocationOverrideRequest"/>
 /// </summary>
@@ -12547,7 +12547,7 @@ public string Command { get; } = "Page.setLifecycleEventsEnabled";
 /// <summary>
 /// If true, starts emitting lifecycle events.
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetLifecycleEventsEnabledRequest"/>
 /// </summary>
@@ -12567,7 +12567,7 @@ public string Command { get; } = "Page.setTouchEmulationEnabled";
 /// <summary>
 /// Whether the touch event emulation should be enabled.
 /// </summary>
-public bool Enabled { get; set; }
+public bool? Enabled { get; set; }
 /// <summary>
 /// Touch/gesture events configuration. Default: current platform.
 /// </summary>
@@ -12595,19 +12595,19 @@ public string Format { get; set; }
 /// <summary>
 /// Compression quality from range [0..100].
 /// </summary>
-public int Quality { get; set; }
+public int? Quality { get; set; }
 /// <summary>
 /// Maximum screenshot width.
 /// </summary>
-public int MaxWidth { get; set; }
+public int? MaxWidth { get; set; }
 /// <summary>
 /// Maximum screenshot height.
 /// </summary>
-public int MaxHeight { get; set; }
+public int? MaxHeight { get; set; }
 /// <summary>
 /// Send every n-th frame.
 /// </summary>
-public int EveryNthFrame { get; set; }}
+public int? EveryNthFrame { get; set; }}
 /// <summary>
 /// Response from <see cref="PageStartScreencastRequest"/>
 /// </summary>
@@ -12717,7 +12717,7 @@ public string Command { get; } = "Page.setProduceCompilationCache";
 /// <summary>
 /// 
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetProduceCompilationCacheRequest"/>
 /// </summary>
@@ -12822,7 +12822,7 @@ public string Command { get; } = "Page.setInterceptFileChooserDialog";
 /// <summary>
 /// 
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetInterceptFileChooserDialogRequest"/>
 /// </summary>
@@ -12841,7 +12841,7 @@ public string InternalName { get; } = "Page.domContentEventFired";
 /// <summary>
 /// 
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Emitted only when `page.interceptFileChooser` is enabled.
 /// </summary>
@@ -12858,7 +12858,7 @@ public string FrameId { get; set; }
 /// <summary>
 /// Input node id.
 /// </summary>
-public int BackendNodeId { get; set; }
+public int? BackendNodeId { get; set; }
 /// <summary>
 /// Input mode.
 /// </summary>
@@ -12972,7 +12972,7 @@ public string FrameId { get; set; }
 /// Delay (in seconds) until the navigation is scheduled to begin. The navigation is not
 /// guaranteed to start.
 /// </summary>
-public double Delay { get; set; }
+public double? Delay { get; set; }
 /// <summary>
 /// The reason for the navigation.
 /// </summary>
@@ -13057,7 +13057,7 @@ public string InternalName { get; } = "Page.javascriptDialogClosed";
 /// <summary>
 /// Whether dialog was confirmed.
 /// </summary>
-public bool Result { get; set; }
+public bool? Result { get; set; }
 /// <summary>
 /// User input in case of prompt.
 /// </summary>
@@ -13089,7 +13089,7 @@ public DialogType Type { get; set; }
 /// dialog handler for given target, calling alert while Page domain is engaged will stall
 /// the page execution. Execution can be resumed via calling Page.handleJavaScriptDialog.
 /// </summary>
-public bool HasBrowserHandler { get; set; }
+public bool? HasBrowserHandler { get; set; }
 /// <summary>
 /// Default dialog prompt.
 /// </summary>
@@ -13118,7 +13118,7 @@ public string Name { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -13131,7 +13131,7 @@ public string InternalName { get; } = "Page.loadEventFired";
 /// <summary>
 /// 
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.
 /// </summary>
@@ -13169,7 +13169,7 @@ public ScreencastFrameMetadata Metadata { get; set; }
 /// <summary>
 /// Frame number.
 /// </summary>
-public int SessionId { get; set; }}
+public int? SessionId { get; set; }}
 /// <summary>
 /// Fired when the page with currently enabled screencast was shown or hidden `.
 /// </summary>
@@ -13182,7 +13182,7 @@ public string InternalName { get; } = "Page.screencastVisibilityChanged";
 /// <summary>
 /// True if the page is visible.
 /// </summary>
-public bool Visible { get; set; }}
+public bool? Visible { get; set; }}
 /// <summary>
 /// Fired when a new window is going to be opened, via window.open(), link click, form submission,
 /// etc.
@@ -13208,7 +13208,7 @@ public string[] WindowFeatures { get; set; }
 /// <summary>
 /// Whether or not it was triggered by user gesture.
 /// </summary>
-public bool UserGesture { get; set; }}
+public bool? UserGesture { get; set; }}
 /// <summary>
 /// Issued for every compilation cache generated. Is only available
 /// if Page.setGenerateCompilationCache is enabled.
@@ -13242,7 +13242,7 @@ public string Name { get; set; }
 /// <summary>
 /// Metric value.
 /// </summary>
-public double Value { get; set; }}
+public double? Value { get; set; }}
 /// <summary>
 /// Disable collecting and reporting metrics.
 /// </summary>
@@ -13399,11 +13399,11 @@ public string Issuer { get; set; }
 /// <summary>
 /// Certificate valid from date.
 /// </summary>
-public double ValidFrom { get; set; }
+public double? ValidFrom { get; set; }
 /// <summary>
 /// Certificate valid to (expiration) date
 /// </summary>
-public double ValidTo { get; set; }
+public double? ValidTo { get; set; }
 /// <summary>
 /// The highest priority network error code, if the certificate has an error.
 /// </summary>
@@ -13411,31 +13411,31 @@ public string CertificateNetworkError { get; set; }
 /// <summary>
 /// True if the certificate uses a weak signature aglorithm.
 /// </summary>
-public bool CertificateHasWeakSignature { get; set; }
+public bool? CertificateHasWeakSignature { get; set; }
 /// <summary>
 /// True if the certificate has a SHA1 signature in the chain.
 /// </summary>
-public bool CertificateHasSha1Signature { get; set; }
+public bool? CertificateHasSha1Signature { get; set; }
 /// <summary>
 /// True if modern SSL
 /// </summary>
-public bool ModernSSL { get; set; }
+public bool? ModernSSL { get; set; }
 /// <summary>
 /// True if the connection is using an obsolete SSL protocol.
 /// </summary>
-public bool ObsoleteSslProtocol { get; set; }
+public bool? ObsoleteSslProtocol { get; set; }
 /// <summary>
 /// True if the connection is using an obsolete SSL key exchange.
 /// </summary>
-public bool ObsoleteSslKeyExchange { get; set; }
+public bool? ObsoleteSslKeyExchange { get; set; }
 /// <summary>
 /// True if the connection is using an obsolete SSL cipher.
 /// </summary>
-public bool ObsoleteSslCipher { get; set; }
+public bool? ObsoleteSslCipher { get; set; }
 /// <summary>
 /// True if the connection is using an obsolete SSL signature.
 /// </summary>
-public bool ObsoleteSslSignature { get; set; }}
+public bool? ObsoleteSslSignature { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -13518,23 +13518,23 @@ internal class InsecureContentStatus
 /// <summary>
 /// Always false.
 /// </summary>
-public bool RanMixedContent { get; set; }
+public bool? RanMixedContent { get; set; }
 /// <summary>
 /// Always false.
 /// </summary>
-public bool DisplayedMixedContent { get; set; }
+public bool? DisplayedMixedContent { get; set; }
 /// <summary>
 /// Always false.
 /// </summary>
-public bool ContainedMixedForm { get; set; }
+public bool? ContainedMixedForm { get; set; }
 /// <summary>
 /// Always false.
 /// </summary>
-public bool RanContentWithCertErrors { get; set; }
+public bool? RanContentWithCertErrors { get; set; }
 /// <summary>
 /// Always false.
 /// </summary>
-public bool DisplayedContentWithCertErrors { get; set; }
+public bool? DisplayedContentWithCertErrors { get; set; }
 /// <summary>
 /// Always set to unknown.
 /// </summary>
@@ -13598,7 +13598,7 @@ public string Command { get; } = "Security.setIgnoreCertificateErrors";
 /// <summary>
 /// If true, all certificate errors will be ignored.
 /// </summary>
-public bool Ignore { get; set; }}
+public bool? Ignore { get; set; }}
 /// <summary>
 /// Response from <see cref="SecuritySetIgnoreCertificateErrorsRequest"/>
 /// </summary>
@@ -13618,7 +13618,7 @@ public string Command { get; } = "Security.handleCertificateError";
 /// <summary>
 /// The ID of the event.
 /// </summary>
-public int EventId { get; set; }
+public int? EventId { get; set; }
 /// <summary>
 /// The action to take on the certificate error.
 /// </summary>
@@ -13643,7 +13643,7 @@ public string Command { get; } = "Security.setOverrideCertificateErrors";
 /// <summary>
 /// If true, certificate errors will be overridden.
 /// </summary>
-public bool Override { get; set; }}
+public bool? Override { get; set; }}
 /// <summary>
 /// Response from <see cref="SecuritySetOverrideCertificateErrorsRequest"/>
 /// </summary>
@@ -13665,7 +13665,7 @@ public string InternalName { get; } = "Security.certificateError";
 /// <summary>
 /// The ID of the event.
 /// </summary>
-public int EventId { get; set; }
+public int? EventId { get; set; }
 /// <summary>
 /// The type of the error.
 /// </summary>
@@ -13703,7 +13703,7 @@ public SecurityState SecurityState { get; set; }
 /// <summary>
 /// True if the page was loaded over cryptographic transport such as HTTPS.
 /// </summary>
-public bool SchemeIsCryptographic { get; set; }
+public bool? SchemeIsCryptographic { get; set; }
 /// <summary>
 /// List of explanations for the security state. If the overall security state is `insecure` or
 /// `warning`, at least one corresponding explanation should be included.
@@ -13736,7 +13736,7 @@ public string ScopeURL { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool IsDeleted { get; set; }}
+public bool? IsDeleted { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -13785,12 +13785,12 @@ public ServiceWorkerVersionStatus Status { get; set; }
 /// <summary>
 /// The Last-Modified header value of the main script.
 /// </summary>
-public double ScriptLastModified { get; set; }
+public double? ScriptLastModified { get; set; }
 /// <summary>
 /// The time at which the response headers of the main script were received from the server.
 /// For cached script it is the last time the cache entry was validated.
 /// </summary>
-public double ScriptResponseTime { get; set; }
+public double? ScriptResponseTime { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -13823,11 +13823,11 @@ public string SourceURL { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int ColumnNumber { get; set; }}
+public int? ColumnNumber { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -13898,7 +13898,7 @@ public string Tag { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool LastChance { get; set; }}
+public bool? LastChance { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDispatchSyncEventRequest"/>
 /// </summary>
@@ -13983,7 +13983,7 @@ public string Command { get; } = "ServiceWorker.setForceUpdateOnPageLoad";
 /// <summary>
 /// 
 /// </summary>
-public bool ForceUpdateOnPageLoad { get; set; }}
+public bool? ForceUpdateOnPageLoad { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerSetForceUpdateOnPageLoadRequest"/>
 /// </summary>
@@ -14177,7 +14177,7 @@ public StorageType StorageType { get; set; }
 /// <summary>
 /// Storage usage (bytes).
 /// </summary>
-public double Usage { get; set; }}
+public double? Usage { get; set; }}
 /// <summary>
 /// Clears storage for origin.
 /// </summary>
@@ -14291,11 +14291,11 @@ internal class StorageGetUsageAndQuotaResponse : IChromiumResponse
 /// <summary>
 /// Storage usage (bytes).
 /// </summary>
-public double Usage { get; set; }
+public double? Usage { get; set; }
 /// <summary>
 /// Storage quota (bytes).
 /// </summary>
-public double Quota { get; set; }
+public double? Quota { get; set; }
 /// <summary>
 /// Storage usage per type (bytes).
 /// </summary>
@@ -14455,19 +14455,19 @@ internal class GPUDevice
 /// <summary>
 /// PCI ID of the GPU vendor, if available; 0 otherwise.
 /// </summary>
-public double VendorId { get; set; }
+public double? VendorId { get; set; }
 /// <summary>
 /// PCI ID of the GPU device, if available; 0 otherwise.
 /// </summary>
-public double DeviceId { get; set; }
+public double? DeviceId { get; set; }
 /// <summary>
 /// Sub sys ID of the GPU, only available on Windows.
 /// </summary>
-public double SubSysId { get; set; }
+public double? SubSysId { get; set; }
 /// <summary>
 /// Revision of the GPU, only available on Windows.
 /// </summary>
-public double Revision { get; set; }
+public double? Revision { get; set; }
 /// <summary>
 /// String description of the GPU vendor, if the PCI ID is not available.
 /// </summary>
@@ -14492,11 +14492,11 @@ internal class Size
 /// <summary>
 /// Width in pixels.
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Height in pixels.
 /// </summary>
-public int Height { get; set; }}
+public int? Height { get; set; }}
 /// <summary>
 /// Describes a supported video decoding profile with its associated minimum and
 /// maximum resolutions.
@@ -14534,11 +14534,11 @@ public Size MaxResolution { get; set; }
 /// |profile|, as fraction's numerator and denominator, e.g. 24/1 fps,
 /// 24000/1001 fps, etc.
 /// </summary>
-public int MaxFramerateNumerator { get; set; }
+public int? MaxFramerateNumerator { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int MaxFramerateDenominator { get; set; }}
+public int? MaxFramerateDenominator { get; set; }}
 /// <summary>
 /// YUV subsampling type of the pixels of a given image.
 /// </summary>
@@ -14622,12 +14622,12 @@ public string Type { get; set; }
 /// <summary>
 /// Specifies process id.
 /// </summary>
-public int Id { get; set; }
+public int? Id { get; set; }
 /// <summary>
 /// Specifies cumulative CPU usage in seconds across all threads of the
 /// process since the process start.
 /// </summary>
-public double CpuTime { get; set; }}
+public double? CpuTime { get; set; }}
 /// <summary>
 /// Returns information about the system.
 /// </summary>
@@ -14710,7 +14710,7 @@ public string Url { get; set; }
 /// <summary>
 /// Whether the target has an attached client.
 /// </summary>
-public bool Attached { get; set; }
+public bool? Attached { get; set; }
 /// <summary>
 /// Opener target Id
 /// </summary>
@@ -14731,7 +14731,7 @@ public string Host { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int Port { get; set; }}
+public int? Port { get; set; }}
 /// <summary>
 /// Activates (focuses) the target.
 /// </summary>
@@ -14771,7 +14771,7 @@ public string TargetId { get; set; }
 /// We plan to make this the default, deprecate non-flattened mode,
 /// and eventually retire it. See crbug.com/991325.
 /// </summary>
-public bool Flatten { get; set; }}
+public bool? Flatten { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetAttachToTargetRequest"/>
 /// </summary>
@@ -14823,7 +14823,7 @@ internal class TargetCloseTargetResponse : IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public bool Success { get; set; }}
+public bool? Success { get; set; }}
 /// <summary>
 /// Inject object to the target's main frame that provides a communication
 /// channel with browser target.
@@ -14913,11 +14913,11 @@ public string Url { get; set; }
 /// <summary>
 /// Frame width in DIP (headless chrome only).
 /// </summary>
-public int Width { get; set; }
+public int? Width { get; set; }
 /// <summary>
 /// Frame height in DIP (headless chrome only).
 /// </summary>
-public int Height { get; set; }
+public int? Height { get; set; }
 /// <summary>
 /// The browser context to create the page in.
 /// </summary>
@@ -14926,16 +14926,16 @@ public string BrowserContextId { get; set; }
 /// Whether BeginFrames for this target will be controlled via DevTools (headless chrome only,
 /// not supported on MacOS yet, false by default).
 /// </summary>
-public bool EnableBeginFrameControl { get; set; }
+public bool? EnableBeginFrameControl { get; set; }
 /// <summary>
 /// Whether to create a new Window or Tab (chrome-only, false by default).
 /// </summary>
-public bool NewWindow { get; set; }
+public bool? NewWindow { get; set; }
 /// <summary>
 /// Whether to create the target in background or foreground (chrome-only,
 /// false by default).
 /// </summary>
-public bool Background { get; set; }}
+public bool? Background { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetCreateTargetRequest"/>
 /// </summary>
@@ -15078,22 +15078,22 @@ public string Command { get; } = "Target.setAutoAttach";
 /// <summary>
 /// Whether to auto-attach to related targets.
 /// </summary>
-public bool AutoAttach { get; set; }
+public bool? AutoAttach { get; set; }
 /// <summary>
 /// Whether to pause new targets when attaching to them. Use `Runtime.runIfWaitingForDebugger`
 /// to run paused targets.
 /// </summary>
-public bool WaitForDebuggerOnStart { get; set; }
+public bool? WaitForDebuggerOnStart { get; set; }
 /// <summary>
 /// Enables "flat" access to the session via specifying sessionId attribute in the commands.
 /// We plan to make this the default, deprecate non-flattened mode,
 /// and eventually retire it. See crbug.com/991325.
 /// </summary>
-public bool Flatten { get; set; }
+public bool? Flatten { get; set; }
 /// <summary>
 /// Auto-attach to the targets created via window.open from current target.
 /// </summary>
-public bool WindowOpen { get; set; }}
+public bool? WindowOpen { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetSetAutoAttachRequest"/>
 /// </summary>
@@ -15114,7 +15114,7 @@ public string Command { get; } = "Target.setDiscoverTargets";
 /// <summary>
 /// Whether to discover available targets.
 /// </summary>
-public bool Discover { get; set; }}
+public bool? Discover { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetSetDiscoverTargetsRequest"/>
 /// </summary>
@@ -15162,7 +15162,7 @@ public TargetInfo TargetInfo { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool WaitingForDebugger { get; set; }}
+public bool? WaitingForDebugger { get; set; }}
 /// <summary>
 /// Issued when detached from target for any reason (including `detachFromTarget` command). Can be
 /// issued multiple times per target if multiple sessions have been attached to it.
@@ -15249,7 +15249,7 @@ public string Status { get; set; }
 /// <summary>
 /// Termination error code.
 /// </summary>
-public int ErrorCode { get; set; }}
+public int? ErrorCode { get; set; }}
 /// <summary>
 /// Issued when some information about a target has changed. This only happens between
 /// `targetCreated` and `targetDestroyed`.
@@ -15280,7 +15280,7 @@ public string Command { get; } = "Tethering.bind";
 /// <summary>
 /// Port number to bind.
 /// </summary>
-public int Port { get; set; }}
+public int? Port { get; set; }}
 /// <summary>
 /// Response from <see cref="TetheringBindRequest"/>
 /// </summary>
@@ -15300,7 +15300,7 @@ public string Command { get; } = "Tethering.unbind";
 /// <summary>
 /// Port number to unbind.
 /// </summary>
-public int Port { get; set; }}
+public int? Port { get; set; }}
 /// <summary>
 /// Response from <see cref="TetheringUnbindRequest"/>
 /// </summary>
@@ -15319,7 +15319,7 @@ public string InternalName { get; } = "Tethering.accepted";
 /// <summary>
 /// Port number that was successfully bound.
 /// </summary>
-public int Port { get; set; }
+public int? Port { get; set; }
 /// <summary>
 /// Connection id to be used.
 /// </summary>
@@ -15345,15 +15345,15 @@ public string RecordMode { get; set; }
 /// <summary>
 /// Turns on JavaScript stack sampling.
 /// </summary>
-public bool EnableSampling { get; set; }
+public bool? EnableSampling { get; set; }
 /// <summary>
 /// Turns on system tracing.
 /// </summary>
-public bool EnableSystrace { get; set; }
+public bool? EnableSystrace { get; set; }
 /// <summary>
 /// Turns on argument filter.
 /// </summary>
-public bool EnableArgumentFilter { get; set; }
+public bool? EnableArgumentFilter { get; set; }
 /// <summary>
 /// Included category filters.
 /// </summary>
@@ -15455,7 +15455,7 @@ public string Command { get; } = "Tracing.requestMemoryDump";
 /// <summary>
 /// Enables more deterministic results by forcing garbage collection
 /// </summary>
-public bool Deterministic { get; set; }}
+public bool? Deterministic { get; set; }}
 /// <summary>
 /// Response from <see cref="TracingRequestMemoryDumpRequest"/>
 /// </summary>
@@ -15468,7 +15468,7 @@ public string DumpGuid { get; set; }
 /// <summary>
 /// True iff the global memory dump succeeded.
 /// </summary>
-public bool Success { get; set; }}
+public bool? Success { get; set; }}
 /// <summary>
 /// Start trace events collection.
 /// </summary>
@@ -15490,7 +15490,7 @@ public string Options { get; set; }
 /// <summary>
 /// If set, the agent will issue bufferUsage events at this interval, specified in milliseconds
 /// </summary>
-public double BufferUsageReportingInterval { get; set; }
+public double? BufferUsageReportingInterval { get; set; }
 /// <summary>
 /// Whether to report trace events as series of dataCollected events or to save trace to a
 /// stream (defaults to `ReportEvents`).
@@ -15529,16 +15529,16 @@ public string InternalName { get; } = "Tracing.bufferUsage";
 /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
 /// total size.
 /// </summary>
-public double PercentFull { get; set; }
+public double? PercentFull { get; set; }
 /// <summary>
 /// An approximate number of events in the trace log.
 /// </summary>
-public double EventCount { get; set; }
+public double? EventCount { get; set; }
 /// <summary>
 /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
 /// total size.
 /// </summary>
-public double Value { get; set; }}
+public double? Value { get; set; }}
 /// <summary>
 /// Contains an bucket of collected trace events. When tracing is stopped collected events will be
 /// send as a sequence of dataCollected events followed by tracingComplete event.
@@ -15567,7 +15567,7 @@ public string InternalName { get; } = "Tracing.tracingComplete";
 /// Indicates whether some trace data is known to have been lost, e.g. because the trace ring
 /// buffer wrapped around.
 /// </summary>
-public bool DataLossOccurred { get; set; }
+public bool? DataLossOccurred { get; set; }
 /// <summary>
 /// A handle of the stream that holds resulting trace data.
 /// </summary>
@@ -15703,7 +15703,7 @@ public RequestPattern[] Patterns { get; set; }
 /// If true, authRequired events will be issued and requests will be paused
 /// expecting a call to continueWithAuth.
 /// </summary>
-public bool HandleAuthRequests { get; set; }}
+public bool? HandleAuthRequests { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchEnableRequest"/>
 /// </summary>
@@ -15751,7 +15751,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// An HTTP response code.
 /// </summary>
-public int ResponseCode { get; set; }
+public int? ResponseCode { get; set; }
 /// <summary>
 /// Response headers.
 /// </summary>
@@ -15869,7 +15869,7 @@ public string Body { get; set; }
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool Base64Encoded { get; set; }}
+public bool? Base64Encoded { get; set; }}
 /// <summary>
 /// Returns a handle to the stream representing the response body.
 /// The request must be paused in the HeadersReceived stage.
@@ -15939,7 +15939,7 @@ public Network.ErrorReason ResponseErrorReason { get; set; }
 /// <summary>
 /// Response code if intercepted at response stage.
 /// </summary>
-public int ResponseStatusCode { get; set; }
+public int? ResponseStatusCode { get; set; }
 /// <summary>
 /// Response headers if intercepted at the response stage.
 /// </summary>
@@ -16029,21 +16029,21 @@ internal class ContextRealtimeData
 /// <summary>
 /// The current context time in second in BaseAudioContext.
 /// </summary>
-public double CurrentTime { get; set; }
+public double? CurrentTime { get; set; }
 /// <summary>
 /// The time spent on rendering graph divided by render qunatum duration,
 /// and multiplied by 100. 100 means the audio renderer reached the full
 /// capacity and glitch may occur.
 /// </summary>
-public double RenderCapacity { get; set; }
+public double? RenderCapacity { get; set; }
 /// <summary>
 /// A running mean of callback interval.
 /// </summary>
-public double CallbackIntervalMean { get; set; }
+public double? CallbackIntervalMean { get; set; }
 /// <summary>
 /// A running variance of callback interval.
 /// </summary>
-public double CallbackIntervalVariance { get; set; }}
+public double? CallbackIntervalVariance { get; set; }}
 /// <summary>
 /// Protocol object for BaseAudioContext
 /// </summary>
@@ -16068,15 +16068,15 @@ public ContextRealtimeData RealtimeData { get; set; }
 /// <summary>
 /// Platform-dependent callback buffer size.
 /// </summary>
-public double CallbackBufferSize { get; set; }
+public double? CallbackBufferSize { get; set; }
 /// <summary>
 /// Number of output channels supported by audio hardware in use.
 /// </summary>
-public double MaxOutputChannelCount { get; set; }
+public double? MaxOutputChannelCount { get; set; }
 /// <summary>
 /// Context sample rate.
 /// </summary>
-public double SampleRate { get; set; }}
+public double? SampleRate { get; set; }}
 /// <summary>
 /// Protocol object for AudioListner
 /// </summary>
@@ -16110,15 +16110,15 @@ public string NodeType { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double NumberOfInputs { get; set; }
+public double? NumberOfInputs { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double NumberOfOutputs { get; set; }
+public double? NumberOfOutputs { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double ChannelCount { get; set; }
+public double? ChannelCount { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -16155,15 +16155,15 @@ public AutomationRate Rate { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double DefaultValue { get; set; }
+public double? DefaultValue { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double MinValue { get; set; }
+public double? MinValue { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double MaxValue { get; set; }}
+public double? MaxValue { get; set; }}
 /// <summary>
 /// Enables the WebAudio domain and starts sending context lifetime events.
 /// </summary>
@@ -16378,11 +16378,11 @@ public string DestinationId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double SourceOutputIndex { get; set; }
+public double? SourceOutputIndex { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double DestinationInputIndex { get; set; }}
+public double? DestinationInputIndex { get; set; }}
 /// <summary>
 /// Notifies that AudioNodes are disconnected. The destination can be null, and it means all the outgoing connections from the source are disconnected.
 /// </summary>
@@ -16407,11 +16407,11 @@ public string DestinationId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double SourceOutputIndex { get; set; }
+public double? SourceOutputIndex { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double DestinationInputIndex { get; set; }}
+public double? DestinationInputIndex { get; set; }}
 /// <summary>
 /// Notifies that an AudioNode is connected to an AudioParam.
 /// </summary>
@@ -16436,7 +16436,7 @@ public string DestinationId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double SourceOutputIndex { get; set; }}
+public double? SourceOutputIndex { get; set; }}
 /// <summary>
 /// Notifies that an AudioNode is disconnected to an AudioParam.
 /// </summary>
@@ -16461,7 +16461,7 @@ public string DestinationId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double SourceOutputIndex { get; set; }}
+public double? SourceOutputIndex { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
 {
@@ -16498,21 +16498,21 @@ public AuthenticatorTransport Transport { get; set; }
 /// <summary>
 /// Defaults to false.
 /// </summary>
-public bool HasResidentKey { get; set; }
+public bool? HasResidentKey { get; set; }
 /// <summary>
 /// Defaults to false.
 /// </summary>
-public bool HasUserVerification { get; set; }
+public bool? HasUserVerification { get; set; }
 /// <summary>
 /// If set to true, tests of user presence will succeed immediately.
 /// Otherwise, they will not be resolved. Defaults to true.
 /// </summary>
-public bool AutomaticPresenceSimulation { get; set; }
+public bool? AutomaticPresenceSimulation { get; set; }
 /// <summary>
 /// Sets whether User Verification succeeds or fails for an authenticator.
 /// Defaults to false.
 /// </summary>
-public bool IsUserVerified { get; set; }}
+public bool? IsUserVerified { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -16525,7 +16525,7 @@ public byte[] CredentialId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool IsResidentCredential { get; set; }
+public bool? IsResidentCredential { get; set; }
 /// <summary>
 /// Relying Party ID the credential is scoped to. Must be set when adding a
 /// credential.
@@ -16545,7 +16545,7 @@ public byte[] UserHandle { get; set; }
 /// assertion.
 /// See https://w3c.github.io/webauthn/#signature-counter
 /// </summary>
-public int SignCount { get; set; }}
+public int? SignCount { get; set; }}
 /// <summary>
 /// Enable the WebAuthn domain and start intercepting credential storage and
 /// retrieval with a virtual authenticator.
@@ -16761,7 +16761,7 @@ public string AuthenticatorId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool IsUserVerified { get; set; }}
+public bool? IsUserVerified { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnSetUserVerifiedRequest"/>
 /// </summary>
@@ -16805,7 +16805,7 @@ public PlayerEventType Type { get; set; }
 /// Events are timestamped relative to the start of the player creation
 /// not relative to the start of playback.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -16926,11 +16926,11 @@ public string Url { get; set; }
 /// <summary>
 /// Line number in the resource that generated this message (1-based).
 /// </summary>
-public int Line { get; set; }
+public int? Line { get; set; }
 /// <summary>
 /// Column number in the resource that generated this message (1-based).
 /// </summary>
-public int Column { get; set; }}
+public int? Column { get; set; }}
 /// <summary>
 /// Does nothing.
 /// </summary>
@@ -17011,11 +17011,11 @@ public string ScriptId { get; set; }
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int ColumnNumber { get; set; }}
+public int? ColumnNumber { get; set; }}
 /// <summary>
 /// Location in the source code.
 /// </summary>
@@ -17024,11 +17024,11 @@ internal class ScriptPosition
 /// <summary>
 /// 
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int ColumnNumber { get; set; }}
+public int? ColumnNumber { get; set; }}
 /// <summary>
 /// JavaScript call frame. Array of call frames form the call stack.
 /// </summary>
@@ -17101,7 +17101,7 @@ internal class SearchMatch
 /// <summary>
 /// Line number in resource content.
 /// </summary>
-public double LineNumber { get; set; }
+public double? LineNumber { get; set; }
 /// <summary>
 /// Line with match content.
 /// </summary>
@@ -17118,11 +17118,11 @@ public string ScriptId { get; set; }
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int ColumnNumber { get; set; }
+public int? ColumnNumber { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -17183,7 +17183,7 @@ public string Command { get; } = "Debugger.enable";
 /// The maximum size in bytes of collected scripts (not referenced by other heap objects)
 /// the debugger can hold. Puts no limit if paramter is omitted.
 /// </summary>
-public double MaxScriptsCacheSize { get; set; }}
+public double? MaxScriptsCacheSize { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerEnableRequest"/>
 /// </summary>
@@ -17220,28 +17220,28 @@ public string ObjectGroup { get; set; }
 /// Specifies whether command line API should be available to the evaluated expression, defaults
 /// to false.
 /// </summary>
-public bool IncludeCommandLineAPI { get; set; }
+public bool? IncludeCommandLineAPI { get; set; }
 /// <summary>
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool Silent { get; set; }
+public bool? Silent { get; set; }
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool ReturnByValue { get; set; }
+public bool? ReturnByValue { get; set; }
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool GeneratePreview { get; set; }
+public bool? GeneratePreview { get; set; }
 /// <summary>
 /// Whether to throw an exception if side effect cannot be ruled out during evaluation.
 /// </summary>
-public bool ThrowOnSideEffect { get; set; }
+public bool? ThrowOnSideEffect { get; set; }
 /// <summary>
 /// Terminate execution after timing out (number of milliseconds).
 /// </summary>
-public double Timeout { get; set; }}
+public double? Timeout { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
 /// </summary>
@@ -17278,7 +17278,7 @@ public Location End { get; set; }
 /// <summary>
 /// Only consider locations which are in the same (non-nested) function as start.
 /// </summary>
-public bool RestrictToFunction { get; set; }}
+public bool? RestrictToFunction { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerGetPossibleBreakpointsRequest"/>
 /// </summary>
@@ -17487,11 +17487,11 @@ public string Query { get; set; }
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool CaseSensitive { get; set; }
+public bool? CaseSensitive { get; set; }
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool IsRegex { get; set; }}
+public bool? IsRegex { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSearchInContentRequest"/>
 /// </summary>
@@ -17515,7 +17515,7 @@ public string Command { get; } = "Debugger.setAsyncCallStackDepth";
 /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
 /// call stacks (default).
 /// </summary>
-public int MaxDepth { get; set; }}
+public int? MaxDepth { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetAsyncCallStackDepthRequest"/>
 /// </summary>
@@ -17642,7 +17642,7 @@ public string Command { get; } = "Debugger.setBreakpointByUrl";
 /// <summary>
 /// Line number to set breakpoint at.
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// URL of the resources to set breakpoint on.
 /// </summary>
@@ -17659,7 +17659,7 @@ public string ScriptHash { get; set; }
 /// <summary>
 /// Offset in the line to set breakpoint at.
 /// </summary>
-public int ColumnNumber { get; set; }
+public int? ColumnNumber { get; set; }
 /// <summary>
 /// Expression to use as a breakpoint condition. When specified, debugger will only stop on the
 /// breakpoint if this expression evaluates to true.
@@ -17721,7 +17721,7 @@ public string Command { get; } = "Debugger.setBreakpointsActive";
 /// <summary>
 /// New value for breakpoints active state.
 /// </summary>
-public bool Active { get; set; }}
+public bool? Active { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
 /// </summary>
@@ -17791,7 +17791,7 @@ public string ScriptSource { get; set; }
 /// If true the change will not actually be applied. Dry run may be used to get result
 /// description without actually modifying the code.
 /// </summary>
-public bool DryRun { get; set; }}
+public bool? DryRun { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetScriptSourceRequest"/>
 /// </summary>
@@ -17804,7 +17804,7 @@ public CallFrame[] CallFrames { get; set; }
 /// <summary>
 /// Whether current call stack  was modified after applying the changes.
 /// </summary>
-public bool StackChanged { get; set; }
+public bool? StackChanged { get; set; }
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
@@ -17830,7 +17830,7 @@ public string Command { get; } = "Debugger.setSkipAllPauses";
 /// <summary>
 /// New value for skip pauses state.
 /// </summary>
-public bool Skip { get; set; }}
+public bool? Skip { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetSkipAllPausesRequest"/>
 /// </summary>
@@ -17852,7 +17852,7 @@ public string Command { get; } = "Debugger.setVariableValue";
 /// 0-based number of scope as was listed in scope chain. Only 'local', 'closure' and 'catch'
 /// scope types are allowed. Other scopes could be manipulated manually.
 /// </summary>
-public int ScopeNumber { get; set; }
+public int? ScopeNumber { get; set; }
 /// <summary>
 /// Variable name.
 /// </summary>
@@ -17885,7 +17885,7 @@ public string Command { get; } = "Debugger.stepInto";
 /// Debugger will pause on the execution of the first async task which was scheduled
 /// before next pause.
 /// </summary>
-public bool BreakOnAsyncCall { get; set; }}
+public bool? BreakOnAsyncCall { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerStepIntoRequest"/>
 /// </summary>
@@ -18010,23 +18010,23 @@ public string Url { get; set; }
 /// <summary>
 /// Line offset of the script within the resource with given URL (for script tags).
 /// </summary>
-public int StartLine { get; set; }
+public int? StartLine { get; set; }
 /// <summary>
 /// Column offset of the script within the resource with given URL.
 /// </summary>
-public int StartColumn { get; set; }
+public int? StartColumn { get; set; }
 /// <summary>
 /// Last line of the script.
 /// </summary>
-public int EndLine { get; set; }
+public int? EndLine { get; set; }
 /// <summary>
 /// Length of the last line of the script.
 /// </summary>
-public int EndColumn { get; set; }
+public int? EndColumn { get; set; }
 /// <summary>
 /// Specifies script creation context.
 /// </summary>
-public int ExecutionContextId { get; set; }
+public int? ExecutionContextId { get; set; }
 /// <summary>
 /// Content hash of the script.
 /// </summary>
@@ -18042,15 +18042,15 @@ public string SourceMapURL { get; set; }
 /// <summary>
 /// True, if this script has sourceURL.
 /// </summary>
-public bool HasSourceURL { get; set; }
+public bool? HasSourceURL { get; set; }
 /// <summary>
 /// True, if this script is ES6 module.
 /// </summary>
-public bool IsModule { get; set; }
+public bool? IsModule { get; set; }
 /// <summary>
 /// This script length.
 /// </summary>
-public int Length { get; set; }
+public int? Length { get; set; }
 /// <summary>
 /// JavaScript top stack frame of where the script parsed event was triggered if available.
 /// </summary>
@@ -18076,23 +18076,23 @@ public string Url { get; set; }
 /// <summary>
 /// Line offset of the script within the resource with given URL (for script tags).
 /// </summary>
-public int StartLine { get; set; }
+public int? StartLine { get; set; }
 /// <summary>
 /// Column offset of the script within the resource with given URL.
 /// </summary>
-public int StartColumn { get; set; }
+public int? StartColumn { get; set; }
 /// <summary>
 /// Last line of the script.
 /// </summary>
-public int EndLine { get; set; }
+public int? EndLine { get; set; }
 /// <summary>
 /// Length of the last line of the script.
 /// </summary>
-public int EndColumn { get; set; }
+public int? EndColumn { get; set; }
 /// <summary>
 /// Specifies script creation context.
 /// </summary>
-public int ExecutionContextId { get; set; }
+public int? ExecutionContextId { get; set; }
 /// <summary>
 /// Content hash of the script.
 /// </summary>
@@ -18104,7 +18104,7 @@ public JsonElement? ExecutionContextAuxData { get; set; }
 /// <summary>
 /// True, if this script is generated as a result of the live edit operation.
 /// </summary>
-public bool IsLiveEdit { get; set; }
+public bool? IsLiveEdit { get; set; }
 /// <summary>
 /// URL of source map associated with script (if any).
 /// </summary>
@@ -18112,15 +18112,15 @@ public string SourceMapURL { get; set; }
 /// <summary>
 /// True, if this script has sourceURL.
 /// </summary>
-public bool HasSourceURL { get; set; }
+public bool? HasSourceURL { get; set; }
 /// <summary>
 /// True, if this script is ES6 module.
 /// </summary>
-public bool IsModule { get; set; }
+public bool? IsModule { get; set; }
 /// <summary>
 /// This script length.
 /// </summary>
-public int Length { get; set; }
+public int? Length { get; set; }
 /// <summary>
 /// JavaScript top stack frame of where the script parsed event was triggered if available.
 /// </summary>
@@ -18140,11 +18140,11 @@ public Runtime.CallFrame CallFrame { get; set; }
 /// <summary>
 /// Allocations size in bytes for the node excluding children.
 /// </summary>
-public double SelfSize { get; set; }
+public double? SelfSize { get; set; }
 /// <summary>
 /// Node id. Ids are unique across all profiles collected between startSampling and stopSampling.
 /// </summary>
-public int Id { get; set; }
+public int? Id { get; set; }
 /// <summary>
 /// Child nodes.
 /// </summary>
@@ -18157,16 +18157,16 @@ internal class SamplingHeapProfileSample
 /// <summary>
 /// Allocation size in bytes attributed to the sample.
 /// </summary>
-public double Size { get; set; }
+public double? Size { get; set; }
 /// <summary>
 /// Id of the corresponding profile tree node.
 /// </summary>
-public int NodeId { get; set; }
+public int? NodeId { get; set; }
 /// <summary>
 /// Time-ordered sample ordinal number. It is unique across all profiles retrieved
 /// between startSampling and stopSampling.
 /// </summary>
-public double Ordinal { get; set; }}
+public double? Ordinal { get; set; }}
 /// <summary>
 /// Sampling profile.
 /// </summary>
@@ -18336,7 +18336,7 @@ public string Command { get; } = "HeapProfiler.startSampling";
 /// Average sample interval in bytes. Poisson distribution is used for the intervals. The
 /// default value is 32768 bytes.
 /// </summary>
-public double SamplingInterval { get; set; }}
+public double? SamplingInterval { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerStartSamplingRequest"/>
 /// </summary>
@@ -18356,7 +18356,7 @@ public string Command { get; } = "HeapProfiler.startTrackingHeapObjects";
 /// <summary>
 /// 
 /// </summary>
-public bool TrackAllocations { get; set; }}
+public bool? TrackAllocations { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerStartTrackingHeapObjectsRequest"/>
 /// </summary>
@@ -18397,11 +18397,11 @@ public string Command { get; } = "HeapProfiler.stopTrackingHeapObjects";
 /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken
 /// when the tracking is stopped.
 /// </summary>
-public bool ReportProgress { get; set; }
+public bool? ReportProgress { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool TreatGlobalObjectsAsRoots { get; set; }}
+public bool? TreatGlobalObjectsAsRoots { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerStopTrackingHeapObjectsRequest"/>
 /// </summary>
@@ -18421,11 +18421,11 @@ public string Command { get; } = "HeapProfiler.takeHeapSnapshot";
 /// <summary>
 /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken.
 /// </summary>
-public bool ReportProgress { get; set; }
+public bool? ReportProgress { get; set; }
 /// <summary>
 /// If true, a raw snapshot without artifical roots will be generated
 /// </summary>
-public bool TreatGlobalObjectsAsRoots { get; set; }}
+public bool? TreatGlobalObjectsAsRoots { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerTakeHeapSnapshotRequest"/>
 /// </summary>
@@ -18459,7 +18459,7 @@ public string InternalName { get; } = "HeapProfiler.heapStatsUpdate";
 /// index, the second integer is a total count of objects for the fragment, the third integer is
 /// a total size of the objects for the fragment.
 /// </summary>
-public int[] StatsUpdate { get; set; }}
+public int?[] StatsUpdate { get; set; }}
 /// <summary>
 /// If heap objects tracking has been started then backend regularly sends a current value for last
 /// seen object id and corresponding timestamp. If the were changes in the heap since last event
@@ -18474,11 +18474,11 @@ public string InternalName { get; } = "HeapProfiler.lastSeenObjectId";
 /// <summary>
 /// 
 /// </summary>
-public int LastSeenObjectId { get; set; }
+public int? LastSeenObjectId { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -18491,15 +18491,15 @@ public string InternalName { get; } = "HeapProfiler.reportHeapSnapshotProgress";
 /// <summary>
 /// 
 /// </summary>
-public int Done { get; set; }
+public int? Done { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int Total { get; set; }
+public int? Total { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public bool Finished { get; set; }}
+public bool? Finished { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -18521,7 +18521,7 @@ internal class ProfileNode
 /// <summary>
 /// Unique id of the node.
 /// </summary>
-public int Id { get; set; }
+public int? Id { get; set; }
 /// <summary>
 /// Function location.
 /// </summary>
@@ -18529,11 +18529,11 @@ public Runtime.CallFrame CallFrame { get; set; }
 /// <summary>
 /// Number of samples where this node was on top of the call stack.
 /// </summary>
-public int HitCount { get; set; }
+public int? HitCount { get; set; }
 /// <summary>
 /// Child node ids.
 /// </summary>
-public int[] Children { get; set; }
+public int?[] Children { get; set; }
 /// <summary>
 /// The reason of being not optimized. The function may be deoptimized or marked as don't
 /// optimize.
@@ -18555,20 +18555,20 @@ public ProfileNode[] Nodes { get; set; }
 /// <summary>
 /// Profiling start timestamp in microseconds.
 /// </summary>
-public double StartTime { get; set; }
+public double? StartTime { get; set; }
 /// <summary>
 /// Profiling end timestamp in microseconds.
 /// </summary>
-public double EndTime { get; set; }
+public double? EndTime { get; set; }
 /// <summary>
 /// Ids of samples top nodes.
 /// </summary>
-public int[] Samples { get; set; }
+public int?[] Samples { get; set; }
 /// <summary>
 /// Time intervals between adjacent samples in microseconds. The first delta is relative to the
 /// profile startTime.
 /// </summary>
-public int[] TimeDeltas { get; set; }}
+public int?[] TimeDeltas { get; set; }}
 /// <summary>
 /// Specifies a number of samples attributed to a certain source position.
 /// </summary>
@@ -18577,11 +18577,11 @@ internal class PositionTickInfo
 /// <summary>
 /// Source line number (1-based).
 /// </summary>
-public int Line { get; set; }
+public int? Line { get; set; }
 /// <summary>
 /// Number of samples attributed to the source line.
 /// </summary>
-public int Ticks { get; set; }}
+public int? Ticks { get; set; }}
 /// <summary>
 /// Coverage data for a source range.
 /// </summary>
@@ -18590,15 +18590,15 @@ internal class CoverageRange
 /// <summary>
 /// JavaScript script source offset for the range start.
 /// </summary>
-public int StartOffset { get; set; }
+public int? StartOffset { get; set; }
 /// <summary>
 /// JavaScript script source offset for the range end.
 /// </summary>
-public int EndOffset { get; set; }
+public int? EndOffset { get; set; }
 /// <summary>
 /// Collected execution count of the source range.
 /// </summary>
-public int Count { get; set; }}
+public int? Count { get; set; }}
 /// <summary>
 /// Coverage data for a JavaScript function.
 /// </summary>
@@ -18615,7 +18615,7 @@ public CoverageRange[] Ranges { get; set; }
 /// <summary>
 /// Whether coverage data for this function has block granularity.
 /// </summary>
-public bool IsBlockCoverage { get; set; }}
+public bool? IsBlockCoverage { get; set; }}
 /// <summary>
 /// Coverage data for a JavaScript script.
 /// </summary>
@@ -18650,7 +18650,7 @@ internal class TypeProfileEntry
 /// <summary>
 /// Source offset of the parameter or end of function for return values.
 /// </summary>
-public int Offset { get; set; }
+public int? Offset { get; set; }
 /// <summary>
 /// The types for this parameter or return value.
 /// </summary>
@@ -18684,7 +18684,7 @@ public string Name { get; set; }
 /// <summary>
 /// Counter value.
 /// </summary>
-public int Value { get; set; }}
+public int? Value { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -18753,7 +18753,7 @@ public string Command { get; } = "Profiler.setSamplingInterval";
 /// <summary>
 /// New sampling interval in microseconds.
 /// </summary>
-public int Interval { get; set; }}
+public int? Interval { get; set; }}
 /// <summary>
 /// Response from <see cref="ProfilerSetSamplingIntervalRequest"/>
 /// </summary>
@@ -18792,11 +18792,11 @@ public string Command { get; } = "Profiler.startPreciseCoverage";
 /// <summary>
 /// Collect accurate call counts beyond simple 'covered' or 'not covered'.
 /// </summary>
-public bool CallCount { get; set; }
+public bool? CallCount { get; set; }
 /// <summary>
 /// Collect block-based coverage.
 /// </summary>
-public bool Detailed { get; set; }}
+public bool? Detailed { get; set; }}
 /// <summary>
 /// Response from <see cref="ProfilerStartPreciseCoverageRequest"/>
 /// </summary>
@@ -18805,7 +18805,7 @@ internal class ProfilerStartPreciseCoverageResponse : IChromiumResponse
 /// <summary>
 /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Enable type profile.
 /// </summary>
@@ -18902,7 +18902,7 @@ public ScriptCoverage[] Result { get; set; }
 /// <summary>
 /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
 /// </summary>
-public double Timestamp { get; set; }}
+public double? Timestamp { get; set; }}
 /// <summary>
 /// Collect type profile.
 /// </summary>
@@ -19104,7 +19104,7 @@ public string Description { get; set; }
 /// <summary>
 /// True iff some of the properties or entries of the original object did not fit.
 /// </summary>
-public bool Overflow { get; set; }
+public bool? Overflow { get; set; }
 /// <summary>
 /// List of the properties.
 /// </summary>
@@ -19167,7 +19167,7 @@ public RemoteObject Value { get; set; }
 /// <summary>
 /// True if the value associated with the property may be changed (data descriptors only).
 /// </summary>
-public bool Writable { get; set; }
+public bool? Writable { get; set; }
 /// <summary>
 /// A function which serves as a getter for the property, or `undefined` if there is no getter
 /// (accessor descriptors only).
@@ -19182,20 +19182,20 @@ public RemoteObject Set { get; set; }
 /// True if the type of this property descriptor may be changed and if the property may be
 /// deleted from the corresponding object.
 /// </summary>
-public bool Configurable { get; set; }
+public bool? Configurable { get; set; }
 /// <summary>
 /// True if this property shows up during enumeration of the properties on the corresponding
 /// object.
 /// </summary>
-public bool Enumerable { get; set; }
+public bool? Enumerable { get; set; }
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool WasThrown { get; set; }
+public bool? WasThrown { get; set; }
 /// <summary>
 /// True if the property is owned for the object.
 /// </summary>
-public bool IsOwn { get; set; }
+public bool? IsOwn { get; set; }
 /// <summary>
 /// Property symbol object, if the property is of the `symbol` type.
 /// </summary>
@@ -19263,7 +19263,7 @@ internal class ExecutionContextDescription
 /// Unique id of the execution context. It can be used to specify in which execution context
 /// script evaluation should be performed.
 /// </summary>
-public int Id { get; set; }
+public int? Id { get; set; }
 /// <summary>
 /// Execution context origin.
 /// </summary>
@@ -19285,7 +19285,7 @@ internal class ExceptionDetails
 /// <summary>
 /// Exception id.
 /// </summary>
-public int ExceptionId { get; set; }
+public int? ExceptionId { get; set; }
 /// <summary>
 /// Exception text, which should be used together with exception object when available.
 /// </summary>
@@ -19293,11 +19293,11 @@ public string Text { get; set; }
 /// <summary>
 /// Line number of the exception location (0-based).
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// Column number of the exception location (0-based).
 /// </summary>
-public int ColumnNumber { get; set; }
+public int? ColumnNumber { get; set; }
 /// <summary>
 /// Script ID of the exception location.
 /// </summary>
@@ -19317,7 +19317,7 @@ public RemoteObject Exception { get; set; }
 /// <summary>
 /// Identifier of the context where exception happened.
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Stack entry for runtime errors and assertions.
 /// </summary>
@@ -19338,11 +19338,11 @@ public string Url { get; set; }
 /// <summary>
 /// JavaScript script line number (0-based).
 /// </summary>
-public int LineNumber { get; set; }
+public int? LineNumber { get; set; }
 /// <summary>
 /// JavaScript script column number (0-based).
 /// </summary>
-public int ColumnNumber { get; set; }}
+public int? ColumnNumber { get; set; }}
 /// <summary>
 /// Call frames for assertions or error messages.
 /// </summary>
@@ -19396,11 +19396,11 @@ public string PromiseObjectId { get; set; }
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool ReturnByValue { get; set; }
+public bool? ReturnByValue { get; set; }
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool GeneratePreview { get; set; }}
+public bool? GeneratePreview { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeAwaitPromiseRequest"/>
 /// </summary>
@@ -19443,29 +19443,29 @@ public CallArgument[] Arguments { get; set; }
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool Silent { get; set; }
+public bool? Silent { get; set; }
 /// <summary>
 /// Whether the result is expected to be a JSON object which should be sent by value.
 /// </summary>
-public bool ReturnByValue { get; set; }
+public bool? ReturnByValue { get; set; }
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool GeneratePreview { get; set; }
+public bool? GeneratePreview { get; set; }
 /// <summary>
 /// Whether execution should be treated as initiated by user in the UI.
 /// </summary>
-public bool UserGesture { get; set; }
+public bool? UserGesture { get; set; }
 /// <summary>
 /// Whether execution should `await` for resulting value and return once awaited promise is
 /// resolved.
 /// </summary>
-public bool AwaitPromise { get; set; }
+public bool? AwaitPromise { get; set; }
 /// <summary>
 /// Specifies execution context which global object will be used to call function on. Either
 /// executionContextId or objectId should be specified.
 /// </summary>
-public int ExecutionContextId { get; set; }
+public int? ExecutionContextId { get; set; }
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects. If objectGroup is not
 /// specified and objectId is, objectGroup will be inherited from object.
@@ -19505,12 +19505,12 @@ public string SourceURL { get; set; }
 /// <summary>
 /// Specifies whether the compiled script should be persisted.
 /// </summary>
-public bool PersistScript { get; set; }
+public bool? PersistScript { get; set; }
 /// <summary>
 /// Specifies in which execution context to perform script run. If the parameter is omitted the
 /// evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeCompileScriptRequest"/>
 /// </summary>
@@ -19598,51 +19598,51 @@ public string ObjectGroup { get; set; }
 /// <summary>
 /// Determines whether Command Line API should be available during the evaluation.
 /// </summary>
-public bool IncludeCommandLineAPI { get; set; }
+public bool? IncludeCommandLineAPI { get; set; }
 /// <summary>
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool Silent { get; set; }
+public bool? Silent { get; set; }
 /// <summary>
 /// Specifies in which execution context to perform evaluation. If the parameter is omitted the
 /// evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int ContextId { get; set; }
+public int? ContextId { get; set; }
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool ReturnByValue { get; set; }
+public bool? ReturnByValue { get; set; }
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool GeneratePreview { get; set; }
+public bool? GeneratePreview { get; set; }
 /// <summary>
 /// Whether execution should be treated as initiated by user in the UI.
 /// </summary>
-public bool UserGesture { get; set; }
+public bool? UserGesture { get; set; }
 /// <summary>
 /// Whether execution should `await` for resulting value and return once awaited promise is
 /// resolved.
 /// </summary>
-public bool AwaitPromise { get; set; }
+public bool? AwaitPromise { get; set; }
 /// <summary>
 /// Whether to throw an exception if side effect cannot be ruled out during evaluation.
 /// This implies `disableBreaks` below.
 /// </summary>
-public bool ThrowOnSideEffect { get; set; }
+public bool? ThrowOnSideEffect { get; set; }
 /// <summary>
 /// Terminate execution after timing out (number of milliseconds).
 /// </summary>
-public double Timeout { get; set; }
+public double? Timeout { get; set; }
 /// <summary>
 /// Disable breakpoints during execution.
 /// </summary>
-public bool DisableBreaks { get; set; }
+public bool? DisableBreaks { get; set; }
 /// <summary>
 /// Reserved flag for future REPL mode support. Setting this flag has currently no effect.
 /// </summary>
-public bool ReplMode { get; set; }}
+public bool? ReplMode { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeEvaluateRequest"/>
 /// </summary>
@@ -19696,11 +19696,11 @@ internal class RuntimeGetHeapUsageResponse : IChromiumResponse
 /// <summary>
 /// Used heap size in bytes.
 /// </summary>
-public double UsedSize { get; set; }
+public double? UsedSize { get; set; }
 /// <summary>
 /// Allocated heap size in bytes.
 /// </summary>
-public double TotalSize { get; set; }}
+public double? TotalSize { get; set; }}
 /// <summary>
 /// Returns properties of a given object. Object group of the result is inherited from the target
 /// object.
@@ -19720,16 +19720,16 @@ public string ObjectId { get; set; }
 /// If true, returns properties belonging only to the element itself, not to its prototype
 /// chain.
 /// </summary>
-public bool OwnProperties { get; set; }
+public bool? OwnProperties { get; set; }
 /// <summary>
 /// If true, returns accessor properties (with getter/setter) only; internal properties are not
 /// returned either.
 /// </summary>
-public bool AccessorPropertiesOnly { get; set; }
+public bool? AccessorPropertiesOnly { get; set; }
 /// <summary>
 /// Whether preview should be generated for the results.
 /// </summary>
-public bool GeneratePreview { get; set; }}
+public bool? GeneratePreview { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeGetPropertiesRequest"/>
 /// </summary>
@@ -19764,7 +19764,7 @@ public string Command { get; } = "Runtime.globalLexicalScopeNames";
 /// <summary>
 /// Specifies in which execution context to lookup global scope variables.
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeGlobalLexicalScopeNamesRequest"/>
 /// </summary>
@@ -19876,7 +19876,7 @@ public string ScriptId { get; set; }
 /// Specifies in which execution context to perform script run. If the parameter is omitted the
 /// evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int ExecutionContextId { get; set; }
+public int? ExecutionContextId { get; set; }
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
@@ -19885,24 +19885,24 @@ public string ObjectGroup { get; set; }
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool Silent { get; set; }
+public bool? Silent { get; set; }
 /// <summary>
 /// Determines whether Command Line API should be available during the evaluation.
 /// </summary>
-public bool IncludeCommandLineAPI { get; set; }
+public bool? IncludeCommandLineAPI { get; set; }
 /// <summary>
 /// Whether the result is expected to be a JSON object which should be sent by value.
 /// </summary>
-public bool ReturnByValue { get; set; }
+public bool? ReturnByValue { get; set; }
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool GeneratePreview { get; set; }
+public bool? GeneratePreview { get; set; }
 /// <summary>
 /// Whether execution should `await` for resulting value and return once awaited promise is
 /// resolved.
 /// </summary>
-public bool AwaitPromise { get; set; }}
+public bool? AwaitPromise { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeRunScriptRequest"/>
 /// </summary>
@@ -19930,7 +19930,7 @@ public string Command { get; } = "Runtime.setAsyncCallStackDepth";
 /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
 /// call stacks (default).
 /// </summary>
-public int MaxDepth { get; set; }}
+public int? MaxDepth { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeSetAsyncCallStackDepthRequest"/>
 /// </summary>
@@ -19950,7 +19950,7 @@ public string Command { get; } = "Runtime.setCustomObjectFormatterEnabled";
 /// <summary>
 /// 
 /// </summary>
-public bool Enabled { get; set; }}
+public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeSetCustomObjectFormatterEnabledRequest"/>
 /// </summary>
@@ -19970,7 +19970,7 @@ public string Command { get; } = "Runtime.setMaxCallStackSizeToCapture";
 /// <summary>
 /// 
 /// </summary>
-public int Size { get; set; }}
+public int? Size { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeSetMaxCallStackSizeToCaptureRequest"/>
 /// </summary>
@@ -20019,7 +20019,7 @@ public string Name { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeAddBindingRequest"/>
 /// </summary>
@@ -20067,7 +20067,7 @@ public string Payload { get; set; }
 /// <summary>
 /// Identifier of the context where the call was made.
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Issued when console API was called.
 /// </summary>
@@ -20088,11 +20088,11 @@ public RemoteObject[] Args { get; set; }
 /// <summary>
 /// Identifier of the context where the call was made.
 /// </summary>
-public int ExecutionContextId { get; set; }
+public int? ExecutionContextId { get; set; }
 /// <summary>
 /// Call timestamp.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// Stack trace captured when the call was made. The async stack chain is automatically reported for
 /// the following call types: `assert`, `error`, `trace`, `warning`. For other types the async call
@@ -20121,7 +20121,7 @@ public string Reason { get; set; }
 /// <summary>
 /// The id of revoked exception, as reported in `exceptionThrown`.
 /// </summary>
-public int ExceptionId { get; set; }}
+public int? ExceptionId { get; set; }}
 /// <summary>
 /// Issued when exception was thrown and unhandled.
 /// </summary>
@@ -20134,7 +20134,7 @@ public string InternalName { get; } = "Runtime.exceptionThrown";
 /// <summary>
 /// Timestamp of the exception.
 /// </summary>
-public double Timestamp { get; set; }
+public double? Timestamp { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -20164,7 +20164,7 @@ public string InternalName { get; } = "Runtime.executionContextDestroyed";
 /// <summary>
 /// Id of the destroyed context
 /// </summary>
-public int ExecutionContextId { get; set; }}
+public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Issued when all executionContexts were cleared in browser
 /// </summary>

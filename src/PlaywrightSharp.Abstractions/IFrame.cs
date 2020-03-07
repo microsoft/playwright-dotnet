@@ -49,12 +49,6 @@ namespace PlaywrightSharp
         string Id { get; set; }
 
         /// <summary>
-        /// Gets the frame's utility execution context.
-        /// </summary>
-        /// <returns>A <see cref="Task{IFrameExecutionContext}"/> that completes when the frame execution context is resolved, yielding the <see cref="IFrameExecutionContext"/>.</returns>
-        Task<IFrameExecutionContext> GetUtilityContextAsync();
-
-        /// <summary>
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
