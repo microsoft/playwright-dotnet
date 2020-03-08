@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: Build on ${{ matrix.framework }}
-    runs-on: window-latest
+    runs-on: windows-latest
     strategy:
       matrix:
         framework: [netcoreapp3.1, net48]
