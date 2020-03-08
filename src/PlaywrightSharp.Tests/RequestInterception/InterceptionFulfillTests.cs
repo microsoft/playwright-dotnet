@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         }
 
         /// <summary>
-        /// In puppeteer this method is called ShouldWorkWithStatusCode422.
+        /// In Playwright this method is called ShouldWorkWithStatusCode422.
         /// I found that status 422 is not available in all .NET runtimes (see https://github.com/dotnet/core/blob/4c4642d548074b3fbfd425541a968aadd75fea99/release-notes/2.1/Preview/api-diff/preview2/2.1-preview2_System.Net.md)
         /// As the goal here is testing HTTP codes that are not in Chromium (see https://cs.chromium.org/chromium/src/net/http/http_status_code_list.h?sq=package:chromium) we will use code 426: Upgrade Required
         /// </summary>
