@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Launcher
                 Assert.Equal("hello", await page2.EvaluateAsync<string>("localStorage.hey"));
             }
 
-            await using (var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions())
+            await using (var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
             {
                 var page3 = await browser3.DefaultContext.NewPageAsync();
                 await page3.GoToAsync(TestConstants.EmptyPage);
