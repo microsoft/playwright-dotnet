@@ -46,6 +46,7 @@ namespace PlaywrightSharp.Transport
         {
             byte[] encoded = Encoding.UTF8.GetBytes(message);
             var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+            System.Diagnostics.Debug.WriteLine($"SEND ► {message}");
             Task SendCoreAsync() => _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, default);
 
             return _enqueueTransportMessages ? _socketQueue.Enqueue(SendCoreAsync) : SendCoreAsync();
@@ -129,6 +130,7 @@ namespace PlaywrightSharp.Transport
                     }
                 }
 
+                System.Diagnostics.Debug.WriteLine($"◀ RECV {response}");
                 MessageReceived?.Invoke(this, new MessageReceivedEventArgs(response.ToString()));
             }
 

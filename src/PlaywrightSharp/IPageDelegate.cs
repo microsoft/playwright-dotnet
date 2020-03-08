@@ -6,7 +6,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Page delegate interface.
     /// </summary>
-    public interface IPageDelegate
+    internal interface IPageDelegate
     {
         /// <summary>
         /// Navigates a frame to an url.
@@ -16,6 +16,14 @@ namespace PlaywrightSharp
         /// <param name="referrer">Referer.</param>
         /// <returns>A <see cref="Task"/> that completes when the navigation is complete, yieldin its <see cref="GotoResult"/>.</returns>
         Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer);
+
+        /// <summary>
+        /// Adopt argument.
+        /// </summary>
+        /// <param name="arg">Argument to adpopt.</param>
+        /// <param name="frameExecutionContext">Execution context.</param>
+        /// <returns>A <see cref="Task"/> that completes when the argument is adopted, yielding the <see cref="ElementHandle"/>.</returns>
+        Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext);
 
         /// <summary>
         /// Sets the viewport.

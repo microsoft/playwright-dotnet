@@ -98,7 +98,7 @@ namespace PlaywrightSharp
         public string Url => MainFrame.Url;
 
         /// <inheritdoc cref="IPage.Frames"/>
-        public IFrame[] Frames => null;
+        public IFrame[] Frames => FrameManager.GetFrames();
 
         /// <inheritdoc cref="IPage.Keyboard"/>
         public IKeyboard Keyboard => null;
@@ -169,14 +169,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.EvaluateAsync{T}(string, object[])"/>
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
-            => Task.FromResult<T>((T)Convert.ChangeType(56, typeof(T), System.Globalization.CultureInfo.InvariantCulture));
+        public Task<T> EvaluateAsync<T>(string script, params object[] args) => MainFrame.EvaluateAsync<T>(script, args);
 
         /// <inheritdoc cref="IPage.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => MainFrame.EvaluateAsync<JsonElement?>(script, args);
 
         /// <inheritdoc cref="IPage.EvaluateHandleAsync(string)"/>
         public Task<IJSHandle> EvaluateHandleAsync(string expression)
