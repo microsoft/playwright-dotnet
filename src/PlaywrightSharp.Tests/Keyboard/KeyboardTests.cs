@@ -330,7 +330,6 @@ namespace PlaywrightSharp.Tests.Keyboard
             var textarea = await frame.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("👹 Tokyo street Japan 🇯🇵");
             Assert.Equal("👹 Tokyo street Japan 🇯🇵", await frame.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
-
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -356,7 +355,6 @@ namespace PlaywrightSharp.Tests.Keyboard
         [SkipBrowserAndPlatformFact(skipOSX: true, skipChromium: true)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
-
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("some text");
