@@ -1,40 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-
-    <IsPackable>false</IsPackable>
-    <ReleaseVersion>0.0.0</ReleaseVersion>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netcoreapp3.1\PlaywrightSharp.Tests.xml</DocumentationFile>
-    <NoWarn>1701;1702</NoWarn>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="1.2.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="MicrosoftExtensions.Logging.Xunit" Version="1.0.0" />
-    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
-    <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
-    <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
-    <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
-    <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
-    <ProjectReference Include="..\PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <DocumentationFile>bin\Debug\netcoreapp3.1\PlaywrightSharp.Tests.xml</DocumentationFile>
+        <NoWarn>1701;1702</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="MicrosoftExtensions.Logging.Xunit" Version="1.0.0" />
+        <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
+        <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
+        <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
+        <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
+        <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
+        <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
+        <ProjectReference Include="..\PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj" />
+    </ItemGroup>
 </Project>

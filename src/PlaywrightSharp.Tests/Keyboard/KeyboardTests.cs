@@ -125,8 +125,9 @@ namespace PlaywrightSharp.Tests.Keyboard
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
             var keyboard = Page.Keyboard;
             var codeForKey = new Dictionary<string, int> { ["Shift"] = 16, ["Alt"] = 18, ["Control"] = 17 };
-            foreach (var (modifierKey, modifierValue) in codeForKey)
+            foreach (string modifierKey in codeForKey.Keys)
             {
+                int modifierValue = codeForKey[modifierKey];
                 await keyboard.DownAsync(modifierKey);
                 Assert.Equal($"Keydown: {modifierKey} {modifierKey}Left {modifierValue} [{modifierKey}]", await Page.EvaluateAsync<string>("() => getResult()"));
                 await keyboard.DownAsync("!");
@@ -177,12 +178,12 @@ namespace PlaywrightSharp.Tests.Keyboard
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
             await Page.Keyboard.TypeAsync("!");
-            Assert.Equal(string.Join('\n',
+            Assert.Equal(string.Join("\n",
                 "Keydown: ! Digit1 49 []",
                 "Keypress: ! Digit1 33 33 []",
                 "Keyup: ! Digit1 49 []"), await Page.EvaluateAsync<string>("() => getResult()"));
             await Page.Keyboard.TypeAsync("^");
-            Assert.Equal(string.Join('\n',
+            Assert.Equal(string.Join("\n",
                 "Keydown: ^ Digit6 54 []",
                 "Keypress: ^ Digit6 94 94 []",
                 "Keyup: ^ Digit6 54 []"), await Page.EvaluateAsync<string>("() => getResult()"));
@@ -198,7 +199,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             var keyboard = Page.Keyboard;
             await keyboard.DownAsync("Shift");
             await Page.Keyboard.TypeAsync("~");
-            Assert.Equal(string.Join('\n',
+            Assert.Equal(string.Join("\n",
                 "Keydown: Shift ShiftLeft 16 [Shift]",
                 "Keydown: ~ Backquote 192 [Shift]", // 192 is ` keyCode
                 "Keypress: ~ Backquote 126 126 [Shift]", // 126 is ~ charCode

@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAPath()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var styleHandle = await Page.AddStyleTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/injectedstyle.css") });
+            var styleHandle = await Page.AddStyleTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/injectedstyle.css") });
             Assert.NotNull(styleHandle);
             Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
@@ -64,10 +64,10 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddStyleTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/injectedstyle.css") });
+            await Page.AddStyleTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/injectedstyle.css") });
             var styleHandle = await Page.QuerySelectorAsync("style");
             string styleContent = await Page.EvaluateAsync<string>("style => style.innerHTML", styleHandle);
-            Assert.Contains(Path.Join("assets", "injectedstyle.css"), styleContent);
+            Assert.Contains(Path.Combine("assets", "injectedstyle.css"), styleContent);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
