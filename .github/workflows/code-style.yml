@@ -24,6 +24,6 @@ jobs:
       with:
         dotnet-version: 3.1.100
     - name: Build with dotnet
-      run: dotnet build ./src/PlaywrightSharp.sln --configuration Debug
+      run: dotnet build ./src/PlaywrightSharp.sln --configuration Debug -f netcoreapp3.1
     - name: Check formatting
       run: dotnet tool update dotnet-format --add-source https://dotnet.myget.org/F/format/api/v3/index.json --tool-path ./dotnet-format/ && ./dotnet-format/dotnet-format -w ./src/ --dry-run --check -v:diag
