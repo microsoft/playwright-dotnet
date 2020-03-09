@@ -9,7 +9,7 @@ using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {
-    internal class ChromiumProcessManager : IDisposable
+    internal class ChromiumProcessManager : IProcessManager
     {
         private static int _processCount;
 

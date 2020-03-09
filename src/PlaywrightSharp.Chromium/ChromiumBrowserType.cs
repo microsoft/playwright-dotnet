@@ -189,7 +189,7 @@ namespace PlaywrightSharp.Chromium
 
             var (chromiumArgs, tempUserDataDir) = PrepareChromiumArgs(options);
             string chromiumExecutable = GetChromeExecutablePath(options);
-            ChromiumBrowserApp browserApp = null;
+            BrowserApp browserApp = null;
 
             var process = new ChromiumProcessManager(
                 chromiumExecutable,
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Chromium
                     SlowMo = options.SlowMo,
                 };
 
-                return new ChromiumBrowserApp(process, () => Task.CompletedTask, connectOptions);
+                return new BrowserApp(process, () => Task.CompletedTask, connectOptions);
             }
             catch
             {
