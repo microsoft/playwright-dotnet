@@ -44,6 +44,8 @@ namespace PlaywrightSharp.Tests.Launcher
             Assert.Equal(TestConstants.NestedFramesDumpResult, frameDump);
             int response = await restoredPage.EvaluateAsync<int>("7 * 8");
             Assert.Equal(56, response);
+
+            await remote.DisconnectAsync();
         }
     }
 }
