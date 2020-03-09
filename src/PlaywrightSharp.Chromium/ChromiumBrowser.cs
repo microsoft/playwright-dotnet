@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowser"/>
         public bool IsConnected => false;
 
-        internal IDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
+        internal ConcurrentDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
 
         /// <inheritdoc cref="IBrowser"/>
         public async Task CloseAsync()
@@ -90,8 +90,13 @@ namespace PlaywrightSharp.Chromium
             return disconnectedTcs.Task;
         }
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose() => _ = CloseAsync();
+
+#if NETSTANDARD2_1
+        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync"/>
+        public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
+#endif
 
         /// <inheritdoc cref="IBrowser"/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
@@ -227,7 +232,7 @@ namespace PlaywrightSharp.Chromium
             }
 
             var target = TargetsMap[e.TargetId];
-            TargetsMap.Remove(e.TargetId);
+            TargetsMap.TryRemove(e.TargetId, out _);
             target.DidClose();
 
             target.CloseTaskWrapper.TrySetResult(true);

@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Input
         public async Task ShouldUploadTheFile()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/fileupload.html");
-            string filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), TestConstants.FileToUpload);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload);
             var input = await Page.QuerySelectorAsync("input");
             await input.SetInputFilesAsync(filePath);
             Assert.Equal("file-to-upload.txt", await Page.EvaluateAsync<string>("e => e.files[0].name", input));

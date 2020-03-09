@@ -15,7 +15,7 @@ namespace PlaywrightSharp
             _page = page;
         }
 
-        internal IList<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
+        internal List<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
         internal Frame MainFrame { get; set; }
 
@@ -90,7 +90,7 @@ namespace PlaywrightSharp
 
             frame.FiredLifecycleEvents.Add(e);
 
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnLifecycleEvent(frame);
             }

@@ -23,4 +23,4 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium -c Debug
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium -c Debug -f netcoreapp3.1

@@ -206,9 +206,9 @@ namespace PlaywrightSharp.Tests.Input
                Page.ClickAsync("input")
             );
             await Assert.ThrowsAsync<PlaywrightSharpException>(() => fileChooser.Element.SetInputFilesAsync(
-                Path.GetRelativePath(Directory.GetCurrentDirectory(), Path.Combine("assets", "file-to-upload.txt")),
-                Path.GetRelativePath(Directory.GetCurrentDirectory(), Path.Combine("assets", "pptr.png"))
-            ));
+                Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload),
+                Path.Combine(Directory.GetCurrentDirectory(), "Assets", "pptr.png"))
+            );
         }
     }
 }

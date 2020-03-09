@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAPathAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/es6/es6pathimport.js"), Type = "module" });
+            await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/es6/es6pathimport.js"), Type = "module" });
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAPath()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/injectedfile.js") });
+            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/injectedfile.js") });
             Assert.NotNull(scriptHandle);
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -99,9 +99,9 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Join(Directory.GetCurrentDirectory(), "assets/injectedfile.js") });
+            await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/injectedfile.js") });
             string result = await Page.EvaluateAsync<string>("() => __injectedError.stack");
-            Assert.Contains(Path.Join("assets", "injectedfile.js"), result);
+            Assert.Contains(Path.Combine("assets", "injectedfile.js"), result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
