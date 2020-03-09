@@ -177,7 +177,9 @@ namespace PlaywrightSharp.Chromium
         public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
             var app = await LaunchBrowserAppAsync(options).ConfigureAwait(false);
-            return await ChromiumBrowser.ConnectAsync(app, app.ConnectOptions).ConfigureAwait(false);
+            var connectOptions = app.ConnectOptions;
+            connectOptions.EnqueueTransportMessages = options?.EnqueueTransportMessages ?? false;
+            return await ChromiumBrowser.ConnectAsync(app, connectOptions).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserType"/>
