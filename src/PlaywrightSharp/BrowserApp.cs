@@ -7,12 +7,12 @@ namespace PlaywrightSharp.Chromium
     /// <summary>
     /// Chromium implementation for <see cref="IBrowserApp"/>.
     /// </summary>
-    public class ChromiumBrowserApp : IBrowserApp
+    public class BrowserApp : IBrowserApp
     {
-        private readonly ChromiumProcessManager _processManager;
+        private readonly IProcessManager _processManager;
         private readonly Func<Task> _gracefullyClose;
 
-        internal ChromiumBrowserApp(ChromiumProcessManager processManager, Func<Task> gracefullyClose, ConnectOptions options)
+        internal BrowserApp(IProcessManager processManager, Func<Task> gracefullyClose, ConnectOptions options)
         {
             _processManager = processManager;
             _gracefullyClose = gracefullyClose;
@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IDisposable"/>
-        ~ChromiumBrowserApp() => Dispose(false);
+        ~BrowserApp() => Dispose(false);
 
         /// <inheritdoc cref="IBrowserApp"/>
         public event EventHandler<BrowserAppClosedEventArgs> Closed;
