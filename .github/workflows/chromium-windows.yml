@@ -14,7 +14,8 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        framework: [netcoreapp3.1, net48]
+#        framework: [netcoreapp3.1, net48]
+        framework: [netcoreapp3.1]
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
