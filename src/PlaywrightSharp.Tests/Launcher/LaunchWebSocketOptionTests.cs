@@ -11,6 +11,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch |webSocket| option</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class LaunchWebSocketOptionTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
