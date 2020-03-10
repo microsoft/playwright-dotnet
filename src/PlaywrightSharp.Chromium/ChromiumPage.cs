@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
@@ -215,7 +216,10 @@ namespace PlaywrightSharp.Chromium
 
         private void OnExecutionContextCreated(ExecutionContextDescription contextPayload)
         {
-            var auxData = contextPayload.AuxData?.ToObject<ExecutionContextDescriptionAuxData>();
+            var auxData = contextPayload.AuxData != null
+                ? ((JsonElement)contextPayload.AuxData).ToObject<ExecutionContextDescriptionAuxData>()
+                : null;
+
             Frame frame = null;
 
             if (contextPayload.AuxData != null && !Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out frame))

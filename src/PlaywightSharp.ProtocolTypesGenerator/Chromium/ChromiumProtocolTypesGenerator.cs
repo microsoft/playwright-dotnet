@@ -85,7 +85,7 @@ using System.Text.Json;
                 {
                     if (type.Type == "array")
                     {
-                        string itemType = ConvertJsToCsharp(type?.Items?.Type);
+                        string itemType = ConvertJsToCsharp(type?.Items?.Type, false);
                         if (itemType != null)
                         {
                             _knownTypes[type.Id] = itemType + "[]";
@@ -142,7 +142,7 @@ using System.Text.Json;
                     builder.AppendLine("/// </summary>");
                     builder.Append("internal class ").AppendLine(type.Id);
                     builder.AppendLine("{");
-                    builder.AppendJoin("\n", NormalizeProperties(type.Properties));
+                    builder.AppendJoin("\n", NormalizeProperties(type.Properties, false));
                     builder.AppendLine("}");
                 }
             }
@@ -174,7 +174,7 @@ using System.Text.Json;
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.Append("public string Command { get; } = \"").Append(domain.Domain).Append('.').Append(command.Name).AppendLine("\";");
-                builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
+                builder.AppendJoin("\n", NormalizeProperties(command.Parameters, false));
                 builder.AppendLine("}");
 
                 // response
@@ -183,7 +183,7 @@ using System.Text.Json;
                 builder.AppendLine("/// </summary>");
                 builder.Append("internal class ").Append(baseName).AppendLine("Response : IChromiumResponse");
                 builder.AppendLine("{");
-                builder.AppendJoin("\n", NormalizeProperties(command.Returns));
+                builder.AppendJoin("\n", NormalizeProperties(command.Returns, true));
                 builder.AppendLine("}");
             }
         }
@@ -207,7 +207,7 @@ using System.Text.Json;
                 builder.Append("internal class ").Append(domain.Domain).Append(eventName).AppendLine("ChromiumEvent : IChromiumEvent");
                 builder.AppendLine("{");
                 builder.Append("public string InternalName { get; } = \"").Append(domain.Domain).Append('.').Append(e.Name).AppendLine("\";");
-                builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
+                builder.AppendJoin("\n", NormalizeProperties(e.Parameters, false));
                 builder.AppendLine("}");
             }
         }
@@ -218,7 +218,7 @@ using System.Text.Json;
             .Replace("<", "&lt;", StringComparison.OrdinalIgnoreCase)
             .Replace(">", "&gt;", StringComparison.OrdinalIgnoreCase);
 
-        private string GetTypeOfProperty(ChromiumProtocolDomainProperty property)
+        private string GetTypeOfProperty(ChromiumProtocolDomainProperty property, bool isResponse)
         {
             if (property.Ref != null)
             {
@@ -227,18 +227,18 @@ using System.Text.Json;
 
             return property.Type switch
             {
-                "array" => ConvertItemsProperty(property.Items),
-                _ => ConvertJsToCsharp(property.Type)
+                "array" => ConvertItemsProperty(property.Items, isResponse),
+                _ => ConvertJsToCsharp(property.Type, isResponse)
             };
         }
 
-        private string ConvertItemsProperty(ChromiumProtocolDomainItems items)
-            => (items.Type != null ? ConvertJsToCsharp(items.Type) : ConvertRefToCsharp(items.Ref)) + "[]";
+        private string ConvertItemsProperty(ChromiumProtocolDomainItems items, bool isResponse)
+            => (items.Type != null ? ConvertJsToCsharp(items.Type, isResponse) : ConvertRefToCsharp(items.Ref)) + "[]";
 
         private string ConvertRefToCsharp(string refValue)
             => _knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
 
-        private string ConvertJsToCsharp(string type)
+        private string ConvertJsToCsharp(string type, bool isResponse)
             => type switch
             {
                 "string" => "string",
@@ -246,12 +246,12 @@ using System.Text.Json;
                 "integer" => "int?",
                 "boolean" => "bool?",
                 "binary" => "byte[]",
-                "any" => "JsonElement?",
-                "object" => "JsonElement?",
+                "any" => isResponse ? "JsonElement?" : "object",
+                "object" => isResponse ? "JsonElement?" : "object",
                 _ => null
             };
 
-        private string[] NormalizeProperties(ChromiumProtocolDomainProperty[] properties)
+        private string[] NormalizeProperties(ChromiumProtocolDomainProperty[] properties, bool isResponse)
         {
             if (properties == null)
             {
@@ -265,7 +265,7 @@ using System.Text.Json;
                     .Append("/// ").AppendLine(FormatDocs(property.Description))
                     .AppendLine("/// </summary>")
                     .Append("public ")
-                    .Append(GetTypeOfProperty(property))
+                    .Append(GetTypeOfProperty(property, isResponse))
                     .Append(' ').Append(char.ToUpper(property.Name[0], CultureInfo.InvariantCulture)).Append(property.Name.Substring(1)).Append(' ')
                     .Append("{ get; set; }");
 

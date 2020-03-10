@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -27,8 +29,9 @@ namespace PlaywrightSharp.Chromium
         public async Task<T> EvaluateAsync<T>(FrameExecutionContext context, bool returnByValue, string script, object[] args)
         {
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
+            RemoteObject remoteObject = null;
 
-            if (!IsFunction(script))
+            if (!script.IsJavascriptFunction())
             {
                 string expressionWithSourceUrl = _sourceUrlRegex.IsMatch(script) ? script : script + '\n' + suffix;
                 var result = await _client.SendAsync(new RuntimeEvaluateRequest
@@ -45,10 +48,29 @@ namespace PlaywrightSharp.Chromium
                     throw new PlaywrightSharpException($"Evaluation failed: {GetExceptionMessage(result.ExceptionDetails)}");
                 }
 
-                return (T)(returnByValue ? GetValueFromRemoteObject<T>(result.Result) : context.CreateHandle(null /*TODO*/));
+                remoteObject = result.Result;
+            }
+            else
+            {
+                var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
+                {
+                    FunctionDeclaration = $"{script}\n{suffix}\n",
+                    ExecutionContextId = _contextId,
+                    Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
+                    ReturnByValue = returnByValue,
+                    AwaitPromise = true,
+                    UserGesture = true,
+                }).ConfigureAwait(false);
+
+                if (result.ExceptionDetails != null)
+                {
+                    throw new PlaywrightSharpException($"Evaluation failed: {GetExceptionMessage(result.ExceptionDetails)}");
+                }
+
+                remoteObject = result.Result;
             }
 
-            return default;
+            return (T)(returnByValue ? GetValueFromRemoteObject<T>(remoteObject) : context.CreateHandle(null /*TODO*/));
         }
 
         private static object ValueFromUnserializableValue(RemoteObject remoteObject, string unserializableValue)
@@ -75,6 +97,65 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        private CallArgument FormatArgument(object arg, FrameExecutionContext context)
+        {
+            switch (arg)
+            {
+                case BigInteger big:
+                    return new CallArgument { UnserializableValue = $"{big}n" };
+
+                case int integer when integer == -0:
+                    return new CallArgument { UnserializableValue = "-0" };
+
+                case double d:
+                    if (double.IsPositiveInfinity(d))
+                    {
+                        return new CallArgument { UnserializableValue = "Infinity" };
+                    }
+
+                    if (double.IsNegativeInfinity(d))
+                    {
+                        return new CallArgument { UnserializableValue = "-Infinity" };
+                    }
+
+                    if (double.IsNaN(d))
+                    {
+                        return new CallArgument { UnserializableValue = "NaN" };
+                    }
+
+                    break;
+
+                case JSHandle objectHandle:
+                    if (objectHandle.Context != context)
+                    {
+                        throw new PlaywrightSharpException("JSHandles can be evaluated only in the context they were created!");
+                    }
+
+                    if (objectHandle.Disposed)
+                    {
+                        throw new PlaywrightSharpException("JSHandle is disposed!");
+                    }
+
+                    var remoteObject = ToRemoteObject(objectHandle);
+                    if (!string.IsNullOrEmpty(remoteObject.UnserializableValue))
+                    {
+                        return new CallArgument { UnserializableValue = remoteObject.UnserializableValue };
+                    }
+
+                    if (!string.IsNullOrEmpty(remoteObject.ObjectId))
+                    {
+                        return new CallArgument { Value = remoteObject.Value };
+                    }
+
+                    return new CallArgument { ObjectId = remoteObject.ObjectId };
+            }
+
+            return new CallArgument
+            {
+                Value = arg,
+            };
+        }
+
         private object GetValueFromRemoteObject<T>(RemoteObject remoteObject)
         {
             string unserializableValue = remoteObject.UnserializableValue;
@@ -84,14 +165,14 @@ namespace PlaywrightSharp.Chromium
                 return ValueFromUnserializableValue(remoteObject, unserializableValue);
             }
 
-            var value = remoteObject.Value;
+            object value = remoteObject.Value;
 
             if (value == null)
             {
                 return default(T);
             }
 
-            return remoteObject.Value.HasValue ? remoteObject.Value.Value.ToObject<T>() : default;
+            return remoteObject != null ? Convert.ChangeType(remoteObject.Value, typeof(T)) : default;
         }
 
         private object GetExceptionMessage(ExceptionDetails exceptionDetails)
@@ -99,6 +180,9 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
-        private bool IsFunction(string script) => false;
+        private RemoteObject ToRemoteObject(JSHandle objectHandle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -6,18 +6,10 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IElementHandle"/>
-    public class ElementHandle : IElementHandle
+    public class ElementHandle : JSHandle, IElementHandle
     {
-        internal FrameExecutionContext Context { get; set; }
-
         /// <inheritdoc cref="IElementHandle"/>
         public Task ClickAsync(ClickOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IElementHandle"/>
-        public Task DisposeAsync()
         {
             throw new NotImplementedException();
         }
@@ -52,26 +44,8 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IJSHandle.GetJsonValueAsync{T}"/>
-        public Task<T> GetJsonValueAsync<T>()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
         public Task<IFrame> GetOwnerFrameAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IJSHandle.GetPropertiesAsync"/>
-        public Task<IReadOnlyDictionary<string, IJSHandle>> GetPropertiesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IJSHandle.GetPropertyAsync"/>
-        public Task<IJSHandle> GetPropertyAsync(string propertyName)
         {
             throw new NotImplementedException();
         }
