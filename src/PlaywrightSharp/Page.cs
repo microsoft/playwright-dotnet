@@ -136,10 +136,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.ClickAsync(string, ClickOptions)"/>
-        public Task ClickAsync(string selector, ClickOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public Task ClickAsync(string selector, ClickOptions options = null) => MainFrame.ClickAsync(selector, options);
 
         /// <inheritdoc cref="IPage.CloseAsync(PageCloseOptions)"/>
         public async Task CloseAsync(PageCloseOptions options = null)

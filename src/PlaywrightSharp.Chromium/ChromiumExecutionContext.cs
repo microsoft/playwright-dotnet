@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
@@ -172,7 +173,7 @@ namespace PlaywrightSharp.Chromium
                 return default(T);
             }
 
-            return remoteObject != null ? Convert.ChangeType(remoteObject.Value, typeof(T)) : default;
+            return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
         }
 
         private object GetExceptionMessage(ExceptionDetails exceptionDetails)
