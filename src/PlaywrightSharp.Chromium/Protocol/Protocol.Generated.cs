@@ -7,9 +7,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 using System.Text.Json;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace PlaywrightSharp.Chromium.Protocol.Accessibility
 {
