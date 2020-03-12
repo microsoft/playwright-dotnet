@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {

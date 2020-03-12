@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using PlaywrightSharp.Protocol;
 
 namespace PlaywrightSharp.Chromium.Protocol
 {
@@ -6,13 +6,8 @@ namespace PlaywrightSharp.Chromium.Protocol
     /// Basic structure for sending requests to chromium using the devtools protocol.
     /// </summary>
     /// <typeparam name="TChromiumResponse">The response type.</typeparam>
-    internal interface IChromiumRequest<out TChromiumResponse>
+    internal interface IChromiumRequest<out TChromiumResponse> : IProtocolRequest<IChromiumResponse>
         where TChromiumResponse : IChromiumResponse
     {
-        /// <summary>
-        /// Gets the command name that will be sent to chromium.
-        /// </summary>
-        [JsonIgnore]
-        string Command { get; }
     }
 }

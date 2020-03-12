@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Page;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Chromium.Protocol.Security;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
 {

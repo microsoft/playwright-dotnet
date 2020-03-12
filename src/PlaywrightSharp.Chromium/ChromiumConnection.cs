@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Chromium
                     Params = args,
                     SessionId = string.IsNullOrEmpty(sessionId) ? null : sessionId,
                 },
-                JsonHelper.DefaultChromiumJsonSerializerOptions));
+                JsonHelper.DefaultJsonSerializerOptions));
 
         internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Chromium
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultChromiumJsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException ex)
                 {
