@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
@@ -15,5 +19,14 @@ namespace PlaywrightSharp
         public int Generation { get; set; }
 
         public string[] Sources { get; }
+
+        private async Task<string> GetSources()
+        {
+            using var stream = typeof(Selectors).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.zsSelectorEngineSource.ts");
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return await reader.ReadToEndAsync().ConfigureAwait(false);
+            }
+        }
     }
 }

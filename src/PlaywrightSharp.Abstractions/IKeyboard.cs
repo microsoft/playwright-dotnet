@@ -55,5 +55,12 @@ namespace PlaywrightSharp
         /// <param name="charText">Character to send into the page.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SendCharactersAsync(string charText);
+
+        /// <summary>
+        /// Ensure click modifiers.
+        /// </summary>
+        /// <param name="modifiers"><see cref="ClickModifier"/> to check.</param>
+        /// <returns>A <see cref="Task"/> that completes when the modifiers are ensure, yeilding the applied modifiers.</returns>
+        Task<ClickModifier[]> EnsureModifiersAsync(ClickModifier[] modifiers);
     }
 }

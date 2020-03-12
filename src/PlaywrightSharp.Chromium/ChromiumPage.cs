@@ -84,6 +84,8 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
+        public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject?.Subtype == "node";
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());

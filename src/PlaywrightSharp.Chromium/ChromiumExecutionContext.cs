@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Chromium
                 remoteObject = result.Result;
             }
 
-            return (T)(returnByValue ? GetValueFromRemoteObject<T>(remoteObject) : context.CreateHandle(null /*TODO*/));
+            return (T)(returnByValue ? GetValueFromRemoteObject<T>(remoteObject) : context.CreateHandle(remoteObject));
         }
 
         private static object ValueFromUnserializableValue(RemoteObject remoteObject, string unserializableValue)
@@ -137,13 +137,13 @@ namespace PlaywrightSharp.Chromium
                         throw new PlaywrightSharpException("JSHandle is disposed!");
                     }
 
-                    var remoteObject = ToRemoteObject(objectHandle);
+                    var remoteObject = objectHandle.RemoteObject;
                     if (!string.IsNullOrEmpty(remoteObject.UnserializableValue))
                     {
                         return new CallArgument { UnserializableValue = remoteObject.UnserializableValue };
                     }
 
-                    if (!string.IsNullOrEmpty(remoteObject.ObjectId))
+                    if (string.IsNullOrEmpty(remoteObject.ObjectId))
                     {
                         return new CallArgument { Value = remoteObject.Value };
                     }
@@ -178,12 +178,23 @@ namespace PlaywrightSharp.Chromium
 
         private object GetExceptionMessage(ExceptionDetails exceptionDetails)
         {
-            throw new NotImplementedException();
-        }
+            if (exceptionDetails.Exception != null)
+            {
+                return exceptionDetails.Exception.Description ?? exceptionDetails.Exception.Value;
+            }
 
-        private RemoteObject ToRemoteObject(JSHandle objectHandle)
-        {
-            throw new NotImplementedException();
+            string message = exceptionDetails.Text;
+            if (exceptionDetails.StackTrace != null)
+            {
+                foreach (var callframe in exceptionDetails.StackTrace.CallFrames)
+                {
+                    string location = $"{callframe.Url}:{callframe.LineNumber}:{callframe.ColumnNumber}";
+                    string functionName = string.IsNullOrEmpty(callframe.FunctionName) ? "<anonymous>" : callframe.FunctionName;
+                    message += $"\n at ${functionName} (${location})";
+                }
+            }
+
+            return message;
         }
     }
 }

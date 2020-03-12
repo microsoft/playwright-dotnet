@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -8,11 +9,15 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IElementHandle"/>
     public class ElementHandle : JSHandle, IElementHandle
     {
-        /// <inheritdoc cref="IElementHandle"/>
-        public Task ClickAsync(ClickOptions options = null)
+        private readonly Page _page;
+
+        internal ElementHandle(FrameExecutionContext context, IRemoteObject remoteObject) : base(context, remoteObject)
         {
-            throw new NotImplementedException();
+            _page = context.Frame.Page;
         }
+
+        /// <inheritdoc cref="IElementHandle"/>
+        public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.ClickAsync(point.X, point.Y, options), options);
 
         /// <inheritdoc cref="IElementHandle.EvaluateAsync{T}(string, object[])"/>
         public Task<T> EvaluateAsync<T>(string script, params object[] args)
@@ -124,6 +129,29 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.SetInputFilesAsync"/>
         public Task TypeAsync(string text, TypeOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task PerformPointerActionAsync(Func<Point, Task> action, ClickOptions options)
+        {
+            var point = await EnsurePointerActionPointAsync(options?.RelativePoint).ConfigureAwait(false);
+            ClickModifier[] restoreModifiers = null;
+
+            if (options?.Modifiers != null)
+            {
+                restoreModifiers = await _page.Keyboard.EnsureModifiersAsync(options.Modifiers).ConfigureAwait(false);
+            }
+
+            await action(point).ConfigureAwait(false);
+
+            if (restoreModifiers != null)
+            {
+                await _page.Keyboard.EnsureModifiersAsync(restoreModifiers).ConfigureAwait(false);
+            }
+        }
+
+        private Task<Point> EnsurePointerActionPointAsync(Point? relativePoint)
         {
             throw new NotImplementedException();
         }

@@ -19029,7 +19029,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
 /// <summary>
 /// Mirror object referencing original JavaScript object.
 /// </summary>
-internal class RemoteObject
+internal class RemoteObject: IRemoteObject
 {
 /// <summary>
 /// Object type.

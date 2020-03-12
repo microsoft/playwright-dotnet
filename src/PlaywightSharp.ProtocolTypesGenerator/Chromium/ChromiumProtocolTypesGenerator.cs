@@ -140,13 +140,20 @@ using System.Text.Json;
                     builder.AppendLine("/// <summary>");
                     builder.Append("/// ").AppendLine(FormatDocs(type.Description));
                     builder.AppendLine("/// </summary>");
-                    builder.Append("internal class ").AppendLine(type.Id);
+                    builder.Append("internal class ").Append(type.Id).AppendLine(GetTypeInterfaces(type.Id));
                     builder.AppendLine("{");
                     builder.AppendJoin("\n", NormalizeProperties(type.Properties, false));
                     builder.AppendLine("}");
                 }
             }
         }
+
+        private string GetTypeInterfaces(string id)
+            => id switch
+            {
+                "RemoteObject" => ": IRemoteObject",
+                _ => string.Empty
+            };
 
         private void GenerateCommands(StringBuilder builder, ChromiumProtocolDomain domain)
         {

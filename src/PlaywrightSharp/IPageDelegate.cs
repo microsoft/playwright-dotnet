@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -54,5 +55,12 @@ namespace PlaywrightSharp
         /// <param name="runBeforeUnload">Should run before unload.</param>
         /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
         Task ClosePageAsync(bool runBeforeUnload);
+
+        /// <summary>
+        /// Check if the <see cref="JsonElement"/> is an <see cref="ElementHandle"/>.
+        /// </summary>
+        /// <param name="remoteObject">Object to check.</param>
+        /// <returns>Whether the <see cref="JsonElement"/> is an <see cref="ElementHandle"/> or not.</returns>
+        bool IsElementHandle(IRemoteObject remoteObject);
     }
 }

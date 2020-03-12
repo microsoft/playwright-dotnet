@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -6,9 +7,17 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IJSHandle"/>
     public class JSHandle : IJSHandle
     {
+        internal JSHandle(ExecutionContext context, IRemoteObject remoteObject)
+        {
+            RemoteObject = remoteObject;
+            Context = context;
+        }
+
         internal bool Disposed { get; }
 
-        internal FrameExecutionContext Context { get; set; }
+        internal IRemoteObject RemoteObject { get; set; }
+
+        internal ExecutionContext Context { get; set; }
 
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
         public Task DisposeAsync()
