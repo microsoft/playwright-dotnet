@@ -237,7 +237,7 @@ namespace PlaywrightSharp.Tests.Page
             IResponse response3 = null;
             var response3Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
             {
-                UrlPredicate = (url) => HttpUtility.ParseQueryString(new Uri(url).Query).Get("foo") == "bar"
+                UrlPredicate = (url) => new Uri(url).Query.ParseQueryString()["foo"] == "bar"
             }).ContinueWith(t => response3 = t.Result);
 
             Assert.Null(response1);

@@ -108,17 +108,18 @@ namespace PlaywrightSharp.Tests.Mouse
                 modifiers.Remove("Meta");
             }
 
-            foreach (var (key, value) in modifiers)
+            foreach (string key in modifiers.Keys)
             {
+                string value = modifiers[key];
                 await Page.Keyboard.DownAsync(key);
                 await Page.ClickAsync("#button-3");
                 Assert.True(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", value));
                 await Page.Keyboard.UpAsync(key);
             }
             await Page.ClickAsync("#button-3");
-            foreach (var (key, value) in modifiers)
+            foreach (string key in modifiers.Keys)
             {
-                Assert.False(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", value));
+                Assert.False(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", modifiers[key]));
             }
         }
 

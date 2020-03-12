@@ -26,11 +26,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 Directory.CreateDirectory(directory);
             }
 
-            if (revision.Local && File.Exists(output))
-            {
-                return;
-            }
-
             using var process = Process.Start(revision.ExecutablePath, "--remote-debugging-port=9222 --headless");
             using var stream = await _httpClient.GetStreamAsync(new Uri("http://localhost:9222/json/protocol")).ConfigureAwait(false);
             var response = await JsonSerializer.DeserializeAsync<ChromiumProtocolDomainsContainer>(stream, new JsonSerializerOptions
@@ -86,13 +81,13 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     }
                     else if (type.Type == "integer")
                     {
-                        _knownTypes[type.Id] = "int";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "int";
+                        _knownTypes[type.Id] = "int?";
+                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "int?";
                     }
                     else if (type.Type == "number")
                     {
-                        _knownTypes[type.Id] = "double";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "double";
+                        _knownTypes[type.Id] = "double?";
+                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "double?";
                     }
                 }
             }
@@ -229,12 +224,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
             => type switch
             {
                 "string" => "string",
-                "number" => "double",
-                "integer" => "int",
-                "boolean" => "bool",
+                "number" => "double?",
+                "integer" => "int?",
+                "boolean" => "bool?",
                 "binary" => "byte[]",
-                "any" => "object",
-                "object" => "object",
+                "any" => "JsonElement?",
+                "object" => "JsonElement?",
                 _ => null
             };
 

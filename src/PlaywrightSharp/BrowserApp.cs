@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Chromium
@@ -7,12 +8,12 @@ namespace PlaywrightSharp.Chromium
     /// <summary>
     /// Chromium implementation for <see cref="IBrowserApp"/>.
     /// </summary>
-    public class ChromiumBrowserApp : IBrowserApp
+    public class BrowserApp : IBrowserApp
     {
-        private readonly ChromiumProcessManager _processManager;
+        private readonly IProcessManager _processManager;
         private readonly Func<Task> _gracefullyClose;
 
-        internal ChromiumBrowserApp(ChromiumProcessManager processManager, Func<Task> gracefullyClose, ConnectOptions options)
+        internal BrowserApp(IProcessManager processManager, Func<Task> gracefullyClose, ConnectOptions options)
         {
             _processManager = processManager;
             _gracefullyClose = gracefullyClose;
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IDisposable"/>
-        ~ChromiumBrowserApp() => Dispose(false);
+        ~BrowserApp() => Dispose(false);
 
         /// <inheritdoc cref="IBrowserApp"/>
         public event EventHandler<BrowserAppClosedEventArgs> Closed;
@@ -29,7 +30,7 @@ namespace PlaywrightSharp.Chromium
         public ConnectOptions ConnectOptions { get; }
 
         /// <inheritdoc cref="IBrowserApp"/>
-        public string WebSocketEndpoint => null;
+        public string WebSocketEndpoint => ConnectOptions.BrowserWSEndpoint;
 
         /// <inheritdoc cref="IBrowserApp"/>
         public Process Process => _processManager.Process;
@@ -47,7 +48,27 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowserApp"/>
         public void Kill()
         {
-            throw new NotImplementedException();
+            if (Process?.HasExited == false)
+            {
+                int pid = Process.Id;
+                using var process = new Process();
+
+                // We need to kill the process tree manually
+                // See: https://github.com/dotnet/corefx/issues/26234
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    process.StartInfo.FileName = "taskkill";
+                    process.StartInfo.Arguments = $"-pid {pid} -t -f";
+                }
+                else
+                {
+                    process.StartInfo.FileName = "/bin/bash";
+                    process.StartInfo.Arguments = $"-c \"kill -s 9 {pid}\"";
+                }
+
+                process.Start();
+                process.WaitForExit();
+            }
         }
 
         internal void ProcessKilled(int exitCode) => Closed?.Invoke(this, new BrowserAppClosedEventArgs { ExitCode = exitCode });

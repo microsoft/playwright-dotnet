@@ -9,27 +9,28 @@ namespace PlaywrightSharp
     internal class FrameManager
     {
         private readonly Page _page;
-        private readonly ConcurrentDictionary<string, Frame> _frames = new ConcurrentDictionary<string, Frame>();
 
         public FrameManager(Page page)
         {
             _page = page;
         }
 
-        internal IList<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
+        internal List<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
         internal Frame MainFrame { get; set; }
 
+        internal ConcurrentDictionary<string, Frame> Frames { get; } = new ConcurrentDictionary<string, Frame>();
+
         internal IFrame FrameAttached(string frameId, string parentFrameId)
         {
-            _frames.TryGetValue(parentFrameId, out var parentFrame);
+            Frames.TryGetValue(parentFrameId, out var parentFrame);
 
             if (parentFrame == null)
             {
                 if (MainFrame != null)
                 {
                     // Update frame id to retain frame identity on cross-process navigation.
-                    _frames.TryRemove(MainFrame.Id, out _);
+                    Frames.TryRemove(MainFrame.Id, out _);
                     MainFrame.Id = frameId;
                 }
                 else
@@ -37,13 +38,13 @@ namespace PlaywrightSharp
                     MainFrame = new Frame(_page, frameId, parentFrame);
                 }
 
-                _frames.TryAdd(frameId, MainFrame);
+                Frames.TryAdd(frameId, MainFrame);
                 return MainFrame;
             }
             else
             {
                 var frame = new Frame(_page, frameId, parentFrame);
-                _frames.TryAdd(frameId, frame);
+                Frames.TryAdd(frameId, frame);
                 _page.OnFrameAttached(frame);
                 return frame;
             }
@@ -51,7 +52,7 @@ namespace PlaywrightSharp
 
         internal void FrameCommittedNewDocumentNavigation(string frameId, string url, string name, string documentId, bool initial)
         {
-            _frames.TryGetValue(frameId, out var frame);
+            Frames.TryGetValue(frameId, out var frame);
 
             foreach (var child in frame.ChildFrames)
             {
@@ -82,14 +83,14 @@ namespace PlaywrightSharp
 
         internal void FrameLifecycleEvent(string frameId, string e)
         {
-            if (!_frames.TryGetValue(frameId, out var frame))
+            if (!Frames.TryGetValue(frameId, out var frame))
             {
                 return;
             }
 
             frame.FiredLifecycleEvents.Add(e);
 
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnLifecycleEvent(frame);
             }
@@ -103,6 +104,13 @@ namespace PlaywrightSharp
             {
                 _page.OnDOMContentLoaded();
             }
+        }
+
+        internal IFrame[] GetFrames()
+        {
+            List<Frame> frames = new List<Frame>();
+            CollectFrames(MainFrame, frames);
+            return frames.ToArray();
         }
 
         private void ClearWebSockets(Frame frame)
@@ -121,8 +129,17 @@ namespace PlaywrightSharp
             }
 
             frame.OnDetached();
-            _frames.TryRemove(frame.Id, out _);
+            Frames.TryRemove(frame.Id, out _);
             _page.OnFrameAttached(frame);
+        }
+
+        private void CollectFrames(Frame frame, List<Frame> frames)
+        {
+            frames.Add(frame);
+            foreach (var subframe in frame.ChildFrames)
+            {
+                CollectFrames(subframe, frames);
+            }
         }
     }
 }

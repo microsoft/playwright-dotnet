@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
@@ -19,6 +20,7 @@ namespace PlaywrightSharp.Chromium
         private readonly string[] _browserContextIds;
         private readonly ChromiumSession _session;
         private readonly Dictionary<string, IBrowserContext> _contexts;
+        private bool _isClosed;
 
         internal ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
         {
@@ -63,10 +65,21 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowser"/>
         public bool IsConnected => false;
 
-        internal IDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
+        internal ConcurrentDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
 
         /// <inheritdoc cref="IBrowser"/>
-        public Task CloseAsync() => _app?.CloseAsync();
+        public async Task CloseAsync()
+        {
+            if (!_isClosed)
+            {
+                _isClosed = true;
+                var disconnectedTcs = new TaskCompletionSource<bool>();
+                Disconnected += (sender, e) => disconnectedTcs.TrySetResult(true);
+
+                await _connection.RootSession.SendAsync(new BrowserCloseRequest()).ConfigureAwait(false);
+                await disconnectedTcs.Task.ConfigureAwait(false);
+            }
+        }
 
         /// <inheritdoc cref="IBrowser"/>
         public Task DisconnectAsync()
@@ -77,10 +90,13 @@ namespace PlaywrightSharp.Chromium
             return disconnectedTcs.Task;
         }
 
-        /// <inheritdoc cref="IBrowser"/>
-        public void Dispose()
-        {
-        }
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        public void Dispose() => _ = CloseAsync();
+
+#if NETSTANDARD2_1
+        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync"/>
+        public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
+#endif
 
         /// <inheritdoc cref="IBrowser"/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
@@ -216,7 +232,7 @@ namespace PlaywrightSharp.Chromium
             }
 
             var target = TargetsMap[e.TargetId];
-            TargetsMap.Remove(e.TargetId);
+            TargetsMap.TryRemove(e.TargetId, out _);
             target.DidClose();
 
             target.CloseTaskWrapper.TrySetResult(true);

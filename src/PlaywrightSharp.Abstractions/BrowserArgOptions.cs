@@ -1,3 +1,5 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Additional arguments to pass to the browser instance.
         /// </summary>
-        public string[] Args { get; set; }
+        public string[] Args { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Path to a User Data Directory.

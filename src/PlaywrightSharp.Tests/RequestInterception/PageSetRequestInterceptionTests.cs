@@ -493,7 +493,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public async Task ShouldWorkWithBadlyEncodedServer()
         {
             await Page.SetRequestInterceptionAsync(true);
-            Server.SetRoute("/malformed?rnd=%911", context => context.Response.CompleteAsync());
+            Server.SetRoute("/malformed?rnd=%911", context => Task.CompletedTask);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/malformed?rnd=%911");
             Assert.Equal(HttpStatusCode.OK, response.Status);

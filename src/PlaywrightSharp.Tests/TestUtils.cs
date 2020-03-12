@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests
     {
         internal static string FindParentDirectory(string directory)
         {
-            var current = Directory.GetCurrentDirectory();
+            string current = Directory.GetCurrentDirectory();
             while (!Directory.Exists(Path.Combine(current, directory)))
             {
                 current = Directory.GetParent(current).FullName;

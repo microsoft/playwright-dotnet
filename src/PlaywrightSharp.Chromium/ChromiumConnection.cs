@@ -101,7 +101,6 @@ namespace PlaywrightSharp.Chromium
                 }
 
                 // _logger.LogTrace("◀ Receive {Message}", response);
-                System.Diagnostics.Debug.WriteLine($"◀ Receive {response}");
                 ProcessIncomingMessage(obj);
             }
 

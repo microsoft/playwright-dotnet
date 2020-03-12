@@ -177,7 +177,9 @@ namespace PlaywrightSharp.Chromium
         public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
             var app = await LaunchBrowserAppAsync(options).ConfigureAwait(false);
-            return await ChromiumBrowser.ConnectAsync(app, app.ConnectOptions).ConfigureAwait(false);
+            var connectOptions = app.ConnectOptions;
+            connectOptions.EnqueueTransportMessages = options?.EnqueueTransportMessages ?? false;
+            return await ChromiumBrowser.ConnectAsync(app, connectOptions).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserType"/>
@@ -187,7 +189,7 @@ namespace PlaywrightSharp.Chromium
 
             var (chromiumArgs, tempUserDataDir) = PrepareChromiumArgs(options);
             string chromiumExecutable = GetChromeExecutablePath(options);
-            ChromiumBrowserApp browserApp = null;
+            BrowserApp browserApp = null;
 
             var process = new ChromiumProcessManager(
                 chromiumExecutable,
@@ -225,7 +227,7 @@ namespace PlaywrightSharp.Chromium
                     SlowMo = options.SlowMo,
                 };
 
-                return new ChromiumBrowserApp(process, () => Task.CompletedTask, connectOptions);
+                return new BrowserApp(process, () => Task.CompletedTask, connectOptions);
             }
             catch
             {
