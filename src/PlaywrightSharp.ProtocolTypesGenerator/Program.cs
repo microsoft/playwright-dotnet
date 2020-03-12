@@ -27,7 +27,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     }
                 };
                 var revision = await generator.BrowserFetcher.DownloadAsync().ConfigureAwait(false);
-                await generator.ProtocolTypesGenerator.GenerateTypesAsync(revision).ConfigureAwait(false);
+                await generator.ProtocolTypesGenerator.GenerateCodeAsync(revision).ConfigureAwait(false);
             }
         }
     }
