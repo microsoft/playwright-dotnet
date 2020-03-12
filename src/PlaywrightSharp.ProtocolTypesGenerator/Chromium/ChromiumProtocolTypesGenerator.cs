@@ -145,7 +145,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
             foreach (var command in domain.Commands)
             {
                 // request
-                string baseName = $"{domain.Domain}{char.ToUpper(command.Name[0], CultureInfo.InvariantCulture)}{command.Name.Substring(1)}";
+                string baseName = $"{domain.Domain}{command.Name.ToPascalCase()}";
                 builder.AppendLine("/// <summary>");
                 builder.Append("/// ").AppendLine(FormatDocs(command.Description));
                 builder.AppendLine("/// </summary>");
@@ -184,7 +184,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
 
             foreach (var e in domain.Events)
             {
-                string eventName = char.ToUpper(e.Name[0], CultureInfo.InvariantCulture) + e.Name.Substring(1);
+                string eventName = e.Name.ToPascalCase();
                 builder.AppendLine("/// <summary>");
                 builder.Append("/// ").AppendLine(FormatDocs(e.Description));
                 builder.AppendLine("/// </summary>");
@@ -253,7 +253,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     .AppendLine("/// </summary>")
                     .Append("public ")
                     .Append(GetTypeOfProperty(property))
-                    .Append(' ').Append(char.ToUpper(property.Name[0], CultureInfo.InvariantCulture)).Append(property.Name.Substring(1)).Append(' ')
+                    .Append(' ').Append(property.Name.ToPascalCase()).Append(' ')
                     .Append("{ get; set; }");
 
                 return builder.ToString();
@@ -261,42 +261,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
         }
 
         private string[] NormalizeEnum(string[] values)
-            => Array.ConvertAll(values, value =>
-            {
-                var builder = new StringBuilder().Append("[System.Runtime.Serialization.EnumMember(Value = \"").Append(value).Append("\")]");
-                bool shouldUppercase = true;
-                for (int i = 0; i < value.Length; i++)
-                {
-                    if (char.IsLetter(value[i]))
-                    {
-                        if (char.IsUpper(value[i]))
-                        {
-                            shouldUppercase = false;
-                            builder.Append(char.ToUpper(value[i], CultureInfo.InvariantCulture));
-                        }
-                        else if (shouldUppercase && char.IsLower(value[i]))
-                        {
-                            shouldUppercase = false;
-                            builder.Append(char.ToUpper(value[i], CultureInfo.InvariantCulture));
-                        }
-                        else
-                        {
-                            builder.Append(value[i]);
-                        }
-                    }
-                    else if (char.IsDigit(value[i]))
-                    {
-                        builder.Append(value[i]);
-                        shouldUppercase = true;
-                    }
-                    else
-                    {
-                        shouldUppercase = true;
-                    }
-                }
-
-                return builder.ToString();
-            });
+            => Array.ConvertAll(values, value => value.ToEnumField());
 
 #pragma warning disable CA1812
         public class ChromiumProtocolDomainsContainer

@@ -27,7 +27,7 @@
   <Import Project="../Common/Dependencies.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
+    <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
   </ItemGroup>

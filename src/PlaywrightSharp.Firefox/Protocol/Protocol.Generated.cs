@@ -11,223 +11,414 @@
 
 namespace PlaywrightSharp.Firefox.Protocol.Browser
 {
+internal class CookieOptions
+{
+public string Name { get; set; }
+public string Value { get; set; }
+public string Url { get; set; }
+public string Domain { get; set; }
+public string Path { get; set; }
+public bool? Secure { get; set; }
+public bool? HttpOnly { get; set; }
+public Browser.SameSite SameSite { get; set; }
+public double? Expires { get; set; }
+}
+internal class Cookie
+{
+public string Name { get; set; }
+public string Domain { get; set; }
+public string Path { get; set; }
+public string Value { get; set; }
+public double? Expires { get; set; }
+public double? Size { get; set; }
+public bool? HttpOnly { get; set; }
+public bool? Secure { get; set; }
+public bool? Session { get; set; }
+public Browser.SameSite SameSite { get; set; }
+}
+internal enum SameSite
+{
+[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict,
+[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
+[System.Runtime.Serialization.EnumMember(Value = "None")]None,
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Target
 {
+internal class TargetInfo
+{
+public Target.Type Type { get; set; }
+public string TargetId { get; set; }
+public string BrowserContextId { get; set; }
+public string Url { get; set; }
+public string OpenerId { get; set; }
+}
+internal enum Type
+{
+[System.Runtime.Serialization.EnumMember(Value = "page")]Page,
+[System.Runtime.Serialization.EnumMember(Value = "browser")]Browser,
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Page
 {
-    internal class Clip
-    {
-        public double? x { get; set; }
-        public double? y { get; set; }
-        public double? width { get; set; }
-        public double? height { get; set; }
-    }
+internal class DOMPoint
+{
+public double? X { get; set; }
+public double? Y { get; set; }
+}
+internal class BoundingBox
+{
+public double? X { get; set; }
+public double? Y { get; set; }
+public double? Width { get; set; }
+public double? Height { get; set; }
+}
+internal class Viewport
+{
+public double? Width { get; set; }
+public double? Height { get; set; }
+public double? DeviceScaleFactor { get; set; }
+public bool? IsMobile { get; set; }
+public bool? HasTouch { get; set; }
+public bool? IsLandscape { get; set; }
+}
+internal class DOMQuad
+{
+public Page.DOMPoint P1 { get; set; }
+public Page.DOMPoint P2 { get; set; }
+public Page.DOMPoint P3 { get; set; }
+public Page.DOMPoint P4 { get; set; }
+}
+internal class TouchPoint
+{
+public double? X { get; set; }
+public double? Y { get; set; }
+public double? RadiusX { get; set; }
+public double? RadiusY { get; set; }
+public double? RotationAngle { get; set; }
+public double? Force { get; set; }
+}
+internal class Clip
+{
+public double? X { get; set; }
+public double? Y { get; set; }
+public double? Width { get; set; }
+public double? Height { get; set; }
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
+internal class RemoteObject
+{
+public Runtime.Type Type { get; set; }
+public Runtime.Subtype Subtype { get; set; }
+public string ObjectId { get; set; }
+public Runtime.UnserializableValue UnserializableValue { get; set; }
+public JsonElement? Value { get; set; }
+}
+internal class ObjectProperty
+{
+public string Name { get; set; }
+public Runtime.RemoteObject Value { get; set; }
+}
+internal class ScriptLocation
+{
+public double? ColumnNumber { get; set; }
+public double? LineNumber { get; set; }
+public string Url { get; set; }
+}
+internal class ExceptionDetails
+{
+public string Text { get; set; }
+public string Stack { get; set; }
+public JsonElement? Value { get; set; }
+}
+internal class CallFunctionArgument
+{
+public string ObjectId { get; set; }
+public Runtime.UnserializableValue UnserializableValue { get; set; }
+public JsonElement? Value { get; set; }
+}
+internal enum Type
+{
+[System.Runtime.Serialization.EnumMember(Value = "object")]Object,
+[System.Runtime.Serialization.EnumMember(Value = "function")]Function,
+[System.Runtime.Serialization.EnumMember(Value = "undefined")]Undefined,
+[System.Runtime.Serialization.EnumMember(Value = "string")]String,
+[System.Runtime.Serialization.EnumMember(Value = "number")]Number,
+[System.Runtime.Serialization.EnumMember(Value = "boolean")]Boolean,
+[System.Runtime.Serialization.EnumMember(Value = "symbol")]Symbol,
+[System.Runtime.Serialization.EnumMember(Value = "bigint")]Bigint,
+}
+internal enum Subtype
+{
+[System.Runtime.Serialization.EnumMember(Value = "array")]Array,
+[System.Runtime.Serialization.EnumMember(Value = "null")]Null,
+[System.Runtime.Serialization.EnumMember(Value = "node")]Node,
+[System.Runtime.Serialization.EnumMember(Value = "regexp")]Regexp,
+[System.Runtime.Serialization.EnumMember(Value = "date")]Date,
+[System.Runtime.Serialization.EnumMember(Value = "map")]Map,
+[System.Runtime.Serialization.EnumMember(Value = "set")]Set,
+[System.Runtime.Serialization.EnumMember(Value = "weakmap")]Weakmap,
+[System.Runtime.Serialization.EnumMember(Value = "weakset")]Weakset,
+[System.Runtime.Serialization.EnumMember(Value = "error")]Error,
+[System.Runtime.Serialization.EnumMember(Value = "proxy")]Proxy,
+[System.Runtime.Serialization.EnumMember(Value = "promise")]Promise,
+[System.Runtime.Serialization.EnumMember(Value = "typedarray")]Typedarray,
+}
+internal enum UnserializableValue
+{
+[System.Runtime.Serialization.EnumMember(Value = "Infinity")]Infinity,
+[System.Runtime.Serialization.EnumMember(Value = "-Infinity")]Infinity,
+[System.Runtime.Serialization.EnumMember(Value = "-0")]0,
+[System.Runtime.Serialization.EnumMember(Value = "NaN")]NaN,
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Network
 {
+internal class HTTPHeader
+{
+public string Name { get; set; }
+public string Value { get; set; }
+}
+internal class SecurityDetails
+{
+public string Protocol { get; set; }
+public string SubjectName { get; set; }
+public string Issuer { get; set; }
+public double? ValidFrom { get; set; }
+public double? ValidTo { get; set; }
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Accessibility
 {
+internal class AXTree
+{
+public string Role { get; set; }
+public string Name { get; set; }
+public AXTree[] Children { get; set; }
+public bool? Selected { get; set; }
+public bool? Focused { get; set; }
+public bool? Pressed { get; set; }
+public bool? Focusable { get; set; }
+public bool? Haspopup { get; set; }
+public bool? Required { get; set; }
+public bool? Invalid { get; set; }
+public bool? Modal { get; set; }
+public bool? Editable { get; set; }
+public bool? Busy { get; set; }
+public bool? Multiline { get; set; }
+public bool? Readonly { get; set; }
+public Accessibility.Checked Checked { get; set; }
+public bool? Expanded { get; set; }
+public bool? Disabled { get; set; }
+public bool? Multiselectable { get; set; }
+public string Value { get; set; }
+public string Description { get; set; }
+public string Roledescription { get; set; }
+public string Valuetext { get; set; }
+public string Orientation { get; set; }
+public string Autocomplete { get; set; }
+public string Keyshortcuts { get; set; }
+public double? Level { get; set; }
+public string Tag { get; set; }
+public bool? FoundObject { get; set; }
+}
+internal enum Checked
+{
+[System.Runtime.Serialization.EnumMember(Value = "mixed")]Mixed,
+[System.Runtime.Serialization.EnumMember(Value = "True")]True,
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Browser
 {
 }
 namespace PlaywrightSharp.Firefox.Protocol.Target
 {
-    internal class TargetattachedToTargetFirefoxEvent
-    {
-        public string sessionId { get; set; }
-        public TargetTargetInfo targetInfo { get; set; }
-    }
-    internal class TargetdetachedFromTargetFirefoxEvent
-    {
-        public string sessionId { get; set; }
-    }
-    internal class TargettargetCreatedFirefoxEvent
-    {
-        internal enum type
-        {
-            page,
-            browser,
-        }
-        public Target.type type { get; set; }
-        public string targetId { get; set; }
-        public string browserContextId { get; set; }
-        public string url { get; set; }
-        public string openerId { get; set; }
-    }
-    internal class TargettargetDestroyedFirefoxEvent
-    {
-        public Target.type type { get; set; }
-        public string targetId { get; set; }
-        public string browserContextId { get; set; }
-        public string url { get; set; }
-        public string openerId { get; set; }
-    }
-    internal class TargettargetInfoChangedFirefoxEvent
-    {
-        public Target.type type { get; set; }
-        public string targetId { get; set; }
-        public string browserContextId { get; set; }
-        public string url { get; set; }
-        public string openerId { get; set; }
-    }
+internal class TargetAttachedToTargetFirefoxEvent
+{
+public string SessionId { get; set; }
+public Target.TargetInfo TargetInfo { get; set; }
+}
+internal class TargetDetachedFromTargetFirefoxEvent
+{
+public string SessionId { get; set; }
+}
+internal class TargetTargetCreatedFirefoxEvent
+{
+public Target.Type Type { get; set; }
+public string TargetId { get; set; }
+public string BrowserContextId { get; set; }
+public string Url { get; set; }
+public string OpenerId { get; set; }
+}
+internal class TargetTargetDestroyedFirefoxEvent
+{
+public Target.Type Type { get; set; }
+public string TargetId { get; set; }
+public string BrowserContextId { get; set; }
+public string Url { get; set; }
+public string OpenerId { get; set; }
+}
+internal class TargetTargetInfoChangedFirefoxEvent
+{
+public Target.Type Type { get; set; }
+public string TargetId { get; set; }
+public string BrowserContextId { get; set; }
+public string Url { get; set; }
+public string OpenerId { get; set; }
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Page
 {
-    internal class PageeventFiredFirefoxEvent
-    {
-        public string frameId { get; set; }
-        internal enum name
-        {
-            load,
-            DOMContentLoaded,
-        }
-        public Page.name name { get; set; }
-    }
-    internal class PageuncaughtErrorFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string message { get; set; }
-        public string stack { get; set; }
-    }
-    internal class PageframeAttachedFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string parentFrameId { get; set; }
-    }
-    internal class PageframeDetachedFirefoxEvent
-    {
-        public string frameId { get; set; }
-    }
-    internal class PagenavigationStartedFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string navigationId { get; set; }
-        public string url { get; set; }
-    }
-    internal class PagenavigationCommittedFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string navigationId { get; set; }
-        public string url { get; set; }
-        public string name { get; set; }
-    }
-    internal class PagenavigationAbortedFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string navigationId { get; set; }
-        public string errorText { get; set; }
-    }
-    internal class PagesameDocumentNavigationFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string url { get; set; }
-    }
-    internal class PagedialogOpenedFirefoxEvent
-    {
-        public string dialogId { get; set; }
-        internal enum type
-        {
-            prompt,
-            alert,
-            confirm,
-            beforeunload,
-        }
-        public Page.type type { get; set; }
-        public string message { get; set; }
-        public string defaultValue { get; set; }
-    }
-    internal class PagedialogClosedFirefoxEvent
-    {
-        public string dialogId { get; set; }
-    }
-    internal class PagebindingCalledFirefoxEvent
-    {
-        public string executionContextId { get; set; }
-        public string name { get; set; }
-        public JsonElement? payload { get; set; }
-    }
-    internal class PagefileChooserOpenedFirefoxEvent
-    {
-        public string executionContextId { get; set; }
-        public RuntimeRemoteObject element { get; set; }
-    }
-    internal class PageworkerCreatedFirefoxEvent
-    {
-        public string workerId { get; set; }
-        public string frameId { get; set; }
-        public string url { get; set; }
-    }
-    internal class PageworkerDestroyedFirefoxEvent
-    {
-        public string workerId { get; set; }
-    }
-    internal class PagedispatchMessageFromWorkerFirefoxEvent
-    {
-        public string workerId { get; set; }
-        public string message { get; set; }
-    }
+internal class PageEventFiredFirefoxEvent
+{
+public string FrameId { get; set; }
+public Page.Name Name { get; set; }
+}
+internal class PageUncaughtErrorFirefoxEvent
+{
+public string FrameId { get; set; }
+public string Message { get; set; }
+public string Stack { get; set; }
+}
+internal class PageFrameAttachedFirefoxEvent
+{
+public string FrameId { get; set; }
+public string ParentFrameId { get; set; }
+}
+internal class PageFrameDetachedFirefoxEvent
+{
+public string FrameId { get; set; }
+}
+internal class PageNavigationStartedFirefoxEvent
+{
+public string FrameId { get; set; }
+public string NavigationId { get; set; }
+public string Url { get; set; }
+}
+internal class PageNavigationCommittedFirefoxEvent
+{
+public string FrameId { get; set; }
+public string NavigationId { get; set; }
+public string Url { get; set; }
+public string Name { get; set; }
+}
+internal class PageNavigationAbortedFirefoxEvent
+{
+public string FrameId { get; set; }
+public string NavigationId { get; set; }
+public string ErrorText { get; set; }
+}
+internal class PageSameDocumentNavigationFirefoxEvent
+{
+public string FrameId { get; set; }
+public string Url { get; set; }
+}
+internal class PageDialogOpenedFirefoxEvent
+{
+public string DialogId { get; set; }
+public Page.Type Type { get; set; }
+public string Message { get; set; }
+public string DefaultValue { get; set; }
+}
+internal class PageDialogClosedFirefoxEvent
+{
+public string DialogId { get; set; }
+}
+internal class PageBindingCalledFirefoxEvent
+{
+public string ExecutionContextId { get; set; }
+public string Name { get; set; }
+public JsonElement? Payload { get; set; }
+}
+internal class PageFileChooserOpenedFirefoxEvent
+{
+public string ExecutionContextId { get; set; }
+public Runtime.RemoteObject Element { get; set; }
+}
+internal class PageWorkerCreatedFirefoxEvent
+{
+public string WorkerId { get; set; }
+public string FrameId { get; set; }
+public string Url { get; set; }
+}
+internal class PageWorkerDestroyedFirefoxEvent
+{
+public string WorkerId { get; set; }
+}
+internal class PageDispatchMessageFromWorkerFirefoxEvent
+{
+public string WorkerId { get; set; }
+public string Message { get; set; }
+}
+internal enum Name
+{
+[System.Runtime.Serialization.EnumMember(Value = "load")]Load,
+[System.Runtime.Serialization.EnumMember(Value = "DOMContentLoaded")]DOMContentLoaded,
+}
+internal enum Type
+{
+[System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt,
+[System.Runtime.Serialization.EnumMember(Value = "alert")]Alert,
+[System.Runtime.Serialization.EnumMember(Value = "confirm")]Confirm,
+[System.Runtime.Serialization.EnumMember(Value = "beforeunload")]Beforeunload,
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
-    internal class RuntimeexecutionContextCreatedFirefoxEvent
-    {
-        public string executionContextId { get; set; }
-        public JsonElement? auxData { get; set; }
-    }
-    internal class RuntimeexecutionContextDestroyedFirefoxEvent
-    {
-        public string executionContextId { get; set; }
-    }
-    internal class RuntimeconsoleFirefoxEvent
-    {
-        public string executionContextId { get; set; }
-        public RuntimeRemoteObject[] args { get; set; }
-        public string type { get; set; }
-        public RuntimeScriptLocation location { get; set; }
-    }
+internal class RuntimeExecutionContextCreatedFirefoxEvent
+{
+public string ExecutionContextId { get; set; }
+public JsonElement? AuxData { get; set; }
+}
+internal class RuntimeExecutionContextDestroyedFirefoxEvent
+{
+public string ExecutionContextId { get; set; }
+}
+internal class RuntimeConsoleFirefoxEvent
+{
+public string ExecutionContextId { get; set; }
+public Runtime.RemoteObject[] Args { get; set; }
+public string Type { get; set; }
+public Runtime.ScriptLocation Location { get; set; }
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Network
 {
-    internal class NetworkrequestWillBeSentFirefoxEvent
-    {
-        public string frameId { get; set; }
-        public string requestId { get; set; }
-        public string redirectedFrom { get; set; }
-        public string postData { get; set; }
-        public NetworkHTTPHeader[] headers { get; set; }
-        public boolean? isIntercepted { get; set; }
-        public string url { get; set; }
-        public string method { get; set; }
-        public string navigationId { get; set; }
-        public string cause { get; set; }
-    }
-    internal class NetworkresponseReceivedFirefoxEvent
-    {
-        public NetworkSecurityDetails securityDetails { get; set; }
-        public string requestId { get; set; }
-        public boolean? fromCache { get; set; }
-        public string remoteIPAddress { get; set; }
-        public double? remotePort { get; set; }
-        public double? status { get; set; }
-        public string statusText { get; set; }
-        public NetworkHTTPHeader[] headers { get; set; }
-    }
-    internal class NetworkrequestFinishedFirefoxEvent
-    {
-        public string requestId { get; set; }
-    }
-    internal class NetworkrequestFailedFirefoxEvent
-    {
-        public string requestId { get; set; }
-        public string errorCode { get; set; }
-    }
+internal class NetworkRequestWillBeSentFirefoxEvent
+{
+public string FrameId { get; set; }
+public string RequestId { get; set; }
+public string RedirectedFrom { get; set; }
+public string PostData { get; set; }
+public Network.HTTPHeader[] Headers { get; set; }
+public bool? IsIntercepted { get; set; }
+public string Url { get; set; }
+public string Method { get; set; }
+public string NavigationId { get; set; }
+public string Cause { get; set; }
+}
+internal class NetworkResponseReceivedFirefoxEvent
+{
+public Network.SecurityDetails SecurityDetails { get; set; }
+public string RequestId { get; set; }
+public bool? FromCache { get; set; }
+public string RemoteIPAddress { get; set; }
+public double? RemotePort { get; set; }
+public double? Status { get; set; }
+public string StatusText { get; set; }
+public Network.HTTPHeader[] Headers { get; set; }
+}
+internal class NetworkRequestFinishedFirefoxEvent
+{
+public string RequestId { get; set; }
+}
+internal class NetworkRequestFailedFirefoxEvent
+{
+public string RequestId { get; set; }
+public string ErrorCode { get; set; }
+}
 }
 namespace PlaywrightSharp.Firefox.Protocol.Accessibility
 {

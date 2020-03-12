@@ -20,4 +20,7 @@
       <_Parameter1>PlaywrightSharp.Tests</_Parameter1>
     </AssemblyAttribute>
 </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Protocol\" />
+  </ItemGroup>
 </Project>
