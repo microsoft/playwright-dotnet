@@ -117,7 +117,6 @@ namespace PlaywrightSharp.Firefox
             ["datareporting.policy.dataSubmissionPolicyBypassNotification"] = true,
 
             // DevTools JSONViewer sometimes fails to load dependencies with its require.js.
-            // This doesn't affect Puppeteer but spams console (Bug 1424372)
             ["devtools.jsonview.enabled"] = false,
 
             // Disable popup-blocker
@@ -185,7 +184,6 @@ namespace PlaywrightSharp.Firefox
             ["media.gmp-manager.updateEnabled"] = false,
 
             // Prevent various error message on the console
-            // jest-puppeteer asserts that no error message is emitted by the console
             ["network.cookie.cookieBehavior"] = 0,
 
             // Do not prompt for temporary redirects
