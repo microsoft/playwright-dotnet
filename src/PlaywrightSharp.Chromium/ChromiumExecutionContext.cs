@@ -32,13 +32,14 @@ namespace PlaywrightSharp.Chromium
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
             RemoteObject remoteObject = null;
 
-            if (!script.IsJavascriptFunction())
+            // is-playwright-function is a temporary bypass till we fix esprima
+            if (script.StartsWith("/*is-playwright-function*/") || script.IsJavascriptFunction())
             {
-                string expressionWithSourceUrl = _sourceUrlRegex.IsMatch(script) ? script : script + '\n' + suffix;
-                var result = await _client.SendAsync(new RuntimeEvaluateRequest
+                var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
                 {
-                    Expression = expressionWithSourceUrl,
-                    ContextId = _contextId,
+                    FunctionDeclaration = $"{script}\n{suffix}\n",
+                    ExecutionContextId = _contextId,
+                    Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
                     ReturnByValue = returnByValue,
                     AwaitPromise = true,
                     UserGesture = true,
@@ -53,11 +54,11 @@ namespace PlaywrightSharp.Chromium
             }
             else
             {
-                var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
+                string expressionWithSourceUrl = _sourceUrlRegex.IsMatch(script) ? script : script + '\n' + suffix;
+                var result = await _client.SendAsync(new RuntimeEvaluateRequest
                 {
-                    FunctionDeclaration = $"{script}\n{suffix}\n",
-                    ExecutionContextId = _contextId,
-                    Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
+                    Expression = expressionWithSourceUrl,
+                    ContextId = _contextId,
                     ReturnByValue = returnByValue,
                     AwaitPromise = true,
                     UserGesture = true,

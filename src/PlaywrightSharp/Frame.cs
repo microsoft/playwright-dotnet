@@ -202,10 +202,7 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        internal Task<IFrameExecutionContext> GetUtilityContextAsync()
-        {
-            throw new NotImplementedException();
-        }
+        internal Task<IFrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
 
         internal void OnDetached()
         {

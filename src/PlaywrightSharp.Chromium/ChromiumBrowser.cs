@@ -256,6 +256,6 @@ namespace PlaywrightSharp.Chromium
         }
 
         private BrowserContext CreateBrowserContext(string contextId, BrowserContextOptions options = null)
-            => new BrowserContext(new ChromiumBrowserContext(_session, this, contextId, options));
+            => new BrowserContext(new ChromiumBrowserContext(_session, this, contextId, options), options);
     }
 }

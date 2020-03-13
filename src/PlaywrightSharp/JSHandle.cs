@@ -13,11 +13,11 @@ namespace PlaywrightSharp
             Context = context;
         }
 
+        internal ExecutionContext Context { get; set; }
+
         internal bool Disposed { get; }
 
         internal IRemoteObject RemoteObject { get; set; }
-
-        internal ExecutionContext Context { get; set; }
 
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
         public Task DisposeAsync()

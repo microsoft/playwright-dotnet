@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Page;
@@ -85,6 +86,54 @@ namespace PlaywrightSharp.Chromium
         }
 
         public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject?.Subtype == "node";
+
+        public async Task<Quad[][]> GetContentQuadsAsync(ElementHandle handle)
+        {
+            var result = await Client.SendAsync(new DOMGetContentQuadsRequest
+            {
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.Quads.Select(quad => new[]
+            {
+                new Quad
+                {
+                    X = quad[0].Value,
+                    Y = quad[1].Value,
+                },
+                new Quad
+                {
+                    X = quad[2].Value,
+                    Y = quad[3].Value,
+                },
+                new Quad
+                {
+                    X = quad[4].Value,
+                    Y = quad[5].Value,
+                },
+                new Quad
+                {
+                    X = quad[6].Value,
+                    Y = quad[7].Value,
+                },
+            }).ToArray();
+        }
+
+        public async Task<LayoutMetric> GetLayoutViewportAsync()
+        {
+            var layoutMetrics = await Client.SendAsync(new PageGetLayoutMetricsRequest()).ConfigureAwait(false);
+
+            return new LayoutMetric
+            {
+                Width = layoutMetrics.LayoutViewport.ClientWidth.Value,
+                Height = layoutMetrics.LayoutViewport.ClientHeight.Value,
+            };
+        }
 
         internal async Task InitializeAsync()
         {

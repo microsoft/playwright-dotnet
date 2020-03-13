@@ -62,5 +62,18 @@ namespace PlaywrightSharp
         /// <param name="remoteObject">Object to check.</param>
         /// <returns>Whether the <see cref="JsonElement"/> is an <see cref="ElementHandle"/> or not.</returns>
         bool IsElementHandle(IRemoteObject remoteObject);
+
+        /// <summary>
+        /// Gets the content quads.
+        /// </summary>
+        /// <param name="elementHandle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the quads are returned by the browser, yielding an array of <see cref="Quad"/>.</returns>
+        Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle);
+
+        /// <summary>
+        /// Gets the metrics of the viewport layout.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the metrics are returned by the browser, yielding its <see cref="LayoutMetric"/>.</returns>
+        Task<LayoutMetric> GetLayoutViewportAsync();
     }
 }

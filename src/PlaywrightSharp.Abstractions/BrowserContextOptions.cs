@@ -25,7 +25,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether or not to enable or disable JavaScript in the context. Defaults to true.
         /// </summary>
-        public bool JavaScriptEnabled { get; set; }
+        public bool JavaScriptEnabled { get; set; } = true;
 
         /// <summary>
         /// Whether to ignore HTTPS errors during navigation. Defaults to false.
