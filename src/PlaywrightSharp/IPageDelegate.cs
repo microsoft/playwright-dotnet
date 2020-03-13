@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -9,6 +10,16 @@ namespace PlaywrightSharp
     /// </summary>
     internal interface IPageDelegate
     {
+        /// <summary>
+        /// Internal keyboard implementation.
+        /// </summary>
+        IRawKeyboard RawKeyboard { get; }
+
+        /// <summary>
+        /// Internal mouse implementation.
+        /// </summary>
+        IRawMouse RawMouse { get; }
+
         /// <summary>
         /// Navigates a frame to an url.
         /// </summary>

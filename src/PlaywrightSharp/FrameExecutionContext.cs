@@ -11,13 +11,11 @@ namespace PlaywrightSharp
 {
     internal class FrameExecutionContext : ExecutionContext, IFrameExecutionContext
     {
-        private readonly IExecutionContextDelegate _delegate;
         private int _injectedGeneration = -1;
         private Task<IJSHandle> _injectedTask;
 
-        internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame)
+        internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame) : base(executionContextDelegate)
         {
-            _delegate = executionContextDelegate;
             Frame = frame;
         }
 
@@ -31,7 +29,7 @@ namespace PlaywrightSharp
 
             if (!args.Any(needsAdoption))
             {
-                return await _delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
+                return await Delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
             }
 
             List<Task<ElementHandle>> toDispose = new List<Task<ElementHandle>>();
@@ -53,7 +51,7 @@ namespace PlaywrightSharp
             T result;
             try
             {
-                result = await _delegate.EvaluateAsync<T>(this, returnByValue, script, adoptedTasks.Select(t => t.Result).ToArray()).ConfigureAwait(false);
+                result = await Delegate.EvaluateAsync<T>(this, returnByValue, script, adoptedTasks.Select(t => t.Result).ToArray()).ConfigureAwait(false);
             }
             finally
             {

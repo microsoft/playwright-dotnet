@@ -1,4 +1,5 @@
 using System.Drawing;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -35,7 +36,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.
         /// </summary>
-        public ClickModifier[] Modifiers { get; set; }
+        public Modifier[] Modifiers { get; set; }
 
         /// <summary>
         /// Maximum time to wait for in milliseconds. Defaults to 30000 (30 seconds). Pass 0 to disable timeout.

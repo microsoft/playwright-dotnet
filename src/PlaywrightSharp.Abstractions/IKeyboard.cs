@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -7,6 +8,11 @@ namespace PlaywrightSharp
     /// </summary>
     public interface IKeyboard
     {
+        /// <summary>
+        /// Pressed <see cref="Modifier"/> keys.
+        /// </summary>
+        Modifier[] Modifiers { get; }
+
         /// <summary>
         /// <![CDATA[
         /// Dispatches a <c>keydown</c> event
@@ -59,8 +65,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// Ensure click modifiers.
         /// </summary>
-        /// <param name="modifiers"><see cref="ClickModifier"/> to check.</param>
+        /// <param name="modifiers"><see cref="Modifier"/> to check.</param>
         /// <returns>A <see cref="Task"/> that completes when the modifiers are ensure, yeilding the applied modifiers.</returns>
-        Task<ClickModifier[]> EnsureModifiersAsync(ClickModifier[] modifiers);
+        Task<Modifier[]> EnsureModifiersAsync(Modifier[] modifiers);
     }
 }

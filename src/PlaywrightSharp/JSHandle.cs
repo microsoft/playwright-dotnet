@@ -7,6 +7,8 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IJSHandle"/>
     public class JSHandle : IJSHandle
     {
+        private bool _disposed;
+
         internal JSHandle(ExecutionContext context, IRemoteObject remoteObject)
         {
             RemoteObject = remoteObject;
@@ -22,7 +24,13 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
         public Task DisposeAsync()
         {
-            throw new System.NotImplementedException();
+            if (_disposed)
+            {
+                return Task.CompletedTask;
+            }
+
+            _disposed = true;
+            return Context.Delegate.ReleaseHandleAsync(this);
         }
 
         /// <inheritdoc cref="IJSHandle.GetJsonValueAsync{T}"/>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
+using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
@@ -11,6 +12,7 @@ using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Page;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Chromium.Protocol.Security;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -32,11 +34,18 @@ namespace PlaywrightSharp.Chromium
             _browser = browser;
             _browserContext = browserContext;
             _networkManager = new ChromiumNetworkManager(Client, this);
+            RawKeyboard = new ChromiumRawKeyboard(client);
+            RawMouse = new ChromiumRawMouse(client);
             Page = new Page(this, browserContext);
+
             client.MessageReceived += Client_MessageReceived;
         }
 
         public ChromiumTarget Target { get; set; }
+
+        public IRawKeyboard RawKeyboard { get; }
+
+        public IRawMouse RawMouse { get; }
 
         internal Page Page { get; }
 

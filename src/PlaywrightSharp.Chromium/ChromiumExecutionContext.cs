@@ -75,6 +75,8 @@ namespace PlaywrightSharp.Chromium
             return (T)(returnByValue ? GetValueFromRemoteObject<T>(remoteObject) : context.CreateHandle(remoteObject));
         }
 
+        public Task ReleaseHandleAsync(JSHandle handle) => ReleaseObjectAsync(_client, handle.RemoteObject);
+
         private static object ValueFromUnserializableValue(RemoteObject remoteObject, string unserializableValue)
         {
             if (
@@ -196,6 +198,28 @@ namespace PlaywrightSharp.Chromium
             }
 
             return message;
+        }
+
+        private async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)
+        {
+            if (string.IsNullOrEmpty(remoteObject.ObjectId))
+            {
+                return;
+            }
+
+            try
+            {
+                await client.SendAsync(new RuntimeReleaseObjectRequest
+                {
+                    ObjectId = remoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+#pragma warning disable CA1031 // Do not catch general exception types.
+            catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types.
+            {
+                System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+            }
         }
     }
 }

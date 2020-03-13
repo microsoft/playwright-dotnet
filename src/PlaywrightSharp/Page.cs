@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -20,6 +21,8 @@ namespace PlaywrightSharp
             FrameManager = new FrameManager(this);
             Delegate = pageDelegate;
             BrowserContext = browserContext;
+            Keyboard = new Keyboard(Delegate.RawKeyboard);
+            Mouse = new Mouse(Delegate.RawMouse, Keyboard);
         }
 
         /// <inheritdoc cref="IPage.Console"/>
@@ -92,7 +95,7 @@ namespace PlaywrightSharp
         public IAccessibility Accessibility => null;
 
         /// <inheritdoc cref="IPage.Mouse"/>
-        public IMouse Mouse => null;
+        public IMouse Mouse { get; }
 
         /// <inheritdoc cref="IPage.Url"/>
         public string Url => MainFrame.Url;
@@ -101,7 +104,7 @@ namespace PlaywrightSharp
         public IFrame[] Frames => FrameManager.GetFrames();
 
         /// <inheritdoc cref="IPage.Keyboard"/>
-        public IKeyboard Keyboard => null;
+        public IKeyboard Keyboard { get; }
 
         /// <inheritdoc cref="IPage.DefaultTimeout"/>
         public int DefaultTimeout { get; set; }
@@ -171,17 +174,8 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.EvaluateAsync(string, object[])"/>
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => MainFrame.EvaluateAsync<JsonElement?>(script, args);
 
-        /// <inheritdoc cref="IPage.EvaluateHandleAsync(string)"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string expression)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IPage.EvaluateHandleAsync(string, object[])"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args) => MainFrame.EvaluateHandleAsync(pageFunction, args);
 
         /// <inheritdoc cref="IPage.EvaluateOnNewDocumentAsync(string, object[])"/>
         public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args)

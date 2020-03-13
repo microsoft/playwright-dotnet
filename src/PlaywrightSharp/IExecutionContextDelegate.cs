@@ -21,5 +21,12 @@ namespace PlaywrightSharp
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string script, object[] args);
+
+        /// <summary>
+        /// Releases a <see cref="JSHandle"/>.
+        /// </summary>
+        /// <param name="handle">Handle to be released.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task ReleaseHandleAsync(JSHandle handle);
     }
 }

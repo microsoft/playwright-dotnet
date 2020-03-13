@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -175,7 +176,7 @@ namespace PlaywrightSharp
         private async Task PerformPointerActionAsync(Func<Point, Task> action, ClickOptions options)
         {
             var point = await EnsurePointerActionPointAsync(options?.RelativePoint).ConfigureAwait(false);
-            ClickModifier[] restoreModifiers = null;
+            Modifier[] restoreModifiers = null;
 
             if (options?.Modifiers != null)
             {
@@ -273,7 +274,7 @@ namespace PlaywrightSharp
                  }).ToArray();
              };
 
-            if (quads != null || quads.Length == 0)
+            if (quads == null || quads.Length == 0)
             {
                 throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
             }

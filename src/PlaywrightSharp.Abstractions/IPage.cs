@@ -741,17 +741,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="expression">Script to be evaluated in browser context.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string expression);
-
-        /// <summary>
-        /// Executes a script in browser context.
-        /// </summary>
         /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <param name="args">Function arguments.</param>
         /// <remarks>
