@@ -83,7 +83,7 @@ namespace PlaywrightSharp
             {
                 string source = $@"
                     new ({await GetInjectedSource().ConfigureAwait(false)})([
-                      {string.Join(",\n", selectors.Sources)},
+                      {string.Join(",\n", await selectors.GetSourcesAsync().ConfigureAwait(false))},
                     ])
                   ";
                 _injectedTask = EvaluateHandleAsync(source);
