@@ -11,8 +11,8 @@ namespace PlaywrightSharp.Protocol
         where TProtocolResponse : IProtocolResponse
         where TProtocolEvent : IProtocolEvent
     {
-        private static readonly IDictionary<string, Type> ChromiumResponseMapper = new Dictionary<string, Type>();
-        private static readonly IDictionary<string, Type> ChromiumEventsMapper = new Dictionary<string, Type>();
+        private static readonly IDictionary<string, Type> ResponsesMapper = new Dictionary<string, Type>();
+        private static readonly IDictionary<string, Type> EventsMapper = new Dictionary<string, Type>();
 
         static ProtocolTypes()
         {
@@ -33,21 +33,39 @@ namespace PlaywrightSharp.Protocol
 
                 var request = (TProtocolRequest)Activator.CreateInstance(type);
 
-                ChromiumResponseMapper.Add(request.Command, responses[name]);
+                ResponsesMapper.Add(request.Command, responses[name]);
             }
 
             foreach (var type in types.Where(type => !type.IsAbstract && type.IsClass && chromiumEvent.IsAssignableFrom(type)))
             {
                 var eventObj = (TProtocolEvent)Activator.CreateInstance(type);
 
-                ChromiumEventsMapper.Add(eventObj.InternalName, type);
+                EventsMapper.Add(eventObj.InternalName, type);
             }
         }
 
         public static TProtocolResponse ParseResponse(string command, string json)
-            => (TProtocolResponse)JsonSerializer.Deserialize(json, ChromiumResponseMapper[command], JsonHelper.DefaultJsonSerializerOptions);
+        {
+            try
+            {
+                return (TProtocolResponse)JsonSerializer.Deserialize(json, ResponsesMapper[command], JsonHelper.DefaultJsonSerializerOptions);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public static TProtocolEvent ParseEvent(string method, string json)
-            => (TProtocolEvent)JsonSerializer.Deserialize(json, ChromiumEventsMapper[method], JsonHelper.DefaultJsonSerializerOptions);
+        {
+            try
+            {
+                return (TProtocolEvent)JsonSerializer.Deserialize(json, EventsMapper[method], JsonHelper.DefaultJsonSerializerOptions);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace PlaywrightSharp.Protocol
 {
     /// <summary>
@@ -10,7 +8,6 @@ namespace PlaywrightSharp.Protocol
         /// <summary>
         /// The event name raised by the devtools protocol.
         /// </summary>
-        [JsonIgnore]
         string InternalName { get; }
     }
 }

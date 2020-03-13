@@ -1,7 +1,7 @@
 namespace PlaywrightSharp.Firefox.Protocol
 {
     /// <summary>
-    /// Basic class for chromium events.
+    /// Basic class for firefox events.
     /// </summary>
     internal interface IFirefoxEvent
     {

@@ -6,7 +6,7 @@ namespace PlaywrightSharp.Helpers
     internal static partial class JsonExtensions
     {
         public static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
-            => JsonSerializer.Deserialize<T>(element.GetRawText(), options);
+            => JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonHelper.DefaultJsonSerializerOptions);
 
         public static T ToObject<T>(this JsonDocument document, JsonSerializerOptions options = null)
         {
@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Helpers
                 throw new ArgumentNullException(nameof(document));
             }
 
-            return document.RootElement.ToObject<T>(options);
+            return document.RootElement.ToObject<T>(options ?? JsonHelper.DefaultJsonSerializerOptions);
         }
     }
 }

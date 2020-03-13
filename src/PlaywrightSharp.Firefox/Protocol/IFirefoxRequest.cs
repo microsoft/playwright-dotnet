@@ -1,18 +1,13 @@
-using System.Text.Json.Serialization;
+using PlaywrightSharp.Protocol;
 
 namespace PlaywrightSharp.Firefox.Protocol
 {
     /// <summary>
-    /// Basic structure for sending requests to chromium using the devtools protocol.
+    /// Basic class for sending requests to firefox using the devtools protocol.
     /// </summary>
     /// <typeparam name="TFirefoxResponse">The response type.</typeparam>
-    internal interface IFirefoxRequest<out TFirefoxResponse>
+    internal interface IFirefoxRequest<out TFirefoxResponse> : IProtocolRequest<TFirefoxResponse>
         where TFirefoxResponse : IFirefoxResponse
     {
-        /// <summary>
-        /// Gets the command name that will be sent to chromium.
-        /// </summary>
-        [JsonIgnore]
-        string Command { get; }
     }
 }

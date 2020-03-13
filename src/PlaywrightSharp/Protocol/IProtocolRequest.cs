@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace PlaywrightSharp.Protocol
 {
     /// <summary>
@@ -12,7 +10,6 @@ namespace PlaywrightSharp.Protocol
         /// <summary>
         /// The protocol command name.
         /// </summary>
-        [JsonIgnore]
         string Command { get; }
     }
 }

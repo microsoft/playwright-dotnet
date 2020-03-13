@@ -17,6 +17,8 @@ namespace PlaywrightSharp.Firefox
         /// </summary>
         public const int PreferredRevision = 1021;
 
+        private static readonly string[] DefaultArgs = { "-no-remote" };
+
         /// <inheritdoc cref="IBrowserType.Devices"/>
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
 
@@ -77,7 +79,34 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
         public string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
-            throw new NotImplementedException();
+            if (options?.Devtools == true)
+            {
+                throw new PlaywrightSharpException("Option \"devtools\" is not supported by Firefox");
+            }
+
+            var firefoxArguments = new List<string>(DefaultArgs);
+            if (!string.IsNullOrEmpty(options?.UserDataDir))
+            {
+                firefoxArguments.Add("-profile");
+                firefoxArguments.Add(options.UserDataDir);
+            }
+
+            if (options?.Headless == true)
+            {
+                firefoxArguments.Add("-headless");
+            }
+
+            if (options?.Args != null)
+            {
+                firefoxArguments.AddRange(options.Args);
+            }
+
+            if (firefoxArguments.TrueForAll(arg => arg.StartsWith("-")))
+            {
+                firefoxArguments.Add("about:blank");
+            }
+
+            return firefoxArguments.ToArray();
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
@@ -87,9 +116,42 @@ namespace PlaywrightSharp.Firefox
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchBrowserAppAsync(LaunchOptions)"/>
-        public Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
+        public async Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
         {
-            throw new NotImplementedException();
+            var firefoxArguments = new List<string>();
+            if (!(options?.IgnoreDefaultArgs == true))
+            {
+                firefoxArguments.AddRange(GetDefaultArgs(options));
+            }
+            else if (options?.IgnoredDefaultArgs?.Length > 0)
+            {
+                firefoxArguments.AddRange(GetDefaultArgs(options).Except(options.IgnoredDefaultArgs));
+            }
+            else if (options?.Args?.Length > 0)
+            {
+                firefoxArguments.AddRange(options.Args);
+            }
+
+            if (!firefoxArguments.Contains("-juggler"))
+            {
+                firefoxArguments.Insert(0, "-juggler");
+            }
+
+            string temporaryProfileDir = null;
+            if (!firefoxArguments.Contains("-profile") && !firefoxArguments.Contains("--profile"))
+            {
+                temporaryProfileDir = await CreateProfileAsync().ConfigureAwait(false);
+                firefoxArguments.InsertRange(0, new[] { "-profile", temporaryProfileDir });
+            }
+
+            string firefoxExecutable = options?.ExecutablePath;
+            if (firefoxExecutable == null)
+            {
+                firefoxExecutable = ResolveExecutablePath();
+            }
+
+            IBrowserApp browserApp = null;
+            return browserApp;
         }
 
         private string ResolveExecutablePath()
@@ -123,6 +185,11 @@ namespace PlaywrightSharp.Firefox
             }
 
             return Platform.Unknown;
+        }
+
+        private Task<string> CreateProfileAsync()
+        {
+            return Task.FromResult("null");
         }
     }
 }
