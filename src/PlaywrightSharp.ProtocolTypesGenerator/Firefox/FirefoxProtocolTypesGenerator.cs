@@ -145,7 +145,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     _knownTypes.Add(jsonTextOptional, type);
                 }
 
-                builder.Append("internal class ").AppendLine(typeDef.Name.ToPascalCase());
+                builder.Append("internal class ").Append(domain.Name).AppendLine(typeDef.Name.ToPascalCase());
                 builder.AppendLine("{");
                 foreach (var propertyDef in typeDef.Value.EnumerateObject())
                 {

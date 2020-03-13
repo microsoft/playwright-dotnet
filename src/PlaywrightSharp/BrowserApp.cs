@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Chromium implementation for <see cref="IBrowserApp"/>.
@@ -20,32 +20,32 @@ namespace PlaywrightSharp.Chromium
             ConnectOptions = options;
         }
 
-        /// <inheritdoc cref="IDisposable"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         ~BrowserApp() => Dispose(false);
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IBrowserApp.Closed"/>
         public event EventHandler<BrowserAppClosedEventArgs> Closed;
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IBrowserApp.ConnectOptions"/>
         public ConnectOptions ConnectOptions { get; }
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IBrowserApp.WebSocketEndpoint"/>
         public string WebSocketEndpoint => ConnectOptions.BrowserWSEndpoint;
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IBrowserApp.Process"/>
         public Process Process => _processManager.Process;
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IBrowserApp.CloseAsync"/>
         public Task CloseAsync() => _gracefullyClose();
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <inheritdoc cref="IBrowserApp"/>
+        /// <inheritdoc cref="IBrowserApp.Kill"/>
         public void Kill()
         {
             if (Process?.HasExited == false)
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Chromium
 
         internal void ProcessKilled(int exitCode) => Closed?.Invoke(this, new BrowserAppClosedEventArgs { ExitCode = exitCode });
 
-        /// <inheritdoc cref="IDisposable"/>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
