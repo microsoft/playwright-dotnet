@@ -37,7 +37,6 @@ namespace PlaywrightSharp.Firefox
             ["apz.content_response_timeout"] = 60000,
 
             // Prevent various error message on the console
-            // jest-puppeteer asserts that no error message is emitted by the console
             ["browser.contentblocking.features.standard"] = "-tp,tpPrivate,cookieBehavior0,-cm,-fp",
 
             // Enable the dump function: which sends messages to the system
