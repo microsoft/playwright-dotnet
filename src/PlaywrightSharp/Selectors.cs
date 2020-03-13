@@ -22,10 +22,8 @@ namespace PlaywrightSharp
             var sources = new List<string>();
 
             using var stream = typeof(Selectors).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.zsSelectorEngineSource.ts");
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                sources.Add(await reader.ReadToEndAsync().ConfigureAwait(false));
-            }
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            sources.Add(await reader.ReadToEndAsync().ConfigureAwait(false));
 
             return sources.ToArray();
         }
