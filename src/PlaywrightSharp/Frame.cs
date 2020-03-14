@@ -85,16 +85,11 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        /// <inheritdoc cref="IFrame.EvaluateHandleAsync(string)"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
+        /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
+        public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
         {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IFrame.EvaluateHandleAsync(string)"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string expression)
-        {
-            throw new System.NotImplementedException();
+            var context = await GeMainContextAsync().ConfigureAwait(false);
+            return await context.EvaluateHandleAsync(script, args).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.FillAsync(string, string, WaitForSelectorOptions)"/>
