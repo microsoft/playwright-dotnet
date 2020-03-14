@@ -337,9 +337,12 @@ namespace PlaywrightSharp.Firefox
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
-        public Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+        public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
-            throw new NotImplementedException();
+            var app = await LaunchBrowserAppAsync(options).ConfigureAwait(false);
+            var connectOptions = app.ConnectOptions;
+            connectOptions.EnqueueTransportMessages = options?.EnqueueTransportMessages ?? false;
+            return await FirefoxBrowser.ConnectAsync(app, connectOptions).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchBrowserAppAsync(LaunchOptions)"/>

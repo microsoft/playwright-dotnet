@@ -13,1050 +13,1050 @@ using System.Text.Json;
 
 namespace PlaywrightSharp.Firefox.Protocol.Browser
 {
-internal class CookieOptions
-{
-public string Name { get; set; }
-public string Value { get; set; }
-public string Url { get; set; }
-public string Domain { get; set; }
-public string Path { get; set; }
-public bool? Secure { get; set; }
-public bool? HttpOnly { get; set; }
-public Browser.CookieOptionsSameSite SameSite { get; set; }
-public double? Expires { get; set; }
-}
-internal class Cookie
-{
-public string Name { get; set; }
-public string Domain { get; set; }
-public string Path { get; set; }
-public string Value { get; set; }
-public double? Expires { get; set; }
-public double? Size { get; set; }
-public bool? HttpOnly { get; set; }
-public bool? Secure { get; set; }
-public bool? Session { get; set; }
-public Browser.CookieOptionsSameSite SameSite { get; set; }
-}
-internal enum CookieOptionsSameSite
-{
-[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict,
-[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
-[System.Runtime.Serialization.EnumMember(Value = "None")]None,
-}
+    internal class CookieOptions
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string Url { get; set; }
+        public string Domain { get; set; }
+        public string Path { get; set; }
+        public bool? Secure { get; set; }
+        public bool? HttpOnly { get; set; }
+        public Browser.CookieOptionsSameSite SameSite { get; set; }
+        public double? Expires { get; set; }
+    }
+    internal class Cookie
+    {
+        public string Name { get; set; }
+        public string Domain { get; set; }
+        public string Path { get; set; }
+        public string Value { get; set; }
+        public double? Expires { get; set; }
+        public double? Size { get; set; }
+        public bool? HttpOnly { get; set; }
+        public bool? Secure { get; set; }
+        public bool? Session { get; set; }
+        public Browser.CookieOptionsSameSite SameSite { get; set; }
+    }
+    internal enum CookieOptionsSameSite
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "Strict")] Strict,
+        [System.Runtime.Serialization.EnumMember(Value = "Lax")] Lax,
+        [System.Runtime.Serialization.EnumMember(Value = "None")] None,
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Target
 {
-internal class TargetInfo
-{
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
-}
-internal enum TargetInfoType
-{
-[System.Runtime.Serialization.EnumMember(Value = "page")]Page,
-[System.Runtime.Serialization.EnumMember(Value = "browser")]Browser,
-}
+    internal class TargetInfo
+    {
+        public Target.TargetInfoType Type { get; set; }
+        public string TargetId { get; set; }
+        public string BrowserContextId { get; set; }
+        public string Url { get; set; }
+        public string OpenerId { get; set; }
+    }
+    internal enum TargetInfoType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "page")] Page,
+        [System.Runtime.Serialization.EnumMember(Value = "browser")] Browser,
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Page
 {
-internal class DOMPoint
-{
-public double? X { get; set; }
-public double? Y { get; set; }
-}
-internal class BoundingBox
-{
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? Width { get; set; }
-public double? Height { get; set; }
-}
-internal class Viewport
-{
-public double? Width { get; set; }
-public double? Height { get; set; }
-public double? DeviceScaleFactor { get; set; }
-public bool? IsMobile { get; set; }
-public bool? HasTouch { get; set; }
-public bool? IsLandscape { get; set; }
-}
-internal class DOMQuad
-{
-public Page.DOMPoint P1 { get; set; }
-public Page.DOMPoint P2 { get; set; }
-public Page.DOMPoint P3 { get; set; }
-public Page.DOMPoint P4 { get; set; }
-}
-internal class TouchPoint
-{
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? RadiusX { get; set; }
-public double? RadiusY { get; set; }
-public double? RotationAngle { get; set; }
-public double? Force { get; set; }
-}
-internal class Clip
-{
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? Width { get; set; }
-public double? Height { get; set; }
-}
+    internal class DOMPoint
+    {
+        public double? X { get; set; }
+        public double? Y { get; set; }
+    }
+    internal class BoundingBox
+    {
+        public double? X { get; set; }
+        public double? Y { get; set; }
+        public double? Width { get; set; }
+        public double? Height { get; set; }
+    }
+    internal class Viewport
+    {
+        public double? Width { get; set; }
+        public double? Height { get; set; }
+        public double? DeviceScaleFactor { get; set; }
+        public bool? IsMobile { get; set; }
+        public bool? HasTouch { get; set; }
+        public bool? IsLandscape { get; set; }
+    }
+    internal class DOMQuad
+    {
+        public Page.DOMPoint P1 { get; set; }
+        public Page.DOMPoint P2 { get; set; }
+        public Page.DOMPoint P3 { get; set; }
+        public Page.DOMPoint P4 { get; set; }
+    }
+    internal class TouchPoint
+    {
+        public double? X { get; set; }
+        public double? Y { get; set; }
+        public double? RadiusX { get; set; }
+        public double? RadiusY { get; set; }
+        public double? RotationAngle { get; set; }
+        public double? Force { get; set; }
+    }
+    internal class Clip
+    {
+        public double? X { get; set; }
+        public double? Y { get; set; }
+        public double? Width { get; set; }
+        public double? Height { get; set; }
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
-internal class RemoteObject
-{
-public Runtime.RemoteObjectType Type { get; set; }
-public Runtime.RemoteObjectSubtype Subtype { get; set; }
-public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
-public JsonElement? Value { get; set; }
-}
-internal class ObjectProperty
-{
-public string Name { get; set; }
-public Runtime.RemoteObject Value { get; set; }
-}
-internal class ScriptLocation
-{
-public double? ColumnNumber { get; set; }
-public double? LineNumber { get; set; }
-public string Url { get; set; }
-}
-internal class ExceptionDetails
-{
-public string Text { get; set; }
-public string Stack { get; set; }
-public JsonElement? Value { get; set; }
-}
-internal class CallFunctionArgument
-{
-public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
-public JsonElement? Value { get; set; }
-}
-internal enum RemoteObjectType
-{
-[System.Runtime.Serialization.EnumMember(Value = "object")]Object,
-[System.Runtime.Serialization.EnumMember(Value = "function")]Function,
-[System.Runtime.Serialization.EnumMember(Value = "undefined")]Undefined,
-[System.Runtime.Serialization.EnumMember(Value = "string")]String,
-[System.Runtime.Serialization.EnumMember(Value = "number")]Number,
-[System.Runtime.Serialization.EnumMember(Value = "boolean")]Boolean,
-[System.Runtime.Serialization.EnumMember(Value = "symbol")]Symbol,
-[System.Runtime.Serialization.EnumMember(Value = "bigint")]Bigint,
-}
-internal enum RemoteObjectSubtype
-{
-[System.Runtime.Serialization.EnumMember(Value = "array")]Array,
-[System.Runtime.Serialization.EnumMember(Value = "null")]Null,
-[System.Runtime.Serialization.EnumMember(Value = "node")]Node,
-[System.Runtime.Serialization.EnumMember(Value = "regexp")]Regexp,
-[System.Runtime.Serialization.EnumMember(Value = "date")]Date,
-[System.Runtime.Serialization.EnumMember(Value = "map")]Map,
-[System.Runtime.Serialization.EnumMember(Value = "set")]Set,
-[System.Runtime.Serialization.EnumMember(Value = "weakmap")]Weakmap,
-[System.Runtime.Serialization.EnumMember(Value = "weakset")]Weakset,
-[System.Runtime.Serialization.EnumMember(Value = "error")]Error,
-[System.Runtime.Serialization.EnumMember(Value = "proxy")]Proxy,
-[System.Runtime.Serialization.EnumMember(Value = "promise")]Promise,
-[System.Runtime.Serialization.EnumMember(Value = "typedarray")]Typedarray,
-}
-internal enum RemoteObjectUnserializableValue
-{
-[System.Runtime.Serialization.EnumMember(Value = "Infinity")]Infinity,
-[System.Runtime.Serialization.EnumMember(Value = "-Infinity")]NegativeInfinity,
-[System.Runtime.Serialization.EnumMember(Value = "-0")]NegativeZero,
-[System.Runtime.Serialization.EnumMember(Value = "NaN")]NaN,
-}
+    internal class RemoteObject
+    {
+        public Runtime.RemoteObjectType Type { get; set; }
+        public Runtime.RemoteObjectSubtype Subtype { get; set; }
+        public string ObjectId { get; set; }
+        public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
+        public JsonElement? Value { get; set; }
+    }
+    internal class ObjectProperty
+    {
+        public string Name { get; set; }
+        public Runtime.RemoteObject Value { get; set; }
+    }
+    internal class ScriptLocation
+    {
+        public double? ColumnNumber { get; set; }
+        public double? LineNumber { get; set; }
+        public string Url { get; set; }
+    }
+    internal class ExceptionDetails
+    {
+        public string Text { get; set; }
+        public string Stack { get; set; }
+        public JsonElement? Value { get; set; }
+    }
+    internal class CallFunctionArgument
+    {
+        public string ObjectId { get; set; }
+        public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
+        public JsonElement? Value { get; set; }
+    }
+    internal enum RemoteObjectType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "object")] Object,
+        [System.Runtime.Serialization.EnumMember(Value = "function")] Function,
+        [System.Runtime.Serialization.EnumMember(Value = "undefined")] Undefined,
+        [System.Runtime.Serialization.EnumMember(Value = "string")] String,
+        [System.Runtime.Serialization.EnumMember(Value = "number")] Number,
+        [System.Runtime.Serialization.EnumMember(Value = "boolean")] Boolean,
+        [System.Runtime.Serialization.EnumMember(Value = "symbol")] Symbol,
+        [System.Runtime.Serialization.EnumMember(Value = "bigint")] Bigint,
+    }
+    internal enum RemoteObjectSubtype
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "array")] Array,
+        [System.Runtime.Serialization.EnumMember(Value = "null")] Null,
+        [System.Runtime.Serialization.EnumMember(Value = "node")] Node,
+        [System.Runtime.Serialization.EnumMember(Value = "regexp")] Regexp,
+        [System.Runtime.Serialization.EnumMember(Value = "date")] Date,
+        [System.Runtime.Serialization.EnumMember(Value = "map")] Map,
+        [System.Runtime.Serialization.EnumMember(Value = "set")] Set,
+        [System.Runtime.Serialization.EnumMember(Value = "weakmap")] Weakmap,
+        [System.Runtime.Serialization.EnumMember(Value = "weakset")] Weakset,
+        [System.Runtime.Serialization.EnumMember(Value = "error")] Error,
+        [System.Runtime.Serialization.EnumMember(Value = "proxy")] Proxy,
+        [System.Runtime.Serialization.EnumMember(Value = "promise")] Promise,
+        [System.Runtime.Serialization.EnumMember(Value = "typedarray")] Typedarray,
+    }
+    internal enum RemoteObjectUnserializableValue
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "Infinity")] Infinity,
+        [System.Runtime.Serialization.EnumMember(Value = "-Infinity")] NegativeInfinity,
+        [System.Runtime.Serialization.EnumMember(Value = "-0")] NegativeZero,
+        [System.Runtime.Serialization.EnumMember(Value = "NaN")] NaN,
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Network
 {
-internal class HTTPHeader
-{
-public string Name { get; set; }
-public string Value { get; set; }
-}
-internal class SecurityDetails
-{
-public string Protocol { get; set; }
-public string SubjectName { get; set; }
-public string Issuer { get; set; }
-public double? ValidFrom { get; set; }
-public double? ValidTo { get; set; }
-}
+    internal class HTTPHeader
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
+    internal class SecurityDetails
+    {
+        public string Protocol { get; set; }
+        public string SubjectName { get; set; }
+        public string Issuer { get; set; }
+        public double? ValidFrom { get; set; }
+        public double? ValidTo { get; set; }
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Accessibility
 {
-internal class AXTree
-{
-public string Role { get; set; }
-public string Name { get; set; }
-public AXTree[] Children { get; set; }
-public bool? Selected { get; set; }
-public bool? Focused { get; set; }
-public bool? Pressed { get; set; }
-public bool? Focusable { get; set; }
-public bool? Haspopup { get; set; }
-public bool? Required { get; set; }
-public bool? Invalid { get; set; }
-public bool? Modal { get; set; }
-public bool? Editable { get; set; }
-public bool? Busy { get; set; }
-public bool? Multiline { get; set; }
-public bool? Readonly { get; set; }
-public Accessibility.AXTreeChecked Checked { get; set; }
-public bool? Expanded { get; set; }
-public bool? Disabled { get; set; }
-public bool? Multiselectable { get; set; }
-public string Value { get; set; }
-public string Description { get; set; }
-public string Roledescription { get; set; }
-public string Valuetext { get; set; }
-public string Orientation { get; set; }
-public string Autocomplete { get; set; }
-public string Keyshortcuts { get; set; }
-public double? Level { get; set; }
-public string Tag { get; set; }
-public bool? FoundObject { get; set; }
-}
-internal enum AXTreeChecked
-{
-[System.Runtime.Serialization.EnumMember(Value = "mixed")]Mixed,
-[System.Runtime.Serialization.EnumMember(Value = "True")]True,
-}
+    internal class AXTree
+    {
+        public string Role { get; set; }
+        public string Name { get; set; }
+        public AXTree[] Children { get; set; }
+        public bool? Selected { get; set; }
+        public bool? Focused { get; set; }
+        public bool? Pressed { get; set; }
+        public bool? Focusable { get; set; }
+        public bool? Haspopup { get; set; }
+        public bool? Required { get; set; }
+        public bool? Invalid { get; set; }
+        public bool? Modal { get; set; }
+        public bool? Editable { get; set; }
+        public bool? Busy { get; set; }
+        public bool? Multiline { get; set; }
+        public bool? Readonly { get; set; }
+        public Accessibility.AXTreeChecked Checked { get; set; }
+        public bool? Expanded { get; set; }
+        public bool? Disabled { get; set; }
+        public bool? Multiselectable { get; set; }
+        public string Value { get; set; }
+        public string Description { get; set; }
+        public string Roledescription { get; set; }
+        public string Valuetext { get; set; }
+        public string Orientation { get; set; }
+        public string Autocomplete { get; set; }
+        public string Keyshortcuts { get; set; }
+        public double? Level { get; set; }
+        public string Tag { get; set; }
+        public bool? FoundObject { get; set; }
+    }
+    internal enum AXTreeChecked
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "mixed")] Mixed,
+        [System.Runtime.Serialization.EnumMember(Value = "True")] True,
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Browser
 {
-internal class CloseRequest : IFirefoxRequest<CloseResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.close";
-}
-internal class CloseResponse : IFirefoxResponse
-{
-}
-internal class GetInfoRequest : IFirefoxRequest<GetInfoResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.getInfo";
-}
-internal class GetInfoResponse : IFirefoxResponse
-{
-public string UserAgent { get; set; }
-public string Version { get; set; }
-}
-internal class SetIgnoreHTTPSErrorsRequest : IFirefoxRequest<SetIgnoreHTTPSErrorsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.setIgnoreHTTPSErrors";
-public bool? Enabled { get; set; }
-}
-internal class SetIgnoreHTTPSErrorsResponse : IFirefoxResponse
-{
-}
-internal class GrantPermissionsRequest : IFirefoxRequest<GrantPermissionsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.grantPermissions";
-public string Origin { get; set; }
-public string BrowserContextId { get; set; }
-public Browser.PermissionsGrantPermissions[] Permissions { get; set; }
-}
-internal class GrantPermissionsResponse : IFirefoxResponse
-{
-}
-internal class ResetPermissionsRequest : IFirefoxRequest<ResetPermissionsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.resetPermissions";
-public string BrowserContextId { get; set; }
-}
-internal class ResetPermissionsResponse : IFirefoxResponse
-{
-}
-internal class SetCookiesRequest : IFirefoxRequest<SetCookiesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.setCookies";
-public string BrowserContextId { get; set; }
-public Browser.CookieOptions[] Cookies { get; set; }
-}
-internal class SetCookiesResponse : IFirefoxResponse
-{
-}
-internal class ClearCookiesRequest : IFirefoxRequest<ClearCookiesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.clearCookies";
-public string BrowserContextId { get; set; }
-}
-internal class ClearCookiesResponse : IFirefoxResponse
-{
-}
-internal class GetCookiesRequest : IFirefoxRequest<GetCookiesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Browser.getCookies";
-public string BrowserContextId { get; set; }
-}
-internal class GetCookiesResponse : IFirefoxResponse
-{
-public Browser.Cookie[] Cookies { get; set; }
-}
-internal enum PermissionsGrantPermissions
-{
-[System.Runtime.Serialization.EnumMember(Value = "geo")]Geo,
-[System.Runtime.Serialization.EnumMember(Value = "microphone")]Microphone,
-[System.Runtime.Serialization.EnumMember(Value = "camera")]Camera,
-[System.Runtime.Serialization.EnumMember(Value = "desktop-notifications")]DesktopNotifications,
-}
+    internal class BrowserCloseRequest : IFirefoxRequest<BrowserCloseResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.close";
+    }
+    internal class BrowserCloseResponse : IFirefoxResponse
+    {
+    }
+    internal class BrowserGetInfoRequest : IFirefoxRequest<BrowserGetInfoResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.getInfo";
+    }
+    internal class BrowserGetInfoResponse : IFirefoxResponse
+    {
+        public string UserAgent { get; set; }
+        public string Version { get; set; }
+    }
+    internal class BrowserSetIgnoreHTTPSErrorsRequest : IFirefoxRequest<BrowserSetIgnoreHTTPSErrorsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.setIgnoreHTTPSErrors";
+        public bool? Enabled { get; set; }
+    }
+    internal class BrowserSetIgnoreHTTPSErrorsResponse : IFirefoxResponse
+    {
+    }
+    internal class BrowserGrantPermissionsRequest : IFirefoxRequest<BrowserGrantPermissionsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.grantPermissions";
+        public string Origin { get; set; }
+        public string BrowserContextId { get; set; }
+        public Browser.PermissionsGrantPermissions[] Permissions { get; set; }
+    }
+    internal class BrowserGrantPermissionsResponse : IFirefoxResponse
+    {
+    }
+    internal class BrowserResetPermissionsRequest : IFirefoxRequest<BrowserResetPermissionsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.resetPermissions";
+        public string BrowserContextId { get; set; }
+    }
+    internal class BrowserResetPermissionsResponse : IFirefoxResponse
+    {
+    }
+    internal class BrowserSetCookiesRequest : IFirefoxRequest<BrowserSetCookiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.setCookies";
+        public string BrowserContextId { get; set; }
+        public Browser.CookieOptions[] Cookies { get; set; }
+    }
+    internal class BrowserSetCookiesResponse : IFirefoxResponse
+    {
+    }
+    internal class BrowserClearCookiesRequest : IFirefoxRequest<BrowserClearCookiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.clearCookies";
+        public string BrowserContextId { get; set; }
+    }
+    internal class BrowserClearCookiesResponse : IFirefoxResponse
+    {
+    }
+    internal class BrowserGetCookiesRequest : IFirefoxRequest<BrowserGetCookiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Browser.getCookies";
+        public string BrowserContextId { get; set; }
+    }
+    internal class BrowserGetCookiesResponse : IFirefoxResponse
+    {
+        public Browser.Cookie[] Cookies { get; set; }
+    }
+    internal enum PermissionsGrantPermissions
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "geo")] Geo,
+        [System.Runtime.Serialization.EnumMember(Value = "microphone")] Microphone,
+        [System.Runtime.Serialization.EnumMember(Value = "camera")] Camera,
+        [System.Runtime.Serialization.EnumMember(Value = "desktop-notifications")] DesktopNotifications,
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Target
 {
-internal class TargetAttachedToTargetFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Target.attachedToTarget";
-public string SessionId { get; set; }
-public Target.TargetInfo TargetInfo { get; set; }
-}
-internal class TargetDetachedFromTargetFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Target.detachedFromTarget";
-public string SessionId { get; set; }
-}
-internal class TargetTargetCreatedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Target.targetCreated";
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
-}
-internal class TargetTargetDestroyedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Target.targetDestroyed";
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
-}
-internal class TargetTargetInfoChangedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Target.targetInfoChanged";
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
-}
-internal class EnableRequest : IFirefoxRequest<EnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Target.enable";
-}
-internal class EnableResponse : IFirefoxResponse
-{
-}
-internal class AttachToTargetRequest : IFirefoxRequest<AttachToTargetResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Target.attachToTarget";
-public string TargetId { get; set; }
-}
-internal class AttachToTargetResponse : IFirefoxResponse
-{
-public string SessionId { get; set; }
-}
-internal class NewPageRequest : IFirefoxRequest<NewPageResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Target.newPage";
-public string BrowserContextId { get; set; }
-}
-internal class NewPageResponse : IFirefoxResponse
-{
-public string TargetId { get; set; }
-}
-internal class CreateBrowserContextRequest : IFirefoxRequest<CreateBrowserContextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Target.createBrowserContext";
-}
-internal class CreateBrowserContextResponse : IFirefoxResponse
-{
-public string BrowserContextId { get; set; }
-}
-internal class RemoveBrowserContextRequest : IFirefoxRequest<RemoveBrowserContextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Target.removeBrowserContext";
-public string BrowserContextId { get; set; }
-}
-internal class RemoveBrowserContextResponse : IFirefoxResponse
-{
-}
-internal class GetBrowserContextsRequest : IFirefoxRequest<GetBrowserContextsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Target.getBrowserContexts";
-}
-internal class GetBrowserContextsResponse : IFirefoxResponse
-{
-public string[] BrowserContextIds { get; set; }
-}
+    internal class TargetAttachedToTargetFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Target.attachedToTarget";
+        public string SessionId { get; set; }
+        public Target.TargetInfo TargetInfo { get; set; }
+    }
+    internal class TargetDetachedFromTargetFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Target.detachedFromTarget";
+        public string SessionId { get; set; }
+    }
+    internal class TargetTargetCreatedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Target.targetCreated";
+        public Target.TargetInfoType Type { get; set; }
+        public string TargetId { get; set; }
+        public string BrowserContextId { get; set; }
+        public string Url { get; set; }
+        public string OpenerId { get; set; }
+    }
+    internal class TargetTargetDestroyedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Target.targetDestroyed";
+        public Target.TargetInfoType Type { get; set; }
+        public string TargetId { get; set; }
+        public string BrowserContextId { get; set; }
+        public string Url { get; set; }
+        public string OpenerId { get; set; }
+    }
+    internal class TargetTargetInfoChangedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Target.targetInfoChanged";
+        public Target.TargetInfoType Type { get; set; }
+        public string TargetId { get; set; }
+        public string BrowserContextId { get; set; }
+        public string Url { get; set; }
+        public string OpenerId { get; set; }
+    }
+    internal class TargetEnableRequest : IFirefoxRequest<TargetEnableResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Target.enable";
+    }
+    internal class TargetEnableResponse : IFirefoxResponse
+    {
+    }
+    internal class TargetAttachToTargetRequest : IFirefoxRequest<TargetAttachToTargetResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Target.attachToTarget";
+        public string TargetId { get; set; }
+    }
+    internal class TargetAttachToTargetResponse : IFirefoxResponse
+    {
+        public string SessionId { get; set; }
+    }
+    internal class TargetNewPageRequest : IFirefoxRequest<TargetNewPageResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Target.newPage";
+        public string BrowserContextId { get; set; }
+    }
+    internal class TargetNewPageResponse : IFirefoxResponse
+    {
+        public string TargetId { get; set; }
+    }
+    internal class TargetCreateBrowserContextRequest : IFirefoxRequest<TargetCreateBrowserContextResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Target.createBrowserContext";
+    }
+    internal class TargetCreateBrowserContextResponse : IFirefoxResponse
+    {
+        public string BrowserContextId { get; set; }
+    }
+    internal class TargetRemoveBrowserContextRequest : IFirefoxRequest<TargetRemoveBrowserContextResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Target.removeBrowserContext";
+        public string BrowserContextId { get; set; }
+    }
+    internal class TargetRemoveBrowserContextResponse : IFirefoxResponse
+    {
+    }
+    internal class TargetGetBrowserContextsRequest : IFirefoxRequest<TargetGetBrowserContextsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Target.getBrowserContexts";
+    }
+    internal class TargetGetBrowserContextsResponse : IFirefoxResponse
+    {
+        public string[] BrowserContextIds { get; set; }
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Page
 {
-internal class PageEventFiredFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.eventFired";
-public string FrameId { get; set; }
-public Page.EventFiredName Name { get; set; }
-}
-internal class PageUncaughtErrorFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.uncaughtError";
-public string FrameId { get; set; }
-public string Message { get; set; }
-public string Stack { get; set; }
-}
-internal class PageFrameAttachedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.frameAttached";
-public string FrameId { get; set; }
-public string ParentFrameId { get; set; }
-}
-internal class PageFrameDetachedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.frameDetached";
-public string FrameId { get; set; }
-}
-internal class PageNavigationStartedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.navigationStarted";
-public string FrameId { get; set; }
-public string NavigationId { get; set; }
-public string Url { get; set; }
-}
-internal class PageNavigationCommittedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.navigationCommitted";
-public string FrameId { get; set; }
-public string NavigationId { get; set; }
-public string Url { get; set; }
-public string Name { get; set; }
-}
-internal class PageNavigationAbortedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.navigationAborted";
-public string FrameId { get; set; }
-public string NavigationId { get; set; }
-public string ErrorText { get; set; }
-}
-internal class PageSameDocumentNavigationFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.sameDocumentNavigation";
-public string FrameId { get; set; }
-public string Url { get; set; }
-}
-internal class PageDialogOpenedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.dialogOpened";
-public string DialogId { get; set; }
-public Page.DialogOpenedType Type { get; set; }
-public string Message { get; set; }
-public string DefaultValue { get; set; }
-}
-internal class PageDialogClosedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.dialogClosed";
-public string DialogId { get; set; }
-}
-internal class PageBindingCalledFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.bindingCalled";
-public string ExecutionContextId { get; set; }
-public string Name { get; set; }
-public JsonElement? Payload { get; set; }
-}
-internal class PageFileChooserOpenedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.fileChooserOpened";
-public string ExecutionContextId { get; set; }
-public Runtime.RemoteObject Element { get; set; }
-}
-internal class PageWorkerCreatedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.workerCreated";
-public string WorkerId { get; set; }
-public string FrameId { get; set; }
-public string Url { get; set; }
-}
-internal class PageWorkerDestroyedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.workerDestroyed";
-public string WorkerId { get; set; }
-}
-internal class PageDispatchMessageFromWorkerFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Page.dispatchMessageFromWorker";
-public string WorkerId { get; set; }
-public string Message { get; set; }
-}
-internal class EnableRequest : IFirefoxRequest<EnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.enable";
-}
-internal class EnableResponse : IFirefoxResponse
-{
-}
-internal class CloseRequest : IFirefoxRequest<CloseResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.close";
-public bool? RunBeforeUnload { get; set; }
-}
-internal class CloseResponse : IFirefoxResponse
-{
-}
-internal class SetFileInputFilesRequest : IFirefoxRequest<SetFileInputFilesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setFileInputFiles";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-public string[] Files { get; set; }
-}
-internal class SetFileInputFilesResponse : IFirefoxResponse
-{
-}
-internal class AddBindingRequest : IFirefoxRequest<AddBindingResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.addBinding";
-public string Name { get; set; }
-}
-internal class AddBindingResponse : IFirefoxResponse
-{
-}
-internal class SetViewportRequest : IFirefoxRequest<SetViewportResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setViewport";
-public Page.Viewport Viewport { get; set; }
-}
-internal class SetViewportResponse : IFirefoxResponse
-{
-}
-internal class SetUserAgentRequest : IFirefoxRequest<SetUserAgentResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setUserAgent";
-public string UserAgent { get; set; }
-}
-internal class SetUserAgentResponse : IFirefoxResponse
-{
-}
-internal class SetEmulatedMediaRequest : IFirefoxRequest<SetEmulatedMediaResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setEmulatedMedia";
-public Page.SetEmulatedMediaType Type { get; set; }
-public Page.SetEmulatedMediaColorScheme ColorScheme { get; set; }
-}
-internal class SetEmulatedMediaResponse : IFirefoxResponse
-{
-}
-internal class SetBypassCSPRequest : IFirefoxRequest<SetBypassCSPResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setBypassCSP";
-public bool? Enabled { get; set; }
-}
-internal class SetBypassCSPResponse : IFirefoxResponse
-{
-}
-internal class SetCacheDisabledRequest : IFirefoxRequest<SetCacheDisabledResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setCacheDisabled";
-public bool? CacheDisabled { get; set; }
-}
-internal class SetCacheDisabledResponse : IFirefoxResponse
-{
-}
-internal class SetJavascriptEnabledRequest : IFirefoxRequest<SetJavascriptEnabledResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setJavascriptEnabled";
-public bool? Enabled { get; set; }
-}
-internal class SetJavascriptEnabledResponse : IFirefoxResponse
-{
-}
-internal class DescribeNodeRequest : IFirefoxRequest<DescribeNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.describeNode";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-}
-internal class DescribeNodeResponse : IFirefoxResponse
-{
-public string ContentFrameId { get; set; }
-public string OwnerFrameId { get; set; }
-}
-internal class AddScriptToEvaluateOnNewDocumentRequest : IFirefoxRequest<AddScriptToEvaluateOnNewDocumentResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
-public string Script { get; set; }
-public string WorldName { get; set; }
-}
-internal class AddScriptToEvaluateOnNewDocumentResponse : IFirefoxResponse
-{
-public string ScriptId { get; set; }
-}
-internal class RemoveScriptToEvaluateOnNewDocumentRequest : IFirefoxRequest<RemoveScriptToEvaluateOnNewDocumentResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
-public string ScriptId { get; set; }
-}
-internal class RemoveScriptToEvaluateOnNewDocumentResponse : IFirefoxResponse
-{
-}
-internal class NavigateRequest : IFirefoxRequest<NavigateResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.navigate";
-public string FrameId { get; set; }
-public string Url { get; set; }
-public string Referer { get; set; }
-}
-internal class NavigateResponse : IFirefoxResponse
-{
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
-}
-internal class GoBackRequest : IFirefoxRequest<GoBackResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.goBack";
-public string FrameId { get; set; }
-}
-internal class GoBackResponse : IFirefoxResponse
-{
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
-}
-internal class GoForwardRequest : IFirefoxRequest<GoForwardResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.goForward";
-public string FrameId { get; set; }
-}
-internal class GoForwardResponse : IFirefoxResponse
-{
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
-}
-internal class ReloadRequest : IFirefoxRequest<ReloadResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.reload";
-public string FrameId { get; set; }
-}
-internal class ReloadResponse : IFirefoxResponse
-{
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
-}
-internal class GetBoundingBoxRequest : IFirefoxRequest<GetBoundingBoxResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.getBoundingBox";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-}
-internal class GetBoundingBoxResponse : IFirefoxResponse
-{
-public Page.BoundingBox BoundingBox { get; set; }
-}
-internal class AdoptNodeRequest : IFirefoxRequest<AdoptNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.adoptNode";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-public string ExecutionContextId { get; set; }
-}
-internal class AdoptNodeResponse : IFirefoxResponse
-{
-public Runtime.RemoteObject RemoteObject { get; set; }
-}
-internal class ScreenshotRequest : IFirefoxRequest<ScreenshotResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.screenshot";
-public Page.ScreenshotMimeType MimeType { get; set; }
-public bool? FullPage { get; set; }
-public Page.BoundingBox Clip { get; set; }
-}
-internal class ScreenshotResponse : IFirefoxResponse
-{
-public string Data { get; set; }
-}
-internal class GetContentQuadsRequest : IFirefoxRequest<GetContentQuadsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.getContentQuads";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-}
-internal class GetContentQuadsResponse : IFirefoxResponse
-{
-public Page.DOMQuad[] Quads { get; set; }
-}
-internal class DispatchKeyEventRequest : IFirefoxRequest<DispatchKeyEventResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.dispatchKeyEvent";
-public string Type { get; set; }
-public string Key { get; set; }
-public double? KeyCode { get; set; }
-public double? Location { get; set; }
-public string Code { get; set; }
-public bool? Repeat { get; set; }
-}
-internal class DispatchKeyEventResponse : IFirefoxResponse
-{
-}
-internal class DispatchTouchEventRequest : IFirefoxRequest<DispatchTouchEventResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.dispatchTouchEvent";
-public Page.DispatchTouchEventType Type { get; set; }
-public Page.TouchPoint[] TouchPoints { get; set; }
-public double? Modifiers { get; set; }
-}
-internal class DispatchTouchEventResponse : IFirefoxResponse
-{
-public bool? DefaultPrevented { get; set; }
-}
-internal class DispatchMouseEventRequest : IFirefoxRequest<DispatchMouseEventResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.dispatchMouseEvent";
-public string Type { get; set; }
-public double? Button { get; set; }
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? Modifiers { get; set; }
-public double? ClickCount { get; set; }
-public double? Buttons { get; set; }
-}
-internal class DispatchMouseEventResponse : IFirefoxResponse
-{
-}
-internal class InsertTextRequest : IFirefoxRequest<InsertTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.insertText";
-public string Text { get; set; }
-}
-internal class InsertTextResponse : IFirefoxResponse
-{
-}
-internal class HandleDialogRequest : IFirefoxRequest<HandleDialogResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.handleDialog";
-public string DialogId { get; set; }
-public bool? Accept { get; set; }
-public string PromptText { get; set; }
-}
-internal class HandleDialogResponse : IFirefoxResponse
-{
-}
-internal class SetInterceptFileChooserDialogRequest : IFirefoxRequest<SetInterceptFileChooserDialogResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.setInterceptFileChooserDialog";
-public bool? Enabled { get; set; }
-}
-internal class SetInterceptFileChooserDialogResponse : IFirefoxResponse
-{
-}
-internal class SendMessageToWorkerRequest : IFirefoxRequest<SendMessageToWorkerResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Page.sendMessageToWorker";
-public string FrameId { get; set; }
-public string WorkerId { get; set; }
-public string Message { get; set; }
-}
-internal class SendMessageToWorkerResponse : IFirefoxResponse
-{
-}
-internal enum EventFiredName
-{
-[System.Runtime.Serialization.EnumMember(Value = "load")]Load,
-[System.Runtime.Serialization.EnumMember(Value = "DOMContentLoaded")]DOMContentLoaded,
-}
-internal enum DialogOpenedType
-{
-[System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt,
-[System.Runtime.Serialization.EnumMember(Value = "alert")]Alert,
-[System.Runtime.Serialization.EnumMember(Value = "confirm")]Confirm,
-[System.Runtime.Serialization.EnumMember(Value = "beforeunload")]Beforeunload,
-}
-internal enum SetEmulatedMediaType
-{
-[System.Runtime.Serialization.EnumMember(Value = "screen")]Screen,
-[System.Runtime.Serialization.EnumMember(Value = "print")]Print,
-[System.Runtime.Serialization.EnumMember(Value = "")]Empty,
-}
-internal enum SetEmulatedMediaColorScheme
-{
-[System.Runtime.Serialization.EnumMember(Value = "dark")]Dark,
-[System.Runtime.Serialization.EnumMember(Value = "light")]Light,
-[System.Runtime.Serialization.EnumMember(Value = "no-preference")]NoPreference,
-}
-internal enum ScreenshotMimeType
-{
-[System.Runtime.Serialization.EnumMember(Value = "image/png")]ImagePng,
-[System.Runtime.Serialization.EnumMember(Value = "image/jpeg")]ImageJpeg,
-}
-internal enum DispatchTouchEventType
-{
-[System.Runtime.Serialization.EnumMember(Value = "touchStart")]TouchStart,
-[System.Runtime.Serialization.EnumMember(Value = "touchEnd")]TouchEnd,
-[System.Runtime.Serialization.EnumMember(Value = "touchMove")]TouchMove,
-[System.Runtime.Serialization.EnumMember(Value = "touchCancel")]TouchCancel,
-}
+    internal class PageEventFiredFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.eventFired";
+        public string FrameId { get; set; }
+        public Page.EventFiredName Name { get; set; }
+    }
+    internal class PageUncaughtErrorFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.uncaughtError";
+        public string FrameId { get; set; }
+        public string Message { get; set; }
+        public string Stack { get; set; }
+    }
+    internal class PageFrameAttachedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.frameAttached";
+        public string FrameId { get; set; }
+        public string ParentFrameId { get; set; }
+    }
+    internal class PageFrameDetachedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.frameDetached";
+        public string FrameId { get; set; }
+    }
+    internal class PageNavigationStartedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.navigationStarted";
+        public string FrameId { get; set; }
+        public string NavigationId { get; set; }
+        public string Url { get; set; }
+    }
+    internal class PageNavigationCommittedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.navigationCommitted";
+        public string FrameId { get; set; }
+        public string NavigationId { get; set; }
+        public string Url { get; set; }
+        public string Name { get; set; }
+    }
+    internal class PageNavigationAbortedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.navigationAborted";
+        public string FrameId { get; set; }
+        public string NavigationId { get; set; }
+        public string ErrorText { get; set; }
+    }
+    internal class PageSameDocumentNavigationFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.sameDocumentNavigation";
+        public string FrameId { get; set; }
+        public string Url { get; set; }
+    }
+    internal class PageDialogOpenedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.dialogOpened";
+        public string DialogId { get; set; }
+        public Page.DialogOpenedType Type { get; set; }
+        public string Message { get; set; }
+        public string DefaultValue { get; set; }
+    }
+    internal class PageDialogClosedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.dialogClosed";
+        public string DialogId { get; set; }
+    }
+    internal class PageBindingCalledFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.bindingCalled";
+        public string ExecutionContextId { get; set; }
+        public string Name { get; set; }
+        public JsonElement? Payload { get; set; }
+    }
+    internal class PageFileChooserOpenedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.fileChooserOpened";
+        public string ExecutionContextId { get; set; }
+        public Runtime.RemoteObject Element { get; set; }
+    }
+    internal class PageWorkerCreatedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.workerCreated";
+        public string WorkerId { get; set; }
+        public string FrameId { get; set; }
+        public string Url { get; set; }
+    }
+    internal class PageWorkerDestroyedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.workerDestroyed";
+        public string WorkerId { get; set; }
+    }
+    internal class PageDispatchMessageFromWorkerFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Page.dispatchMessageFromWorker";
+        public string WorkerId { get; set; }
+        public string Message { get; set; }
+    }
+    internal class PageEnableRequest : IFirefoxRequest<PageEnableResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.enable";
+    }
+    internal class PageEnableResponse : IFirefoxResponse
+    {
+    }
+    internal class PageCloseRequest : IFirefoxRequest<PageCloseResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.close";
+        public bool? RunBeforeUnload { get; set; }
+    }
+    internal class PageCloseResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetFileInputFilesRequest : IFirefoxRequest<PageSetFileInputFilesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setFileInputFiles";
+        public string FrameId { get; set; }
+        public string ObjectId { get; set; }
+        public string[] Files { get; set; }
+    }
+    internal class PageSetFileInputFilesResponse : IFirefoxResponse
+    {
+    }
+    internal class PageAddBindingRequest : IFirefoxRequest<PageAddBindingResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.addBinding";
+        public string Name { get; set; }
+    }
+    internal class PageAddBindingResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetViewportRequest : IFirefoxRequest<PageSetViewportResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setViewport";
+        public Page.Viewport Viewport { get; set; }
+    }
+    internal class PageSetViewportResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetUserAgentRequest : IFirefoxRequest<PageSetUserAgentResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setUserAgent";
+        public string UserAgent { get; set; }
+    }
+    internal class PageSetUserAgentResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetEmulatedMediaRequest : IFirefoxRequest<PageSetEmulatedMediaResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setEmulatedMedia";
+        public Page.SetEmulatedMediaType Type { get; set; }
+        public Page.SetEmulatedMediaColorScheme ColorScheme { get; set; }
+    }
+    internal class PageSetEmulatedMediaResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetBypassCSPRequest : IFirefoxRequest<PageSetBypassCSPResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setBypassCSP";
+        public bool? Enabled { get; set; }
+    }
+    internal class PageSetBypassCSPResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetCacheDisabledRequest : IFirefoxRequest<PageSetCacheDisabledResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setCacheDisabled";
+        public bool? CacheDisabled { get; set; }
+    }
+    internal class PageSetCacheDisabledResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetJavascriptEnabledRequest : IFirefoxRequest<PageSetJavascriptEnabledResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setJavascriptEnabled";
+        public bool? Enabled { get; set; }
+    }
+    internal class PageSetJavascriptEnabledResponse : IFirefoxResponse
+    {
+    }
+    internal class PageDescribeNodeRequest : IFirefoxRequest<PageDescribeNodeResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.describeNode";
+        public string FrameId { get; set; }
+        public string ObjectId { get; set; }
+    }
+    internal class PageDescribeNodeResponse : IFirefoxResponse
+    {
+        public string ContentFrameId { get; set; }
+        public string OwnerFrameId { get; set; }
+    }
+    internal class PageAddScriptToEvaluateOnNewDocumentRequest : IFirefoxRequest<PageAddScriptToEvaluateOnNewDocumentResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
+        public string Script { get; set; }
+        public string WorldName { get; set; }
+    }
+    internal class PageAddScriptToEvaluateOnNewDocumentResponse : IFirefoxResponse
+    {
+        public string ScriptId { get; set; }
+    }
+    internal class PageRemoveScriptToEvaluateOnNewDocumentRequest : IFirefoxRequest<PageRemoveScriptToEvaluateOnNewDocumentResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
+        public string ScriptId { get; set; }
+    }
+    internal class PageRemoveScriptToEvaluateOnNewDocumentResponse : IFirefoxResponse
+    {
+    }
+    internal class PageNavigateRequest : IFirefoxRequest<PageNavigateResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.navigate";
+        public string FrameId { get; set; }
+        public string Url { get; set; }
+        public string Referer { get; set; }
+    }
+    internal class PageNavigateResponse : IFirefoxResponse
+    {
+        public string NavigationId { get; set; }
+        public string NavigationURL { get; set; }
+    }
+    internal class PageGoBackRequest : IFirefoxRequest<PageGoBackResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.goBack";
+        public string FrameId { get; set; }
+    }
+    internal class PageGoBackResponse : IFirefoxResponse
+    {
+        public string NavigationId { get; set; }
+        public string NavigationURL { get; set; }
+    }
+    internal class PageGoForwardRequest : IFirefoxRequest<PageGoForwardResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.goForward";
+        public string FrameId { get; set; }
+    }
+    internal class PageGoForwardResponse : IFirefoxResponse
+    {
+        public string NavigationId { get; set; }
+        public string NavigationURL { get; set; }
+    }
+    internal class PageReloadRequest : IFirefoxRequest<PageReloadResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.reload";
+        public string FrameId { get; set; }
+    }
+    internal class PageReloadResponse : IFirefoxResponse
+    {
+        public string NavigationId { get; set; }
+        public string NavigationURL { get; set; }
+    }
+    internal class PageGetBoundingBoxRequest : IFirefoxRequest<PageGetBoundingBoxResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.getBoundingBox";
+        public string FrameId { get; set; }
+        public string ObjectId { get; set; }
+    }
+    internal class PageGetBoundingBoxResponse : IFirefoxResponse
+    {
+        public Page.BoundingBox BoundingBox { get; set; }
+    }
+    internal class PageAdoptNodeRequest : IFirefoxRequest<PageAdoptNodeResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.adoptNode";
+        public string FrameId { get; set; }
+        public string ObjectId { get; set; }
+        public string ExecutionContextId { get; set; }
+    }
+    internal class PageAdoptNodeResponse : IFirefoxResponse
+    {
+        public Runtime.RemoteObject RemoteObject { get; set; }
+    }
+    internal class PageScreenshotRequest : IFirefoxRequest<PageScreenshotResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.screenshot";
+        public Page.ScreenshotMimeType MimeType { get; set; }
+        public bool? FullPage { get; set; }
+        public Page.BoundingBox Clip { get; set; }
+    }
+    internal class PageScreenshotResponse : IFirefoxResponse
+    {
+        public string Data { get; set; }
+    }
+    internal class PageGetContentQuadsRequest : IFirefoxRequest<PageGetContentQuadsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.getContentQuads";
+        public string FrameId { get; set; }
+        public string ObjectId { get; set; }
+    }
+    internal class PageGetContentQuadsResponse : IFirefoxResponse
+    {
+        public Page.DOMQuad[] Quads { get; set; }
+    }
+    internal class PageDispatchKeyEventRequest : IFirefoxRequest<PageDispatchKeyEventResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.dispatchKeyEvent";
+        public string Type { get; set; }
+        public string Key { get; set; }
+        public double? KeyCode { get; set; }
+        public double? Location { get; set; }
+        public string Code { get; set; }
+        public bool? Repeat { get; set; }
+    }
+    internal class PageDispatchKeyEventResponse : IFirefoxResponse
+    {
+    }
+    internal class PageDispatchTouchEventRequest : IFirefoxRequest<PageDispatchTouchEventResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.dispatchTouchEvent";
+        public Page.DispatchTouchEventType Type { get; set; }
+        public Page.TouchPoint[] TouchPoints { get; set; }
+        public double? Modifiers { get; set; }
+    }
+    internal class PageDispatchTouchEventResponse : IFirefoxResponse
+    {
+        public bool? DefaultPrevented { get; set; }
+    }
+    internal class PageDispatchMouseEventRequest : IFirefoxRequest<PageDispatchMouseEventResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.dispatchMouseEvent";
+        public string Type { get; set; }
+        public double? Button { get; set; }
+        public double? X { get; set; }
+        public double? Y { get; set; }
+        public double? Modifiers { get; set; }
+        public double? ClickCount { get; set; }
+        public double? Buttons { get; set; }
+    }
+    internal class PageDispatchMouseEventResponse : IFirefoxResponse
+    {
+    }
+    internal class PageInsertTextRequest : IFirefoxRequest<PageInsertTextResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.insertText";
+        public string Text { get; set; }
+    }
+    internal class PageInsertTextResponse : IFirefoxResponse
+    {
+    }
+    internal class PageHandleDialogRequest : IFirefoxRequest<PageHandleDialogResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.handleDialog";
+        public string DialogId { get; set; }
+        public bool? Accept { get; set; }
+        public string PromptText { get; set; }
+    }
+    internal class PageHandleDialogResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSetInterceptFileChooserDialogRequest : IFirefoxRequest<PageSetInterceptFileChooserDialogResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.setInterceptFileChooserDialog";
+        public bool? Enabled { get; set; }
+    }
+    internal class PageSetInterceptFileChooserDialogResponse : IFirefoxResponse
+    {
+    }
+    internal class PageSendMessageToWorkerRequest : IFirefoxRequest<PageSendMessageToWorkerResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Page.sendMessageToWorker";
+        public string FrameId { get; set; }
+        public string WorkerId { get; set; }
+        public string Message { get; set; }
+    }
+    internal class PageSendMessageToWorkerResponse : IFirefoxResponse
+    {
+    }
+    internal enum EventFiredName
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "load")] Load,
+        [System.Runtime.Serialization.EnumMember(Value = "DOMContentLoaded")] DOMContentLoaded,
+    }
+    internal enum DialogOpenedType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "prompt")] Prompt,
+        [System.Runtime.Serialization.EnumMember(Value = "alert")] Alert,
+        [System.Runtime.Serialization.EnumMember(Value = "confirm")] Confirm,
+        [System.Runtime.Serialization.EnumMember(Value = "beforeunload")] Beforeunload,
+    }
+    internal enum SetEmulatedMediaType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "screen")] Screen,
+        [System.Runtime.Serialization.EnumMember(Value = "print")] Print,
+        [System.Runtime.Serialization.EnumMember(Value = "")] Empty,
+    }
+    internal enum SetEmulatedMediaColorScheme
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "dark")] Dark,
+        [System.Runtime.Serialization.EnumMember(Value = "light")] Light,
+        [System.Runtime.Serialization.EnumMember(Value = "no-preference")] NoPreference,
+    }
+    internal enum ScreenshotMimeType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "image/png")] ImagePng,
+        [System.Runtime.Serialization.EnumMember(Value = "image/jpeg")] ImageJpeg,
+    }
+    internal enum DispatchTouchEventType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = "touchStart")] TouchStart,
+        [System.Runtime.Serialization.EnumMember(Value = "touchEnd")] TouchEnd,
+        [System.Runtime.Serialization.EnumMember(Value = "touchMove")] TouchMove,
+        [System.Runtime.Serialization.EnumMember(Value = "touchCancel")] TouchCancel,
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
-internal class RuntimeExecutionContextCreatedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Runtime.executionContextCreated";
-public string ExecutionContextId { get; set; }
-public JsonElement? AuxData { get; set; }
-}
-internal class RuntimeExecutionContextDestroyedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Runtime.executionContextDestroyed";
-public string ExecutionContextId { get; set; }
-}
-internal class RuntimeConsoleFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Runtime.console";
-public string ExecutionContextId { get; set; }
-public Runtime.RemoteObject[] Args { get; set; }
-public string Type { get; set; }
-public Runtime.ScriptLocation Location { get; set; }
-}
-internal class EnableRequest : IFirefoxRequest<EnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Runtime.enable";
-}
-internal class EnableResponse : IFirefoxResponse
-{
-}
-internal class EvaluateRequest : IFirefoxRequest<EvaluateResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Runtime.evaluate";
-public string ExecutionContextId { get; set; }
-public string Expression { get; set; }
-public bool? ReturnByValue { get; set; }
-}
-internal class EvaluateResponse : IFirefoxResponse
-{
-public Runtime.RemoteObject Result { get; set; }
-public Runtime.ExceptionDetails ExceptionDetails { get; set; }
-}
-internal class CallFunctionRequest : IFirefoxRequest<CallFunctionResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Runtime.callFunction";
-public string ExecutionContextId { get; set; }
-public string FunctionDeclaration { get; set; }
-public bool? ReturnByValue { get; set; }
-public Runtime.CallFunctionArgument[] Args { get; set; }
-}
-internal class CallFunctionResponse : IFirefoxResponse
-{
-public Runtime.RemoteObject Result { get; set; }
-public Runtime.ExceptionDetails ExceptionDetails { get; set; }
-}
-internal class DisposeObjectRequest : IFirefoxRequest<DisposeObjectResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Runtime.disposeObject";
-public string ExecutionContextId { get; set; }
-public string ObjectId { get; set; }
-}
-internal class DisposeObjectResponse : IFirefoxResponse
-{
-}
-internal class GetObjectPropertiesRequest : IFirefoxRequest<GetObjectPropertiesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Runtime.getObjectProperties";
-public string ExecutionContextId { get; set; }
-public string ObjectId { get; set; }
-}
-internal class GetObjectPropertiesResponse : IFirefoxResponse
-{
-public Runtime.ObjectProperty[] Properties { get; set; }
-}
+    internal class RuntimeExecutionContextCreatedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Runtime.executionContextCreated";
+        public string ExecutionContextId { get; set; }
+        public JsonElement? AuxData { get; set; }
+    }
+    internal class RuntimeExecutionContextDestroyedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Runtime.executionContextDestroyed";
+        public string ExecutionContextId { get; set; }
+    }
+    internal class RuntimeConsoleFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Runtime.console";
+        public string ExecutionContextId { get; set; }
+        public Runtime.RemoteObject[] Args { get; set; }
+        public string Type { get; set; }
+        public Runtime.ScriptLocation Location { get; set; }
+    }
+    internal class RuntimeEnableRequest : IFirefoxRequest<RuntimeEnableResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Runtime.enable";
+    }
+    internal class RuntimeEnableResponse : IFirefoxResponse
+    {
+    }
+    internal class RuntimeEvaluateRequest : IFirefoxRequest<RuntimeEvaluateResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Runtime.evaluate";
+        public string ExecutionContextId { get; set; }
+        public string Expression { get; set; }
+        public bool? ReturnByValue { get; set; }
+    }
+    internal class RuntimeEvaluateResponse : IFirefoxResponse
+    {
+        public Runtime.RemoteObject Result { get; set; }
+        public Runtime.ExceptionDetails ExceptionDetails { get; set; }
+    }
+    internal class RuntimeCallFunctionRequest : IFirefoxRequest<RuntimeCallFunctionResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Runtime.callFunction";
+        public string ExecutionContextId { get; set; }
+        public string FunctionDeclaration { get; set; }
+        public bool? ReturnByValue { get; set; }
+        public Runtime.CallFunctionArgument[] Args { get; set; }
+    }
+    internal class RuntimeCallFunctionResponse : IFirefoxResponse
+    {
+        public Runtime.RemoteObject Result { get; set; }
+        public Runtime.ExceptionDetails ExceptionDetails { get; set; }
+    }
+    internal class RuntimeDisposeObjectRequest : IFirefoxRequest<RuntimeDisposeObjectResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Runtime.disposeObject";
+        public string ExecutionContextId { get; set; }
+        public string ObjectId { get; set; }
+    }
+    internal class RuntimeDisposeObjectResponse : IFirefoxResponse
+    {
+    }
+    internal class RuntimeGetObjectPropertiesRequest : IFirefoxRequest<RuntimeGetObjectPropertiesResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Runtime.getObjectProperties";
+        public string ExecutionContextId { get; set; }
+        public string ObjectId { get; set; }
+    }
+    internal class RuntimeGetObjectPropertiesResponse : IFirefoxResponse
+    {
+        public Runtime.ObjectProperty[] Properties { get; set; }
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Network
 {
-internal class NetworkRequestWillBeSentFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Network.requestWillBeSent";
-public string FrameId { get; set; }
-public string RequestId { get; set; }
-public string RedirectedFrom { get; set; }
-public string PostData { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-public bool? IsIntercepted { get; set; }
-public string Url { get; set; }
-public string Method { get; set; }
-public string NavigationId { get; set; }
-public string Cause { get; set; }
-}
-internal class NetworkResponseReceivedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Network.responseReceived";
-public Network.SecurityDetails SecurityDetails { get; set; }
-public string RequestId { get; set; }
-public bool? FromCache { get; set; }
-public string RemoteIPAddress { get; set; }
-public double? RemotePort { get; set; }
-public double? Status { get; set; }
-public string StatusText { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-}
-internal class NetworkRequestFinishedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Network.requestFinished";
-public string RequestId { get; set; }
-}
-internal class NetworkRequestFailedFirefoxEvent : IFirefoxEvent
-{
-public string InternalName { get; } = "Network.requestFailed";
-public string RequestId { get; set; }
-public string ErrorCode { get; set; }
-}
-internal class EnableRequest : IFirefoxRequest<EnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.enable";
-}
-internal class EnableResponse : IFirefoxResponse
-{
-}
-internal class SetRequestInterceptionRequest : IFirefoxRequest<SetRequestInterceptionResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.setRequestInterception";
-public bool? Enabled { get; set; }
-}
-internal class SetRequestInterceptionResponse : IFirefoxResponse
-{
-}
-internal class SetExtraHTTPHeadersRequest : IFirefoxRequest<SetExtraHTTPHeadersResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.setExtraHTTPHeaders";
-public Network.HTTPHeader[] Headers { get; set; }
-}
-internal class SetExtraHTTPHeadersResponse : IFirefoxResponse
-{
-}
-internal class AbortInterceptedRequestRequest : IFirefoxRequest<AbortInterceptedRequestResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.abortInterceptedRequest";
-public string RequestId { get; set; }
-public string ErrorCode { get; set; }
-}
-internal class AbortInterceptedRequestResponse : IFirefoxResponse
-{
-}
-internal class ResumeInterceptedRequestRequest : IFirefoxRequest<ResumeInterceptedRequestResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.resumeInterceptedRequest";
-public string RequestId { get; set; }
-public string Method { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-public string PostData { get; set; }
-}
-internal class ResumeInterceptedRequestResponse : IFirefoxResponse
-{
-}
-internal class FulfillInterceptedRequestRequest : IFirefoxRequest<FulfillInterceptedRequestResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.fulfillInterceptedRequest";
-public string RequestId { get; set; }
-public double? Status { get; set; }
-public string StatusText { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-public string Base64Body { get; set; }
-}
-internal class FulfillInterceptedRequestResponse : IFirefoxResponse
-{
-}
-internal class GetResponseBodyRequest : IFirefoxRequest<GetResponseBodyResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.getResponseBody";
-public string RequestId { get; set; }
-}
-internal class GetResponseBodyResponse : IFirefoxResponse
-{
-public string Base64Body { get; set; }
-public bool? Evicted { get; set; }
-}
-internal class SetAuthCredentialsRequest : IFirefoxRequest<SetAuthCredentialsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Network.setAuthCredentials";
-public string Username { get; set; }
-public string Password { get; set; }
-}
-internal class SetAuthCredentialsResponse : IFirefoxResponse
-{
-}
+    internal class NetworkRequestWillBeSentFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Network.requestWillBeSent";
+        public string FrameId { get; set; }
+        public string RequestId { get; set; }
+        public string RedirectedFrom { get; set; }
+        public string PostData { get; set; }
+        public Network.HTTPHeader[] Headers { get; set; }
+        public bool? IsIntercepted { get; set; }
+        public string Url { get; set; }
+        public string Method { get; set; }
+        public string NavigationId { get; set; }
+        public string Cause { get; set; }
+    }
+    internal class NetworkResponseReceivedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Network.responseReceived";
+        public Network.SecurityDetails SecurityDetails { get; set; }
+        public string RequestId { get; set; }
+        public bool? FromCache { get; set; }
+        public string RemoteIPAddress { get; set; }
+        public double? RemotePort { get; set; }
+        public double? Status { get; set; }
+        public string StatusText { get; set; }
+        public Network.HTTPHeader[] Headers { get; set; }
+    }
+    internal class NetworkRequestFinishedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Network.requestFinished";
+        public string RequestId { get; set; }
+    }
+    internal class NetworkRequestFailedFirefoxEvent : IFirefoxEvent
+    {
+        public string InternalName { get; } = "Network.requestFailed";
+        public string RequestId { get; set; }
+        public string ErrorCode { get; set; }
+    }
+    internal class NetworkEnableRequest : IFirefoxRequest<NetworkEnableResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.enable";
+    }
+    internal class NetworkEnableResponse : IFirefoxResponse
+    {
+    }
+    internal class NetworkSetRequestInterceptionRequest : IFirefoxRequest<NetworkSetRequestInterceptionResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.setRequestInterception";
+        public bool? Enabled { get; set; }
+    }
+    internal class NetworkSetRequestInterceptionResponse : IFirefoxResponse
+    {
+    }
+    internal class NetworkSetExtraHTTPHeadersRequest : IFirefoxRequest<NetworkSetExtraHTTPHeadersResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.setExtraHTTPHeaders";
+        public Network.HTTPHeader[] Headers { get; set; }
+    }
+    internal class NetworkSetExtraHTTPHeadersResponse : IFirefoxResponse
+    {
+    }
+    internal class NetworkAbortInterceptedRequestRequest : IFirefoxRequest<NetworkAbortInterceptedRequestResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.abortInterceptedRequest";
+        public string RequestId { get; set; }
+        public string ErrorCode { get; set; }
+    }
+    internal class NetworkAbortInterceptedRequestResponse : IFirefoxResponse
+    {
+    }
+    internal class NetworkResumeInterceptedRequestRequest : IFirefoxRequest<NetworkResumeInterceptedRequestResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.resumeInterceptedRequest";
+        public string RequestId { get; set; }
+        public string Method { get; set; }
+        public Network.HTTPHeader[] Headers { get; set; }
+        public string PostData { get; set; }
+    }
+    internal class NetworkResumeInterceptedRequestResponse : IFirefoxResponse
+    {
+    }
+    internal class NetworkFulfillInterceptedRequestRequest : IFirefoxRequest<NetworkFulfillInterceptedRequestResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.fulfillInterceptedRequest";
+        public string RequestId { get; set; }
+        public double? Status { get; set; }
+        public string StatusText { get; set; }
+        public Network.HTTPHeader[] Headers { get; set; }
+        public string Base64Body { get; set; }
+    }
+    internal class NetworkFulfillInterceptedRequestResponse : IFirefoxResponse
+    {
+    }
+    internal class NetworkGetResponseBodyRequest : IFirefoxRequest<NetworkGetResponseBodyResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.getResponseBody";
+        public string RequestId { get; set; }
+    }
+    internal class NetworkGetResponseBodyResponse : IFirefoxResponse
+    {
+        public string Base64Body { get; set; }
+        public bool? Evicted { get; set; }
+    }
+    internal class NetworkSetAuthCredentialsRequest : IFirefoxRequest<NetworkSetAuthCredentialsResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Network.setAuthCredentials";
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+    internal class NetworkSetAuthCredentialsResponse : IFirefoxResponse
+    {
+    }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Accessibility
 {
-internal class GetFullAXTreeRequest : IFirefoxRequest<GetFullAXTreeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Accessibility.getFullAXTree";
-public string ObjectId { get; set; }
-}
-internal class GetFullAXTreeResponse : IFirefoxResponse
-{
-public Accessibility.AXTree Tree { get; set; }
-}
+    internal class AccessibilityGetFullAXTreeRequest : IFirefoxRequest<AccessibilityGetFullAXTreeResponse>
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Command { get; } = "Accessibility.getFullAXTree";
+        public string ObjectId { get; set; }
+    }
+    internal class AccessibilityGetFullAXTreeResponse : IFirefoxResponse
+    {
+        public Accessibility.AXTree Tree { get; set; }
+    }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

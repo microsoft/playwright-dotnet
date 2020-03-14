@@ -43,8 +43,6 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                 builder.AppendLine("}");
             }
 
-            var clip = _knownTypes.Where(pair => pair.Value.Contains("Clip")).ToArray();
-
             foreach (var property in document.RootElement.GetProperty("domains").EnumerateObject())
             {
                 builder.AppendLine($"namespace {NamespacePrefix}.{property.Name}");
@@ -87,7 +85,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
         {
             foreach (var methodDef in domain.Value.GetProperty("methods").EnumerateObject())
             {
-                string method = methodDef.Name.ToPascalCase();
+                string method = domain.Name + methodDef.Name.ToPascalCase();
                 builder.AppendLine($"internal class {method}Request : IFirefoxRequest<{method}Response>");
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
@@ -145,7 +143,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     _knownTypes.Add(jsonTextOptional, type);
                 }
 
-                builder.Append("internal class ").Append(domain.Name).AppendLine(typeDef.Name.ToPascalCase());
+                builder.Append("internal class ").AppendLine(typeDef.Name.ToPascalCase());
                 builder.AppendLine("{");
                 foreach (var propertyDef in typeDef.Value.EnumerateObject())
                 {

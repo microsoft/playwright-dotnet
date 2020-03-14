@@ -3,39 +3,35 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
-using PlaywrightSharp.Chromium.Messaging;
-using PlaywrightSharp.Chromium.Protocol;
-using PlaywrightSharp.Chromium.Protocol.Target;
+using PlaywrightSharp.Firefox.Messaging;
+using PlaywrightSharp.Firefox.Protocol;
+using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp.Firefox
 {
-    internal class ChromiumConnection : IDisposable
+    internal class FirefoxConnection
     {
         internal const int BrowserCloseMessageId = -9999;
 
-        private readonly AsyncDictionaryHelper<string, ChromiumSession> _asyncSessions;
+        private readonly AsyncDictionaryHelper<string, FirefoxSession> _asyncSessions;
         private readonly IConnectionTransport _transport;
-        private readonly ConcurrentDictionary<string, ChromiumSession> _sessions = new ConcurrentDictionary<string, ChromiumSession>();
+        private readonly ConcurrentDictionary<string, FirefoxSession> _sessions = new ConcurrentDictionary<string, FirefoxSession>();
+        private readonly ConcurrentDictionary<int, MessageTask> _callbacks = new ConcurrentDictionary<int, MessageTask>();
         private int _lastId;
 
-        public ChromiumConnection(IConnectionTransport transport)
+        public FirefoxConnection(IConnectionTransport transport)
         {
             _transport = transport;
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.Closed += Transport_Closed;
-            RootSession = new ChromiumSession(this, TargetType.Browser, string.Empty);
-            _sessions.TryAdd(string.Empty, RootSession);
 
-            _asyncSessions = new AsyncDictionaryHelper<string, ChromiumSession>(_sessions, "Session {0} not found");
+            _asyncSessions = new AsyncDictionaryHelper<string, FirefoxSession>(_sessions, "Session {0} not found");
         }
 
-        public event EventHandler<IChromiumEvent> MessageReceived;
+        public event EventHandler<IFirefoxEvent> MessageReceived;
 
         public event EventHandler Disconnected;
-
-        public ChromiumSession RootSession { get; set; }
 
         internal bool IsClosed { get; set; }
 
@@ -45,16 +41,43 @@ namespace PlaywrightSharp.Chromium
 
         internal int GetMessageId() => Interlocked.Increment(ref _lastId);
 
-        internal Task RawSendASync(int id, string method, object args, string sessionId)
-            => _transport.SendAsync(new ConnectionRequest
+        internal async Task<TFirefoxResponse> SendAsync<TFirefoxResponse>(IFirefoxRequest<TFirefoxResponse> request)
+            where TFirefoxResponse : IFirefoxResponse
+        {
+            int id = GetMessageId();
+            MessageTask callback = new MessageTask
             {
-                Id = id,
-                Method = method,
-                Params = args,
-                SessionId = string.IsNullOrEmpty(sessionId) ? null : sessionId,
-            }.ToJson());
+                TaskWrapper = new TaskCompletionSource<IFirefoxResponse>(),
+                Method = request.Command,
+            };
+            _callbacks[id] = callback;
 
-        internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
+            try
+            {
+                await RawSendASync(id, request.Command, request).ConfigureAwait(false);
+            }
+
+            // We need to silence exceptions on async void events.
+#pragma warning disable CA1031 // Do not catch general exception types.
+            catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types.
+            {
+                if (_callbacks.TryRemove(id, out _))
+                {
+                    callback.TaskWrapper.TrySetException(new PlaywrightSharpException(ex.Message, ex));
+                }
+            }
+
+            var result = await callback.TaskWrapper.Task.ConfigureAwait(false);
+            return (TFirefoxResponse)result;
+        }
+
+        internal Task RawSendASync(int id, string method, object args) => _transport.SendAsync(new ConnectionRequest
+        {
+            Id = id,
+            Method = method,
+            Params = args,
+        }.ToJson());
 
         internal void Close(string closeReason)
         {
@@ -64,17 +87,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        internal Task<ChromiumSession> GetSessionAsync(string sessionId) => _asyncSessions.GetItemAsync(sessionId);
-
-        internal async Task<ChromiumSession> CreateSessionAsync(Protocol.Target.TargetInfo targetInfo)
-        {
-            string sessionId = (await RootSession.SendAsync(new TargetAttachToTargetRequest
-            {
-                TargetId = targetInfo.TargetId,
-                Flatten = true,
-            }).ConfigureAwait(false)).SessionId;
-            return await GetSessionAsync(sessionId).ConfigureAwait(false);
-        }
+        internal FirefoxSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 
         private void Transport_Closed(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, e);
 
@@ -123,25 +136,25 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            var param = ChromiumProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
             if (obj.Id == BrowserCloseMessageId)
             {
                 return;
             }
 
-            if (param is TargetAttachedToTargetChromiumEvent targetAttachedToTarget)
+            var param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
+            if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
             {
                 string sessionId = targetAttachedToTarget.SessionId;
-                ChromiumSession session = new ChromiumSession(this, targetAttachedToTarget.TargetInfo.GetTargetType(), sessionId);
+                var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type, sessionId);
                 _asyncSessions.AddItem(sessionId, session);
 
                 return;
             }
 
-            if (param is TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
+            if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
             {
                 string sessionId = targetDetachedFromTarget.SessionId;
-                if (_sessions.TryRemove(sessionId, out var session) && !session.IsClosed)
+                if (_sessions.TryRemove(sessionId, out var session))
                 {
                     session.OnClosed(targetDetachedFromTarget.InternalName);
                 }

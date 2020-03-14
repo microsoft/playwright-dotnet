@@ -8,6 +8,9 @@ namespace PlaywrightSharp.Helpers
         public static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
             => JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? JsonHelper.DefaultJsonSerializerOptions);
 
+        public static string ToJson<T>(this T value, JsonSerializerOptions options = null)
+            => JsonSerializer.Serialize(value, options ?? JsonHelper.DefaultJsonSerializerOptions);
+
         public static T ToObject<T>(this JsonDocument document, JsonSerializerOptions options = null)
         {
             if (document == null)
