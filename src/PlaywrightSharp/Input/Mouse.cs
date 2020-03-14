@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Input
 {
-    internal class Mouse : IMouse
+    /// <inheritdoc cref="IMouse"/>
+    public class Mouse : IMouse
     {
         private readonly IRawMouse _raw;
         private readonly IKeyboard _keyboard;
@@ -13,12 +14,13 @@ namespace PlaywrightSharp.Input
         private double _y = 0;
         private MouseButton _lastButton;
 
-        public Mouse(IRawMouse rawMouse, IKeyboard keyboard)
+        internal Mouse(IRawMouse rawMouse, IKeyboard keyboard)
         {
             _raw = rawMouse;
             _keyboard = keyboard;
         }
 
+        /// <inheritdoc cref="IMouse.ClickAsync(double, double, ClickOptions)"/>
         public async Task ClickAsync(double x, double y, ClickOptions options = null)
         {
             if ((options?.Delay ?? 0) != 0)
@@ -40,6 +42,7 @@ namespace PlaywrightSharp.Input
             }
         }
 
+        /// <inheritdoc cref="IMouse.DownAsync(ClickOptions)"/>
         public Task DownAsync(ClickOptions options = null)
         {
             var button = options?.Button ?? MouseButton.Left;
@@ -51,6 +54,7 @@ namespace PlaywrightSharp.Input
             return _raw.DownAsync(_x, _y, _lastButton, _buttons, _keyboard.Modifiers, clickCount);
         }
 
+        /// <inheritdoc cref="IMouse.MoveAsync(double, double, MoveOptions)"/>
         public async Task MoveAsync(double x, double y, MoveOptions options = null)
         {
             int steps = options?.Steps ?? 1;
@@ -67,6 +71,7 @@ namespace PlaywrightSharp.Input
             }
         }
 
+        /// <inheritdoc cref="IMouse.UpAsync(ClickOptions)"/>
         public Task UpAsync(ClickOptions options = null)
         {
             var button = options?.Button ?? MouseButton.Left;
@@ -77,6 +82,7 @@ namespace PlaywrightSharp.Input
             return _raw.UpAsync(_x, _y, button, _buttons, _keyboard.Modifiers, clickCount);
         }
 
+        /// <inheritdoc cref="IMouse.WheelAsync(double, double)"/>
         public Task WheelAsync(double deltaX, double deltaY)
         {
             throw new NotImplementedException();

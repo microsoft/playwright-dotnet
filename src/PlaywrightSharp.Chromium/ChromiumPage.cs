@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        public Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
         {
             throw new NotImplementedException();
         }
@@ -240,11 +240,7 @@ namespace PlaywrightSharp.Chromium
                         break;
                 }
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 // TODO Add Logger
                 /*

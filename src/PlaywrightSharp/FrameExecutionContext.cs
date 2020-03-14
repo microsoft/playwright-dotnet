@@ -32,7 +32,7 @@ namespace PlaywrightSharp
                 return await Delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
             }
 
-            List<Task<ElementHandle>> toDispose = new List<Task<ElementHandle>>();
+            List<Task<IElementHandle>> toDispose = new List<Task<IElementHandle>>();
 
             var adoptedTasks = args.Select<object, Task<object>>(arg =>
             {

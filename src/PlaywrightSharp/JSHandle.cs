@@ -22,7 +22,7 @@ namespace PlaywrightSharp
         internal IRemoteObject RemoteObject { get; set; }
 
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
-        public Task DisposeAsync()
+        Task IJSHandle.DisposeAsync()
         {
             if (_disposed)
             {

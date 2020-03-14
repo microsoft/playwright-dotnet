@@ -47,11 +47,7 @@ namespace PlaywrightSharp.Transport
                 await Task.Delay(_delay).ConfigureAwait(false);
                 MessageReceived?.Invoke(this, e);
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types
             {
                 // TODO Add Logger
                 Close($"SlowMoTransport failed to process {e.Message}. {ex.Message}. {ex.StackTrace}");

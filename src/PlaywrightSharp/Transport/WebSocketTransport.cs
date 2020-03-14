@@ -107,11 +107,7 @@ namespace PlaywrightSharp.Transport
                     {
                         return null;
                     }
-
-                    // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
                     catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
                     {
                         OnClose(ex.Message);
                         return null;

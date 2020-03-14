@@ -214,9 +214,7 @@ namespace PlaywrightSharp.Chromium
                     ObjectId = remoteObject.ObjectId,
                 }).ConfigureAwait(false);
             }
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
             }

@@ -35,7 +35,7 @@ namespace PlaywrightSharp
         /// <param name="arg">Argument to adpopt.</param>
         /// <param name="frameExecutionContext">Execution context.</param>
         /// <returns>A <see cref="Task"/> that completes when the argument is adopted, yielding the <see cref="ElementHandle"/>.</returns>
-        Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext);
+        Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext);
 
         /// <summary>
         /// Sets the viewport.

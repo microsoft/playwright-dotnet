@@ -22,6 +22,7 @@
     <Rule Id="CA1801" Action="Info" /><!-- Unused parameter-->
     <Rule Id="CA1822" Action="None" /><!-- Method can be marked as static-->
     <Rule Id="CA1823" Action="Error" /><!-- avoid unused fields-->
+    <Rule Id="CA1031" Action="None"/> <!-- Use specific exceptions-->
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1303" Action="None" />

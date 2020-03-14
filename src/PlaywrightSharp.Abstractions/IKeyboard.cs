@@ -11,7 +11,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Pressed <see cref="Modifier"/> keys.
         /// </summary>
-        Modifier[] Modifiers { get; }
+        internal Modifier[] Modifiers { get; }
 
         /// <summary>
         /// <![CDATA[
@@ -67,6 +67,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="modifiers"><see cref="Modifier"/> to check.</param>
         /// <returns>A <see cref="Task"/> that completes when the modifiers are ensure, yeilding the applied modifiers.</returns>
-        Task<Modifier[]> EnsureModifiersAsync(Modifier[] modifiers);
+        internal Task<Modifier[]> EnsureModifiersAsync(Modifier[] modifiers);
     }
 }

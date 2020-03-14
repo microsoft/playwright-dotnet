@@ -301,7 +301,7 @@ namespace PlaywrightSharp
             return handle;
         }
 
-        private object SelectorToString(string selector, WaitForOption waitFor)
+        private string SelectorToString(string selector, WaitForOption waitFor)
         {
             string label = waitFor switch
             {

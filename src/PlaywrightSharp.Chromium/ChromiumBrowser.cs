@@ -180,11 +180,7 @@ namespace PlaywrightSharp.Chromium
                         return;
                 }
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 string message = $"Browser failed to process {e.InternalName}. {ex.Message}. {ex.StackTrace}";
 
