@@ -1,9 +1,9 @@
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Input
 {
     /// <summary>
     /// Modifiers for <see cref="ClickOptions.Modifiers"/>.
     /// </summary>
-    public enum ClickModifier
+    public enum Modifier
     {
         /// <summary>
         /// Alt key.

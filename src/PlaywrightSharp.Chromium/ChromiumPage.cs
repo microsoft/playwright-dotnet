@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
+using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Page;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Chromium.Protocol.Security;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -30,11 +34,18 @@ namespace PlaywrightSharp.Chromium
             _browser = browser;
             _browserContext = browserContext;
             _networkManager = new ChromiumNetworkManager(Client, this);
+            RawKeyboard = new ChromiumRawKeyboard(client);
+            RawMouse = new ChromiumRawMouse(client);
             Page = new Page(this, browserContext);
+
             client.MessageReceived += Client_MessageReceived;
         }
 
         public ChromiumTarget Target { get; set; }
+
+        public IRawKeyboard RawKeyboard { get; }
+
+        public IRawMouse RawMouse { get; }
 
         internal Page Page { get; }
 
@@ -78,9 +89,59 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        public Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject?.Subtype == "node";
+
+        public async Task<Quad[][]> GetContentQuadsAsync(ElementHandle handle)
+        {
+            var result = await Client.SendAsync(new DOMGetContentQuadsRequest
+            {
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.Quads.Select(quad => new[]
+            {
+                new Quad
+                {
+                    X = quad[0].Value,
+                    Y = quad[1].Value,
+                },
+                new Quad
+                {
+                    X = quad[2].Value,
+                    Y = quad[3].Value,
+                },
+                new Quad
+                {
+                    X = quad[4].Value,
+                    Y = quad[5].Value,
+                },
+                new Quad
+                {
+                    X = quad[6].Value,
+                    Y = quad[7].Value,
+                },
+            }).ToArray();
+        }
+
+        public async Task<LayoutMetric> GetLayoutViewportAsync()
+        {
+            var layoutMetrics = await Client.SendAsync(new PageGetLayoutMetricsRequest()).ConfigureAwait(false);
+
+            return new LayoutMetric
+            {
+                Width = layoutMetrics.LayoutViewport.ClientWidth.Value,
+                Height = layoutMetrics.LayoutViewport.ClientHeight.Value,
+            };
         }
 
         internal async Task InitializeAsync()
@@ -179,11 +240,7 @@ namespace PlaywrightSharp.Chromium
                         break;
                 }
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 // TODO Add Logger
                 /*
@@ -215,7 +272,10 @@ namespace PlaywrightSharp.Chromium
 
         private void OnExecutionContextCreated(ExecutionContextDescription contextPayload)
         {
-            var auxData = contextPayload.AuxData?.ToObject<ExecutionContextDescriptionAuxData>();
+            var auxData = contextPayload.AuxData != null
+                ? ((JsonElement)contextPayload.AuxData).ToObject<ExecutionContextDescriptionAuxData>()
+                : null;
+
             Frame frame = null;
 
             if (contextPayload.AuxData != null && !Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out frame))

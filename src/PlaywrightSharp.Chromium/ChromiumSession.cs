@@ -56,11 +56,7 @@ namespace PlaywrightSharp.Chromium
             {
                 await _connection.RawSendASync(id, request.Command, request, _sessionId).ConfigureAwait(false);
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 if (waitForCallback && _callbacks.TryRemove(id, out _))
                 {

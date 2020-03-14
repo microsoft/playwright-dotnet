@@ -13,6 +13,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>headul.spec.js</playwright-file>
     ///<playwright-describe>Headful</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class HeadfulTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
@@ -64,7 +66,7 @@ namespace PlaywrightSharp.Tests.Launcher
             string cookie = await headlessPage.EvaluateAsync<string>("() => document.cookie");
             await headlessBrowser.CloseAsync();
 
-            Assert.Equal("foo=true, cookie", cookie);
+            Assert.Equal("foo=true", cookie);
         }
 
         ///<playwright-file>headul.spec.js</playwright-file>

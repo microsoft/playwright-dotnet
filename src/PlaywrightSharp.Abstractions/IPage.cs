@@ -725,7 +725,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/>.
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle> QuerySelectorAsync(string selector);
 
@@ -734,20 +734,9 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an array of <see cref="IElementHandle"/>.
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
-
-        /// <summary>
-        /// Executes a script in browser context.
-        /// </summary>
-        /// <param name="expression">Script to be evaluated in browser context.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string expression);
 
         /// <summary>
         /// Executes a script in browser context.

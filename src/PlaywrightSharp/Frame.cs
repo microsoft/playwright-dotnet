@@ -65,9 +65,11 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.ClickAsync(string, ClickOptions)"/>
-        public Task ClickAsync(string selector, ClickOptions options = null)
+        public async Task ClickAsync(string selector, ClickOptions options = null)
         {
-            throw new System.NotImplementedException();
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.ClickAsync(options).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
@@ -200,10 +202,7 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        internal Task<IFrameExecutionContext> GetUtilityContextAsync()
-        {
-            throw new NotImplementedException();
-        }
+        internal Task<IFrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
 
         internal void OnDetached()
         {
@@ -266,6 +265,78 @@ namespace PlaywrightSharp
             }
 
             return _contextData[contextType].ContextTask;
+        }
+
+        private async Task<IElementHandle> OptionallyWaitForSelectorInUtilityContextAsync(string selector, ClickOptions options)
+        {
+            options ??= new ClickOptions();
+            options.Timeout ??= Page.DefaultTimeout;
+
+            IElementHandle handle;
+
+            if (options.WaitFor != WaitForOption.NoWait)
+            {
+                var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, options.WaitFor, options.Timeout).ConfigureAwait(false);
+
+                if (maybeHandle == null)
+                {
+                    throw new PlaywrightSharpException($"No node found for selector: {SelectorToString(selector, options.WaitFor)}");
+                }
+
+                handle = maybeHandle;
+            }
+            else
+            {
+                var context = await GetContextAsync(ContextType.Utility).ConfigureAwait(false);
+                var maybeHandle = await context.QuerySelectorAsync(selector).ConfigureAwait(false);
+
+                if (maybeHandle == null)
+                {
+                    throw new PlaywrightSharpException($"No node found for selector: {selector}");
+                }
+
+                handle = maybeHandle!;
+            }
+
+            return handle;
+        }
+
+        private string SelectorToString(string selector, WaitForOption waitFor)
+        {
+            string label = waitFor switch
+            {
+                WaitForOption.Visible => "[visible] ",
+                WaitForOption.Hidden => "[hidden] ",
+                _ => string.Empty,
+            };
+            return $"{label}{selector}";
+        }
+
+        private async Task<ElementHandle> WaitForSelectorInUtilityContextAsync(string selector, WaitForOption waitFor, int? timeout)
+        {
+            var task = Dom.GetWaitForSelectorFunction(selector, waitFor, timeout);
+            var result = await ScheduleRerunnableTaskAsync(task, ContextType.Utility, timeout, $"selector \"{SelectorToString(selector, waitFor)}\"").ConfigureAwait(false);
+
+            if (!(result is ElementHandle))
+            {
+                await result.DisposeAsync().ConfigureAwait(false);
+                return null;
+            }
+
+            return result as ElementHandle;
+        }
+
+        private Task<IJSHandle> ScheduleRerunnableTaskAsync(Func<IFrameExecutionContext, Task<IJSHandle>> task, ContextType contextType, int? timeout, string title)
+        {
+            var data = _contextData[contextType];
+            var rerunnableTask = new RerunnableTask(data, task, timeout, title);
+            data.RerunnableTasks.Add(rerunnableTask);
+            if (data.Context != null)
+            {
+                _ = rerunnableTask.RerunAsync(data.Context);
+            }
+
+            return rerunnableTask.Task;
         }
     }
 }

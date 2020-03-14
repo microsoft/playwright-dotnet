@@ -148,7 +148,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/>.
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle> QuerySelectorAsync(string selector);
 
@@ -157,7 +157,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an array of <see cref="IElementHandle"/>.
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
 

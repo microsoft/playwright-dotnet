@@ -14,16 +14,16 @@ namespace PlaywrightSharp
         /// <param name="y">Y coordinate.</param>
         /// <param name="options">Extra options.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task MoveAsync(decimal x, decimal y, MoveOptions options = null);
+        Task MoveAsync(double x, double y, MoveOptions options = null);
 
         /// <summary>
-        /// Shortcut for <see cref="MoveAsync(decimal, decimal, MoveOptions)"/>, <see cref="DownAsync(ClickOptions)"/> and <see cref="UpAsync(ClickOptions)"/>.
+        /// Shortcut for <see cref="MoveAsync(double, double, MoveOptions)"/>, <see cref="DownAsync(ClickOptions)"/> and <see cref="UpAsync(ClickOptions)"/>.
         /// </summary>
         /// <param name="x">X coordinate.</param>
         /// <param name="y">Y coordinate.</param>
         /// <param name="options">Extra options.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task ClickAsync(decimal x, decimal y, ClickOptions options = null);
+        Task ClickAsync(double x, double y, ClickOptions options = null);
 
         /// <summary>
         /// Dispatches a <c>mousedown</c> event.
@@ -45,6 +45,6 @@ namespace PlaywrightSharp
         /// <param name="deltaX">delta X.</param>
         /// <param name="deltaY">delta Y.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task WheelAsync(decimal deltaX, decimal deltaY);
+        Task WheelAsync(double deltaX, double deltaY);
     }
 }

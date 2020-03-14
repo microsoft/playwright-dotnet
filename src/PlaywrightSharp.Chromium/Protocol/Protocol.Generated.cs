@@ -142,7 +142,7 @@ public AXValueType Type { get; set; }
 /// <summary>
 /// The computed value of this property.
 /// </summary>
-public JsonElement? Value { get; set; }
+public object Value { get; set; }
 /// <summary>
 /// One or more related nodes, if applicable.
 /// </summary>
@@ -3331,11 +3331,11 @@ public double?[] Bounds { get; set; }
 /// <summary>
 /// Shape coordinate details
 /// </summary>
-public JsonElement?[] Shape { get; set; }
+public object[] Shape { get; set; }
 /// <summary>
 /// Margin shape bounds
 /// </summary>
-public JsonElement?[] MarginShape { get; set; }}
+public object[] MarginShape { get; set; }}
 /// <summary>
 /// Rectangle.
 /// </summary>
@@ -14589,11 +14589,11 @@ public GPUDevice[] Devices { get; set; }
 /// <summary>
 /// An optional dictionary of additional GPU related attributes.
 /// </summary>
-public JsonElement? AuxAttributes { get; set; }
+public object AuxAttributes { get; set; }
 /// <summary>
 /// An optional dictionary of graphics features and their status.
 /// </summary>
-public JsonElement? FeatureStatus { get; set; }
+public object FeatureStatus { get; set; }
 /// <summary>
 /// An optional array of GPU driver bug workarounds.
 /// </summary>
@@ -15552,7 +15552,7 @@ public string InternalName { get; } = "Tracing.dataCollected";
 /// <summary>
 /// 
 /// </summary>
-public JsonElement?[] Value { get; set; }}
+public object[] Value { get; set; }}
 /// <summary>
 /// Signals that tracing is stopped and there is no trace buffers pending flush, all data were
 /// delivered via dataCollected events.
@@ -17963,7 +17963,7 @@ public string Reason { get; set; }
 /// <summary>
 /// Object containing break-specific auxiliary properties.
 /// </summary>
-public JsonElement? Data { get; set; }
+public object Data { get; set; }
 /// <summary>
 /// Hit breakpoints IDs
 /// </summary>
@@ -18034,7 +18034,7 @@ public string Hash { get; set; }
 /// <summary>
 /// Embedder-specific auxiliary data.
 /// </summary>
-public JsonElement? ExecutionContextAuxData { get; set; }
+public object ExecutionContextAuxData { get; set; }
 /// <summary>
 /// URL of source map associated with script (if any).
 /// </summary>
@@ -18100,7 +18100,7 @@ public string Hash { get; set; }
 /// <summary>
 /// Embedder-specific auxiliary data.
 /// </summary>
-public JsonElement? ExecutionContextAuxData { get; set; }
+public object ExecutionContextAuxData { get; set; }
 /// <summary>
 /// True, if this script is generated as a result of the live edit operation.
 /// </summary>
@@ -19029,7 +19029,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
 /// <summary>
 /// Mirror object referencing original JavaScript object.
 /// </summary>
-internal class RemoteObject
+internal class RemoteObject: IRemoteObject
 {
 /// <summary>
 /// Object type.
@@ -19046,7 +19046,7 @@ public string ClassName { get; set; }
 /// <summary>
 /// Remote object value in case of primitive values or JSON values (if it was requested).
 /// </summary>
-public JsonElement? Value { get; set; }
+public object Value { get; set; }
 /// <summary>
 /// Primitive value which can not be JSON-stringified does not have `value`, but gets this
 /// property.
@@ -19245,7 +19245,7 @@ internal class CallArgument
 /// <summary>
 /// Primitive value or serializable javascript object.
 /// </summary>
-public JsonElement? Value { get; set; }
+public object Value { get; set; }
 /// <summary>
 /// Primitive value which can not be JSON-stringified.
 /// </summary>
@@ -19275,7 +19275,7 @@ public string Name { get; set; }
 /// <summary>
 /// Embedder-specific auxiliary data.
 /// </summary>
-public JsonElement? AuxData { get; set; }}
+public object AuxData { get; set; }}
 /// <summary>
 /// Detailed information about exception (or error) that was thrown during script compilation or
 /// execution.
@@ -20192,7 +20192,7 @@ public RemoteObject Object { get; set; }
 /// <summary>
 /// 
 /// </summary>
-public JsonElement? Hints { get; set; }}
+public object Hints { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Schema
 {
