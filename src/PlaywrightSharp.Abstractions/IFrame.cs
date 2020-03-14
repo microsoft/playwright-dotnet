@@ -167,17 +167,6 @@ namespace PlaywrightSharp
         Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
         /// <summary>
-        /// Executes a function in the <see cref="IFrame"/> context. It returns an <see cref="IJSHandle"/> which points to the value returned by the function.
-        /// </summary>
-        /// <param name="expression">Script to be evaluated in browser context.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string expression);
-
-        /// <summary>
         /// Waits for a selector to be added to the DOM.
         /// </summary>
         /// <param name="selector">A selector of an element to wait for.</param>
