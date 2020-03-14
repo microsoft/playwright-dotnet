@@ -124,7 +124,7 @@ namespace PlaywrightSharp
         public async Task ScrollIntoViewIfNeededAsync()
         {
             string error = await EvaluateInUtility<string>(
-                @"/*is-playwright-function*/ async (node, pageJavascriptEnabled) => {
+                @"async (node, pageJavascriptEnabled) => {
                     if (!node.isConnected)
                         return 'Node is detached from document';
                     if (node.nodeType !== Node.ELEMENT_NODE)

@@ -81,7 +81,7 @@ namespace PlaywrightSharp.Helpers
         public static bool IsJavascriptFunction(this string script)
         {
             var parser = new JavaScriptParser(script);
-            var program = parser.ParseProgram();
+            var program = parser.ParseScript();
 
             if (program.Body.Count > 0 && program.Body[0] is ExpressionStatement expression)
             {

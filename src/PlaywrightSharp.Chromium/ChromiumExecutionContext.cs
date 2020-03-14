@@ -32,8 +32,7 @@ namespace PlaywrightSharp.Chromium
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
             RemoteObject remoteObject = null;
 
-            // is-playwright-function is a temporary bypass till we fix esprima
-            if (script.StartsWith("/*is-playwright-function*/") || script.IsJavascriptFunction())
+            if (script.IsJavascriptFunction())
             {
                 var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
                 {
