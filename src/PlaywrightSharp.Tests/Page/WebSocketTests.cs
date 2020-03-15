@@ -11,6 +11,5 @@ namespace PlaywrightSharp.Tests.Page.Network
         internal WebSocketTests(ITestOutputHelper output) : base(output)
         {
         }
-
     }
 }
