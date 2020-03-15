@@ -680,6 +680,15 @@ namespace PlaywrightSharp
         Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
 
         /// <summary>
+        /// Takes a screenshot of the page.
+        /// </summary>
+        /// <param name="options">Screenshot options.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a base64 <see cref="string"/>.
+        /// </returns>
+        Task<string> ScreenshotBase64Async(ScreenshotOptions options = null);
+
+        /// <summary>
         /// Sets the HTML markup to the page.
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
