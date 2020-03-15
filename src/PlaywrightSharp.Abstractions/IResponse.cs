@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -49,5 +50,17 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the text was processed, yielding to a text representation of response body.</returns>
         Task<string> GetTextAsync();
+
+        /// <summary>
+        /// Returns a <see cref="Task"/> which resolves to a <see cref="JsonDocument"/> representation of response body.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <see cref="JsonDocument"/> representation of response body.</returns>
+        Task<JsonDocument> GetJsonAsync();
+
+        /// <summary>
+        /// Returns a <see cref="Task"/> which resolves to a buffer with response body.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the response is returned by the server, yielding a <see cref="byte"/> array.</returns>
+        Task<byte[]> GetBufferAsync();
     }
 }
