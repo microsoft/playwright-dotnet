@@ -58,6 +58,12 @@ namespace PlaywrightSharp
         Task<JsonDocument> GetJsonAsync();
 
         /// <summary>
+        /// Returns a <see cref="Task"/> which resolves to a <typeparamref name="T"/> representation of response body.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <typeparamref name="T"/> representation of response body.</returns>
+        Task<T> GetJsonAsync<T>();
+
+        /// <summary>
         /// Returns a <see cref="Task"/> which resolves to a buffer with response body.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the response is returned by the server, yielding a <see cref="byte"/> array.</returns>

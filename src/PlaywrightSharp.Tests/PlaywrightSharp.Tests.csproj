@@ -5,7 +5,6 @@
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
         <LangVersion>8.0</LangVersion>
-        <ReleaseVersion>0.0.0</ReleaseVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -32,8 +31,5 @@
         <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
         <ProjectReference Include="..\PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj" />
         <ProjectReference Include="..\PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Page\Network\" />
     </ItemGroup>
 </Project>
