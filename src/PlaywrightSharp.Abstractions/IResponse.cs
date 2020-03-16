@@ -60,6 +60,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Returns a <see cref="Task"/> which resolves to a <typeparamref name="T"/> representation of response body.
         /// </summary>
+        /// <typeparam name="T">Return type.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <typeparamref name="T"/> representation of response body.</returns>
         Task<T> GetJsonAsync<T>();
 
