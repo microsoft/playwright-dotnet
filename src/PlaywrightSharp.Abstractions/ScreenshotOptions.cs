@@ -9,5 +9,21 @@ namespace PlaywrightSharp
         /// When <c>true</c>, takes a screenshot of the full scrollable page. Defaults to <c>false</c>.
         /// </summary>
         public bool FullPage { get; set; }
+
+        /// <summary>
+        /// Specifies clipping region of the page.
+        /// </summary>
+        public Clip Clip { get; set; }
+
+        /// <summary>
+        /// Hides default white background and allows capturing screenshots with transparency. Defaults to <c>false</c>.
+        /// </summary>
+        public bool OmitBackground { get; set; }
+
+        /// <summary>
+        /// Specify screenshot type, can be either jpeg or png. Defaults to 'png'.
+        /// </summary>
+        /// <value>The type.</value>
+        public ScreenshotType? Type { get; set; }
     }
 }

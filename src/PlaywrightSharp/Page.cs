@@ -494,6 +494,12 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IPage.ScreenshotBase64Async(ScreenshotOptions)"/>
+        public Task<string> ScreenshotBase64Async(ScreenshotOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
         internal void OnPopup(object popupPage)
         {
             throw new NotImplementedException();
