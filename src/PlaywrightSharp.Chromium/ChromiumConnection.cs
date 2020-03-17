@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Chromium
 
         internal int GetMessageId() => Interlocked.Increment(ref _lastId);
 
-        internal Task RawSendASync(int id, string method, object args, string sessionId)
+        internal Task RawSendAsync(int id, string method, object args, string sessionId)
             => _transport.SendAsync(new ConnectionRequest
             {
                 Id = id,

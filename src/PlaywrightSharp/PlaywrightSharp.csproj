@@ -34,7 +34,4 @@
             <_Parameter1>PlaywrightSharp.Webkit</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Transport\" />
-    </ItemGroup>
 </Project>

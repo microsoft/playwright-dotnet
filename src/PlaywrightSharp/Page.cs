@@ -503,10 +503,7 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        internal void OnPopup(object popupPage)
-        {
-            throw new NotImplementedException();
-        }
+        internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
 
         internal void DidDisconnected() => _disconnected = true;
 

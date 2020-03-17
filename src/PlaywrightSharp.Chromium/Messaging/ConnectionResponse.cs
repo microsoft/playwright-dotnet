@@ -1,4 +1,5 @@
 using System.Text.Json;
+using PlaywrightSharp.Messaging;
 
 namespace PlaywrightSharp.Chromium.Messaging
 {

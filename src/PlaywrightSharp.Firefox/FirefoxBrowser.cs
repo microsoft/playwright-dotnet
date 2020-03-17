@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Firefox.Protocol;
 using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
@@ -20,12 +22,11 @@ namespace PlaywrightSharp.Firefox
         {
             _app = app;
             _connection = connection;
-            _contexts = browserContextIds.ToDictionary(id => id, CreateBrowserContext);
+            _contexts = browserContextIds.ToDictionary(id => id, id => CreateBrowserContext(id));
+            DefaultContext = CreateBrowserContext(null);
 
-            TargetChanged?.Invoke(this, new TargetChangedArgs());
-            TargetCreated?.Invoke(this, new TargetChangedArgs());
-            TargetDestroyed?.Invoke(this, new TargetChangedArgs());
-            Disconnected?.Invoke(this, EventArgs.Empty);
+            _connection.Disconnected += OnDisconnected;
+            _connection.MessageReceived += OnMessageReceived;
         }
 
         /// <inheritdoc cref="IBrowser.TargetChanged"/>
@@ -44,10 +45,12 @@ namespace PlaywrightSharp.Firefox
         public IBrowserContext[] BrowserContexts => null;
 
         /// <inheritdoc cref="IBrowser.DefaultContext"/>
-        public IBrowserContext DefaultContext => null;
+        public IBrowserContext DefaultContext { get; }
 
         /// <inheritdoc cref="IBrowser.IsConnected"/>
-        public bool IsConnected => false;
+        public bool IsConnected => !_connection.IsClosed;
+
+        internal ConcurrentDictionary<string, FirefoxTarget> TargetsMap { get; } = new ConcurrentDictionary<string, FirefoxTarget>();
 
         /// <inheritdoc cref="IBrowser.CloseAsync"/>
         public Task CloseAsync()
@@ -90,9 +93,67 @@ namespace PlaywrightSharp.Firefox
             return browser;
         }
 
-        private IBrowserContext CreateBrowserContext(string browserContextId)
+        private async void OnMessageReceived(object sender, IFirefoxEvent e)
         {
-            return null;
+            switch (e)
+            {
+                case TargetTargetCreatedFirefoxEvent targetCreated:
+                    await OnTargetCreatedAsync(targetCreated).ConfigureAwait(false);
+                    break;
+                case TargetTargetDestroyedFirefoxEvent targetDestroyed:
+                    OnTargetDestroyed(targetDestroyed);
+                    break;
+                case TargetTargetInfoChangedFirefoxEvent targetInfoChanged:
+                    OnTargetInfoChanged(targetInfoChanged);
+                    break;
+            }
         }
+
+        private async Task OnTargetCreatedAsync(TargetTargetCreatedFirefoxEvent payload)
+        {
+            string targetId = payload.TargetId;
+            string url = payload.Url;
+            string browserContextId = payload.BrowserContextId;
+            string openerId = payload.OpenerId;
+            var type = payload.Type;
+
+            var context = browserContextId != null ? _contexts[browserContextId] : DefaultContext;
+            var target = new FirefoxTarget(_connection, this, context, targetId, type, url, openerId);
+            TargetsMap[targetId] = target;
+            var opener = target.Opener;
+
+            if (opener?.PageTsc != null)
+            {
+                var page = await opener.PageTsc.Task.ConfigureAwait(false);
+                if (page.HasPopupEventListeners)
+                {
+                    var popupPage = await target.PageAsync().ConfigureAwait(false);
+                    popupPage.OnPopup(this);
+                }
+            }
+        }
+
+        private void OnTargetDestroyed(TargetTargetDestroyedFirefoxEvent payload)
+        {
+            string targetId = payload.TargetId;
+            if (TargetsMap.TryRemove(targetId, out var target))
+            {
+                target.DidClose();
+            }
+        }
+
+        private void OnTargetInfoChanged(TargetTargetInfoChangedFirefoxEvent payload)
+        {
+            string targetId = payload.TargetId;
+            string url = payload.Url;
+            TargetsMap[targetId].Url = url;
+        }
+
+        private IBrowserContext CreateBrowserContext(string browserContextId, BrowserContextOptions options = null)
+        {
+            return new BrowserContext(new FirefoxBrowserContext(browserContextId, _connection, options ?? new BrowserContextOptions()));
+        }
+
+        private void OnDisconnected(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Firefox.Messaging
+namespace PlaywrightSharp.Messaging
 {
     internal class ConnectionError
     {

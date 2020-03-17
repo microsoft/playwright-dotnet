@@ -7,6 +7,7 @@ using PlaywrightSharp.Firefox.Messaging;
 using PlaywrightSharp.Firefox.Protocol;
 using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Messaging;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -17,7 +18,7 @@ namespace PlaywrightSharp.Firefox
         private readonly AsyncDictionaryHelper<string, FirefoxSession> _asyncSessions;
         private readonly IConnectionTransport _transport;
         private readonly ConcurrentDictionary<string, FirefoxSession> _sessions = new ConcurrentDictionary<string, FirefoxSession>();
-        private readonly ConcurrentDictionary<int, MessageTask> _callbacks = new ConcurrentDictionary<int, MessageTask>();
+        private readonly ConcurrentDictionary<int, MessageTask<IFirefoxResponse>> _callbacks = new ConcurrentDictionary<int, MessageTask<IFirefoxResponse>>();
         private int _lastId;
 
         public FirefoxConnection(IConnectionTransport transport)
@@ -31,7 +32,7 @@ namespace PlaywrightSharp.Firefox
 
         public event EventHandler<IFirefoxEvent> MessageReceived;
 
-        public event EventHandler Disconnected;
+        public event EventHandler<TransportClosedEventArgs> Disconnected;
 
         internal bool IsClosed { get; set; }
 
@@ -45,7 +46,7 @@ namespace PlaywrightSharp.Firefox
             where TFirefoxResponse : IFirefoxResponse
         {
             int id = GetMessageId();
-            MessageTask callback = new MessageTask
+            MessageTask<IFirefoxResponse> callback = new MessageTask<IFirefoxResponse>
             {
                 TaskWrapper = new TaskCompletionSource<IFirefoxResponse>(),
                 Method = request.Command,
@@ -54,7 +55,12 @@ namespace PlaywrightSharp.Firefox
 
             try
             {
-                await RawSendASync(id, request.Command, request).ConfigureAwait(false);
+                await RawSendAsync(new ConnectionRequest
+                {
+                    Id = id,
+                    Method = request.Command,
+                    Params = request,
+                }).ConfigureAwait(false);
             }
 
             // We need to silence exceptions on async void events.
@@ -64,7 +70,7 @@ namespace PlaywrightSharp.Firefox
             {
                 if (_callbacks.TryRemove(id, out _))
                 {
-                    callback.TaskWrapper.TrySetException(new PlaywrightSharpException(ex.Message, ex));
+                    callback.TaskWrapper.TrySetException(new MessageException(ex.Message, ex));
                 }
             }
 
@@ -72,12 +78,7 @@ namespace PlaywrightSharp.Firefox
             return (TFirefoxResponse)result;
         }
 
-        internal Task RawSendASync(int id, string method, object args) => _transport.SendAsync(new ConnectionRequest
-        {
-            Id = id,
-            Method = method,
-            Params = args,
-        }.ToJson());
+        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson());
 
         internal void Close(string closeReason)
         {
@@ -130,12 +131,6 @@ namespace PlaywrightSharp.Firefox
 
         private void ProcessIncomingMessage(ConnectionResponse obj)
         {
-            if (!obj.Params.HasValue)
-            {
-                GetSession(obj.SessionId ?? string.Empty)?.OnMessage(obj);
-                return;
-            }
-
             if (obj.Id == BrowserCloseMessageId)
             {
                 return;
@@ -147,22 +142,35 @@ namespace PlaywrightSharp.Firefox
                 string sessionId = targetAttachedToTarget.SessionId;
                 var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type, sessionId);
                 _asyncSessions.AddItem(sessionId, session);
-
-                return;
             }
-
-            if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
+            else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
             {
                 string sessionId = targetDetachedFromTarget.SessionId;
                 if (_sessions.TryRemove(sessionId, out var session))
                 {
                     session.OnClosed(targetDetachedFromTarget.InternalName);
                 }
-
-                return;
             }
 
-            MessageReceived?.Invoke(this, param);
+            if (obj.SessionId != null)
+            {
+                GetSession(obj.SessionId)?.OnMessage(obj);
+            }
+            else if (obj.Id.HasValue && _callbacks.TryRemove(obj.Id.Value, out var callback))
+            {
+                if (obj.Error != null)
+                {
+                    callback.TaskWrapper.TrySetException(new MessageException(callback, obj.Error));
+                }
+                else
+                {
+                    callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(obj.Method, obj.Result.Value.GetRawText()));
+                }
+            }
+            else
+            {
+                MessageReceived?.Invoke(this, param);
+            }
         }
     }
 }

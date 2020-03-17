@@ -45,27 +45,13 @@ namespace PlaywrightSharp.Protocol
         }
 
         public static TProtocolResponse ParseResponse(string command, string json)
-        {
-            try
-            {
-                return (TProtocolResponse)JsonSerializer.Deserialize(json, ResponsesMapper[command], JsonHelper.DefaultJsonSerializerOptions);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+            => ResponsesMapper.TryGetValue(command, out var type)
+                ? (TProtocolResponse)JsonSerializer.Deserialize(json, type, JsonHelper.DefaultJsonSerializerOptions)
+                : default;
 
         public static TProtocolEvent ParseEvent(string method, string json)
-        {
-            try
-            {
-                return (TProtocolEvent)JsonSerializer.Deserialize(json, EventsMapper[method], JsonHelper.DefaultJsonSerializerOptions);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+            => EventsMapper.TryGetValue(method, out var type)
+                ? (TProtocolEvent)JsonSerializer.Deserialize(json, type, JsonHelper.DefaultJsonSerializerOptions)
+                : default;
     }
 }

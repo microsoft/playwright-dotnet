@@ -7,5 +7,7 @@ namespace PlaywrightSharp.Firefox.Messaging
         public string Method { get; set; }
 
         public object Params { get; set; }
+
+        public string SessionId { get; set; }
     }
 }
