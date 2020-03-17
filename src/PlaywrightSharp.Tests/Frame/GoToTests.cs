@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.Frame
             // Navigate all frames to the same URL.
             var requestHandler = new RequestDelegate(async (context) =>
             {
-                if (int.TryParse(context.Request.Query["index"], out var index))
+                if (int.TryParse(context.Request.Query["index"], out int index))
                 {
                     await context.Response.WriteAsync(await matchingData[index].ServerResponseTcs.Task);
                 }
@@ -81,15 +81,15 @@ namespace PlaywrightSharp.Tests.Frame
             Server.SetRoute("/one-style.html?index=1", requestHandler);
             Server.SetRoute("/one-style.html?index=2", requestHandler);
 
-            for (var i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 var waitRequestTask = Server.WaitForRequest("/one-style.html");
                 matchingData[i].NavigationTask = matchingData[i].FrameTask.Result.GoToAsync($"{TestConstants.ServerUrl}/one-style.html?index={i}");
                 await waitRequestTask;
             }
             // Respond from server out-of-order.
-            var serverResponseTexts = new string[] { "AAA", "BBB", "CCC" };
-            for (var i = 0; i < 3; ++i)
+            string[] serverResponseTexts = new string[] { "AAA", "BBB", "CCC" };
+            for (int i = 0; i < 3; ++i)
             {
                 matchingData[i].ServerResponseTcs.TrySetResult(serverResponseTexts[i]);
                 var response = await matchingData[i].NavigationTask;
