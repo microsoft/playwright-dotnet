@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -49,12 +50,13 @@ namespace PlaywrightSharp.Tests.Page.Network
         [Fact]
         public async Task ShouldWorkForFetchRequests()
         {
+            await Page.GoToAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
             Page.Request += (sender, e) => requests.Add(e.Request);
 
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.EvaluateAsync("fetch('/empty.html')");
-            Assert.Equal(2, requests.Count);
+            await Page.EvaluateAsync("fetch('/digits/1.png')");
+            Assert.Single(requests.Where(r => !r.Url.Contains("favicon")));
             Assert.Equal(Page.MainFrame, requests[0].Frame);
         }
     }
