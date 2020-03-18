@@ -102,5 +102,10 @@ namespace PlaywrightSharp.Chromium
         {
             MessageReceived?.Invoke(this, e);
         }
+
+        internal Task DetachAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

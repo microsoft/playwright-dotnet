@@ -143,6 +143,12 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        /// <inheritdoc cref="IBrowser.GetPageTarget(IPage)"/>
+        public ITarget GetPageTarget(IPage page)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static Task<IBrowser> ConnectAsync(ConnectOptions options) => ConnectAsync(null, options);
 
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)

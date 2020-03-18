@@ -118,6 +118,9 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.Workers"/>
         public IWorker[] Workers => null;
 
+        /// <inheritdoc cref="IPage.Coverage"/>
+        public ICoverage Coverage => null;
+
         internal FrameManager FrameManager { get; }
 
         internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
