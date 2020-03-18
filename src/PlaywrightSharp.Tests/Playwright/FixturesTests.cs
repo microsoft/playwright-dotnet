@@ -1,16 +1,13 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Launcher
+namespace PlaywrightSharp.Tests.Playwright
 {
     ///<playwright-file>fixtures.spec.js</playwright-file>
     ///<playwright-describe>Fixtures</playwright-describe>
