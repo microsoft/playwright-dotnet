@@ -239,7 +239,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     .AppendLine("/// </summary>")
                     .Append("public ")
                     .Append(GetTypeOfProperty(property, isResponse))
-                    .Append(' ').Append(char.ToUpper(property.Name[0], CultureInfo.InvariantCulture)).Append(property.Name.Substring(1)).Append(' ')
+                    .Append(' ').Append(property.Name.ToPascalCase()).Append(' ')
                     .Append("{ get; set; }");
 
                 return builder.ToString();
