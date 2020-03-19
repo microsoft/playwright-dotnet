@@ -57,11 +57,7 @@ namespace PlaywrightSharp.Chromium
             {
                 await _connection.RawSendAsync(id, request.Command, request, _sessionId).ConfigureAwait(false);
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 if (waitForCallback && _callbacks.TryRemove(id, out _))
                 {
@@ -77,7 +73,7 @@ namespace PlaywrightSharp.Chromium
         {
             foreach (var callback in _callbacks)
             {
-                callback.Value.TaskWrapper.TrySetException(new PlaywrightSharpException($"Protocol error ({callback.Value.Method}): Target closed. {reason}"));
+                callback.Value.TaskWrapper.TrySetException(new TargetClosedException($"Protocol error ({callback.Value.Method}): Target closed. {reason}"));
             }
 
             _callbacks.Clear();
@@ -106,6 +102,11 @@ namespace PlaywrightSharp.Chromium
         internal void OnMessageReceived(object sender, IChromiumEvent e)
         {
             MessageReceived?.Invoke(this, e);
+        }
+
+        internal Task DetachAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

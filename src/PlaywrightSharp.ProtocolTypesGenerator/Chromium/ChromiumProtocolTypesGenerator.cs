@@ -51,7 +51,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 {
                     if (type.Type == "array")
                     {
-                        string itemType = ConvertJsToCsharp(type?.Items?.Type);
+                        string itemType = ConvertJsToCsharp(type?.Items?.Type, false);
                         if (itemType != null)
                         {
                             _knownTypes[type.Id] = itemType + "[]";
@@ -106,13 +106,20 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     builder.AppendLine("/// <summary>");
                     builder.Append("/// ").AppendLine(FormatDocs(type.Description));
                     builder.AppendLine("/// </summary>");
-                    builder.Append("internal class ").AppendLine(type.Id);
+                    builder.Append("internal class ").Append(type.Id).AppendLine(GetTypeInterfaces(type.Id));
                     builder.AppendLine("{");
-                    builder.AppendJoin("\n", NormalizeProperties(type.Properties));
+                    builder.AppendJoin("\n", NormalizeProperties(type.Properties, false));
                     builder.AppendLine("}");
                 }
             }
         }
+
+        private string GetTypeInterfaces(string id)
+            => id switch
+            {
+                "RemoteObject" => ": IRemoteObject",
+                _ => string.Empty
+            };
 
         private void GenerateCommands(StringBuilder builder, ChromiumProtocolDomain domain)
         {
@@ -140,7 +147,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.Append("public string Command { get; } = \"").Append(domain.Domain).Append('.').Append(command.Name).AppendLine("\";");
-                builder.AppendJoin("\n", NormalizeProperties(command.Parameters));
+                builder.AppendJoin("\n", NormalizeProperties(command.Parameters, false));
                 builder.AppendLine("}");
 
                 // response
@@ -149,7 +156,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.AppendLine("/// </summary>");
                 builder.Append("internal class ").Append(baseName).AppendLine("Response : IChromiumResponse");
                 builder.AppendLine("{");
-                builder.AppendJoin("\n", NormalizeProperties(command.Returns));
+                builder.AppendJoin("\n", NormalizeProperties(command.Returns, true));
                 builder.AppendLine("}");
             }
         }
@@ -173,7 +180,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.Append("internal class ").Append(domain.Domain).Append(eventName).AppendLine("ChromiumEvent : IChromiumEvent");
                 builder.AppendLine("{");
                 builder.Append("public string InternalName { get; } = \"").Append(domain.Domain).Append('.').Append(e.Name).AppendLine("\";");
-                builder.AppendJoin("\n", NormalizeProperties(e.Parameters));
+                builder.AppendJoin("\n", NormalizeProperties(e.Parameters, false));
                 builder.AppendLine("}");
             }
         }
@@ -184,7 +191,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
             .Replace("<", "&lt;", StringComparison.OrdinalIgnoreCase)
             .Replace(">", "&gt;", StringComparison.OrdinalIgnoreCase);
 
-        private string GetTypeOfProperty(ChromiumProtocolDomainProperty property)
+        private string GetTypeOfProperty(ChromiumProtocolDomainProperty property, bool isResponse)
         {
             if (property.Ref != null)
             {
@@ -193,18 +200,18 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
 
             return property.Type switch
             {
-                "array" => ConvertItemsProperty(property.Items),
-                _ => ConvertJsToCsharp(property.Type)
+                "array" => ConvertItemsProperty(property.Items, isResponse),
+                _ => ConvertJsToCsharp(property.Type, isResponse)
             };
         }
 
-        private string ConvertItemsProperty(ChromiumProtocolDomainItems items)
-            => (items.Type != null ? ConvertJsToCsharp(items.Type) : ConvertRefToCsharp(items.Ref)) + "[]";
+        private string ConvertItemsProperty(ChromiumProtocolDomainItems items, bool isResponse)
+            => (items.Type != null ? ConvertJsToCsharp(items.Type, isResponse) : ConvertRefToCsharp(items.Ref)) + "[]";
 
         private string ConvertRefToCsharp(string refValue)
             => _knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
 
-        private string ConvertJsToCsharp(string type)
+        private string ConvertJsToCsharp(string type, bool isResponse)
             => type switch
             {
                 "string" => "string",
@@ -212,12 +219,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 "integer" => "int?",
                 "boolean" => "bool?",
                 "binary" => "byte[]",
-                "any" => "JsonElement?",
-                "object" => "JsonElement?",
+                "any" => isResponse ? "JsonElement?" : "object",
+                "object" => isResponse ? "JsonElement?" : "object",
                 _ => null
             };
 
-        private string[] NormalizeProperties(ChromiumProtocolDomainProperty[] properties)
+        private string[] NormalizeProperties(ChromiumProtocolDomainProperty[] properties, bool isResponse)
         {
             if (properties == null)
             {
@@ -231,8 +238,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     .Append("/// ").AppendLine(FormatDocs(property.Description))
                     .AppendLine("/// </summary>")
                     .Append("public ")
-                    .Append(GetTypeOfProperty(property))
-                    .Append(' ').Append(property.Name.ToPascalCase()).Append(' ')
+                    .Append(GetTypeOfProperty(property, isResponse))
+                    .Append(' ').Append(char.ToUpper(property.Name[0], CultureInfo.InvariantCulture)).Append(property.Name.Substring(1)).Append(' ')
                     .Append("{ get; set; }");
 
                 return builder.ToString();

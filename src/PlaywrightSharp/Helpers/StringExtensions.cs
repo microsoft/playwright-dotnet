@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Esprima;
+using Esprima.Ast;
 
 namespace PlaywrightSharp.Helpers
 {
@@ -69,6 +71,24 @@ namespace PlaywrightSharp.Helpers
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Determin if the script is a javascript function and not an expression.
+        /// </summary>
+        /// <param name="script">Script to evaluate.</param>
+        /// <returns>Whether the script is a function or not.</returns>
+        public static bool IsJavascriptFunction(this string script)
+        {
+            var parser = new JavaScriptParser(script);
+            var program = parser.ParseScript();
+
+            if (program.Body.Count > 0 && program.Body[0] is ExpressionStatement expression)
+            {
+                return expression.Expression.Type == Nodes.ArrowFunctionExpression;
+            }
+
+            return false;
         }
 
         private static bool IsQuoted(this string value)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -561,14 +562,14 @@ button.style.position = 'absolute';
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.ClickAsync("button", new ClickOptions { Modifiers = new[] { ClickModifier.Shift } });
+            await Page.ClickAsync("button", new ClickOptions { Modifiers = new[] { Modifier.Shift } });
             Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
-            await Page.ClickAsync("button", new ClickOptions { Modifiers = new ClickModifier[] { } });
+            await Page.ClickAsync("button", new ClickOptions { Modifiers = new Modifier[] { } });
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.Keyboard.DownAsync("Shift");
 
-            await Page.ClickAsync("button", new ClickOptions { Modifiers = new ClickModifier[] { } });
+            await Page.ClickAsync("button", new ClickOptions { Modifiers = new Modifier[] { } });
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.ClickAsync("button");

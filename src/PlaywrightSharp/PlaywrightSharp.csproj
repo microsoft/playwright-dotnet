@@ -34,4 +34,23 @@
             <_Parameter1>PlaywrightSharp.Webkit</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Transport\" />
+        <Folder Include="Resources\" />
+        <Folder Include="Input\" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Esprima" Version="1.0.1270" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\injectedSource.ts" />
+        <None Remove="Resources\zsSelectorEngineSource.ts" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\injectedSource.ts" />
+        <EmbeddedResource Include="Resources\zsSelectorEngineSource.ts" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Input\Button.cs" />
+    </ItemGroup>
 </Project>

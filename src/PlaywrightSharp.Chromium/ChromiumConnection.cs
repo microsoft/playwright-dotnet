@@ -101,11 +101,7 @@ namespace PlaywrightSharp.Chromium
                 // _logger.LogTrace("◀ Receive {Message}", response);
                 ProcessIncomingMessage(obj);
             }
-
-            // We need to silence exceptions on async void events.
-#pragma warning disable CA1031 // Do not catch general exception types.
             catch (Exception ex)
-#pragma warning restore CA1031 // Do not catch general exception types.
             {
                 string message = $"Connection failed to process {e.Message}. {ex.Message}. {ex.StackTrace}";
 

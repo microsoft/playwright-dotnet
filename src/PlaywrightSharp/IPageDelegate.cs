@@ -1,5 +1,7 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -8,6 +10,16 @@ namespace PlaywrightSharp
     /// </summary>
     internal interface IPageDelegate
     {
+        /// <summary>
+        /// Internal keyboard implementation.
+        /// </summary>
+        IRawKeyboard RawKeyboard { get; }
+
+        /// <summary>
+        /// Internal mouse implementation.
+        /// </summary>
+        IRawMouse RawMouse { get; }
+
         /// <summary>
         /// Navigates a frame to an url.
         /// </summary>
@@ -23,7 +35,7 @@ namespace PlaywrightSharp
         /// <param name="arg">Argument to adpopt.</param>
         /// <param name="frameExecutionContext">Execution context.</param>
         /// <returns>A <see cref="Task"/> that completes when the argument is adopted, yielding the <see cref="ElementHandle"/>.</returns>
-        Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext);
+        Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext);
 
         /// <summary>
         /// Sets the viewport.
@@ -54,5 +66,25 @@ namespace PlaywrightSharp
         /// <param name="runBeforeUnload">Should run before unload.</param>
         /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
         Task ClosePageAsync(bool runBeforeUnload);
+
+        /// <summary>
+        /// Check if the <see cref="JsonElement"/> is an <see cref="ElementHandle"/>.
+        /// </summary>
+        /// <param name="remoteObject">Object to check.</param>
+        /// <returns>Whether the <see cref="JsonElement"/> is an <see cref="ElementHandle"/> or not.</returns>
+        bool IsElementHandle(IRemoteObject remoteObject);
+
+        /// <summary>
+        /// Gets the content quads.
+        /// </summary>
+        /// <param name="elementHandle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the quads are returned by the browser, yielding an array of <see cref="Quad"/>.</returns>
+        Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle);
+
+        /// <summary>
+        /// Gets the metrics of the viewport layout.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the metrics are returned by the browser, yielding its <see cref="LayoutMetric"/>.</returns>
+        Task<LayoutMetric> GetLayoutViewportAsync();
     }
 }

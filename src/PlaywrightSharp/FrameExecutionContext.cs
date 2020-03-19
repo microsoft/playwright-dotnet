@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    internal class FrameExecutionContext : IFrameExecutionContext
+    internal class FrameExecutionContext : ExecutionContext, IFrameExecutionContext
     {
-        private readonly IExecutionContextDelegate _delegate;
+        private int _injectedGeneration = -1;
+        private Task<IJSHandle> _injectedTask;
 
-        internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame)
+        internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame) : base(executionContextDelegate)
         {
-            _delegate = executionContextDelegate;
             Frame = frame;
         }
 
@@ -26,10 +29,10 @@ namespace PlaywrightSharp
 
             if (!args.Any(needsAdoption))
             {
-                return await _delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
+                return await Delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
             }
 
-            List<Task<ElementHandle>> toDispose = new List<Task<ElementHandle>>();
+            List<Task<IElementHandle>> toDispose = new List<Task<IElementHandle>>();
 
             var adoptedTasks = args.Select<object, Task<object>>(arg =>
             {
@@ -48,7 +51,7 @@ namespace PlaywrightSharp
             T result;
             try
             {
-                result = await _delegate.EvaluateAsync<T>(this, returnByValue, script, adoptedTasks.Select(t => t.Result).ToArray()).ConfigureAwait(false);
+                result = await Delegate.EvaluateAsync<T>(this, returnByValue, script, adoptedTasks.Select(t => t.Result).ToArray()).ConfigureAwait(false);
             }
             finally
             {
@@ -60,14 +63,53 @@ namespace PlaywrightSharp
             return result;
         }
 
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => EvaluateAsync<IJSHandle>(false, script, args);
 
-        internal JsonElement CreateHandle(JsonElement? remoteObject)
+        public Task<IElementHandle> QuerySelectorAsync(string selector)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IJSHandle> GetInjectedAsync()
+        {
+            var selectors = Selectors.Instance.Value;
+            if (_injectedTask != null && selectors.Generation != _injectedGeneration)
+            {
+                _ = _injectedTask.ContinueWith(handleTask => handleTask.Result.DisposeAsync(), TaskScheduler.Default);
+                _injectedTask = null;
+            }
+
+            if (_injectedTask == null)
+            {
+                string source = $@"
+                    new ({await GetInjectedSource().ConfigureAwait(false)})([
+                      {string.Join(",\n", await selectors.GetSourcesAsync().ConfigureAwait(false))},
+                    ])
+                  ";
+                _injectedTask = EvaluateHandleAsync(source);
+                _injectedGeneration = selectors.Generation;
+            }
+
+            return await _injectedTask.ConfigureAwait(false);
+        }
+
+        internal override IJSHandle CreateHandle(IRemoteObject remoteObject)
+        {
+            if (Frame.Page.Delegate.IsElementHandle(remoteObject))
+            {
+                return new ElementHandle(this, remoteObject);
+            }
+
+            return base.CreateHandle(remoteObject);
+        }
+
+        private async Task<string> GetInjectedSource()
+        {
+            using var stream = typeof(FrameExecutionContext).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.injectedSource.ts");
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return await reader.ReadToEndAsync().ConfigureAwait(false);
+            }
         }
     }
 }

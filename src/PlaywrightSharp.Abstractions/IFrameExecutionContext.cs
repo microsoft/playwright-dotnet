@@ -23,6 +23,12 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(bool returnByValue, string script, params object[] args);
 
         /// <summary>
+        /// Returns the injected <see cref="IJSHandle"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the injected <see cref="IJSHandle"/> is resolved, yeilding the <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> GetInjectedAsync();
+
+        /// <summary>
         /// Executes a script in the frame's context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
@@ -47,5 +53,14 @@ namespace PlaywrightSharp
         /// <seealso cref="IFrame.EvaluateHandleAsync(string, object[])"/>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/>.</returns>
         Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
+
+        /// <summary>
+        /// The method runs <c>document.querySelector</c> within the element. If no element matches the selector, the return value resolve to <c>null</c>.
+        /// </summary>
+        /// <param name="selector">A selector to query element for.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an <see cref="IElementHandle"/>.
+        /// </returns>
+        Task<IElementHandle> QuerySelectorAsync(string selector);
     }
 }

@@ -8,10 +8,15 @@ namespace PlaywrightSharp
     {
         private readonly IBrowserContextDelegate _delegate;
 
-        internal BrowserContext(IBrowserContextDelegate browserContextDelegate)
+        internal BrowserContext(IBrowserContextDelegate browserContextDelegate) : this(browserContextDelegate, null)
+        {
+        }
+
+        internal BrowserContext(IBrowserContextDelegate browserContextDelegate, BrowserContextOptions options)
         {
             _delegate = browserContextDelegate;
             _delegate.BrowserContext = this;
+            Options = options ?? new BrowserContextOptions();
         }
 
         /// <inheritdoc cref="IBrowserContext.Options"/>

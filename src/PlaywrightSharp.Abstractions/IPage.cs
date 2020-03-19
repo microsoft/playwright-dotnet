@@ -233,6 +233,11 @@ namespace PlaywrightSharp
         IWorker[] Workers { get; }
 
         /// <summary>
+        /// Browser-specific Coverage implementation, only available for Chromium atm.
+        /// </summary>
+        ICoverage Coverage { get; }
+
+        /// <summary>
         /// Returns page's title.
         /// </summary>
         /// <returns>A <see cref="Task"/> the completes when the title is resolved, yielding the page's title.</returns>
@@ -680,6 +685,15 @@ namespace PlaywrightSharp
         Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
 
         /// <summary>
+        /// Takes a screenshot of the page.
+        /// </summary>
+        /// <param name="options">Screenshot options.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a base64 <see cref="string"/>.
+        /// </returns>
+        Task<string> ScreenshotBase64Async(ScreenshotOptions options = null);
+
+        /// <summary>
         /// Sets the HTML markup to the page.
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
@@ -725,7 +739,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an <see cref="IElementHandle"/>.
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle> QuerySelectorAsync(string selector);
 
@@ -734,20 +748,9 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the javascription function finishes, yielding an array of <see cref="IElementHandle"/>.
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
         Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
-
-        /// <summary>
-        /// Executes a script in browser context.
-        /// </summary>
-        /// <param name="expression">Script to be evaluated in browser context.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string expression);
 
         /// <summary>
         /// Executes a script in browser context.

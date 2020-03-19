@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// JSHandle represents an in-page JavaScript object. JSHandles can be created with the <see cref="IPage.EvaluateHandleAsync(string)"/> and <see cref="IPage.EvaluateHandleAsync(string, object[])"/> methods.
+    /// JSHandle represents an in-page JavaScript object. JSHandles can be created with the <see cref="IPage.EvaluateHandleAsync(string, object[])"/> method.
     /// </summary>
     public interface IJSHandle
     {
@@ -44,6 +44,6 @@ namespace PlaywrightSharp
         /// Disposes the Handle. It will mark the JSHandle as disposed and release the <see cref="IJSHandle"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the handle is disposed.</returns>
-        Task DisposeAsync();
+        internal Task DisposeAsync();
     }
 }
