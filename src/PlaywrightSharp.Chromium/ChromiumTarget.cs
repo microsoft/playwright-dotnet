@@ -108,6 +108,12 @@ namespace PlaywrightSharp.Chromium
             return _workerTask;
         }
 
+        /// <inheritdoc cref="ITarget.GetPageAsync"/>
+        public Task<IPage> GetPageAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         internal async Task<IPage> PageAsync()
         {
             if ((Type == TargetType.Page || Type == TargetType.BackgroundPage) && PageTask == null)
