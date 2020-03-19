@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Firefox
         private readonly IBrowserContext _context;
         private readonly string _targetId;
         private readonly string _openerId;
-        private FirefoxPage _page;
+        private Page _page;
 
         public FirefoxTarget(FirefoxConnection connection, FirefoxBrowser firefoxBrowser, IBrowserContext context, string targetId, TargetInfoType type, string url, string openerId)
         {
@@ -37,19 +37,43 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="ITarget.Type"/>
         public TargetType Type { get; }
 
+        internal bool IsInitialized { get; set; }
+
         internal FirefoxTarget Opener => _openerId != null ?
             _browser.TargetsMap[_openerId] : null;
 
-        internal TaskCompletionSource<Page> PageTsc { get; private set; }
-
-        internal Task<Page> PageAsync()
-        {
-            throw new NotImplementedException();
-        }
+        internal Task<Page> PageTask => CreatePageAsync();
 
         internal void DidClose()
         {
             _page?.DidClose();
+        }
+
+        private async Task<Page> CreatePageAsync()
+        {
+            if (Type != TargetType.Page)
+            {
+                throw new PlaywrightSharpException($"Cannot create page for \"{Type}\" target");
+            }
+
+            FirefoxPage firefoxPage;
+            if (PageTask == null)
+            {
+                var session = await _connection.CreateSessionAsync(_targetId).ConfigureAwait(false);
+                firefoxPage = new FirefoxPage(session, _context, () =>
+                {
+                    var openerTarget = Opener;
+                    if (openerTarget == null)
+                    {
+                        return Task.FromResult<Page>(null);
+                    }
+
+                    return openerTarget.PageTask;
+                });
+                _page = firefoxPage.Page;
+            }
+
+            return _page;
         }
     }
 }

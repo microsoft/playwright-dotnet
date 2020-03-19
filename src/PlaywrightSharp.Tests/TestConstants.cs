@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
 using PlaywrightSharp.Chromium;
+using PlaywrightSharp.Firefox;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
@@ -17,7 +18,7 @@ namespace PlaywrightSharp.Tests
         public const string FirefoxProduct = "FIREFOX";
 
         public static string Product => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PRODUCT")) ?
-            ChromiumProduct :
+            FirefoxProduct :
             Environment.GetEnvironmentVariable("PRODUCT");
 
         public const string TestFixtureCollectionName = "PlaywrightSharpLoaderFixture collection";
@@ -31,7 +32,7 @@ namespace PlaywrightSharp.Tests
             => Product switch
             {
                 WebkitProduct => null,
-                FirefoxProduct => null,
+                FirefoxProduct => new FirefoxBrowserType(),
                 ChromiumProduct => new ChromiumBrowserType(),
                 _ => throw new ArgumentOutOfRangeException($"product {Product} does not exist")
             };

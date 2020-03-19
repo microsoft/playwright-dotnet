@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Firefox
@@ -306,24 +307,26 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
         public string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
-            if (options?.Devtools == true)
+            options ??= new BrowserArgOptions();
+            if (options.Devtools == true)
             {
                 throw new PlaywrightSharpException("Option \"devtools\" is not supported by Firefox");
             }
 
             var firefoxArguments = new List<string>(DefaultArgs);
-            if (!string.IsNullOrEmpty(options?.UserDataDir))
+            if (!string.IsNullOrEmpty(options.UserDataDir))
             {
                 firefoxArguments.Add("-profile");
                 firefoxArguments.Add(options.UserDataDir);
             }
 
-            if (options?.Headless == true)
+            bool headless = options.Headless.HasValue ? options.Headless.Value : !(options.Devtools == true);
+            if (headless)
             {
                 firefoxArguments.Add("-headless");
             }
 
-            if (options?.Args != null)
+            if (options.Args != null)
             {
                 firefoxArguments.AddRange(options.Args);
             }
@@ -367,7 +370,7 @@ namespace PlaywrightSharp.Firefox
                     }
 
                     var transport = await BrowserHelper.CreateTransportAsync(browserApp.ConnectOptions).ConfigureAwait(false);
-                    await transport.SendAsync(new Protocol.Browser.CloseRequest().Command).ConfigureAwait(false);
+                    await transport.SendAsync(new BrowserCloseRequest().Command).ConfigureAwait(false);
                 },
                 (exitCode) =>
                 {
@@ -433,7 +436,7 @@ namespace PlaywrightSharp.Firefox
 
             if (!firefoxArguments.Contains("-juggler"))
             {
-                firefoxArguments.Insert(0, "-juggler");
+                firefoxArguments.InsertRange(0, new[] { "-juggler", "0" });
             }
 
             TempDirectory temporaryProfileDir = null;
@@ -512,7 +515,7 @@ namespace PlaywrightSharp.Firefox
 
             foreach (var pair in prefs)
             {
-                userJS.Add($"user_pref(\"{pair.Key}\", ${JsonSerializer.Serialize(pair.Value, pair.Value.GetType())});");
+                userJS.Add($"user_pref(\"{pair.Key}\", {JsonSerializer.Serialize(pair.Value, pair.Value.GetType())});");
             }
 
             File.WriteAllText(Path.Combine(tempDir.Path, "user.js"), string.Join("\n", userJS));

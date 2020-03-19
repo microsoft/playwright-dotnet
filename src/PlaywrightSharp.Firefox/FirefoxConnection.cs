@@ -90,6 +90,12 @@ namespace PlaywrightSharp.Firefox
 
         internal FirefoxSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 
+        internal async Task<FirefoxSession> CreateSessionAsync(string targetId)
+        {
+            var response = await SendAsync(new TargetAttachToTargetRequest { TargetId = targetId }).ConfigureAwait(false);
+            return GetSession(response.SessionId);
+        }
+
         private void Transport_Closed(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, e);
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e) => ProcessMessage(e);
@@ -136,19 +142,26 @@ namespace PlaywrightSharp.Firefox
                 return;
             }
 
-            var param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
-            if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
+            if (obj.Params?.ValueKind == JsonValueKind.Object)
             {
-                string sessionId = targetAttachedToTarget.SessionId;
-                var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type, sessionId);
-                _asyncSessions.AddItem(sessionId, session);
-            }
-            else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
-            {
-                string sessionId = targetDetachedFromTarget.SessionId;
-                if (_sessions.TryRemove(sessionId, out var session))
+                var param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
+                if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
                 {
-                    session.OnClosed(targetDetachedFromTarget.InternalName);
+                    string sessionId = targetAttachedToTarget.SessionId;
+                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type, sessionId);
+                    _asyncSessions.AddItem(sessionId, session);
+                }
+                else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
+                {
+                    string sessionId = targetDetachedFromTarget.SessionId;
+                    if (_sessions.TryRemove(sessionId, out var session))
+                    {
+                        session.OnClosed(targetDetachedFromTarget.InternalName);
+                    }
+                }
+                else
+                {
+                    MessageReceived?.Invoke(this, param);
                 }
             }
 
@@ -164,12 +177,8 @@ namespace PlaywrightSharp.Firefox
                 }
                 else
                 {
-                    callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(obj.Method, obj.Result.Value.GetRawText()));
+                    callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText() ?? "{}"));
                 }
-            }
-            else
-            {
-                MessageReceived?.Invoke(this, param);
             }
         }
     }

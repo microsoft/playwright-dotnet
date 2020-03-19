@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Protocol;
+using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Firefox
         {
             _app = app;
             _connection = connection;
-            _contexts = browserContextIds.ToDictionary(id => id, id => CreateBrowserContext(id));
+            _contexts = browserContextIds.ToDictionary(id => id, id => (IBrowserContext)CreateBrowserContext(id));
             DefaultContext = CreateBrowserContext(null);
 
             _connection.Disconnected += OnDisconnected;
@@ -47,15 +48,29 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowser.DefaultContext"/>
         public IBrowserContext DefaultContext { get; }
 
+        /// <summary>
+        /// Dafault wait time in milliseconds. Defaults to 30 seconds.
+        /// </summary>
+        public int DefaultWaitForTimeout { get; set; } = Playwright.DefaultTimeout;
+
         /// <inheritdoc cref="IBrowser.IsConnected"/>
         public bool IsConnected => !_connection.IsClosed;
 
         internal ConcurrentDictionary<string, FirefoxTarget> TargetsMap { get; } = new ConcurrentDictionary<string, FirefoxTarget>();
 
         /// <inheritdoc cref="IBrowser.CloseAsync"/>
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            throw new NotImplementedException();
+            var tsc = new TaskCompletionSource<bool>();
+            void EventHandler(object sender, EventArgs e)
+            {
+                tsc.TrySetResult(true);
+                _connection.Disconnected -= EventHandler;
+            }
+
+            _connection.Disconnected += EventHandler;
+            await _connection.SendAsync(new BrowserCloseRequest()).ConfigureAwait(false);
+            await tsc.Task.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowser.DisconnectAsync"/>
@@ -71,15 +86,39 @@ namespace PlaywrightSharp.Firefox
         public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
         /// <inheritdoc cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>
-        public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
+        public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
         {
-            throw new NotImplementedException();
+            string browserContextId = (await _connection.SendAsync(new TargetCreateBrowserContextRequest()).ConfigureAwait(false)).BrowserContextId;
+            if (options?.IgnoreHTTPSErrors == true)
+            {
+                await _connection.SendAsync(new BrowserSetIgnoreHTTPSErrorsRequest { Enabled = true }).ConfigureAwait(false);
+            }
+
+            var context = CreateBrowserContext(browserContextId, options);
+            await context.InitializeAsync().ConfigureAwait(false);
+            _contexts[browserContextId] = context;
+            return context;
         }
 
         /// <inheritdoc cref="IBrowser.WaitForTargetAsync(Func{ITarget, bool}, WaitForOptions)"/>
         public Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null)
         {
-            throw new NotImplementedException();
+            int timeout = options?.Timeout ?? DefaultWaitForTimeout;
+            var existingTarget = GetAllTargets().FirstOrDefault(predicate);
+            if (existingTarget != null)
+            {
+                return Task.FromResult(existingTarget);
+            }
+
+            var tsc = new TaskCompletionSource<ITarget>();
+            void TargetChangedHandler(object sender, TargetChangedArgs e)
+            {
+                tsc.TrySetResult(e.Target);
+                TargetChanged -= TargetChangedHandler;
+            }
+
+            TargetChanged += TargetChangedHandler;
+            return tsc.Task.WithTimeout(timeout);
         }
 
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
@@ -92,6 +131,8 @@ namespace PlaywrightSharp.Firefox
             await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
             return browser;
         }
+
+        internal IEnumerable<FirefoxTarget> GetAllTargets() => TargetsMap.Values;
 
         private async void OnMessageReceived(object sender, IFirefoxEvent e)
         {
@@ -122,15 +163,17 @@ namespace PlaywrightSharp.Firefox
             TargetsMap[targetId] = target;
             var opener = target.Opener;
 
-            if (opener?.PageTsc != null)
+            if (opener?.PageTask != null)
             {
-                var page = await opener.PageTsc.Task.ConfigureAwait(false);
+                var page = await opener.PageTask.ConfigureAwait(false);
                 if (page.HasPopupEventListeners)
                 {
-                    var popupPage = await target.PageAsync().ConfigureAwait(false);
+                    var popupPage = await target.PageTask.ConfigureAwait(false);
                     popupPage.OnPopup(this);
                 }
             }
+
+            TargetCreated?.Invoke(this, new TargetChangedArgs { Target = target });
         }
 
         private void OnTargetDestroyed(TargetTargetDestroyedFirefoxEvent payload)
@@ -139,17 +182,20 @@ namespace PlaywrightSharp.Firefox
             if (TargetsMap.TryRemove(targetId, out var target))
             {
                 target.DidClose();
+                TargetDestroyed?.Invoke(this, new TargetChangedArgs { Target = target });
             }
         }
 
         private void OnTargetInfoChanged(TargetTargetInfoChangedFirefoxEvent payload)
         {
             string targetId = payload.TargetId;
-            string url = payload.Url;
-            TargetsMap[targetId].Url = url;
+            TargetsMap[targetId].Url = payload.Url;
+            var target = TargetsMap[targetId];
+
+            TargetChanged?.Invoke(this, new TargetChangedArgs { Target = target });
         }
 
-        private IBrowserContext CreateBrowserContext(string browserContextId, BrowserContextOptions options = null)
+        private BrowserContext CreateBrowserContext(string browserContextId, BrowserContextOptions options = null)
         {
             return new BrowserContext(new FirefoxBrowserContext(browserContextId, _connection, options ?? new BrowserContextOptions()));
         }

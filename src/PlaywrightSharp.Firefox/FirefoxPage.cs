@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Firefox
@@ -5,7 +6,20 @@ namespace PlaywrightSharp.Firefox
     /// <inheritdoc cref="IPageDelegate"/>
     internal class FirefoxPage : IPageDelegate
     {
-        private readonly Page _page;
+        private readonly FirefoxSession _session;
+        private readonly IBrowserContext _context;
+        private readonly Func<Task<Page>> _openerResolver;
+
+        public FirefoxPage(FirefoxSession session, IBrowserContext context, Func<Task<Page>> openerResolver)
+        {
+            _session = session;
+            _context = context;
+            _openerResolver = openerResolver;
+
+            Page = new Page(this, _context);
+        }
+
+        internal Page Page { get; }
 
         public Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
         {
@@ -27,6 +41,6 @@ namespace PlaywrightSharp.Firefox
             throw new System.NotImplementedException();
         }
 
-        internal void DidClose() => _page.DidClose();
+        internal void DidClose() => Page.DidClose();
     }
 }

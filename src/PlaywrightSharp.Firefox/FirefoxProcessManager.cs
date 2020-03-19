@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Firefox
 
         public FirefoxProcessManager(
             string firefoxExecutable,
-            List<string> chromiumArgs,
+            List<string> firefoxArgs,
             TempDirectory tempUserDataDir,
             int timeout,
             Func<Task> attemptToGracefullyCloseFunc,
@@ -39,8 +39,9 @@ namespace PlaywrightSharp.Firefox
             };
             Process.StartInfo.UseShellExecute = false;
             Process.StartInfo.FileName = firefoxExecutable;
-            Process.StartInfo.Arguments = string.Join(" ", chromiumArgs);
+            Process.StartInfo.Arguments = string.Join(" ", firefoxArgs);
             Process.StartInfo.RedirectStandardError = true;
+            Process.StartInfo.RedirectStandardOutput = true;
         }
 
         /// <summary>
@@ -322,6 +323,7 @@ namespace PlaywrightSharp.Firefox
                         p.Process.Start();
                         await Started.EnterFromAsync(p, this).ConfigureAwait(false);
 
+                        p.Process.BeginOutputReadLine();
                         p.Process.BeginErrorReadLine();
 
                         int timeout = p.Timeout;
@@ -343,11 +345,15 @@ namespace PlaywrightSharp.Firefox
                             throw;
                         }
                     }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.Message);
+                    }
                     finally
                     {
                         cts?.Dispose();
                         p.Process.Exited -= OnProcessExitedWhileStarting;
-                        p.Process.ErrorDataReceived -= OnProcessDataReceivedWhileStarting;
+                        p.Process.OutputDataReceived -= OnProcessDataReceivedWhileStarting;
                     }
                 }
             }
