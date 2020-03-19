@@ -44,6 +44,9 @@ namespace PlaywrightSharp.Firefox
 
         internal Task<Page> PageTask => CreatePageAsync();
 
+        /// <inheritdoc cref="ITarget.GetPageAsync"/>
+        public Task<IPage> GetPageAsync() => Task.FromResult<IPage>(null);
+
         internal void DidClose()
         {
             _page?.DidClose();

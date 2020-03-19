@@ -121,6 +121,12 @@ namespace PlaywrightSharp.Firefox
             return tsc.Task.WithTimeout(timeout);
         }
 
+        /// <inheritdoc cref="IBrowser.GetPageTarget(IPage)" />
+        public ITarget GetPageTarget(IPage page)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
         {
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);

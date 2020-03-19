@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -19,9 +20,13 @@ namespace PlaywrightSharp.Firefox
             Page = new Page(this, _context);
         }
 
+        public IRawKeyboard RawKeyboard => throw new NotImplementedException();
+
+        public IRawMouse RawMouse => throw new NotImplementedException();
+
         internal Page Page { get; }
 
-        public Task<ElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
         {
             throw new System.NotImplementedException();
         }
@@ -29,6 +34,21 @@ namespace PlaywrightSharp.Firefox
         public Task ClosePageAsync(bool runBeforeUnload)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LayoutMetric> GetLayoutViewportAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsElementHandle(IRemoteObject remoteObject)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)

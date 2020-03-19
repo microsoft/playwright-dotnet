@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.DOM;
@@ -12,8 +11,8 @@ using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Page;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Chromium.Protocol.Security;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Chromium
 {
