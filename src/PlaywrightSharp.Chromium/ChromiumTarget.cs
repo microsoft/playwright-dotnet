@@ -136,6 +136,11 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        internal Task<ChromiumSession> CreateCDPSessionAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         internal void DidClose() => _page?.DidClose();
 
         private static Task<Worker> WorkerInternalAsync() => Task.FromResult<Worker>(null);

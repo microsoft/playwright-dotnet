@@ -73,6 +73,13 @@ namespace PlaywrightSharp
         Task DisconnectAsync();
 
         /// <summary>
+        /// Gets the <see cref="IPage"/> <see cref="ITarget"/>.
+        /// </summary>
+        /// <param name="page">Page to evaluate.</param>
+        /// <returns><see cref="IPage"/> main target.</returns>
+        ITarget GetPageTarget(IPage page);
+
+        /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
         /// </summary>
         /// <param name="options">Context options.</param>

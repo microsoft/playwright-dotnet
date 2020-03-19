@@ -233,6 +233,11 @@ namespace PlaywrightSharp
         IWorker[] Workers { get; }
 
         /// <summary>
+        /// Browser-specific Coverage implementation, only available for Chromium atm.
+        /// </summary>
+        ICoverage Coverage { get; }
+
+        /// <summary>
         /// Returns page's title.
         /// </summary>
         /// <returns>A <see cref="Task"/> the completes when the title is resolved, yielding the page's title.</returns>
