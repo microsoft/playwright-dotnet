@@ -59,6 +59,19 @@ namespace PlaywrightSharp
         bool IsConnected { get; }
 
         /// <summary>
+        /// Starts tracing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        /// <param name="options">Tracing options.</param>
+        Task StartTracingAsync(TracingOptions options = null);
+
+        /// <summary>
+        /// Stops tracing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser, yielding the tracing result.</returns>
+        Task<string> StopTracingAsync();
+
+        /// <summary>
         /// Closes browser and all of its pages (if any were opened).
         /// The Browser object itself is considered to be disposed and cannot be used anymore.
         /// </summary>

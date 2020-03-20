@@ -149,6 +149,18 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IBrowser.StartTracingAsync(TracingOptions)"/>
+        public Task StartTracingAsync(TracingOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IBrowser.StopTracingAsync"/>
+        public Task<string> StopTracingAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         internal static Task<IBrowser> ConnectAsync(ConnectOptions options) => ConnectAsync(null, options);
 
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
