@@ -95,7 +95,6 @@ namespace PlaywrightSharp.Tests.Chromium
             string jsonString = File.ReadAllText(_file);
             var traceJson = JsonDocument.Parse(jsonString);
             Assert.Contains("disabled-by-default-v8.cpu_profiler.hires", traceJson.RootElement.GetProperty("metadata").GetProperty("trace-config").ToString());
-
         }
 
         ///<playwright-file>chromium/tracing.spec.js</playwright-file>
