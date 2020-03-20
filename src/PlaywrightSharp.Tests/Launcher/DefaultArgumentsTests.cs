@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Launcher
                 Playwright.GetDefaultArgs(new BrowserArgOptions { Headless = false }));
 
             Assert.Contains(
-                TestConstants.IsFirefox ? "foo" : "--user-data-dir=foo",
+                TestConstants.IsFirefox ? "foo" : "--user-data-dir=\"foo\"",
                 Playwright.GetDefaultArgs(new BrowserArgOptions { UserDataDir = "foo" }));
 
         }
