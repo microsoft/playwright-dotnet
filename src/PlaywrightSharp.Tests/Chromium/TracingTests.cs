@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Path = _file
             });
             var newPage = await Browser.DefaultContext.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
                 await Browser.StartTracingAsync(new TracingOptions
                 {
@@ -132,8 +132,8 @@ namespace PlaywrightSharp.Tests.Chromium
                 Path = _file
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var trace = await Browser.StopTracingAsync();
-            var buf = File.ReadAllText(_file);
+            string trace = await Browser.StopTracingAsync();
+            string buf = File.ReadAllText(_file);
             Assert.Equal(trace, buf);
         }
 
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             await Browser.StartTracingAsync();
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var trace = await Browser.StopTracingAsync();
+            string trace = await Browser.StopTracingAsync();
             Assert.NotNull(trace);
         }
 
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Screenshots = true
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var trace = await Browser.StopTracingAsync();
+            string trace = await Browser.StopTracingAsync();
             Assert.Contains("screenshot", trace);
         }
     }

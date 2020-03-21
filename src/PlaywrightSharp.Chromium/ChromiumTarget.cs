@@ -65,11 +65,17 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        /// <inheritdoc cref="ITarget"/>
+        /// <inheritdoc cref="ITarget.Url"/>
         public string Url => TargetInfo.Url;
 
-        /// <inheritdoc cref="ITarget"/>
+        /// <inheritdoc cref="ITarget.Type"/>
         public TargetType Type => TargetInfo.GetTargetType();
+
+        /// <inheritdoc cref="ITarget.BrowserContext"/>
+        public IBrowserContext BrowserContext { get; }
+
+        /// <inheritdoc cref="ITarget.Opener"/>
+        ITarget ITarget.Opener => Opener;
 
         internal bool IsInitialized { get; set; }
 
@@ -78,8 +84,6 @@ namespace PlaywrightSharp.Chromium
         internal string TargetId => TargetInfo.TargetId;
 
         internal ChromiumTarget Opener => TargetInfo.OpenerId != null ? _browser.TargetsMap.GetValueOrDefault(TargetInfo.OpenerId) : null;
-
-        internal IBrowserContext BrowserContext { get; }
 
         internal Task<bool> InitializedTask => _initializedTaskWrapper.Task;
 
@@ -113,6 +117,9 @@ namespace PlaywrightSharp.Chromium
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc cref="ITarget.GetWorkerAsync"/>
+        public Task<IWorker> GetWorkerAsync() => Task.FromResult<IWorker>(null);
 
         internal async Task<IPage> PageAsync()
         {
