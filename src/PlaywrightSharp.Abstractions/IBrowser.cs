@@ -129,7 +129,7 @@ namespace PlaywrightSharp
         /// Get all the browser's targets.
         /// </summary>
         /// <param name="context">Optional <see cref="IBrowserContext"/> to use as a filter.</param>
-        /// <returns>All the <see cref="ITarget"/> of the browser.</returns>
+        /// <returns>A list of all the browser's <see cref="ITarget"/>.</returns>
         IEnumerable<ITarget> GetTargets(IBrowserContext context = null);
     }
 }
