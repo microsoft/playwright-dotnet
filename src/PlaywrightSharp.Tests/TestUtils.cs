@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using Xunit;
 
 namespace PlaywrightSharp.Tests
@@ -35,6 +36,46 @@ namespace PlaywrightSharp.Tests
             {
                 Assert.Contains("SSL_ERROR_UNKNOWN", errorMessage);
             }
+        }
+
+        /// <summary>
+        /// Removes as much whitespace as possible from a given string. Whitespace
+        /// that separates letters and/or digits is collapsed to a space character.
+        /// Other whitespace is fully removed.
+        /// </summary>
+        public static string CompressText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            var sb = new StringBuilder();
+            bool inWhitespace = false;
+            foreach (char ch in text)
+            {
+                if (char.IsWhiteSpace(ch))
+                {
+                    if (ch != '\n' && ch != '\r')
+                    {
+                        inWhitespace = true;
+                    }
+                }
+                else
+                {
+                    if (inWhitespace)
+                    {
+                        inWhitespace = false;
+                        if (sb.Length > 0 && char.IsLetterOrDigit(sb[sb.Length - 1]) && char.IsLetterOrDigit(ch))
+                        {
+                            sb.Append(' ');
+                        }
+                    }
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

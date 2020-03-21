@@ -18,6 +18,16 @@ namespace PlaywrightSharp
         TargetType Type { get; }
 
         /// <summary>
+        /// Gets the opener <see cref="ITarget"/>.
+        /// </summary>
+        ITarget Opener { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IBrowserContext"/>.
+        /// </summary>
+        IBrowserContext BrowserContext { get; }
+
+        /// <summary>
         /// Terget's <see cref="IPage"/>.
         /// </summary>
         /// <remarks>
@@ -25,5 +35,11 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the corresponding <see cref="IPage"/> is found, yielding its <see cref="IPage"/>.</returns>
         Task<IPage> GetPageAsync();
+
+        /// <summary>
+        /// Gets the worker associated to the target.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the worker is resolved, yielding the associated <see cref="IWorker"/>.</returns>
+        Task<IWorker> GetWorkerAsync();
     }
 }

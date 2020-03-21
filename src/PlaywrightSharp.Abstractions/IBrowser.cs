@@ -124,5 +124,12 @@ namespace PlaywrightSharp
         /// <param name="options">options.</param>
         /// <returns>Resolves to the first target found that matches the predicate function.</returns>
         Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null);
+
+        /// <summary>
+        /// Get all the browser's targets.
+        /// </summary>
+        /// <param name="context">Optional <see cref="IBrowserContext"/> to use as a filter.</param>
+        /// <returns>A list of all the browser's <see cref="ITarget"/>.</returns>
+        IEnumerable<ITarget> GetTargets(IBrowserContext context = null);
     }
 }

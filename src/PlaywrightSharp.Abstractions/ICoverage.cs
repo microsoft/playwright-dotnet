@@ -11,13 +11,14 @@ namespace PlaywrightSharp
         /// <summary>
         /// Starts the JS coverage.
         /// </summary>
+        /// <param name="options">Coverage options.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task StartJSCoverageAsync();
+        Task StartJSCoverageAsync(CoverageStartOptions options = null);
 
         /// <summary>
         /// Stops the JS coverage.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task StopJSCoverageAsync();
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser, yielding the coverage result.</returns>
+        Task<CoverageEntry[]> StopJSCoverageAsync();
     }
 }
