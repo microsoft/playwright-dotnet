@@ -43,6 +43,5 @@ namespace PlaywrightSharp.Tests.Chromium
 
             Assert.Contains("feature/5718547946799104", interventionHeader);
         }
-
     }
 }
