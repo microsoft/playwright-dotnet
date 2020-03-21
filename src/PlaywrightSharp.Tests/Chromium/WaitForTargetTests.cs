@@ -1,16 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Mono.Unix;
-using PlaywrightSharp.Chromium;
-using PlaywrightSharp.Chromium.Protocol.Page;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
