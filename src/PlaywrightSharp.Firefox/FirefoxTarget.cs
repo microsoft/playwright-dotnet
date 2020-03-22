@@ -37,6 +37,10 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="ITarget.Type"/>
         public TargetType Type { get; }
 
+        public IBrowserContext BrowserContext => throw new NotImplementedException();
+
+        ITarget ITarget.Opener => Opener;
+
         internal bool IsInitialized { get; set; }
 
         internal FirefoxTarget Opener => _openerId != null ?
@@ -46,6 +50,11 @@ namespace PlaywrightSharp.Firefox
 
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
         public Task<IPage> GetPageAsync() => Task.FromResult<IPage>(null);
+
+        public Task<IWorker> GetWorkerAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         internal void DidClose()
         {

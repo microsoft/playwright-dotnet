@@ -127,6 +127,24 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IBrowser.StartTracingAsync(TracingOptions)" />
+        public Task StartTracingAsync(TracingOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IBrowser.StopTracingAsync" />
+        public Task<string> StopTracingAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IBrowser.GetTargets(IBrowserContext)" />
+        public IEnumerable<ITarget> GetTargets(IBrowserContext context = null)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
         {
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
