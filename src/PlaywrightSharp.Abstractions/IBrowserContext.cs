@@ -88,5 +88,11 @@ namespace PlaywrightSharp
         /// <param name="geolocation">Geolocation.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task SetGeolocationAsync(GeolocationOption geolocation);
+
+        /// <summary>
+        /// Clears all permission overrides for the browser context.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task ClearPermissionsAsync();
     }
 }

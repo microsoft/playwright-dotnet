@@ -66,6 +66,9 @@ namespace PlaywrightSharp.Chromium
         public Task SetGeolocationAsync(GeolocationOption geolocation)
             => _delegate.SetGeolocationAsync(geolocation);
 
+        /// <inheritdoc cref="IBrowserContext.ClearPermissionsAsync"/>
+        public Task ClearPermissionsAsync() => throw new System.NotImplementedException();
+
         /// <inheritdoc cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/>
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
             => _delegate.SetPermissionsAsync(origin, permissions);
