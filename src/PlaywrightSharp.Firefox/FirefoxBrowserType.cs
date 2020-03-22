@@ -307,29 +307,29 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
         public string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
-            options ??= new BrowserArgOptions();
-            if (options.Devtools == true)
+            bool devtools = options?.Devtools ?? false;
+            bool headless = options?.Headless ?? !devtools;
+            string userDataDir = options?.UserDataDir;
+            string[] args = options?.Args ?? Array.Empty<string>();
+
+            if (devtools)
             {
                 throw new PlaywrightSharpException("Option \"devtools\" is not supported by Firefox");
             }
 
             var firefoxArguments = new List<string>(DefaultArgs);
-            if (!string.IsNullOrEmpty(options.UserDataDir))
+            if (userDataDir != null)
             {
                 firefoxArguments.Add("-profile");
-                firefoxArguments.Add(options.UserDataDir);
+                firefoxArguments.Add(userDataDir);
             }
 
-            bool headless = options.Headless.HasValue ? options.Headless.Value : !(options.Devtools == true);
             if (headless)
             {
                 firefoxArguments.Add("-headless");
             }
 
-            if (options.Args != null)
-            {
-                firefoxArguments.AddRange(options.Args);
-            }
+            firefoxArguments.AddRange(args);
 
             if (firefoxArguments.TrueForAll(arg => arg.StartsWith("-")))
             {

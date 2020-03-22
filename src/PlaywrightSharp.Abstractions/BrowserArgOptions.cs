@@ -10,7 +10,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether to run browser in headless mode. Defaults to true unless the devtools option is true.
         /// </summary>
-        public bool? Headless { get; set; }
+        public bool Headless { get; set; }
 
         /// <summary>
         /// Additional arguments to pass to the browser instance.
@@ -25,6 +25,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether to auto-open DevTools panel for each tab. If this option is true, the headless option will be set false.
         /// </summary>
-        public bool? Devtools { get; set; }
+        public bool Devtools { get; set; }
     }
 }
