@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -973,5 +974,15 @@ namespace PlaywrightSharp
         /// <param name="options">Options.</param>
         /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
         Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null);
+
+        /// <summary>
+        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        /// </summary>
+        /// <param name="file">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
+        /// <remarks>
+        /// Generating a pdf is currently only supported in Chrome headless.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
+        Task GetPdfAsync(string file);
     }
 }

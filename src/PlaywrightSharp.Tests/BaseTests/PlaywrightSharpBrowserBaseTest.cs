@@ -13,9 +13,8 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest, IAsyncLifetime
     {
         internal IBrowser Browser { get; set; }
-        internal IBrowserApp BrowserApp { get; set; }
 
-        // protected LaunchOptions DefaultOptions { get; set; }
+        internal LaunchOptions DefaultOptions { get; set; }
 
         internal PlaywrightSharpBrowserBaseTest(ITestOutputHelper output) : base(output)
         {
@@ -38,7 +37,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public virtual async Task InitializeAsync()
-            => Browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            => Browser = await Playwright.LaunchAsync(DefaultOptions ?? TestConstants.GetDefaultBrowserOptions());
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         public virtual Task DisposeAsync() => Browser.CloseAsync();

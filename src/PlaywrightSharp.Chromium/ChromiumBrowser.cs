@@ -143,8 +143,23 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        /// <inheritdoc cref="IBrowser.GetTargets"/>
+        public IEnumerable<ITarget> GetTargets(IBrowserContext context = null) => null;
+
         /// <inheritdoc cref="IBrowser.GetPageTarget(IPage)"/>
         public ITarget GetPageTarget(IPage page)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IBrowser.StartTracingAsync(TracingOptions)"/>
+        public Task StartTracingAsync(TracingOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IBrowser.StopTracingAsync"/>
+        public Task<string> StopTracingAsync()
         {
             throw new NotImplementedException();
         }

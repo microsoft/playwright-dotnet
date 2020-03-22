@@ -401,6 +401,9 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IPage.GetPdfAsync(string)"/>
+        public Task GetPdfAsync(string file) => throw new NotImplementedException();
+
         /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
         public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
         {
