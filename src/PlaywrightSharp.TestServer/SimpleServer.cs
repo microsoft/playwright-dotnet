@@ -118,6 +118,9 @@ namespace PlaywrightSharp.TestServer
             return Task.CompletedTask;
         });
 
+        public void Subscribe(string path, Func<HttpRequest, Task> action)
+            => _requestSubscribers.Add(path, (httpRequest) => action(httpRequest));
+
         public async Task<T> WaitForRequest<T>(string path, Func<HttpRequest, T> selector)
         {
             var taskCompletion = new TaskCompletionSource<T>();
