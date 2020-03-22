@@ -43,8 +43,7 @@ namespace PlaywrightSharp.Firefox
 
         internal bool IsInitialized { get; set; }
 
-        internal FirefoxTarget Opener => _openerId != null ?
-            _browser.TargetsMap[_openerId] : null;
+        internal FirefoxTarget Opener => _openerId != null ? _browser.TargetsMap[_openerId] : null;
 
         internal Task<Page> PageTask => CreatePageAsync();
 
@@ -56,10 +55,7 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
-        internal void DidClose()
-        {
-            _page?.DidClose();
-        }
+        internal void DidClose() => _page?.DidClose();
 
         private async Task<Page> CreatePageAsync()
         {

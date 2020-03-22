@@ -16,14 +16,14 @@ namespace PlaywrightSharp.Protocol
 
         static ProtocolTypes()
         {
-            var chromiumResponse = typeof(TProtocolResponse);
-            var chromiumRequest = typeof(TProtocolRequest);
-            var chromiumEvent = typeof(TProtocolEvent);
+            var protocolResponse = typeof(TProtocolResponse);
+            var protocolRequest = typeof(TProtocolRequest);
+            var protocolEvent = typeof(TProtocolEvent);
 
             var types = typeof(TProtocolRequest).Assembly.GetTypes();
 
-            var responses = types.Where(type => type.IsClass && chromiumResponse.IsAssignableFrom(type)).ToDictionary(type => type.Name);
-            var requests = types.Where(type => type.IsClass && type.GetInterface(chromiumRequest.Name) != null).ToDictionary(type => type.Name);
+            var responses = types.Where(type => type.IsClass && protocolResponse.IsAssignableFrom(type)).ToDictionary(type => type.Name);
+            var requests = types.Where(type => type.IsClass && type.GetInterface(protocolRequest.Name) != null).ToDictionary(type => type.Name);
 
             foreach (string name in responses.Keys)
             {
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Protocol
                 ResponsesMapper.Add(request.Command, responses[name]);
             }
 
-            foreach (var type in types.Where(type => !type.IsAbstract && type.IsClass && chromiumEvent.IsAssignableFrom(type)))
+            foreach (var type in types.Where(type => !type.IsAbstract && type.IsClass && protocolEvent.IsAssignableFrom(type)))
             {
                 var eventObj = (TProtocolEvent)Activator.CreateInstance(type);
 
