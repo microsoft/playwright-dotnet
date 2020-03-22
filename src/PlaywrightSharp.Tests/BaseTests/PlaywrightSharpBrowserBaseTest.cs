@@ -14,7 +14,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     {
         internal IBrowser Browser { get; set; }
 
-        protected LaunchOptions DefaultOptions { get; set; }
+        internal LaunchOptions DefaultOptions { get; set; }
 
         internal PlaywrightSharpBrowserBaseTest(ITestOutputHelper output) : base(output)
         {
