@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Manage the browser process lifecycle.

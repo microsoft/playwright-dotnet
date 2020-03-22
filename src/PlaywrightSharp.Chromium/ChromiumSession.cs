@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Messaging;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -11,7 +12,7 @@ namespace PlaywrightSharp.Chromium
         private readonly TargetType _targetType;
         private readonly string _sessionId;
         private readonly string _closeReason = string.Empty;
-        private readonly ConcurrentDictionary<int, MessageTask> _callbacks = new ConcurrentDictionary<int, MessageTask>();
+        private readonly ConcurrentDictionary<int, MessageTask<IChromiumResponse>> _callbacks = new ConcurrentDictionary<int, MessageTask<IChromiumResponse>>();
         private ChromiumConnection _connection;
 
         public ChromiumSession(ChromiumConnection chromiumConnection, TargetType targetType, string sessionId)
@@ -41,10 +42,10 @@ namespace PlaywrightSharp.Chromium
             }
 
             int id = _connection.GetMessageId();
-            MessageTask callback = null;
+            MessageTask<IChromiumResponse> callback = null;
             if (waitForCallback)
             {
-                callback = new MessageTask
+                callback = new MessageTask<IChromiumResponse>
                 {
                     TaskWrapper = new TaskCompletionSource<IChromiumResponse>(),
                     Method = request.Command,
@@ -54,7 +55,7 @@ namespace PlaywrightSharp.Chromium
 
             try
             {
-                await _connection.RawSendASync(id, request.Command, request, _sessionId).ConfigureAwait(false);
+                await _connection.RawSendAsync(id, request.Command, request, _sessionId).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

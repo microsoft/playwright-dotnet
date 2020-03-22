@@ -14,6 +14,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class DefaultArgumentsTests : PlaywrightSharpBrowserContextBaseTest
     {
@@ -38,8 +39,8 @@ namespace PlaywrightSharp.Tests.Launcher
                 TestConstants.IsFirefox ? "-headless" : "--headless",
                 Playwright.GetDefaultArgs(new BrowserArgOptions { Headless = false }));
 
-            Assert.DoesNotContain(
-                TestConstants.IsFirefox ? "foo" : "--user-data-dir=foo",
+            Assert.Contains(
+                TestConstants.IsFirefox ? "foo" : "--user-data-dir=\"foo\"",
                 Playwright.GetDefaultArgs(new BrowserArgOptions { UserDataDir = "foo" }));
 
         }

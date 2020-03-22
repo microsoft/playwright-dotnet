@@ -1,18 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <ReleaseVersion>0.0.0</ReleaseVersion>
-        <LangVersion>8.0</LangVersion>
+        <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Chromium.xml</DocumentationFile>
-        <RunWithWarnings>true</RunWithWarnings>
-        <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+        <LangVersion>8.0</LangVersion>
+        <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Firefox.xml</DocumentationFile>
         <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <NoWarn>1701;1702;CS0067</NoWarn>
-    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
     <ItemGroup>
         <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />

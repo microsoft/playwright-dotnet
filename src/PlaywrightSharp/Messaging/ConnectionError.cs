@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Chromium.Messaging
+namespace PlaywrightSharp.Messaging
 {
     internal class ConnectionError
     {

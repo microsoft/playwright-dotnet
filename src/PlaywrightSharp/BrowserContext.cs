@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserContext"/>
     public class BrowserContext : IBrowserContext

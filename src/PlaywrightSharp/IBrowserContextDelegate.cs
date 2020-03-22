@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium;
 
 namespace PlaywrightSharp
 {

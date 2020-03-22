@@ -18,9 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base Libraries", "Base Libr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Chromium", "PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj", "{90666F55-EE58-4FDA-B029-E1699CB519B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Firefox", "PlaywrightShap.Firefox\PlaywrightSharp.Firefox.csproj", "{E86F4820-F657-4904-BF88-B4CD226E2AEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Firefox", "PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj", "{E86F4820-F657-4904-BF88-B4CD226E2AEE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Webkit", "PlaywrightShap.Webkit\PlaywrightSharp.Webkit.csproj", "{99B5F65B-BA43-437C-ADFD-9A93064CCEC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Webkit", "PlaywrightSharp.Webkit\PlaywrightSharp.Webkit.csproj", "{99B5F65B-BA43-437C-ADFD-9A93064CCEC7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.TestServer", "PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj", "{A907B324-4541-4FAF-8CAE-D0B512B4BC36}"
 EndProject
@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp", "Playwrig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Abstractions", "PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj", "{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.ProtocolTypesGenerator", "PlaywightSharp.ProtocolTypesGenerator\PlaywrightSharp.ProtocolTypesGenerator.csproj", "{1E580718-B961-4E14-9F5A-A74BC54EB0C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.ProtocolTypesGenerator", "PlaywrightSharp.ProtocolTypesGenerator\PlaywrightSharp.ProtocolTypesGenerator.csproj", "{1E580718-B961-4E14-9F5A-A74BC54EB0C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests.DumpIO", "PlaywrightSharp.Tests.DumpIO\PlaywrightSharp.Tests.DumpIO.csproj", "{CB6AA501-251C-48E2-BF88-F67FCA6F7C19}"
 EndProject

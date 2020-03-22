@@ -1,7 +1,7 @@
 using System.Text.Json;
 using PlaywrightSharp.Messaging;
 
-namespace PlaywrightSharp.Chromium.Messaging
+namespace PlaywrightSharp.Firefox.Messaging
 {
     internal class ConnectionResponse
     {

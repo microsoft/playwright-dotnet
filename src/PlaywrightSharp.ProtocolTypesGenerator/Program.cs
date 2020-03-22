@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.ProtocolTypesGenerator.Chromium;
+using PlaywrightSharp.ProtocolTypesGenerator.Firefox;
 
 namespace PlaywrightSharp.ProtocolTypesGenerator
 {
@@ -11,6 +12,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             IBrowserProtocolTypesGenerator[] generators =
             {
                 new ChromiumBrowserProtocolTypesGenerator(),
+                new FirefoxBrowserProtocolTypesGenerator(),
             };
 
             foreach (var generator in generators)
@@ -25,7 +27,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     }
                 };
                 var revision = await generator.BrowserFetcher.DownloadAsync().ConfigureAwait(false);
-                await generator.ProtocolTypesGenerator.GenerateTypesAsync(revision).ConfigureAwait(false);
+                await generator.ProtocolTypesGenerator.GenerateCodeAsync(revision).ConfigureAwait(false);
             }
         }
     }

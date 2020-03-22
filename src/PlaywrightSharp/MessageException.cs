@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.Serialization;
-using PlaywrightSharp.Chromium.Messaging;
+using PlaywrightSharp.Messaging;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp
 {
     [Serializable]
     internal class MessageException : PlaywrightSharpException
@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Chromium
         {
         }
 
-        internal MessageException(MessageTask callback, ConnectionError error) : base(GetCallbackMessage(callback, error))
+        public MessageException(IMessageTask callback, ConnectionError error) : base(GetCallbackMessage(callback, error))
         {
         }
 
@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Chromium
         {
         }
 
-        internal static string GetCallbackMessage(MessageTask callback, ConnectionError connectionError)
+        internal static string GetCallbackMessage(IMessageTask callback, ConnectionError connectionError)
         {
             string message = $"Protocol error ({callback.Method}): {connectionError.Message}";
 

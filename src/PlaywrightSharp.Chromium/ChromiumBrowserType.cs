@@ -215,7 +215,7 @@ namespace PlaywrightSharp.Chromium
             {
                 SetEnvVariables(process.Process.StartInfo.Environment, options.Env, Environment.GetEnvironmentVariables());
 
-                if (options.DumpIO == true)
+                if (options.DumpIO)
                 {
                     process.Process.ErrorDataReceived += (sender, e) => Console.Error.WriteLine(e.Data);
                 }

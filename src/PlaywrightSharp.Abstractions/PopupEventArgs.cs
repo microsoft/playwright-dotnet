@@ -7,6 +7,8 @@ namespace PlaywrightSharp
     /// </summary>
     public class PopupEventArgs : EventArgs
     {
+        internal PopupEventArgs(IPage page) => Page = page;
+
         /// <summary>
         /// Popup <see cref="IPage"/>.
         /// </summary>

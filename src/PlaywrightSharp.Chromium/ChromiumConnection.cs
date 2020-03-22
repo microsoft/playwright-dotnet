@@ -45,16 +45,14 @@ namespace PlaywrightSharp.Chromium
 
         internal int GetMessageId() => Interlocked.Increment(ref _lastId);
 
-        internal Task RawSendASync(int id, string method, object args, string sessionId)
-            => _transport.SendAsync(JsonSerializer.Serialize(
-                new ConnectionRequest
-                {
-                    Id = id,
-                    Method = method,
-                    Params = args,
-                    SessionId = string.IsNullOrEmpty(sessionId) ? null : sessionId,
-                },
-                JsonHelper.DefaultChromiumJsonSerializerOptions));
+        internal Task RawSendAsync(int id, string method, object args, string sessionId)
+            => _transport.SendAsync(new ConnectionRequest
+            {
+                Id = id,
+                Method = method,
+                Params = args,
+                SessionId = string.IsNullOrEmpty(sessionId) ? null : sessionId,
+            }.ToJson());
 
         internal ChromiumSession GetSession(string sessionId) => _sessions.GetValueOrDefault(sessionId);
 
@@ -91,7 +89,7 @@ namespace PlaywrightSharp.Chromium
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultChromiumJsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException ex)
                 {

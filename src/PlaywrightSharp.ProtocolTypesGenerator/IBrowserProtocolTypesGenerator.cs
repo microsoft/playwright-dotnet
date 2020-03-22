@@ -2,7 +2,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 {
     internal interface IBrowserProtocolTypesGenerator
     {
-        IProtocolTypesGenerator ProtocolTypesGenerator { get; }
+        ProtocolTypesGeneratorBase ProtocolTypesGenerator { get; }
 
         IBrowserFetcher BrowserFetcher { get; }
     }
