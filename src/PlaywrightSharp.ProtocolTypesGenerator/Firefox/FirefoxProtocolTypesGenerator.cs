@@ -62,7 +62,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
             foreach (var eventDef in domain.Value.GetProperty("events").EnumerateObject())
             {
                 string eventName = eventDef.Name.ToPascalCase();
-                builder.Append("internal class ").Append(domain.Name).Append(eventName).AppendLine("FirefoxEvent : IFirefoxEvent");
+                GenerateEventDefinition(builder, domain.Name + eventName);
                 builder.AppendLine("{");
                 builder.Append("public string InternalName { get; } = \"").Append(domain.Name).Append('.').Append(eventDef.Name).AppendLine("\";");
                 foreach (var propertyDef in eventDef.Value.EnumerateObject())
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                         continue;
                     }
 
-                    string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, eventName, propertyDef.Name, propertyDef.Value, enumBuilder);
+                    string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, eventName, propertyDef.Name, propertyDef.Value, enumBuilder, false);
                     builder.AppendLine($"public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
                 }
 
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
             foreach (var methodDef in domain.Value.GetProperty("methods").EnumerateObject())
             {
                 string method = domain.Name + methodDef.Name.ToPascalCase();
-                builder.AppendLine($"internal class {method}Request : IFirefoxRequest<{method}Response>");
+                GenerateRequestDefinition(builder, method);
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.Append("public string Command { get; } = \"").Append(domain.Name).Append('.').Append(methodDef.Name).AppendLine("\";");
@@ -100,13 +100,13 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                             continue;
                         }
 
-                        string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, methodDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder);
+                        string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, methodDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder, false);
                         builder.AppendLine($"public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
                     }
                 }
 
                 builder.AppendLine("}");
-                builder.AppendLine($"internal class {method}Response : IFirefoxResponse");
+                GenerateResponseDefinition(builder, method);
                 builder.AppendLine("{");
 
                 if (methodDef.Value.TryGetProperty("returns", out var returnesDef))
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                             continue;
                         }
 
-                        string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, methodDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder);
+                        string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, methodDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder, true);
                         builder.AppendLine($"public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
                     }
                 }
@@ -143,11 +143,11 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     _knownTypes.Add(jsonTextOptional, type);
                 }
 
-                builder.Append("internal class ").AppendLine(typeDef.Name.ToPascalCase());
+                GenerateTypeDefinition(builder, typeDef.Name.ToPascalCase());
                 builder.AppendLine("{");
                 foreach (var propertyDef in typeDef.Value.EnumerateObject())
                 {
-                    string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, typeDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder);
+                    string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, typeDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder, false);
                     builder.AppendLine($"public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
                 }
 
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
             }
         }
 
-        private string ConvertJsTypeToCsharp(StringBuilder builder, string domain, string objectName, string name, JsonElement obj, StringBuilder enumBuilder)
+        private string ConvertJsTypeToCsharp(StringBuilder builder, string domain, string objectName, string name, JsonElement obj, StringBuilder enumBuilder, bool isResponse)
         {
             try
             {
@@ -195,8 +195,9 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     "boolean" => "bool?",
                     "number" => "double?",
                     "enum" when _knownTypes.TryGetValue(obj.GetProperty("$values").GetRawText(), out string enumName) => enumName,
-                    "any" => "JsonElement?",
-                    "array" => ConvertJsTypeToCsharp(builder, domain, name, objectName, obj.GetProperty("$items"), enumBuilder) + "[]",
+                    "any" => isResponse ? "JsonElement?" : "object",
+                    "object" => isResponse ? "JsonElement?" : "object",
+                    "array" => ConvertJsTypeToCsharp(builder, domain, name, objectName, obj.GetProperty("$items"), enumBuilder, false) + "[]",
                     "ref" => obj.GetProperty("$ref").GetString(),
                     _ => throw new ArgumentOutOfRangeException(nameof(obj), type, $"[{domain}.{name}] invalid object type")
                 };

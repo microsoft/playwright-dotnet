@@ -1,5 +1,16 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Firefox.Helper;
+using PlaywrightSharp.Firefox.Input;
+using PlaywrightSharp.Firefox.Messaging;
+using PlaywrightSharp.Firefox.Protocol;
+using PlaywrightSharp.Firefox.Protocol.Network;
+using PlaywrightSharp.Firefox.Protocol.Page;
+using PlaywrightSharp.Firefox.Protocol.Runtime;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Firefox
@@ -7,9 +18,12 @@ namespace PlaywrightSharp.Firefox
     /// <inheritdoc cref="IPageDelegate"/>
     internal class FirefoxPage : IPageDelegate
     {
+        private const string UtilityWorldName = "__playwright_utility_world__";
+
         private readonly FirefoxSession _session;
         private readonly IBrowserContext _context;
         private readonly Func<Task<Page>> _openerResolver;
+        private readonly ConcurrentDictionary<string, WorkerSession> _workers = new ConcurrentDictionary<string, WorkerSession>();
 
         public FirefoxPage(FirefoxSession session, IBrowserContext context, Func<Task<Page>> openerResolver)
         {
@@ -18,11 +32,15 @@ namespace PlaywrightSharp.Firefox
             _openerResolver = openerResolver;
 
             Page = new Page(this, _context);
+            RawKeyboard = new FirefoxRawKeyboard(session);
+            RawMouse = new FirefoxRawMouse(session);
+
+            session.MessageReceived += OnMessageReceived;
         }
 
-        public IRawKeyboard RawKeyboard => throw new NotImplementedException();
+        public IRawKeyboard RawKeyboard { get; }
 
-        public IRawMouse RawMouse => throw new NotImplementedException();
+        public IRawMouse RawMouse { get; }
 
         internal Page Page { get; }
 
@@ -61,6 +79,187 @@ namespace PlaywrightSharp.Firefox
             throw new System.NotImplementedException();
         }
 
+        internal async Task InitializeAsync()
+        {
+            var tasks = new List<Task>
+            {
+               _session.SendAsync(new RuntimeEnableRequest()),
+               _session.SendAsync(new NetworkEnableRequest()),
+               _session.SendAsync(new PageEnableRequest()),
+            };
+
+            if (_context.Options != null)
+            {
+                var options = _context.Options;
+
+                if (options.Viewport != null)
+                {
+                    tasks.Add(SetViewportAsync(options.Viewport));
+                }
+
+                if (options.BypassCSP)
+                {
+                    tasks.Add(_session.SendAsync(new PageSetBypassCSPRequest { Enabled = true }));
+                }
+
+                if (options.JavaScriptEnabled)
+                {
+                    tasks.Add(_session.SendAsync(new PageSetJavascriptEnabledRequest { Enabled = true }));
+                }
+
+                if (options.UserAgent != null)
+                {
+                    tasks.Add(_session.SendAsync(new PageSetUserAgentRequest { UserAgent = options.UserAgent }));
+                }
+            }
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+            await EnsureIsolatedWorldAsync(UtilityWorldName).ConfigureAwait(false);
+        }
+
         internal void DidClose() => Page.DidClose();
+
+        private Task EnsureIsolatedWorldAsync(string name)
+            => _session.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            {
+                Script = string.Empty,
+                WorldName = name,
+            });
+
+        private void OnMessageReceived(object sender, IFirefoxEvent e)
+        {
+            switch (e)
+            {
+                case PageEventFiredFirefoxEvent pageEventFired:
+                    break;
+                case PageFrameAttachedFirefoxEvent pageFrameAttached:
+                    OnFrameAttached(pageFrameAttached);
+                    break;
+                case PageFrameDetachedFirefoxEvent pageFrameDetached:
+                    break;
+                case PageNavigationAbortedFirefoxEvent pageNavigationAborted:
+                    break;
+                case PageNavigationCommittedFirefoxEvent pageNavigationCommitted:
+                    OnNavigationCommitted(pageNavigationCommitted);
+                    break;
+                case PageNavigationStartedFirefoxEvent pageNavigationStarted:
+                    break;
+                case PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation:
+                    break;
+                case RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated:
+                    break;
+                case RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed:
+                    break;
+                case PageUncaughtErrorFirefoxEvent pageUncaughtError:
+                    break;
+                case RuntimeConsoleFirefoxEvent runtimeConsole:
+                    break;
+                case PageDialogOpenedFirefoxEvent pageDialogOpened:
+                    break;
+                case PageBindingCalledFirefoxEvent pageBindingCalled:
+                    break;
+                case PageFileChooserOpenedFirefoxEvent pageFileChooserOpened:
+                    break;
+                case PageWorkerCreatedFirefoxEvent pageWorkerCreated:
+                    OnPageWorkerCreated(pageWorkerCreated);
+                    break;
+                case PageWorkerDestroyedFirefoxEvent pageWorkerDestroyed:
+                    OnPageWorkerDestroyed(pageWorkerDestroyed);
+                    break;
+                case PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker:
+                    OnPageDispatchMessageFromWorker(pageDispatchMessageFromWorker);
+                    break;
+            }
+        }
+
+        private void OnFrameAttached(PageFrameAttachedFirefoxEvent pageFrameAttached)
+            => Page.FrameManager.FrameAttached(pageFrameAttached.FrameId, pageFrameAttached.ParentFrameId);
+
+        private void OnNavigationCommitted(PageNavigationCommittedFirefoxEvent pageNavigationCommitted)
+        {
+            foreach (var pair in _workers)
+            {
+                if (pair.Key == pageNavigationCommitted.FrameId)
+                {
+                    OnPageWorkerDestroyed(new PageWorkerDestroyedFirefoxEvent { WorkerId = pair.Key });
+                }
+            }
+
+            Page.FrameManager.FrameCommittedNewDocumentNavigation(pageNavigationCommitted.FrameId, pageNavigationCommitted.Url, pageNavigationCommitted.Name ?? string.Empty, pageNavigationCommitted.NavigationId ?? string.Empty, false);
+        }
+
+        private void OnPageWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)
+        {
+            string workerId = pageWorkerCreated.WorkerId;
+            var worker = new Worker(pageWorkerCreated.Url);
+            var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request) =>
+            {
+                try
+                {
+                    await _session.SendAsync(new PageSendMessageToWorkerRequest
+                    {
+                        FrameId = pageWorkerCreated.FrameId,
+                        WorkerId = workerId,
+                        Message = new ConnectionRequest
+                        {
+                            Id = id,
+                            Method = request.Command,
+                            Params = request,
+                        }.ToJson(),
+                    }).ConfigureAwait(false);
+                }
+                catch (AggregateException)
+                {
+                    // how do I call workerSession from here?
+                }
+            });
+            _workers[workerId] = new WorkerSession(pageWorkerCreated.FrameId, workerSession);
+            Page.AddWorker(workerId, worker);
+            void HandleRuntimeExecutionContextCreated(object sender, IFirefoxEvent e)
+            {
+                if (e is RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated)
+                {
+                    worker.CreateExecutionContext(new FirefoxExecutionContext(workerSession, runtimeExecutionContextCreated.ExecutionContextId));
+                    workerSession.MessageReceived -= HandleRuntimeExecutionContextCreated;
+                }
+            }
+
+            workerSession.MessageReceived += HandleRuntimeExecutionContextCreated;
+            workerSession.MessageReceived += (sender, e) =>
+            {
+                if (e is RuntimeConsoleFirefoxEvent runtimeConsole)
+                {
+                    var context = worker.ExistingExecutionContext;
+                    var type = runtimeConsole.GetConsoleType();
+                    var location = runtimeConsole.ToConsoleMessageLocation();
+
+                    Page.AddConsoleMessage(type, Array.ConvertAll(runtimeConsole.Args, arg => context.CreateHandle(arg)), location);
+                }
+            };
+        }
+
+        private void OnPageWorkerDestroyed(PageWorkerDestroyedFirefoxEvent pageWorkerDestroyed)
+        {
+            string workerId = pageWorkerDestroyed.WorkerId;
+            if (_workers.TryRemove(workerId, out var worker))
+            {
+                worker.Session.OnClosed(pageWorkerDestroyed.InternalName);
+                Page.RemoveWorker(workerId);
+            }
+        }
+
+        private void OnPageDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker)
+        {
+            throw new NotImplementedException();
+        }
+
+        private class WorkerSession
+        {
+            public WorkerSession(string frameId, FirefoxSession session) => (FrameId, Session) = (frameId, session);
+
+            public string FrameId { get; }
+
+            public FirefoxSession Session { get; }
+        }
     }
 }

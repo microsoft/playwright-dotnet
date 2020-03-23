@@ -9,7 +9,6 @@ namespace PlaywrightSharp.Firefox
     {
         private readonly FirefoxConnection _connection;
         private readonly FirefoxBrowser _browser;
-        private readonly IBrowserContext _context;
         private readonly string _targetId;
         private readonly string _openerId;
         private Page _page;
@@ -18,10 +17,10 @@ namespace PlaywrightSharp.Firefox
         {
             _connection = connection;
             _browser = firefoxBrowser;
-            _context = context;
             _targetId = targetId;
             _openerId = openerId;
 
+            BrowserContext = context;
             Type = type switch
             {
                 TargetInfoType.Browser => TargetType.Browser,
@@ -37,7 +36,7 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="ITarget.Type"/>
         public TargetType Type { get; }
 
-        public IBrowserContext BrowserContext => throw new NotImplementedException();
+        public IBrowserContext BrowserContext { get; }
 
         ITarget ITarget.Opener => Opener;
 
@@ -45,10 +44,18 @@ namespace PlaywrightSharp.Firefox
 
         internal FirefoxTarget Opener => _openerId != null ? _browser.TargetsMap[_openerId] : null;
 
-        internal Task<Page> PageTask => CreatePageAsync();
+        internal Task<Page> PageTask { get; set; }
 
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
-        public Task<IPage> GetPageAsync() => Task.FromResult<IPage>(null);
+        public async Task<IPage> GetPageAsync()
+        {
+            if (PageTask == null)
+            {
+                PageTask = CreatePageAsync();
+            }
+
+            return await (PageTask ?? Task.FromResult<Page>(null)).ConfigureAwait(false);
+        }
 
         public Task<IWorker> GetWorkerAsync()
         {
@@ -68,7 +75,7 @@ namespace PlaywrightSharp.Firefox
             if (PageTask == null)
             {
                 var session = await _connection.CreateSessionAsync(_targetId).ConfigureAwait(false);
-                firefoxPage = new FirefoxPage(session, _context, () =>
+                firefoxPage = new FirefoxPage(session, BrowserContext, () =>
                 {
                     var openerTarget = Opener;
                     if (openerTarget == null)
@@ -79,6 +86,14 @@ namespace PlaywrightSharp.Firefox
                     return openerTarget.PageTask;
                 });
                 _page = firefoxPage.Page;
+                void DisconnectedEventHandler(object sender, EventArgs e)
+                {
+                    _page.DidDisconnected();
+                    session.Disconnected -= DisconnectedEventHandler;
+                }
+
+                session.Disconnected += DisconnectedEventHandler;
+                await firefoxPage.InitializeAsync().ConfigureAwait(false);
             }
 
             return _page;

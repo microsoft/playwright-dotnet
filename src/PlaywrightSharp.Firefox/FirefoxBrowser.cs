@@ -221,7 +221,7 @@ namespace PlaywrightSharp.Firefox
 
         private BrowserContext CreateBrowserContext(string browserContextId, BrowserContextOptions options = null)
         {
-            return new BrowserContext(new FirefoxBrowserContext(browserContextId, _connection, options ?? new BrowserContextOptions()));
+            return new BrowserContext(new FirefoxBrowserContext(browserContextId, _connection, options ?? new BrowserContextOptions(), this));
         }
 
         private void OnDisconnected(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, EventArgs.Empty);

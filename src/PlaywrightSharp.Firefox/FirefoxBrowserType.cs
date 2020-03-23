@@ -328,6 +328,10 @@ namespace PlaywrightSharp.Firefox
             {
                 firefoxArguments.Add("-headless");
             }
+            else
+            {
+                firefoxArguments.Add("-wait-for-browser");
+            }
 
             firefoxArguments.AddRange(args);
 

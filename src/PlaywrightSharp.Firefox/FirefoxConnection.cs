@@ -140,7 +140,14 @@ namespace PlaywrightSharp.Firefox
                 if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
                 {
                     string sessionId = targetAttachedToTarget.SessionId;
-                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type, sessionId);
+                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type.ToString(), sessionId, (id, request) =>
+                        RawSendAsync(new ConnectionRequest
+                        {
+                            Id = id,
+                            Method = request.Command,
+                            Params = request,
+                            SessionId = sessionId,
+                        }));
                     _asyncSessions.AddItem(sessionId, session);
                 }
                 else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
@@ -151,10 +158,8 @@ namespace PlaywrightSharp.Firefox
                         session.OnClosed(targetDetachedFromTarget.InternalName);
                     }
                 }
-                else
-                {
-                    MessageReceived?.Invoke(this, param);
-                }
+
+                MessageReceived?.Invoke(this, param);
             }
 
             if (obj.SessionId != null)
@@ -169,7 +174,7 @@ namespace PlaywrightSharp.Firefox
                 }
                 else
                 {
-                    callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText() ?? "{}"));
+                    callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText()));
                 }
             }
         }
