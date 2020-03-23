@@ -20,8 +20,6 @@ namespace PlaywrightSharp.Chromium
             _connection = chromiumConnection;
             _targetType = targetType;
             _sessionId = sessionId;
-
-            chromiumConnection.MessageReceived += OnMessageReceived;
         }
 
         public event EventHandler<IChromiumEvent> MessageReceived;
@@ -93,16 +91,13 @@ namespace PlaywrightSharp.Chromium
                 }
                 else
                 {
-                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result.Value.GetRawText());
+                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText());
                     callback.TaskWrapper.TrySetResult(result);
                 }
             }
         }
 
-        internal void OnMessageReceived(object sender, IChromiumEvent e)
-        {
-            MessageReceived?.Invoke(this, e);
-        }
+        internal void OnMessageReceived(IChromiumEvent e) => MessageReceived?.Invoke(this, e);
 
         internal Task DetachAsync()
         {

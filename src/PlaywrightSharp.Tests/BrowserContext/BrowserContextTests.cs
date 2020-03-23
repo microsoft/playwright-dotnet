@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should isolate localStorage and cookies</playwright-it>
-        [Fact(Skip = "will hang the build")]
+        [Fact]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
@@ -148,7 +148,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.GoToAsync(TestConstants.EmptyPage + "/grid.html");
 
             var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            var screenshot = await page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });

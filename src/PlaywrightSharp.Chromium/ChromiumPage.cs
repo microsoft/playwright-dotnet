@@ -74,7 +74,13 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetViewportAsync(Viewport viewport)
         {
-            throw new NotImplementedException();
+            var isLandscape = viewport.Width > viewport.Height;
+            var screenOrientation = isLandscape
+                ? new ScreenOrientation() { Angle = 90, Type = EvaluationScriptUrl } : { angle: 0, type: 'portraitPrimary' };
+            await Promise.all([
+                this._client.send('Emulation.setDeviceMetricsOverride', { mobile: isMobile, width, height, deviceScaleFactor, screenOrientation }),
+            this._client.send('Emulation.setTouchEmulationEnabled', { enabled: isMobile })
+            ]);
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)

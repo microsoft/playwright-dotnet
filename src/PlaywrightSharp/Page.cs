@@ -10,10 +10,10 @@ using PlaywrightSharp.Input;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage"/>
-    public class Page : IPage
+    public sealed class Page : IPage
     {
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
-        private bool _disconnected = false;
+        private bool _disconnected;
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -86,7 +86,7 @@ namespace PlaywrightSharp
         public IFrame MainFrame => FrameManager.MainFrame;
 
         /// <inheritdoc cref="IPage.BrowserContext"/>
-        public virtual IBrowserContext BrowserContext { get; internal set; }
+        public IBrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc cref="IPage.Viewport"/>
         public Viewport Viewport => null;
@@ -123,7 +123,7 @@ namespace PlaywrightSharp
 
         internal FrameManager FrameManager { get; }
 
-        internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
+        internal bool HasPopupEventListeners => Popup?.GetInvocationList().Length > 0;
 
         internal PageState PageState { get; } = new PageState();
 
