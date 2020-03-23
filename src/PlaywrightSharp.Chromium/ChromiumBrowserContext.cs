@@ -42,7 +42,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IBrowserContextDelegate.BrowserContext"/>
         public BrowserContext BrowserContext { get; set; }
 
-        internal ChromiumBrowser Browser { get; }
+        private ChromiumBrowser Browser { get; }
 
         /// <inheritdoc cref="IBrowserContextDelegate.GetPagesAsync"/>
         public async Task<IPage[]> GetPagesAsync()
@@ -92,6 +92,18 @@ namespace PlaywrightSharp
             {
                 await ((ChromiumPage)page.Delegate).Client.SendAsync(request).ConfigureAwait(false);
             }
+        }
+
+        /// <inheritdoc cref="IBrowserContextDelegate.CloseAsync"/>
+        public async Task CloseAsync()
+        {
+            if (string.IsNullOrEmpty(_contextId))
+            {
+                throw new PlaywrightSharpException("Non-incognito profiles cannot be closed!");
+            }
+
+            await _client.SendAsync(new TargetDisposeBrowserContextRequest { BrowserContextId = _contextId }).ConfigureAwait(false);
+            Browser.RemoveContext(_contextId);
         }
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetPermissionsAsync(string, ContextPermission[])"/>

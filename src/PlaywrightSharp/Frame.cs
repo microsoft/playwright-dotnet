@@ -75,7 +75,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<T> EvaluateAsync<T>(string script, params object[] args)
         {
-            var context = await GeMainContextAsync().ConfigureAwait(false);
+            var context = await GetMainContextAsync().ConfigureAwait(false);
             return await context.EvaluateAsync<T>(script, args).ConfigureAwait(false);
         }
 
@@ -88,7 +88,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
         {
-            var context = await GeMainContextAsync().ConfigureAwait(false);
+            var context = await GetMainContextAsync().ConfigureAwait(false);
             return await context.EvaluateHandleAsync(script, args).ConfigureAwait(false);
         }
 
@@ -250,7 +250,7 @@ namespace PlaywrightSharp
             }
         }
 
-        private Task<IFrameExecutionContext> GeMainContextAsync() => GetContextAsync(ContextType.Main);
+        private Task<IFrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
 
         private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
         {

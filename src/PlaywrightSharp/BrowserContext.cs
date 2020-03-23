@@ -7,12 +7,9 @@ namespace PlaywrightSharp
     public class BrowserContext : IBrowserContext
     {
         private readonly IBrowserContextDelegate _delegate;
+        private bool _closed;
 
-        internal BrowserContext(IBrowserContextDelegate browserContextDelegate) : this(browserContextDelegate, null)
-        {
-        }
-
-        internal BrowserContext(IBrowserContextDelegate browserContextDelegate, BrowserContextOptions options)
+        internal BrowserContext(IBrowserContextDelegate browserContextDelegate, BrowserContextOptions options = null)
         {
             _delegate = browserContextDelegate;
             _delegate.BrowserContext = this;
@@ -29,9 +26,15 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IBrowserContext.CloseAsync"/>
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            throw new System.NotImplementedException();
+            if (_closed)
+            {
+                return;
+            }
+
+            await _delegate.CloseAsync().ConfigureAwait(false);
+            _closed = true;
         }
 
         /// <inheritdoc cref="IBrowserContext.GetCookiesAsync(string[])"/>
