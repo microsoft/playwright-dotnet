@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Helper;
 using PlaywrightSharp.Firefox.Input;
@@ -12,6 +12,7 @@ using PlaywrightSharp.Firefox.Protocol.Page;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
+using PlaywrightSharp.Messaging;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -161,13 +162,13 @@ namespace PlaywrightSharp.Firefox
                 case PageFileChooserOpenedFirefoxEvent pageFileChooserOpened:
                     break;
                 case PageWorkerCreatedFirefoxEvent pageWorkerCreated:
-                    OnPageWorkerCreated(pageWorkerCreated);
+                    OnWorkerCreated(pageWorkerCreated);
                     break;
                 case PageWorkerDestroyedFirefoxEvent pageWorkerDestroyed:
-                    OnPageWorkerDestroyed(pageWorkerDestroyed);
+                    OnWorkerDestroyed(pageWorkerDestroyed);
                     break;
                 case PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker:
-                    OnPageDispatchMessageFromWorker(pageDispatchMessageFromWorker);
+                    OnDispatchMessageFromWorker(pageDispatchMessageFromWorker);
                     break;
             }
         }
@@ -181,17 +182,18 @@ namespace PlaywrightSharp.Firefox
             {
                 if (pair.Key == pageNavigationCommitted.FrameId)
                 {
-                    OnPageWorkerDestroyed(new PageWorkerDestroyedFirefoxEvent { WorkerId = pair.Key });
+                    OnWorkerDestroyed(new PageWorkerDestroyedFirefoxEvent { WorkerId = pair.Key });
                 }
             }
 
             Page.FrameManager.FrameCommittedNewDocumentNavigation(pageNavigationCommitted.FrameId, pageNavigationCommitted.Url, pageNavigationCommitted.Name ?? string.Empty, pageNavigationCommitted.NavigationId ?? string.Empty, false);
         }
 
-        private void OnPageWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)
+        private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)
         {
             string workerId = pageWorkerCreated.WorkerId;
             var worker = new Worker(pageWorkerCreated.Url);
+            FirefoxSession tempWorkerSession = null;
             var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request) =>
             {
                 try
@@ -208,11 +210,21 @@ namespace PlaywrightSharp.Firefox
                         }.ToJson(),
                     }).ConfigureAwait(false);
                 }
-                catch (AggregateException)
+                catch (Exception e)
                 {
-                    // how do I call workerSession from here?
+                    tempWorkerSession.OnMessage(new ConnectionResponse
+                    {
+                        Id = id,
+                        Method = string.Empty,
+                        Error = new ConnectionError
+                        {
+                            Message = e.Message,
+                        },
+                    });
                 }
             });
+            tempWorkerSession = workerSession;
+
             _workers[workerId] = new WorkerSession(pageWorkerCreated.FrameId, workerSession);
             Page.AddWorker(workerId, worker);
             void HandleRuntimeExecutionContextCreated(object sender, IFirefoxEvent e)
@@ -238,7 +250,7 @@ namespace PlaywrightSharp.Firefox
             };
         }
 
-        private void OnPageWorkerDestroyed(PageWorkerDestroyedFirefoxEvent pageWorkerDestroyed)
+        private void OnWorkerDestroyed(PageWorkerDestroyedFirefoxEvent pageWorkerDestroyed)
         {
             string workerId = pageWorkerDestroyed.WorkerId;
             if (_workers.TryRemove(workerId, out var worker))
@@ -248,7 +260,7 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private void OnPageDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker)
+        private void OnDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker)
         {
             throw new NotImplementedException();
         }

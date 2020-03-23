@@ -520,7 +520,7 @@ namespace PlaywrightSharp
         {
             var message = new ConsoleMessage(type, text, args, location);
             bool intercepted = FrameManager.InterceptConsoleMessage(message);
-            if (intercepted || Console.GetInvocationList().Length <= 0)
+            if (intercepted || Console.GetInvocationList().Length == 0)
             {
                 foreach (var arg in args)
                 {
