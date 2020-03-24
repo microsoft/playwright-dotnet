@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
 
@@ -45,6 +46,14 @@ namespace PlaywrightSharp.Firefox
         {
             throw new NotImplementedException();
         }
+
+        public bool CanScreenshotOutsideViewport() => throw new NotImplementedException();
+
+        public Task ResetViewportAsync(Size viewportSize) => throw new NotImplementedException();
+
+        public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
+
+        public Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport) => throw new NotImplementedException();
 
         public bool IsElementHandle(IRemoteObject remoteObject)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
@@ -86,5 +87,34 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the metrics are returned by the browser, yielding its <see cref="LayoutMetric"/>.</returns>
         Task<LayoutMetric> GetLayoutViewportAsync();
+
+        /// <summary>
+        /// Evaluates if <see cref="Screenshotter"/> can take a full page screenshot.
+        /// </summary>
+        /// <returns>Whether the <see cref="Screenshotter"/> can take a full page screenshot.</returns>
+        bool CanScreenshotOutsideViewport();
+
+        /// <summary>
+        /// Resets the viewport.
+        /// </summary>
+        /// <param name="viewportSize">Size to use.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task ResetViewportAsync(Size viewportSize);
+
+        /// <summary>
+        /// Sets the background color of the page.
+        /// </summary>
+        /// <param name="color">Color to set.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task SetBackgroundColorAsync(Color? color = null);
+
+        /// <summary>
+        /// Performs the screenshot action.
+        /// </summary>
+        /// <param name="format">Screenshot format.</param>
+        /// <param name="options">Options.</param>
+        /// <param name="viewport">Viewport.</param>
+        /// <returns>A <see cref="Task"/> that completes when the screenshot was taken, yielding the screenshot as a <see cref="byte"/> array.</returns>
+        Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport);
     }
 }

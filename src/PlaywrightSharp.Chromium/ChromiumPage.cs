@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -74,26 +75,25 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetViewportAsync(Viewport viewport)
         {
-            var isLandscape = viewport.Width > viewport.Height;
+            bool isLandscape = viewport.Width > viewport.Height;
             var screenOrientation = isLandscape
-                ? new ScreenOrientation() { Angle = 90, Type = EvaluationScriptUrl } : { angle: 0, type: 'portraitPrimary' };
-            await Promise.all([
-                this._client.send('Emulation.setDeviceMetricsOverride', { mobile: isMobile, width, height, deviceScaleFactor, screenOrientation }),
-            this._client.send('Emulation.setTouchEmulationEnabled', { enabled: isMobile })
-            ]);
+                ? new ScreenOrientation { Angle = 90, Type = "landscapePrimary" }
+                : new ScreenOrientation { Angle = 0, Type = "portraitPrimary" };
+
+            return Task.WhenAll(
+                Client.SendAsync(new EmulationSetDeviceMetricsOverrideRequest
+                {
+                    Mobile = viewport.IsMobile,
+                    Width = viewport.Width,
+                    Height = viewport.Height,
+                    DeviceScaleFactor = viewport.DeviceScaleFactor,
+                    ScreenOrientation = screenOrientation,
+                }),
+                Client.SendAsync(new EmulationSetTouchEmulationEnabledRequest { Enabled = viewport.IsMobile }));
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)
-        {
-            if (runBeforeUnload)
-            {
-                return Client.SendAsync(new PageCloseRequest());
-            }
-            else
-            {
-                return _browser.ClosePageAsync(this);
-            }
-        }
+            => runBeforeUnload ? Client.SendAsync(new PageCloseRequest()) : _browser.ClosePageAsync(this);
 
         public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
         {
@@ -109,12 +109,7 @@ namespace PlaywrightSharp.Chromium
                 ObjectId = handle.RemoteObject.ObjectId,
             }).ConfigureAwait(false);
 
-            if (result == null)
-            {
-                return null;
-            }
-
-            return result.Quads.Select(quad => new[]
+            return result?.Quads.Select(quad => new[]
             {
                 new Quad
                 {
@@ -149,6 +144,14 @@ namespace PlaywrightSharp.Chromium
                 Height = layoutMetrics.LayoutViewport.ClientHeight.Value,
             };
         }
+
+        public bool CanScreenshotOutsideViewport() => throw new NotImplementedException();
+
+        public Task ResetViewportAsync(Size viewportSize) => throw new NotImplementedException();
+
+        public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
+
+        public Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport) => throw new NotImplementedException();
 
         internal async Task InitializeAsync()
         {

@@ -13,7 +13,7 @@ namespace PlaywrightSharp
         {
             _delegate = browserContextDelegate;
             _delegate.BrowserContext = this;
-            Options = options ?? new BrowserContextOptions();
+            Options = options?.Clone() ?? new BrowserContextOptions();
         }
 
         /// <inheritdoc cref="IBrowserContext.Options"/>

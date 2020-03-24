@@ -121,17 +121,17 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var page = await NewPageAsync(new BrowserContextOptions
             {
-                Viewport =
+                Viewport = new Viewport
                 {
                     Width = 456,
-                    Height =  789
+                    Height = 789
                 }
             });
 
             Assert.Equal(456, page.Viewport.Width);
             Assert.Equal(789, page.Viewport.Height);
             Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var page = await NewPageAsync(new BrowserContextOptions
             {
-                Viewport =
+                Viewport = new Viewport
                 {
                     Width = 456,
                     Height =  789

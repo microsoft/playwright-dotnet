@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -10,10 +9,11 @@ using PlaywrightSharp.Input;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage"/>
-    public sealed class Page : IPage
+    public sealed class Page : IPage, IDisposable
     {
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private bool _disconnected;
+        private Screenshotter _screenshotter;
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -23,6 +23,10 @@ namespace PlaywrightSharp
             BrowserContext = browserContext;
             Keyboard = new Keyboard(Delegate.RawKeyboard);
             Mouse = new Mouse(Delegate.RawMouse, Keyboard);
+
+            PageState = new PageState { Viewport = browserContext.Options.Viewport };
+
+            _screenshotter = new Screenshotter(this);
         }
 
         /// <inheritdoc cref="IPage.Console"/>
@@ -89,7 +93,7 @@ namespace PlaywrightSharp
         public IBrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc cref="IPage.Viewport"/>
-        public Viewport Viewport => null;
+        public Viewport Viewport => PageState.Viewport;
 
         /// <inheritdoc cref="IPage.Accessibility"/>
         public IAccessibility Accessibility => null;
@@ -125,7 +129,7 @@ namespace PlaywrightSharp
 
         internal bool HasPopupEventListeners => Popup?.GetInvocationList().Length > 0;
 
-        internal PageState PageState { get; } = new PageState();
+        internal PageState PageState { get; }
 
         internal IPageDelegate Delegate { get; }
 
@@ -289,9 +293,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.ScreenshotAsync(ScreenshotOptions)"/>
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+            => _screenshotter.ScreenshotPageAsync(options);
 
         /// <inheritdoc cref="IPage.SetCacheEnabledAsync(bool)"/>
         public Task SetCacheEnabledAsync(bool enabled = true)
@@ -336,9 +338,23 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>
-        public Task SetViewportAsync(Viewport viewport)
+        public async Task SetViewportAsync(Viewport viewport)
         {
-            throw new NotImplementedException();
+            if (viewport == null)
+            {
+                throw new ArgumentNullException(nameof(viewport));
+            }
+
+            bool oldIsMobile = PageState.Viewport?.IsMobile ?? false;
+            bool newIsMobile = viewport.IsMobile;
+            PageState.Viewport = viewport.Clone();
+
+            await Delegate.SetViewportAsync(viewport).ConfigureAwait(false);
+
+            if (oldIsMobile != newIsMobile)
+            {
+                await ReloadAsync().ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc cref="IPage.TripleClickAsync(string, ClickOptions)"/>
@@ -505,6 +521,9 @@ namespace PlaywrightSharp
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        public void Dispose() => _screenshotter?.Dispose();
 
         internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
 

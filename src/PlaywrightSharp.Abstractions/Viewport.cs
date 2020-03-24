@@ -28,5 +28,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <value>Specify device scale factor (can be thought of as dpr).</value>
         public double DeviceScaleFactor { get; set; } = 1;
+
+        /// <summary>
+        /// Clones the <see cref="Viewport"/>.
+        /// </summary>
+        /// <returns>A copy of the current <see cref="Viewport"/>.</returns>
+        public Viewport Clone() => (Viewport)MemberwiseClone();
     }
 }

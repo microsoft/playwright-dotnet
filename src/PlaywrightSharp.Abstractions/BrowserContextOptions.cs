@@ -46,5 +46,16 @@ namespace PlaywrightSharp
         /// A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/> for more details.
         /// </summary>
         public Dictionary<string, ContextPermission[]> Permissions { get; set; }
+
+        /// <summary>
+        /// Clones the <see cref="BrowserContextOptions"/>.
+        /// </summary>
+        /// <returns>A copy of the current <see cref="BrowserContextOptions"/>.</returns>
+        public BrowserContextOptions Clone()
+        {
+            var copy = (BrowserContextOptions)MemberwiseClone();
+            copy.Viewport = Viewport.Clone();
+            return copy;
+        }
     }
 }

@@ -24,6 +24,11 @@ namespace PlaywrightSharp
         /// Specify screenshot type, can be either jpeg or png. Defaults to 'png'.
         /// </summary>
         /// <value>The type.</value>
-        public ScreenshotType? Type { get; set; }
+        public ScreenshotFormat? Type { get; set; }
+
+        /// <summary>
+        /// The quality of the image, between 0-100. Not applicable to png images.
+        /// </summary>
+        public int? Quality { get; set; }
     }
 }
