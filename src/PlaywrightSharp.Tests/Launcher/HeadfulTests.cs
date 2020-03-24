@@ -14,8 +14,9 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>headul.spec.js</playwright-file>
     ///<playwright-describe>Headful</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class HeadfulTests : PlaywrightSharpBrowserContextBaseTest
+    public class HeadfulTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public HeadfulTests(ITestOutputHelper output) : base(output)

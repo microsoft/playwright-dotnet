@@ -106,20 +106,13 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     builder.AppendLine("/// <summary>");
                     builder.Append("/// ").AppendLine(FormatDocs(type.Description));
                     builder.AppendLine("/// </summary>");
-                    builder.Append("internal class ").Append(type.Id).AppendLine(GetTypeInterfaces(type.Id));
+                    GenerateTypeDefinition(builder, type.Id);
                     builder.AppendLine("{");
                     builder.AppendJoin("\n", NormalizeProperties(type.Properties, false));
                     builder.AppendLine("}");
                 }
             }
         }
-
-        private string GetTypeInterfaces(string id)
-            => id switch
-            {
-                "RemoteObject" => ": IRemoteObject",
-                _ => string.Empty
-            };
 
         private void GenerateCommands(StringBuilder builder, ChromiumProtocolDomain domain)
         {
@@ -143,7 +136,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     builder.Append("[System.Obsolete(\"").Append(command.Description.Replace("\n", "\\n", StringComparison.OrdinalIgnoreCase)).AppendLine("\")]");
                 }
 
-                builder.Append("internal class ").Append(baseName).Append("Request : IChromiumRequest<").Append(baseName).AppendLine("Response>");
+                GenerateRequestDefinition(builder, baseName);
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.Append("public string Command { get; } = \"").Append(domain.Domain).Append('.').Append(command.Name).AppendLine("\";");
@@ -154,7 +147,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.AppendLine("/// <summary>");
                 builder.Append("/// Response from <see cref=\"").Append(baseName).AppendLine("Request\"/>");
                 builder.AppendLine("/// </summary>");
-                builder.Append("internal class ").Append(baseName).AppendLine("Response : IChromiumResponse");
+                GenerateResponseDefinition(builder, baseName);
                 builder.AppendLine("{");
                 builder.AppendJoin("\n", NormalizeProperties(command.Returns, true));
                 builder.AppendLine("}");
@@ -177,7 +170,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.AppendLine("/// <remarks>");
                 builder.Append("/// Matches on the event <c>").Append(domain.Domain).Append('.').Append(e.Name).AppendLine("</c>");
                 builder.AppendLine("/// </remarks>");
-                builder.Append("internal class ").Append(domain.Domain).Append(eventName).AppendLine("ChromiumEvent : IChromiumEvent");
+                GenerateEventDefinition(builder, domain.Domain + eventName);
                 builder.AppendLine("{");
                 builder.Append("public string InternalName { get; } = \"").Append(domain.Domain).Append('.').Append(e.Name).AppendLine("\";");
                 builder.AppendJoin("\n", NormalizeProperties(e.Parameters, false));

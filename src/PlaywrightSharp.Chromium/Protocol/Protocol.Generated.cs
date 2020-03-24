@@ -7,9 +7,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 using System.Text.Json;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace PlaywrightSharp.Chromium.Protocol.Accessibility
 {
@@ -62,7 +62,7 @@ internal enum AXValueNativeSourceType
 /// <summary>
 /// A single source for a computed AX property.
 /// </summary>
-internal class AXValueSource
+internal partial class AXValueSource
 {
 /// <summary>
 /// What type of source this is.
@@ -103,7 +103,7 @@ public string InvalidReason { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class AXRelatedNode
+internal partial class AXRelatedNode
 {
 /// <summary>
 /// The BackendNodeId of the related DOM node.
@@ -120,7 +120,7 @@ public string Text { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class AXProperty
+internal partial class AXProperty
 {
 /// <summary>
 /// The name of this property.
@@ -133,7 +133,7 @@ public AXValue Value { get; set; }}
 /// <summary>
 /// A single computed AX property.
 /// </summary>
-internal class AXValue
+internal partial class AXValue
 {
 /// <summary>
 /// The type of this value.
@@ -203,7 +203,7 @@ internal enum AXPropertyName
 /// <summary>
 /// A node in the accessibility tree.
 /// </summary>
-internal class AXNode
+internal partial class AXNode
 {
 /// <summary>
 /// Unique identifier for this node.
@@ -251,7 +251,7 @@ public int? BackendDOMNodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Accessibility.disable</c>
 /// </remarks>
-internal class AccessibilityDisableRequest : IChromiumRequest<AccessibilityDisableResponse>
+internal partial class AccessibilityDisableRequest : IChromiumRequest<AccessibilityDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Accessibility.disable";
@@ -259,7 +259,7 @@ public string Command { get; } = "Accessibility.disable";
 /// <summary>
 /// Response from <see cref="AccessibilityDisableRequest"/>
 /// </summary>
-internal class AccessibilityDisableResponse : IChromiumResponse
+internal partial class AccessibilityDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -269,7 +269,7 @@ internal class AccessibilityDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Accessibility.enable</c>
 /// </remarks>
-internal class AccessibilityEnableRequest : IChromiumRequest<AccessibilityEnableResponse>
+internal partial class AccessibilityEnableRequest : IChromiumRequest<AccessibilityEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Accessibility.enable";
@@ -277,7 +277,7 @@ public string Command { get; } = "Accessibility.enable";
 /// <summary>
 /// Response from <see cref="AccessibilityEnableRequest"/>
 /// </summary>
-internal class AccessibilityEnableResponse : IChromiumResponse
+internal partial class AccessibilityEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -286,7 +286,7 @@ internal class AccessibilityEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Accessibility.getPartialAXTree</c>
 /// </remarks>
-internal class AccessibilityGetPartialAXTreeRequest : IChromiumRequest<AccessibilityGetPartialAXTreeResponse>
+internal partial class AccessibilityGetPartialAXTreeRequest : IChromiumRequest<AccessibilityGetPartialAXTreeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Accessibility.getPartialAXTree";
@@ -309,7 +309,7 @@ public bool? FetchRelatives { get; set; }}
 /// <summary>
 /// Response from <see cref="AccessibilityGetPartialAXTreeRequest"/>
 /// </summary>
-internal class AccessibilityGetPartialAXTreeResponse : IChromiumResponse
+internal partial class AccessibilityGetPartialAXTreeResponse: IChromiumResponse
 {
 /// <summary>
 /// The `Accessibility.AXNode` for this DOM node, if it exists, plus its ancestors, siblings and
@@ -322,7 +322,7 @@ public AXNode[] Nodes { get; set; }}
 /// <remarks>
 /// Will send the command <c>Accessibility.getFullAXTree</c>
 /// </remarks>
-internal class AccessibilityGetFullAXTreeRequest : IChromiumRequest<AccessibilityGetFullAXTreeResponse>
+internal partial class AccessibilityGetFullAXTreeRequest : IChromiumRequest<AccessibilityGetFullAXTreeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Accessibility.getFullAXTree";
@@ -330,7 +330,7 @@ public string Command { get; } = "Accessibility.getFullAXTree";
 /// <summary>
 /// Response from <see cref="AccessibilityGetFullAXTreeRequest"/>
 /// </summary>
-internal class AccessibilityGetFullAXTreeResponse : IChromiumResponse
+internal partial class AccessibilityGetFullAXTreeResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -342,7 +342,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Animation
 /// <summary>
 /// Animation instance.
 /// </summary>
-internal class Animation
+internal partial class Animation
 {
 /// <summary>
 /// `Animation`'s id.
@@ -388,7 +388,7 @@ public string CssId { get; set; }}
 /// <summary>
 /// AnimationEffect instance
 /// </summary>
-internal class AnimationEffect
+internal partial class AnimationEffect
 {
 /// <summary>
 /// `AnimationEffect`'s delay.
@@ -433,7 +433,7 @@ public string Easing { get; set; }}
 /// <summary>
 /// Keyframes Rule
 /// </summary>
-internal class KeyframesRule
+internal partial class KeyframesRule
 {
 /// <summary>
 /// CSS keyframed animation's name.
@@ -446,7 +446,7 @@ public KeyframeStyle[] Keyframes { get; set; }}
 /// <summary>
 /// Keyframe Style
 /// </summary>
-internal class KeyframeStyle
+internal partial class KeyframeStyle
 {
 /// <summary>
 /// Keyframe's time offset.
@@ -462,7 +462,7 @@ public string Easing { get; set; }}
 /// <remarks>
 /// Will send the command <c>Animation.disable</c>
 /// </remarks>
-internal class AnimationDisableRequest : IChromiumRequest<AnimationDisableResponse>
+internal partial class AnimationDisableRequest : IChromiumRequest<AnimationDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.disable";
@@ -470,7 +470,7 @@ public string Command { get; } = "Animation.disable";
 /// <summary>
 /// Response from <see cref="AnimationDisableRequest"/>
 /// </summary>
-internal class AnimationDisableResponse : IChromiumResponse
+internal partial class AnimationDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -479,7 +479,7 @@ internal class AnimationDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Animation.enable</c>
 /// </remarks>
-internal class AnimationEnableRequest : IChromiumRequest<AnimationEnableResponse>
+internal partial class AnimationEnableRequest : IChromiumRequest<AnimationEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.enable";
@@ -487,7 +487,7 @@ public string Command { get; } = "Animation.enable";
 /// <summary>
 /// Response from <see cref="AnimationEnableRequest"/>
 /// </summary>
-internal class AnimationEnableResponse : IChromiumResponse
+internal partial class AnimationEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -496,7 +496,7 @@ internal class AnimationEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Animation.getCurrentTime</c>
 /// </remarks>
-internal class AnimationGetCurrentTimeRequest : IChromiumRequest<AnimationGetCurrentTimeResponse>
+internal partial class AnimationGetCurrentTimeRequest : IChromiumRequest<AnimationGetCurrentTimeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.getCurrentTime";
@@ -507,7 +507,7 @@ public string Id { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationGetCurrentTimeRequest"/>
 /// </summary>
-internal class AnimationGetCurrentTimeResponse : IChromiumResponse
+internal partial class AnimationGetCurrentTimeResponse: IChromiumResponse
 {
 /// <summary>
 /// Current time of the page.
@@ -519,7 +519,7 @@ public double? CurrentTime { get; set; }}
 /// <remarks>
 /// Will send the command <c>Animation.getPlaybackRate</c>
 /// </remarks>
-internal class AnimationGetPlaybackRateRequest : IChromiumRequest<AnimationGetPlaybackRateResponse>
+internal partial class AnimationGetPlaybackRateRequest : IChromiumRequest<AnimationGetPlaybackRateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.getPlaybackRate";
@@ -527,7 +527,7 @@ public string Command { get; } = "Animation.getPlaybackRate";
 /// <summary>
 /// Response from <see cref="AnimationGetPlaybackRateRequest"/>
 /// </summary>
-internal class AnimationGetPlaybackRateResponse : IChromiumResponse
+internal partial class AnimationGetPlaybackRateResponse: IChromiumResponse
 {
 /// <summary>
 /// Playback rate for animations on page.
@@ -539,7 +539,7 @@ public double? PlaybackRate { get; set; }}
 /// <remarks>
 /// Will send the command <c>Animation.releaseAnimations</c>
 /// </remarks>
-internal class AnimationReleaseAnimationsRequest : IChromiumRequest<AnimationReleaseAnimationsResponse>
+internal partial class AnimationReleaseAnimationsRequest : IChromiumRequest<AnimationReleaseAnimationsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.releaseAnimations";
@@ -550,7 +550,7 @@ public string[] Animations { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationReleaseAnimationsRequest"/>
 /// </summary>
-internal class AnimationReleaseAnimationsResponse : IChromiumResponse
+internal partial class AnimationReleaseAnimationsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -559,7 +559,7 @@ internal class AnimationReleaseAnimationsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Animation.resolveAnimation</c>
 /// </remarks>
-internal class AnimationResolveAnimationRequest : IChromiumRequest<AnimationResolveAnimationResponse>
+internal partial class AnimationResolveAnimationRequest : IChromiumRequest<AnimationResolveAnimationResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.resolveAnimation";
@@ -570,7 +570,7 @@ public string AnimationId { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationResolveAnimationRequest"/>
 /// </summary>
-internal class AnimationResolveAnimationResponse : IChromiumResponse
+internal partial class AnimationResolveAnimationResponse: IChromiumResponse
 {
 /// <summary>
 /// Corresponding remote object.
@@ -582,7 +582,7 @@ public Runtime.RemoteObject RemoteObject { get; set; }}
 /// <remarks>
 /// Will send the command <c>Animation.seekAnimations</c>
 /// </remarks>
-internal class AnimationSeekAnimationsRequest : IChromiumRequest<AnimationSeekAnimationsResponse>
+internal partial class AnimationSeekAnimationsRequest : IChromiumRequest<AnimationSeekAnimationsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.seekAnimations";
@@ -597,7 +597,7 @@ public double? CurrentTime { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSeekAnimationsRequest"/>
 /// </summary>
-internal class AnimationSeekAnimationsResponse : IChromiumResponse
+internal partial class AnimationSeekAnimationsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -606,7 +606,7 @@ internal class AnimationSeekAnimationsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Animation.setPaused</c>
 /// </remarks>
-internal class AnimationSetPausedRequest : IChromiumRequest<AnimationSetPausedResponse>
+internal partial class AnimationSetPausedRequest : IChromiumRequest<AnimationSetPausedResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.setPaused";
@@ -621,7 +621,7 @@ public bool? Paused { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSetPausedRequest"/>
 /// </summary>
-internal class AnimationSetPausedResponse : IChromiumResponse
+internal partial class AnimationSetPausedResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -630,7 +630,7 @@ internal class AnimationSetPausedResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Animation.setPlaybackRate</c>
 /// </remarks>
-internal class AnimationSetPlaybackRateRequest : IChromiumRequest<AnimationSetPlaybackRateResponse>
+internal partial class AnimationSetPlaybackRateRequest : IChromiumRequest<AnimationSetPlaybackRateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.setPlaybackRate";
@@ -641,7 +641,7 @@ public double? PlaybackRate { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSetPlaybackRateRequest"/>
 /// </summary>
-internal class AnimationSetPlaybackRateResponse : IChromiumResponse
+internal partial class AnimationSetPlaybackRateResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -650,7 +650,7 @@ internal class AnimationSetPlaybackRateResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Animation.setTiming</c>
 /// </remarks>
-internal class AnimationSetTimingRequest : IChromiumRequest<AnimationSetTimingResponse>
+internal partial class AnimationSetTimingRequest : IChromiumRequest<AnimationSetTimingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Animation.setTiming";
@@ -669,7 +669,7 @@ public double? Delay { get; set; }}
 /// <summary>
 /// Response from <see cref="AnimationSetTimingRequest"/>
 /// </summary>
-internal class AnimationSetTimingResponse : IChromiumResponse
+internal partial class AnimationSetTimingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -678,7 +678,7 @@ internal class AnimationSetTimingResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Animation.animationCanceled</c>
 /// </remarks>
-internal class AnimationAnimationCanceledChromiumEvent : IChromiumEvent
+internal partial class AnimationAnimationCanceledChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Animation.animationCanceled";
 /// <summary>
@@ -691,7 +691,7 @@ public string Id { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Animation.animationCreated</c>
 /// </remarks>
-internal class AnimationAnimationCreatedChromiumEvent : IChromiumEvent
+internal partial class AnimationAnimationCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Animation.animationCreated";
 /// <summary>
@@ -704,7 +704,7 @@ public string Id { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Animation.animationStarted</c>
 /// </remarks>
-internal class AnimationAnimationStartedChromiumEvent : IChromiumEvent
+internal partial class AnimationAnimationStartedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Animation.animationStarted";
 /// <summary>
@@ -717,7 +717,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
 /// <summary>
 /// Detailed application cache resource information.
 /// </summary>
-internal class ApplicationCacheResource
+internal partial class ApplicationCacheResource
 {
 /// <summary>
 /// Resource url.
@@ -734,7 +734,7 @@ public string Type { get; set; }}
 /// <summary>
 /// Detailed application cache information.
 /// </summary>
-internal class ApplicationCache
+internal partial class ApplicationCache
 {
 /// <summary>
 /// Manifest URL.
@@ -759,7 +759,7 @@ public ApplicationCacheResource[] Resources { get; set; }}
 /// <summary>
 /// Frame identifier - manifest URL pair.
 /// </summary>
-internal class FrameWithManifest
+internal partial class FrameWithManifest
 {
 /// <summary>
 /// Frame identifier.
@@ -779,7 +779,7 @@ public int? Status { get; set; }}
 /// <remarks>
 /// Will send the command <c>ApplicationCache.enable</c>
 /// </remarks>
-internal class ApplicationCacheEnableRequest : IChromiumRequest<ApplicationCacheEnableResponse>
+internal partial class ApplicationCacheEnableRequest : IChromiumRequest<ApplicationCacheEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ApplicationCache.enable";
@@ -787,7 +787,7 @@ public string Command { get; } = "ApplicationCache.enable";
 /// <summary>
 /// Response from <see cref="ApplicationCacheEnableRequest"/>
 /// </summary>
-internal class ApplicationCacheEnableResponse : IChromiumResponse
+internal partial class ApplicationCacheEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -796,7 +796,7 @@ internal class ApplicationCacheEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ApplicationCache.getApplicationCacheForFrame</c>
 /// </remarks>
-internal class ApplicationCacheGetApplicationCacheForFrameRequest : IChromiumRequest<ApplicationCacheGetApplicationCacheForFrameResponse>
+internal partial class ApplicationCacheGetApplicationCacheForFrameRequest : IChromiumRequest<ApplicationCacheGetApplicationCacheForFrameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ApplicationCache.getApplicationCacheForFrame";
@@ -807,7 +807,7 @@ public string FrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetApplicationCacheForFrameRequest"/>
 /// </summary>
-internal class ApplicationCacheGetApplicationCacheForFrameResponse : IChromiumResponse
+internal partial class ApplicationCacheGetApplicationCacheForFrameResponse: IChromiumResponse
 {
 /// <summary>
 /// Relevant application cache data for the document in given frame.
@@ -820,7 +820,7 @@ public ApplicationCache ApplicationCache { get; set; }}
 /// <remarks>
 /// Will send the command <c>ApplicationCache.getFramesWithManifests</c>
 /// </remarks>
-internal class ApplicationCacheGetFramesWithManifestsRequest : IChromiumRequest<ApplicationCacheGetFramesWithManifestsResponse>
+internal partial class ApplicationCacheGetFramesWithManifestsRequest : IChromiumRequest<ApplicationCacheGetFramesWithManifestsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ApplicationCache.getFramesWithManifests";
@@ -828,7 +828,7 @@ public string Command { get; } = "ApplicationCache.getFramesWithManifests";
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetFramesWithManifestsRequest"/>
 /// </summary>
-internal class ApplicationCacheGetFramesWithManifestsResponse : IChromiumResponse
+internal partial class ApplicationCacheGetFramesWithManifestsResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of frame identifiers with manifest urls for each frame containing a document
@@ -841,7 +841,7 @@ public FrameWithManifest[] FrameIds { get; set; }}
 /// <remarks>
 /// Will send the command <c>ApplicationCache.getManifestForFrame</c>
 /// </remarks>
-internal class ApplicationCacheGetManifestForFrameRequest : IChromiumRequest<ApplicationCacheGetManifestForFrameResponse>
+internal partial class ApplicationCacheGetManifestForFrameRequest : IChromiumRequest<ApplicationCacheGetManifestForFrameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ApplicationCache.getManifestForFrame";
@@ -852,7 +852,7 @@ public string FrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetManifestForFrameRequest"/>
 /// </summary>
-internal class ApplicationCacheGetManifestForFrameResponse : IChromiumResponse
+internal partial class ApplicationCacheGetManifestForFrameResponse: IChromiumResponse
 {
 /// <summary>
 /// Manifest URL for document in the given frame.
@@ -864,7 +864,7 @@ public string ManifestURL { get; set; }}
 /// <remarks>
 /// Matches on the event <c>ApplicationCache.applicationCacheStatusUpdated</c>
 /// </remarks>
-internal class ApplicationCacheApplicationCacheStatusUpdatedChromiumEvent : IChromiumEvent
+internal partial class ApplicationCacheApplicationCacheStatusUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "ApplicationCache.applicationCacheStatusUpdated";
 /// <summary>
@@ -885,7 +885,7 @@ public int? Status { get; set; }}
 /// <remarks>
 /// Matches on the event <c>ApplicationCache.networkStateUpdated</c>
 /// </remarks>
-internal class ApplicationCacheNetworkStateUpdatedChromiumEvent : IChromiumEvent
+internal partial class ApplicationCacheNetworkStateUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "ApplicationCache.networkStateUpdated";
 /// <summary>
@@ -902,7 +902,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Audits
 /// <remarks>
 /// Will send the command <c>Audits.getEncodedResponse</c>
 /// </remarks>
-internal class AuditsGetEncodedResponseRequest : IChromiumRequest<AuditsGetEncodedResponseResponse>
+internal partial class AuditsGetEncodedResponseRequest : IChromiumRequest<AuditsGetEncodedResponseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Audits.getEncodedResponse";
@@ -925,7 +925,7 @@ public bool? SizeOnly { get; set; }}
 /// <summary>
 /// Response from <see cref="AuditsGetEncodedResponseRequest"/>
 /// </summary>
-internal class AuditsGetEncodedResponseResponse : IChromiumResponse
+internal partial class AuditsGetEncodedResponseResponse: IChromiumResponse
 {
 /// <summary>
 /// The encoded body as a base64 string. Omitted if sizeOnly is true.
@@ -958,7 +958,7 @@ internal enum ServiceName
 /// <summary>
 /// A key-value pair for additional event information to pass along.
 /// </summary>
-internal class EventMetadata
+internal partial class EventMetadata
 {
 /// <summary>
 /// 
@@ -971,7 +971,7 @@ public string Value { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class BackgroundServiceEvent
+internal partial class BackgroundServiceEvent
 {
 /// <summary>
 /// Timestamp of the event (in seconds).
@@ -1007,7 +1007,7 @@ public EventMetadata[] EventMetadata { get; set; }}
 /// <remarks>
 /// Will send the command <c>BackgroundService.startObserving</c>
 /// </remarks>
-internal class BackgroundServiceStartObservingRequest : IChromiumRequest<BackgroundServiceStartObservingResponse>
+internal partial class BackgroundServiceStartObservingRequest : IChromiumRequest<BackgroundServiceStartObservingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.startObserving";
@@ -1018,7 +1018,7 @@ public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceStartObservingRequest"/>
 /// </summary>
-internal class BackgroundServiceStartObservingResponse : IChromiumResponse
+internal partial class BackgroundServiceStartObservingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1027,7 +1027,7 @@ internal class BackgroundServiceStartObservingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>BackgroundService.stopObserving</c>
 /// </remarks>
-internal class BackgroundServiceStopObservingRequest : IChromiumRequest<BackgroundServiceStopObservingResponse>
+internal partial class BackgroundServiceStopObservingRequest : IChromiumRequest<BackgroundServiceStopObservingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.stopObserving";
@@ -1038,7 +1038,7 @@ public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceStopObservingRequest"/>
 /// </summary>
-internal class BackgroundServiceStopObservingResponse : IChromiumResponse
+internal partial class BackgroundServiceStopObservingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1047,7 +1047,7 @@ internal class BackgroundServiceStopObservingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>BackgroundService.setRecording</c>
 /// </remarks>
-internal class BackgroundServiceSetRecordingRequest : IChromiumRequest<BackgroundServiceSetRecordingResponse>
+internal partial class BackgroundServiceSetRecordingRequest : IChromiumRequest<BackgroundServiceSetRecordingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.setRecording";
@@ -1062,7 +1062,7 @@ public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceSetRecordingRequest"/>
 /// </summary>
-internal class BackgroundServiceSetRecordingResponse : IChromiumResponse
+internal partial class BackgroundServiceSetRecordingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1071,7 +1071,7 @@ internal class BackgroundServiceSetRecordingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>BackgroundService.clearEvents</c>
 /// </remarks>
-internal class BackgroundServiceClearEventsRequest : IChromiumRequest<BackgroundServiceClearEventsResponse>
+internal partial class BackgroundServiceClearEventsRequest : IChromiumRequest<BackgroundServiceClearEventsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.clearEvents";
@@ -1082,7 +1082,7 @@ public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceClearEventsRequest"/>
 /// </summary>
-internal class BackgroundServiceClearEventsResponse : IChromiumResponse
+internal partial class BackgroundServiceClearEventsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1091,7 +1091,7 @@ internal class BackgroundServiceClearEventsResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>BackgroundService.recordingStateChanged</c>
 /// </remarks>
-internal class BackgroundServiceRecordingStateChangedChromiumEvent : IChromiumEvent
+internal partial class BackgroundServiceRecordingStateChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "BackgroundService.recordingStateChanged";
 /// <summary>
@@ -1109,7 +1109,7 @@ public ServiceName Service { get; set; }}
 /// <remarks>
 /// Matches on the event <c>BackgroundService.backgroundServiceEventReceived</c>
 /// </remarks>
-internal class BackgroundServiceBackgroundServiceEventReceivedChromiumEvent : IChromiumEvent
+internal partial class BackgroundServiceBackgroundServiceEventReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "BackgroundService.backgroundServiceEventReceived";
 /// <summary>
@@ -1131,7 +1131,7 @@ internal enum WindowState
 /// <summary>
 /// Browser window bounds information
 /// </summary>
-internal class Bounds
+internal partial class Bounds
 {
 /// <summary>
 /// The offset from the left edge of the screen to the window in pixels.
@@ -1191,7 +1191,7 @@ internal enum PermissionSetting
 /// Definition of PermissionDescriptor defined in the Permissions API:
 /// https://w3c.github.io/permissions/#dictdef-permissiondescriptor.
 /// </summary>
-internal class PermissionDescriptor
+internal partial class PermissionDescriptor
 {
 /// <summary>
 /// Name of permission.
@@ -1218,7 +1218,7 @@ public bool? AllowWithoutSanitization { get; set; }}
 /// <summary>
 /// Chrome histogram bucket.
 /// </summary>
-internal class Bucket
+internal partial class Bucket
 {
 /// <summary>
 /// Minimum value (inclusive).
@@ -1235,7 +1235,7 @@ public int? Count { get; set; }}
 /// <summary>
 /// Chrome histogram.
 /// </summary>
-internal class Histogram
+internal partial class Histogram
 {
 /// <summary>
 /// Name.
@@ -1259,7 +1259,7 @@ public Bucket[] Buckets { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.setPermission</c>
 /// </remarks>
-internal class BrowserSetPermissionRequest : IChromiumRequest<BrowserSetPermissionResponse>
+internal partial class BrowserSetPermissionRequest : IChromiumRequest<BrowserSetPermissionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.setPermission";
@@ -1282,7 +1282,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserSetPermissionRequest"/>
 /// </summary>
-internal class BrowserSetPermissionResponse : IChromiumResponse
+internal partial class BrowserSetPermissionResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1291,7 +1291,7 @@ internal class BrowserSetPermissionResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.grantPermissions</c>
 /// </remarks>
-internal class BrowserGrantPermissionsRequest : IChromiumRequest<BrowserGrantPermissionsResponse>
+internal partial class BrowserGrantPermissionsRequest : IChromiumRequest<BrowserGrantPermissionsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.grantPermissions";
@@ -1310,7 +1310,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGrantPermissionsRequest"/>
 /// </summary>
-internal class BrowserGrantPermissionsResponse : IChromiumResponse
+internal partial class BrowserGrantPermissionsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1319,7 +1319,7 @@ internal class BrowserGrantPermissionsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.resetPermissions</c>
 /// </remarks>
-internal class BrowserResetPermissionsRequest : IChromiumRequest<BrowserResetPermissionsResponse>
+internal partial class BrowserResetPermissionsRequest : IChromiumRequest<BrowserResetPermissionsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.resetPermissions";
@@ -1330,7 +1330,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserResetPermissionsRequest"/>
 /// </summary>
-internal class BrowserResetPermissionsResponse : IChromiumResponse
+internal partial class BrowserResetPermissionsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1339,7 +1339,7 @@ internal class BrowserResetPermissionsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.close</c>
 /// </remarks>
-internal class BrowserCloseRequest : IChromiumRequest<BrowserCloseResponse>
+internal partial class BrowserCloseRequest : IChromiumRequest<BrowserCloseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.close";
@@ -1347,7 +1347,7 @@ public string Command { get; } = "Browser.close";
 /// <summary>
 /// Response from <see cref="BrowserCloseRequest"/>
 /// </summary>
-internal class BrowserCloseResponse : IChromiumResponse
+internal partial class BrowserCloseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1356,7 +1356,7 @@ internal class BrowserCloseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.crash</c>
 /// </remarks>
-internal class BrowserCrashRequest : IChromiumRequest<BrowserCrashResponse>
+internal partial class BrowserCrashRequest : IChromiumRequest<BrowserCrashResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.crash";
@@ -1364,7 +1364,7 @@ public string Command { get; } = "Browser.crash";
 /// <summary>
 /// Response from <see cref="BrowserCrashRequest"/>
 /// </summary>
-internal class BrowserCrashResponse : IChromiumResponse
+internal partial class BrowserCrashResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1373,7 +1373,7 @@ internal class BrowserCrashResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.crashGpuProcess</c>
 /// </remarks>
-internal class BrowserCrashGpuProcessRequest : IChromiumRequest<BrowserCrashGpuProcessResponse>
+internal partial class BrowserCrashGpuProcessRequest : IChromiumRequest<BrowserCrashGpuProcessResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.crashGpuProcess";
@@ -1381,7 +1381,7 @@ public string Command { get; } = "Browser.crashGpuProcess";
 /// <summary>
 /// Response from <see cref="BrowserCrashGpuProcessRequest"/>
 /// </summary>
-internal class BrowserCrashGpuProcessResponse : IChromiumResponse
+internal partial class BrowserCrashGpuProcessResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1390,7 +1390,7 @@ internal class BrowserCrashGpuProcessResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.getVersion</c>
 /// </remarks>
-internal class BrowserGetVersionRequest : IChromiumRequest<BrowserGetVersionResponse>
+internal partial class BrowserGetVersionRequest : IChromiumRequest<BrowserGetVersionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getVersion";
@@ -1398,7 +1398,7 @@ public string Command { get; } = "Browser.getVersion";
 /// <summary>
 /// Response from <see cref="BrowserGetVersionRequest"/>
 /// </summary>
-internal class BrowserGetVersionResponse : IChromiumResponse
+internal partial class BrowserGetVersionResponse: IChromiumResponse
 {
 /// <summary>
 /// Protocol version.
@@ -1427,7 +1427,7 @@ public string JsVersion { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.getBrowserCommandLine</c>
 /// </remarks>
-internal class BrowserGetBrowserCommandLineRequest : IChromiumRequest<BrowserGetBrowserCommandLineResponse>
+internal partial class BrowserGetBrowserCommandLineRequest : IChromiumRequest<BrowserGetBrowserCommandLineResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getBrowserCommandLine";
@@ -1435,7 +1435,7 @@ public string Command { get; } = "Browser.getBrowserCommandLine";
 /// <summary>
 /// Response from <see cref="BrowserGetBrowserCommandLineRequest"/>
 /// </summary>
-internal class BrowserGetBrowserCommandLineResponse : IChromiumResponse
+internal partial class BrowserGetBrowserCommandLineResponse: IChromiumResponse
 {
 /// <summary>
 /// Commandline parameters
@@ -1447,7 +1447,7 @@ public string[] Arguments { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.getHistograms</c>
 /// </remarks>
-internal class BrowserGetHistogramsRequest : IChromiumRequest<BrowserGetHistogramsResponse>
+internal partial class BrowserGetHistogramsRequest : IChromiumRequest<BrowserGetHistogramsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getHistograms";
@@ -1464,7 +1464,7 @@ public bool? Delta { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetHistogramsRequest"/>
 /// </summary>
-internal class BrowserGetHistogramsResponse : IChromiumResponse
+internal partial class BrowserGetHistogramsResponse: IChromiumResponse
 {
 /// <summary>
 /// Histograms.
@@ -1476,7 +1476,7 @@ public Histogram[] Histograms { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.getHistogram</c>
 /// </remarks>
-internal class BrowserGetHistogramRequest : IChromiumRequest<BrowserGetHistogramResponse>
+internal partial class BrowserGetHistogramRequest : IChromiumRequest<BrowserGetHistogramResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getHistogram";
@@ -1491,7 +1491,7 @@ public bool? Delta { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetHistogramRequest"/>
 /// </summary>
-internal class BrowserGetHistogramResponse : IChromiumResponse
+internal partial class BrowserGetHistogramResponse: IChromiumResponse
 {
 /// <summary>
 /// Histogram.
@@ -1503,7 +1503,7 @@ public Histogram Histogram { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.getWindowBounds</c>
 /// </remarks>
-internal class BrowserGetWindowBoundsRequest : IChromiumRequest<BrowserGetWindowBoundsResponse>
+internal partial class BrowserGetWindowBoundsRequest : IChromiumRequest<BrowserGetWindowBoundsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getWindowBounds";
@@ -1514,7 +1514,7 @@ public int? WindowId { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetWindowBoundsRequest"/>
 /// </summary>
-internal class BrowserGetWindowBoundsResponse : IChromiumResponse
+internal partial class BrowserGetWindowBoundsResponse: IChromiumResponse
 {
 /// <summary>
 /// Bounds information of the window. When window state is 'minimized', the restored window
@@ -1527,7 +1527,7 @@ public Bounds Bounds { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.getWindowForTarget</c>
 /// </remarks>
-internal class BrowserGetWindowForTargetRequest : IChromiumRequest<BrowserGetWindowForTargetResponse>
+internal partial class BrowserGetWindowForTargetRequest : IChromiumRequest<BrowserGetWindowForTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getWindowForTarget";
@@ -1538,7 +1538,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserGetWindowForTargetRequest"/>
 /// </summary>
-internal class BrowserGetWindowForTargetResponse : IChromiumResponse
+internal partial class BrowserGetWindowForTargetResponse: IChromiumResponse
 {
 /// <summary>
 /// Browser window id.
@@ -1555,7 +1555,7 @@ public Bounds Bounds { get; set; }}
 /// <remarks>
 /// Will send the command <c>Browser.setWindowBounds</c>
 /// </remarks>
-internal class BrowserSetWindowBoundsRequest : IChromiumRequest<BrowserSetWindowBoundsResponse>
+internal partial class BrowserSetWindowBoundsRequest : IChromiumRequest<BrowserSetWindowBoundsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.setWindowBounds";
@@ -1571,7 +1571,7 @@ public Bounds Bounds { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserSetWindowBoundsRequest"/>
 /// </summary>
-internal class BrowserSetWindowBoundsResponse : IChromiumResponse
+internal partial class BrowserSetWindowBoundsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -1580,7 +1580,7 @@ internal class BrowserSetWindowBoundsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Browser.setDockTile</c>
 /// </remarks>
-internal class BrowserSetDockTileRequest : IChromiumRequest<BrowserSetDockTileResponse>
+internal partial class BrowserSetDockTileRequest : IChromiumRequest<BrowserSetDockTileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.setDockTile";
@@ -1595,7 +1595,7 @@ public byte[] Image { get; set; }}
 /// <summary>
 /// Response from <see cref="BrowserSetDockTileRequest"/>
 /// </summary>
-internal class BrowserSetDockTileResponse : IChromiumResponse
+internal partial class BrowserSetDockTileResponse: IChromiumResponse
 {
 }
 }
@@ -1615,7 +1615,7 @@ internal enum StyleSheetOrigin
 /// <summary>
 /// CSS rule collection for a single pseudo style.
 /// </summary>
-internal class PseudoElementMatches
+internal partial class PseudoElementMatches
 {
 /// <summary>
 /// Pseudo element type.
@@ -1628,7 +1628,7 @@ public RuleMatch[] Matches { get; set; }}
 /// <summary>
 /// Inherited CSS rule collection from ancestor node.
 /// </summary>
-internal class InheritedStyleEntry
+internal partial class InheritedStyleEntry
 {
 /// <summary>
 /// The ancestor node's inline style, if any, in the style inheritance chain.
@@ -1641,7 +1641,7 @@ public RuleMatch[] MatchedCSSRules { get; set; }}
 /// <summary>
 /// Match data for a CSS rule.
 /// </summary>
-internal class RuleMatch
+internal partial class RuleMatch
 {
 /// <summary>
 /// CSS rule in the match.
@@ -1654,7 +1654,7 @@ public int?[] MatchingSelectors { get; set; }}
 /// <summary>
 /// Data for a simple selector (these are delimited by commas in a selector list).
 /// </summary>
-internal class Value
+internal partial class Value
 {
 /// <summary>
 /// Value text.
@@ -1667,7 +1667,7 @@ public SourceRange Range { get; set; }}
 /// <summary>
 /// Selector list data.
 /// </summary>
-internal class SelectorList
+internal partial class SelectorList
 {
 /// <summary>
 /// Selectors in the list.
@@ -1680,7 +1680,7 @@ public string Text { get; set; }}
 /// <summary>
 /// CSS stylesheet metainformation.
 /// </summary>
-internal class CSSStyleSheetHeader
+internal partial class CSSStyleSheetHeader
 {
 /// <summary>
 /// The stylesheet identifier.
@@ -1746,7 +1746,7 @@ public double? EndColumn { get; set; }}
 /// <summary>
 /// CSS rule representation.
 /// </summary>
-internal class CSSRule
+internal partial class CSSRule
 {
 /// <summary>
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
@@ -1773,7 +1773,7 @@ public CSSMedia[] Media { get; set; }}
 /// <summary>
 /// CSS coverage information.
 /// </summary>
-internal class RuleUsage
+internal partial class RuleUsage
 {
 /// <summary>
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
@@ -1795,7 +1795,7 @@ public bool? Used { get; set; }}
 /// <summary>
 /// Text range within a resource. All numbers are zero-based.
 /// </summary>
-internal class SourceRange
+internal partial class SourceRange
 {
 /// <summary>
 /// Start line of range.
@@ -1816,7 +1816,7 @@ public int? EndColumn { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class ShorthandEntry
+internal partial class ShorthandEntry
 {
 /// <summary>
 /// Shorthand name.
@@ -1833,7 +1833,7 @@ public bool? Important { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class CSSComputedStyleProperty
+internal partial class CSSComputedStyleProperty
 {
 /// <summary>
 /// Computed style property name.
@@ -1846,7 +1846,7 @@ public string Value { get; set; }}
 /// <summary>
 /// CSS style representation.
 /// </summary>
-internal class CSSStyle
+internal partial class CSSStyle
 {
 /// <summary>
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
@@ -1872,7 +1872,7 @@ public SourceRange Range { get; set; }}
 /// <summary>
 /// CSS property declaration data.
 /// </summary>
-internal class CSSProperty
+internal partial class CSSProperty
 {
 /// <summary>
 /// The property name.
@@ -1909,7 +1909,7 @@ public SourceRange Range { get; set; }}
 /// <summary>
 /// CSS media rule descriptor.
 /// </summary>
-internal class CSSMedia
+internal partial class CSSMedia
 {
 /// <summary>
 /// Media query text.
@@ -1942,7 +1942,7 @@ public MediaQuery[] MediaList { get; set; }}
 /// <summary>
 /// Media query descriptor.
 /// </summary>
-internal class MediaQuery
+internal partial class MediaQuery
 {
 /// <summary>
 /// Array of media query expressions.
@@ -1955,7 +1955,7 @@ public bool? Active { get; set; }}
 /// <summary>
 /// Media query expression descriptor.
 /// </summary>
-internal class MediaQueryExpression
+internal partial class MediaQueryExpression
 {
 /// <summary>
 /// Media query expression value.
@@ -1980,7 +1980,7 @@ public double? ComputedLength { get; set; }}
 /// <summary>
 /// Information about amount of glyphs that were rendered with given font.
 /// </summary>
-internal class PlatformFontUsage
+internal partial class PlatformFontUsage
 {
 /// <summary>
 /// Font's family name reported by platform.
@@ -1997,7 +1997,7 @@ public double? GlyphCount { get; set; }}
 /// <summary>
 /// Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions
 /// </summary>
-internal class FontFace
+internal partial class FontFace
 {
 /// <summary>
 /// The font-family.
@@ -2034,7 +2034,7 @@ public string PlatformFontFamily { get; set; }}
 /// <summary>
 /// CSS keyframes rule representation.
 /// </summary>
-internal class CSSKeyframesRule
+internal partial class CSSKeyframesRule
 {
 /// <summary>
 /// Animation name.
@@ -2047,7 +2047,7 @@ public CSSKeyframeRule[] Keyframes { get; set; }}
 /// <summary>
 /// CSS keyframe rule representation.
 /// </summary>
-internal class CSSKeyframeRule
+internal partial class CSSKeyframeRule
 {
 /// <summary>
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
@@ -2069,7 +2069,7 @@ public CSSStyle Style { get; set; }}
 /// <summary>
 /// A descriptor of operation to mutate style declaration text.
 /// </summary>
-internal class StyleDeclarationEdit
+internal partial class StyleDeclarationEdit
 {
 /// <summary>
 /// The css style sheet identifier.
@@ -2090,7 +2090,7 @@ public string Text { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.addRule</c>
 /// </remarks>
-internal class CSSAddRuleRequest : IChromiumRequest<CSSAddRuleResponse>
+internal partial class CSSAddRuleRequest : IChromiumRequest<CSSAddRuleResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.addRule";
@@ -2109,7 +2109,7 @@ public SourceRange Location { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSAddRuleRequest"/>
 /// </summary>
-internal class CSSAddRuleResponse : IChromiumResponse
+internal partial class CSSAddRuleResponse: IChromiumResponse
 {
 /// <summary>
 /// The newly created rule.
@@ -2121,7 +2121,7 @@ public CSSRule Rule { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.collectClassNames</c>
 /// </remarks>
-internal class CSSCollectClassNamesRequest : IChromiumRequest<CSSCollectClassNamesResponse>
+internal partial class CSSCollectClassNamesRequest : IChromiumRequest<CSSCollectClassNamesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.collectClassNames";
@@ -2132,7 +2132,7 @@ public string StyleSheetId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSCollectClassNamesRequest"/>
 /// </summary>
-internal class CSSCollectClassNamesResponse : IChromiumResponse
+internal partial class CSSCollectClassNamesResponse: IChromiumResponse
 {
 /// <summary>
 /// Class name list.
@@ -2144,7 +2144,7 @@ public string[] ClassNames { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.createStyleSheet</c>
 /// </remarks>
-internal class CSSCreateStyleSheetRequest : IChromiumRequest<CSSCreateStyleSheetResponse>
+internal partial class CSSCreateStyleSheetRequest : IChromiumRequest<CSSCreateStyleSheetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.createStyleSheet";
@@ -2155,7 +2155,7 @@ public string FrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSCreateStyleSheetRequest"/>
 /// </summary>
-internal class CSSCreateStyleSheetResponse : IChromiumResponse
+internal partial class CSSCreateStyleSheetResponse: IChromiumResponse
 {
 /// <summary>
 /// Identifier of the created "via-inspector" stylesheet.
@@ -2167,7 +2167,7 @@ public string StyleSheetId { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.disable</c>
 /// </remarks>
-internal class CSSDisableRequest : IChromiumRequest<CSSDisableResponse>
+internal partial class CSSDisableRequest : IChromiumRequest<CSSDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.disable";
@@ -2175,7 +2175,7 @@ public string Command { get; } = "CSS.disable";
 /// <summary>
 /// Response from <see cref="CSSDisableRequest"/>
 /// </summary>
-internal class CSSDisableResponse : IChromiumResponse
+internal partial class CSSDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2185,7 +2185,7 @@ internal class CSSDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CSS.enable</c>
 /// </remarks>
-internal class CSSEnableRequest : IChromiumRequest<CSSEnableResponse>
+internal partial class CSSEnableRequest : IChromiumRequest<CSSEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.enable";
@@ -2193,7 +2193,7 @@ public string Command { get; } = "CSS.enable";
 /// <summary>
 /// Response from <see cref="CSSEnableRequest"/>
 /// </summary>
-internal class CSSEnableResponse : IChromiumResponse
+internal partial class CSSEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2203,7 +2203,7 @@ internal class CSSEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CSS.forcePseudoState</c>
 /// </remarks>
-internal class CSSForcePseudoStateRequest : IChromiumRequest<CSSForcePseudoStateResponse>
+internal partial class CSSForcePseudoStateRequest : IChromiumRequest<CSSForcePseudoStateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.forcePseudoState";
@@ -2218,7 +2218,7 @@ public string[] ForcedPseudoClasses { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSForcePseudoStateRequest"/>
 /// </summary>
-internal class CSSForcePseudoStateResponse : IChromiumResponse
+internal partial class CSSForcePseudoStateResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2227,7 +2227,7 @@ internal class CSSForcePseudoStateResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CSS.getBackgroundColors</c>
 /// </remarks>
-internal class CSSGetBackgroundColorsRequest : IChromiumRequest<CSSGetBackgroundColorsResponse>
+internal partial class CSSGetBackgroundColorsRequest : IChromiumRequest<CSSGetBackgroundColorsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getBackgroundColors";
@@ -2238,7 +2238,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetBackgroundColorsRequest"/>
 /// </summary>
-internal class CSSGetBackgroundColorsResponse : IChromiumResponse
+internal partial class CSSGetBackgroundColorsResponse: IChromiumResponse
 {
 /// <summary>
 /// The range of background colors behind this element, if it contains any visible text. If no
@@ -2263,7 +2263,7 @@ public string ComputedFontWeight { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.getComputedStyleForNode</c>
 /// </remarks>
-internal class CSSGetComputedStyleForNodeRequest : IChromiumRequest<CSSGetComputedStyleForNodeResponse>
+internal partial class CSSGetComputedStyleForNodeRequest : IChromiumRequest<CSSGetComputedStyleForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getComputedStyleForNode";
@@ -2274,7 +2274,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
 /// </summary>
-internal class CSSGetComputedStyleForNodeResponse : IChromiumResponse
+internal partial class CSSGetComputedStyleForNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Computed style for the specified DOM node.
@@ -2287,7 +2287,7 @@ public CSSComputedStyleProperty[] ComputedStyle { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.getInlineStylesForNode</c>
 /// </remarks>
-internal class CSSGetInlineStylesForNodeRequest : IChromiumRequest<CSSGetInlineStylesForNodeResponse>
+internal partial class CSSGetInlineStylesForNodeRequest : IChromiumRequest<CSSGetInlineStylesForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getInlineStylesForNode";
@@ -2298,7 +2298,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
 /// </summary>
-internal class CSSGetInlineStylesForNodeResponse : IChromiumResponse
+internal partial class CSSGetInlineStylesForNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Inline style for the specified DOM node.
@@ -2314,7 +2314,7 @@ public CSSStyle AttributesStyle { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.getMatchedStylesForNode</c>
 /// </remarks>
-internal class CSSGetMatchedStylesForNodeRequest : IChromiumRequest<CSSGetMatchedStylesForNodeResponse>
+internal partial class CSSGetMatchedStylesForNodeRequest : IChromiumRequest<CSSGetMatchedStylesForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getMatchedStylesForNode";
@@ -2325,7 +2325,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
 /// </summary>
-internal class CSSGetMatchedStylesForNodeResponse : IChromiumResponse
+internal partial class CSSGetMatchedStylesForNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Inline style for the specified DOM node.
@@ -2357,7 +2357,7 @@ public CSSKeyframesRule[] CssKeyframesRules { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.getMediaQueries</c>
 /// </remarks>
-internal class CSSGetMediaQueriesRequest : IChromiumRequest<CSSGetMediaQueriesResponse>
+internal partial class CSSGetMediaQueriesRequest : IChromiumRequest<CSSGetMediaQueriesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getMediaQueries";
@@ -2365,7 +2365,7 @@ public string Command { get; } = "CSS.getMediaQueries";
 /// <summary>
 /// Response from <see cref="CSSGetMediaQueriesRequest"/>
 /// </summary>
-internal class CSSGetMediaQueriesResponse : IChromiumResponse
+internal partial class CSSGetMediaQueriesResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -2378,7 +2378,7 @@ public CSSMedia[] Medias { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.getPlatformFontsForNode</c>
 /// </remarks>
-internal class CSSGetPlatformFontsForNodeRequest : IChromiumRequest<CSSGetPlatformFontsForNodeResponse>
+internal partial class CSSGetPlatformFontsForNodeRequest : IChromiumRequest<CSSGetPlatformFontsForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getPlatformFontsForNode";
@@ -2389,7 +2389,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetPlatformFontsForNodeRequest"/>
 /// </summary>
-internal class CSSGetPlatformFontsForNodeResponse : IChromiumResponse
+internal partial class CSSGetPlatformFontsForNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Usage statistics for every employed platform font.
@@ -2401,7 +2401,7 @@ public PlatformFontUsage[] Fonts { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.getStyleSheetText</c>
 /// </remarks>
-internal class CSSGetStyleSheetTextRequest : IChromiumRequest<CSSGetStyleSheetTextResponse>
+internal partial class CSSGetStyleSheetTextRequest : IChromiumRequest<CSSGetStyleSheetTextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getStyleSheetText";
@@ -2412,7 +2412,7 @@ public string StyleSheetId { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSGetStyleSheetTextRequest"/>
 /// </summary>
-internal class CSSGetStyleSheetTextResponse : IChromiumResponse
+internal partial class CSSGetStyleSheetTextResponse: IChromiumResponse
 {
 /// <summary>
 /// The stylesheet text.
@@ -2425,7 +2425,7 @@ public string Text { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.setEffectivePropertyValueForNode</c>
 /// </remarks>
-internal class CSSSetEffectivePropertyValueForNodeRequest : IChromiumRequest<CSSSetEffectivePropertyValueForNodeResponse>
+internal partial class CSSSetEffectivePropertyValueForNodeRequest : IChromiumRequest<CSSSetEffectivePropertyValueForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setEffectivePropertyValueForNode";
@@ -2444,7 +2444,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSSetEffectivePropertyValueForNodeRequest"/>
 /// </summary>
-internal class CSSSetEffectivePropertyValueForNodeResponse : IChromiumResponse
+internal partial class CSSSetEffectivePropertyValueForNodeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2453,7 +2453,7 @@ internal class CSSSetEffectivePropertyValueForNodeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CSS.setKeyframeKey</c>
 /// </remarks>
-internal class CSSSetKeyframeKeyRequest : IChromiumRequest<CSSSetKeyframeKeyResponse>
+internal partial class CSSSetKeyframeKeyRequest : IChromiumRequest<CSSSetKeyframeKeyResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setKeyframeKey";
@@ -2472,7 +2472,7 @@ public string KeyText { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSSetKeyframeKeyRequest"/>
 /// </summary>
-internal class CSSSetKeyframeKeyResponse : IChromiumResponse
+internal partial class CSSSetKeyframeKeyResponse: IChromiumResponse
 {
 /// <summary>
 /// The resulting key text after modification.
@@ -2484,7 +2484,7 @@ public Value KeyText { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.setMediaText</c>
 /// </remarks>
-internal class CSSSetMediaTextRequest : IChromiumRequest<CSSSetMediaTextResponse>
+internal partial class CSSSetMediaTextRequest : IChromiumRequest<CSSSetMediaTextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setMediaText";
@@ -2503,7 +2503,7 @@ public string Text { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSSetMediaTextRequest"/>
 /// </summary>
-internal class CSSSetMediaTextResponse : IChromiumResponse
+internal partial class CSSSetMediaTextResponse: IChromiumResponse
 {
 /// <summary>
 /// The resulting CSS media rule after modification.
@@ -2515,7 +2515,7 @@ public CSSMedia Media { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.setRuleSelector</c>
 /// </remarks>
-internal class CSSSetRuleSelectorRequest : IChromiumRequest<CSSSetRuleSelectorResponse>
+internal partial class CSSSetRuleSelectorRequest : IChromiumRequest<CSSSetRuleSelectorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setRuleSelector";
@@ -2534,7 +2534,7 @@ public string Selector { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSSetRuleSelectorRequest"/>
 /// </summary>
-internal class CSSSetRuleSelectorResponse : IChromiumResponse
+internal partial class CSSSetRuleSelectorResponse: IChromiumResponse
 {
 /// <summary>
 /// The resulting selector list after modification.
@@ -2546,7 +2546,7 @@ public SelectorList SelectorList { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.setStyleSheetText</c>
 /// </remarks>
-internal class CSSSetStyleSheetTextRequest : IChromiumRequest<CSSSetStyleSheetTextResponse>
+internal partial class CSSSetStyleSheetTextRequest : IChromiumRequest<CSSSetStyleSheetTextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setStyleSheetText";
@@ -2561,7 +2561,7 @@ public string Text { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSSetStyleSheetTextRequest"/>
 /// </summary>
-internal class CSSSetStyleSheetTextResponse : IChromiumResponse
+internal partial class CSSSetStyleSheetTextResponse: IChromiumResponse
 {
 /// <summary>
 /// URL of source map associated with script (if any).
@@ -2573,7 +2573,7 @@ public string SourceMapURL { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.setStyleTexts</c>
 /// </remarks>
-internal class CSSSetStyleTextsRequest : IChromiumRequest<CSSSetStyleTextsResponse>
+internal partial class CSSSetStyleTextsRequest : IChromiumRequest<CSSSetStyleTextsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setStyleTexts";
@@ -2584,7 +2584,7 @@ public StyleDeclarationEdit[] Edits { get; set; }}
 /// <summary>
 /// Response from <see cref="CSSSetStyleTextsRequest"/>
 /// </summary>
-internal class CSSSetStyleTextsResponse : IChromiumResponse
+internal partial class CSSSetStyleTextsResponse: IChromiumResponse
 {
 /// <summary>
 /// The resulting styles after modification.
@@ -2596,7 +2596,7 @@ public CSSStyle[] Styles { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.startRuleUsageTracking</c>
 /// </remarks>
-internal class CSSStartRuleUsageTrackingRequest : IChromiumRequest<CSSStartRuleUsageTrackingResponse>
+internal partial class CSSStartRuleUsageTrackingRequest : IChromiumRequest<CSSStartRuleUsageTrackingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.startRuleUsageTracking";
@@ -2604,7 +2604,7 @@ public string Command { get; } = "CSS.startRuleUsageTracking";
 /// <summary>
 /// Response from <see cref="CSSStartRuleUsageTrackingRequest"/>
 /// </summary>
-internal class CSSStartRuleUsageTrackingResponse : IChromiumResponse
+internal partial class CSSStartRuleUsageTrackingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2614,7 +2614,7 @@ internal class CSSStartRuleUsageTrackingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CSS.stopRuleUsageTracking</c>
 /// </remarks>
-internal class CSSStopRuleUsageTrackingRequest : IChromiumRequest<CSSStopRuleUsageTrackingResponse>
+internal partial class CSSStopRuleUsageTrackingRequest : IChromiumRequest<CSSStopRuleUsageTrackingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.stopRuleUsageTracking";
@@ -2622,7 +2622,7 @@ public string Command { get; } = "CSS.stopRuleUsageTracking";
 /// <summary>
 /// Response from <see cref="CSSStopRuleUsageTrackingRequest"/>
 /// </summary>
-internal class CSSStopRuleUsageTrackingResponse : IChromiumResponse
+internal partial class CSSStopRuleUsageTrackingResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -2635,7 +2635,7 @@ public RuleUsage[] RuleUsage { get; set; }}
 /// <remarks>
 /// Will send the command <c>CSS.takeCoverageDelta</c>
 /// </remarks>
-internal class CSSTakeCoverageDeltaRequest : IChromiumRequest<CSSTakeCoverageDeltaResponse>
+internal partial class CSSTakeCoverageDeltaRequest : IChromiumRequest<CSSTakeCoverageDeltaResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.takeCoverageDelta";
@@ -2643,7 +2643,7 @@ public string Command { get; } = "CSS.takeCoverageDelta";
 /// <summary>
 /// Response from <see cref="CSSTakeCoverageDeltaRequest"/>
 /// </summary>
-internal class CSSTakeCoverageDeltaResponse : IChromiumResponse
+internal partial class CSSTakeCoverageDeltaResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -2660,7 +2660,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>CSS.fontsUpdated</c>
 /// </remarks>
-internal class CSSFontsUpdatedChromiumEvent : IChromiumEvent
+internal partial class CSSFontsUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "CSS.fontsUpdated";
 /// <summary>
@@ -2674,7 +2674,7 @@ public FontFace Font { get; set; }}
 /// <remarks>
 /// Matches on the event <c>CSS.mediaQueryResultChanged</c>
 /// </remarks>
-internal class CSSMediaQueryResultChangedChromiumEvent : IChromiumEvent
+internal partial class CSSMediaQueryResultChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "CSS.mediaQueryResultChanged";
 }
@@ -2684,7 +2684,7 @@ public string InternalName { get; } = "CSS.mediaQueryResultChanged";
 /// <remarks>
 /// Matches on the event <c>CSS.styleSheetAdded</c>
 /// </remarks>
-internal class CSSStyleSheetAddedChromiumEvent : IChromiumEvent
+internal partial class CSSStyleSheetAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "CSS.styleSheetAdded";
 /// <summary>
@@ -2697,7 +2697,7 @@ public CSSStyleSheetHeader Header { get; set; }}
 /// <remarks>
 /// Matches on the event <c>CSS.styleSheetChanged</c>
 /// </remarks>
-internal class CSSStyleSheetChangedChromiumEvent : IChromiumEvent
+internal partial class CSSStyleSheetChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "CSS.styleSheetChanged";
 /// <summary>
@@ -2710,7 +2710,7 @@ public string StyleSheetId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>CSS.styleSheetRemoved</c>
 /// </remarks>
-internal class CSSStyleSheetRemovedChromiumEvent : IChromiumEvent
+internal partial class CSSStyleSheetRemovedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "CSS.styleSheetRemoved";
 /// <summary>
@@ -2734,7 +2734,7 @@ internal enum CachedResponseType
 /// <summary>
 /// Data entry.
 /// </summary>
-internal class DataEntry
+internal partial class DataEntry
 {
 /// <summary>
 /// Request URL.
@@ -2771,7 +2771,7 @@ public Header[] ResponseHeaders { get; set; }}
 /// <summary>
 /// Cache identifier.
 /// </summary>
-internal class Cache
+internal partial class Cache
 {
 /// <summary>
 /// An opaque unique id of the cache.
@@ -2788,7 +2788,7 @@ public string CacheName { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class Header
+internal partial class Header
 {
 /// <summary>
 /// 
@@ -2801,7 +2801,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Cached response
 /// </summary>
-internal class CachedResponse
+internal partial class CachedResponse
 {
 /// <summary>
 /// Entry content, base64-encoded.
@@ -2813,7 +2813,7 @@ public byte[] Body { get; set; }}
 /// <remarks>
 /// Will send the command <c>CacheStorage.deleteCache</c>
 /// </remarks>
-internal class CacheStorageDeleteCacheRequest : IChromiumRequest<CacheStorageDeleteCacheResponse>
+internal partial class CacheStorageDeleteCacheRequest : IChromiumRequest<CacheStorageDeleteCacheResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CacheStorage.deleteCache";
@@ -2824,7 +2824,7 @@ public string CacheId { get; set; }}
 /// <summary>
 /// Response from <see cref="CacheStorageDeleteCacheRequest"/>
 /// </summary>
-internal class CacheStorageDeleteCacheResponse : IChromiumResponse
+internal partial class CacheStorageDeleteCacheResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2833,7 +2833,7 @@ internal class CacheStorageDeleteCacheResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CacheStorage.deleteEntry</c>
 /// </remarks>
-internal class CacheStorageDeleteEntryRequest : IChromiumRequest<CacheStorageDeleteEntryResponse>
+internal partial class CacheStorageDeleteEntryRequest : IChromiumRequest<CacheStorageDeleteEntryResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CacheStorage.deleteEntry";
@@ -2848,7 +2848,7 @@ public string Request { get; set; }}
 /// <summary>
 /// Response from <see cref="CacheStorageDeleteEntryRequest"/>
 /// </summary>
-internal class CacheStorageDeleteEntryResponse : IChromiumResponse
+internal partial class CacheStorageDeleteEntryResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2857,7 +2857,7 @@ internal class CacheStorageDeleteEntryResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>CacheStorage.requestCacheNames</c>
 /// </remarks>
-internal class CacheStorageRequestCacheNamesRequest : IChromiumRequest<CacheStorageRequestCacheNamesResponse>
+internal partial class CacheStorageRequestCacheNamesRequest : IChromiumRequest<CacheStorageRequestCacheNamesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CacheStorage.requestCacheNames";
@@ -2868,7 +2868,7 @@ public string SecurityOrigin { get; set; }}
 /// <summary>
 /// Response from <see cref="CacheStorageRequestCacheNamesRequest"/>
 /// </summary>
-internal class CacheStorageRequestCacheNamesResponse : IChromiumResponse
+internal partial class CacheStorageRequestCacheNamesResponse: IChromiumResponse
 {
 /// <summary>
 /// Caches for the security origin.
@@ -2880,7 +2880,7 @@ public Cache[] Caches { get; set; }}
 /// <remarks>
 /// Will send the command <c>CacheStorage.requestCachedResponse</c>
 /// </remarks>
-internal class CacheStorageRequestCachedResponseRequest : IChromiumRequest<CacheStorageRequestCachedResponseResponse>
+internal partial class CacheStorageRequestCachedResponseRequest : IChromiumRequest<CacheStorageRequestCachedResponseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CacheStorage.requestCachedResponse";
@@ -2899,7 +2899,7 @@ public Header[] RequestHeaders { get; set; }}
 /// <summary>
 /// Response from <see cref="CacheStorageRequestCachedResponseRequest"/>
 /// </summary>
-internal class CacheStorageRequestCachedResponseResponse : IChromiumResponse
+internal partial class CacheStorageRequestCachedResponseResponse: IChromiumResponse
 {
 /// <summary>
 /// Response read from the cache.
@@ -2911,7 +2911,7 @@ public CachedResponse Response { get; set; }}
 /// <remarks>
 /// Will send the command <c>CacheStorage.requestEntries</c>
 /// </remarks>
-internal class CacheStorageRequestEntriesRequest : IChromiumRequest<CacheStorageRequestEntriesResponse>
+internal partial class CacheStorageRequestEntriesRequest : IChromiumRequest<CacheStorageRequestEntriesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CacheStorage.requestEntries";
@@ -2934,7 +2934,7 @@ public string PathFilter { get; set; }}
 /// <summary>
 /// Response from <see cref="CacheStorageRequestEntriesRequest"/>
 /// </summary>
-internal class CacheStorageRequestEntriesResponse : IChromiumResponse
+internal partial class CacheStorageRequestEntriesResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of object store data entries.
@@ -2951,7 +2951,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Cast
 /// <summary>
 /// 
 /// </summary>
-internal class Sink
+internal partial class Sink
 {
 /// <summary>
 /// 
@@ -2976,7 +2976,7 @@ public string Session { get; set; }}
 /// <remarks>
 /// Will send the command <c>Cast.enable</c>
 /// </remarks>
-internal class CastEnableRequest : IChromiumRequest<CastEnableResponse>
+internal partial class CastEnableRequest : IChromiumRequest<CastEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.enable";
@@ -2987,7 +2987,7 @@ public string PresentationUrl { get; set; }}
 /// <summary>
 /// Response from <see cref="CastEnableRequest"/>
 /// </summary>
-internal class CastEnableResponse : IChromiumResponse
+internal partial class CastEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -2996,7 +2996,7 @@ internal class CastEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Cast.disable</c>
 /// </remarks>
-internal class CastDisableRequest : IChromiumRequest<CastDisableResponse>
+internal partial class CastDisableRequest : IChromiumRequest<CastDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.disable";
@@ -3004,7 +3004,7 @@ public string Command { get; } = "Cast.disable";
 /// <summary>
 /// Response from <see cref="CastDisableRequest"/>
 /// </summary>
-internal class CastDisableResponse : IChromiumResponse
+internal partial class CastDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3014,7 +3014,7 @@ internal class CastDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Cast.setSinkToUse</c>
 /// </remarks>
-internal class CastSetSinkToUseRequest : IChromiumRequest<CastSetSinkToUseResponse>
+internal partial class CastSetSinkToUseRequest : IChromiumRequest<CastSetSinkToUseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.setSinkToUse";
@@ -3025,7 +3025,7 @@ public string SinkName { get; set; }}
 /// <summary>
 /// Response from <see cref="CastSetSinkToUseRequest"/>
 /// </summary>
-internal class CastSetSinkToUseResponse : IChromiumResponse
+internal partial class CastSetSinkToUseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3034,7 +3034,7 @@ internal class CastSetSinkToUseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Cast.startTabMirroring</c>
 /// </remarks>
-internal class CastStartTabMirroringRequest : IChromiumRequest<CastStartTabMirroringResponse>
+internal partial class CastStartTabMirroringRequest : IChromiumRequest<CastStartTabMirroringResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.startTabMirroring";
@@ -3045,7 +3045,7 @@ public string SinkName { get; set; }}
 /// <summary>
 /// Response from <see cref="CastStartTabMirroringRequest"/>
 /// </summary>
-internal class CastStartTabMirroringResponse : IChromiumResponse
+internal partial class CastStartTabMirroringResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3054,7 +3054,7 @@ internal class CastStartTabMirroringResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Cast.stopCasting</c>
 /// </remarks>
-internal class CastStopCastingRequest : IChromiumRequest<CastStopCastingResponse>
+internal partial class CastStopCastingRequest : IChromiumRequest<CastStopCastingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.stopCasting";
@@ -3065,7 +3065,7 @@ public string SinkName { get; set; }}
 /// <summary>
 /// Response from <see cref="CastStopCastingRequest"/>
 /// </summary>
-internal class CastStopCastingResponse : IChromiumResponse
+internal partial class CastStopCastingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3075,7 +3075,7 @@ internal class CastStopCastingResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Cast.sinksUpdated</c>
 /// </remarks>
-internal class CastSinksUpdatedChromiumEvent : IChromiumEvent
+internal partial class CastSinksUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Cast.sinksUpdated";
 /// <summary>
@@ -3089,7 +3089,7 @@ public Sink[] Sinks { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Cast.issueUpdated</c>
 /// </remarks>
-internal class CastIssueUpdatedChromiumEvent : IChromiumEvent
+internal partial class CastIssueUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Cast.issueUpdated";
 /// <summary>
@@ -3102,7 +3102,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOM
 /// <summary>
 /// Backend node with a friendly name.
 /// </summary>
-internal class BackendNode
+internal partial class BackendNode
 {
 /// <summary>
 /// `Node`'s nodeType.
@@ -3149,7 +3149,7 @@ internal enum ShadowRootType
 /// DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes.
 /// DOMNode is a base node mirror type.
 /// </summary>
-internal class Node
+internal partial class Node
 {
 /// <summary>
 /// Node identifier that is passed into the rest of the DOM messages as the `nodeId`. Backend
@@ -3268,7 +3268,7 @@ public bool? IsSVG { get; set; }}
 /// <summary>
 /// A structure holding an RGBA color.
 /// </summary>
-internal class RGBA
+internal partial class RGBA
 {
 /// <summary>
 /// The red component, in the [0-255] range.
@@ -3289,7 +3289,7 @@ public double? A { get; set; }}
 /// <summary>
 /// Box model.
 /// </summary>
-internal class BoxModel
+internal partial class BoxModel
 {
 /// <summary>
 /// Content box
@@ -3322,7 +3322,7 @@ public ShapeOutsideInfo ShapeOutside { get; set; }}
 /// <summary>
 /// CSS Shape Outside details.
 /// </summary>
-internal class ShapeOutsideInfo
+internal partial class ShapeOutsideInfo
 {
 /// <summary>
 /// Shape bounds
@@ -3339,7 +3339,7 @@ public object[] MarginShape { get; set; }}
 /// <summary>
 /// Rectangle.
 /// </summary>
-internal class Rect
+internal partial class Rect
 {
 /// <summary>
 /// X coordinate
@@ -3363,7 +3363,7 @@ public double? Height { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.collectClassNamesFromSubtree</c>
 /// </remarks>
-internal class DOMCollectClassNamesFromSubtreeRequest : IChromiumRequest<DOMCollectClassNamesFromSubtreeResponse>
+internal partial class DOMCollectClassNamesFromSubtreeRequest : IChromiumRequest<DOMCollectClassNamesFromSubtreeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.collectClassNamesFromSubtree";
@@ -3374,7 +3374,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMCollectClassNamesFromSubtreeRequest"/>
 /// </summary>
-internal class DOMCollectClassNamesFromSubtreeResponse : IChromiumResponse
+internal partial class DOMCollectClassNamesFromSubtreeResponse: IChromiumResponse
 {
 /// <summary>
 /// Class name list.
@@ -3387,7 +3387,7 @@ public string[] ClassNames { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.copyTo</c>
 /// </remarks>
-internal class DOMCopyToRequest : IChromiumRequest<DOMCopyToResponse>
+internal partial class DOMCopyToRequest : IChromiumRequest<DOMCopyToResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.copyTo";
@@ -3407,7 +3407,7 @@ public int? InsertBeforeNodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMCopyToRequest"/>
 /// </summary>
-internal class DOMCopyToResponse : IChromiumResponse
+internal partial class DOMCopyToResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the node clone.
@@ -3420,7 +3420,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.describeNode</c>
 /// </remarks>
-internal class DOMDescribeNodeRequest : IChromiumRequest<DOMDescribeNodeResponse>
+internal partial class DOMDescribeNodeRequest : IChromiumRequest<DOMDescribeNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.describeNode";
@@ -3449,7 +3449,7 @@ public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDescribeNodeRequest"/>
 /// </summary>
-internal class DOMDescribeNodeResponse : IChromiumResponse
+internal partial class DOMDescribeNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Node description.
@@ -3461,7 +3461,7 @@ public Node Node { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.disable</c>
 /// </remarks>
-internal class DOMDisableRequest : IChromiumRequest<DOMDisableResponse>
+internal partial class DOMDisableRequest : IChromiumRequest<DOMDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.disable";
@@ -3469,7 +3469,7 @@ public string Command { get; } = "DOM.disable";
 /// <summary>
 /// Response from <see cref="DOMDisableRequest"/>
 /// </summary>
-internal class DOMDisableResponse : IChromiumResponse
+internal partial class DOMDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3479,7 +3479,7 @@ internal class DOMDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.discardSearchResults</c>
 /// </remarks>
-internal class DOMDiscardSearchResultsRequest : IChromiumRequest<DOMDiscardSearchResultsResponse>
+internal partial class DOMDiscardSearchResultsRequest : IChromiumRequest<DOMDiscardSearchResultsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.discardSearchResults";
@@ -3490,7 +3490,7 @@ public string SearchId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDiscardSearchResultsRequest"/>
 /// </summary>
-internal class DOMDiscardSearchResultsResponse : IChromiumResponse
+internal partial class DOMDiscardSearchResultsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3499,7 +3499,7 @@ internal class DOMDiscardSearchResultsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.enable</c>
 /// </remarks>
-internal class DOMEnableRequest : IChromiumRequest<DOMEnableResponse>
+internal partial class DOMEnableRequest : IChromiumRequest<DOMEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.enable";
@@ -3507,7 +3507,7 @@ public string Command { get; } = "DOM.enable";
 /// <summary>
 /// Response from <see cref="DOMEnableRequest"/>
 /// </summary>
-internal class DOMEnableResponse : IChromiumResponse
+internal partial class DOMEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3516,7 +3516,7 @@ internal class DOMEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.focus</c>
 /// </remarks>
-internal class DOMFocusRequest : IChromiumRequest<DOMFocusResponse>
+internal partial class DOMFocusRequest : IChromiumRequest<DOMFocusResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.focus";
@@ -3535,7 +3535,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMFocusRequest"/>
 /// </summary>
-internal class DOMFocusResponse : IChromiumResponse
+internal partial class DOMFocusResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3544,7 +3544,7 @@ internal class DOMFocusResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.getAttributes</c>
 /// </remarks>
-internal class DOMGetAttributesRequest : IChromiumRequest<DOMGetAttributesResponse>
+internal partial class DOMGetAttributesRequest : IChromiumRequest<DOMGetAttributesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getAttributes";
@@ -3555,7 +3555,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetAttributesRequest"/>
 /// </summary>
-internal class DOMGetAttributesResponse : IChromiumResponse
+internal partial class DOMGetAttributesResponse: IChromiumResponse
 {
 /// <summary>
 /// An interleaved array of node attribute names and values.
@@ -3567,7 +3567,7 @@ public string[] Attributes { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getBoxModel</c>
 /// </remarks>
-internal class DOMGetBoxModelRequest : IChromiumRequest<DOMGetBoxModelResponse>
+internal partial class DOMGetBoxModelRequest : IChromiumRequest<DOMGetBoxModelResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getBoxModel";
@@ -3586,7 +3586,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetBoxModelRequest"/>
 /// </summary>
-internal class DOMGetBoxModelResponse : IChromiumResponse
+internal partial class DOMGetBoxModelResponse: IChromiumResponse
 {
 /// <summary>
 /// Box model for the node.
@@ -3599,7 +3599,7 @@ public BoxModel Model { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getContentQuads</c>
 /// </remarks>
-internal class DOMGetContentQuadsRequest : IChromiumRequest<DOMGetContentQuadsResponse>
+internal partial class DOMGetContentQuadsRequest : IChromiumRequest<DOMGetContentQuadsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getContentQuads";
@@ -3618,7 +3618,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetContentQuadsRequest"/>
 /// </summary>
-internal class DOMGetContentQuadsResponse : IChromiumResponse
+internal partial class DOMGetContentQuadsResponse: IChromiumResponse
 {
 /// <summary>
 /// Quads that describe node layout relative to viewport.
@@ -3630,7 +3630,7 @@ public double?[][] Quads { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getDocument</c>
 /// </remarks>
-internal class DOMGetDocumentRequest : IChromiumRequest<DOMGetDocumentResponse>
+internal partial class DOMGetDocumentRequest : IChromiumRequest<DOMGetDocumentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getDocument";
@@ -3647,7 +3647,7 @@ public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetDocumentRequest"/>
 /// </summary>
-internal class DOMGetDocumentResponse : IChromiumResponse
+internal partial class DOMGetDocumentResponse: IChromiumResponse
 {
 /// <summary>
 /// Resulting node.
@@ -3659,7 +3659,7 @@ public Node Root { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getFlattenedDocument</c>
 /// </remarks>
-internal class DOMGetFlattenedDocumentRequest : IChromiumRequest<DOMGetFlattenedDocumentResponse>
+internal partial class DOMGetFlattenedDocumentRequest : IChromiumRequest<DOMGetFlattenedDocumentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getFlattenedDocument";
@@ -3676,7 +3676,7 @@ public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetFlattenedDocumentRequest"/>
 /// </summary>
-internal class DOMGetFlattenedDocumentResponse : IChromiumResponse
+internal partial class DOMGetFlattenedDocumentResponse: IChromiumResponse
 {
 /// <summary>
 /// Resulting node.
@@ -3689,7 +3689,7 @@ public Node[] Nodes { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getNodeForLocation</c>
 /// </remarks>
-internal class DOMGetNodeForLocationRequest : IChromiumRequest<DOMGetNodeForLocationResponse>
+internal partial class DOMGetNodeForLocationRequest : IChromiumRequest<DOMGetNodeForLocationResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getNodeForLocation";
@@ -3712,7 +3712,7 @@ public bool? IgnorePointerEventsNone { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetNodeForLocationRequest"/>
 /// </summary>
-internal class DOMGetNodeForLocationResponse : IChromiumResponse
+internal partial class DOMGetNodeForLocationResponse: IChromiumResponse
 {
 /// <summary>
 /// Resulting node.
@@ -3732,7 +3732,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getOuterHTML</c>
 /// </remarks>
-internal class DOMGetOuterHTMLRequest : IChromiumRequest<DOMGetOuterHTMLResponse>
+internal partial class DOMGetOuterHTMLRequest : IChromiumRequest<DOMGetOuterHTMLResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getOuterHTML";
@@ -3751,7 +3751,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetOuterHTMLRequest"/>
 /// </summary>
-internal class DOMGetOuterHTMLResponse : IChromiumResponse
+internal partial class DOMGetOuterHTMLResponse: IChromiumResponse
 {
 /// <summary>
 /// Outer HTML markup.
@@ -3763,7 +3763,7 @@ public string OuterHTML { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getRelayoutBoundary</c>
 /// </remarks>
-internal class DOMGetRelayoutBoundaryRequest : IChromiumRequest<DOMGetRelayoutBoundaryResponse>
+internal partial class DOMGetRelayoutBoundaryRequest : IChromiumRequest<DOMGetRelayoutBoundaryResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getRelayoutBoundary";
@@ -3774,7 +3774,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetRelayoutBoundaryRequest"/>
 /// </summary>
-internal class DOMGetRelayoutBoundaryResponse : IChromiumResponse
+internal partial class DOMGetRelayoutBoundaryResponse: IChromiumResponse
 {
 /// <summary>
 /// Relayout boundary node id for the given node.
@@ -3787,7 +3787,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getSearchResults</c>
 /// </remarks>
-internal class DOMGetSearchResultsRequest : IChromiumRequest<DOMGetSearchResultsResponse>
+internal partial class DOMGetSearchResultsRequest : IChromiumRequest<DOMGetSearchResultsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getSearchResults";
@@ -3806,7 +3806,7 @@ public int? ToIndex { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetSearchResultsRequest"/>
 /// </summary>
-internal class DOMGetSearchResultsResponse : IChromiumResponse
+internal partial class DOMGetSearchResultsResponse: IChromiumResponse
 {
 /// <summary>
 /// Ids of the search result nodes.
@@ -3818,7 +3818,7 @@ public int?[] NodeIds { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.hideHighlight</c>
 /// </remarks>
-internal class DOMHideHighlightRequest : IChromiumRequest<DOMHideHighlightResponse>
+internal partial class DOMHideHighlightRequest : IChromiumRequest<DOMHideHighlightResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.hideHighlight";
@@ -3826,7 +3826,7 @@ public string Command { get; } = "DOM.hideHighlight";
 /// <summary>
 /// Response from <see cref="DOMHideHighlightRequest"/>
 /// </summary>
-internal class DOMHideHighlightResponse : IChromiumResponse
+internal partial class DOMHideHighlightResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3835,7 +3835,7 @@ internal class DOMHideHighlightResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.highlightNode</c>
 /// </remarks>
-internal class DOMHighlightNodeRequest : IChromiumRequest<DOMHighlightNodeResponse>
+internal partial class DOMHighlightNodeRequest : IChromiumRequest<DOMHighlightNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.highlightNode";
@@ -3843,7 +3843,7 @@ public string Command { get; } = "DOM.highlightNode";
 /// <summary>
 /// Response from <see cref="DOMHighlightNodeRequest"/>
 /// </summary>
-internal class DOMHighlightNodeResponse : IChromiumResponse
+internal partial class DOMHighlightNodeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3852,7 +3852,7 @@ internal class DOMHighlightNodeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.highlightRect</c>
 /// </remarks>
-internal class DOMHighlightRectRequest : IChromiumRequest<DOMHighlightRectResponse>
+internal partial class DOMHighlightRectRequest : IChromiumRequest<DOMHighlightRectResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.highlightRect";
@@ -3860,7 +3860,7 @@ public string Command { get; } = "DOM.highlightRect";
 /// <summary>
 /// Response from <see cref="DOMHighlightRectRequest"/>
 /// </summary>
-internal class DOMHighlightRectResponse : IChromiumResponse
+internal partial class DOMHighlightRectResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3869,7 +3869,7 @@ internal class DOMHighlightRectResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.markUndoableState</c>
 /// </remarks>
-internal class DOMMarkUndoableStateRequest : IChromiumRequest<DOMMarkUndoableStateResponse>
+internal partial class DOMMarkUndoableStateRequest : IChromiumRequest<DOMMarkUndoableStateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.markUndoableState";
@@ -3877,7 +3877,7 @@ public string Command { get; } = "DOM.markUndoableState";
 /// <summary>
 /// Response from <see cref="DOMMarkUndoableStateRequest"/>
 /// </summary>
-internal class DOMMarkUndoableStateResponse : IChromiumResponse
+internal partial class DOMMarkUndoableStateResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -3886,7 +3886,7 @@ internal class DOMMarkUndoableStateResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.moveTo</c>
 /// </remarks>
-internal class DOMMoveToRequest : IChromiumRequest<DOMMoveToResponse>
+internal partial class DOMMoveToRequest : IChromiumRequest<DOMMoveToResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.moveTo";
@@ -3906,7 +3906,7 @@ public int? InsertBeforeNodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMMoveToRequest"/>
 /// </summary>
-internal class DOMMoveToResponse : IChromiumResponse
+internal partial class DOMMoveToResponse: IChromiumResponse
 {
 /// <summary>
 /// New id of the moved node.
@@ -3919,7 +3919,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.performSearch</c>
 /// </remarks>
-internal class DOMPerformSearchRequest : IChromiumRequest<DOMPerformSearchResponse>
+internal partial class DOMPerformSearchRequest : IChromiumRequest<DOMPerformSearchResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.performSearch";
@@ -3934,7 +3934,7 @@ public bool? IncludeUserAgentShadowDOM { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMPerformSearchRequest"/>
 /// </summary>
-internal class DOMPerformSearchResponse : IChromiumResponse
+internal partial class DOMPerformSearchResponse: IChromiumResponse
 {
 /// <summary>
 /// Unique search session identifier.
@@ -3950,7 +3950,7 @@ public int? ResultCount { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.pushNodeByPathToFrontend</c>
 /// </remarks>
-internal class DOMPushNodeByPathToFrontendRequest : IChromiumRequest<DOMPushNodeByPathToFrontendResponse>
+internal partial class DOMPushNodeByPathToFrontendRequest : IChromiumRequest<DOMPushNodeByPathToFrontendResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.pushNodeByPathToFrontend";
@@ -3961,7 +3961,7 @@ public string Path { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMPushNodeByPathToFrontendRequest"/>
 /// </summary>
-internal class DOMPushNodeByPathToFrontendResponse : IChromiumResponse
+internal partial class DOMPushNodeByPathToFrontendResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the node for given path.
@@ -3973,7 +3973,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.pushNodesByBackendIdsToFrontend</c>
 /// </remarks>
-internal class DOMPushNodesByBackendIdsToFrontendRequest : IChromiumRequest<DOMPushNodesByBackendIdsToFrontendResponse>
+internal partial class DOMPushNodesByBackendIdsToFrontendRequest : IChromiumRequest<DOMPushNodesByBackendIdsToFrontendResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.pushNodesByBackendIdsToFrontend";
@@ -3984,7 +3984,7 @@ public int?[] BackendNodeIds { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMPushNodesByBackendIdsToFrontendRequest"/>
 /// </summary>
-internal class DOMPushNodesByBackendIdsToFrontendResponse : IChromiumResponse
+internal partial class DOMPushNodesByBackendIdsToFrontendResponse: IChromiumResponse
 {
 /// <summary>
 /// The array of ids of pushed nodes that correspond to the backend ids specified in
@@ -3997,7 +3997,7 @@ public int?[] NodeIds { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.querySelector</c>
 /// </remarks>
-internal class DOMQuerySelectorRequest : IChromiumRequest<DOMQuerySelectorResponse>
+internal partial class DOMQuerySelectorRequest : IChromiumRequest<DOMQuerySelectorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.querySelector";
@@ -4012,7 +4012,7 @@ public string Selector { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMQuerySelectorRequest"/>
 /// </summary>
-internal class DOMQuerySelectorResponse : IChromiumResponse
+internal partial class DOMQuerySelectorResponse: IChromiumResponse
 {
 /// <summary>
 /// Query selector result.
@@ -4024,7 +4024,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.querySelectorAll</c>
 /// </remarks>
-internal class DOMQuerySelectorAllRequest : IChromiumRequest<DOMQuerySelectorAllResponse>
+internal partial class DOMQuerySelectorAllRequest : IChromiumRequest<DOMQuerySelectorAllResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.querySelectorAll";
@@ -4039,7 +4039,7 @@ public string Selector { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMQuerySelectorAllRequest"/>
 /// </summary>
-internal class DOMQuerySelectorAllResponse : IChromiumResponse
+internal partial class DOMQuerySelectorAllResponse: IChromiumResponse
 {
 /// <summary>
 /// Query selector result.
@@ -4051,7 +4051,7 @@ public int?[] NodeIds { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.redo</c>
 /// </remarks>
-internal class DOMRedoRequest : IChromiumRequest<DOMRedoResponse>
+internal partial class DOMRedoRequest : IChromiumRequest<DOMRedoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.redo";
@@ -4059,7 +4059,7 @@ public string Command { get; } = "DOM.redo";
 /// <summary>
 /// Response from <see cref="DOMRedoRequest"/>
 /// </summary>
-internal class DOMRedoResponse : IChromiumResponse
+internal partial class DOMRedoResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4068,7 +4068,7 @@ internal class DOMRedoResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.removeAttribute</c>
 /// </remarks>
-internal class DOMRemoveAttributeRequest : IChromiumRequest<DOMRemoveAttributeResponse>
+internal partial class DOMRemoveAttributeRequest : IChromiumRequest<DOMRemoveAttributeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.removeAttribute";
@@ -4083,7 +4083,7 @@ public string Name { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMRemoveAttributeRequest"/>
 /// </summary>
-internal class DOMRemoveAttributeResponse : IChromiumResponse
+internal partial class DOMRemoveAttributeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4092,7 +4092,7 @@ internal class DOMRemoveAttributeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.removeNode</c>
 /// </remarks>
-internal class DOMRemoveNodeRequest : IChromiumRequest<DOMRemoveNodeResponse>
+internal partial class DOMRemoveNodeRequest : IChromiumRequest<DOMRemoveNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.removeNode";
@@ -4103,7 +4103,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMRemoveNodeRequest"/>
 /// </summary>
-internal class DOMRemoveNodeResponse : IChromiumResponse
+internal partial class DOMRemoveNodeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4114,7 +4114,7 @@ internal class DOMRemoveNodeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.requestChildNodes</c>
 /// </remarks>
-internal class DOMRequestChildNodesRequest : IChromiumRequest<DOMRequestChildNodesResponse>
+internal partial class DOMRequestChildNodesRequest : IChromiumRequest<DOMRequestChildNodesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.requestChildNodes";
@@ -4135,7 +4135,7 @@ public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMRequestChildNodesRequest"/>
 /// </summary>
-internal class DOMRequestChildNodesResponse : IChromiumResponse
+internal partial class DOMRequestChildNodesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4146,7 +4146,7 @@ internal class DOMRequestChildNodesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.requestNode</c>
 /// </remarks>
-internal class DOMRequestNodeRequest : IChromiumRequest<DOMRequestNodeResponse>
+internal partial class DOMRequestNodeRequest : IChromiumRequest<DOMRequestNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.requestNode";
@@ -4157,7 +4157,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMRequestNodeRequest"/>
 /// </summary>
-internal class DOMRequestNodeResponse : IChromiumResponse
+internal partial class DOMRequestNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Node id for given object.
@@ -4169,7 +4169,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.resolveNode</c>
 /// </remarks>
-internal class DOMResolveNodeRequest : IChromiumRequest<DOMResolveNodeResponse>
+internal partial class DOMResolveNodeRequest : IChromiumRequest<DOMResolveNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.resolveNode";
@@ -4192,7 +4192,7 @@ public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMResolveNodeRequest"/>
 /// </summary>
-internal class DOMResolveNodeResponse : IChromiumResponse
+internal partial class DOMResolveNodeResponse: IChromiumResponse
 {
 /// <summary>
 /// JavaScript object wrapper for given node.
@@ -4204,7 +4204,7 @@ public Runtime.RemoteObject Object { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.setAttributeValue</c>
 /// </remarks>
-internal class DOMSetAttributeValueRequest : IChromiumRequest<DOMSetAttributeValueResponse>
+internal partial class DOMSetAttributeValueRequest : IChromiumRequest<DOMSetAttributeValueResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setAttributeValue";
@@ -4223,7 +4223,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetAttributeValueRequest"/>
 /// </summary>
-internal class DOMSetAttributeValueResponse : IChromiumResponse
+internal partial class DOMSetAttributeValueResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4233,7 +4233,7 @@ internal class DOMSetAttributeValueResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.setAttributesAsText</c>
 /// </remarks>
-internal class DOMSetAttributesAsTextRequest : IChromiumRequest<DOMSetAttributesAsTextResponse>
+internal partial class DOMSetAttributesAsTextRequest : IChromiumRequest<DOMSetAttributesAsTextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setAttributesAsText";
@@ -4253,7 +4253,7 @@ public string Name { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetAttributesAsTextRequest"/>
 /// </summary>
-internal class DOMSetAttributesAsTextResponse : IChromiumResponse
+internal partial class DOMSetAttributesAsTextResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4262,7 +4262,7 @@ internal class DOMSetAttributesAsTextResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.setFileInputFiles</c>
 /// </remarks>
-internal class DOMSetFileInputFilesRequest : IChromiumRequest<DOMSetFileInputFilesResponse>
+internal partial class DOMSetFileInputFilesRequest : IChromiumRequest<DOMSetFileInputFilesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setFileInputFiles";
@@ -4285,7 +4285,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetFileInputFilesRequest"/>
 /// </summary>
-internal class DOMSetFileInputFilesResponse : IChromiumResponse
+internal partial class DOMSetFileInputFilesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4294,7 +4294,7 @@ internal class DOMSetFileInputFilesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.setNodeStackTracesEnabled</c>
 /// </remarks>
-internal class DOMSetNodeStackTracesEnabledRequest : IChromiumRequest<DOMSetNodeStackTracesEnabledResponse>
+internal partial class DOMSetNodeStackTracesEnabledRequest : IChromiumRequest<DOMSetNodeStackTracesEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setNodeStackTracesEnabled";
@@ -4305,7 +4305,7 @@ public bool? Enable { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetNodeStackTracesEnabledRequest"/>
 /// </summary>
-internal class DOMSetNodeStackTracesEnabledResponse : IChromiumResponse
+internal partial class DOMSetNodeStackTracesEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4314,7 +4314,7 @@ internal class DOMSetNodeStackTracesEnabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.getNodeStackTraces</c>
 /// </remarks>
-internal class DOMGetNodeStackTracesRequest : IChromiumRequest<DOMGetNodeStackTracesResponse>
+internal partial class DOMGetNodeStackTracesRequest : IChromiumRequest<DOMGetNodeStackTracesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getNodeStackTraces";
@@ -4325,7 +4325,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetNodeStackTracesRequest"/>
 /// </summary>
-internal class DOMGetNodeStackTracesResponse : IChromiumResponse
+internal partial class DOMGetNodeStackTracesResponse: IChromiumResponse
 {
 /// <summary>
 /// Creation stack trace, if available.
@@ -4338,7 +4338,7 @@ public Runtime.StackTrace Creation { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.getFileInfo</c>
 /// </remarks>
-internal class DOMGetFileInfoRequest : IChromiumRequest<DOMGetFileInfoResponse>
+internal partial class DOMGetFileInfoRequest : IChromiumRequest<DOMGetFileInfoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getFileInfo";
@@ -4349,7 +4349,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetFileInfoRequest"/>
 /// </summary>
-internal class DOMGetFileInfoResponse : IChromiumResponse
+internal partial class DOMGetFileInfoResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -4362,7 +4362,7 @@ public string Path { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.setInspectedNode</c>
 /// </remarks>
-internal class DOMSetInspectedNodeRequest : IChromiumRequest<DOMSetInspectedNodeResponse>
+internal partial class DOMSetInspectedNodeRequest : IChromiumRequest<DOMSetInspectedNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setInspectedNode";
@@ -4373,7 +4373,7 @@ public int? NodeId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetInspectedNodeRequest"/>
 /// </summary>
-internal class DOMSetInspectedNodeResponse : IChromiumResponse
+internal partial class DOMSetInspectedNodeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4382,7 +4382,7 @@ internal class DOMSetInspectedNodeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.setNodeName</c>
 /// </remarks>
-internal class DOMSetNodeNameRequest : IChromiumRequest<DOMSetNodeNameResponse>
+internal partial class DOMSetNodeNameRequest : IChromiumRequest<DOMSetNodeNameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setNodeName";
@@ -4397,7 +4397,7 @@ public string Name { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetNodeNameRequest"/>
 /// </summary>
-internal class DOMSetNodeNameResponse : IChromiumResponse
+internal partial class DOMSetNodeNameResponse: IChromiumResponse
 {
 /// <summary>
 /// New node's id.
@@ -4409,7 +4409,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOM.setNodeValue</c>
 /// </remarks>
-internal class DOMSetNodeValueRequest : IChromiumRequest<DOMSetNodeValueResponse>
+internal partial class DOMSetNodeValueRequest : IChromiumRequest<DOMSetNodeValueResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setNodeValue";
@@ -4424,7 +4424,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetNodeValueRequest"/>
 /// </summary>
-internal class DOMSetNodeValueResponse : IChromiumResponse
+internal partial class DOMSetNodeValueResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4433,7 +4433,7 @@ internal class DOMSetNodeValueResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.setOuterHTML</c>
 /// </remarks>
-internal class DOMSetOuterHTMLRequest : IChromiumRequest<DOMSetOuterHTMLResponse>
+internal partial class DOMSetOuterHTMLRequest : IChromiumRequest<DOMSetOuterHTMLResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.setOuterHTML";
@@ -4448,7 +4448,7 @@ public string OuterHTML { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSetOuterHTMLRequest"/>
 /// </summary>
-internal class DOMSetOuterHTMLResponse : IChromiumResponse
+internal partial class DOMSetOuterHTMLResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4457,7 +4457,7 @@ internal class DOMSetOuterHTMLResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.undo</c>
 /// </remarks>
-internal class DOMUndoRequest : IChromiumRequest<DOMUndoResponse>
+internal partial class DOMUndoRequest : IChromiumRequest<DOMUndoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.undo";
@@ -4465,7 +4465,7 @@ public string Command { get; } = "DOM.undo";
 /// <summary>
 /// Response from <see cref="DOMUndoRequest"/>
 /// </summary>
-internal class DOMUndoResponse : IChromiumResponse
+internal partial class DOMUndoResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4474,7 +4474,7 @@ internal class DOMUndoResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOM.getFrameOwner</c>
 /// </remarks>
-internal class DOMGetFrameOwnerRequest : IChromiumRequest<DOMGetFrameOwnerResponse>
+internal partial class DOMGetFrameOwnerRequest : IChromiumRequest<DOMGetFrameOwnerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getFrameOwner";
@@ -4485,7 +4485,7 @@ public string FrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMGetFrameOwnerRequest"/>
 /// </summary>
-internal class DOMGetFrameOwnerResponse : IChromiumResponse
+internal partial class DOMGetFrameOwnerResponse: IChromiumResponse
 {
 /// <summary>
 /// Resulting node.
@@ -4501,7 +4501,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.attributeModified</c>
 /// </remarks>
-internal class DOMAttributeModifiedChromiumEvent : IChromiumEvent
+internal partial class DOMAttributeModifiedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.attributeModified";
 /// <summary>
@@ -4522,7 +4522,7 @@ public string Value { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.attributeRemoved</c>
 /// </remarks>
-internal class DOMAttributeRemovedChromiumEvent : IChromiumEvent
+internal partial class DOMAttributeRemovedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.attributeRemoved";
 /// <summary>
@@ -4539,7 +4539,7 @@ public string Name { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.characterDataModified</c>
 /// </remarks>
-internal class DOMCharacterDataModifiedChromiumEvent : IChromiumEvent
+internal partial class DOMCharacterDataModifiedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.characterDataModified";
 /// <summary>
@@ -4556,7 +4556,7 @@ public string CharacterData { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.childNodeCountUpdated</c>
 /// </remarks>
-internal class DOMChildNodeCountUpdatedChromiumEvent : IChromiumEvent
+internal partial class DOMChildNodeCountUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.childNodeCountUpdated";
 /// <summary>
@@ -4573,7 +4573,7 @@ public int? ChildNodeCount { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.childNodeInserted</c>
 /// </remarks>
-internal class DOMChildNodeInsertedChromiumEvent : IChromiumEvent
+internal partial class DOMChildNodeInsertedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.childNodeInserted";
 /// <summary>
@@ -4594,7 +4594,7 @@ public Node Node { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.childNodeRemoved</c>
 /// </remarks>
-internal class DOMChildNodeRemovedChromiumEvent : IChromiumEvent
+internal partial class DOMChildNodeRemovedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.childNodeRemoved";
 /// <summary>
@@ -4611,7 +4611,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.distributedNodesUpdated</c>
 /// </remarks>
-internal class DOMDistributedNodesUpdatedChromiumEvent : IChromiumEvent
+internal partial class DOMDistributedNodesUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.distributedNodesUpdated";
 /// <summary>
@@ -4628,7 +4628,7 @@ public BackendNode[] DistributedNodes { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.documentUpdated</c>
 /// </remarks>
-internal class DOMDocumentUpdatedChromiumEvent : IChromiumEvent
+internal partial class DOMDocumentUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.documentUpdated";
 }
@@ -4638,7 +4638,7 @@ public string InternalName { get; } = "DOM.documentUpdated";
 /// <remarks>
 /// Matches on the event <c>DOM.inlineStyleInvalidated</c>
 /// </remarks>
-internal class DOMInlineStyleInvalidatedChromiumEvent : IChromiumEvent
+internal partial class DOMInlineStyleInvalidatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.inlineStyleInvalidated";
 /// <summary>
@@ -4651,7 +4651,7 @@ public int?[] NodeIds { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.pseudoElementAdded</c>
 /// </remarks>
-internal class DOMPseudoElementAddedChromiumEvent : IChromiumEvent
+internal partial class DOMPseudoElementAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.pseudoElementAdded";
 /// <summary>
@@ -4668,7 +4668,7 @@ public Node PseudoElement { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.pseudoElementRemoved</c>
 /// </remarks>
-internal class DOMPseudoElementRemovedChromiumEvent : IChromiumEvent
+internal partial class DOMPseudoElementRemovedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.pseudoElementRemoved";
 /// <summary>
@@ -4686,7 +4686,7 @@ public int? PseudoElementId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.setChildNodes</c>
 /// </remarks>
-internal class DOMSetChildNodesChromiumEvent : IChromiumEvent
+internal partial class DOMSetChildNodesChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.setChildNodes";
 /// <summary>
@@ -4703,7 +4703,7 @@ public Node[] Nodes { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.shadowRootPopped</c>
 /// </remarks>
-internal class DOMShadowRootPoppedChromiumEvent : IChromiumEvent
+internal partial class DOMShadowRootPoppedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.shadowRootPopped";
 /// <summary>
@@ -4720,7 +4720,7 @@ public int? RootId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOM.shadowRootPushed</c>
 /// </remarks>
-internal class DOMShadowRootPushedChromiumEvent : IChromiumEvent
+internal partial class DOMShadowRootPushedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOM.shadowRootPushed";
 /// <summary>
@@ -4745,7 +4745,7 @@ internal enum DOMBreakpointType
 /// <summary>
 /// Object event listener.
 /// </summary>
-internal class EventListener
+internal partial class EventListener
 {
 /// <summary>
 /// `EventListener`'s type.
@@ -4793,7 +4793,7 @@ public int? BackendNodeId { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOMDebugger.getEventListeners</c>
 /// </remarks>
-internal class DOMDebuggerGetEventListenersRequest : IChromiumRequest<DOMDebuggerGetEventListenersResponse>
+internal partial class DOMDebuggerGetEventListenersRequest : IChromiumRequest<DOMDebuggerGetEventListenersResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.getEventListeners";
@@ -4814,7 +4814,7 @@ public bool? Pierce { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerGetEventListenersRequest"/>
 /// </summary>
-internal class DOMDebuggerGetEventListenersResponse : IChromiumResponse
+internal partial class DOMDebuggerGetEventListenersResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of relevant listeners.
@@ -4826,7 +4826,7 @@ public EventListener[] Listeners { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOMDebugger.removeDOMBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerRemoveDOMBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveDOMBreakpointResponse>
+internal partial class DOMDebuggerRemoveDOMBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveDOMBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
@@ -4841,7 +4841,7 @@ public DOMBreakpointType Type { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveDOMBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerRemoveDOMBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerRemoveDOMBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4850,7 +4850,7 @@ internal class DOMDebuggerRemoveDOMBreakpointResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMDebugger.removeEventListenerBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerRemoveEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveEventListenerBreakpointResponse>
+internal partial class DOMDebuggerRemoveEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveEventListenerBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.removeEventListenerBreakpoint";
@@ -4865,7 +4865,7 @@ public string TargetName { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveEventListenerBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerRemoveEventListenerBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerRemoveEventListenerBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4874,7 +4874,7 @@ internal class DOMDebuggerRemoveEventListenerBreakpointResponse : IChromiumRespo
 /// <remarks>
 /// Will send the command <c>DOMDebugger.removeInstrumentationBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerRemoveInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveInstrumentationBreakpointResponse>
+internal partial class DOMDebuggerRemoveInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveInstrumentationBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.removeInstrumentationBreakpoint";
@@ -4885,7 +4885,7 @@ public string EventName { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveInstrumentationBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerRemoveInstrumentationBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerRemoveInstrumentationBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4894,7 +4894,7 @@ internal class DOMDebuggerRemoveInstrumentationBreakpointResponse : IChromiumRes
 /// <remarks>
 /// Will send the command <c>DOMDebugger.removeXHRBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerRemoveXHRBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveXHRBreakpointResponse>
+internal partial class DOMDebuggerRemoveXHRBreakpointRequest : IChromiumRequest<DOMDebuggerRemoveXHRBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.removeXHRBreakpoint";
@@ -4905,7 +4905,7 @@ public string Url { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveXHRBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerRemoveXHRBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerRemoveXHRBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4914,7 +4914,7 @@ internal class DOMDebuggerRemoveXHRBreakpointResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMDebugger.setDOMBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerSetDOMBreakpointRequest : IChromiumRequest<DOMDebuggerSetDOMBreakpointResponse>
+internal partial class DOMDebuggerSetDOMBreakpointRequest : IChromiumRequest<DOMDebuggerSetDOMBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
@@ -4929,7 +4929,7 @@ public DOMBreakpointType Type { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetDOMBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerSetDOMBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerSetDOMBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4938,7 +4938,7 @@ internal class DOMDebuggerSetDOMBreakpointResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMDebugger.setEventListenerBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerSetEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerSetEventListenerBreakpointResponse>
+internal partial class DOMDebuggerSetEventListenerBreakpointRequest : IChromiumRequest<DOMDebuggerSetEventListenerBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.setEventListenerBreakpoint";
@@ -4954,7 +4954,7 @@ public string TargetName { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetEventListenerBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerSetEventListenerBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerSetEventListenerBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4963,7 +4963,7 @@ internal class DOMDebuggerSetEventListenerBreakpointResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMDebugger.setInstrumentationBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerSetInstrumentationBreakpointResponse>
+internal partial class DOMDebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DOMDebuggerSetInstrumentationBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.setInstrumentationBreakpoint";
@@ -4974,7 +4974,7 @@ public string EventName { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetInstrumentationBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerSetInstrumentationBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerSetInstrumentationBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -4983,7 +4983,7 @@ internal class DOMDebuggerSetInstrumentationBreakpointResponse : IChromiumRespon
 /// <remarks>
 /// Will send the command <c>DOMDebugger.setXHRBreakpoint</c>
 /// </remarks>
-internal class DOMDebuggerSetXHRBreakpointRequest : IChromiumRequest<DOMDebuggerSetXHRBreakpointResponse>
+internal partial class DOMDebuggerSetXHRBreakpointRequest : IChromiumRequest<DOMDebuggerSetXHRBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMDebugger.setXHRBreakpoint";
@@ -4994,7 +4994,7 @@ public string Url { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetXHRBreakpointRequest"/>
 /// </summary>
-internal class DOMDebuggerSetXHRBreakpointResponse : IChromiumResponse
+internal partial class DOMDebuggerSetXHRBreakpointResponse: IChromiumResponse
 {
 }
 }
@@ -5003,7 +5003,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
 /// <summary>
 /// A Node in the DOM tree.
 /// </summary>
-internal class DOMNode
+internal partial class DOMNode
 {
 /// <summary>
 /// `Node`'s nodeType.
@@ -5127,7 +5127,7 @@ public double? ScrollOffsetY { get; set; }}
 /// Details of post layout rendered text positions. The exact layout should not be regarded as
 /// stable and may change between versions.
 /// </summary>
-internal class InlineTextBox
+internal partial class InlineTextBox
 {
 /// <summary>
 /// The bounding box in document coordinates. Note that scroll offset of the document is ignored.
@@ -5146,7 +5146,7 @@ public int? NumCharacters { get; set; }}
 /// <summary>
 /// Details of an element in the DOM tree with a LayoutObject.
 /// </summary>
-internal class LayoutTreeNode
+internal partial class LayoutTreeNode
 {
 /// <summary>
 /// The index of the related DOM node in the `domNodes` array returned by `getSnapshot`.
@@ -5181,7 +5181,7 @@ public bool? IsStackingContext { get; set; }}
 /// <summary>
 /// A subset of the full ComputedStyle as defined by the request whitelist.
 /// </summary>
-internal class ComputedStyle
+internal partial class ComputedStyle
 {
 /// <summary>
 /// Name/value pairs of computed style properties.
@@ -5190,7 +5190,7 @@ public NameValue[] Properties { get; set; }}
 /// <summary>
 /// A name/value pair.
 /// </summary>
-internal class NameValue
+internal partial class NameValue
 {
 /// <summary>
 /// Attribute/property name.
@@ -5203,7 +5203,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Data that is only present on rare nodes.
 /// </summary>
-internal class RareStringData
+internal partial class RareStringData
 {
 /// <summary>
 /// 
@@ -5216,7 +5216,7 @@ public int[] Value { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class RareBooleanData
+internal partial class RareBooleanData
 {
 /// <summary>
 /// 
@@ -5225,7 +5225,7 @@ public int?[] Index { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class RareIntegerData
+internal partial class RareIntegerData
 {
 /// <summary>
 /// 
@@ -5238,7 +5238,7 @@ public int?[] Value { get; set; }}
 /// <summary>
 /// Document snapshot.
 /// </summary>
-internal class DocumentSnapshot
+internal partial class DocumentSnapshot
 {
 /// <summary>
 /// Document URL that `Document` or `FrameOwner` node points to.
@@ -5303,7 +5303,7 @@ public double? ContentHeight { get; set; }}
 /// <summary>
 /// Table containing nodes.
 /// </summary>
-internal class NodeTreeSnapshot
+internal partial class NodeTreeSnapshot
 {
 /// <summary>
 /// Parent node index.
@@ -5370,7 +5370,7 @@ public RareStringData OriginURL { get; set; }}
 /// <summary>
 /// Table of details of an element in the DOM tree with a LayoutObject.
 /// </summary>
-internal class LayoutTreeSnapshot
+internal partial class LayoutTreeSnapshot
 {
 /// <summary>
 /// Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
@@ -5414,7 +5414,7 @@ public double?[][] ClientRects { get; set; }}
 /// Table of details of the post layout rendered text positions. The exact layout should not be regarded as
 /// stable and may change between versions.
 /// </summary>
-internal class TextBoxSnapshot
+internal partial class TextBoxSnapshot
 {
 /// <summary>
 /// Index of the layout tree node that owns this box collection.
@@ -5440,7 +5440,7 @@ public int?[] Length { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOMSnapshot.disable</c>
 /// </remarks>
-internal class DOMSnapshotDisableRequest : IChromiumRequest<DOMSnapshotDisableResponse>
+internal partial class DOMSnapshotDisableRequest : IChromiumRequest<DOMSnapshotDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMSnapshot.disable";
@@ -5448,7 +5448,7 @@ public string Command { get; } = "DOMSnapshot.disable";
 /// <summary>
 /// Response from <see cref="DOMSnapshotDisableRequest"/>
 /// </summary>
-internal class DOMSnapshotDisableResponse : IChromiumResponse
+internal partial class DOMSnapshotDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5457,7 +5457,7 @@ internal class DOMSnapshotDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMSnapshot.enable</c>
 /// </remarks>
-internal class DOMSnapshotEnableRequest : IChromiumRequest<DOMSnapshotEnableResponse>
+internal partial class DOMSnapshotEnableRequest : IChromiumRequest<DOMSnapshotEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMSnapshot.enable";
@@ -5465,7 +5465,7 @@ public string Command { get; } = "DOMSnapshot.enable";
 /// <summary>
 /// Response from <see cref="DOMSnapshotEnableRequest"/>
 /// </summary>
-internal class DOMSnapshotEnableResponse : IChromiumResponse
+internal partial class DOMSnapshotEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5477,7 +5477,7 @@ internal class DOMSnapshotEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMSnapshot.getSnapshot</c>
 /// </remarks>
-internal class DOMSnapshotGetSnapshotRequest : IChromiumRequest<DOMSnapshotGetSnapshotResponse>
+internal partial class DOMSnapshotGetSnapshotRequest : IChromiumRequest<DOMSnapshotGetSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMSnapshot.getSnapshot";
@@ -5500,7 +5500,7 @@ public bool? IncludeUserAgentShadowTree { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSnapshotGetSnapshotRequest"/>
 /// </summary>
-internal class DOMSnapshotGetSnapshotResponse : IChromiumResponse
+internal partial class DOMSnapshotGetSnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.
@@ -5523,7 +5523,7 @@ public ComputedStyle[] ComputedStyles { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOMSnapshot.captureSnapshot</c>
 /// </remarks>
-internal class DOMSnapshotCaptureSnapshotRequest : IChromiumRequest<DOMSnapshotCaptureSnapshotResponse>
+internal partial class DOMSnapshotCaptureSnapshotRequest : IChromiumRequest<DOMSnapshotCaptureSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMSnapshot.captureSnapshot";
@@ -5542,7 +5542,7 @@ public bool? IncludeDOMRects { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMSnapshotCaptureSnapshotRequest"/>
 /// </summary>
-internal class DOMSnapshotCaptureSnapshotResponse : IChromiumResponse
+internal partial class DOMSnapshotCaptureSnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.
@@ -5558,7 +5558,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
 /// <summary>
 /// DOM Storage identifier.
 /// </summary>
-internal class StorageId
+internal partial class StorageId
 {
 /// <summary>
 /// Security origin for the storage.
@@ -5574,7 +5574,7 @@ public bool? IsLocalStorage { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOMStorage.clear</c>
 /// </remarks>
-internal class DOMStorageClearRequest : IChromiumRequest<DOMStorageClearResponse>
+internal partial class DOMStorageClearRequest : IChromiumRequest<DOMStorageClearResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.clear";
@@ -5585,7 +5585,7 @@ public StorageId StorageId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMStorageClearRequest"/>
 /// </summary>
-internal class DOMStorageClearResponse : IChromiumResponse
+internal partial class DOMStorageClearResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5594,7 +5594,7 @@ internal class DOMStorageClearResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMStorage.disable</c>
 /// </remarks>
-internal class DOMStorageDisableRequest : IChromiumRequest<DOMStorageDisableResponse>
+internal partial class DOMStorageDisableRequest : IChromiumRequest<DOMStorageDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.disable";
@@ -5602,7 +5602,7 @@ public string Command { get; } = "DOMStorage.disable";
 /// <summary>
 /// Response from <see cref="DOMStorageDisableRequest"/>
 /// </summary>
-internal class DOMStorageDisableResponse : IChromiumResponse
+internal partial class DOMStorageDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5611,7 +5611,7 @@ internal class DOMStorageDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMStorage.enable</c>
 /// </remarks>
-internal class DOMStorageEnableRequest : IChromiumRequest<DOMStorageEnableResponse>
+internal partial class DOMStorageEnableRequest : IChromiumRequest<DOMStorageEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.enable";
@@ -5619,7 +5619,7 @@ public string Command { get; } = "DOMStorage.enable";
 /// <summary>
 /// Response from <see cref="DOMStorageEnableRequest"/>
 /// </summary>
-internal class DOMStorageEnableResponse : IChromiumResponse
+internal partial class DOMStorageEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5628,7 +5628,7 @@ internal class DOMStorageEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMStorage.getDOMStorageItems</c>
 /// </remarks>
-internal class DOMStorageGetDOMStorageItemsRequest : IChromiumRequest<DOMStorageGetDOMStorageItemsResponse>
+internal partial class DOMStorageGetDOMStorageItemsRequest : IChromiumRequest<DOMStorageGetDOMStorageItemsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.getDOMStorageItems";
@@ -5639,7 +5639,7 @@ public StorageId StorageId { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMStorageGetDOMStorageItemsRequest"/>
 /// </summary>
-internal class DOMStorageGetDOMStorageItemsResponse : IChromiumResponse
+internal partial class DOMStorageGetDOMStorageItemsResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -5651,7 +5651,7 @@ public string[][] Entries { get; set; }}
 /// <remarks>
 /// Will send the command <c>DOMStorage.removeDOMStorageItem</c>
 /// </remarks>
-internal class DOMStorageRemoveDOMStorageItemRequest : IChromiumRequest<DOMStorageRemoveDOMStorageItemResponse>
+internal partial class DOMStorageRemoveDOMStorageItemRequest : IChromiumRequest<DOMStorageRemoveDOMStorageItemResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.removeDOMStorageItem";
@@ -5666,7 +5666,7 @@ public string Key { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMStorageRemoveDOMStorageItemRequest"/>
 /// </summary>
-internal class DOMStorageRemoveDOMStorageItemResponse : IChromiumResponse
+internal partial class DOMStorageRemoveDOMStorageItemResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5675,7 +5675,7 @@ internal class DOMStorageRemoveDOMStorageItemResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>DOMStorage.setDOMStorageItem</c>
 /// </remarks>
-internal class DOMStorageSetDOMStorageItemRequest : IChromiumRequest<DOMStorageSetDOMStorageItemResponse>
+internal partial class DOMStorageSetDOMStorageItemRequest : IChromiumRequest<DOMStorageSetDOMStorageItemResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.setDOMStorageItem";
@@ -5694,7 +5694,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMStorageSetDOMStorageItemRequest"/>
 /// </summary>
-internal class DOMStorageSetDOMStorageItemResponse : IChromiumResponse
+internal partial class DOMStorageSetDOMStorageItemResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5703,7 +5703,7 @@ internal class DOMStorageSetDOMStorageItemResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemAdded</c>
 /// </remarks>
-internal class DOMStorageDomStorageItemAddedChromiumEvent : IChromiumEvent
+internal partial class DOMStorageDomStorageItemAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemAdded";
 /// <summary>
@@ -5724,7 +5724,7 @@ public string NewValue { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemRemoved</c>
 /// </remarks>
-internal class DOMStorageDomStorageItemRemovedChromiumEvent : IChromiumEvent
+internal partial class DOMStorageDomStorageItemRemovedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
 /// <summary>
@@ -5741,7 +5741,7 @@ public string Key { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemUpdated</c>
 /// </remarks>
-internal class DOMStorageDomStorageItemUpdatedChromiumEvent : IChromiumEvent
+internal partial class DOMStorageDomStorageItemUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
 /// <summary>
@@ -5766,7 +5766,7 @@ public string NewValue { get; set; }}
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemsCleared</c>
 /// </remarks>
-internal class DOMStorageDomStorageItemsClearedChromiumEvent : IChromiumEvent
+internal partial class DOMStorageDomStorageItemsClearedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
 /// <summary>
@@ -5779,7 +5779,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Database
 /// <summary>
 /// Database object.
 /// </summary>
-internal class Database
+internal partial class Database
 {
 /// <summary>
 /// Database ID.
@@ -5800,7 +5800,7 @@ public string Version { get; set; }}
 /// <summary>
 /// Database error.
 /// </summary>
-internal class Error
+internal partial class Error
 {
 /// <summary>
 /// Error message.
@@ -5816,7 +5816,7 @@ public int? Code { get; set; }}
 /// <remarks>
 /// Will send the command <c>Database.disable</c>
 /// </remarks>
-internal class DatabaseDisableRequest : IChromiumRequest<DatabaseDisableResponse>
+internal partial class DatabaseDisableRequest : IChromiumRequest<DatabaseDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Database.disable";
@@ -5824,7 +5824,7 @@ public string Command { get; } = "Database.disable";
 /// <summary>
 /// Response from <see cref="DatabaseDisableRequest"/>
 /// </summary>
-internal class DatabaseDisableResponse : IChromiumResponse
+internal partial class DatabaseDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5833,7 +5833,7 @@ internal class DatabaseDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Database.enable</c>
 /// </remarks>
-internal class DatabaseEnableRequest : IChromiumRequest<DatabaseEnableResponse>
+internal partial class DatabaseEnableRequest : IChromiumRequest<DatabaseEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Database.enable";
@@ -5841,7 +5841,7 @@ public string Command { get; } = "Database.enable";
 /// <summary>
 /// Response from <see cref="DatabaseEnableRequest"/>
 /// </summary>
-internal class DatabaseEnableResponse : IChromiumResponse
+internal partial class DatabaseEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5850,7 +5850,7 @@ internal class DatabaseEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Database.executeSQL</c>
 /// </remarks>
-internal class DatabaseExecuteSQLRequest : IChromiumRequest<DatabaseExecuteSQLResponse>
+internal partial class DatabaseExecuteSQLRequest : IChromiumRequest<DatabaseExecuteSQLResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Database.executeSQL";
@@ -5865,7 +5865,7 @@ public string Query { get; set; }}
 /// <summary>
 /// Response from <see cref="DatabaseExecuteSQLRequest"/>
 /// </summary>
-internal class DatabaseExecuteSQLResponse : IChromiumResponse
+internal partial class DatabaseExecuteSQLResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -5885,7 +5885,7 @@ public Error SqlError { get; set; }}
 /// <remarks>
 /// Will send the command <c>Database.getDatabaseTableNames</c>
 /// </remarks>
-internal class DatabaseGetDatabaseTableNamesRequest : IChromiumRequest<DatabaseGetDatabaseTableNamesResponse>
+internal partial class DatabaseGetDatabaseTableNamesRequest : IChromiumRequest<DatabaseGetDatabaseTableNamesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Database.getDatabaseTableNames";
@@ -5896,7 +5896,7 @@ public string DatabaseId { get; set; }}
 /// <summary>
 /// Response from <see cref="DatabaseGetDatabaseTableNamesRequest"/>
 /// </summary>
-internal class DatabaseGetDatabaseTableNamesResponse : IChromiumResponse
+internal partial class DatabaseGetDatabaseTableNamesResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -5908,7 +5908,7 @@ public string[] TableNames { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Database.addDatabase</c>
 /// </remarks>
-internal class DatabaseAddDatabaseChromiumEvent : IChromiumEvent
+internal partial class DatabaseAddDatabaseChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Database.addDatabase";
 /// <summary>
@@ -5924,7 +5924,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
 /// <remarks>
 /// Will send the command <c>DeviceOrientation.clearDeviceOrientationOverride</c>
 /// </remarks>
-internal class DeviceOrientationClearDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationClearDeviceOrientationOverrideResponse>
+internal partial class DeviceOrientationClearDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationClearDeviceOrientationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DeviceOrientation.clearDeviceOrientationOverride";
@@ -5932,7 +5932,7 @@ public string Command { get; } = "DeviceOrientation.clearDeviceOrientationOverri
 /// <summary>
 /// Response from <see cref="DeviceOrientationClearDeviceOrientationOverrideRequest"/>
 /// </summary>
-internal class DeviceOrientationClearDeviceOrientationOverrideResponse : IChromiumResponse
+internal partial class DeviceOrientationClearDeviceOrientationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -5941,7 +5941,7 @@ internal class DeviceOrientationClearDeviceOrientationOverrideResponse : IChromi
 /// <remarks>
 /// Will send the command <c>DeviceOrientation.setDeviceOrientationOverride</c>
 /// </remarks>
-internal class DeviceOrientationSetDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationSetDeviceOrientationOverrideResponse>
+internal partial class DeviceOrientationSetDeviceOrientationOverrideRequest : IChromiumRequest<DeviceOrientationSetDeviceOrientationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DeviceOrientation.setDeviceOrientationOverride";
@@ -5960,7 +5960,7 @@ public double? Gamma { get; set; }}
 /// <summary>
 /// Response from <see cref="DeviceOrientationSetDeviceOrientationOverrideRequest"/>
 /// </summary>
-internal class DeviceOrientationSetDeviceOrientationOverrideResponse : IChromiumResponse
+internal partial class DeviceOrientationSetDeviceOrientationOverrideResponse: IChromiumResponse
 {
 }
 }
@@ -5969,7 +5969,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Emulation
 /// <summary>
 /// Screen orientation.
 /// </summary>
-internal class ScreenOrientation
+internal partial class ScreenOrientation
 {
 /// <summary>
 /// Orientation type.
@@ -5982,7 +5982,7 @@ public int? Angle { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class MediaFeature
+internal partial class MediaFeature
 {
 /// <summary>
 /// 
@@ -6009,7 +6009,7 @@ internal enum VirtualTimePolicy
 /// <remarks>
 /// Will send the command <c>Emulation.canEmulate</c>
 /// </remarks>
-internal class EmulationCanEmulateRequest : IChromiumRequest<EmulationCanEmulateResponse>
+internal partial class EmulationCanEmulateRequest : IChromiumRequest<EmulationCanEmulateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.canEmulate";
@@ -6017,7 +6017,7 @@ public string Command { get; } = "Emulation.canEmulate";
 /// <summary>
 /// Response from <see cref="EmulationCanEmulateRequest"/>
 /// </summary>
-internal class EmulationCanEmulateResponse : IChromiumResponse
+internal partial class EmulationCanEmulateResponse: IChromiumResponse
 {
 /// <summary>
 /// True if emulation is supported.
@@ -6029,7 +6029,7 @@ public bool? Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Emulation.clearDeviceMetricsOverride</c>
 /// </remarks>
-internal class EmulationClearDeviceMetricsOverrideRequest : IChromiumRequest<EmulationClearDeviceMetricsOverrideResponse>
+internal partial class EmulationClearDeviceMetricsOverrideRequest : IChromiumRequest<EmulationClearDeviceMetricsOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.clearDeviceMetricsOverride";
@@ -6037,7 +6037,7 @@ public string Command { get; } = "Emulation.clearDeviceMetricsOverride";
 /// <summary>
 /// Response from <see cref="EmulationClearDeviceMetricsOverrideRequest"/>
 /// </summary>
-internal class EmulationClearDeviceMetricsOverrideResponse : IChromiumResponse
+internal partial class EmulationClearDeviceMetricsOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6046,7 +6046,7 @@ internal class EmulationClearDeviceMetricsOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.clearGeolocationOverride</c>
 /// </remarks>
-internal class EmulationClearGeolocationOverrideRequest : IChromiumRequest<EmulationClearGeolocationOverrideResponse>
+internal partial class EmulationClearGeolocationOverrideRequest : IChromiumRequest<EmulationClearGeolocationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.clearGeolocationOverride";
@@ -6054,7 +6054,7 @@ public string Command { get; } = "Emulation.clearGeolocationOverride";
 /// <summary>
 /// Response from <see cref="EmulationClearGeolocationOverrideRequest"/>
 /// </summary>
-internal class EmulationClearGeolocationOverrideResponse : IChromiumResponse
+internal partial class EmulationClearGeolocationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6063,7 +6063,7 @@ internal class EmulationClearGeolocationOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.resetPageScaleFactor</c>
 /// </remarks>
-internal class EmulationResetPageScaleFactorRequest : IChromiumRequest<EmulationResetPageScaleFactorResponse>
+internal partial class EmulationResetPageScaleFactorRequest : IChromiumRequest<EmulationResetPageScaleFactorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.resetPageScaleFactor";
@@ -6071,7 +6071,7 @@ public string Command { get; } = "Emulation.resetPageScaleFactor";
 /// <summary>
 /// Response from <see cref="EmulationResetPageScaleFactorRequest"/>
 /// </summary>
-internal class EmulationResetPageScaleFactorResponse : IChromiumResponse
+internal partial class EmulationResetPageScaleFactorResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6080,7 +6080,7 @@ internal class EmulationResetPageScaleFactorResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setFocusEmulationEnabled</c>
 /// </remarks>
-internal class EmulationSetFocusEmulationEnabledRequest : IChromiumRequest<EmulationSetFocusEmulationEnabledResponse>
+internal partial class EmulationSetFocusEmulationEnabledRequest : IChromiumRequest<EmulationSetFocusEmulationEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setFocusEmulationEnabled";
@@ -6091,7 +6091,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetFocusEmulationEnabledRequest"/>
 /// </summary>
-internal class EmulationSetFocusEmulationEnabledResponse : IChromiumResponse
+internal partial class EmulationSetFocusEmulationEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6100,7 +6100,7 @@ internal class EmulationSetFocusEmulationEnabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setCPUThrottlingRate</c>
 /// </remarks>
-internal class EmulationSetCPUThrottlingRateRequest : IChromiumRequest<EmulationSetCPUThrottlingRateResponse>
+internal partial class EmulationSetCPUThrottlingRateRequest : IChromiumRequest<EmulationSetCPUThrottlingRateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setCPUThrottlingRate";
@@ -6111,7 +6111,7 @@ public double? Rate { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetCPUThrottlingRateRequest"/>
 /// </summary>
-internal class EmulationSetCPUThrottlingRateResponse : IChromiumResponse
+internal partial class EmulationSetCPUThrottlingRateResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6121,7 +6121,7 @@ internal class EmulationSetCPUThrottlingRateResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setDefaultBackgroundColorOverride</c>
 /// </remarks>
-internal class EmulationSetDefaultBackgroundColorOverrideRequest : IChromiumRequest<EmulationSetDefaultBackgroundColorOverrideResponse>
+internal partial class EmulationSetDefaultBackgroundColorOverrideRequest : IChromiumRequest<EmulationSetDefaultBackgroundColorOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setDefaultBackgroundColorOverride";
@@ -6133,7 +6133,7 @@ public DOM.RGBA Color { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetDefaultBackgroundColorOverrideRequest"/>
 /// </summary>
-internal class EmulationSetDefaultBackgroundColorOverrideResponse : IChromiumResponse
+internal partial class EmulationSetDefaultBackgroundColorOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6144,7 +6144,7 @@ internal class EmulationSetDefaultBackgroundColorOverrideResponse : IChromiumRes
 /// <remarks>
 /// Will send the command <c>Emulation.setDeviceMetricsOverride</c>
 /// </remarks>
-internal class EmulationSetDeviceMetricsOverrideRequest : IChromiumRequest<EmulationSetDeviceMetricsOverrideResponse>
+internal partial class EmulationSetDeviceMetricsOverrideRequest : IChromiumRequest<EmulationSetDeviceMetricsOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setDeviceMetricsOverride";
@@ -6201,7 +6201,7 @@ public Page.Viewport Viewport { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetDeviceMetricsOverrideRequest"/>
 /// </summary>
-internal class EmulationSetDeviceMetricsOverrideResponse : IChromiumResponse
+internal partial class EmulationSetDeviceMetricsOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6210,7 +6210,7 @@ internal class EmulationSetDeviceMetricsOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setScrollbarsHidden</c>
 /// </remarks>
-internal class EmulationSetScrollbarsHiddenRequest : IChromiumRequest<EmulationSetScrollbarsHiddenResponse>
+internal partial class EmulationSetScrollbarsHiddenRequest : IChromiumRequest<EmulationSetScrollbarsHiddenResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setScrollbarsHidden";
@@ -6221,7 +6221,7 @@ public bool? Hidden { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetScrollbarsHiddenRequest"/>
 /// </summary>
-internal class EmulationSetScrollbarsHiddenResponse : IChromiumResponse
+internal partial class EmulationSetScrollbarsHiddenResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6230,7 +6230,7 @@ internal class EmulationSetScrollbarsHiddenResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setDocumentCookieDisabled</c>
 /// </remarks>
-internal class EmulationSetDocumentCookieDisabledRequest : IChromiumRequest<EmulationSetDocumentCookieDisabledResponse>
+internal partial class EmulationSetDocumentCookieDisabledRequest : IChromiumRequest<EmulationSetDocumentCookieDisabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setDocumentCookieDisabled";
@@ -6241,7 +6241,7 @@ public bool? Disabled { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetDocumentCookieDisabledRequest"/>
 /// </summary>
-internal class EmulationSetDocumentCookieDisabledResponse : IChromiumResponse
+internal partial class EmulationSetDocumentCookieDisabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6250,7 +6250,7 @@ internal class EmulationSetDocumentCookieDisabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setEmitTouchEventsForMouse</c>
 /// </remarks>
-internal class EmulationSetEmitTouchEventsForMouseRequest : IChromiumRequest<EmulationSetEmitTouchEventsForMouseResponse>
+internal partial class EmulationSetEmitTouchEventsForMouseRequest : IChromiumRequest<EmulationSetEmitTouchEventsForMouseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setEmitTouchEventsForMouse";
@@ -6265,7 +6265,7 @@ public string Configuration { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetEmitTouchEventsForMouseRequest"/>
 /// </summary>
-internal class EmulationSetEmitTouchEventsForMouseResponse : IChromiumResponse
+internal partial class EmulationSetEmitTouchEventsForMouseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6274,7 +6274,7 @@ internal class EmulationSetEmitTouchEventsForMouseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setEmulatedMedia</c>
 /// </remarks>
-internal class EmulationSetEmulatedMediaRequest : IChromiumRequest<EmulationSetEmulatedMediaResponse>
+internal partial class EmulationSetEmulatedMediaRequest : IChromiumRequest<EmulationSetEmulatedMediaResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setEmulatedMedia";
@@ -6289,7 +6289,7 @@ public MediaFeature[] Features { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetEmulatedMediaRequest"/>
 /// </summary>
-internal class EmulationSetEmulatedMediaResponse : IChromiumResponse
+internal partial class EmulationSetEmulatedMediaResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6299,7 +6299,7 @@ internal class EmulationSetEmulatedMediaResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setGeolocationOverride</c>
 /// </remarks>
-internal class EmulationSetGeolocationOverrideRequest : IChromiumRequest<EmulationSetGeolocationOverrideResponse>
+internal partial class EmulationSetGeolocationOverrideRequest : IChromiumRequest<EmulationSetGeolocationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setGeolocationOverride";
@@ -6318,7 +6318,7 @@ public double? Accuracy { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetGeolocationOverrideRequest"/>
 /// </summary>
-internal class EmulationSetGeolocationOverrideResponse : IChromiumResponse
+internal partial class EmulationSetGeolocationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6327,7 +6327,7 @@ internal class EmulationSetGeolocationOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setNavigatorOverrides</c>
 /// </remarks>
-internal class EmulationSetNavigatorOverridesRequest : IChromiumRequest<EmulationSetNavigatorOverridesResponse>
+internal partial class EmulationSetNavigatorOverridesRequest : IChromiumRequest<EmulationSetNavigatorOverridesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setNavigatorOverrides";
@@ -6338,7 +6338,7 @@ public string Platform { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetNavigatorOverridesRequest"/>
 /// </summary>
-internal class EmulationSetNavigatorOverridesResponse : IChromiumResponse
+internal partial class EmulationSetNavigatorOverridesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6347,7 +6347,7 @@ internal class EmulationSetNavigatorOverridesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setPageScaleFactor</c>
 /// </remarks>
-internal class EmulationSetPageScaleFactorRequest : IChromiumRequest<EmulationSetPageScaleFactorResponse>
+internal partial class EmulationSetPageScaleFactorRequest : IChromiumRequest<EmulationSetPageScaleFactorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setPageScaleFactor";
@@ -6358,7 +6358,7 @@ public double? PageScaleFactor { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetPageScaleFactorRequest"/>
 /// </summary>
-internal class EmulationSetPageScaleFactorResponse : IChromiumResponse
+internal partial class EmulationSetPageScaleFactorResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6367,7 +6367,7 @@ internal class EmulationSetPageScaleFactorResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setScriptExecutionDisabled</c>
 /// </remarks>
-internal class EmulationSetScriptExecutionDisabledRequest : IChromiumRequest<EmulationSetScriptExecutionDisabledResponse>
+internal partial class EmulationSetScriptExecutionDisabledRequest : IChromiumRequest<EmulationSetScriptExecutionDisabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setScriptExecutionDisabled";
@@ -6378,7 +6378,7 @@ public bool? Value { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetScriptExecutionDisabledRequest"/>
 /// </summary>
-internal class EmulationSetScriptExecutionDisabledResponse : IChromiumResponse
+internal partial class EmulationSetScriptExecutionDisabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6387,7 +6387,7 @@ internal class EmulationSetScriptExecutionDisabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setTouchEmulationEnabled</c>
 /// </remarks>
-internal class EmulationSetTouchEmulationEnabledRequest : IChromiumRequest<EmulationSetTouchEmulationEnabledResponse>
+internal partial class EmulationSetTouchEmulationEnabledRequest : IChromiumRequest<EmulationSetTouchEmulationEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setTouchEmulationEnabled";
@@ -6402,7 +6402,7 @@ public int? MaxTouchPoints { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetTouchEmulationEnabledRequest"/>
 /// </summary>
-internal class EmulationSetTouchEmulationEnabledResponse : IChromiumResponse
+internal partial class EmulationSetTouchEmulationEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6412,7 +6412,7 @@ internal class EmulationSetTouchEmulationEnabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setVirtualTimePolicy</c>
 /// </remarks>
-internal class EmulationSetVirtualTimePolicyRequest : IChromiumRequest<EmulationSetVirtualTimePolicyResponse>
+internal partial class EmulationSetVirtualTimePolicyRequest : IChromiumRequest<EmulationSetVirtualTimePolicyResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setVirtualTimePolicy";
@@ -6442,7 +6442,7 @@ public double? InitialVirtualTime { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetVirtualTimePolicyRequest"/>
 /// </summary>
-internal class EmulationSetVirtualTimePolicyResponse : IChromiumResponse
+internal partial class EmulationSetVirtualTimePolicyResponse: IChromiumResponse
 {
 /// <summary>
 /// Absolute timestamp at which virtual time was first enabled (up time in milliseconds).
@@ -6454,7 +6454,7 @@ public double? VirtualTimeTicksBase { get; set; }}
 /// <remarks>
 /// Will send the command <c>Emulation.setTimezoneOverride</c>
 /// </remarks>
-internal class EmulationSetTimezoneOverrideRequest : IChromiumRequest<EmulationSetTimezoneOverrideResponse>
+internal partial class EmulationSetTimezoneOverrideRequest : IChromiumRequest<EmulationSetTimezoneOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setTimezoneOverride";
@@ -6466,7 +6466,7 @@ public string TimezoneId { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetTimezoneOverrideRequest"/>
 /// </summary>
-internal class EmulationSetTimezoneOverrideResponse : IChromiumResponse
+internal partial class EmulationSetTimezoneOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6477,7 +6477,7 @@ internal class EmulationSetTimezoneOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setVisibleSize</c>
 /// </remarks>
-internal class EmulationSetVisibleSizeRequest : IChromiumRequest<EmulationSetVisibleSizeResponse>
+internal partial class EmulationSetVisibleSizeRequest : IChromiumRequest<EmulationSetVisibleSizeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setVisibleSize";
@@ -6492,7 +6492,7 @@ public int? Height { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetVisibleSizeRequest"/>
 /// </summary>
-internal class EmulationSetVisibleSizeResponse : IChromiumResponse
+internal partial class EmulationSetVisibleSizeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6501,7 +6501,7 @@ internal class EmulationSetVisibleSizeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Emulation.setUserAgentOverride</c>
 /// </remarks>
-internal class EmulationSetUserAgentOverrideRequest : IChromiumRequest<EmulationSetUserAgentOverrideResponse>
+internal partial class EmulationSetUserAgentOverrideRequest : IChromiumRequest<EmulationSetUserAgentOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setUserAgentOverride";
@@ -6520,7 +6520,7 @@ public string Platform { get; set; }}
 /// <summary>
 /// Response from <see cref="EmulationSetUserAgentOverrideRequest"/>
 /// </summary>
-internal class EmulationSetUserAgentOverrideResponse : IChromiumResponse
+internal partial class EmulationSetUserAgentOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6529,7 +6529,7 @@ internal class EmulationSetUserAgentOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Emulation.virtualTimeBudgetExpired</c>
 /// </remarks>
-internal class EmulationVirtualTimeBudgetExpiredChromiumEvent : IChromiumEvent
+internal partial class EmulationVirtualTimeBudgetExpiredChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Emulation.virtualTimeBudgetExpired";
 }
@@ -6539,7 +6539,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
 /// <summary>
 /// Encoding options for a screenshot.
 /// </summary>
-internal class ScreenshotParams
+internal partial class ScreenshotParams
 {
 /// <summary>
 /// Image compression format (defaults to png).
@@ -6558,7 +6558,7 @@ public int? Quality { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeadlessExperimental.beginFrame</c>
 /// </remarks>
-internal class HeadlessExperimentalBeginFrameRequest : IChromiumRequest<HeadlessExperimentalBeginFrameResponse>
+internal partial class HeadlessExperimentalBeginFrameRequest : IChromiumRequest<HeadlessExperimentalBeginFrameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeadlessExperimental.beginFrame";
@@ -6587,7 +6587,7 @@ public ScreenshotParams Screenshot { get; set; }}
 /// <summary>
 /// Response from <see cref="HeadlessExperimentalBeginFrameRequest"/>
 /// </summary>
-internal class HeadlessExperimentalBeginFrameResponse : IChromiumResponse
+internal partial class HeadlessExperimentalBeginFrameResponse: IChromiumResponse
 {
 /// <summary>
 /// Whether the BeginFrame resulted in damage and, thus, a new frame was committed to the
@@ -6604,7 +6604,7 @@ public byte[] ScreenshotData { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeadlessExperimental.disable</c>
 /// </remarks>
-internal class HeadlessExperimentalDisableRequest : IChromiumRequest<HeadlessExperimentalDisableResponse>
+internal partial class HeadlessExperimentalDisableRequest : IChromiumRequest<HeadlessExperimentalDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeadlessExperimental.disable";
@@ -6612,7 +6612,7 @@ public string Command { get; } = "HeadlessExperimental.disable";
 /// <summary>
 /// Response from <see cref="HeadlessExperimentalDisableRequest"/>
 /// </summary>
-internal class HeadlessExperimentalDisableResponse : IChromiumResponse
+internal partial class HeadlessExperimentalDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6621,7 +6621,7 @@ internal class HeadlessExperimentalDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeadlessExperimental.enable</c>
 /// </remarks>
-internal class HeadlessExperimentalEnableRequest : IChromiumRequest<HeadlessExperimentalEnableResponse>
+internal partial class HeadlessExperimentalEnableRequest : IChromiumRequest<HeadlessExperimentalEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeadlessExperimental.enable";
@@ -6629,7 +6629,7 @@ public string Command { get; } = "HeadlessExperimental.enable";
 /// <summary>
 /// Response from <see cref="HeadlessExperimentalEnableRequest"/>
 /// </summary>
-internal class HeadlessExperimentalEnableResponse : IChromiumResponse
+internal partial class HeadlessExperimentalEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6640,7 +6640,7 @@ internal class HeadlessExperimentalEnableResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>HeadlessExperimental.needsBeginFramesChanged</c>
 /// </remarks>
-internal class HeadlessExperimentalNeedsBeginFramesChangedChromiumEvent : IChromiumEvent
+internal partial class HeadlessExperimentalNeedsBeginFramesChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "HeadlessExperimental.needsBeginFramesChanged";
 /// <summary>
@@ -6656,7 +6656,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IO
 /// <remarks>
 /// Will send the command <c>IO.close</c>
 /// </remarks>
-internal class IOCloseRequest : IChromiumRequest<IOCloseResponse>
+internal partial class IOCloseRequest : IChromiumRequest<IOCloseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IO.close";
@@ -6667,7 +6667,7 @@ public string Handle { get; set; }}
 /// <summary>
 /// Response from <see cref="IOCloseRequest"/>
 /// </summary>
-internal class IOCloseResponse : IChromiumResponse
+internal partial class IOCloseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6676,7 +6676,7 @@ internal class IOCloseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>IO.read</c>
 /// </remarks>
-internal class IOReadRequest : IChromiumRequest<IOReadResponse>
+internal partial class IOReadRequest : IChromiumRequest<IOReadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IO.read";
@@ -6696,7 +6696,7 @@ public int? Size { get; set; }}
 /// <summary>
 /// Response from <see cref="IOReadRequest"/>
 /// </summary>
-internal class IOReadResponse : IChromiumResponse
+internal partial class IOReadResponse: IChromiumResponse
 {
 /// <summary>
 /// Set if the data is base64-encoded
@@ -6716,7 +6716,7 @@ public bool? Eof { get; set; }}
 /// <remarks>
 /// Will send the command <c>IO.resolveBlob</c>
 /// </remarks>
-internal class IOResolveBlobRequest : IChromiumRequest<IOResolveBlobResponse>
+internal partial class IOResolveBlobRequest : IChromiumRequest<IOResolveBlobResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IO.resolveBlob";
@@ -6727,7 +6727,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="IOResolveBlobRequest"/>
 /// </summary>
-internal class IOResolveBlobResponse : IChromiumResponse
+internal partial class IOResolveBlobResponse: IChromiumResponse
 {
 /// <summary>
 /// UUID of the specified Blob.
@@ -6739,7 +6739,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
 /// <summary>
 /// Database with an array of object stores.
 /// </summary>
-internal class DatabaseWithObjectStores
+internal partial class DatabaseWithObjectStores
 {
 /// <summary>
 /// Database name.
@@ -6757,7 +6757,7 @@ public ObjectStore[] ObjectStores { get; set; }}
 /// <summary>
 /// Object store.
 /// </summary>
-internal class ObjectStore
+internal partial class ObjectStore
 {
 /// <summary>
 /// Object store name.
@@ -6778,7 +6778,7 @@ public ObjectStoreIndex[] Indexes { get; set; }}
 /// <summary>
 /// Object store index.
 /// </summary>
-internal class ObjectStoreIndex
+internal partial class ObjectStoreIndex
 {
 /// <summary>
 /// Index name.
@@ -6799,7 +6799,7 @@ public bool? MultiEntry { get; set; }}
 /// <summary>
 /// Key.
 /// </summary>
-internal class Key
+internal partial class Key
 {
 /// <summary>
 /// Key type.
@@ -6824,7 +6824,7 @@ public Key[] Array { get; set; }}
 /// <summary>
 /// Key range.
 /// </summary>
-internal class KeyRange
+internal partial class KeyRange
 {
 /// <summary>
 /// Lower bound.
@@ -6845,7 +6845,7 @@ public bool? UpperOpen { get; set; }}
 /// <summary>
 /// Data entry.
 /// </summary>
-internal class DataEntry
+internal partial class DataEntry
 {
 /// <summary>
 /// Key object.
@@ -6862,7 +6862,7 @@ public Runtime.RemoteObject Value { get; set; }}
 /// <summary>
 /// Key path.
 /// </summary>
-internal class KeyPath
+internal partial class KeyPath
 {
 /// <summary>
 /// Key path type.
@@ -6882,7 +6882,7 @@ public string[] Array { get; set; }}
 /// <remarks>
 /// Will send the command <c>IndexedDB.clearObjectStore</c>
 /// </remarks>
-internal class IndexedDBClearObjectStoreRequest : IChromiumRequest<IndexedDBClearObjectStoreResponse>
+internal partial class IndexedDBClearObjectStoreRequest : IChromiumRequest<IndexedDBClearObjectStoreResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.clearObjectStore";
@@ -6901,7 +6901,7 @@ public string ObjectStoreName { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBClearObjectStoreRequest"/>
 /// </summary>
-internal class IndexedDBClearObjectStoreResponse : IChromiumResponse
+internal partial class IndexedDBClearObjectStoreResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6910,7 +6910,7 @@ internal class IndexedDBClearObjectStoreResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>IndexedDB.deleteDatabase</c>
 /// </remarks>
-internal class IndexedDBDeleteDatabaseRequest : IChromiumRequest<IndexedDBDeleteDatabaseResponse>
+internal partial class IndexedDBDeleteDatabaseRequest : IChromiumRequest<IndexedDBDeleteDatabaseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.deleteDatabase";
@@ -6925,7 +6925,7 @@ public string DatabaseName { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBDeleteDatabaseRequest"/>
 /// </summary>
-internal class IndexedDBDeleteDatabaseResponse : IChromiumResponse
+internal partial class IndexedDBDeleteDatabaseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6934,7 +6934,7 @@ internal class IndexedDBDeleteDatabaseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>IndexedDB.deleteObjectStoreEntries</c>
 /// </remarks>
-internal class IndexedDBDeleteObjectStoreEntriesRequest : IChromiumRequest<IndexedDBDeleteObjectStoreEntriesResponse>
+internal partial class IndexedDBDeleteObjectStoreEntriesRequest : IChromiumRequest<IndexedDBDeleteObjectStoreEntriesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.deleteObjectStoreEntries";
@@ -6957,7 +6957,7 @@ public KeyRange KeyRange { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBDeleteObjectStoreEntriesRequest"/>
 /// </summary>
-internal class IndexedDBDeleteObjectStoreEntriesResponse : IChromiumResponse
+internal partial class IndexedDBDeleteObjectStoreEntriesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6966,7 +6966,7 @@ internal class IndexedDBDeleteObjectStoreEntriesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>IndexedDB.disable</c>
 /// </remarks>
-internal class IndexedDBDisableRequest : IChromiumRequest<IndexedDBDisableResponse>
+internal partial class IndexedDBDisableRequest : IChromiumRequest<IndexedDBDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.disable";
@@ -6974,7 +6974,7 @@ public string Command { get; } = "IndexedDB.disable";
 /// <summary>
 /// Response from <see cref="IndexedDBDisableRequest"/>
 /// </summary>
-internal class IndexedDBDisableResponse : IChromiumResponse
+internal partial class IndexedDBDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -6983,7 +6983,7 @@ internal class IndexedDBDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>IndexedDB.enable</c>
 /// </remarks>
-internal class IndexedDBEnableRequest : IChromiumRequest<IndexedDBEnableResponse>
+internal partial class IndexedDBEnableRequest : IChromiumRequest<IndexedDBEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.enable";
@@ -6991,7 +6991,7 @@ public string Command { get; } = "IndexedDB.enable";
 /// <summary>
 /// Response from <see cref="IndexedDBEnableRequest"/>
 /// </summary>
-internal class IndexedDBEnableResponse : IChromiumResponse
+internal partial class IndexedDBEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7000,7 +7000,7 @@ internal class IndexedDBEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>IndexedDB.requestData</c>
 /// </remarks>
-internal class IndexedDBRequestDataRequest : IChromiumRequest<IndexedDBRequestDataResponse>
+internal partial class IndexedDBRequestDataRequest : IChromiumRequest<IndexedDBRequestDataResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.requestData";
@@ -7035,7 +7035,7 @@ public KeyRange KeyRange { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDataRequest"/>
 /// </summary>
-internal class IndexedDBRequestDataResponse : IChromiumResponse
+internal partial class IndexedDBRequestDataResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of object store data entries.
@@ -7051,7 +7051,7 @@ public bool? HasMore { get; set; }}
 /// <remarks>
 /// Will send the command <c>IndexedDB.getMetadata</c>
 /// </remarks>
-internal class IndexedDBGetMetadataRequest : IChromiumRequest<IndexedDBGetMetadataResponse>
+internal partial class IndexedDBGetMetadataRequest : IChromiumRequest<IndexedDBGetMetadataResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.getMetadata";
@@ -7070,7 +7070,7 @@ public string ObjectStoreName { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBGetMetadataRequest"/>
 /// </summary>
-internal class IndexedDBGetMetadataResponse : IChromiumResponse
+internal partial class IndexedDBGetMetadataResponse: IChromiumResponse
 {
 /// <summary>
 /// the entries count
@@ -7088,7 +7088,7 @@ public double? KeyGeneratorValue { get; set; }}
 /// <remarks>
 /// Will send the command <c>IndexedDB.requestDatabase</c>
 /// </remarks>
-internal class IndexedDBRequestDatabaseRequest : IChromiumRequest<IndexedDBRequestDatabaseResponse>
+internal partial class IndexedDBRequestDatabaseRequest : IChromiumRequest<IndexedDBRequestDatabaseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.requestDatabase";
@@ -7103,7 +7103,7 @@ public string DatabaseName { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDatabaseRequest"/>
 /// </summary>
-internal class IndexedDBRequestDatabaseResponse : IChromiumResponse
+internal partial class IndexedDBRequestDatabaseResponse: IChromiumResponse
 {
 /// <summary>
 /// Database with an array of object stores.
@@ -7115,7 +7115,7 @@ public DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }}
 /// <remarks>
 /// Will send the command <c>IndexedDB.requestDatabaseNames</c>
 /// </remarks>
-internal class IndexedDBRequestDatabaseNamesRequest : IChromiumRequest<IndexedDBRequestDatabaseNamesResponse>
+internal partial class IndexedDBRequestDatabaseNamesRequest : IChromiumRequest<IndexedDBRequestDatabaseNamesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.requestDatabaseNames";
@@ -7126,7 +7126,7 @@ public string SecurityOrigin { get; set; }}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDatabaseNamesRequest"/>
 /// </summary>
-internal class IndexedDBRequestDatabaseNamesResponse : IChromiumResponse
+internal partial class IndexedDBRequestDatabaseNamesResponse: IChromiumResponse
 {
 /// <summary>
 /// Database names for origin.
@@ -7138,7 +7138,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Input
 /// <summary>
 /// 
 /// </summary>
-internal class TouchPoint
+internal partial class TouchPoint
 {
 /// <summary>
 /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
@@ -7194,7 +7194,7 @@ internal enum MouseButton
 /// <remarks>
 /// Will send the command <c>Input.dispatchKeyEvent</c>
 /// </remarks>
-internal class InputDispatchKeyEventRequest : IChromiumRequest<InputDispatchKeyEventResponse>
+internal partial class InputDispatchKeyEventRequest : IChromiumRequest<InputDispatchKeyEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.dispatchKeyEvent";
@@ -7262,7 +7262,7 @@ public int? Location { get; set; }}
 /// <summary>
 /// Response from <see cref="InputDispatchKeyEventRequest"/>
 /// </summary>
-internal class InputDispatchKeyEventResponse : IChromiumResponse
+internal partial class InputDispatchKeyEventResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7272,7 +7272,7 @@ internal class InputDispatchKeyEventResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.insertText</c>
 /// </remarks>
-internal class InputInsertTextRequest : IChromiumRequest<InputInsertTextResponse>
+internal partial class InputInsertTextRequest : IChromiumRequest<InputInsertTextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.insertText";
@@ -7283,7 +7283,7 @@ public string Text { get; set; }}
 /// <summary>
 /// Response from <see cref="InputInsertTextRequest"/>
 /// </summary>
-internal class InputInsertTextResponse : IChromiumResponse
+internal partial class InputInsertTextResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7292,7 +7292,7 @@ internal class InputInsertTextResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.dispatchMouseEvent</c>
 /// </remarks>
-internal class InputDispatchMouseEventRequest : IChromiumRequest<InputDispatchMouseEventResponse>
+internal partial class InputDispatchMouseEventRequest : IChromiumRequest<InputDispatchMouseEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.dispatchMouseEvent";
@@ -7346,7 +7346,7 @@ public string PointerType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputDispatchMouseEventRequest"/>
 /// </summary>
-internal class InputDispatchMouseEventResponse : IChromiumResponse
+internal partial class InputDispatchMouseEventResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7355,7 +7355,7 @@ internal class InputDispatchMouseEventResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.dispatchTouchEvent</c>
 /// </remarks>
-internal class InputDispatchTouchEventRequest : IChromiumRequest<InputDispatchTouchEventResponse>
+internal partial class InputDispatchTouchEventRequest : IChromiumRequest<InputDispatchTouchEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.dispatchTouchEvent";
@@ -7382,7 +7382,7 @@ public double? Timestamp { get; set; }}
 /// <summary>
 /// Response from <see cref="InputDispatchTouchEventRequest"/>
 /// </summary>
-internal class InputDispatchTouchEventResponse : IChromiumResponse
+internal partial class InputDispatchTouchEventResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7391,7 +7391,7 @@ internal class InputDispatchTouchEventResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.emulateTouchFromMouseEvent</c>
 /// </remarks>
-internal class InputEmulateTouchFromMouseEventRequest : IChromiumRequest<InputEmulateTouchFromMouseEventResponse>
+internal partial class InputEmulateTouchFromMouseEventRequest : IChromiumRequest<InputEmulateTouchFromMouseEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.emulateTouchFromMouseEvent";
@@ -7435,7 +7435,7 @@ public int? ClickCount { get; set; }}
 /// <summary>
 /// Response from <see cref="InputEmulateTouchFromMouseEventRequest"/>
 /// </summary>
-internal class InputEmulateTouchFromMouseEventResponse : IChromiumResponse
+internal partial class InputEmulateTouchFromMouseEventResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7444,7 +7444,7 @@ internal class InputEmulateTouchFromMouseEventResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.setIgnoreInputEvents</c>
 /// </remarks>
-internal class InputSetIgnoreInputEventsRequest : IChromiumRequest<InputSetIgnoreInputEventsResponse>
+internal partial class InputSetIgnoreInputEventsRequest : IChromiumRequest<InputSetIgnoreInputEventsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.setIgnoreInputEvents";
@@ -7455,7 +7455,7 @@ public bool? Ignore { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSetIgnoreInputEventsRequest"/>
 /// </summary>
-internal class InputSetIgnoreInputEventsResponse : IChromiumResponse
+internal partial class InputSetIgnoreInputEventsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7464,7 +7464,7 @@ internal class InputSetIgnoreInputEventsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.synthesizePinchGesture</c>
 /// </remarks>
-internal class InputSynthesizePinchGestureRequest : IChromiumRequest<InputSynthesizePinchGestureResponse>
+internal partial class InputSynthesizePinchGestureRequest : IChromiumRequest<InputSynthesizePinchGestureResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.synthesizePinchGesture";
@@ -7492,7 +7492,7 @@ public GestureSourceType GestureSourceType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizePinchGestureRequest"/>
 /// </summary>
-internal class InputSynthesizePinchGestureResponse : IChromiumResponse
+internal partial class InputSynthesizePinchGestureResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7501,7 +7501,7 @@ internal class InputSynthesizePinchGestureResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.synthesizeScrollGesture</c>
 /// </remarks>
-internal class InputSynthesizeScrollGestureRequest : IChromiumRequest<InputSynthesizeScrollGestureResponse>
+internal partial class InputSynthesizeScrollGestureRequest : IChromiumRequest<InputSynthesizeScrollGestureResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.synthesizeScrollGesture";
@@ -7559,7 +7559,7 @@ public string InteractionMarkerName { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizeScrollGestureRequest"/>
 /// </summary>
-internal class InputSynthesizeScrollGestureResponse : IChromiumResponse
+internal partial class InputSynthesizeScrollGestureResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7568,7 +7568,7 @@ internal class InputSynthesizeScrollGestureResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Input.synthesizeTapGesture</c>
 /// </remarks>
-internal class InputSynthesizeTapGestureRequest : IChromiumRequest<InputSynthesizeTapGestureResponse>
+internal partial class InputSynthesizeTapGestureRequest : IChromiumRequest<InputSynthesizeTapGestureResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Input.synthesizeTapGesture";
@@ -7596,7 +7596,7 @@ public GestureSourceType GestureSourceType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizeTapGestureRequest"/>
 /// </summary>
-internal class InputSynthesizeTapGestureResponse : IChromiumResponse
+internal partial class InputSynthesizeTapGestureResponse: IChromiumResponse
 {
 }
 }
@@ -7608,7 +7608,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Inspector
 /// <remarks>
 /// Will send the command <c>Inspector.disable</c>
 /// </remarks>
-internal class InspectorDisableRequest : IChromiumRequest<InspectorDisableResponse>
+internal partial class InspectorDisableRequest : IChromiumRequest<InspectorDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Inspector.disable";
@@ -7616,7 +7616,7 @@ public string Command { get; } = "Inspector.disable";
 /// <summary>
 /// Response from <see cref="InspectorDisableRequest"/>
 /// </summary>
-internal class InspectorDisableResponse : IChromiumResponse
+internal partial class InspectorDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7625,7 +7625,7 @@ internal class InspectorDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Inspector.enable</c>
 /// </remarks>
-internal class InspectorEnableRequest : IChromiumRequest<InspectorEnableResponse>
+internal partial class InspectorEnableRequest : IChromiumRequest<InspectorEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Inspector.enable";
@@ -7633,7 +7633,7 @@ public string Command { get; } = "Inspector.enable";
 /// <summary>
 /// Response from <see cref="InspectorEnableRequest"/>
 /// </summary>
-internal class InspectorEnableResponse : IChromiumResponse
+internal partial class InspectorEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7642,7 +7642,7 @@ internal class InspectorEnableResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Inspector.detached</c>
 /// </remarks>
-internal class InspectorDetachedChromiumEvent : IChromiumEvent
+internal partial class InspectorDetachedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Inspector.detached";
 /// <summary>
@@ -7655,7 +7655,7 @@ public string Reason { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Inspector.targetCrashed</c>
 /// </remarks>
-internal class InspectorTargetCrashedChromiumEvent : IChromiumEvent
+internal partial class InspectorTargetCrashedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Inspector.targetCrashed";
 }
@@ -7665,7 +7665,7 @@ public string InternalName { get; } = "Inspector.targetCrashed";
 /// <remarks>
 /// Matches on the event <c>Inspector.targetReloadedAfterCrash</c>
 /// </remarks>
-internal class InspectorTargetReloadedAfterCrashChromiumEvent : IChromiumEvent
+internal partial class InspectorTargetReloadedAfterCrashChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Inspector.targetReloadedAfterCrash";
 }
@@ -7675,7 +7675,7 @@ namespace PlaywrightSharp.Chromium.Protocol.LayerTree
 /// <summary>
 /// Rectangle where scrolling happens on the main thread.
 /// </summary>
-internal class ScrollRect
+internal partial class ScrollRect
 {
 /// <summary>
 /// Rectangle itself.
@@ -7688,7 +7688,7 @@ public string Type { get; set; }}
 /// <summary>
 /// Sticky position constraints.
 /// </summary>
-internal class StickyPositionConstraint
+internal partial class StickyPositionConstraint
 {
 /// <summary>
 /// Layout rectangle of the sticky element before being shifted
@@ -7709,7 +7709,7 @@ public string NearestLayerShiftingContainingBlock { get; set; }}
 /// <summary>
 /// Serialized fragment of layer picture along with its offset within the layer.
 /// </summary>
-internal class PictureTile
+internal partial class PictureTile
 {
 /// <summary>
 /// Offset from owning layer left boundary
@@ -7726,7 +7726,7 @@ public byte[] Picture { get; set; }}
 /// <summary>
 /// Information about a compositing layer.
 /// </summary>
-internal class Layer
+internal partial class Layer
 {
 /// <summary>
 /// The unique id for this layer.
@@ -7799,7 +7799,7 @@ public StickyPositionConstraint StickyPositionConstraint { get; set; }}
 /// <remarks>
 /// Will send the command <c>LayerTree.compositingReasons</c>
 /// </remarks>
-internal class LayerTreeCompositingReasonsRequest : IChromiumRequest<LayerTreeCompositingReasonsResponse>
+internal partial class LayerTreeCompositingReasonsRequest : IChromiumRequest<LayerTreeCompositingReasonsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.compositingReasons";
@@ -7810,7 +7810,7 @@ public string LayerId { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeCompositingReasonsRequest"/>
 /// </summary>
-internal class LayerTreeCompositingReasonsResponse : IChromiumResponse
+internal partial class LayerTreeCompositingReasonsResponse: IChromiumResponse
 {
 /// <summary>
 /// A list of strings specifying reasons for the given layer to become composited.
@@ -7822,7 +7822,7 @@ public string[] CompositingReasons { get; set; }}
 /// <remarks>
 /// Will send the command <c>LayerTree.disable</c>
 /// </remarks>
-internal class LayerTreeDisableRequest : IChromiumRequest<LayerTreeDisableResponse>
+internal partial class LayerTreeDisableRequest : IChromiumRequest<LayerTreeDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.disable";
@@ -7830,7 +7830,7 @@ public string Command { get; } = "LayerTree.disable";
 /// <summary>
 /// Response from <see cref="LayerTreeDisableRequest"/>
 /// </summary>
-internal class LayerTreeDisableResponse : IChromiumResponse
+internal partial class LayerTreeDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7839,7 +7839,7 @@ internal class LayerTreeDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>LayerTree.enable</c>
 /// </remarks>
-internal class LayerTreeEnableRequest : IChromiumRequest<LayerTreeEnableResponse>
+internal partial class LayerTreeEnableRequest : IChromiumRequest<LayerTreeEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.enable";
@@ -7847,7 +7847,7 @@ public string Command { get; } = "LayerTree.enable";
 /// <summary>
 /// Response from <see cref="LayerTreeEnableRequest"/>
 /// </summary>
-internal class LayerTreeEnableResponse : IChromiumResponse
+internal partial class LayerTreeEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7856,7 +7856,7 @@ internal class LayerTreeEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>LayerTree.loadSnapshot</c>
 /// </remarks>
-internal class LayerTreeLoadSnapshotRequest : IChromiumRequest<LayerTreeLoadSnapshotResponse>
+internal partial class LayerTreeLoadSnapshotRequest : IChromiumRequest<LayerTreeLoadSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.loadSnapshot";
@@ -7867,7 +7867,7 @@ public PictureTile[] Tiles { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeLoadSnapshotRequest"/>
 /// </summary>
-internal class LayerTreeLoadSnapshotResponse : IChromiumResponse
+internal partial class LayerTreeLoadSnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// The id of the snapshot.
@@ -7879,7 +7879,7 @@ public string SnapshotId { get; set; }}
 /// <remarks>
 /// Will send the command <c>LayerTree.makeSnapshot</c>
 /// </remarks>
-internal class LayerTreeMakeSnapshotRequest : IChromiumRequest<LayerTreeMakeSnapshotResponse>
+internal partial class LayerTreeMakeSnapshotRequest : IChromiumRequest<LayerTreeMakeSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.makeSnapshot";
@@ -7890,7 +7890,7 @@ public string LayerId { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeMakeSnapshotRequest"/>
 /// </summary>
-internal class LayerTreeMakeSnapshotResponse : IChromiumResponse
+internal partial class LayerTreeMakeSnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// The id of the layer snapshot.
@@ -7902,7 +7902,7 @@ public string SnapshotId { get; set; }}
 /// <remarks>
 /// Will send the command <c>LayerTree.profileSnapshot</c>
 /// </remarks>
-internal class LayerTreeProfileSnapshotRequest : IChromiumRequest<LayerTreeProfileSnapshotResponse>
+internal partial class LayerTreeProfileSnapshotRequest : IChromiumRequest<LayerTreeProfileSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.profileSnapshot";
@@ -7925,7 +7925,7 @@ public DOM.Rect ClipRect { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeProfileSnapshotRequest"/>
 /// </summary>
-internal class LayerTreeProfileSnapshotResponse : IChromiumResponse
+internal partial class LayerTreeProfileSnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// The array of paint profiles, one per run.
@@ -7937,7 +7937,7 @@ public double?[][] Timings { get; set; }}
 /// <remarks>
 /// Will send the command <c>LayerTree.releaseSnapshot</c>
 /// </remarks>
-internal class LayerTreeReleaseSnapshotRequest : IChromiumRequest<LayerTreeReleaseSnapshotResponse>
+internal partial class LayerTreeReleaseSnapshotRequest : IChromiumRequest<LayerTreeReleaseSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.releaseSnapshot";
@@ -7948,7 +7948,7 @@ public string SnapshotId { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeReleaseSnapshotRequest"/>
 /// </summary>
-internal class LayerTreeReleaseSnapshotResponse : IChromiumResponse
+internal partial class LayerTreeReleaseSnapshotResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -7957,7 +7957,7 @@ internal class LayerTreeReleaseSnapshotResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>LayerTree.replaySnapshot</c>
 /// </remarks>
-internal class LayerTreeReplaySnapshotRequest : IChromiumRequest<LayerTreeReplaySnapshotResponse>
+internal partial class LayerTreeReplaySnapshotRequest : IChromiumRequest<LayerTreeReplaySnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.replaySnapshot";
@@ -7980,7 +7980,7 @@ public double? Scale { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeReplaySnapshotRequest"/>
 /// </summary>
-internal class LayerTreeReplaySnapshotResponse : IChromiumResponse
+internal partial class LayerTreeReplaySnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// A data: URL for resulting image.
@@ -7992,7 +7992,7 @@ public string DataURL { get; set; }}
 /// <remarks>
 /// Will send the command <c>LayerTree.snapshotCommandLog</c>
 /// </remarks>
-internal class LayerTreeSnapshotCommandLogRequest : IChromiumRequest<LayerTreeSnapshotCommandLogResponse>
+internal partial class LayerTreeSnapshotCommandLogRequest : IChromiumRequest<LayerTreeSnapshotCommandLogResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "LayerTree.snapshotCommandLog";
@@ -8003,7 +8003,7 @@ public string SnapshotId { get; set; }}
 /// <summary>
 /// Response from <see cref="LayerTreeSnapshotCommandLogRequest"/>
 /// </summary>
-internal class LayerTreeSnapshotCommandLogResponse : IChromiumResponse
+internal partial class LayerTreeSnapshotCommandLogResponse: IChromiumResponse
 {
 /// <summary>
 /// The array of canvas function calls.
@@ -8015,7 +8015,7 @@ public JsonElement?[] CommandLog { get; set; }}
 /// <remarks>
 /// Matches on the event <c>LayerTree.layerPainted</c>
 /// </remarks>
-internal class LayerTreeLayerPaintedChromiumEvent : IChromiumEvent
+internal partial class LayerTreeLayerPaintedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "LayerTree.layerPainted";
 /// <summary>
@@ -8032,7 +8032,7 @@ public DOM.Rect Clip { get; set; }}
 /// <remarks>
 /// Matches on the event <c>LayerTree.layerTreeDidChange</c>
 /// </remarks>
-internal class LayerTreeLayerTreeDidChangeChromiumEvent : IChromiumEvent
+internal partial class LayerTreeLayerTreeDidChangeChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "LayerTree.layerTreeDidChange";
 /// <summary>
@@ -8045,7 +8045,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Log
 /// <summary>
 /// Log entry.
 /// </summary>
-internal class LogEntry
+internal partial class LogEntry
 {
 /// <summary>
 /// Log entry source.
@@ -8090,7 +8090,7 @@ public Runtime.RemoteObject[] Args { get; set; }}
 /// <summary>
 /// Violation configuration setting.
 /// </summary>
-internal class ViolationSetting
+internal partial class ViolationSetting
 {
 /// <summary>
 /// Violation type.
@@ -8106,7 +8106,7 @@ public double? Threshold { get; set; }}
 /// <remarks>
 /// Will send the command <c>Log.clear</c>
 /// </remarks>
-internal class LogClearRequest : IChromiumRequest<LogClearResponse>
+internal partial class LogClearRequest : IChromiumRequest<LogClearResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Log.clear";
@@ -8114,7 +8114,7 @@ public string Command { get; } = "Log.clear";
 /// <summary>
 /// Response from <see cref="LogClearRequest"/>
 /// </summary>
-internal class LogClearResponse : IChromiumResponse
+internal partial class LogClearResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8123,7 +8123,7 @@ internal class LogClearResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Log.disable</c>
 /// </remarks>
-internal class LogDisableRequest : IChromiumRequest<LogDisableResponse>
+internal partial class LogDisableRequest : IChromiumRequest<LogDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Log.disable";
@@ -8131,7 +8131,7 @@ public string Command { get; } = "Log.disable";
 /// <summary>
 /// Response from <see cref="LogDisableRequest"/>
 /// </summary>
-internal class LogDisableResponse : IChromiumResponse
+internal partial class LogDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8141,7 +8141,7 @@ internal class LogDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Log.enable</c>
 /// </remarks>
-internal class LogEnableRequest : IChromiumRequest<LogEnableResponse>
+internal partial class LogEnableRequest : IChromiumRequest<LogEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Log.enable";
@@ -8149,7 +8149,7 @@ public string Command { get; } = "Log.enable";
 /// <summary>
 /// Response from <see cref="LogEnableRequest"/>
 /// </summary>
-internal class LogEnableResponse : IChromiumResponse
+internal partial class LogEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8158,7 +8158,7 @@ internal class LogEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Log.startViolationsReport</c>
 /// </remarks>
-internal class LogStartViolationsReportRequest : IChromiumRequest<LogStartViolationsReportResponse>
+internal partial class LogStartViolationsReportRequest : IChromiumRequest<LogStartViolationsReportResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Log.startViolationsReport";
@@ -8169,7 +8169,7 @@ public ViolationSetting[] Config { get; set; }}
 /// <summary>
 /// Response from <see cref="LogStartViolationsReportRequest"/>
 /// </summary>
-internal class LogStartViolationsReportResponse : IChromiumResponse
+internal partial class LogStartViolationsReportResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8178,7 +8178,7 @@ internal class LogStartViolationsReportResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Log.stopViolationsReport</c>
 /// </remarks>
-internal class LogStopViolationsReportRequest : IChromiumRequest<LogStopViolationsReportResponse>
+internal partial class LogStopViolationsReportRequest : IChromiumRequest<LogStopViolationsReportResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Log.stopViolationsReport";
@@ -8186,7 +8186,7 @@ public string Command { get; } = "Log.stopViolationsReport";
 /// <summary>
 /// Response from <see cref="LogStopViolationsReportRequest"/>
 /// </summary>
-internal class LogStopViolationsReportResponse : IChromiumResponse
+internal partial class LogStopViolationsReportResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8195,7 +8195,7 @@ internal class LogStopViolationsReportResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Log.entryAdded</c>
 /// </remarks>
-internal class LogEntryAddedChromiumEvent : IChromiumEvent
+internal partial class LogEntryAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Log.entryAdded";
 /// <summary>
@@ -8215,7 +8215,7 @@ internal enum PressureLevel
 /// <summary>
 /// Heap profile sample.
 /// </summary>
-internal class SamplingProfileNode
+internal partial class SamplingProfileNode
 {
 /// <summary>
 /// Size of the sampled allocation.
@@ -8232,7 +8232,7 @@ public string[] Stack { get; set; }}
 /// <summary>
 /// Array of heap profile samples.
 /// </summary>
-internal class SamplingProfile
+internal partial class SamplingProfile
 {
 /// <summary>
 /// 
@@ -8245,7 +8245,7 @@ public Module[] Modules { get; set; }}
 /// <summary>
 /// Executable module information
 /// </summary>
-internal class Module
+internal partial class Module
 {
 /// <summary>
 /// Name of the module.
@@ -8270,7 +8270,7 @@ public double? Size { get; set; }}
 /// <remarks>
 /// Will send the command <c>Memory.getDOMCounters</c>
 /// </remarks>
-internal class MemoryGetDOMCountersRequest : IChromiumRequest<MemoryGetDOMCountersResponse>
+internal partial class MemoryGetDOMCountersRequest : IChromiumRequest<MemoryGetDOMCountersResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.getDOMCounters";
@@ -8278,7 +8278,7 @@ public string Command { get; } = "Memory.getDOMCounters";
 /// <summary>
 /// Response from <see cref="MemoryGetDOMCountersRequest"/>
 /// </summary>
-internal class MemoryGetDOMCountersResponse : IChromiumResponse
+internal partial class MemoryGetDOMCountersResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -8298,7 +8298,7 @@ public int? JsEventListeners { get; set; }}
 /// <remarks>
 /// Will send the command <c>Memory.prepareForLeakDetection</c>
 /// </remarks>
-internal class MemoryPrepareForLeakDetectionRequest : IChromiumRequest<MemoryPrepareForLeakDetectionResponse>
+internal partial class MemoryPrepareForLeakDetectionRequest : IChromiumRequest<MemoryPrepareForLeakDetectionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.prepareForLeakDetection";
@@ -8306,7 +8306,7 @@ public string Command { get; } = "Memory.prepareForLeakDetection";
 /// <summary>
 /// Response from <see cref="MemoryPrepareForLeakDetectionRequest"/>
 /// </summary>
-internal class MemoryPrepareForLeakDetectionResponse : IChromiumResponse
+internal partial class MemoryPrepareForLeakDetectionResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8315,7 +8315,7 @@ internal class MemoryPrepareForLeakDetectionResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Memory.forciblyPurgeJavaScriptMemory</c>
 /// </remarks>
-internal class MemoryForciblyPurgeJavaScriptMemoryRequest : IChromiumRequest<MemoryForciblyPurgeJavaScriptMemoryResponse>
+internal partial class MemoryForciblyPurgeJavaScriptMemoryRequest : IChromiumRequest<MemoryForciblyPurgeJavaScriptMemoryResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.forciblyPurgeJavaScriptMemory";
@@ -8323,7 +8323,7 @@ public string Command { get; } = "Memory.forciblyPurgeJavaScriptMemory";
 /// <summary>
 /// Response from <see cref="MemoryForciblyPurgeJavaScriptMemoryRequest"/>
 /// </summary>
-internal class MemoryForciblyPurgeJavaScriptMemoryResponse : IChromiumResponse
+internal partial class MemoryForciblyPurgeJavaScriptMemoryResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8332,7 +8332,7 @@ internal class MemoryForciblyPurgeJavaScriptMemoryResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Memory.setPressureNotificationsSuppressed</c>
 /// </remarks>
-internal class MemorySetPressureNotificationsSuppressedRequest : IChromiumRequest<MemorySetPressureNotificationsSuppressedResponse>
+internal partial class MemorySetPressureNotificationsSuppressedRequest : IChromiumRequest<MemorySetPressureNotificationsSuppressedResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.setPressureNotificationsSuppressed";
@@ -8343,7 +8343,7 @@ public bool? Suppressed { get; set; }}
 /// <summary>
 /// Response from <see cref="MemorySetPressureNotificationsSuppressedRequest"/>
 /// </summary>
-internal class MemorySetPressureNotificationsSuppressedResponse : IChromiumResponse
+internal partial class MemorySetPressureNotificationsSuppressedResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8352,7 +8352,7 @@ internal class MemorySetPressureNotificationsSuppressedResponse : IChromiumRespo
 /// <remarks>
 /// Will send the command <c>Memory.simulatePressureNotification</c>
 /// </remarks>
-internal class MemorySimulatePressureNotificationRequest : IChromiumRequest<MemorySimulatePressureNotificationResponse>
+internal partial class MemorySimulatePressureNotificationRequest : IChromiumRequest<MemorySimulatePressureNotificationResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.simulatePressureNotification";
@@ -8363,7 +8363,7 @@ public PressureLevel Level { get; set; }}
 /// <summary>
 /// Response from <see cref="MemorySimulatePressureNotificationRequest"/>
 /// </summary>
-internal class MemorySimulatePressureNotificationResponse : IChromiumResponse
+internal partial class MemorySimulatePressureNotificationResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8372,7 +8372,7 @@ internal class MemorySimulatePressureNotificationResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Memory.startSampling</c>
 /// </remarks>
-internal class MemoryStartSamplingRequest : IChromiumRequest<MemoryStartSamplingResponse>
+internal partial class MemoryStartSamplingRequest : IChromiumRequest<MemoryStartSamplingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.startSampling";
@@ -8387,7 +8387,7 @@ public bool? SuppressRandomness { get; set; }}
 /// <summary>
 /// Response from <see cref="MemoryStartSamplingRequest"/>
 /// </summary>
-internal class MemoryStartSamplingResponse : IChromiumResponse
+internal partial class MemoryStartSamplingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8396,7 +8396,7 @@ internal class MemoryStartSamplingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Memory.stopSampling</c>
 /// </remarks>
-internal class MemoryStopSamplingRequest : IChromiumRequest<MemoryStopSamplingResponse>
+internal partial class MemoryStopSamplingRequest : IChromiumRequest<MemoryStopSamplingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.stopSampling";
@@ -8404,7 +8404,7 @@ public string Command { get; } = "Memory.stopSampling";
 /// <summary>
 /// Response from <see cref="MemoryStopSamplingRequest"/>
 /// </summary>
-internal class MemoryStopSamplingResponse : IChromiumResponse
+internal partial class MemoryStopSamplingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -8414,7 +8414,7 @@ internal class MemoryStopSamplingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Memory.getAllTimeSamplingProfile</c>
 /// </remarks>
-internal class MemoryGetAllTimeSamplingProfileRequest : IChromiumRequest<MemoryGetAllTimeSamplingProfileResponse>
+internal partial class MemoryGetAllTimeSamplingProfileRequest : IChromiumRequest<MemoryGetAllTimeSamplingProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.getAllTimeSamplingProfile";
@@ -8422,7 +8422,7 @@ public string Command { get; } = "Memory.getAllTimeSamplingProfile";
 /// <summary>
 /// Response from <see cref="MemoryGetAllTimeSamplingProfileRequest"/>
 /// </summary>
-internal class MemoryGetAllTimeSamplingProfileResponse : IChromiumResponse
+internal partial class MemoryGetAllTimeSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -8435,7 +8435,7 @@ public SamplingProfile Profile { get; set; }}
 /// <remarks>
 /// Will send the command <c>Memory.getBrowserSamplingProfile</c>
 /// </remarks>
-internal class MemoryGetBrowserSamplingProfileRequest : IChromiumRequest<MemoryGetBrowserSamplingProfileResponse>
+internal partial class MemoryGetBrowserSamplingProfileRequest : IChromiumRequest<MemoryGetBrowserSamplingProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.getBrowserSamplingProfile";
@@ -8443,7 +8443,7 @@ public string Command { get; } = "Memory.getBrowserSamplingProfile";
 /// <summary>
 /// Response from <see cref="MemoryGetBrowserSamplingProfileRequest"/>
 /// </summary>
-internal class MemoryGetBrowserSamplingProfileResponse : IChromiumResponse
+internal partial class MemoryGetBrowserSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -8456,7 +8456,7 @@ public SamplingProfile Profile { get; set; }}
 /// <remarks>
 /// Will send the command <c>Memory.getSamplingProfile</c>
 /// </remarks>
-internal class MemoryGetSamplingProfileRequest : IChromiumRequest<MemoryGetSamplingProfileResponse>
+internal partial class MemoryGetSamplingProfileRequest : IChromiumRequest<MemoryGetSamplingProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Memory.getSamplingProfile";
@@ -8464,7 +8464,7 @@ public string Command { get; } = "Memory.getSamplingProfile";
 /// <summary>
 /// Response from <see cref="MemoryGetSamplingProfileRequest"/>
 /// </summary>
-internal class MemoryGetSamplingProfileResponse : IChromiumResponse
+internal partial class MemoryGetSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -8516,7 +8516,7 @@ internal enum ErrorReason
 /// <summary>
 /// Request / response headers as keys / values of JSON object.
 /// </summary>
-internal class Headers
+internal partial class Headers
 {
 }
 /// <summary>
@@ -8554,7 +8554,7 @@ internal enum CookiePriority
 /// <summary>
 /// Timing information for the request.
 /// </summary>
-internal class ResourceTiming
+internal partial class ResourceTiming
 {
 /// <summary>
 /// Timing's requestTime is a baseline in seconds, while the other numbers are ticks in
@@ -8634,7 +8634,7 @@ internal enum ResourcePriority
 /// <summary>
 /// HTTP request data.
 /// </summary>
-internal class Request
+internal partial class Request
 {
 /// <summary>
 /// Request URL (without fragment).
@@ -8679,7 +8679,7 @@ public bool? IsLinkPreload { get; set; }}
 /// <summary>
 /// Details of a signed certificate timestamp (SCT).
 /// </summary>
-internal class SignedCertificateTimestamp
+internal partial class SignedCertificateTimestamp
 {
 /// <summary>
 /// Validation status.
@@ -8716,7 +8716,7 @@ public string SignatureData { get; set; }}
 /// <summary>
 /// Security details about a request.
 /// </summary>
-internal class SecurityDetails
+internal partial class SecurityDetails
 {
 /// <summary>
 /// Protocol name (e.g. "TLS 1.2" or "QUIC").
@@ -8794,7 +8794,7 @@ internal enum BlockedReason
 /// <summary>
 /// HTTP response data.
 /// </summary>
-internal class Response
+internal partial class Response
 {
 /// <summary>
 /// Response URL. This URL can be different from CachedResource.url in case of redirect.
@@ -8879,7 +8879,7 @@ public SecurityDetails SecurityDetails { get; set; }}
 /// <summary>
 /// WebSocket request data.
 /// </summary>
-internal class WebSocketRequest
+internal partial class WebSocketRequest
 {
 /// <summary>
 /// HTTP request headers.
@@ -8888,7 +8888,7 @@ public System.Collections.Generic.IDictionary<string, string> Headers { get; set
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-internal class WebSocketResponse
+internal partial class WebSocketResponse
 {
 /// <summary>
 /// HTTP response status code.
@@ -8917,7 +8917,7 @@ public string RequestHeadersText { get; set; }}
 /// <summary>
 /// WebSocket message data. This represents an entire WebSocket message, not just a fragmented frame as the name suggests.
 /// </summary>
-internal class WebSocketFrame
+internal partial class WebSocketFrame
 {
 /// <summary>
 /// WebSocket message opcode.
@@ -8936,7 +8936,7 @@ public string PayloadData { get; set; }}
 /// <summary>
 /// Information about the cached resource.
 /// </summary>
-internal class CachedResource
+internal partial class CachedResource
 {
 /// <summary>
 /// Resource URL. This is the url of the original network request.
@@ -8957,7 +8957,7 @@ public double? BodySize { get; set; }}
 /// <summary>
 /// Information about the request initiator.
 /// </summary>
-internal class Initiator
+internal partial class Initiator
 {
 /// <summary>
 /// Type of this initiator.
@@ -8979,7 +8979,7 @@ public double? LineNumber { get; set; }}
 /// <summary>
 /// Cookie object
 /// </summary>
-internal class Cookie
+internal partial class Cookie
 {
 /// <summary>
 /// Cookie name.
@@ -9059,7 +9059,7 @@ internal enum CookieBlockedReason
 /// <summary>
 /// A cookie which was not stored from a response with the corresponding reason.
 /// </summary>
-internal class BlockedSetCookieWithReason
+internal partial class BlockedSetCookieWithReason
 {
 /// <summary>
 /// The reason(s) this cookie was blocked.
@@ -9079,7 +9079,7 @@ public Cookie Cookie { get; set; }}
 /// <summary>
 /// A cookie with was not sent with a request with the corresponding reason.
 /// </summary>
-internal class BlockedCookieWithReason
+internal partial class BlockedCookieWithReason
 {
 /// <summary>
 /// The reason(s) the cookie was blocked.
@@ -9092,7 +9092,7 @@ public Cookie Cookie { get; set; }}
 /// <summary>
 /// Cookie parameter object
 /// </summary>
-internal class CookieParam
+internal partial class CookieParam
 {
 /// <summary>
 /// Cookie name.
@@ -9138,7 +9138,7 @@ public CookiePriority Priority { get; set; }}
 /// <summary>
 /// Authorization challenge for HTTP status code 401 or 407.
 /// </summary>
-internal class AuthChallenge
+internal partial class AuthChallenge
 {
 /// <summary>
 /// Source of the authentication challenge.
@@ -9159,7 +9159,7 @@ public string Realm { get; set; }}
 /// <summary>
 /// Response to an AuthChallenge.
 /// </summary>
-internal class AuthChallengeResponse
+internal partial class AuthChallengeResponse
 {
 /// <summary>
 /// The decision on what to do in response to the authorization challenge.  Default means
@@ -9188,7 +9188,7 @@ internal enum InterceptionStage
 /// <summary>
 /// Request pattern for interception.
 /// </summary>
-internal class RequestPattern
+internal partial class RequestPattern
 {
 /// <summary>
 /// Wildcards ('*' -&gt; zero or more, '?' -&gt; exactly one) are allowed. Escape character is
@@ -9207,7 +9207,7 @@ public InterceptionStage InterceptionStage { get; set; }}
 /// Information about a signed exchange signature.
 /// https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1
 /// </summary>
-internal class SignedExchangeSignature
+internal partial class SignedExchangeSignature
 {
 /// <summary>
 /// Signed exchange signature label.
@@ -9249,7 +9249,7 @@ public string[] Certificates { get; set; }}
 /// Information about a signed exchange header.
 /// https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation
 /// </summary>
-internal class SignedExchangeHeader
+internal partial class SignedExchangeHeader
 {
 /// <summary>
 /// Signed exchange request URL.
@@ -9285,7 +9285,7 @@ internal enum SignedExchangeErrorField
 /// <summary>
 /// Information about a signed exchange response.
 /// </summary>
-internal class SignedExchangeError
+internal partial class SignedExchangeError
 {
 /// <summary>
 /// Error message.
@@ -9302,7 +9302,7 @@ public SignedExchangeErrorField ErrorField { get; set; }}
 /// <summary>
 /// Information about a signed exchange response.
 /// </summary>
-internal class SignedExchangeInfo
+internal partial class SignedExchangeInfo
 {
 /// <summary>
 /// The outer response of signed HTTP exchange which was received from network.
@@ -9326,7 +9326,7 @@ public SignedExchangeError[] Errors { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.canClearBrowserCache</c>
 /// </remarks>
-internal class NetworkCanClearBrowserCacheRequest : IChromiumRequest<NetworkCanClearBrowserCacheResponse>
+internal partial class NetworkCanClearBrowserCacheRequest : IChromiumRequest<NetworkCanClearBrowserCacheResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.canClearBrowserCache";
@@ -9334,7 +9334,7 @@ public string Command { get; } = "Network.canClearBrowserCache";
 /// <summary>
 /// Response from <see cref="NetworkCanClearBrowserCacheRequest"/>
 /// </summary>
-internal class NetworkCanClearBrowserCacheResponse : IChromiumResponse
+internal partial class NetworkCanClearBrowserCacheResponse: IChromiumResponse
 {
 /// <summary>
 /// True if browser cache can be cleared.
@@ -9346,7 +9346,7 @@ public bool? Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.canClearBrowserCookies</c>
 /// </remarks>
-internal class NetworkCanClearBrowserCookiesRequest : IChromiumRequest<NetworkCanClearBrowserCookiesResponse>
+internal partial class NetworkCanClearBrowserCookiesRequest : IChromiumRequest<NetworkCanClearBrowserCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.canClearBrowserCookies";
@@ -9354,7 +9354,7 @@ public string Command { get; } = "Network.canClearBrowserCookies";
 /// <summary>
 /// Response from <see cref="NetworkCanClearBrowserCookiesRequest"/>
 /// </summary>
-internal class NetworkCanClearBrowserCookiesResponse : IChromiumResponse
+internal partial class NetworkCanClearBrowserCookiesResponse: IChromiumResponse
 {
 /// <summary>
 /// True if browser cookies can be cleared.
@@ -9366,7 +9366,7 @@ public bool? Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.canEmulateNetworkConditions</c>
 /// </remarks>
-internal class NetworkCanEmulateNetworkConditionsRequest : IChromiumRequest<NetworkCanEmulateNetworkConditionsResponse>
+internal partial class NetworkCanEmulateNetworkConditionsRequest : IChromiumRequest<NetworkCanEmulateNetworkConditionsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.canEmulateNetworkConditions";
@@ -9374,7 +9374,7 @@ public string Command { get; } = "Network.canEmulateNetworkConditions";
 /// <summary>
 /// Response from <see cref="NetworkCanEmulateNetworkConditionsRequest"/>
 /// </summary>
-internal class NetworkCanEmulateNetworkConditionsResponse : IChromiumResponse
+internal partial class NetworkCanEmulateNetworkConditionsResponse: IChromiumResponse
 {
 /// <summary>
 /// True if emulation of network conditions is supported.
@@ -9386,7 +9386,7 @@ public bool? Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.clearBrowserCache</c>
 /// </remarks>
-internal class NetworkClearBrowserCacheRequest : IChromiumRequest<NetworkClearBrowserCacheResponse>
+internal partial class NetworkClearBrowserCacheRequest : IChromiumRequest<NetworkClearBrowserCacheResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.clearBrowserCache";
@@ -9394,7 +9394,7 @@ public string Command { get; } = "Network.clearBrowserCache";
 /// <summary>
 /// Response from <see cref="NetworkClearBrowserCacheRequest"/>
 /// </summary>
-internal class NetworkClearBrowserCacheResponse : IChromiumResponse
+internal partial class NetworkClearBrowserCacheResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9403,7 +9403,7 @@ internal class NetworkClearBrowserCacheResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.clearBrowserCookies</c>
 /// </remarks>
-internal class NetworkClearBrowserCookiesRequest : IChromiumRequest<NetworkClearBrowserCookiesResponse>
+internal partial class NetworkClearBrowserCookiesRequest : IChromiumRequest<NetworkClearBrowserCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.clearBrowserCookies";
@@ -9411,7 +9411,7 @@ public string Command { get; } = "Network.clearBrowserCookies";
 /// <summary>
 /// Response from <see cref="NetworkClearBrowserCookiesRequest"/>
 /// </summary>
-internal class NetworkClearBrowserCookiesResponse : IChromiumResponse
+internal partial class NetworkClearBrowserCookiesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9424,7 +9424,7 @@ internal class NetworkClearBrowserCookiesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.continueInterceptedRequest</c>
 /// </remarks>
-internal class NetworkContinueInterceptedRequestRequest : IChromiumRequest<NetworkContinueInterceptedRequestResponse>
+internal partial class NetworkContinueInterceptedRequestRequest : IChromiumRequest<NetworkContinueInterceptedRequestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.continueInterceptedRequest";
@@ -9469,7 +9469,7 @@ public AuthChallengeResponse AuthChallengeResponse { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkContinueInterceptedRequestRequest"/>
 /// </summary>
-internal class NetworkContinueInterceptedRequestResponse : IChromiumResponse
+internal partial class NetworkContinueInterceptedRequestResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9478,7 +9478,7 @@ internal class NetworkContinueInterceptedRequestResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.deleteCookies</c>
 /// </remarks>
-internal class NetworkDeleteCookiesRequest : IChromiumRequest<NetworkDeleteCookiesResponse>
+internal partial class NetworkDeleteCookiesRequest : IChromiumRequest<NetworkDeleteCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.deleteCookies";
@@ -9502,7 +9502,7 @@ public string Path { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkDeleteCookiesRequest"/>
 /// </summary>
-internal class NetworkDeleteCookiesResponse : IChromiumResponse
+internal partial class NetworkDeleteCookiesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9511,7 +9511,7 @@ internal class NetworkDeleteCookiesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.disable</c>
 /// </remarks>
-internal class NetworkDisableRequest : IChromiumRequest<NetworkDisableResponse>
+internal partial class NetworkDisableRequest : IChromiumRequest<NetworkDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.disable";
@@ -9519,7 +9519,7 @@ public string Command { get; } = "Network.disable";
 /// <summary>
 /// Response from <see cref="NetworkDisableRequest"/>
 /// </summary>
-internal class NetworkDisableResponse : IChromiumResponse
+internal partial class NetworkDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9528,7 +9528,7 @@ internal class NetworkDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.emulateNetworkConditions</c>
 /// </remarks>
-internal class NetworkEmulateNetworkConditionsRequest : IChromiumRequest<NetworkEmulateNetworkConditionsResponse>
+internal partial class NetworkEmulateNetworkConditionsRequest : IChromiumRequest<NetworkEmulateNetworkConditionsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.emulateNetworkConditions";
@@ -9555,7 +9555,7 @@ public ConnectionType ConnectionType { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkEmulateNetworkConditionsRequest"/>
 /// </summary>
-internal class NetworkEmulateNetworkConditionsResponse : IChromiumResponse
+internal partial class NetworkEmulateNetworkConditionsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9564,7 +9564,7 @@ internal class NetworkEmulateNetworkConditionsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.enable</c>
 /// </remarks>
-internal class NetworkEnableRequest : IChromiumRequest<NetworkEnableResponse>
+internal partial class NetworkEnableRequest : IChromiumRequest<NetworkEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.enable";
@@ -9583,7 +9583,7 @@ public int? MaxPostDataSize { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkEnableRequest"/>
 /// </summary>
-internal class NetworkEnableResponse : IChromiumResponse
+internal partial class NetworkEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9593,7 +9593,7 @@ internal class NetworkEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.getAllCookies</c>
 /// </remarks>
-internal class NetworkGetAllCookiesRequest : IChromiumRequest<NetworkGetAllCookiesResponse>
+internal partial class NetworkGetAllCookiesRequest : IChromiumRequest<NetworkGetAllCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getAllCookies";
@@ -9601,7 +9601,7 @@ public string Command { get; } = "Network.getAllCookies";
 /// <summary>
 /// Response from <see cref="NetworkGetAllCookiesRequest"/>
 /// </summary>
-internal class NetworkGetAllCookiesResponse : IChromiumResponse
+internal partial class NetworkGetAllCookiesResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of cookie objects.
@@ -9613,7 +9613,7 @@ public Cookie[] Cookies { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.getCertificate</c>
 /// </remarks>
-internal class NetworkGetCertificateRequest : IChromiumRequest<NetworkGetCertificateResponse>
+internal partial class NetworkGetCertificateRequest : IChromiumRequest<NetworkGetCertificateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getCertificate";
@@ -9624,7 +9624,7 @@ public string Origin { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkGetCertificateRequest"/>
 /// </summary>
-internal class NetworkGetCertificateResponse : IChromiumResponse
+internal partial class NetworkGetCertificateResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -9637,7 +9637,7 @@ public string[] TableNames { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.getCookies</c>
 /// </remarks>
-internal class NetworkGetCookiesRequest : IChromiumRequest<NetworkGetCookiesResponse>
+internal partial class NetworkGetCookiesRequest : IChromiumRequest<NetworkGetCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getCookies";
@@ -9648,7 +9648,7 @@ public string[] Urls { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkGetCookiesRequest"/>
 /// </summary>
-internal class NetworkGetCookiesResponse : IChromiumResponse
+internal partial class NetworkGetCookiesResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of cookie objects.
@@ -9660,7 +9660,7 @@ public Cookie[] Cookies { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.getResponseBody</c>
 /// </remarks>
-internal class NetworkGetResponseBodyRequest : IChromiumRequest<NetworkGetResponseBodyResponse>
+internal partial class NetworkGetResponseBodyRequest : IChromiumRequest<NetworkGetResponseBodyResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getResponseBody";
@@ -9671,7 +9671,7 @@ public string RequestId { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkGetResponseBodyRequest"/>
 /// </summary>
-internal class NetworkGetResponseBodyResponse : IChromiumResponse
+internal partial class NetworkGetResponseBodyResponse: IChromiumResponse
 {
 /// <summary>
 /// Response body.
@@ -9687,7 +9687,7 @@ public bool? Base64Encoded { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.getRequestPostData</c>
 /// </remarks>
-internal class NetworkGetRequestPostDataRequest : IChromiumRequest<NetworkGetRequestPostDataResponse>
+internal partial class NetworkGetRequestPostDataRequest : IChromiumRequest<NetworkGetRequestPostDataResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getRequestPostData";
@@ -9698,7 +9698,7 @@ public string RequestId { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkGetRequestPostDataRequest"/>
 /// </summary>
-internal class NetworkGetRequestPostDataResponse : IChromiumResponse
+internal partial class NetworkGetRequestPostDataResponse: IChromiumResponse
 {
 /// <summary>
 /// Request body string, omitting files from multipart requests
@@ -9710,7 +9710,7 @@ public string PostData { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.getResponseBodyForInterception</c>
 /// </remarks>
-internal class NetworkGetResponseBodyForInterceptionRequest : IChromiumRequest<NetworkGetResponseBodyForInterceptionResponse>
+internal partial class NetworkGetResponseBodyForInterceptionRequest : IChromiumRequest<NetworkGetResponseBodyForInterceptionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getResponseBodyForInterception";
@@ -9721,7 +9721,7 @@ public string InterceptionId { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkGetResponseBodyForInterceptionRequest"/>
 /// </summary>
-internal class NetworkGetResponseBodyForInterceptionResponse : IChromiumResponse
+internal partial class NetworkGetResponseBodyForInterceptionResponse: IChromiumResponse
 {
 /// <summary>
 /// Response body.
@@ -9740,7 +9740,7 @@ public bool? Base64Encoded { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.takeResponseBodyForInterceptionAsStream</c>
 /// </remarks>
-internal class NetworkTakeResponseBodyForInterceptionAsStreamRequest : IChromiumRequest<NetworkTakeResponseBodyForInterceptionAsStreamResponse>
+internal partial class NetworkTakeResponseBodyForInterceptionAsStreamRequest : IChromiumRequest<NetworkTakeResponseBodyForInterceptionAsStreamResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.takeResponseBodyForInterceptionAsStream";
@@ -9751,7 +9751,7 @@ public string InterceptionId { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkTakeResponseBodyForInterceptionAsStreamRequest"/>
 /// </summary>
-internal class NetworkTakeResponseBodyForInterceptionAsStreamResponse : IChromiumResponse
+internal partial class NetworkTakeResponseBodyForInterceptionAsStreamResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -9765,7 +9765,7 @@ public string Stream { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.replayXHR</c>
 /// </remarks>
-internal class NetworkReplayXHRRequest : IChromiumRequest<NetworkReplayXHRResponse>
+internal partial class NetworkReplayXHRRequest : IChromiumRequest<NetworkReplayXHRResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.replayXHR";
@@ -9776,7 +9776,7 @@ public string RequestId { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkReplayXHRRequest"/>
 /// </summary>
-internal class NetworkReplayXHRResponse : IChromiumResponse
+internal partial class NetworkReplayXHRResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9785,7 +9785,7 @@ internal class NetworkReplayXHRResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.searchInResponseBody</c>
 /// </remarks>
-internal class NetworkSearchInResponseBodyRequest : IChromiumRequest<NetworkSearchInResponseBodyResponse>
+internal partial class NetworkSearchInResponseBodyRequest : IChromiumRequest<NetworkSearchInResponseBodyResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.searchInResponseBody";
@@ -9808,7 +9808,7 @@ public bool? IsRegex { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSearchInResponseBodyRequest"/>
 /// </summary>
-internal class NetworkSearchInResponseBodyResponse : IChromiumResponse
+internal partial class NetworkSearchInResponseBodyResponse: IChromiumResponse
 {
 /// <summary>
 /// List of search matches.
@@ -9820,7 +9820,7 @@ public Debugger.SearchMatch[] Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.setBlockedURLs</c>
 /// </remarks>
-internal class NetworkSetBlockedURLsRequest : IChromiumRequest<NetworkSetBlockedURLsResponse>
+internal partial class NetworkSetBlockedURLsRequest : IChromiumRequest<NetworkSetBlockedURLsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setBlockedURLs";
@@ -9831,7 +9831,7 @@ public string[] Urls { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetBlockedURLsRequest"/>
 /// </summary>
-internal class NetworkSetBlockedURLsResponse : IChromiumResponse
+internal partial class NetworkSetBlockedURLsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9840,7 +9840,7 @@ internal class NetworkSetBlockedURLsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setBypassServiceWorker</c>
 /// </remarks>
-internal class NetworkSetBypassServiceWorkerRequest : IChromiumRequest<NetworkSetBypassServiceWorkerResponse>
+internal partial class NetworkSetBypassServiceWorkerRequest : IChromiumRequest<NetworkSetBypassServiceWorkerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setBypassServiceWorker";
@@ -9851,7 +9851,7 @@ public bool? Bypass { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetBypassServiceWorkerRequest"/>
 /// </summary>
-internal class NetworkSetBypassServiceWorkerResponse : IChromiumResponse
+internal partial class NetworkSetBypassServiceWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9860,7 +9860,7 @@ internal class NetworkSetBypassServiceWorkerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setCacheDisabled</c>
 /// </remarks>
-internal class NetworkSetCacheDisabledRequest : IChromiumRequest<NetworkSetCacheDisabledResponse>
+internal partial class NetworkSetCacheDisabledRequest : IChromiumRequest<NetworkSetCacheDisabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setCacheDisabled";
@@ -9871,7 +9871,7 @@ public bool? CacheDisabled { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetCacheDisabledRequest"/>
 /// </summary>
-internal class NetworkSetCacheDisabledResponse : IChromiumResponse
+internal partial class NetworkSetCacheDisabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9880,7 +9880,7 @@ internal class NetworkSetCacheDisabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setCookie</c>
 /// </remarks>
-internal class NetworkSetCookieRequest : IChromiumRequest<NetworkSetCookieResponse>
+internal partial class NetworkSetCookieRequest : IChromiumRequest<NetworkSetCookieResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setCookie";
@@ -9928,7 +9928,7 @@ public CookiePriority Priority { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetCookieRequest"/>
 /// </summary>
-internal class NetworkSetCookieResponse : IChromiumResponse
+internal partial class NetworkSetCookieResponse: IChromiumResponse
 {
 /// <summary>
 /// True if successfully set cookie.
@@ -9940,7 +9940,7 @@ public bool? Success { get; set; }}
 /// <remarks>
 /// Will send the command <c>Network.setCookies</c>
 /// </remarks>
-internal class NetworkSetCookiesRequest : IChromiumRequest<NetworkSetCookiesResponse>
+internal partial class NetworkSetCookiesRequest : IChromiumRequest<NetworkSetCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setCookies";
@@ -9951,7 +9951,7 @@ public CookieParam[] Cookies { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetCookiesRequest"/>
 /// </summary>
-internal class NetworkSetCookiesResponse : IChromiumResponse
+internal partial class NetworkSetCookiesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9960,7 +9960,7 @@ internal class NetworkSetCookiesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setDataSizeLimitsForTest</c>
 /// </remarks>
-internal class NetworkSetDataSizeLimitsForTestRequest : IChromiumRequest<NetworkSetDataSizeLimitsForTestResponse>
+internal partial class NetworkSetDataSizeLimitsForTestRequest : IChromiumRequest<NetworkSetDataSizeLimitsForTestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setDataSizeLimitsForTest";
@@ -9975,7 +9975,7 @@ public int? MaxResourceSize { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetDataSizeLimitsForTestRequest"/>
 /// </summary>
-internal class NetworkSetDataSizeLimitsForTestResponse : IChromiumResponse
+internal partial class NetworkSetDataSizeLimitsForTestResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -9984,7 +9984,7 @@ internal class NetworkSetDataSizeLimitsForTestResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setExtraHTTPHeaders</c>
 /// </remarks>
-internal class NetworkSetExtraHTTPHeadersRequest : IChromiumRequest<NetworkSetExtraHTTPHeadersResponse>
+internal partial class NetworkSetExtraHTTPHeadersRequest : IChromiumRequest<NetworkSetExtraHTTPHeadersResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setExtraHTTPHeaders";
@@ -9995,7 +9995,7 @@ public System.Collections.Generic.IDictionary<string, string> Headers { get; set
 /// <summary>
 /// Response from <see cref="NetworkSetExtraHTTPHeadersRequest"/>
 /// </summary>
-internal class NetworkSetExtraHTTPHeadersResponse : IChromiumResponse
+internal partial class NetworkSetExtraHTTPHeadersResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10005,7 +10005,7 @@ internal class NetworkSetExtraHTTPHeadersResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setRequestInterception</c>
 /// </remarks>
-internal class NetworkSetRequestInterceptionRequest : IChromiumRequest<NetworkSetRequestInterceptionResponse>
+internal partial class NetworkSetRequestInterceptionRequest : IChromiumRequest<NetworkSetRequestInterceptionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setRequestInterception";
@@ -10017,7 +10017,7 @@ public RequestPattern[] Patterns { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetRequestInterceptionRequest"/>
 /// </summary>
-internal class NetworkSetRequestInterceptionResponse : IChromiumResponse
+internal partial class NetworkSetRequestInterceptionResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10026,7 +10026,7 @@ internal class NetworkSetRequestInterceptionResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Network.setUserAgentOverride</c>
 /// </remarks>
-internal class NetworkSetUserAgentOverrideRequest : IChromiumRequest<NetworkSetUserAgentOverrideResponse>
+internal partial class NetworkSetUserAgentOverrideRequest : IChromiumRequest<NetworkSetUserAgentOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setUserAgentOverride";
@@ -10045,7 +10045,7 @@ public string Platform { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetUserAgentOverrideRequest"/>
 /// </summary>
-internal class NetworkSetUserAgentOverrideResponse : IChromiumResponse
+internal partial class NetworkSetUserAgentOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10054,7 +10054,7 @@ internal class NetworkSetUserAgentOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Network.dataReceived</c>
 /// </remarks>
-internal class NetworkDataReceivedChromiumEvent : IChromiumEvent
+internal partial class NetworkDataReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.dataReceived";
 /// <summary>
@@ -10079,7 +10079,7 @@ public int? EncodedDataLength { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.eventSourceMessageReceived</c>
 /// </remarks>
-internal class NetworkEventSourceMessageReceivedChromiumEvent : IChromiumEvent
+internal partial class NetworkEventSourceMessageReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.eventSourceMessageReceived";
 /// <summary>
@@ -10108,7 +10108,7 @@ public string Data { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.loadingFailed</c>
 /// </remarks>
-internal class NetworkLoadingFailedChromiumEvent : IChromiumEvent
+internal partial class NetworkLoadingFailedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.loadingFailed";
 /// <summary>
@@ -10141,7 +10141,7 @@ public BlockedReason BlockedReason { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.loadingFinished</c>
 /// </remarks>
-internal class NetworkLoadingFinishedChromiumEvent : IChromiumEvent
+internal partial class NetworkLoadingFinishedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.loadingFinished";
 /// <summary>
@@ -10169,7 +10169,7 @@ public bool? ShouldReportCorbBlocking { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.requestIntercepted</c>
 /// </remarks>
-internal class NetworkRequestInterceptedChromiumEvent : IChromiumEvent
+internal partial class NetworkRequestInterceptedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.requestIntercepted";
 /// <summary>
@@ -10234,7 +10234,7 @@ public string RequestId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.requestServedFromCache</c>
 /// </remarks>
-internal class NetworkRequestServedFromCacheChromiumEvent : IChromiumEvent
+internal partial class NetworkRequestServedFromCacheChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.requestServedFromCache";
 /// <summary>
@@ -10247,7 +10247,7 @@ public string RequestId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.requestWillBeSent</c>
 /// </remarks>
-internal class NetworkRequestWillBeSentChromiumEvent : IChromiumEvent
+internal partial class NetworkRequestWillBeSentChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.requestWillBeSent";
 /// <summary>
@@ -10300,7 +10300,7 @@ public bool? HasUserGesture { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.resourceChangedPriority</c>
 /// </remarks>
-internal class NetworkResourceChangedPriorityChromiumEvent : IChromiumEvent
+internal partial class NetworkResourceChangedPriorityChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.resourceChangedPriority";
 /// <summary>
@@ -10321,7 +10321,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.signedExchangeReceived</c>
 /// </remarks>
-internal class NetworkSignedExchangeReceivedChromiumEvent : IChromiumEvent
+internal partial class NetworkSignedExchangeReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.signedExchangeReceived";
 /// <summary>
@@ -10338,7 +10338,7 @@ public SignedExchangeInfo Info { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.responseReceived</c>
 /// </remarks>
-internal class NetworkResponseReceivedChromiumEvent : IChromiumEvent
+internal partial class NetworkResponseReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.responseReceived";
 /// <summary>
@@ -10371,7 +10371,7 @@ public string FrameId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketClosed</c>
 /// </remarks>
-internal class NetworkWebSocketClosedChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketClosedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketClosed";
 /// <summary>
@@ -10388,7 +10388,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketCreated</c>
 /// </remarks>
-internal class NetworkWebSocketCreatedChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketCreated";
 /// <summary>
@@ -10409,7 +10409,7 @@ public Initiator Initiator { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketFrameError</c>
 /// </remarks>
-internal class NetworkWebSocketFrameErrorChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketFrameErrorChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketFrameError";
 /// <summary>
@@ -10430,7 +10430,7 @@ public string ErrorMessage { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketFrameReceived</c>
 /// </remarks>
-internal class NetworkWebSocketFrameReceivedChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketFrameReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketFrameReceived";
 /// <summary>
@@ -10451,7 +10451,7 @@ public WebSocketFrame Response { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketFrameSent</c>
 /// </remarks>
-internal class NetworkWebSocketFrameSentChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketFrameSentChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketFrameSent";
 /// <summary>
@@ -10472,7 +10472,7 @@ public WebSocketFrame Response { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketHandshakeResponseReceived</c>
 /// </remarks>
-internal class NetworkWebSocketHandshakeResponseReceivedChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketHandshakeResponseReceivedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketHandshakeResponseReceived";
 /// <summary>
@@ -10493,7 +10493,7 @@ public WebSocketResponse Response { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.webSocketWillSendHandshakeRequest</c>
 /// </remarks>
-internal class NetworkWebSocketWillSendHandshakeRequestChromiumEvent : IChromiumEvent
+internal partial class NetworkWebSocketWillSendHandshakeRequestChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.webSocketWillSendHandshakeRequest";
 /// <summary>
@@ -10521,7 +10521,7 @@ public WebSocketRequest Request { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Network.requestWillBeSentExtraInfo</c>
 /// </remarks>
-internal class NetworkRequestWillBeSentExtraInfoChromiumEvent : IChromiumEvent
+internal partial class NetworkRequestWillBeSentExtraInfoChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.requestWillBeSentExtraInfo";
 /// <summary>
@@ -10545,7 +10545,7 @@ public System.Collections.Generic.IDictionary<string, string> Headers { get; set
 /// <remarks>
 /// Matches on the event <c>Network.responseReceivedExtraInfo</c>
 /// </remarks>
-internal class NetworkResponseReceivedExtraInfoChromiumEvent : IChromiumEvent
+internal partial class NetworkResponseReceivedExtraInfoChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Network.responseReceivedExtraInfo";
 /// <summary>
@@ -10573,7 +10573,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Overlay
 /// <summary>
 /// Configuration data for the highlighting of page elements.
 /// </summary>
-internal class HighlightConfig
+internal partial class HighlightConfig
 {
 /// <summary>
 /// Whether the node info tooltip should be shown (default: false).
@@ -10639,7 +10639,7 @@ internal enum InspectMode
 /// <remarks>
 /// Will send the command <c>Overlay.disable</c>
 /// </remarks>
-internal class OverlayDisableRequest : IChromiumRequest<OverlayDisableResponse>
+internal partial class OverlayDisableRequest : IChromiumRequest<OverlayDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.disable";
@@ -10647,7 +10647,7 @@ public string Command { get; } = "Overlay.disable";
 /// <summary>
 /// Response from <see cref="OverlayDisableRequest"/>
 /// </summary>
-internal class OverlayDisableResponse : IChromiumResponse
+internal partial class OverlayDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10656,7 +10656,7 @@ internal class OverlayDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.enable</c>
 /// </remarks>
-internal class OverlayEnableRequest : IChromiumRequest<OverlayEnableResponse>
+internal partial class OverlayEnableRequest : IChromiumRequest<OverlayEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.enable";
@@ -10664,7 +10664,7 @@ public string Command { get; } = "Overlay.enable";
 /// <summary>
 /// Response from <see cref="OverlayEnableRequest"/>
 /// </summary>
-internal class OverlayEnableResponse : IChromiumResponse
+internal partial class OverlayEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10673,7 +10673,7 @@ internal class OverlayEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.getHighlightObjectForTest</c>
 /// </remarks>
-internal class OverlayGetHighlightObjectForTestRequest : IChromiumRequest<OverlayGetHighlightObjectForTestResponse>
+internal partial class OverlayGetHighlightObjectForTestRequest : IChromiumRequest<OverlayGetHighlightObjectForTestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.getHighlightObjectForTest";
@@ -10692,7 +10692,7 @@ public bool? IncludeStyle { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlayGetHighlightObjectForTestRequest"/>
 /// </summary>
-internal class OverlayGetHighlightObjectForTestResponse : IChromiumResponse
+internal partial class OverlayGetHighlightObjectForTestResponse: IChromiumResponse
 {
 /// <summary>
 /// Highlight data for the node.
@@ -10704,7 +10704,7 @@ public JsonElement? Highlight { get; set; }}
 /// <remarks>
 /// Will send the command <c>Overlay.hideHighlight</c>
 /// </remarks>
-internal class OverlayHideHighlightRequest : IChromiumRequest<OverlayHideHighlightResponse>
+internal partial class OverlayHideHighlightRequest : IChromiumRequest<OverlayHideHighlightResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.hideHighlight";
@@ -10712,7 +10712,7 @@ public string Command { get; } = "Overlay.hideHighlight";
 /// <summary>
 /// Response from <see cref="OverlayHideHighlightRequest"/>
 /// </summary>
-internal class OverlayHideHighlightResponse : IChromiumResponse
+internal partial class OverlayHideHighlightResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10721,7 +10721,7 @@ internal class OverlayHideHighlightResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.highlightFrame</c>
 /// </remarks>
-internal class OverlayHighlightFrameRequest : IChromiumRequest<OverlayHighlightFrameResponse>
+internal partial class OverlayHighlightFrameRequest : IChromiumRequest<OverlayHighlightFrameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.highlightFrame";
@@ -10740,7 +10740,7 @@ public DOM.RGBA ContentOutlineColor { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlayHighlightFrameRequest"/>
 /// </summary>
-internal class OverlayHighlightFrameResponse : IChromiumResponse
+internal partial class OverlayHighlightFrameResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10750,7 +10750,7 @@ internal class OverlayHighlightFrameResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.highlightNode</c>
 /// </remarks>
-internal class OverlayHighlightNodeRequest : IChromiumRequest<OverlayHighlightNodeResponse>
+internal partial class OverlayHighlightNodeRequest : IChromiumRequest<OverlayHighlightNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.highlightNode";
@@ -10777,7 +10777,7 @@ public string Selector { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlayHighlightNodeRequest"/>
 /// </summary>
-internal class OverlayHighlightNodeResponse : IChromiumResponse
+internal partial class OverlayHighlightNodeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10786,7 +10786,7 @@ internal class OverlayHighlightNodeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.highlightQuad</c>
 /// </remarks>
-internal class OverlayHighlightQuadRequest : IChromiumRequest<OverlayHighlightQuadResponse>
+internal partial class OverlayHighlightQuadRequest : IChromiumRequest<OverlayHighlightQuadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.highlightQuad";
@@ -10805,7 +10805,7 @@ public DOM.RGBA OutlineColor { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlayHighlightQuadRequest"/>
 /// </summary>
-internal class OverlayHighlightQuadResponse : IChromiumResponse
+internal partial class OverlayHighlightQuadResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10814,7 +10814,7 @@ internal class OverlayHighlightQuadResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.highlightRect</c>
 /// </remarks>
-internal class OverlayHighlightRectRequest : IChromiumRequest<OverlayHighlightRectResponse>
+internal partial class OverlayHighlightRectRequest : IChromiumRequest<OverlayHighlightRectResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.highlightRect";
@@ -10845,7 +10845,7 @@ public DOM.RGBA OutlineColor { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlayHighlightRectRequest"/>
 /// </summary>
-internal class OverlayHighlightRectResponse : IChromiumResponse
+internal partial class OverlayHighlightRectResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10855,7 +10855,7 @@ internal class OverlayHighlightRectResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setInspectMode</c>
 /// </remarks>
-internal class OverlaySetInspectModeRequest : IChromiumRequest<OverlaySetInspectModeResponse>
+internal partial class OverlaySetInspectModeRequest : IChromiumRequest<OverlaySetInspectModeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setInspectMode";
@@ -10871,7 +10871,7 @@ public HighlightConfig HighlightConfig { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetInspectModeRequest"/>
 /// </summary>
-internal class OverlaySetInspectModeResponse : IChromiumResponse
+internal partial class OverlaySetInspectModeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10880,7 +10880,7 @@ internal class OverlaySetInspectModeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowAdHighlights</c>
 /// </remarks>
-internal class OverlaySetShowAdHighlightsRequest : IChromiumRequest<OverlaySetShowAdHighlightsResponse>
+internal partial class OverlaySetShowAdHighlightsRequest : IChromiumRequest<OverlaySetShowAdHighlightsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowAdHighlights";
@@ -10891,7 +10891,7 @@ public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowAdHighlightsRequest"/>
 /// </summary>
-internal class OverlaySetShowAdHighlightsResponse : IChromiumResponse
+internal partial class OverlaySetShowAdHighlightsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10900,7 +10900,7 @@ internal class OverlaySetShowAdHighlightsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setPausedInDebuggerMessage</c>
 /// </remarks>
-internal class OverlaySetPausedInDebuggerMessageRequest : IChromiumRequest<OverlaySetPausedInDebuggerMessageResponse>
+internal partial class OverlaySetPausedInDebuggerMessageRequest : IChromiumRequest<OverlaySetPausedInDebuggerMessageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setPausedInDebuggerMessage";
@@ -10911,7 +10911,7 @@ public string Message { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetPausedInDebuggerMessageRequest"/>
 /// </summary>
-internal class OverlaySetPausedInDebuggerMessageResponse : IChromiumResponse
+internal partial class OverlaySetPausedInDebuggerMessageResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10920,7 +10920,7 @@ internal class OverlaySetPausedInDebuggerMessageResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowDebugBorders</c>
 /// </remarks>
-internal class OverlaySetShowDebugBordersRequest : IChromiumRequest<OverlaySetShowDebugBordersResponse>
+internal partial class OverlaySetShowDebugBordersRequest : IChromiumRequest<OverlaySetShowDebugBordersResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowDebugBorders";
@@ -10931,7 +10931,7 @@ public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowDebugBordersRequest"/>
 /// </summary>
-internal class OverlaySetShowDebugBordersResponse : IChromiumResponse
+internal partial class OverlaySetShowDebugBordersResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10940,7 +10940,7 @@ internal class OverlaySetShowDebugBordersResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowFPSCounter</c>
 /// </remarks>
-internal class OverlaySetShowFPSCounterRequest : IChromiumRequest<OverlaySetShowFPSCounterResponse>
+internal partial class OverlaySetShowFPSCounterRequest : IChromiumRequest<OverlaySetShowFPSCounterResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowFPSCounter";
@@ -10951,7 +10951,7 @@ public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowFPSCounterRequest"/>
 /// </summary>
-internal class OverlaySetShowFPSCounterResponse : IChromiumResponse
+internal partial class OverlaySetShowFPSCounterResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10960,7 +10960,7 @@ internal class OverlaySetShowFPSCounterResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowPaintRects</c>
 /// </remarks>
-internal class OverlaySetShowPaintRectsRequest : IChromiumRequest<OverlaySetShowPaintRectsResponse>
+internal partial class OverlaySetShowPaintRectsRequest : IChromiumRequest<OverlaySetShowPaintRectsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowPaintRects";
@@ -10971,7 +10971,7 @@ public bool? Result { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowPaintRectsRequest"/>
 /// </summary>
-internal class OverlaySetShowPaintRectsResponse : IChromiumResponse
+internal partial class OverlaySetShowPaintRectsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -10980,7 +10980,7 @@ internal class OverlaySetShowPaintRectsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowLayoutShiftRegions</c>
 /// </remarks>
-internal class OverlaySetShowLayoutShiftRegionsRequest : IChromiumRequest<OverlaySetShowLayoutShiftRegionsResponse>
+internal partial class OverlaySetShowLayoutShiftRegionsRequest : IChromiumRequest<OverlaySetShowLayoutShiftRegionsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowLayoutShiftRegions";
@@ -10991,7 +10991,7 @@ public bool? Result { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowLayoutShiftRegionsRequest"/>
 /// </summary>
-internal class OverlaySetShowLayoutShiftRegionsResponse : IChromiumResponse
+internal partial class OverlaySetShowLayoutShiftRegionsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11000,7 +11000,7 @@ internal class OverlaySetShowLayoutShiftRegionsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowScrollBottleneckRects</c>
 /// </remarks>
-internal class OverlaySetShowScrollBottleneckRectsRequest : IChromiumRequest<OverlaySetShowScrollBottleneckRectsResponse>
+internal partial class OverlaySetShowScrollBottleneckRectsRequest : IChromiumRequest<OverlaySetShowScrollBottleneckRectsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowScrollBottleneckRects";
@@ -11011,7 +11011,7 @@ public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowScrollBottleneckRectsRequest"/>
 /// </summary>
-internal class OverlaySetShowScrollBottleneckRectsResponse : IChromiumResponse
+internal partial class OverlaySetShowScrollBottleneckRectsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11020,7 +11020,7 @@ internal class OverlaySetShowScrollBottleneckRectsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowHitTestBorders</c>
 /// </remarks>
-internal class OverlaySetShowHitTestBordersRequest : IChromiumRequest<OverlaySetShowHitTestBordersResponse>
+internal partial class OverlaySetShowHitTestBordersRequest : IChromiumRequest<OverlaySetShowHitTestBordersResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowHitTestBorders";
@@ -11031,7 +11031,7 @@ public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowHitTestBordersRequest"/>
 /// </summary>
-internal class OverlaySetShowHitTestBordersResponse : IChromiumResponse
+internal partial class OverlaySetShowHitTestBordersResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11040,7 +11040,7 @@ internal class OverlaySetShowHitTestBordersResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Overlay.setShowViewportSizeOnResize</c>
 /// </remarks>
-internal class OverlaySetShowViewportSizeOnResizeRequest : IChromiumRequest<OverlaySetShowViewportSizeOnResizeResponse>
+internal partial class OverlaySetShowViewportSizeOnResizeRequest : IChromiumRequest<OverlaySetShowViewportSizeOnResizeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Overlay.setShowViewportSizeOnResize";
@@ -11051,7 +11051,7 @@ public bool? Show { get; set; }}
 /// <summary>
 /// Response from <see cref="OverlaySetShowViewportSizeOnResizeRequest"/>
 /// </summary>
-internal class OverlaySetShowViewportSizeOnResizeResponse : IChromiumResponse
+internal partial class OverlaySetShowViewportSizeOnResizeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11061,7 +11061,7 @@ internal class OverlaySetShowViewportSizeOnResizeResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Overlay.inspectNodeRequested</c>
 /// </remarks>
-internal class OverlayInspectNodeRequestedChromiumEvent : IChromiumEvent
+internal partial class OverlayInspectNodeRequestedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Overlay.inspectNodeRequested";
 /// <summary>
@@ -11074,7 +11074,7 @@ public int? BackendNodeId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Overlay.nodeHighlightRequested</c>
 /// </remarks>
-internal class OverlayNodeHighlightRequestedChromiumEvent : IChromiumEvent
+internal partial class OverlayNodeHighlightRequestedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Overlay.nodeHighlightRequested";
 /// <summary>
@@ -11087,7 +11087,7 @@ public int? NodeId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Overlay.screenshotRequested</c>
 /// </remarks>
-internal class OverlayScreenshotRequestedChromiumEvent : IChromiumEvent
+internal partial class OverlayScreenshotRequestedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Overlay.screenshotRequested";
 /// <summary>
@@ -11100,7 +11100,7 @@ public Page.Viewport Viewport { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Overlay.inspectModeCanceled</c>
 /// </remarks>
-internal class OverlayInspectModeCanceledChromiumEvent : IChromiumEvent
+internal partial class OverlayInspectModeCanceledChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Overlay.inspectModeCanceled";
 }
@@ -11110,7 +11110,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Page
 /// <summary>
 /// Information about the Frame on the page.
 /// </summary>
-internal class Frame
+internal partial class Frame
 {
 /// <summary>
 /// Frame unique identifier.
@@ -11151,7 +11151,7 @@ public string UnreachableUrl { get; set; }}
 /// <summary>
 /// Information about the Resource on the page.
 /// </summary>
-internal class FrameResource
+internal partial class FrameResource
 {
 /// <summary>
 /// Resource URL.
@@ -11184,7 +11184,7 @@ public bool? Canceled { get; set; }}
 /// <summary>
 /// Information about the Frame hierarchy along with their cached resources.
 /// </summary>
-internal class FrameResourceTree
+internal partial class FrameResourceTree
 {
 /// <summary>
 /// Frame information for this tree item.
@@ -11201,7 +11201,7 @@ public FrameResource[] Resources { get; set; }}
 /// <summary>
 /// Information about the Frame hierarchy.
 /// </summary>
-internal class FrameTree
+internal partial class FrameTree
 {
 /// <summary>
 /// Frame information for this tree item.
@@ -11232,7 +11232,7 @@ internal enum TransitionType
 /// <summary>
 /// Navigation history entry.
 /// </summary>
-internal class NavigationEntry
+internal partial class NavigationEntry
 {
 /// <summary>
 /// Unique id of the navigation history entry.
@@ -11257,7 +11257,7 @@ public TransitionType TransitionType { get; set; }}
 /// <summary>
 /// Screencast frame metadata.
 /// </summary>
-internal class ScreencastFrameMetadata
+internal partial class ScreencastFrameMetadata
 {
 /// <summary>
 /// Top offset in DIP.
@@ -11299,7 +11299,7 @@ internal enum DialogType
 /// <summary>
 /// Error while paring app manifest.
 /// </summary>
-internal class AppManifestError
+internal partial class AppManifestError
 {
 /// <summary>
 /// Error message.
@@ -11320,7 +11320,7 @@ public int? Column { get; set; }}
 /// <summary>
 /// Parsed app manifest properties.
 /// </summary>
-internal class AppManifestParsedProperties
+internal partial class AppManifestParsedProperties
 {
 /// <summary>
 /// Computed scope value
@@ -11329,7 +11329,7 @@ public string Scope { get; set; }}
 /// <summary>
 /// Layout viewport position and dimensions.
 /// </summary>
-internal class LayoutViewport
+internal partial class LayoutViewport
 {
 /// <summary>
 /// Horizontal offset relative to the document (CSS pixels).
@@ -11350,7 +11350,7 @@ public int? ClientHeight { get; set; }}
 /// <summary>
 /// Visual viewport position, dimensions, and scale.
 /// </summary>
-internal class VisualViewport
+internal partial class VisualViewport
 {
 /// <summary>
 /// Horizontal offset relative to the layout viewport (CSS pixels).
@@ -11387,7 +11387,7 @@ public double? Zoom { get; set; }}
 /// <summary>
 /// Viewport for capturing screenshot.
 /// </summary>
-internal class Viewport
+internal partial class Viewport
 {
 /// <summary>
 /// X offset in device independent pixels (dip).
@@ -11412,7 +11412,7 @@ public double? Scale { get; set; }}
 /// <summary>
 /// Generic font families collection.
 /// </summary>
-internal class FontFamilies
+internal partial class FontFamilies
 {
 /// <summary>
 /// The standard font-family.
@@ -11445,7 +11445,7 @@ public string Pictograph { get; set; }}
 /// <summary>
 /// Default font sizes.
 /// </summary>
-internal class FontSizes
+internal partial class FontSizes
 {
 /// <summary>
 /// Default standard font size.
@@ -11474,7 +11474,7 @@ internal enum ClientNavigationReason
 /// Will send the command <c>Page.addScriptToEvaluateOnLoad</c>
 /// </remarks>
 [System.Obsolete("Deprecated, please use addScriptToEvaluateOnNewDocument instead.")]
-internal class PageAddScriptToEvaluateOnLoadRequest : IChromiumRequest<PageAddScriptToEvaluateOnLoadResponse>
+internal partial class PageAddScriptToEvaluateOnLoadRequest : IChromiumRequest<PageAddScriptToEvaluateOnLoadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addScriptToEvaluateOnLoad";
@@ -11485,7 +11485,7 @@ public string ScriptSource { get; set; }}
 /// <summary>
 /// Response from <see cref="PageAddScriptToEvaluateOnLoadRequest"/>
 /// </summary>
-internal class PageAddScriptToEvaluateOnLoadResponse : IChromiumResponse
+internal partial class PageAddScriptToEvaluateOnLoadResponse: IChromiumResponse
 {
 /// <summary>
 /// Identifier of the added script.
@@ -11497,7 +11497,7 @@ public string Identifier { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.addScriptToEvaluateOnNewDocument</c>
 /// </remarks>
-internal class PageAddScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageAddScriptToEvaluateOnNewDocumentResponse>
+internal partial class PageAddScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageAddScriptToEvaluateOnNewDocumentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
@@ -11514,7 +11514,7 @@ public string WorldName { get; set; }}
 /// <summary>
 /// Response from <see cref="PageAddScriptToEvaluateOnNewDocumentRequest"/>
 /// </summary>
-internal class PageAddScriptToEvaluateOnNewDocumentResponse : IChromiumResponse
+internal partial class PageAddScriptToEvaluateOnNewDocumentResponse: IChromiumResponse
 {
 /// <summary>
 /// Identifier of the added script.
@@ -11526,7 +11526,7 @@ public string Identifier { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.bringToFront</c>
 /// </remarks>
-internal class PageBringToFrontRequest : IChromiumRequest<PageBringToFrontResponse>
+internal partial class PageBringToFrontRequest : IChromiumRequest<PageBringToFrontResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.bringToFront";
@@ -11534,7 +11534,7 @@ public string Command { get; } = "Page.bringToFront";
 /// <summary>
 /// Response from <see cref="PageBringToFrontRequest"/>
 /// </summary>
-internal class PageBringToFrontResponse : IChromiumResponse
+internal partial class PageBringToFrontResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11543,7 +11543,7 @@ internal class PageBringToFrontResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.captureScreenshot</c>
 /// </remarks>
-internal class PageCaptureScreenshotRequest : IChromiumRequest<PageCaptureScreenshotResponse>
+internal partial class PageCaptureScreenshotRequest : IChromiumRequest<PageCaptureScreenshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.captureScreenshot";
@@ -11566,7 +11566,7 @@ public bool? FromSurface { get; set; }}
 /// <summary>
 /// Response from <see cref="PageCaptureScreenshotRequest"/>
 /// </summary>
-internal class PageCaptureScreenshotResponse : IChromiumResponse
+internal partial class PageCaptureScreenshotResponse: IChromiumResponse
 {
 /// <summary>
 /// Base64-encoded image data.
@@ -11579,7 +11579,7 @@ public byte[] Data { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.captureSnapshot</c>
 /// </remarks>
-internal class PageCaptureSnapshotRequest : IChromiumRequest<PageCaptureSnapshotResponse>
+internal partial class PageCaptureSnapshotRequest : IChromiumRequest<PageCaptureSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.captureSnapshot";
@@ -11590,7 +11590,7 @@ public string Format { get; set; }}
 /// <summary>
 /// Response from <see cref="PageCaptureSnapshotRequest"/>
 /// </summary>
-internal class PageCaptureSnapshotResponse : IChromiumResponse
+internal partial class PageCaptureSnapshotResponse: IChromiumResponse
 {
 /// <summary>
 /// Serialized page data.
@@ -11602,7 +11602,7 @@ public string Data { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.clearDeviceMetricsOverride</c>
 /// </remarks>
-internal class PageClearDeviceMetricsOverrideRequest : IChromiumRequest<PageClearDeviceMetricsOverrideResponse>
+internal partial class PageClearDeviceMetricsOverrideRequest : IChromiumRequest<PageClearDeviceMetricsOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.clearDeviceMetricsOverride";
@@ -11610,7 +11610,7 @@ public string Command { get; } = "Page.clearDeviceMetricsOverride";
 /// <summary>
 /// Response from <see cref="PageClearDeviceMetricsOverrideRequest"/>
 /// </summary>
-internal class PageClearDeviceMetricsOverrideResponse : IChromiumResponse
+internal partial class PageClearDeviceMetricsOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11619,7 +11619,7 @@ internal class PageClearDeviceMetricsOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.clearDeviceOrientationOverride</c>
 /// </remarks>
-internal class PageClearDeviceOrientationOverrideRequest : IChromiumRequest<PageClearDeviceOrientationOverrideResponse>
+internal partial class PageClearDeviceOrientationOverrideRequest : IChromiumRequest<PageClearDeviceOrientationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.clearDeviceOrientationOverride";
@@ -11627,7 +11627,7 @@ public string Command { get; } = "Page.clearDeviceOrientationOverride";
 /// <summary>
 /// Response from <see cref="PageClearDeviceOrientationOverrideRequest"/>
 /// </summary>
-internal class PageClearDeviceOrientationOverrideResponse : IChromiumResponse
+internal partial class PageClearDeviceOrientationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11636,7 +11636,7 @@ internal class PageClearDeviceOrientationOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.clearGeolocationOverride</c>
 /// </remarks>
-internal class PageClearGeolocationOverrideRequest : IChromiumRequest<PageClearGeolocationOverrideResponse>
+internal partial class PageClearGeolocationOverrideRequest : IChromiumRequest<PageClearGeolocationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.clearGeolocationOverride";
@@ -11644,7 +11644,7 @@ public string Command { get; } = "Page.clearGeolocationOverride";
 /// <summary>
 /// Response from <see cref="PageClearGeolocationOverrideRequest"/>
 /// </summary>
-internal class PageClearGeolocationOverrideResponse : IChromiumResponse
+internal partial class PageClearGeolocationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11653,7 +11653,7 @@ internal class PageClearGeolocationOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.createIsolatedWorld</c>
 /// </remarks>
-internal class PageCreateIsolatedWorldRequest : IChromiumRequest<PageCreateIsolatedWorldResponse>
+internal partial class PageCreateIsolatedWorldRequest : IChromiumRequest<PageCreateIsolatedWorldResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.createIsolatedWorld";
@@ -11673,7 +11673,7 @@ public bool? GrantUniveralAccess { get; set; }}
 /// <summary>
 /// Response from <see cref="PageCreateIsolatedWorldRequest"/>
 /// </summary>
-internal class PageCreateIsolatedWorldResponse : IChromiumResponse
+internal partial class PageCreateIsolatedWorldResponse: IChromiumResponse
 {
 /// <summary>
 /// Execution context of the isolated world.
@@ -11685,7 +11685,7 @@ public int? ExecutionContextId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.deleteCookie</c>
 /// </remarks>
-internal class PageDeleteCookieRequest : IChromiumRequest<PageDeleteCookieResponse>
+internal partial class PageDeleteCookieRequest : IChromiumRequest<PageDeleteCookieResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.deleteCookie";
@@ -11700,7 +11700,7 @@ public string Url { get; set; }}
 /// <summary>
 /// Response from <see cref="PageDeleteCookieRequest"/>
 /// </summary>
-internal class PageDeleteCookieResponse : IChromiumResponse
+internal partial class PageDeleteCookieResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11709,7 +11709,7 @@ internal class PageDeleteCookieResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.disable</c>
 /// </remarks>
-internal class PageDisableRequest : IChromiumRequest<PageDisableResponse>
+internal partial class PageDisableRequest : IChromiumRequest<PageDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.disable";
@@ -11717,7 +11717,7 @@ public string Command { get; } = "Page.disable";
 /// <summary>
 /// Response from <see cref="PageDisableRequest"/>
 /// </summary>
-internal class PageDisableResponse : IChromiumResponse
+internal partial class PageDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11726,7 +11726,7 @@ internal class PageDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.enable</c>
 /// </remarks>
-internal class PageEnableRequest : IChromiumRequest<PageEnableResponse>
+internal partial class PageEnableRequest : IChromiumRequest<PageEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.enable";
@@ -11734,7 +11734,7 @@ public string Command { get; } = "Page.enable";
 /// <summary>
 /// Response from <see cref="PageEnableRequest"/>
 /// </summary>
-internal class PageEnableResponse : IChromiumResponse
+internal partial class PageEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11743,7 +11743,7 @@ internal class PageEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.getAppManifest</c>
 /// </remarks>
-internal class PageGetAppManifestRequest : IChromiumRequest<PageGetAppManifestResponse>
+internal partial class PageGetAppManifestRequest : IChromiumRequest<PageGetAppManifestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getAppManifest";
@@ -11751,7 +11751,7 @@ public string Command { get; } = "Page.getAppManifest";
 /// <summary>
 /// Response from <see cref="PageGetAppManifestRequest"/>
 /// </summary>
-internal class PageGetAppManifestResponse : IChromiumResponse
+internal partial class PageGetAppManifestResponse: IChromiumResponse
 {
 /// <summary>
 /// Manifest location.
@@ -11775,7 +11775,7 @@ public AppManifestParsedProperties Parsed { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getInstallabilityErrors</c>
 /// </remarks>
-internal class PageGetInstallabilityErrorsRequest : IChromiumRequest<PageGetInstallabilityErrorsResponse>
+internal partial class PageGetInstallabilityErrorsRequest : IChromiumRequest<PageGetInstallabilityErrorsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getInstallabilityErrors";
@@ -11783,7 +11783,7 @@ public string Command { get; } = "Page.getInstallabilityErrors";
 /// <summary>
 /// Response from <see cref="PageGetInstallabilityErrorsRequest"/>
 /// </summary>
-internal class PageGetInstallabilityErrorsResponse : IChromiumResponse
+internal partial class PageGetInstallabilityErrorsResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -11795,7 +11795,7 @@ public string[] Errors { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getManifestIcons</c>
 /// </remarks>
-internal class PageGetManifestIconsRequest : IChromiumRequest<PageGetManifestIconsResponse>
+internal partial class PageGetManifestIconsRequest : IChromiumRequest<PageGetManifestIconsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getManifestIcons";
@@ -11803,7 +11803,7 @@ public string Command { get; } = "Page.getManifestIcons";
 /// <summary>
 /// Response from <see cref="PageGetManifestIconsRequest"/>
 /// </summary>
-internal class PageGetManifestIconsResponse : IChromiumResponse
+internal partial class PageGetManifestIconsResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -11816,7 +11816,7 @@ public byte[] PrimaryIcon { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getCookies</c>
 /// </remarks>
-internal class PageGetCookiesRequest : IChromiumRequest<PageGetCookiesResponse>
+internal partial class PageGetCookiesRequest : IChromiumRequest<PageGetCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getCookies";
@@ -11824,7 +11824,7 @@ public string Command { get; } = "Page.getCookies";
 /// <summary>
 /// Response from <see cref="PageGetCookiesRequest"/>
 /// </summary>
-internal class PageGetCookiesResponse : IChromiumResponse
+internal partial class PageGetCookiesResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of cookie objects.
@@ -11836,7 +11836,7 @@ public Network.Cookie[] Cookies { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getFrameTree</c>
 /// </remarks>
-internal class PageGetFrameTreeRequest : IChromiumRequest<PageGetFrameTreeResponse>
+internal partial class PageGetFrameTreeRequest : IChromiumRequest<PageGetFrameTreeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getFrameTree";
@@ -11844,7 +11844,7 @@ public string Command { get; } = "Page.getFrameTree";
 /// <summary>
 /// Response from <see cref="PageGetFrameTreeRequest"/>
 /// </summary>
-internal class PageGetFrameTreeResponse : IChromiumResponse
+internal partial class PageGetFrameTreeResponse: IChromiumResponse
 {
 /// <summary>
 /// Present frame tree structure.
@@ -11856,7 +11856,7 @@ public FrameTree FrameTree { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getLayoutMetrics</c>
 /// </remarks>
-internal class PageGetLayoutMetricsRequest : IChromiumRequest<PageGetLayoutMetricsResponse>
+internal partial class PageGetLayoutMetricsRequest : IChromiumRequest<PageGetLayoutMetricsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getLayoutMetrics";
@@ -11864,7 +11864,7 @@ public string Command { get; } = "Page.getLayoutMetrics";
 /// <summary>
 /// Response from <see cref="PageGetLayoutMetricsRequest"/>
 /// </summary>
-internal class PageGetLayoutMetricsResponse : IChromiumResponse
+internal partial class PageGetLayoutMetricsResponse: IChromiumResponse
 {
 /// <summary>
 /// Metrics relating to the layout viewport.
@@ -11884,7 +11884,7 @@ public DOM.Rect ContentSize { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getNavigationHistory</c>
 /// </remarks>
-internal class PageGetNavigationHistoryRequest : IChromiumRequest<PageGetNavigationHistoryResponse>
+internal partial class PageGetNavigationHistoryRequest : IChromiumRequest<PageGetNavigationHistoryResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getNavigationHistory";
@@ -11892,7 +11892,7 @@ public string Command { get; } = "Page.getNavigationHistory";
 /// <summary>
 /// Response from <see cref="PageGetNavigationHistoryRequest"/>
 /// </summary>
-internal class PageGetNavigationHistoryResponse : IChromiumResponse
+internal partial class PageGetNavigationHistoryResponse: IChromiumResponse
 {
 /// <summary>
 /// Index of the current navigation history entry.
@@ -11908,7 +11908,7 @@ public NavigationEntry[] Entries { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.resetNavigationHistory</c>
 /// </remarks>
-internal class PageResetNavigationHistoryRequest : IChromiumRequest<PageResetNavigationHistoryResponse>
+internal partial class PageResetNavigationHistoryRequest : IChromiumRequest<PageResetNavigationHistoryResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.resetNavigationHistory";
@@ -11916,7 +11916,7 @@ public string Command { get; } = "Page.resetNavigationHistory";
 /// <summary>
 /// Response from <see cref="PageResetNavigationHistoryRequest"/>
 /// </summary>
-internal class PageResetNavigationHistoryResponse : IChromiumResponse
+internal partial class PageResetNavigationHistoryResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -11925,7 +11925,7 @@ internal class PageResetNavigationHistoryResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.getResourceContent</c>
 /// </remarks>
-internal class PageGetResourceContentRequest : IChromiumRequest<PageGetResourceContentResponse>
+internal partial class PageGetResourceContentRequest : IChromiumRequest<PageGetResourceContentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getResourceContent";
@@ -11940,7 +11940,7 @@ public string Url { get; set; }}
 /// <summary>
 /// Response from <see cref="PageGetResourceContentRequest"/>
 /// </summary>
-internal class PageGetResourceContentResponse : IChromiumResponse
+internal partial class PageGetResourceContentResponse: IChromiumResponse
 {
 /// <summary>
 /// Resource content.
@@ -11956,7 +11956,7 @@ public bool? Base64Encoded { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.getResourceTree</c>
 /// </remarks>
-internal class PageGetResourceTreeRequest : IChromiumRequest<PageGetResourceTreeResponse>
+internal partial class PageGetResourceTreeRequest : IChromiumRequest<PageGetResourceTreeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getResourceTree";
@@ -11964,7 +11964,7 @@ public string Command { get; } = "Page.getResourceTree";
 /// <summary>
 /// Response from <see cref="PageGetResourceTreeRequest"/>
 /// </summary>
-internal class PageGetResourceTreeResponse : IChromiumResponse
+internal partial class PageGetResourceTreeResponse: IChromiumResponse
 {
 /// <summary>
 /// Present frame / resource tree structure.
@@ -11976,7 +11976,7 @@ public FrameResourceTree FrameTree { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.handleJavaScriptDialog</c>
 /// </remarks>
-internal class PageHandleJavaScriptDialogRequest : IChromiumRequest<PageHandleJavaScriptDialogResponse>
+internal partial class PageHandleJavaScriptDialogRequest : IChromiumRequest<PageHandleJavaScriptDialogResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.handleJavaScriptDialog";
@@ -11992,7 +11992,7 @@ public string PromptText { get; set; }}
 /// <summary>
 /// Response from <see cref="PageHandleJavaScriptDialogRequest"/>
 /// </summary>
-internal class PageHandleJavaScriptDialogResponse : IChromiumResponse
+internal partial class PageHandleJavaScriptDialogResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12001,7 +12001,7 @@ internal class PageHandleJavaScriptDialogResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.navigate</c>
 /// </remarks>
-internal class PageNavigateRequest : IChromiumRequest<PageNavigateResponse>
+internal partial class PageNavigateRequest : IChromiumRequest<PageNavigateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.navigate";
@@ -12024,7 +12024,7 @@ public string FrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="PageNavigateRequest"/>
 /// </summary>
-internal class PageNavigateResponse : IChromiumResponse
+internal partial class PageNavigateResponse: IChromiumResponse
 {
 /// <summary>
 /// Frame id that has navigated (or failed to navigate)
@@ -12044,7 +12044,7 @@ public string ErrorText { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.navigateToHistoryEntry</c>
 /// </remarks>
-internal class PageNavigateToHistoryEntryRequest : IChromiumRequest<PageNavigateToHistoryEntryResponse>
+internal partial class PageNavigateToHistoryEntryRequest : IChromiumRequest<PageNavigateToHistoryEntryResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.navigateToHistoryEntry";
@@ -12055,7 +12055,7 @@ public int? EntryId { get; set; }}
 /// <summary>
 /// Response from <see cref="PageNavigateToHistoryEntryRequest"/>
 /// </summary>
-internal class PageNavigateToHistoryEntryResponse : IChromiumResponse
+internal partial class PageNavigateToHistoryEntryResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12064,7 +12064,7 @@ internal class PageNavigateToHistoryEntryResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.printToPDF</c>
 /// </remarks>
-internal class PagePrintToPDFRequest : IChromiumRequest<PagePrintToPDFResponse>
+internal partial class PagePrintToPDFRequest : IChromiumRequest<PagePrintToPDFResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.printToPDF";
@@ -12146,7 +12146,7 @@ public string TransferMode { get; set; }}
 /// <summary>
 /// Response from <see cref="PagePrintToPDFRequest"/>
 /// </summary>
-internal class PagePrintToPDFResponse : IChromiumResponse
+internal partial class PagePrintToPDFResponse: IChromiumResponse
 {
 /// <summary>
 /// Base64-encoded pdf data. Empty if |returnAsStream| is specified.
@@ -12162,7 +12162,7 @@ public string Stream { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.reload</c>
 /// </remarks>
-internal class PageReloadRequest : IChromiumRequest<PageReloadResponse>
+internal partial class PageReloadRequest : IChromiumRequest<PageReloadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.reload";
@@ -12178,7 +12178,7 @@ public string ScriptToEvaluateOnLoad { get; set; }}
 /// <summary>
 /// Response from <see cref="PageReloadRequest"/>
 /// </summary>
-internal class PageReloadResponse : IChromiumResponse
+internal partial class PageReloadResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12188,7 +12188,7 @@ internal class PageReloadResponse : IChromiumResponse
 /// Will send the command <c>Page.removeScriptToEvaluateOnLoad</c>
 /// </remarks>
 [System.Obsolete("Deprecated, please use removeScriptToEvaluateOnNewDocument instead.")]
-internal class PageRemoveScriptToEvaluateOnLoadRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnLoadResponse>
+internal partial class PageRemoveScriptToEvaluateOnLoadRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnLoadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.removeScriptToEvaluateOnLoad";
@@ -12199,7 +12199,7 @@ public string Identifier { get; set; }}
 /// <summary>
 /// Response from <see cref="PageRemoveScriptToEvaluateOnLoadRequest"/>
 /// </summary>
-internal class PageRemoveScriptToEvaluateOnLoadResponse : IChromiumResponse
+internal partial class PageRemoveScriptToEvaluateOnLoadResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12208,7 +12208,7 @@ internal class PageRemoveScriptToEvaluateOnLoadResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.removeScriptToEvaluateOnNewDocument</c>
 /// </remarks>
-internal class PageRemoveScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnNewDocumentResponse>
+internal partial class PageRemoveScriptToEvaluateOnNewDocumentRequest : IChromiumRequest<PageRemoveScriptToEvaluateOnNewDocumentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
@@ -12219,7 +12219,7 @@ public string Identifier { get; set; }}
 /// <summary>
 /// Response from <see cref="PageRemoveScriptToEvaluateOnNewDocumentRequest"/>
 /// </summary>
-internal class PageRemoveScriptToEvaluateOnNewDocumentResponse : IChromiumResponse
+internal partial class PageRemoveScriptToEvaluateOnNewDocumentResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12228,7 +12228,7 @@ internal class PageRemoveScriptToEvaluateOnNewDocumentResponse : IChromiumRespon
 /// <remarks>
 /// Will send the command <c>Page.screencastFrameAck</c>
 /// </remarks>
-internal class PageScreencastFrameAckRequest : IChromiumRequest<PageScreencastFrameAckResponse>
+internal partial class PageScreencastFrameAckRequest : IChromiumRequest<PageScreencastFrameAckResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.screencastFrameAck";
@@ -12239,7 +12239,7 @@ public int? SessionId { get; set; }}
 /// <summary>
 /// Response from <see cref="PageScreencastFrameAckRequest"/>
 /// </summary>
-internal class PageScreencastFrameAckResponse : IChromiumResponse
+internal partial class PageScreencastFrameAckResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12248,7 +12248,7 @@ internal class PageScreencastFrameAckResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.searchInResource</c>
 /// </remarks>
-internal class PageSearchInResourceRequest : IChromiumRequest<PageSearchInResourceResponse>
+internal partial class PageSearchInResourceRequest : IChromiumRequest<PageSearchInResourceResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.searchInResource";
@@ -12275,7 +12275,7 @@ public bool? IsRegex { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSearchInResourceRequest"/>
 /// </summary>
-internal class PageSearchInResourceResponse : IChromiumResponse
+internal partial class PageSearchInResourceResponse: IChromiumResponse
 {
 /// <summary>
 /// List of search matches.
@@ -12287,7 +12287,7 @@ public Debugger.SearchMatch[] Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Page.setAdBlockingEnabled</c>
 /// </remarks>
-internal class PageSetAdBlockingEnabledRequest : IChromiumRequest<PageSetAdBlockingEnabledResponse>
+internal partial class PageSetAdBlockingEnabledRequest : IChromiumRequest<PageSetAdBlockingEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setAdBlockingEnabled";
@@ -12298,7 +12298,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetAdBlockingEnabledRequest"/>
 /// </summary>
-internal class PageSetAdBlockingEnabledResponse : IChromiumResponse
+internal partial class PageSetAdBlockingEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12307,7 +12307,7 @@ internal class PageSetAdBlockingEnabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setBypassCSP</c>
 /// </remarks>
-internal class PageSetBypassCSPRequest : IChromiumRequest<PageSetBypassCSPResponse>
+internal partial class PageSetBypassCSPRequest : IChromiumRequest<PageSetBypassCSPResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setBypassCSP";
@@ -12318,7 +12318,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetBypassCSPRequest"/>
 /// </summary>
-internal class PageSetBypassCSPResponse : IChromiumResponse
+internal partial class PageSetBypassCSPResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12329,7 +12329,7 @@ internal class PageSetBypassCSPResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setDeviceMetricsOverride</c>
 /// </remarks>
-internal class PageSetDeviceMetricsOverrideRequest : IChromiumRequest<PageSetDeviceMetricsOverrideResponse>
+internal partial class PageSetDeviceMetricsOverrideRequest : IChromiumRequest<PageSetDeviceMetricsOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setDeviceMetricsOverride";
@@ -12385,7 +12385,7 @@ public Viewport Viewport { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetDeviceMetricsOverrideRequest"/>
 /// </summary>
-internal class PageSetDeviceMetricsOverrideResponse : IChromiumResponse
+internal partial class PageSetDeviceMetricsOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12394,7 +12394,7 @@ internal class PageSetDeviceMetricsOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setDeviceOrientationOverride</c>
 /// </remarks>
-internal class PageSetDeviceOrientationOverrideRequest : IChromiumRequest<PageSetDeviceOrientationOverrideResponse>
+internal partial class PageSetDeviceOrientationOverrideRequest : IChromiumRequest<PageSetDeviceOrientationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setDeviceOrientationOverride";
@@ -12413,7 +12413,7 @@ public double? Gamma { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetDeviceOrientationOverrideRequest"/>
 /// </summary>
-internal class PageSetDeviceOrientationOverrideResponse : IChromiumResponse
+internal partial class PageSetDeviceOrientationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12422,7 +12422,7 @@ internal class PageSetDeviceOrientationOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setFontFamilies</c>
 /// </remarks>
-internal class PageSetFontFamiliesRequest : IChromiumRequest<PageSetFontFamiliesResponse>
+internal partial class PageSetFontFamiliesRequest : IChromiumRequest<PageSetFontFamiliesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setFontFamilies";
@@ -12433,7 +12433,7 @@ public FontFamilies FontFamilies { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetFontFamiliesRequest"/>
 /// </summary>
-internal class PageSetFontFamiliesResponse : IChromiumResponse
+internal partial class PageSetFontFamiliesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12442,7 +12442,7 @@ internal class PageSetFontFamiliesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setFontSizes</c>
 /// </remarks>
-internal class PageSetFontSizesRequest : IChromiumRequest<PageSetFontSizesResponse>
+internal partial class PageSetFontSizesRequest : IChromiumRequest<PageSetFontSizesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setFontSizes";
@@ -12453,7 +12453,7 @@ public FontSizes FontSizes { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetFontSizesRequest"/>
 /// </summary>
-internal class PageSetFontSizesResponse : IChromiumResponse
+internal partial class PageSetFontSizesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12462,7 +12462,7 @@ internal class PageSetFontSizesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setDocumentContent</c>
 /// </remarks>
-internal class PageSetDocumentContentRequest : IChromiumRequest<PageSetDocumentContentResponse>
+internal partial class PageSetDocumentContentRequest : IChromiumRequest<PageSetDocumentContentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setDocumentContent";
@@ -12477,7 +12477,7 @@ public string Html { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetDocumentContentRequest"/>
 /// </summary>
-internal class PageSetDocumentContentResponse : IChromiumResponse
+internal partial class PageSetDocumentContentResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12486,7 +12486,7 @@ internal class PageSetDocumentContentResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setDownloadBehavior</c>
 /// </remarks>
-internal class PageSetDownloadBehaviorRequest : IChromiumRequest<PageSetDownloadBehaviorResponse>
+internal partial class PageSetDownloadBehaviorRequest : IChromiumRequest<PageSetDownloadBehaviorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setDownloadBehavior";
@@ -12502,7 +12502,7 @@ public string DownloadPath { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetDownloadBehaviorRequest"/>
 /// </summary>
-internal class PageSetDownloadBehaviorResponse : IChromiumResponse
+internal partial class PageSetDownloadBehaviorResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12512,7 +12512,7 @@ internal class PageSetDownloadBehaviorResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setGeolocationOverride</c>
 /// </remarks>
-internal class PageSetGeolocationOverrideRequest : IChromiumRequest<PageSetGeolocationOverrideResponse>
+internal partial class PageSetGeolocationOverrideRequest : IChromiumRequest<PageSetGeolocationOverrideResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setGeolocationOverride";
@@ -12531,7 +12531,7 @@ public double? Accuracy { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetGeolocationOverrideRequest"/>
 /// </summary>
-internal class PageSetGeolocationOverrideResponse : IChromiumResponse
+internal partial class PageSetGeolocationOverrideResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12540,7 +12540,7 @@ internal class PageSetGeolocationOverrideResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setLifecycleEventsEnabled</c>
 /// </remarks>
-internal class PageSetLifecycleEventsEnabledRequest : IChromiumRequest<PageSetLifecycleEventsEnabledResponse>
+internal partial class PageSetLifecycleEventsEnabledRequest : IChromiumRequest<PageSetLifecycleEventsEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setLifecycleEventsEnabled";
@@ -12551,7 +12551,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetLifecycleEventsEnabledRequest"/>
 /// </summary>
-internal class PageSetLifecycleEventsEnabledResponse : IChromiumResponse
+internal partial class PageSetLifecycleEventsEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12560,7 +12560,7 @@ internal class PageSetLifecycleEventsEnabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setTouchEmulationEnabled</c>
 /// </remarks>
-internal class PageSetTouchEmulationEnabledRequest : IChromiumRequest<PageSetTouchEmulationEnabledResponse>
+internal partial class PageSetTouchEmulationEnabledRequest : IChromiumRequest<PageSetTouchEmulationEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setTouchEmulationEnabled";
@@ -12575,7 +12575,7 @@ public string Configuration { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetTouchEmulationEnabledRequest"/>
 /// </summary>
-internal class PageSetTouchEmulationEnabledResponse : IChromiumResponse
+internal partial class PageSetTouchEmulationEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12584,7 +12584,7 @@ internal class PageSetTouchEmulationEnabledResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.startScreencast</c>
 /// </remarks>
-internal class PageStartScreencastRequest : IChromiumRequest<PageStartScreencastResponse>
+internal partial class PageStartScreencastRequest : IChromiumRequest<PageStartScreencastResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.startScreencast";
@@ -12611,7 +12611,7 @@ public int? EveryNthFrame { get; set; }}
 /// <summary>
 /// Response from <see cref="PageStartScreencastRequest"/>
 /// </summary>
-internal class PageStartScreencastResponse : IChromiumResponse
+internal partial class PageStartScreencastResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12620,7 +12620,7 @@ internal class PageStartScreencastResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.stopLoading</c>
 /// </remarks>
-internal class PageStopLoadingRequest : IChromiumRequest<PageStopLoadingResponse>
+internal partial class PageStopLoadingRequest : IChromiumRequest<PageStopLoadingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.stopLoading";
@@ -12628,7 +12628,7 @@ public string Command { get; } = "Page.stopLoading";
 /// <summary>
 /// Response from <see cref="PageStopLoadingRequest"/>
 /// </summary>
-internal class PageStopLoadingResponse : IChromiumResponse
+internal partial class PageStopLoadingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12637,7 +12637,7 @@ internal class PageStopLoadingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.crash</c>
 /// </remarks>
-internal class PageCrashRequest : IChromiumRequest<PageCrashResponse>
+internal partial class PageCrashRequest : IChromiumRequest<PageCrashResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.crash";
@@ -12645,7 +12645,7 @@ public string Command { get; } = "Page.crash";
 /// <summary>
 /// Response from <see cref="PageCrashRequest"/>
 /// </summary>
-internal class PageCrashResponse : IChromiumResponse
+internal partial class PageCrashResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12654,7 +12654,7 @@ internal class PageCrashResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.close</c>
 /// </remarks>
-internal class PageCloseRequest : IChromiumRequest<PageCloseResponse>
+internal partial class PageCloseRequest : IChromiumRequest<PageCloseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.close";
@@ -12662,7 +12662,7 @@ public string Command { get; } = "Page.close";
 /// <summary>
 /// Response from <see cref="PageCloseRequest"/>
 /// </summary>
-internal class PageCloseResponse : IChromiumResponse
+internal partial class PageCloseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12673,7 +12673,7 @@ internal class PageCloseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setWebLifecycleState</c>
 /// </remarks>
-internal class PageSetWebLifecycleStateRequest : IChromiumRequest<PageSetWebLifecycleStateResponse>
+internal partial class PageSetWebLifecycleStateRequest : IChromiumRequest<PageSetWebLifecycleStateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setWebLifecycleState";
@@ -12684,7 +12684,7 @@ public string State { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetWebLifecycleStateRequest"/>
 /// </summary>
-internal class PageSetWebLifecycleStateResponse : IChromiumResponse
+internal partial class PageSetWebLifecycleStateResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12693,7 +12693,7 @@ internal class PageSetWebLifecycleStateResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.stopScreencast</c>
 /// </remarks>
-internal class PageStopScreencastRequest : IChromiumRequest<PageStopScreencastResponse>
+internal partial class PageStopScreencastRequest : IChromiumRequest<PageStopScreencastResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.stopScreencast";
@@ -12701,7 +12701,7 @@ public string Command { get; } = "Page.stopScreencast";
 /// <summary>
 /// Response from <see cref="PageStopScreencastRequest"/>
 /// </summary>
-internal class PageStopScreencastResponse : IChromiumResponse
+internal partial class PageStopScreencastResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12710,7 +12710,7 @@ internal class PageStopScreencastResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setProduceCompilationCache</c>
 /// </remarks>
-internal class PageSetProduceCompilationCacheRequest : IChromiumRequest<PageSetProduceCompilationCacheResponse>
+internal partial class PageSetProduceCompilationCacheRequest : IChromiumRequest<PageSetProduceCompilationCacheResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setProduceCompilationCache";
@@ -12721,7 +12721,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetProduceCompilationCacheRequest"/>
 /// </summary>
-internal class PageSetProduceCompilationCacheResponse : IChromiumResponse
+internal partial class PageSetProduceCompilationCacheResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12731,7 +12731,7 @@ internal class PageSetProduceCompilationCacheResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.addCompilationCache</c>
 /// </remarks>
-internal class PageAddCompilationCacheRequest : IChromiumRequest<PageAddCompilationCacheResponse>
+internal partial class PageAddCompilationCacheRequest : IChromiumRequest<PageAddCompilationCacheResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addCompilationCache";
@@ -12746,7 +12746,7 @@ public byte[] Data { get; set; }}
 /// <summary>
 /// Response from <see cref="PageAddCompilationCacheRequest"/>
 /// </summary>
-internal class PageAddCompilationCacheResponse : IChromiumResponse
+internal partial class PageAddCompilationCacheResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12755,7 +12755,7 @@ internal class PageAddCompilationCacheResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.clearCompilationCache</c>
 /// </remarks>
-internal class PageClearCompilationCacheRequest : IChromiumRequest<PageClearCompilationCacheResponse>
+internal partial class PageClearCompilationCacheRequest : IChromiumRequest<PageClearCompilationCacheResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.clearCompilationCache";
@@ -12763,7 +12763,7 @@ public string Command { get; } = "Page.clearCompilationCache";
 /// <summary>
 /// Response from <see cref="PageClearCompilationCacheRequest"/>
 /// </summary>
-internal class PageClearCompilationCacheResponse : IChromiumResponse
+internal partial class PageClearCompilationCacheResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12772,7 +12772,7 @@ internal class PageClearCompilationCacheResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.generateTestReport</c>
 /// </remarks>
-internal class PageGenerateTestReportRequest : IChromiumRequest<PageGenerateTestReportResponse>
+internal partial class PageGenerateTestReportRequest : IChromiumRequest<PageGenerateTestReportResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.generateTestReport";
@@ -12787,7 +12787,7 @@ public string Group { get; set; }}
 /// <summary>
 /// Response from <see cref="PageGenerateTestReportRequest"/>
 /// </summary>
-internal class PageGenerateTestReportResponse : IChromiumResponse
+internal partial class PageGenerateTestReportResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12796,7 +12796,7 @@ internal class PageGenerateTestReportResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.waitForDebugger</c>
 /// </remarks>
-internal class PageWaitForDebuggerRequest : IChromiumRequest<PageWaitForDebuggerResponse>
+internal partial class PageWaitForDebuggerRequest : IChromiumRequest<PageWaitForDebuggerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.waitForDebugger";
@@ -12804,7 +12804,7 @@ public string Command { get; } = "Page.waitForDebugger";
 /// <summary>
 /// Response from <see cref="PageWaitForDebuggerRequest"/>
 /// </summary>
-internal class PageWaitForDebuggerResponse : IChromiumResponse
+internal partial class PageWaitForDebuggerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12815,7 +12815,7 @@ internal class PageWaitForDebuggerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Page.setInterceptFileChooserDialog</c>
 /// </remarks>
-internal class PageSetInterceptFileChooserDialogRequest : IChromiumRequest<PageSetInterceptFileChooserDialogResponse>
+internal partial class PageSetInterceptFileChooserDialogRequest : IChromiumRequest<PageSetInterceptFileChooserDialogResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setInterceptFileChooserDialog";
@@ -12826,7 +12826,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="PageSetInterceptFileChooserDialogRequest"/>
 /// </summary>
-internal class PageSetInterceptFileChooserDialogResponse : IChromiumResponse
+internal partial class PageSetInterceptFileChooserDialogResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -12835,7 +12835,7 @@ internal class PageSetInterceptFileChooserDialogResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Page.domContentEventFired</c>
 /// </remarks>
-internal class PageDomContentEventFiredChromiumEvent : IChromiumEvent
+internal partial class PageDomContentEventFiredChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.domContentEventFired";
 /// <summary>
@@ -12848,7 +12848,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.fileChooserOpened</c>
 /// </remarks>
-internal class PageFileChooserOpenedChromiumEvent : IChromiumEvent
+internal partial class PageFileChooserOpenedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.fileChooserOpened";
 /// <summary>
@@ -12869,7 +12869,7 @@ public string Mode { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameAttached</c>
 /// </remarks>
-internal class PageFrameAttachedChromiumEvent : IChromiumEvent
+internal partial class PageFrameAttachedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameAttached";
 /// <summary>
@@ -12890,7 +12890,7 @@ public Runtime.StackTrace Stack { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameClearedScheduledNavigation</c>
 /// </remarks>
-internal class PageFrameClearedScheduledNavigationChromiumEvent : IChromiumEvent
+internal partial class PageFrameClearedScheduledNavigationChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameClearedScheduledNavigation";
 /// <summary>
@@ -12903,7 +12903,7 @@ public string FrameId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameDetached</c>
 /// </remarks>
-internal class PageFrameDetachedChromiumEvent : IChromiumEvent
+internal partial class PageFrameDetachedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameDetached";
 /// <summary>
@@ -12916,7 +12916,7 @@ public string FrameId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameNavigated</c>
 /// </remarks>
-internal class PageFrameNavigatedChromiumEvent : IChromiumEvent
+internal partial class PageFrameNavigatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameNavigated";
 /// <summary>
@@ -12929,7 +12929,7 @@ public Frame Frame { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameResized</c>
 /// </remarks>
-internal class PageFrameResizedChromiumEvent : IChromiumEvent
+internal partial class PageFrameResizedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameResized";
 }
@@ -12940,7 +12940,7 @@ public string InternalName { get; } = "Page.frameResized";
 /// <remarks>
 /// Matches on the event <c>Page.frameRequestedNavigation</c>
 /// </remarks>
-internal class PageFrameRequestedNavigationChromiumEvent : IChromiumEvent
+internal partial class PageFrameRequestedNavigationChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameRequestedNavigation";
 /// <summary>
@@ -12961,7 +12961,7 @@ public string Url { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameScheduledNavigation</c>
 /// </remarks>
-internal class PageFrameScheduledNavigationChromiumEvent : IChromiumEvent
+internal partial class PageFrameScheduledNavigationChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameScheduledNavigation";
 /// <summary>
@@ -12987,7 +12987,7 @@ public string Url { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameStartedLoading</c>
 /// </remarks>
-internal class PageFrameStartedLoadingChromiumEvent : IChromiumEvent
+internal partial class PageFrameStartedLoadingChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameStartedLoading";
 /// <summary>
@@ -13000,7 +13000,7 @@ public string FrameId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.frameStoppedLoading</c>
 /// </remarks>
-internal class PageFrameStoppedLoadingChromiumEvent : IChromiumEvent
+internal partial class PageFrameStoppedLoadingChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.frameStoppedLoading";
 /// <summary>
@@ -13013,7 +13013,7 @@ public string FrameId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.downloadWillBegin</c>
 /// </remarks>
-internal class PageDownloadWillBeginChromiumEvent : IChromiumEvent
+internal partial class PageDownloadWillBeginChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.downloadWillBegin";
 /// <summary>
@@ -13030,7 +13030,7 @@ public string Url { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.interstitialHidden</c>
 /// </remarks>
-internal class PageInterstitialHiddenChromiumEvent : IChromiumEvent
+internal partial class PageInterstitialHiddenChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.interstitialHidden";
 }
@@ -13040,7 +13040,7 @@ public string InternalName { get; } = "Page.interstitialHidden";
 /// <remarks>
 /// Matches on the event <c>Page.interstitialShown</c>
 /// </remarks>
-internal class PageInterstitialShownChromiumEvent : IChromiumEvent
+internal partial class PageInterstitialShownChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.interstitialShown";
 }
@@ -13051,7 +13051,7 @@ public string InternalName { get; } = "Page.interstitialShown";
 /// <remarks>
 /// Matches on the event <c>Page.javascriptDialogClosed</c>
 /// </remarks>
-internal class PageJavascriptDialogClosedChromiumEvent : IChromiumEvent
+internal partial class PageJavascriptDialogClosedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.javascriptDialogClosed";
 /// <summary>
@@ -13069,7 +13069,7 @@ public string UserInput { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.javascriptDialogOpening</c>
 /// </remarks>
-internal class PageJavascriptDialogOpeningChromiumEvent : IChromiumEvent
+internal partial class PageJavascriptDialogOpeningChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.javascriptDialogOpening";
 /// <summary>
@@ -13100,7 +13100,7 @@ public string DefaultPrompt { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.lifecycleEvent</c>
 /// </remarks>
-internal class PageLifecycleEventChromiumEvent : IChromiumEvent
+internal partial class PageLifecycleEventChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.lifecycleEvent";
 /// <summary>
@@ -13125,7 +13125,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.loadEventFired</c>
 /// </remarks>
-internal class PageLoadEventFiredChromiumEvent : IChromiumEvent
+internal partial class PageLoadEventFiredChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.loadEventFired";
 /// <summary>
@@ -13138,7 +13138,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.navigatedWithinDocument</c>
 /// </remarks>
-internal class PageNavigatedWithinDocumentChromiumEvent : IChromiumEvent
+internal partial class PageNavigatedWithinDocumentChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.navigatedWithinDocument";
 /// <summary>
@@ -13155,7 +13155,7 @@ public string Url { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.screencastFrame</c>
 /// </remarks>
-internal class PageScreencastFrameChromiumEvent : IChromiumEvent
+internal partial class PageScreencastFrameChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.screencastFrame";
 /// <summary>
@@ -13176,7 +13176,7 @@ public int? SessionId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.screencastVisibilityChanged</c>
 /// </remarks>
-internal class PageScreencastVisibilityChangedChromiumEvent : IChromiumEvent
+internal partial class PageScreencastVisibilityChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.screencastVisibilityChanged";
 /// <summary>
@@ -13190,7 +13190,7 @@ public bool? Visible { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.windowOpen</c>
 /// </remarks>
-internal class PageWindowOpenChromiumEvent : IChromiumEvent
+internal partial class PageWindowOpenChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.windowOpen";
 /// <summary>
@@ -13216,7 +13216,7 @@ public bool? UserGesture { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Page.compilationCacheProduced</c>
 /// </remarks>
-internal class PageCompilationCacheProducedChromiumEvent : IChromiumEvent
+internal partial class PageCompilationCacheProducedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.compilationCacheProduced";
 /// <summary>
@@ -13233,7 +13233,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Performance
 /// <summary>
 /// Run-time execution metric.
 /// </summary>
-internal class Metric
+internal partial class Metric
 {
 /// <summary>
 /// Metric name.
@@ -13249,7 +13249,7 @@ public double? Value { get; set; }}
 /// <remarks>
 /// Will send the command <c>Performance.disable</c>
 /// </remarks>
-internal class PerformanceDisableRequest : IChromiumRequest<PerformanceDisableResponse>
+internal partial class PerformanceDisableRequest : IChromiumRequest<PerformanceDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Performance.disable";
@@ -13257,7 +13257,7 @@ public string Command { get; } = "Performance.disable";
 /// <summary>
 /// Response from <see cref="PerformanceDisableRequest"/>
 /// </summary>
-internal class PerformanceDisableResponse : IChromiumResponse
+internal partial class PerformanceDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13266,7 +13266,7 @@ internal class PerformanceDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Performance.enable</c>
 /// </remarks>
-internal class PerformanceEnableRequest : IChromiumRequest<PerformanceEnableResponse>
+internal partial class PerformanceEnableRequest : IChromiumRequest<PerformanceEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Performance.enable";
@@ -13274,7 +13274,7 @@ public string Command { get; } = "Performance.enable";
 /// <summary>
 /// Response from <see cref="PerformanceEnableRequest"/>
 /// </summary>
-internal class PerformanceEnableResponse : IChromiumResponse
+internal partial class PerformanceEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13285,7 +13285,7 @@ internal class PerformanceEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Performance.setTimeDomain</c>
 /// </remarks>
-internal class PerformanceSetTimeDomainRequest : IChromiumRequest<PerformanceSetTimeDomainResponse>
+internal partial class PerformanceSetTimeDomainRequest : IChromiumRequest<PerformanceSetTimeDomainResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Performance.setTimeDomain";
@@ -13296,7 +13296,7 @@ public string TimeDomain { get; set; }}
 /// <summary>
 /// Response from <see cref="PerformanceSetTimeDomainRequest"/>
 /// </summary>
-internal class PerformanceSetTimeDomainResponse : IChromiumResponse
+internal partial class PerformanceSetTimeDomainResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13305,7 +13305,7 @@ internal class PerformanceSetTimeDomainResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Performance.getMetrics</c>
 /// </remarks>
-internal class PerformanceGetMetricsRequest : IChromiumRequest<PerformanceGetMetricsResponse>
+internal partial class PerformanceGetMetricsRequest : IChromiumRequest<PerformanceGetMetricsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Performance.getMetrics";
@@ -13313,7 +13313,7 @@ public string Command { get; } = "Performance.getMetrics";
 /// <summary>
 /// Response from <see cref="PerformanceGetMetricsRequest"/>
 /// </summary>
-internal class PerformanceGetMetricsResponse : IChromiumResponse
+internal partial class PerformanceGetMetricsResponse: IChromiumResponse
 {
 /// <summary>
 /// Current values for run-time metrics.
@@ -13325,7 +13325,7 @@ public Metric[] Metrics { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Performance.metrics</c>
 /// </remarks>
-internal class PerformanceMetricsChromiumEvent : IChromiumEvent
+internal partial class PerformanceMetricsChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Performance.metrics";
 /// <summary>
@@ -13362,7 +13362,7 @@ internal enum SecurityState
 /// <summary>
 /// Details about the security state of the page certificate.
 /// </summary>
-internal class CertificateSecurityState
+internal partial class CertificateSecurityState
 {
 /// <summary>
 /// Protocol name (e.g. "TLS 1.2" or "QUIC").
@@ -13446,7 +13446,7 @@ internal enum SafetyTipStatus
 /// <summary>
 /// 
 /// </summary>
-internal class SafetyTipInfo
+internal partial class SafetyTipInfo
 {
 /// <summary>
 /// Describes whether the page triggers any safety tips or reputation warnings. Default is unknown.
@@ -13459,7 +13459,7 @@ public string SafeUrl { get; set; }}
 /// <summary>
 /// Security state information about the page.
 /// </summary>
-internal class VisibleSecurityState
+internal partial class VisibleSecurityState
 {
 /// <summary>
 /// The security level of the page.
@@ -13480,7 +13480,7 @@ public string[] SecurityStateIssueIds { get; set; }}
 /// <summary>
 /// An explanation of an factor contributing to the security state.
 /// </summary>
-internal class SecurityStateExplanation
+internal partial class SecurityStateExplanation
 {
 /// <summary>
 /// Security state representing the severity of the factor being explained.
@@ -13513,7 +13513,7 @@ public string[] Recommendations { get; set; }}
 /// <summary>
 /// Information about insecure content on the page.
 /// </summary>
-internal class InsecureContentStatus
+internal partial class InsecureContentStatus
 {
 /// <summary>
 /// Always false.
@@ -13557,7 +13557,7 @@ internal enum CertificateErrorAction
 /// <remarks>
 /// Will send the command <c>Security.disable</c>
 /// </remarks>
-internal class SecurityDisableRequest : IChromiumRequest<SecurityDisableResponse>
+internal partial class SecurityDisableRequest : IChromiumRequest<SecurityDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Security.disable";
@@ -13565,7 +13565,7 @@ public string Command { get; } = "Security.disable";
 /// <summary>
 /// Response from <see cref="SecurityDisableRequest"/>
 /// </summary>
-internal class SecurityDisableResponse : IChromiumResponse
+internal partial class SecurityDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13574,7 +13574,7 @@ internal class SecurityDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Security.enable</c>
 /// </remarks>
-internal class SecurityEnableRequest : IChromiumRequest<SecurityEnableResponse>
+internal partial class SecurityEnableRequest : IChromiumRequest<SecurityEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Security.enable";
@@ -13582,7 +13582,7 @@ public string Command { get; } = "Security.enable";
 /// <summary>
 /// Response from <see cref="SecurityEnableRequest"/>
 /// </summary>
-internal class SecurityEnableResponse : IChromiumResponse
+internal partial class SecurityEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13591,7 +13591,7 @@ internal class SecurityEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Security.setIgnoreCertificateErrors</c>
 /// </remarks>
-internal class SecuritySetIgnoreCertificateErrorsRequest : IChromiumRequest<SecuritySetIgnoreCertificateErrorsResponse>
+internal partial class SecuritySetIgnoreCertificateErrorsRequest : IChromiumRequest<SecuritySetIgnoreCertificateErrorsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Security.setIgnoreCertificateErrors";
@@ -13602,7 +13602,7 @@ public bool? Ignore { get; set; }}
 /// <summary>
 /// Response from <see cref="SecuritySetIgnoreCertificateErrorsRequest"/>
 /// </summary>
-internal class SecuritySetIgnoreCertificateErrorsResponse : IChromiumResponse
+internal partial class SecuritySetIgnoreCertificateErrorsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13611,7 +13611,7 @@ internal class SecuritySetIgnoreCertificateErrorsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Security.handleCertificateError</c>
 /// </remarks>
-internal class SecurityHandleCertificateErrorRequest : IChromiumRequest<SecurityHandleCertificateErrorResponse>
+internal partial class SecurityHandleCertificateErrorRequest : IChromiumRequest<SecurityHandleCertificateErrorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Security.handleCertificateError";
@@ -13626,7 +13626,7 @@ public CertificateErrorAction Action { get; set; }}
 /// <summary>
 /// Response from <see cref="SecurityHandleCertificateErrorRequest"/>
 /// </summary>
-internal class SecurityHandleCertificateErrorResponse : IChromiumResponse
+internal partial class SecurityHandleCertificateErrorResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13636,7 +13636,7 @@ internal class SecurityHandleCertificateErrorResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Security.setOverrideCertificateErrors</c>
 /// </remarks>
-internal class SecuritySetOverrideCertificateErrorsRequest : IChromiumRequest<SecuritySetOverrideCertificateErrorsResponse>
+internal partial class SecuritySetOverrideCertificateErrorsRequest : IChromiumRequest<SecuritySetOverrideCertificateErrorsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Security.setOverrideCertificateErrors";
@@ -13647,7 +13647,7 @@ public bool? Override { get; set; }}
 /// <summary>
 /// Response from <see cref="SecuritySetOverrideCertificateErrorsRequest"/>
 /// </summary>
-internal class SecuritySetOverrideCertificateErrorsResponse : IChromiumResponse
+internal partial class SecuritySetOverrideCertificateErrorsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13659,7 +13659,7 @@ internal class SecuritySetOverrideCertificateErrorsResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Security.certificateError</c>
 /// </remarks>
-internal class SecurityCertificateErrorChromiumEvent : IChromiumEvent
+internal partial class SecurityCertificateErrorChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Security.certificateError";
 /// <summary>
@@ -13680,7 +13680,7 @@ public string RequestURL { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Security.visibleSecurityStateChanged</c>
 /// </remarks>
-internal class SecurityVisibleSecurityStateChangedChromiumEvent : IChromiumEvent
+internal partial class SecurityVisibleSecurityStateChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Security.visibleSecurityStateChanged";
 /// <summary>
@@ -13693,7 +13693,7 @@ public VisibleSecurityState VisibleSecurityState { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Security.securityStateChanged</c>
 /// </remarks>
-internal class SecuritySecurityStateChangedChromiumEvent : IChromiumEvent
+internal partial class SecuritySecurityStateChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Security.securityStateChanged";
 /// <summary>
@@ -13723,7 +13723,7 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
 /// <summary>
 /// ServiceWorker registration.
 /// </summary>
-internal class ServiceWorkerRegistration
+internal partial class ServiceWorkerRegistration
 {
 /// <summary>
 /// 
@@ -13760,7 +13760,7 @@ internal enum ServiceWorkerVersionStatus
 /// <summary>
 /// ServiceWorker version.
 /// </summary>
-internal class ServiceWorkerVersion
+internal partial class ServiceWorkerVersion
 {
 /// <summary>
 /// 
@@ -13802,7 +13802,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// ServiceWorker error message.
 /// </summary>
-internal class ServiceWorkerErrorMessage
+internal partial class ServiceWorkerErrorMessage
 {
 /// <summary>
 /// 
@@ -13834,7 +13834,7 @@ public int? ColumnNumber { get; set; }}
 /// <remarks>
 /// Will send the command <c>ServiceWorker.deliverPushMessage</c>
 /// </remarks>
-internal class ServiceWorkerDeliverPushMessageRequest : IChromiumRequest<ServiceWorkerDeliverPushMessageResponse>
+internal partial class ServiceWorkerDeliverPushMessageRequest : IChromiumRequest<ServiceWorkerDeliverPushMessageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.deliverPushMessage";
@@ -13853,7 +13853,7 @@ public string Data { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDeliverPushMessageRequest"/>
 /// </summary>
-internal class ServiceWorkerDeliverPushMessageResponse : IChromiumResponse
+internal partial class ServiceWorkerDeliverPushMessageResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13862,7 +13862,7 @@ internal class ServiceWorkerDeliverPushMessageResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.disable</c>
 /// </remarks>
-internal class ServiceWorkerDisableRequest : IChromiumRequest<ServiceWorkerDisableResponse>
+internal partial class ServiceWorkerDisableRequest : IChromiumRequest<ServiceWorkerDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.disable";
@@ -13870,7 +13870,7 @@ public string Command { get; } = "ServiceWorker.disable";
 /// <summary>
 /// Response from <see cref="ServiceWorkerDisableRequest"/>
 /// </summary>
-internal class ServiceWorkerDisableResponse : IChromiumResponse
+internal partial class ServiceWorkerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13879,7 +13879,7 @@ internal class ServiceWorkerDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.dispatchSyncEvent</c>
 /// </remarks>
-internal class ServiceWorkerDispatchSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchSyncEventResponse>
+internal partial class ServiceWorkerDispatchSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchSyncEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.dispatchSyncEvent";
@@ -13902,7 +13902,7 @@ public bool? LastChance { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDispatchSyncEventRequest"/>
 /// </summary>
-internal class ServiceWorkerDispatchSyncEventResponse : IChromiumResponse
+internal partial class ServiceWorkerDispatchSyncEventResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13911,7 +13911,7 @@ internal class ServiceWorkerDispatchSyncEventResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.dispatchPeriodicSyncEvent</c>
 /// </remarks>
-internal class ServiceWorkerDispatchPeriodicSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchPeriodicSyncEventResponse>
+internal partial class ServiceWorkerDispatchPeriodicSyncEventRequest : IChromiumRequest<ServiceWorkerDispatchPeriodicSyncEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.dispatchPeriodicSyncEvent";
@@ -13930,7 +13930,7 @@ public string Tag { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDispatchPeriodicSyncEventRequest"/>
 /// </summary>
-internal class ServiceWorkerDispatchPeriodicSyncEventResponse : IChromiumResponse
+internal partial class ServiceWorkerDispatchPeriodicSyncEventResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13939,7 +13939,7 @@ internal class ServiceWorkerDispatchPeriodicSyncEventResponse : IChromiumRespons
 /// <remarks>
 /// Will send the command <c>ServiceWorker.enable</c>
 /// </remarks>
-internal class ServiceWorkerEnableRequest : IChromiumRequest<ServiceWorkerEnableResponse>
+internal partial class ServiceWorkerEnableRequest : IChromiumRequest<ServiceWorkerEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.enable";
@@ -13947,7 +13947,7 @@ public string Command { get; } = "ServiceWorker.enable";
 /// <summary>
 /// Response from <see cref="ServiceWorkerEnableRequest"/>
 /// </summary>
-internal class ServiceWorkerEnableResponse : IChromiumResponse
+internal partial class ServiceWorkerEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13956,7 +13956,7 @@ internal class ServiceWorkerEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.inspectWorker</c>
 /// </remarks>
-internal class ServiceWorkerInspectWorkerRequest : IChromiumRequest<ServiceWorkerInspectWorkerResponse>
+internal partial class ServiceWorkerInspectWorkerRequest : IChromiumRequest<ServiceWorkerInspectWorkerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.inspectWorker";
@@ -13967,7 +13967,7 @@ public string VersionId { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerInspectWorkerRequest"/>
 /// </summary>
-internal class ServiceWorkerInspectWorkerResponse : IChromiumResponse
+internal partial class ServiceWorkerInspectWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13976,7 +13976,7 @@ internal class ServiceWorkerInspectWorkerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.setForceUpdateOnPageLoad</c>
 /// </remarks>
-internal class ServiceWorkerSetForceUpdateOnPageLoadRequest : IChromiumRequest<ServiceWorkerSetForceUpdateOnPageLoadResponse>
+internal partial class ServiceWorkerSetForceUpdateOnPageLoadRequest : IChromiumRequest<ServiceWorkerSetForceUpdateOnPageLoadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.setForceUpdateOnPageLoad";
@@ -13987,7 +13987,7 @@ public bool? ForceUpdateOnPageLoad { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerSetForceUpdateOnPageLoadRequest"/>
 /// </summary>
-internal class ServiceWorkerSetForceUpdateOnPageLoadResponse : IChromiumResponse
+internal partial class ServiceWorkerSetForceUpdateOnPageLoadResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -13996,7 +13996,7 @@ internal class ServiceWorkerSetForceUpdateOnPageLoadResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.skipWaiting</c>
 /// </remarks>
-internal class ServiceWorkerSkipWaitingRequest : IChromiumRequest<ServiceWorkerSkipWaitingResponse>
+internal partial class ServiceWorkerSkipWaitingRequest : IChromiumRequest<ServiceWorkerSkipWaitingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.skipWaiting";
@@ -14007,7 +14007,7 @@ public string ScopeURL { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerSkipWaitingRequest"/>
 /// </summary>
-internal class ServiceWorkerSkipWaitingResponse : IChromiumResponse
+internal partial class ServiceWorkerSkipWaitingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14016,7 +14016,7 @@ internal class ServiceWorkerSkipWaitingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.startWorker</c>
 /// </remarks>
-internal class ServiceWorkerStartWorkerRequest : IChromiumRequest<ServiceWorkerStartWorkerResponse>
+internal partial class ServiceWorkerStartWorkerRequest : IChromiumRequest<ServiceWorkerStartWorkerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.startWorker";
@@ -14027,7 +14027,7 @@ public string ScopeURL { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerStartWorkerRequest"/>
 /// </summary>
-internal class ServiceWorkerStartWorkerResponse : IChromiumResponse
+internal partial class ServiceWorkerStartWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14036,7 +14036,7 @@ internal class ServiceWorkerStartWorkerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.stopAllWorkers</c>
 /// </remarks>
-internal class ServiceWorkerStopAllWorkersRequest : IChromiumRequest<ServiceWorkerStopAllWorkersResponse>
+internal partial class ServiceWorkerStopAllWorkersRequest : IChromiumRequest<ServiceWorkerStopAllWorkersResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.stopAllWorkers";
@@ -14044,7 +14044,7 @@ public string Command { get; } = "ServiceWorker.stopAllWorkers";
 /// <summary>
 /// Response from <see cref="ServiceWorkerStopAllWorkersRequest"/>
 /// </summary>
-internal class ServiceWorkerStopAllWorkersResponse : IChromiumResponse
+internal partial class ServiceWorkerStopAllWorkersResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14053,7 +14053,7 @@ internal class ServiceWorkerStopAllWorkersResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.stopWorker</c>
 /// </remarks>
-internal class ServiceWorkerStopWorkerRequest : IChromiumRequest<ServiceWorkerStopWorkerResponse>
+internal partial class ServiceWorkerStopWorkerRequest : IChromiumRequest<ServiceWorkerStopWorkerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.stopWorker";
@@ -14064,7 +14064,7 @@ public string VersionId { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerStopWorkerRequest"/>
 /// </summary>
-internal class ServiceWorkerStopWorkerResponse : IChromiumResponse
+internal partial class ServiceWorkerStopWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14073,7 +14073,7 @@ internal class ServiceWorkerStopWorkerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.unregister</c>
 /// </remarks>
-internal class ServiceWorkerUnregisterRequest : IChromiumRequest<ServiceWorkerUnregisterResponse>
+internal partial class ServiceWorkerUnregisterRequest : IChromiumRequest<ServiceWorkerUnregisterResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.unregister";
@@ -14084,7 +14084,7 @@ public string ScopeURL { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerUnregisterRequest"/>
 /// </summary>
-internal class ServiceWorkerUnregisterResponse : IChromiumResponse
+internal partial class ServiceWorkerUnregisterResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14093,7 +14093,7 @@ internal class ServiceWorkerUnregisterResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>ServiceWorker.updateRegistration</c>
 /// </remarks>
-internal class ServiceWorkerUpdateRegistrationRequest : IChromiumRequest<ServiceWorkerUpdateRegistrationResponse>
+internal partial class ServiceWorkerUpdateRegistrationRequest : IChromiumRequest<ServiceWorkerUpdateRegistrationResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.updateRegistration";
@@ -14104,7 +14104,7 @@ public string ScopeURL { get; set; }}
 /// <summary>
 /// Response from <see cref="ServiceWorkerUpdateRegistrationRequest"/>
 /// </summary>
-internal class ServiceWorkerUpdateRegistrationResponse : IChromiumResponse
+internal partial class ServiceWorkerUpdateRegistrationResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14113,7 +14113,7 @@ internal class ServiceWorkerUpdateRegistrationResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>ServiceWorker.workerErrorReported</c>
 /// </remarks>
-internal class ServiceWorkerWorkerErrorReportedChromiumEvent : IChromiumEvent
+internal partial class ServiceWorkerWorkerErrorReportedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "ServiceWorker.workerErrorReported";
 /// <summary>
@@ -14126,7 +14126,7 @@ public ServiceWorkerErrorMessage ErrorMessage { get; set; }}
 /// <remarks>
 /// Matches on the event <c>ServiceWorker.workerRegistrationUpdated</c>
 /// </remarks>
-internal class ServiceWorkerWorkerRegistrationUpdatedChromiumEvent : IChromiumEvent
+internal partial class ServiceWorkerWorkerRegistrationUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "ServiceWorker.workerRegistrationUpdated";
 /// <summary>
@@ -14139,7 +14139,7 @@ public ServiceWorkerRegistration[] Registrations { get; set; }}
 /// <remarks>
 /// Matches on the event <c>ServiceWorker.workerVersionUpdated</c>
 /// </remarks>
-internal class ServiceWorkerWorkerVersionUpdatedChromiumEvent : IChromiumEvent
+internal partial class ServiceWorkerWorkerVersionUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "ServiceWorker.workerVersionUpdated";
 /// <summary>
@@ -14168,7 +14168,7 @@ internal enum StorageType
 /// <summary>
 /// Usage for a storage type.
 /// </summary>
-internal class UsageForType
+internal partial class UsageForType
 {
 /// <summary>
 /// Name of storage type.
@@ -14184,7 +14184,7 @@ public double? Usage { get; set; }}
 /// <remarks>
 /// Will send the command <c>Storage.clearDataForOrigin</c>
 /// </remarks>
-internal class StorageClearDataForOriginRequest : IChromiumRequest<StorageClearDataForOriginResponse>
+internal partial class StorageClearDataForOriginRequest : IChromiumRequest<StorageClearDataForOriginResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.clearDataForOrigin";
@@ -14199,7 +14199,7 @@ public string StorageTypes { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageClearDataForOriginRequest"/>
 /// </summary>
-internal class StorageClearDataForOriginResponse : IChromiumResponse
+internal partial class StorageClearDataForOriginResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14208,7 +14208,7 @@ internal class StorageClearDataForOriginResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Storage.getCookies</c>
 /// </remarks>
-internal class StorageGetCookiesRequest : IChromiumRequest<StorageGetCookiesResponse>
+internal partial class StorageGetCookiesRequest : IChromiumRequest<StorageGetCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.getCookies";
@@ -14219,7 +14219,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageGetCookiesRequest"/>
 /// </summary>
-internal class StorageGetCookiesResponse : IChromiumResponse
+internal partial class StorageGetCookiesResponse: IChromiumResponse
 {
 /// <summary>
 /// Array of cookie objects.
@@ -14231,7 +14231,7 @@ public Network.Cookie[] Cookies { get; set; }}
 /// <remarks>
 /// Will send the command <c>Storage.setCookies</c>
 /// </remarks>
-internal class StorageSetCookiesRequest : IChromiumRequest<StorageSetCookiesResponse>
+internal partial class StorageSetCookiesRequest : IChromiumRequest<StorageSetCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.setCookies";
@@ -14246,7 +14246,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageSetCookiesRequest"/>
 /// </summary>
-internal class StorageSetCookiesResponse : IChromiumResponse
+internal partial class StorageSetCookiesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14255,7 +14255,7 @@ internal class StorageSetCookiesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Storage.clearCookies</c>
 /// </remarks>
-internal class StorageClearCookiesRequest : IChromiumRequest<StorageClearCookiesResponse>
+internal partial class StorageClearCookiesRequest : IChromiumRequest<StorageClearCookiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.clearCookies";
@@ -14266,7 +14266,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageClearCookiesRequest"/>
 /// </summary>
-internal class StorageClearCookiesResponse : IChromiumResponse
+internal partial class StorageClearCookiesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14275,7 +14275,7 @@ internal class StorageClearCookiesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Storage.getUsageAndQuota</c>
 /// </remarks>
-internal class StorageGetUsageAndQuotaRequest : IChromiumRequest<StorageGetUsageAndQuotaResponse>
+internal partial class StorageGetUsageAndQuotaRequest : IChromiumRequest<StorageGetUsageAndQuotaResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.getUsageAndQuota";
@@ -14286,7 +14286,7 @@ public string Origin { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageGetUsageAndQuotaRequest"/>
 /// </summary>
-internal class StorageGetUsageAndQuotaResponse : IChromiumResponse
+internal partial class StorageGetUsageAndQuotaResponse: IChromiumResponse
 {
 /// <summary>
 /// Storage usage (bytes).
@@ -14306,7 +14306,7 @@ public UsageForType[] UsageBreakdown { get; set; }}
 /// <remarks>
 /// Will send the command <c>Storage.trackCacheStorageForOrigin</c>
 /// </remarks>
-internal class StorageTrackCacheStorageForOriginRequest : IChromiumRequest<StorageTrackCacheStorageForOriginResponse>
+internal partial class StorageTrackCacheStorageForOriginRequest : IChromiumRequest<StorageTrackCacheStorageForOriginResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.trackCacheStorageForOrigin";
@@ -14317,7 +14317,7 @@ public string Origin { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageTrackCacheStorageForOriginRequest"/>
 /// </summary>
-internal class StorageTrackCacheStorageForOriginResponse : IChromiumResponse
+internal partial class StorageTrackCacheStorageForOriginResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14326,7 +14326,7 @@ internal class StorageTrackCacheStorageForOriginResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Storage.trackIndexedDBForOrigin</c>
 /// </remarks>
-internal class StorageTrackIndexedDBForOriginRequest : IChromiumRequest<StorageTrackIndexedDBForOriginResponse>
+internal partial class StorageTrackIndexedDBForOriginRequest : IChromiumRequest<StorageTrackIndexedDBForOriginResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.trackIndexedDBForOrigin";
@@ -14337,7 +14337,7 @@ public string Origin { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageTrackIndexedDBForOriginRequest"/>
 /// </summary>
-internal class StorageTrackIndexedDBForOriginResponse : IChromiumResponse
+internal partial class StorageTrackIndexedDBForOriginResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14346,7 +14346,7 @@ internal class StorageTrackIndexedDBForOriginResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Storage.untrackCacheStorageForOrigin</c>
 /// </remarks>
-internal class StorageUntrackCacheStorageForOriginRequest : IChromiumRequest<StorageUntrackCacheStorageForOriginResponse>
+internal partial class StorageUntrackCacheStorageForOriginRequest : IChromiumRequest<StorageUntrackCacheStorageForOriginResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.untrackCacheStorageForOrigin";
@@ -14357,7 +14357,7 @@ public string Origin { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageUntrackCacheStorageForOriginRequest"/>
 /// </summary>
-internal class StorageUntrackCacheStorageForOriginResponse : IChromiumResponse
+internal partial class StorageUntrackCacheStorageForOriginResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14366,7 +14366,7 @@ internal class StorageUntrackCacheStorageForOriginResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Storage.untrackIndexedDBForOrigin</c>
 /// </remarks>
-internal class StorageUntrackIndexedDBForOriginRequest : IChromiumRequest<StorageUntrackIndexedDBForOriginResponse>
+internal partial class StorageUntrackIndexedDBForOriginRequest : IChromiumRequest<StorageUntrackIndexedDBForOriginResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Storage.untrackIndexedDBForOrigin";
@@ -14377,7 +14377,7 @@ public string Origin { get; set; }}
 /// <summary>
 /// Response from <see cref="StorageUntrackIndexedDBForOriginRequest"/>
 /// </summary>
-internal class StorageUntrackIndexedDBForOriginResponse : IChromiumResponse
+internal partial class StorageUntrackIndexedDBForOriginResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14386,7 +14386,7 @@ internal class StorageUntrackIndexedDBForOriginResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Storage.cacheStorageContentUpdated</c>
 /// </remarks>
-internal class StorageCacheStorageContentUpdatedChromiumEvent : IChromiumEvent
+internal partial class StorageCacheStorageContentUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Storage.cacheStorageContentUpdated";
 /// <summary>
@@ -14403,7 +14403,7 @@ public string CacheName { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Storage.cacheStorageListUpdated</c>
 /// </remarks>
-internal class StorageCacheStorageListUpdatedChromiumEvent : IChromiumEvent
+internal partial class StorageCacheStorageListUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Storage.cacheStorageListUpdated";
 /// <summary>
@@ -14416,7 +14416,7 @@ public string Origin { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Storage.indexedDBContentUpdated</c>
 /// </remarks>
-internal class StorageIndexedDBContentUpdatedChromiumEvent : IChromiumEvent
+internal partial class StorageIndexedDBContentUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Storage.indexedDBContentUpdated";
 /// <summary>
@@ -14437,7 +14437,7 @@ public string ObjectStoreName { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Storage.indexedDBListUpdated</c>
 /// </remarks>
-internal class StorageIndexedDBListUpdatedChromiumEvent : IChromiumEvent
+internal partial class StorageIndexedDBListUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Storage.indexedDBListUpdated";
 /// <summary>
@@ -14450,7 +14450,7 @@ namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
 /// <summary>
 /// Describes a single graphics processor (GPU).
 /// </summary>
-internal class GPUDevice
+internal partial class GPUDevice
 {
 /// <summary>
 /// PCI ID of the GPU vendor, if available; 0 otherwise.
@@ -14487,7 +14487,7 @@ public string DriverVersion { get; set; }}
 /// <summary>
 /// Describes the width and height dimensions of an entity.
 /// </summary>
-internal class Size
+internal partial class Size
 {
 /// <summary>
 /// Width in pixels.
@@ -14501,7 +14501,7 @@ public int? Height { get; set; }}
 /// Describes a supported video decoding profile with its associated minimum and
 /// maximum resolutions.
 /// </summary>
-internal class VideoDecodeAcceleratorCapability
+internal partial class VideoDecodeAcceleratorCapability
 {
 /// <summary>
 /// Video codec profile that is supported, e.g. VP9 Profile 2.
@@ -14519,7 +14519,7 @@ public Size MinResolution { get; set; }}
 /// Describes a supported video encoding profile with its associated maximum
 /// resolution and maximum framerate.
 /// </summary>
-internal class VideoEncodeAcceleratorCapability
+internal partial class VideoEncodeAcceleratorCapability
 {
 /// <summary>
 /// Video codec profile that is supported, e.g H264 Main.
@@ -14559,7 +14559,7 @@ internal enum ImageType
 /// Describes a supported image decoding profile with its associated minimum and
 /// maximum resolutions and subsampling.
 /// </summary>
-internal class ImageDecodeAcceleratorCapability
+internal partial class ImageDecodeAcceleratorCapability
 {
 /// <summary>
 /// Image coded, e.g. Jpeg.
@@ -14580,7 +14580,7 @@ public SubsamplingFormat[] Subsamplings { get; set; }}
 /// <summary>
 /// Provides information about the GPU(s) on the system.
 /// </summary>
-internal class GPUInfo
+internal partial class GPUInfo
 {
 /// <summary>
 /// The graphics devices on the system. Element 0 is the primary GPU.
@@ -14613,7 +14613,7 @@ public ImageDecodeAcceleratorCapability[] ImageDecoding { get; set; }}
 /// <summary>
 /// Represents process info.
 /// </summary>
-internal class ProcessInfo
+internal partial class ProcessInfo
 {
 /// <summary>
 /// Specifies process type.
@@ -14634,7 +14634,7 @@ public double? CpuTime { get; set; }}
 /// <remarks>
 /// Will send the command <c>SystemInfo.getInfo</c>
 /// </remarks>
-internal class SystemInfoGetInfoRequest : IChromiumRequest<SystemInfoGetInfoResponse>
+internal partial class SystemInfoGetInfoRequest : IChromiumRequest<SystemInfoGetInfoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "SystemInfo.getInfo";
@@ -14642,7 +14642,7 @@ public string Command { get; } = "SystemInfo.getInfo";
 /// <summary>
 /// Response from <see cref="SystemInfoGetInfoRequest"/>
 /// </summary>
-internal class SystemInfoGetInfoResponse : IChromiumResponse
+internal partial class SystemInfoGetInfoResponse: IChromiumResponse
 {
 /// <summary>
 /// Information about the GPUs on the system.
@@ -14669,7 +14669,7 @@ public string CommandLine { get; set; }}
 /// <remarks>
 /// Will send the command <c>SystemInfo.getProcessInfo</c>
 /// </remarks>
-internal class SystemInfoGetProcessInfoRequest : IChromiumRequest<SystemInfoGetProcessInfoResponse>
+internal partial class SystemInfoGetProcessInfoRequest : IChromiumRequest<SystemInfoGetProcessInfoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "SystemInfo.getProcessInfo";
@@ -14677,7 +14677,7 @@ public string Command { get; } = "SystemInfo.getProcessInfo";
 /// <summary>
 /// Response from <see cref="SystemInfoGetProcessInfoRequest"/>
 /// </summary>
-internal class SystemInfoGetProcessInfoResponse : IChromiumResponse
+internal partial class SystemInfoGetProcessInfoResponse: IChromiumResponse
 {
 /// <summary>
 /// An array of process info blocks.
@@ -14689,7 +14689,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Target
 /// <summary>
 /// 
 /// </summary>
-internal class TargetInfo
+internal partial class TargetInfo
 {
 /// <summary>
 /// 
@@ -14722,7 +14722,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class RemoteLocation
+internal partial class RemoteLocation
 {
 /// <summary>
 /// 
@@ -14738,7 +14738,7 @@ public int? Port { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.activateTarget</c>
 /// </remarks>
-internal class TargetActivateTargetRequest : IChromiumRequest<TargetActivateTargetResponse>
+internal partial class TargetActivateTargetRequest : IChromiumRequest<TargetActivateTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.activateTarget";
@@ -14749,7 +14749,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetActivateTargetRequest"/>
 /// </summary>
-internal class TargetActivateTargetResponse : IChromiumResponse
+internal partial class TargetActivateTargetResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14758,7 +14758,7 @@ internal class TargetActivateTargetResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.attachToTarget</c>
 /// </remarks>
-internal class TargetAttachToTargetRequest : IChromiumRequest<TargetAttachToTargetResponse>
+internal partial class TargetAttachToTargetRequest : IChromiumRequest<TargetAttachToTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.attachToTarget";
@@ -14775,7 +14775,7 @@ public bool? Flatten { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetAttachToTargetRequest"/>
 /// </summary>
-internal class TargetAttachToTargetResponse : IChromiumResponse
+internal partial class TargetAttachToTargetResponse: IChromiumResponse
 {
 /// <summary>
 /// Id assigned to the session.
@@ -14787,7 +14787,7 @@ public string SessionId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.attachToBrowserTarget</c>
 /// </remarks>
-internal class TargetAttachToBrowserTargetRequest : IChromiumRequest<TargetAttachToBrowserTargetResponse>
+internal partial class TargetAttachToBrowserTargetRequest : IChromiumRequest<TargetAttachToBrowserTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.attachToBrowserTarget";
@@ -14795,7 +14795,7 @@ public string Command { get; } = "Target.attachToBrowserTarget";
 /// <summary>
 /// Response from <see cref="TargetAttachToBrowserTargetRequest"/>
 /// </summary>
-internal class TargetAttachToBrowserTargetResponse : IChromiumResponse
+internal partial class TargetAttachToBrowserTargetResponse: IChromiumResponse
 {
 /// <summary>
 /// Id assigned to the session.
@@ -14807,7 +14807,7 @@ public string SessionId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.closeTarget</c>
 /// </remarks>
-internal class TargetCloseTargetRequest : IChromiumRequest<TargetCloseTargetResponse>
+internal partial class TargetCloseTargetRequest : IChromiumRequest<TargetCloseTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.closeTarget";
@@ -14818,7 +14818,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetCloseTargetRequest"/>
 /// </summary>
-internal class TargetCloseTargetResponse : IChromiumResponse
+internal partial class TargetCloseTargetResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -14837,7 +14837,7 @@ public bool? Success { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.exposeDevToolsProtocol</c>
 /// </remarks>
-internal class TargetExposeDevToolsProtocolRequest : IChromiumRequest<TargetExposeDevToolsProtocolResponse>
+internal partial class TargetExposeDevToolsProtocolRequest : IChromiumRequest<TargetExposeDevToolsProtocolResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.exposeDevToolsProtocol";
@@ -14852,7 +14852,7 @@ public string BindingName { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetExposeDevToolsProtocolRequest"/>
 /// </summary>
-internal class TargetExposeDevToolsProtocolResponse : IChromiumResponse
+internal partial class TargetExposeDevToolsProtocolResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14862,7 +14862,7 @@ internal class TargetExposeDevToolsProtocolResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.createBrowserContext</c>
 /// </remarks>
-internal class TargetCreateBrowserContextRequest : IChromiumRequest<TargetCreateBrowserContextResponse>
+internal partial class TargetCreateBrowserContextRequest : IChromiumRequest<TargetCreateBrowserContextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.createBrowserContext";
@@ -14870,7 +14870,7 @@ public string Command { get; } = "Target.createBrowserContext";
 /// <summary>
 /// Response from <see cref="TargetCreateBrowserContextRequest"/>
 /// </summary>
-internal class TargetCreateBrowserContextResponse : IChromiumResponse
+internal partial class TargetCreateBrowserContextResponse: IChromiumResponse
 {
 /// <summary>
 /// The id of the context created.
@@ -14882,7 +14882,7 @@ public string BrowserContextId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.getBrowserContexts</c>
 /// </remarks>
-internal class TargetGetBrowserContextsRequest : IChromiumRequest<TargetGetBrowserContextsResponse>
+internal partial class TargetGetBrowserContextsRequest : IChromiumRequest<TargetGetBrowserContextsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.getBrowserContexts";
@@ -14890,7 +14890,7 @@ public string Command { get; } = "Target.getBrowserContexts";
 /// <summary>
 /// Response from <see cref="TargetGetBrowserContextsRequest"/>
 /// </summary>
-internal class TargetGetBrowserContextsResponse : IChromiumResponse
+internal partial class TargetGetBrowserContextsResponse: IChromiumResponse
 {
 /// <summary>
 /// An array of browser context ids.
@@ -14902,7 +14902,7 @@ public string[] BrowserContextIds { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.createTarget</c>
 /// </remarks>
-internal class TargetCreateTargetRequest : IChromiumRequest<TargetCreateTargetResponse>
+internal partial class TargetCreateTargetRequest : IChromiumRequest<TargetCreateTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.createTarget";
@@ -14939,7 +14939,7 @@ public bool? Background { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetCreateTargetRequest"/>
 /// </summary>
-internal class TargetCreateTargetResponse : IChromiumResponse
+internal partial class TargetCreateTargetResponse: IChromiumResponse
 {
 /// <summary>
 /// The id of the page opened.
@@ -14951,7 +14951,7 @@ public string TargetId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.detachFromTarget</c>
 /// </remarks>
-internal class TargetDetachFromTargetRequest : IChromiumRequest<TargetDetachFromTargetResponse>
+internal partial class TargetDetachFromTargetRequest : IChromiumRequest<TargetDetachFromTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.detachFromTarget";
@@ -14966,7 +14966,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetDetachFromTargetRequest"/>
 /// </summary>
-internal class TargetDetachFromTargetResponse : IChromiumResponse
+internal partial class TargetDetachFromTargetResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14976,7 +14976,7 @@ internal class TargetDetachFromTargetResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.disposeBrowserContext</c>
 /// </remarks>
-internal class TargetDisposeBrowserContextRequest : IChromiumRequest<TargetDisposeBrowserContextResponse>
+internal partial class TargetDisposeBrowserContextRequest : IChromiumRequest<TargetDisposeBrowserContextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.disposeBrowserContext";
@@ -14987,7 +14987,7 @@ public string BrowserContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetDisposeBrowserContextRequest"/>
 /// </summary>
-internal class TargetDisposeBrowserContextResponse : IChromiumResponse
+internal partial class TargetDisposeBrowserContextResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -14996,7 +14996,7 @@ internal class TargetDisposeBrowserContextResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.getTargetInfo</c>
 /// </remarks>
-internal class TargetGetTargetInfoRequest : IChromiumRequest<TargetGetTargetInfoResponse>
+internal partial class TargetGetTargetInfoRequest : IChromiumRequest<TargetGetTargetInfoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.getTargetInfo";
@@ -15007,7 +15007,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetGetTargetInfoRequest"/>
 /// </summary>
-internal class TargetGetTargetInfoResponse : IChromiumResponse
+internal partial class TargetGetTargetInfoResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -15019,7 +15019,7 @@ public TargetInfo TargetInfo { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.getTargets</c>
 /// </remarks>
-internal class TargetGetTargetsRequest : IChromiumRequest<TargetGetTargetsResponse>
+internal partial class TargetGetTargetsRequest : IChromiumRequest<TargetGetTargetsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.getTargets";
@@ -15027,7 +15027,7 @@ public string Command { get; } = "Target.getTargets";
 /// <summary>
 /// Response from <see cref="TargetGetTargetsRequest"/>
 /// </summary>
-internal class TargetGetTargetsResponse : IChromiumResponse
+internal partial class TargetGetTargetsResponse: IChromiumResponse
 {
 /// <summary>
 /// The list of targets.
@@ -15041,7 +15041,7 @@ public TargetInfo[] TargetInfos { get; set; }}
 /// <remarks>
 /// Will send the command <c>Target.sendMessageToTarget</c>
 /// </remarks>
-internal class TargetSendMessageToTargetRequest : IChromiumRequest<TargetSendMessageToTargetResponse>
+internal partial class TargetSendMessageToTargetRequest : IChromiumRequest<TargetSendMessageToTargetResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.sendMessageToTarget";
@@ -15060,7 +15060,7 @@ public string TargetId { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetSendMessageToTargetRequest"/>
 /// </summary>
-internal class TargetSendMessageToTargetResponse : IChromiumResponse
+internal partial class TargetSendMessageToTargetResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15071,7 +15071,7 @@ internal class TargetSendMessageToTargetResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.setAutoAttach</c>
 /// </remarks>
-internal class TargetSetAutoAttachRequest : IChromiumRequest<TargetSetAutoAttachResponse>
+internal partial class TargetSetAutoAttachRequest : IChromiumRequest<TargetSetAutoAttachResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.setAutoAttach";
@@ -15097,7 +15097,7 @@ public bool? WindowOpen { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetSetAutoAttachRequest"/>
 /// </summary>
-internal class TargetSetAutoAttachResponse : IChromiumResponse
+internal partial class TargetSetAutoAttachResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15107,7 +15107,7 @@ internal class TargetSetAutoAttachResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.setDiscoverTargets</c>
 /// </remarks>
-internal class TargetSetDiscoverTargetsRequest : IChromiumRequest<TargetSetDiscoverTargetsResponse>
+internal partial class TargetSetDiscoverTargetsRequest : IChromiumRequest<TargetSetDiscoverTargetsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.setDiscoverTargets";
@@ -15118,7 +15118,7 @@ public bool? Discover { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetSetDiscoverTargetsRequest"/>
 /// </summary>
-internal class TargetSetDiscoverTargetsResponse : IChromiumResponse
+internal partial class TargetSetDiscoverTargetsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15128,7 +15128,7 @@ internal class TargetSetDiscoverTargetsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Target.setRemoteLocations</c>
 /// </remarks>
-internal class TargetSetRemoteLocationsRequest : IChromiumRequest<TargetSetRemoteLocationsResponse>
+internal partial class TargetSetRemoteLocationsRequest : IChromiumRequest<TargetSetRemoteLocationsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.setRemoteLocations";
@@ -15139,7 +15139,7 @@ public RemoteLocation[] Locations { get; set; }}
 /// <summary>
 /// Response from <see cref="TargetSetRemoteLocationsRequest"/>
 /// </summary>
-internal class TargetSetRemoteLocationsResponse : IChromiumResponse
+internal partial class TargetSetRemoteLocationsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15148,7 +15148,7 @@ internal class TargetSetRemoteLocationsResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Target.attachedToTarget</c>
 /// </remarks>
-internal class TargetAttachedToTargetChromiumEvent : IChromiumEvent
+internal partial class TargetAttachedToTargetChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.attachedToTarget";
 /// <summary>
@@ -15170,7 +15170,7 @@ public bool? WaitingForDebugger { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Target.detachedFromTarget</c>
 /// </remarks>
-internal class TargetDetachedFromTargetChromiumEvent : IChromiumEvent
+internal partial class TargetDetachedFromTargetChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.detachedFromTarget";
 /// <summary>
@@ -15188,7 +15188,7 @@ public string TargetId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Target.receivedMessageFromTarget</c>
 /// </remarks>
-internal class TargetReceivedMessageFromTargetChromiumEvent : IChromiumEvent
+internal partial class TargetReceivedMessageFromTargetChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.receivedMessageFromTarget";
 /// <summary>
@@ -15209,7 +15209,7 @@ public string TargetId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Target.targetCreated</c>
 /// </remarks>
-internal class TargetTargetCreatedChromiumEvent : IChromiumEvent
+internal partial class TargetTargetCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetCreated";
 /// <summary>
@@ -15222,7 +15222,7 @@ public TargetInfo TargetInfo { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Target.targetDestroyed</c>
 /// </remarks>
-internal class TargetTargetDestroyedChromiumEvent : IChromiumEvent
+internal partial class TargetTargetDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetDestroyed";
 /// <summary>
@@ -15235,7 +15235,7 @@ public string TargetId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Target.targetCrashed</c>
 /// </remarks>
-internal class TargetTargetCrashedChromiumEvent : IChromiumEvent
+internal partial class TargetTargetCrashedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetCrashed";
 /// <summary>
@@ -15257,7 +15257,7 @@ public int? ErrorCode { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Target.targetInfoChanged</c>
 /// </remarks>
-internal class TargetTargetInfoChangedChromiumEvent : IChromiumEvent
+internal partial class TargetTargetInfoChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetInfoChanged";
 /// <summary>
@@ -15273,7 +15273,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Tethering
 /// <remarks>
 /// Will send the command <c>Tethering.bind</c>
 /// </remarks>
-internal class TetheringBindRequest : IChromiumRequest<TetheringBindResponse>
+internal partial class TetheringBindRequest : IChromiumRequest<TetheringBindResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tethering.bind";
@@ -15284,7 +15284,7 @@ public int? Port { get; set; }}
 /// <summary>
 /// Response from <see cref="TetheringBindRequest"/>
 /// </summary>
-internal class TetheringBindResponse : IChromiumResponse
+internal partial class TetheringBindResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15293,7 +15293,7 @@ internal class TetheringBindResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Tethering.unbind</c>
 /// </remarks>
-internal class TetheringUnbindRequest : IChromiumRequest<TetheringUnbindResponse>
+internal partial class TetheringUnbindRequest : IChromiumRequest<TetheringUnbindResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tethering.unbind";
@@ -15304,7 +15304,7 @@ public int? Port { get; set; }}
 /// <summary>
 /// Response from <see cref="TetheringUnbindRequest"/>
 /// </summary>
-internal class TetheringUnbindResponse : IChromiumResponse
+internal partial class TetheringUnbindResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15313,7 +15313,7 @@ internal class TetheringUnbindResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Tethering.accepted</c>
 /// </remarks>
-internal class TetheringAcceptedChromiumEvent : IChromiumEvent
+internal partial class TetheringAcceptedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Tethering.accepted";
 /// <summary>
@@ -15330,13 +15330,13 @@ namespace PlaywrightSharp.Chromium.Protocol.Tracing
 /// <summary>
 /// Configuration for memory dump. Used only when "memory-infra" category is enabled.
 /// </summary>
-internal class MemoryDumpConfig
+internal partial class MemoryDumpConfig
 {
 }
 /// <summary>
 /// 
 /// </summary>
-internal class TraceConfig
+internal partial class TraceConfig
 {
 /// <summary>
 /// Controls how the trace buffer stores data.
@@ -15391,7 +15391,7 @@ internal enum StreamCompression
 /// <remarks>
 /// Will send the command <c>Tracing.end</c>
 /// </remarks>
-internal class TracingEndRequest : IChromiumRequest<TracingEndResponse>
+internal partial class TracingEndRequest : IChromiumRequest<TracingEndResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tracing.end";
@@ -15399,7 +15399,7 @@ public string Command { get; } = "Tracing.end";
 /// <summary>
 /// Response from <see cref="TracingEndRequest"/>
 /// </summary>
-internal class TracingEndResponse : IChromiumResponse
+internal partial class TracingEndResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15408,7 +15408,7 @@ internal class TracingEndResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Tracing.getCategories</c>
 /// </remarks>
-internal class TracingGetCategoriesRequest : IChromiumRequest<TracingGetCategoriesResponse>
+internal partial class TracingGetCategoriesRequest : IChromiumRequest<TracingGetCategoriesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tracing.getCategories";
@@ -15416,7 +15416,7 @@ public string Command { get; } = "Tracing.getCategories";
 /// <summary>
 /// Response from <see cref="TracingGetCategoriesRequest"/>
 /// </summary>
-internal class TracingGetCategoriesResponse : IChromiumResponse
+internal partial class TracingGetCategoriesResponse: IChromiumResponse
 {
 /// <summary>
 /// A list of supported tracing categories.
@@ -15428,7 +15428,7 @@ public string[] Categories { get; set; }}
 /// <remarks>
 /// Will send the command <c>Tracing.recordClockSyncMarker</c>
 /// </remarks>
-internal class TracingRecordClockSyncMarkerRequest : IChromiumRequest<TracingRecordClockSyncMarkerResponse>
+internal partial class TracingRecordClockSyncMarkerRequest : IChromiumRequest<TracingRecordClockSyncMarkerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tracing.recordClockSyncMarker";
@@ -15439,7 +15439,7 @@ public string SyncId { get; set; }}
 /// <summary>
 /// Response from <see cref="TracingRecordClockSyncMarkerRequest"/>
 /// </summary>
-internal class TracingRecordClockSyncMarkerResponse : IChromiumResponse
+internal partial class TracingRecordClockSyncMarkerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15448,7 +15448,7 @@ internal class TracingRecordClockSyncMarkerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Tracing.requestMemoryDump</c>
 /// </remarks>
-internal class TracingRequestMemoryDumpRequest : IChromiumRequest<TracingRequestMemoryDumpResponse>
+internal partial class TracingRequestMemoryDumpRequest : IChromiumRequest<TracingRequestMemoryDumpResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tracing.requestMemoryDump";
@@ -15459,7 +15459,7 @@ public bool? Deterministic { get; set; }}
 /// <summary>
 /// Response from <see cref="TracingRequestMemoryDumpRequest"/>
 /// </summary>
-internal class TracingRequestMemoryDumpResponse : IChromiumResponse
+internal partial class TracingRequestMemoryDumpResponse: IChromiumResponse
 {
 /// <summary>
 /// GUID of the resulting global memory dump.
@@ -15475,7 +15475,7 @@ public bool? Success { get; set; }}
 /// <remarks>
 /// Will send the command <c>Tracing.start</c>
 /// </remarks>
-internal class TracingStartRequest : IChromiumRequest<TracingStartResponse>
+internal partial class TracingStartRequest : IChromiumRequest<TracingStartResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Tracing.start";
@@ -15513,7 +15513,7 @@ public TraceConfig TraceConfig { get; set; }}
 /// <summary>
 /// Response from <see cref="TracingStartRequest"/>
 /// </summary>
-internal class TracingStartResponse : IChromiumResponse
+internal partial class TracingStartResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15522,7 +15522,7 @@ internal class TracingStartResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Tracing.bufferUsage</c>
 /// </remarks>
-internal class TracingBufferUsageChromiumEvent : IChromiumEvent
+internal partial class TracingBufferUsageChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Tracing.bufferUsage";
 /// <summary>
@@ -15546,7 +15546,7 @@ public double? Value { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Tracing.dataCollected</c>
 /// </remarks>
-internal class TracingDataCollectedChromiumEvent : IChromiumEvent
+internal partial class TracingDataCollectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Tracing.dataCollected";
 /// <summary>
@@ -15560,7 +15560,7 @@ public object[] Value { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Tracing.tracingComplete</c>
 /// </remarks>
-internal class TracingTracingCompleteChromiumEvent : IChromiumEvent
+internal partial class TracingTracingCompleteChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Tracing.tracingComplete";
 /// <summary>
@@ -15595,7 +15595,7 @@ internal enum RequestStage
 /// <summary>
 /// 
 /// </summary>
-internal class RequestPattern
+internal partial class RequestPattern
 {
 /// <summary>
 /// Wildcards ('*' -&gt; zero or more, '?' -&gt; exactly one) are allowed. Escape character is
@@ -15613,7 +15613,7 @@ public RequestStage RequestStage { get; set; }}
 /// <summary>
 /// Response HTTP header entry
 /// </summary>
-internal class HeaderEntry
+internal partial class HeaderEntry
 {
 /// <summary>
 /// 
@@ -15626,7 +15626,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Authorization challenge for HTTP status code 401 or 407.
 /// </summary>
-internal class AuthChallenge
+internal partial class AuthChallenge
 {
 /// <summary>
 /// Source of the authentication challenge.
@@ -15647,7 +15647,7 @@ public string Realm { get; set; }}
 /// <summary>
 /// Response to an AuthChallenge.
 /// </summary>
-internal class AuthChallengeResponse
+internal partial class AuthChallengeResponse
 {
 /// <summary>
 /// The decision on what to do in response to the authorization challenge.  Default means
@@ -15671,7 +15671,7 @@ public string Password { get; set; }}
 /// <remarks>
 /// Will send the command <c>Fetch.disable</c>
 /// </remarks>
-internal class FetchDisableRequest : IChromiumRequest<FetchDisableResponse>
+internal partial class FetchDisableRequest : IChromiumRequest<FetchDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.disable";
@@ -15679,7 +15679,7 @@ public string Command { get; } = "Fetch.disable";
 /// <summary>
 /// Response from <see cref="FetchDisableRequest"/>
 /// </summary>
-internal class FetchDisableResponse : IChromiumResponse
+internal partial class FetchDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15689,7 +15689,7 @@ internal class FetchDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Fetch.enable</c>
 /// </remarks>
-internal class FetchEnableRequest : IChromiumRequest<FetchEnableResponse>
+internal partial class FetchEnableRequest : IChromiumRequest<FetchEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.enable";
@@ -15707,7 +15707,7 @@ public bool? HandleAuthRequests { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchEnableRequest"/>
 /// </summary>
-internal class FetchEnableResponse : IChromiumResponse
+internal partial class FetchEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15716,7 +15716,7 @@ internal class FetchEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Fetch.failRequest</c>
 /// </remarks>
-internal class FetchFailRequestRequest : IChromiumRequest<FetchFailRequestResponse>
+internal partial class FetchFailRequestRequest : IChromiumRequest<FetchFailRequestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.failRequest";
@@ -15731,7 +15731,7 @@ public Network.ErrorReason ErrorReason { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchFailRequestRequest"/>
 /// </summary>
-internal class FetchFailRequestResponse : IChromiumResponse
+internal partial class FetchFailRequestResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15740,7 +15740,7 @@ internal class FetchFailRequestResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Fetch.fulfillRequest</c>
 /// </remarks>
-internal class FetchFulfillRequestRequest : IChromiumRequest<FetchFulfillRequestResponse>
+internal partial class FetchFulfillRequestRequest : IChromiumRequest<FetchFulfillRequestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.fulfillRequest";
@@ -15775,7 +15775,7 @@ public string ResponsePhrase { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchFulfillRequestRequest"/>
 /// </summary>
-internal class FetchFulfillRequestResponse : IChromiumResponse
+internal partial class FetchFulfillRequestResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15784,7 +15784,7 @@ internal class FetchFulfillRequestResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Fetch.continueRequest</c>
 /// </remarks>
-internal class FetchContinueRequestRequest : IChromiumRequest<FetchContinueRequestResponse>
+internal partial class FetchContinueRequestRequest : IChromiumRequest<FetchContinueRequestResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.continueRequest";
@@ -15811,7 +15811,7 @@ public HeaderEntry[] Headers { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchContinueRequestRequest"/>
 /// </summary>
-internal class FetchContinueRequestResponse : IChromiumResponse
+internal partial class FetchContinueRequestResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15820,7 +15820,7 @@ internal class FetchContinueRequestResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Fetch.continueWithAuth</c>
 /// </remarks>
-internal class FetchContinueWithAuthRequest : IChromiumRequest<FetchContinueWithAuthResponse>
+internal partial class FetchContinueWithAuthRequest : IChromiumRequest<FetchContinueWithAuthResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.continueWithAuth";
@@ -15835,7 +15835,7 @@ public AuthChallengeResponse AuthChallengeResponse { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchContinueWithAuthRequest"/>
 /// </summary>
-internal class FetchContinueWithAuthResponse : IChromiumResponse
+internal partial class FetchContinueWithAuthResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -15849,7 +15849,7 @@ internal class FetchContinueWithAuthResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Fetch.getResponseBody</c>
 /// </remarks>
-internal class FetchGetResponseBodyRequest : IChromiumRequest<FetchGetResponseBodyResponse>
+internal partial class FetchGetResponseBodyRequest : IChromiumRequest<FetchGetResponseBodyResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.getResponseBody";
@@ -15860,7 +15860,7 @@ public string RequestId { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchGetResponseBodyRequest"/>
 /// </summary>
-internal class FetchGetResponseBodyResponse : IChromiumResponse
+internal partial class FetchGetResponseBodyResponse: IChromiumResponse
 {
 /// <summary>
 /// Response body.
@@ -15885,7 +15885,7 @@ public bool? Base64Encoded { get; set; }}
 /// <remarks>
 /// Will send the command <c>Fetch.takeResponseBodyAsStream</c>
 /// </remarks>
-internal class FetchTakeResponseBodyAsStreamRequest : IChromiumRequest<FetchTakeResponseBodyAsStreamResponse>
+internal partial class FetchTakeResponseBodyAsStreamRequest : IChromiumRequest<FetchTakeResponseBodyAsStreamResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.takeResponseBodyAsStream";
@@ -15896,7 +15896,7 @@ public string RequestId { get; set; }}
 /// <summary>
 /// Response from <see cref="FetchTakeResponseBodyAsStreamRequest"/>
 /// </summary>
-internal class FetchTakeResponseBodyAsStreamResponse : IChromiumResponse
+internal partial class FetchTakeResponseBodyAsStreamResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -15913,7 +15913,7 @@ public string Stream { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Fetch.requestPaused</c>
 /// </remarks>
-internal class FetchRequestPausedChromiumEvent : IChromiumEvent
+internal partial class FetchRequestPausedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Fetch.requestPaused";
 /// <summary>
@@ -15956,7 +15956,7 @@ public string NetworkId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Fetch.authRequired</c>
 /// </remarks>
-internal class FetchAuthRequiredChromiumEvent : IChromiumEvent
+internal partial class FetchAuthRequiredChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Fetch.authRequired";
 /// <summary>
@@ -16024,7 +16024,7 @@ internal enum AutomationRate
 /// <summary>
 /// Fields in AudioContext that change in real-time.
 /// </summary>
-internal class ContextRealtimeData
+internal partial class ContextRealtimeData
 {
 /// <summary>
 /// The current context time in second in BaseAudioContext.
@@ -16047,7 +16047,7 @@ public double? CallbackIntervalVariance { get; set; }}
 /// <summary>
 /// Protocol object for BaseAudioContext
 /// </summary>
-internal class BaseAudioContext
+internal partial class BaseAudioContext
 {
 /// <summary>
 /// 
@@ -16080,7 +16080,7 @@ public double? SampleRate { get; set; }}
 /// <summary>
 /// Protocol object for AudioListner
 /// </summary>
-internal class AudioListener
+internal partial class AudioListener
 {
 /// <summary>
 /// 
@@ -16093,7 +16093,7 @@ public string ContextId { get; set; }}
 /// <summary>
 /// Protocol object for AudioNode
 /// </summary>
-internal class AudioNode
+internal partial class AudioNode
 {
 /// <summary>
 /// 
@@ -16130,7 +16130,7 @@ public ChannelInterpretation ChannelInterpretation { get; set; }}
 /// <summary>
 /// Protocol object for AudioParam
 /// </summary>
-internal class AudioParam
+internal partial class AudioParam
 {
 /// <summary>
 /// 
@@ -16170,7 +16170,7 @@ public double? MaxValue { get; set; }}
 /// <remarks>
 /// Will send the command <c>WebAudio.enable</c>
 /// </remarks>
-internal class WebAudioEnableRequest : IChromiumRequest<WebAudioEnableResponse>
+internal partial class WebAudioEnableRequest : IChromiumRequest<WebAudioEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAudio.enable";
@@ -16178,7 +16178,7 @@ public string Command { get; } = "WebAudio.enable";
 /// <summary>
 /// Response from <see cref="WebAudioEnableRequest"/>
 /// </summary>
-internal class WebAudioEnableResponse : IChromiumResponse
+internal partial class WebAudioEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16187,7 +16187,7 @@ internal class WebAudioEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAudio.disable</c>
 /// </remarks>
-internal class WebAudioDisableRequest : IChromiumRequest<WebAudioDisableResponse>
+internal partial class WebAudioDisableRequest : IChromiumRequest<WebAudioDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAudio.disable";
@@ -16195,7 +16195,7 @@ public string Command { get; } = "WebAudio.disable";
 /// <summary>
 /// Response from <see cref="WebAudioDisableRequest"/>
 /// </summary>
-internal class WebAudioDisableResponse : IChromiumResponse
+internal partial class WebAudioDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16204,7 +16204,7 @@ internal class WebAudioDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAudio.getRealtimeData</c>
 /// </remarks>
-internal class WebAudioGetRealtimeDataRequest : IChromiumRequest<WebAudioGetRealtimeDataResponse>
+internal partial class WebAudioGetRealtimeDataRequest : IChromiumRequest<WebAudioGetRealtimeDataResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAudio.getRealtimeData";
@@ -16215,7 +16215,7 @@ public string ContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAudioGetRealtimeDataRequest"/>
 /// </summary>
-internal class WebAudioGetRealtimeDataResponse : IChromiumResponse
+internal partial class WebAudioGetRealtimeDataResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -16227,7 +16227,7 @@ public ContextRealtimeData RealtimeData { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.contextCreated</c>
 /// </remarks>
-internal class WebAudioContextCreatedChromiumEvent : IChromiumEvent
+internal partial class WebAudioContextCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.contextCreated";
 /// <summary>
@@ -16240,7 +16240,7 @@ public BaseAudioContext Context { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.contextWillBeDestroyed</c>
 /// </remarks>
-internal class WebAudioContextWillBeDestroyedChromiumEvent : IChromiumEvent
+internal partial class WebAudioContextWillBeDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.contextWillBeDestroyed";
 /// <summary>
@@ -16253,7 +16253,7 @@ public string ContextId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.contextChanged</c>
 /// </remarks>
-internal class WebAudioContextChangedChromiumEvent : IChromiumEvent
+internal partial class WebAudioContextChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.contextChanged";
 /// <summary>
@@ -16266,7 +16266,7 @@ public BaseAudioContext Context { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.audioListenerCreated</c>
 /// </remarks>
-internal class WebAudioAudioListenerCreatedChromiumEvent : IChromiumEvent
+internal partial class WebAudioAudioListenerCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioListenerCreated";
 /// <summary>
@@ -16279,7 +16279,7 @@ public AudioListener Listener { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.audioListenerWillBeDestroyed</c>
 /// </remarks>
-internal class WebAudioAudioListenerWillBeDestroyedChromiumEvent : IChromiumEvent
+internal partial class WebAudioAudioListenerWillBeDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioListenerWillBeDestroyed";
 /// <summary>
@@ -16296,7 +16296,7 @@ public string ListenerId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.audioNodeCreated</c>
 /// </remarks>
-internal class WebAudioAudioNodeCreatedChromiumEvent : IChromiumEvent
+internal partial class WebAudioAudioNodeCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioNodeCreated";
 /// <summary>
@@ -16309,7 +16309,7 @@ public AudioNode Node { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.audioNodeWillBeDestroyed</c>
 /// </remarks>
-internal class WebAudioAudioNodeWillBeDestroyedChromiumEvent : IChromiumEvent
+internal partial class WebAudioAudioNodeWillBeDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioNodeWillBeDestroyed";
 /// <summary>
@@ -16326,7 +16326,7 @@ public string NodeId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.audioParamCreated</c>
 /// </remarks>
-internal class WebAudioAudioParamCreatedChromiumEvent : IChromiumEvent
+internal partial class WebAudioAudioParamCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioParamCreated";
 /// <summary>
@@ -16339,7 +16339,7 @@ public AudioParam Param { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.audioParamWillBeDestroyed</c>
 /// </remarks>
-internal class WebAudioAudioParamWillBeDestroyedChromiumEvent : IChromiumEvent
+internal partial class WebAudioAudioParamWillBeDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioParamWillBeDestroyed";
 /// <summary>
@@ -16360,7 +16360,7 @@ public string ParamId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.nodesConnected</c>
 /// </remarks>
-internal class WebAudioNodesConnectedChromiumEvent : IChromiumEvent
+internal partial class WebAudioNodesConnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodesConnected";
 /// <summary>
@@ -16389,7 +16389,7 @@ public double? DestinationInputIndex { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.nodesDisconnected</c>
 /// </remarks>
-internal class WebAudioNodesDisconnectedChromiumEvent : IChromiumEvent
+internal partial class WebAudioNodesDisconnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodesDisconnected";
 /// <summary>
@@ -16418,7 +16418,7 @@ public double? DestinationInputIndex { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.nodeParamConnected</c>
 /// </remarks>
-internal class WebAudioNodeParamConnectedChromiumEvent : IChromiumEvent
+internal partial class WebAudioNodeParamConnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodeParamConnected";
 /// <summary>
@@ -16443,7 +16443,7 @@ public double? SourceOutputIndex { get; set; }}
 /// <remarks>
 /// Matches on the event <c>WebAudio.nodeParamDisconnected</c>
 /// </remarks>
-internal class WebAudioNodeParamDisconnectedChromiumEvent : IChromiumEvent
+internal partial class WebAudioNodeParamDisconnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodeParamDisconnected";
 /// <summary>
@@ -16485,7 +16485,7 @@ internal enum AuthenticatorTransport
 /// <summary>
 /// 
 /// </summary>
-internal class VirtualAuthenticatorOptions
+internal partial class VirtualAuthenticatorOptions
 {
 /// <summary>
 /// 
@@ -16516,7 +16516,7 @@ public bool? IsUserVerified { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class Credential
+internal partial class Credential
 {
 /// <summary>
 /// 
@@ -16553,7 +16553,7 @@ public int? SignCount { get; set; }}
 /// <remarks>
 /// Will send the command <c>WebAuthn.enable</c>
 /// </remarks>
-internal class WebAuthnEnableRequest : IChromiumRequest<WebAuthnEnableResponse>
+internal partial class WebAuthnEnableRequest : IChromiumRequest<WebAuthnEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.enable";
@@ -16561,7 +16561,7 @@ public string Command { get; } = "WebAuthn.enable";
 /// <summary>
 /// Response from <see cref="WebAuthnEnableRequest"/>
 /// </summary>
-internal class WebAuthnEnableResponse : IChromiumResponse
+internal partial class WebAuthnEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16570,7 +16570,7 @@ internal class WebAuthnEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAuthn.disable</c>
 /// </remarks>
-internal class WebAuthnDisableRequest : IChromiumRequest<WebAuthnDisableResponse>
+internal partial class WebAuthnDisableRequest : IChromiumRequest<WebAuthnDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.disable";
@@ -16578,7 +16578,7 @@ public string Command { get; } = "WebAuthn.disable";
 /// <summary>
 /// Response from <see cref="WebAuthnDisableRequest"/>
 /// </summary>
-internal class WebAuthnDisableResponse : IChromiumResponse
+internal partial class WebAuthnDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16587,7 +16587,7 @@ internal class WebAuthnDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAuthn.addVirtualAuthenticator</c>
 /// </remarks>
-internal class WebAuthnAddVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnAddVirtualAuthenticatorResponse>
+internal partial class WebAuthnAddVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnAddVirtualAuthenticatorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.addVirtualAuthenticator";
@@ -16598,7 +16598,7 @@ public VirtualAuthenticatorOptions Options { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnAddVirtualAuthenticatorRequest"/>
 /// </summary>
-internal class WebAuthnAddVirtualAuthenticatorResponse : IChromiumResponse
+internal partial class WebAuthnAddVirtualAuthenticatorResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -16610,7 +16610,7 @@ public string AuthenticatorId { get; set; }}
 /// <remarks>
 /// Will send the command <c>WebAuthn.removeVirtualAuthenticator</c>
 /// </remarks>
-internal class WebAuthnRemoveVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnRemoveVirtualAuthenticatorResponse>
+internal partial class WebAuthnRemoveVirtualAuthenticatorRequest : IChromiumRequest<WebAuthnRemoveVirtualAuthenticatorResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.removeVirtualAuthenticator";
@@ -16621,7 +16621,7 @@ public string AuthenticatorId { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnRemoveVirtualAuthenticatorRequest"/>
 /// </summary>
-internal class WebAuthnRemoveVirtualAuthenticatorResponse : IChromiumResponse
+internal partial class WebAuthnRemoveVirtualAuthenticatorResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16630,7 +16630,7 @@ internal class WebAuthnRemoveVirtualAuthenticatorResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAuthn.addCredential</c>
 /// </remarks>
-internal class WebAuthnAddCredentialRequest : IChromiumRequest<WebAuthnAddCredentialResponse>
+internal partial class WebAuthnAddCredentialRequest : IChromiumRequest<WebAuthnAddCredentialResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.addCredential";
@@ -16645,7 +16645,7 @@ public Credential Credential { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnAddCredentialRequest"/>
 /// </summary>
-internal class WebAuthnAddCredentialResponse : IChromiumResponse
+internal partial class WebAuthnAddCredentialResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16655,7 +16655,7 @@ internal class WebAuthnAddCredentialResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAuthn.getCredential</c>
 /// </remarks>
-internal class WebAuthnGetCredentialRequest : IChromiumRequest<WebAuthnGetCredentialResponse>
+internal partial class WebAuthnGetCredentialRequest : IChromiumRequest<WebAuthnGetCredentialResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.getCredential";
@@ -16670,7 +16670,7 @@ public byte[] CredentialId { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnGetCredentialRequest"/>
 /// </summary>
-internal class WebAuthnGetCredentialResponse : IChromiumResponse
+internal partial class WebAuthnGetCredentialResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -16682,7 +16682,7 @@ public Credential Credential { get; set; }}
 /// <remarks>
 /// Will send the command <c>WebAuthn.getCredentials</c>
 /// </remarks>
-internal class WebAuthnGetCredentialsRequest : IChromiumRequest<WebAuthnGetCredentialsResponse>
+internal partial class WebAuthnGetCredentialsRequest : IChromiumRequest<WebAuthnGetCredentialsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.getCredentials";
@@ -16693,7 +16693,7 @@ public string AuthenticatorId { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnGetCredentialsRequest"/>
 /// </summary>
-internal class WebAuthnGetCredentialsResponse : IChromiumResponse
+internal partial class WebAuthnGetCredentialsResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -16705,7 +16705,7 @@ public Credential[] Credentials { get; set; }}
 /// <remarks>
 /// Will send the command <c>WebAuthn.removeCredential</c>
 /// </remarks>
-internal class WebAuthnRemoveCredentialRequest : IChromiumRequest<WebAuthnRemoveCredentialResponse>
+internal partial class WebAuthnRemoveCredentialRequest : IChromiumRequest<WebAuthnRemoveCredentialResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.removeCredential";
@@ -16720,7 +16720,7 @@ public byte[] CredentialId { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnRemoveCredentialRequest"/>
 /// </summary>
-internal class WebAuthnRemoveCredentialResponse : IChromiumResponse
+internal partial class WebAuthnRemoveCredentialResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16729,7 +16729,7 @@ internal class WebAuthnRemoveCredentialResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAuthn.clearCredentials</c>
 /// </remarks>
-internal class WebAuthnClearCredentialsRequest : IChromiumRequest<WebAuthnClearCredentialsResponse>
+internal partial class WebAuthnClearCredentialsRequest : IChromiumRequest<WebAuthnClearCredentialsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.clearCredentials";
@@ -16740,7 +16740,7 @@ public string AuthenticatorId { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnClearCredentialsRequest"/>
 /// </summary>
-internal class WebAuthnClearCredentialsResponse : IChromiumResponse
+internal partial class WebAuthnClearCredentialsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16750,7 +16750,7 @@ internal class WebAuthnClearCredentialsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>WebAuthn.setUserVerified</c>
 /// </remarks>
-internal class WebAuthnSetUserVerifiedRequest : IChromiumRequest<WebAuthnSetUserVerifiedResponse>
+internal partial class WebAuthnSetUserVerifiedRequest : IChromiumRequest<WebAuthnSetUserVerifiedResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.setUserVerified";
@@ -16765,7 +16765,7 @@ public bool? IsUserVerified { get; set; }}
 /// <summary>
 /// Response from <see cref="WebAuthnSetUserVerifiedRequest"/>
 /// </summary>
-internal class WebAuthnSetUserVerifiedResponse : IChromiumResponse
+internal partial class WebAuthnSetUserVerifiedResponse: IChromiumResponse
 {
 }
 }
@@ -16774,7 +16774,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
 /// <summary>
 /// Player Property type
 /// </summary>
-internal class PlayerProperty
+internal partial class PlayerProperty
 {
 /// <summary>
 /// 
@@ -16795,7 +16795,7 @@ internal enum PlayerEventType
 /// <summary>
 /// 
 /// </summary>
-internal class PlayerEvent
+internal partial class PlayerEvent
 {
 /// <summary>
 /// 
@@ -16820,7 +16820,7 @@ public string Value { get; set; }}
 /// <remarks>
 /// Will send the command <c>Media.enable</c>
 /// </remarks>
-internal class MediaEnableRequest : IChromiumRequest<MediaEnableResponse>
+internal partial class MediaEnableRequest : IChromiumRequest<MediaEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Media.enable";
@@ -16828,7 +16828,7 @@ public string Command { get; } = "Media.enable";
 /// <summary>
 /// Response from <see cref="MediaEnableRequest"/>
 /// </summary>
-internal class MediaEnableResponse : IChromiumResponse
+internal partial class MediaEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16837,7 +16837,7 @@ internal class MediaEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Media.disable</c>
 /// </remarks>
-internal class MediaDisableRequest : IChromiumRequest<MediaDisableResponse>
+internal partial class MediaDisableRequest : IChromiumRequest<MediaDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Media.disable";
@@ -16845,7 +16845,7 @@ public string Command { get; } = "Media.disable";
 /// <summary>
 /// Response from <see cref="MediaDisableRequest"/>
 /// </summary>
-internal class MediaDisableResponse : IChromiumResponse
+internal partial class MediaDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16855,7 +16855,7 @@ internal class MediaDisableResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Media.playerPropertiesChanged</c>
 /// </remarks>
-internal class MediaPlayerPropertiesChangedChromiumEvent : IChromiumEvent
+internal partial class MediaPlayerPropertiesChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Media.playerPropertiesChanged";
 /// <summary>
@@ -16873,7 +16873,7 @@ public PlayerProperty[] Properties { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Media.playerEventsAdded</c>
 /// </remarks>
-internal class MediaPlayerEventsAddedChromiumEvent : IChromiumEvent
+internal partial class MediaPlayerEventsAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Media.playerEventsAdded";
 /// <summary>
@@ -16892,7 +16892,7 @@ public PlayerEvent[] Events { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Media.playersCreated</c>
 /// </remarks>
-internal class MediaPlayersCreatedChromiumEvent : IChromiumEvent
+internal partial class MediaPlayersCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Media.playersCreated";
 /// <summary>
@@ -16905,7 +16905,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Console
 /// <summary>
 /// Console message.
 /// </summary>
-internal class ConsoleMessage
+internal partial class ConsoleMessage
 {
 /// <summary>
 /// Message source.
@@ -16937,7 +16937,7 @@ public int? Column { get; set; }}
 /// <remarks>
 /// Will send the command <c>Console.clearMessages</c>
 /// </remarks>
-internal class ConsoleClearMessagesRequest : IChromiumRequest<ConsoleClearMessagesResponse>
+internal partial class ConsoleClearMessagesRequest : IChromiumRequest<ConsoleClearMessagesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Console.clearMessages";
@@ -16945,7 +16945,7 @@ public string Command { get; } = "Console.clearMessages";
 /// <summary>
 /// Response from <see cref="ConsoleClearMessagesRequest"/>
 /// </summary>
-internal class ConsoleClearMessagesResponse : IChromiumResponse
+internal partial class ConsoleClearMessagesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16954,7 +16954,7 @@ internal class ConsoleClearMessagesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Console.disable</c>
 /// </remarks>
-internal class ConsoleDisableRequest : IChromiumRequest<ConsoleDisableResponse>
+internal partial class ConsoleDisableRequest : IChromiumRequest<ConsoleDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Console.disable";
@@ -16962,7 +16962,7 @@ public string Command { get; } = "Console.disable";
 /// <summary>
 /// Response from <see cref="ConsoleDisableRequest"/>
 /// </summary>
-internal class ConsoleDisableResponse : IChromiumResponse
+internal partial class ConsoleDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16972,7 +16972,7 @@ internal class ConsoleDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Console.enable</c>
 /// </remarks>
-internal class ConsoleEnableRequest : IChromiumRequest<ConsoleEnableResponse>
+internal partial class ConsoleEnableRequest : IChromiumRequest<ConsoleEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Console.enable";
@@ -16980,7 +16980,7 @@ public string Command { get; } = "Console.enable";
 /// <summary>
 /// Response from <see cref="ConsoleEnableRequest"/>
 /// </summary>
-internal class ConsoleEnableResponse : IChromiumResponse
+internal partial class ConsoleEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -16989,7 +16989,7 @@ internal class ConsoleEnableResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Console.messageAdded</c>
 /// </remarks>
-internal class ConsoleMessageAddedChromiumEvent : IChromiumEvent
+internal partial class ConsoleMessageAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Console.messageAdded";
 /// <summary>
@@ -17002,7 +17002,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Debugger
 /// <summary>
 /// Location in the source code.
 /// </summary>
-internal class Location
+internal partial class Location
 {
 /// <summary>
 /// Script identifier as reported in the `Debugger.scriptParsed`.
@@ -17019,7 +17019,7 @@ public int? ColumnNumber { get; set; }}
 /// <summary>
 /// Location in the source code.
 /// </summary>
-internal class ScriptPosition
+internal partial class ScriptPosition
 {
 /// <summary>
 /// 
@@ -17032,7 +17032,7 @@ public int? ColumnNumber { get; set; }}
 /// <summary>
 /// JavaScript call frame. Array of call frames form the call stack.
 /// </summary>
-internal class CallFrame
+internal partial class CallFrame
 {
 /// <summary>
 /// Call frame identifier. This identifier is only valid while the virtual machine is paused.
@@ -17069,7 +17069,7 @@ public Runtime.RemoteObject ReturnValue { get; set; }}
 /// <summary>
 /// Scope description.
 /// </summary>
-internal class Scope
+internal partial class Scope
 {
 /// <summary>
 /// Scope type.
@@ -17096,7 +17096,7 @@ public Location EndLocation { get; set; }}
 /// <summary>
 /// Search match for resource.
 /// </summary>
-internal class SearchMatch
+internal partial class SearchMatch
 {
 /// <summary>
 /// Line number in resource content.
@@ -17109,7 +17109,7 @@ public string LineContent { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class BreakLocation
+internal partial class BreakLocation
 {
 /// <summary>
 /// Script identifier as reported in the `Debugger.scriptParsed`.
@@ -17133,7 +17133,7 @@ public string Type { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.continueToLocation</c>
 /// </remarks>
-internal class DebuggerContinueToLocationRequest : IChromiumRequest<DebuggerContinueToLocationResponse>
+internal partial class DebuggerContinueToLocationRequest : IChromiumRequest<DebuggerContinueToLocationResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.continueToLocation";
@@ -17148,7 +17148,7 @@ public string TargetCallFrames { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerContinueToLocationRequest"/>
 /// </summary>
-internal class DebuggerContinueToLocationResponse : IChromiumResponse
+internal partial class DebuggerContinueToLocationResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17157,7 +17157,7 @@ internal class DebuggerContinueToLocationResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.disable</c>
 /// </remarks>
-internal class DebuggerDisableRequest : IChromiumRequest<DebuggerDisableResponse>
+internal partial class DebuggerDisableRequest : IChromiumRequest<DebuggerDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.disable";
@@ -17165,7 +17165,7 @@ public string Command { get; } = "Debugger.disable";
 /// <summary>
 /// Response from <see cref="DebuggerDisableRequest"/>
 /// </summary>
-internal class DebuggerDisableResponse : IChromiumResponse
+internal partial class DebuggerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17175,7 +17175,7 @@ internal class DebuggerDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.enable</c>
 /// </remarks>
-internal class DebuggerEnableRequest : IChromiumRequest<DebuggerEnableResponse>
+internal partial class DebuggerEnableRequest : IChromiumRequest<DebuggerEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.enable";
@@ -17187,7 +17187,7 @@ public double? MaxScriptsCacheSize { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerEnableRequest"/>
 /// </summary>
-internal class DebuggerEnableResponse : IChromiumResponse
+internal partial class DebuggerEnableResponse: IChromiumResponse
 {
 /// <summary>
 /// Unique identifier of the debugger.
@@ -17199,7 +17199,7 @@ public string DebuggerId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.evaluateOnCallFrame</c>
 /// </remarks>
-internal class DebuggerEvaluateOnCallFrameRequest : IChromiumRequest<DebuggerEvaluateOnCallFrameResponse>
+internal partial class DebuggerEvaluateOnCallFrameRequest : IChromiumRequest<DebuggerEvaluateOnCallFrameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.evaluateOnCallFrame";
@@ -17245,7 +17245,7 @@ public double? Timeout { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
 /// </summary>
-internal class DebuggerEvaluateOnCallFrameResponse : IChromiumResponse
+internal partial class DebuggerEvaluateOnCallFrameResponse: IChromiumResponse
 {
 /// <summary>
 /// Object wrapper for the evaluation result.
@@ -17262,7 +17262,7 @@ public Runtime.ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.getPossibleBreakpoints</c>
 /// </remarks>
-internal class DebuggerGetPossibleBreakpointsRequest : IChromiumRequest<DebuggerGetPossibleBreakpointsResponse>
+internal partial class DebuggerGetPossibleBreakpointsRequest : IChromiumRequest<DebuggerGetPossibleBreakpointsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.getPossibleBreakpoints";
@@ -17282,7 +17282,7 @@ public bool? RestrictToFunction { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerGetPossibleBreakpointsRequest"/>
 /// </summary>
-internal class DebuggerGetPossibleBreakpointsResponse : IChromiumResponse
+internal partial class DebuggerGetPossibleBreakpointsResponse: IChromiumResponse
 {
 /// <summary>
 /// List of the possible breakpoint locations.
@@ -17294,7 +17294,7 @@ public BreakLocation[] Locations { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.getScriptSource</c>
 /// </remarks>
-internal class DebuggerGetScriptSourceRequest : IChromiumRequest<DebuggerGetScriptSourceResponse>
+internal partial class DebuggerGetScriptSourceRequest : IChromiumRequest<DebuggerGetScriptSourceResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.getScriptSource";
@@ -17305,7 +17305,7 @@ public string ScriptId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerGetScriptSourceRequest"/>
 /// </summary>
-internal class DebuggerGetScriptSourceResponse : IChromiumResponse
+internal partial class DebuggerGetScriptSourceResponse: IChromiumResponse
 {
 /// <summary>
 /// Script source (empty in case of Wasm bytecode).
@@ -17321,7 +17321,7 @@ public byte[] Bytecode { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.getWasmBytecode</c>
 /// </remarks>
-internal class DebuggerGetWasmBytecodeRequest : IChromiumRequest<DebuggerGetWasmBytecodeResponse>
+internal partial class DebuggerGetWasmBytecodeRequest : IChromiumRequest<DebuggerGetWasmBytecodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.getWasmBytecode";
@@ -17332,7 +17332,7 @@ public string ScriptId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerGetWasmBytecodeRequest"/>
 /// </summary>
-internal class DebuggerGetWasmBytecodeResponse : IChromiumResponse
+internal partial class DebuggerGetWasmBytecodeResponse: IChromiumResponse
 {
 /// <summary>
 /// Script source.
@@ -17344,7 +17344,7 @@ public byte[] Bytecode { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.getStackTrace</c>
 /// </remarks>
-internal class DebuggerGetStackTraceRequest : IChromiumRequest<DebuggerGetStackTraceResponse>
+internal partial class DebuggerGetStackTraceRequest : IChromiumRequest<DebuggerGetStackTraceResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.getStackTrace";
@@ -17355,7 +17355,7 @@ public Runtime.StackTraceId StackTraceId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerGetStackTraceRequest"/>
 /// </summary>
-internal class DebuggerGetStackTraceResponse : IChromiumResponse
+internal partial class DebuggerGetStackTraceResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -17367,7 +17367,7 @@ public Runtime.StackTrace StackTrace { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.pause</c>
 /// </remarks>
-internal class DebuggerPauseRequest : IChromiumRequest<DebuggerPauseResponse>
+internal partial class DebuggerPauseRequest : IChromiumRequest<DebuggerPauseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.pause";
@@ -17375,7 +17375,7 @@ public string Command { get; } = "Debugger.pause";
 /// <summary>
 /// Response from <see cref="DebuggerPauseRequest"/>
 /// </summary>
-internal class DebuggerPauseResponse : IChromiumResponse
+internal partial class DebuggerPauseResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17384,7 +17384,7 @@ internal class DebuggerPauseResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.pauseOnAsyncCall</c>
 /// </remarks>
-internal class DebuggerPauseOnAsyncCallRequest : IChromiumRequest<DebuggerPauseOnAsyncCallResponse>
+internal partial class DebuggerPauseOnAsyncCallRequest : IChromiumRequest<DebuggerPauseOnAsyncCallResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.pauseOnAsyncCall";
@@ -17395,7 +17395,7 @@ public Runtime.StackTraceId ParentStackTraceId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerPauseOnAsyncCallRequest"/>
 /// </summary>
-internal class DebuggerPauseOnAsyncCallResponse : IChromiumResponse
+internal partial class DebuggerPauseOnAsyncCallResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17404,7 +17404,7 @@ internal class DebuggerPauseOnAsyncCallResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.removeBreakpoint</c>
 /// </remarks>
-internal class DebuggerRemoveBreakpointRequest : IChromiumRequest<DebuggerRemoveBreakpointResponse>
+internal partial class DebuggerRemoveBreakpointRequest : IChromiumRequest<DebuggerRemoveBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.removeBreakpoint";
@@ -17415,7 +17415,7 @@ public string BreakpointId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerRemoveBreakpointRequest"/>
 /// </summary>
-internal class DebuggerRemoveBreakpointResponse : IChromiumResponse
+internal partial class DebuggerRemoveBreakpointResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17424,7 +17424,7 @@ internal class DebuggerRemoveBreakpointResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.restartFrame</c>
 /// </remarks>
-internal class DebuggerRestartFrameRequest : IChromiumRequest<DebuggerRestartFrameResponse>
+internal partial class DebuggerRestartFrameRequest : IChromiumRequest<DebuggerRestartFrameResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.restartFrame";
@@ -17435,7 +17435,7 @@ public string CallFrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerRestartFrameRequest"/>
 /// </summary>
-internal class DebuggerRestartFrameResponse : IChromiumResponse
+internal partial class DebuggerRestartFrameResponse: IChromiumResponse
 {
 /// <summary>
 /// New stack trace.
@@ -17455,7 +17455,7 @@ public Runtime.StackTraceId AsyncStackTraceId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.resume</c>
 /// </remarks>
-internal class DebuggerResumeRequest : IChromiumRequest<DebuggerResumeResponse>
+internal partial class DebuggerResumeRequest : IChromiumRequest<DebuggerResumeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.resume";
@@ -17463,7 +17463,7 @@ public string Command { get; } = "Debugger.resume";
 /// <summary>
 /// Response from <see cref="DebuggerResumeRequest"/>
 /// </summary>
-internal class DebuggerResumeResponse : IChromiumResponse
+internal partial class DebuggerResumeResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17472,7 +17472,7 @@ internal class DebuggerResumeResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.searchInContent</c>
 /// </remarks>
-internal class DebuggerSearchInContentRequest : IChromiumRequest<DebuggerSearchInContentResponse>
+internal partial class DebuggerSearchInContentRequest : IChromiumRequest<DebuggerSearchInContentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.searchInContent";
@@ -17495,7 +17495,7 @@ public bool? IsRegex { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSearchInContentRequest"/>
 /// </summary>
-internal class DebuggerSearchInContentResponse : IChromiumResponse
+internal partial class DebuggerSearchInContentResponse: IChromiumResponse
 {
 /// <summary>
 /// List of search matches.
@@ -17507,7 +17507,7 @@ public SearchMatch[] Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.setAsyncCallStackDepth</c>
 /// </remarks>
-internal class DebuggerSetAsyncCallStackDepthRequest : IChromiumRequest<DebuggerSetAsyncCallStackDepthResponse>
+internal partial class DebuggerSetAsyncCallStackDepthRequest : IChromiumRequest<DebuggerSetAsyncCallStackDepthResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setAsyncCallStackDepth";
@@ -17519,7 +17519,7 @@ public int? MaxDepth { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetAsyncCallStackDepthRequest"/>
 /// </summary>
-internal class DebuggerSetAsyncCallStackDepthResponse : IChromiumResponse
+internal partial class DebuggerSetAsyncCallStackDepthResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17530,7 +17530,7 @@ internal class DebuggerSetAsyncCallStackDepthResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setBlackboxPatterns</c>
 /// </remarks>
-internal class DebuggerSetBlackboxPatternsRequest : IChromiumRequest<DebuggerSetBlackboxPatternsResponse>
+internal partial class DebuggerSetBlackboxPatternsRequest : IChromiumRequest<DebuggerSetBlackboxPatternsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setBlackboxPatterns";
@@ -17541,7 +17541,7 @@ public string[] Patterns { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBlackboxPatternsRequest"/>
 /// </summary>
-internal class DebuggerSetBlackboxPatternsResponse : IChromiumResponse
+internal partial class DebuggerSetBlackboxPatternsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17553,7 +17553,7 @@ internal class DebuggerSetBlackboxPatternsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setBlackboxedRanges</c>
 /// </remarks>
-internal class DebuggerSetBlackboxedRangesRequest : IChromiumRequest<DebuggerSetBlackboxedRangesResponse>
+internal partial class DebuggerSetBlackboxedRangesRequest : IChromiumRequest<DebuggerSetBlackboxedRangesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setBlackboxedRanges";
@@ -17568,7 +17568,7 @@ public ScriptPosition[] Positions { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBlackboxedRangesRequest"/>
 /// </summary>
-internal class DebuggerSetBlackboxedRangesResponse : IChromiumResponse
+internal partial class DebuggerSetBlackboxedRangesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17577,7 +17577,7 @@ internal class DebuggerSetBlackboxedRangesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setBreakpoint</c>
 /// </remarks>
-internal class DebuggerSetBreakpointRequest : IChromiumRequest<DebuggerSetBreakpointResponse>
+internal partial class DebuggerSetBreakpointRequest : IChromiumRequest<DebuggerSetBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setBreakpoint";
@@ -17593,7 +17593,7 @@ public string Condition { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointRequest"/>
 /// </summary>
-internal class DebuggerSetBreakpointResponse : IChromiumResponse
+internal partial class DebuggerSetBreakpointResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the created breakpoint for further reference.
@@ -17609,7 +17609,7 @@ public Location ActualLocation { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.setInstrumentationBreakpoint</c>
 /// </remarks>
-internal class DebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DebuggerSetInstrumentationBreakpointResponse>
+internal partial class DebuggerSetInstrumentationBreakpointRequest : IChromiumRequest<DebuggerSetInstrumentationBreakpointResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setInstrumentationBreakpoint";
@@ -17620,7 +17620,7 @@ public string Instrumentation { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetInstrumentationBreakpointRequest"/>
 /// </summary>
-internal class DebuggerSetInstrumentationBreakpointResponse : IChromiumResponse
+internal partial class DebuggerSetInstrumentationBreakpointResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the created breakpoint for further reference.
@@ -17635,7 +17635,7 @@ public string BreakpointId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.setBreakpointByUrl</c>
 /// </remarks>
-internal class DebuggerSetBreakpointByUrlRequest : IChromiumRequest<DebuggerSetBreakpointByUrlResponse>
+internal partial class DebuggerSetBreakpointByUrlRequest : IChromiumRequest<DebuggerSetBreakpointByUrlResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setBreakpointByUrl";
@@ -17668,7 +17668,7 @@ public string Condition { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointByUrlRequest"/>
 /// </summary>
-internal class DebuggerSetBreakpointByUrlResponse : IChromiumResponse
+internal partial class DebuggerSetBreakpointByUrlResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the created breakpoint for further reference.
@@ -17686,7 +17686,7 @@ public Location[] Locations { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.setBreakpointOnFunctionCall</c>
 /// </remarks>
-internal class DebuggerSetBreakpointOnFunctionCallRequest : IChromiumRequest<DebuggerSetBreakpointOnFunctionCallResponse>
+internal partial class DebuggerSetBreakpointOnFunctionCallRequest : IChromiumRequest<DebuggerSetBreakpointOnFunctionCallResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setBreakpointOnFunctionCall";
@@ -17702,7 +17702,7 @@ public string Condition { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointOnFunctionCallRequest"/>
 /// </summary>
-internal class DebuggerSetBreakpointOnFunctionCallResponse : IChromiumResponse
+internal partial class DebuggerSetBreakpointOnFunctionCallResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the created breakpoint for further reference.
@@ -17714,7 +17714,7 @@ public string BreakpointId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.setBreakpointsActive</c>
 /// </remarks>
-internal class DebuggerSetBreakpointsActiveRequest : IChromiumRequest<DebuggerSetBreakpointsActiveResponse>
+internal partial class DebuggerSetBreakpointsActiveRequest : IChromiumRequest<DebuggerSetBreakpointsActiveResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setBreakpointsActive";
@@ -17725,7 +17725,7 @@ public bool? Active { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
 /// </summary>
-internal class DebuggerSetBreakpointsActiveResponse : IChromiumResponse
+internal partial class DebuggerSetBreakpointsActiveResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17735,7 +17735,7 @@ internal class DebuggerSetBreakpointsActiveResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setPauseOnExceptions</c>
 /// </remarks>
-internal class DebuggerSetPauseOnExceptionsRequest : IChromiumRequest<DebuggerSetPauseOnExceptionsResponse>
+internal partial class DebuggerSetPauseOnExceptionsRequest : IChromiumRequest<DebuggerSetPauseOnExceptionsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setPauseOnExceptions";
@@ -17746,7 +17746,7 @@ public string State { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetPauseOnExceptionsRequest"/>
 /// </summary>
-internal class DebuggerSetPauseOnExceptionsResponse : IChromiumResponse
+internal partial class DebuggerSetPauseOnExceptionsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17755,7 +17755,7 @@ internal class DebuggerSetPauseOnExceptionsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setReturnValue</c>
 /// </remarks>
-internal class DebuggerSetReturnValueRequest : IChromiumRequest<DebuggerSetReturnValueResponse>
+internal partial class DebuggerSetReturnValueRequest : IChromiumRequest<DebuggerSetReturnValueResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setReturnValue";
@@ -17766,7 +17766,7 @@ public Runtime.CallArgument NewValue { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetReturnValueRequest"/>
 /// </summary>
-internal class DebuggerSetReturnValueResponse : IChromiumResponse
+internal partial class DebuggerSetReturnValueResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17775,7 +17775,7 @@ internal class DebuggerSetReturnValueResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setScriptSource</c>
 /// </remarks>
-internal class DebuggerSetScriptSourceRequest : IChromiumRequest<DebuggerSetScriptSourceResponse>
+internal partial class DebuggerSetScriptSourceRequest : IChromiumRequest<DebuggerSetScriptSourceResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setScriptSource";
@@ -17795,7 +17795,7 @@ public bool? DryRun { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetScriptSourceRequest"/>
 /// </summary>
-internal class DebuggerSetScriptSourceResponse : IChromiumResponse
+internal partial class DebuggerSetScriptSourceResponse: IChromiumResponse
 {
 /// <summary>
 /// New stack trace in case editing has happened while VM was stopped.
@@ -17823,7 +17823,7 @@ public Runtime.ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Debugger.setSkipAllPauses</c>
 /// </remarks>
-internal class DebuggerSetSkipAllPausesRequest : IChromiumRequest<DebuggerSetSkipAllPausesResponse>
+internal partial class DebuggerSetSkipAllPausesRequest : IChromiumRequest<DebuggerSetSkipAllPausesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setSkipAllPauses";
@@ -17834,7 +17834,7 @@ public bool? Skip { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetSkipAllPausesRequest"/>
 /// </summary>
-internal class DebuggerSetSkipAllPausesResponse : IChromiumResponse
+internal partial class DebuggerSetSkipAllPausesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17844,7 +17844,7 @@ internal class DebuggerSetSkipAllPausesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.setVariableValue</c>
 /// </remarks>
-internal class DebuggerSetVariableValueRequest : IChromiumRequest<DebuggerSetVariableValueResponse>
+internal partial class DebuggerSetVariableValueRequest : IChromiumRequest<DebuggerSetVariableValueResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.setVariableValue";
@@ -17868,7 +17868,7 @@ public string CallFrameId { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerSetVariableValueRequest"/>
 /// </summary>
-internal class DebuggerSetVariableValueResponse : IChromiumResponse
+internal partial class DebuggerSetVariableValueResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17877,7 +17877,7 @@ internal class DebuggerSetVariableValueResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.stepInto</c>
 /// </remarks>
-internal class DebuggerStepIntoRequest : IChromiumRequest<DebuggerStepIntoResponse>
+internal partial class DebuggerStepIntoRequest : IChromiumRequest<DebuggerStepIntoResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.stepInto";
@@ -17889,7 +17889,7 @@ public bool? BreakOnAsyncCall { get; set; }}
 /// <summary>
 /// Response from <see cref="DebuggerStepIntoRequest"/>
 /// </summary>
-internal class DebuggerStepIntoResponse : IChromiumResponse
+internal partial class DebuggerStepIntoResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17898,7 +17898,7 @@ internal class DebuggerStepIntoResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.stepOut</c>
 /// </remarks>
-internal class DebuggerStepOutRequest : IChromiumRequest<DebuggerStepOutResponse>
+internal partial class DebuggerStepOutRequest : IChromiumRequest<DebuggerStepOutResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.stepOut";
@@ -17906,7 +17906,7 @@ public string Command { get; } = "Debugger.stepOut";
 /// <summary>
 /// Response from <see cref="DebuggerStepOutRequest"/>
 /// </summary>
-internal class DebuggerStepOutResponse : IChromiumResponse
+internal partial class DebuggerStepOutResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17915,7 +17915,7 @@ internal class DebuggerStepOutResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Debugger.stepOver</c>
 /// </remarks>
-internal class DebuggerStepOverRequest : IChromiumRequest<DebuggerStepOverResponse>
+internal partial class DebuggerStepOverRequest : IChromiumRequest<DebuggerStepOverResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.stepOver";
@@ -17923,7 +17923,7 @@ public string Command { get; } = "Debugger.stepOver";
 /// <summary>
 /// Response from <see cref="DebuggerStepOverRequest"/>
 /// </summary>
-internal class DebuggerStepOverResponse : IChromiumResponse
+internal partial class DebuggerStepOverResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -17932,7 +17932,7 @@ internal class DebuggerStepOverResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Debugger.breakpointResolved</c>
 /// </remarks>
-internal class DebuggerBreakpointResolvedChromiumEvent : IChromiumEvent
+internal partial class DebuggerBreakpointResolvedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Debugger.breakpointResolved";
 /// <summary>
@@ -17949,7 +17949,7 @@ public Location Location { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Debugger.paused</c>
 /// </remarks>
-internal class DebuggerPausedChromiumEvent : IChromiumEvent
+internal partial class DebuggerPausedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Debugger.paused";
 /// <summary>
@@ -17986,7 +17986,7 @@ public Runtime.StackTraceId AsyncCallStackTraceId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Debugger.resumed</c>
 /// </remarks>
-internal class DebuggerResumedChromiumEvent : IChromiumEvent
+internal partial class DebuggerResumedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Debugger.resumed";
 }
@@ -17996,7 +17996,7 @@ public string InternalName { get; } = "Debugger.resumed";
 /// <remarks>
 /// Matches on the event <c>Debugger.scriptFailedToParse</c>
 /// </remarks>
-internal class DebuggerScriptFailedToParseChromiumEvent : IChromiumEvent
+internal partial class DebuggerScriptFailedToParseChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Debugger.scriptFailedToParse";
 /// <summary>
@@ -18062,7 +18062,7 @@ public Runtime.StackTrace StackTrace { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Debugger.scriptParsed</c>
 /// </remarks>
-internal class DebuggerScriptParsedChromiumEvent : IChromiumEvent
+internal partial class DebuggerScriptParsedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Debugger.scriptParsed";
 /// <summary>
@@ -18131,7 +18131,7 @@ namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
 /// <summary>
 /// Sampling Heap Profile node. Holds callsite information, allocation statistics and child nodes.
 /// </summary>
-internal class SamplingHeapProfileNode
+internal partial class SamplingHeapProfileNode
 {
 /// <summary>
 /// Function location.
@@ -18152,7 +18152,7 @@ public SamplingHeapProfileNode[] Children { get; set; }}
 /// <summary>
 /// A single sample from a sampling profile.
 /// </summary>
-internal class SamplingHeapProfileSample
+internal partial class SamplingHeapProfileSample
 {
 /// <summary>
 /// Allocation size in bytes attributed to the sample.
@@ -18170,7 +18170,7 @@ public double? Ordinal { get; set; }}
 /// <summary>
 /// Sampling profile.
 /// </summary>
-internal class SamplingHeapProfile
+internal partial class SamplingHeapProfile
 {
 /// <summary>
 /// 
@@ -18187,7 +18187,7 @@ public SamplingHeapProfileSample[] Samples { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeapProfiler.addInspectedHeapObject</c>
 /// </remarks>
-internal class HeapProfilerAddInspectedHeapObjectRequest : IChromiumRequest<HeapProfilerAddInspectedHeapObjectResponse>
+internal partial class HeapProfilerAddInspectedHeapObjectRequest : IChromiumRequest<HeapProfilerAddInspectedHeapObjectResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.addInspectedHeapObject";
@@ -18198,7 +18198,7 @@ public string HeapObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerAddInspectedHeapObjectRequest"/>
 /// </summary>
-internal class HeapProfilerAddInspectedHeapObjectResponse : IChromiumResponse
+internal partial class HeapProfilerAddInspectedHeapObjectResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18207,7 +18207,7 @@ internal class HeapProfilerAddInspectedHeapObjectResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.collectGarbage</c>
 /// </remarks>
-internal class HeapProfilerCollectGarbageRequest : IChromiumRequest<HeapProfilerCollectGarbageResponse>
+internal partial class HeapProfilerCollectGarbageRequest : IChromiumRequest<HeapProfilerCollectGarbageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.collectGarbage";
@@ -18215,7 +18215,7 @@ public string Command { get; } = "HeapProfiler.collectGarbage";
 /// <summary>
 /// Response from <see cref="HeapProfilerCollectGarbageRequest"/>
 /// </summary>
-internal class HeapProfilerCollectGarbageResponse : IChromiumResponse
+internal partial class HeapProfilerCollectGarbageResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18224,7 +18224,7 @@ internal class HeapProfilerCollectGarbageResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.disable</c>
 /// </remarks>
-internal class HeapProfilerDisableRequest : IChromiumRequest<HeapProfilerDisableResponse>
+internal partial class HeapProfilerDisableRequest : IChromiumRequest<HeapProfilerDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.disable";
@@ -18232,7 +18232,7 @@ public string Command { get; } = "HeapProfiler.disable";
 /// <summary>
 /// Response from <see cref="HeapProfilerDisableRequest"/>
 /// </summary>
-internal class HeapProfilerDisableResponse : IChromiumResponse
+internal partial class HeapProfilerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18241,7 +18241,7 @@ internal class HeapProfilerDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.enable</c>
 /// </remarks>
-internal class HeapProfilerEnableRequest : IChromiumRequest<HeapProfilerEnableResponse>
+internal partial class HeapProfilerEnableRequest : IChromiumRequest<HeapProfilerEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.enable";
@@ -18249,7 +18249,7 @@ public string Command { get; } = "HeapProfiler.enable";
 /// <summary>
 /// Response from <see cref="HeapProfilerEnableRequest"/>
 /// </summary>
-internal class HeapProfilerEnableResponse : IChromiumResponse
+internal partial class HeapProfilerEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18258,7 +18258,7 @@ internal class HeapProfilerEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.getHeapObjectId</c>
 /// </remarks>
-internal class HeapProfilerGetHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetHeapObjectIdResponse>
+internal partial class HeapProfilerGetHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetHeapObjectIdResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.getHeapObjectId";
@@ -18269,7 +18269,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerGetHeapObjectIdRequest"/>
 /// </summary>
-internal class HeapProfilerGetHeapObjectIdResponse : IChromiumResponse
+internal partial class HeapProfilerGetHeapObjectIdResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the heap snapshot object corresponding to the passed remote object id.
@@ -18281,7 +18281,7 @@ public string HeapSnapshotObjectId { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeapProfiler.getObjectByHeapObjectId</c>
 /// </remarks>
-internal class HeapProfilerGetObjectByHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetObjectByHeapObjectIdResponse>
+internal partial class HeapProfilerGetObjectByHeapObjectIdRequest : IChromiumRequest<HeapProfilerGetObjectByHeapObjectIdResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.getObjectByHeapObjectId";
@@ -18296,7 +18296,7 @@ public string ObjectGroup { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerGetObjectByHeapObjectIdRequest"/>
 /// </summary>
-internal class HeapProfilerGetObjectByHeapObjectIdResponse : IChromiumResponse
+internal partial class HeapProfilerGetObjectByHeapObjectIdResponse: IChromiumResponse
 {
 /// <summary>
 /// Evaluation result.
@@ -18308,7 +18308,7 @@ public Runtime.RemoteObject Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeapProfiler.getSamplingProfile</c>
 /// </remarks>
-internal class HeapProfilerGetSamplingProfileRequest : IChromiumRequest<HeapProfilerGetSamplingProfileResponse>
+internal partial class HeapProfilerGetSamplingProfileRequest : IChromiumRequest<HeapProfilerGetSamplingProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.getSamplingProfile";
@@ -18316,7 +18316,7 @@ public string Command { get; } = "HeapProfiler.getSamplingProfile";
 /// <summary>
 /// Response from <see cref="HeapProfilerGetSamplingProfileRequest"/>
 /// </summary>
-internal class HeapProfilerGetSamplingProfileResponse : IChromiumResponse
+internal partial class HeapProfilerGetSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
 /// Return the sampling profile being collected.
@@ -18328,7 +18328,7 @@ public SamplingHeapProfile Profile { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeapProfiler.startSampling</c>
 /// </remarks>
-internal class HeapProfilerStartSamplingRequest : IChromiumRequest<HeapProfilerStartSamplingResponse>
+internal partial class HeapProfilerStartSamplingRequest : IChromiumRequest<HeapProfilerStartSamplingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.startSampling";
@@ -18340,7 +18340,7 @@ public double? SamplingInterval { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerStartSamplingRequest"/>
 /// </summary>
-internal class HeapProfilerStartSamplingResponse : IChromiumResponse
+internal partial class HeapProfilerStartSamplingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18349,7 +18349,7 @@ internal class HeapProfilerStartSamplingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.startTrackingHeapObjects</c>
 /// </remarks>
-internal class HeapProfilerStartTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStartTrackingHeapObjectsResponse>
+internal partial class HeapProfilerStartTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStartTrackingHeapObjectsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.startTrackingHeapObjects";
@@ -18360,7 +18360,7 @@ public bool? TrackAllocations { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerStartTrackingHeapObjectsRequest"/>
 /// </summary>
-internal class HeapProfilerStartTrackingHeapObjectsResponse : IChromiumResponse
+internal partial class HeapProfilerStartTrackingHeapObjectsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18369,7 +18369,7 @@ internal class HeapProfilerStartTrackingHeapObjectsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.stopSampling</c>
 /// </remarks>
-internal class HeapProfilerStopSamplingRequest : IChromiumRequest<HeapProfilerStopSamplingResponse>
+internal partial class HeapProfilerStopSamplingRequest : IChromiumRequest<HeapProfilerStopSamplingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.stopSampling";
@@ -18377,7 +18377,7 @@ public string Command { get; } = "HeapProfiler.stopSampling";
 /// <summary>
 /// Response from <see cref="HeapProfilerStopSamplingRequest"/>
 /// </summary>
-internal class HeapProfilerStopSamplingResponse : IChromiumResponse
+internal partial class HeapProfilerStopSamplingResponse: IChromiumResponse
 {
 /// <summary>
 /// Recorded sampling heap profile.
@@ -18389,7 +18389,7 @@ public SamplingHeapProfile Profile { get; set; }}
 /// <remarks>
 /// Will send the command <c>HeapProfiler.stopTrackingHeapObjects</c>
 /// </remarks>
-internal class HeapProfilerStopTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStopTrackingHeapObjectsResponse>
+internal partial class HeapProfilerStopTrackingHeapObjectsRequest : IChromiumRequest<HeapProfilerStopTrackingHeapObjectsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.stopTrackingHeapObjects";
@@ -18405,7 +18405,7 @@ public bool? TreatGlobalObjectsAsRoots { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerStopTrackingHeapObjectsRequest"/>
 /// </summary>
-internal class HeapProfilerStopTrackingHeapObjectsResponse : IChromiumResponse
+internal partial class HeapProfilerStopTrackingHeapObjectsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18414,7 +18414,7 @@ internal class HeapProfilerStopTrackingHeapObjectsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>HeapProfiler.takeHeapSnapshot</c>
 /// </remarks>
-internal class HeapProfilerTakeHeapSnapshotRequest : IChromiumRequest<HeapProfilerTakeHeapSnapshotResponse>
+internal partial class HeapProfilerTakeHeapSnapshotRequest : IChromiumRequest<HeapProfilerTakeHeapSnapshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.takeHeapSnapshot";
@@ -18429,7 +18429,7 @@ public bool? TreatGlobalObjectsAsRoots { get; set; }}
 /// <summary>
 /// Response from <see cref="HeapProfilerTakeHeapSnapshotRequest"/>
 /// </summary>
-internal class HeapProfilerTakeHeapSnapshotResponse : IChromiumResponse
+internal partial class HeapProfilerTakeHeapSnapshotResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18438,7 +18438,7 @@ internal class HeapProfilerTakeHeapSnapshotResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.addHeapSnapshotChunk</c>
 /// </remarks>
-internal class HeapProfilerAddHeapSnapshotChunkChromiumEvent : IChromiumEvent
+internal partial class HeapProfilerAddHeapSnapshotChunkChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "HeapProfiler.addHeapSnapshotChunk";
 /// <summary>
@@ -18451,7 +18451,7 @@ public string Chunk { get; set; }}
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.heapStatsUpdate</c>
 /// </remarks>
-internal class HeapProfilerHeapStatsUpdateChromiumEvent : IChromiumEvent
+internal partial class HeapProfilerHeapStatsUpdateChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "HeapProfiler.heapStatsUpdate";
 /// <summary>
@@ -18468,7 +18468,7 @@ public int?[] StatsUpdate { get; set; }}
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.lastSeenObjectId</c>
 /// </remarks>
-internal class HeapProfilerLastSeenObjectIdChromiumEvent : IChromiumEvent
+internal partial class HeapProfilerLastSeenObjectIdChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "HeapProfiler.lastSeenObjectId";
 /// <summary>
@@ -18485,7 +18485,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.reportHeapSnapshotProgress</c>
 /// </remarks>
-internal class HeapProfilerReportHeapSnapshotProgressChromiumEvent : IChromiumEvent
+internal partial class HeapProfilerReportHeapSnapshotProgressChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "HeapProfiler.reportHeapSnapshotProgress";
 /// <summary>
@@ -18506,7 +18506,7 @@ public bool? Finished { get; set; }}
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.resetProfiles</c>
 /// </remarks>
-internal class HeapProfilerResetProfilesChromiumEvent : IChromiumEvent
+internal partial class HeapProfilerResetProfilesChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "HeapProfiler.resetProfiles";
 }
@@ -18516,7 +18516,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Profiler
 /// <summary>
 /// Profile node. Holds callsite information, execution statistics and child nodes.
 /// </summary>
-internal class ProfileNode
+internal partial class ProfileNode
 {
 /// <summary>
 /// Unique id of the node.
@@ -18546,7 +18546,7 @@ public PositionTickInfo[] PositionTicks { get; set; }}
 /// <summary>
 /// Profile.
 /// </summary>
-internal class Profile
+internal partial class Profile
 {
 /// <summary>
 /// The list of profile nodes. First item is the root node.
@@ -18572,7 +18572,7 @@ public int?[] TimeDeltas { get; set; }}
 /// <summary>
 /// Specifies a number of samples attributed to a certain source position.
 /// </summary>
-internal class PositionTickInfo
+internal partial class PositionTickInfo
 {
 /// <summary>
 /// Source line number (1-based).
@@ -18585,7 +18585,7 @@ public int? Ticks { get; set; }}
 /// <summary>
 /// Coverage data for a source range.
 /// </summary>
-internal class CoverageRange
+internal partial class CoverageRange
 {
 /// <summary>
 /// JavaScript script source offset for the range start.
@@ -18602,7 +18602,7 @@ public int? Count { get; set; }}
 /// <summary>
 /// Coverage data for a JavaScript function.
 /// </summary>
-internal class FunctionCoverage
+internal partial class FunctionCoverage
 {
 /// <summary>
 /// JavaScript function name.
@@ -18619,7 +18619,7 @@ public bool? IsBlockCoverage { get; set; }}
 /// <summary>
 /// Coverage data for a JavaScript script.
 /// </summary>
-internal class ScriptCoverage
+internal partial class ScriptCoverage
 {
 /// <summary>
 /// JavaScript script id.
@@ -18636,7 +18636,7 @@ public FunctionCoverage[] Functions { get; set; }}
 /// <summary>
 /// Describes a type collected during runtime.
 /// </summary>
-internal class TypeObject
+internal partial class TypeObject
 {
 /// <summary>
 /// Name of a type collected with type profiling.
@@ -18645,7 +18645,7 @@ public string Name { get; set; }}
 /// <summary>
 /// Source offset and types for a parameter or return value.
 /// </summary>
-internal class TypeProfileEntry
+internal partial class TypeProfileEntry
 {
 /// <summary>
 /// Source offset of the parameter or end of function for return values.
@@ -18658,7 +18658,7 @@ public TypeObject[] Types { get; set; }}
 /// <summary>
 /// Type profile data collected during runtime for a JavaScript script.
 /// </summary>
-internal class ScriptTypeProfile
+internal partial class ScriptTypeProfile
 {
 /// <summary>
 /// JavaScript script id.
@@ -18675,7 +18675,7 @@ public TypeProfileEntry[] Entries { get; set; }}
 /// <summary>
 /// Collected counter information.
 /// </summary>
-internal class CounterInfo
+internal partial class CounterInfo
 {
 /// <summary>
 /// Counter name.
@@ -18691,7 +18691,7 @@ public int? Value { get; set; }}
 /// <remarks>
 /// Will send the command <c>Profiler.disable</c>
 /// </remarks>
-internal class ProfilerDisableRequest : IChromiumRequest<ProfilerDisableResponse>
+internal partial class ProfilerDisableRequest : IChromiumRequest<ProfilerDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.disable";
@@ -18699,7 +18699,7 @@ public string Command { get; } = "Profiler.disable";
 /// <summary>
 /// Response from <see cref="ProfilerDisableRequest"/>
 /// </summary>
-internal class ProfilerDisableResponse : IChromiumResponse
+internal partial class ProfilerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18708,7 +18708,7 @@ internal class ProfilerDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.enable</c>
 /// </remarks>
-internal class ProfilerEnableRequest : IChromiumRequest<ProfilerEnableResponse>
+internal partial class ProfilerEnableRequest : IChromiumRequest<ProfilerEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.enable";
@@ -18716,7 +18716,7 @@ public string Command { get; } = "Profiler.enable";
 /// <summary>
 /// Response from <see cref="ProfilerEnableRequest"/>
 /// </summary>
-internal class ProfilerEnableResponse : IChromiumResponse
+internal partial class ProfilerEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18726,7 +18726,7 @@ internal class ProfilerEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.getBestEffortCoverage</c>
 /// </remarks>
-internal class ProfilerGetBestEffortCoverageRequest : IChromiumRequest<ProfilerGetBestEffortCoverageResponse>
+internal partial class ProfilerGetBestEffortCoverageRequest : IChromiumRequest<ProfilerGetBestEffortCoverageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.getBestEffortCoverage";
@@ -18734,7 +18734,7 @@ public string Command { get; } = "Profiler.getBestEffortCoverage";
 /// <summary>
 /// Response from <see cref="ProfilerGetBestEffortCoverageRequest"/>
 /// </summary>
-internal class ProfilerGetBestEffortCoverageResponse : IChromiumResponse
+internal partial class ProfilerGetBestEffortCoverageResponse: IChromiumResponse
 {
 /// <summary>
 /// Coverage data for the current isolate.
@@ -18746,7 +18746,7 @@ public ScriptCoverage[] Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Profiler.setSamplingInterval</c>
 /// </remarks>
-internal class ProfilerSetSamplingIntervalRequest : IChromiumRequest<ProfilerSetSamplingIntervalResponse>
+internal partial class ProfilerSetSamplingIntervalRequest : IChromiumRequest<ProfilerSetSamplingIntervalResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.setSamplingInterval";
@@ -18757,7 +18757,7 @@ public int? Interval { get; set; }}
 /// <summary>
 /// Response from <see cref="ProfilerSetSamplingIntervalRequest"/>
 /// </summary>
-internal class ProfilerSetSamplingIntervalResponse : IChromiumResponse
+internal partial class ProfilerSetSamplingIntervalResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18766,7 +18766,7 @@ internal class ProfilerSetSamplingIntervalResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.start</c>
 /// </remarks>
-internal class ProfilerStartRequest : IChromiumRequest<ProfilerStartResponse>
+internal partial class ProfilerStartRequest : IChromiumRequest<ProfilerStartResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.start";
@@ -18774,7 +18774,7 @@ public string Command { get; } = "Profiler.start";
 /// <summary>
 /// Response from <see cref="ProfilerStartRequest"/>
 /// </summary>
-internal class ProfilerStartResponse : IChromiumResponse
+internal partial class ProfilerStartResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18785,7 +18785,7 @@ internal class ProfilerStartResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.startPreciseCoverage</c>
 /// </remarks>
-internal class ProfilerStartPreciseCoverageRequest : IChromiumRequest<ProfilerStartPreciseCoverageResponse>
+internal partial class ProfilerStartPreciseCoverageRequest : IChromiumRequest<ProfilerStartPreciseCoverageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.startPreciseCoverage";
@@ -18800,7 +18800,7 @@ public bool? Detailed { get; set; }}
 /// <summary>
 /// Response from <see cref="ProfilerStartPreciseCoverageRequest"/>
 /// </summary>
-internal class ProfilerStartPreciseCoverageResponse : IChromiumResponse
+internal partial class ProfilerStartPreciseCoverageResponse: IChromiumResponse
 {
 /// <summary>
 /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
@@ -18812,7 +18812,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Will send the command <c>Profiler.startTypeProfile</c>
 /// </remarks>
-internal class ProfilerStartTypeProfileRequest : IChromiumRequest<ProfilerStartTypeProfileResponse>
+internal partial class ProfilerStartTypeProfileRequest : IChromiumRequest<ProfilerStartTypeProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.startTypeProfile";
@@ -18820,7 +18820,7 @@ public string Command { get; } = "Profiler.startTypeProfile";
 /// <summary>
 /// Response from <see cref="ProfilerStartTypeProfileRequest"/>
 /// </summary>
-internal class ProfilerStartTypeProfileResponse : IChromiumResponse
+internal partial class ProfilerStartTypeProfileResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18829,7 +18829,7 @@ internal class ProfilerStartTypeProfileResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.stop</c>
 /// </remarks>
-internal class ProfilerStopRequest : IChromiumRequest<ProfilerStopResponse>
+internal partial class ProfilerStopRequest : IChromiumRequest<ProfilerStopResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.stop";
@@ -18837,7 +18837,7 @@ public string Command { get; } = "Profiler.stop";
 /// <summary>
 /// Response from <see cref="ProfilerStopRequest"/>
 /// </summary>
-internal class ProfilerStopResponse : IChromiumResponse
+internal partial class ProfilerStopResponse: IChromiumResponse
 {
 /// <summary>
 /// Recorded profile.
@@ -18850,7 +18850,7 @@ public Profile Profile { get; set; }}
 /// <remarks>
 /// Will send the command <c>Profiler.stopPreciseCoverage</c>
 /// </remarks>
-internal class ProfilerStopPreciseCoverageRequest : IChromiumRequest<ProfilerStopPreciseCoverageResponse>
+internal partial class ProfilerStopPreciseCoverageRequest : IChromiumRequest<ProfilerStopPreciseCoverageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.stopPreciseCoverage";
@@ -18858,7 +18858,7 @@ public string Command { get; } = "Profiler.stopPreciseCoverage";
 /// <summary>
 /// Response from <see cref="ProfilerStopPreciseCoverageRequest"/>
 /// </summary>
-internal class ProfilerStopPreciseCoverageResponse : IChromiumResponse
+internal partial class ProfilerStopPreciseCoverageResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18867,7 +18867,7 @@ internal class ProfilerStopPreciseCoverageResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.stopTypeProfile</c>
 /// </remarks>
-internal class ProfilerStopTypeProfileRequest : IChromiumRequest<ProfilerStopTypeProfileResponse>
+internal partial class ProfilerStopTypeProfileRequest : IChromiumRequest<ProfilerStopTypeProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.stopTypeProfile";
@@ -18875,7 +18875,7 @@ public string Command { get; } = "Profiler.stopTypeProfile";
 /// <summary>
 /// Response from <see cref="ProfilerStopTypeProfileRequest"/>
 /// </summary>
-internal class ProfilerStopTypeProfileResponse : IChromiumResponse
+internal partial class ProfilerStopTypeProfileResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18885,7 +18885,7 @@ internal class ProfilerStopTypeProfileResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.takePreciseCoverage</c>
 /// </remarks>
-internal class ProfilerTakePreciseCoverageRequest : IChromiumRequest<ProfilerTakePreciseCoverageResponse>
+internal partial class ProfilerTakePreciseCoverageRequest : IChromiumRequest<ProfilerTakePreciseCoverageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.takePreciseCoverage";
@@ -18893,7 +18893,7 @@ public string Command { get; } = "Profiler.takePreciseCoverage";
 /// <summary>
 /// Response from <see cref="ProfilerTakePreciseCoverageRequest"/>
 /// </summary>
-internal class ProfilerTakePreciseCoverageResponse : IChromiumResponse
+internal partial class ProfilerTakePreciseCoverageResponse: IChromiumResponse
 {
 /// <summary>
 /// Coverage data for the current isolate.
@@ -18909,7 +18909,7 @@ public double? Timestamp { get; set; }}
 /// <remarks>
 /// Will send the command <c>Profiler.takeTypeProfile</c>
 /// </remarks>
-internal class ProfilerTakeTypeProfileRequest : IChromiumRequest<ProfilerTakeTypeProfileResponse>
+internal partial class ProfilerTakeTypeProfileRequest : IChromiumRequest<ProfilerTakeTypeProfileResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.takeTypeProfile";
@@ -18917,7 +18917,7 @@ public string Command { get; } = "Profiler.takeTypeProfile";
 /// <summary>
 /// Response from <see cref="ProfilerTakeTypeProfileRequest"/>
 /// </summary>
-internal class ProfilerTakeTypeProfileResponse : IChromiumResponse
+internal partial class ProfilerTakeTypeProfileResponse: IChromiumResponse
 {
 /// <summary>
 /// Type profile for all scripts since startTypeProfile() was turned on.
@@ -18929,7 +18929,7 @@ public ScriptTypeProfile[] Result { get; set; }}
 /// <remarks>
 /// Will send the command <c>Profiler.enableRuntimeCallStats</c>
 /// </remarks>
-internal class ProfilerEnableRuntimeCallStatsRequest : IChromiumRequest<ProfilerEnableRuntimeCallStatsResponse>
+internal partial class ProfilerEnableRuntimeCallStatsRequest : IChromiumRequest<ProfilerEnableRuntimeCallStatsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.enableRuntimeCallStats";
@@ -18937,7 +18937,7 @@ public string Command { get; } = "Profiler.enableRuntimeCallStats";
 /// <summary>
 /// Response from <see cref="ProfilerEnableRuntimeCallStatsRequest"/>
 /// </summary>
-internal class ProfilerEnableRuntimeCallStatsResponse : IChromiumResponse
+internal partial class ProfilerEnableRuntimeCallStatsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18946,7 +18946,7 @@ internal class ProfilerEnableRuntimeCallStatsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.disableRuntimeCallStats</c>
 /// </remarks>
-internal class ProfilerDisableRuntimeCallStatsRequest : IChromiumRequest<ProfilerDisableRuntimeCallStatsResponse>
+internal partial class ProfilerDisableRuntimeCallStatsRequest : IChromiumRequest<ProfilerDisableRuntimeCallStatsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.disableRuntimeCallStats";
@@ -18954,7 +18954,7 @@ public string Command { get; } = "Profiler.disableRuntimeCallStats";
 /// <summary>
 /// Response from <see cref="ProfilerDisableRuntimeCallStatsRequest"/>
 /// </summary>
-internal class ProfilerDisableRuntimeCallStatsResponse : IChromiumResponse
+internal partial class ProfilerDisableRuntimeCallStatsResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -18963,7 +18963,7 @@ internal class ProfilerDisableRuntimeCallStatsResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Profiler.getRuntimeCallStats</c>
 /// </remarks>
-internal class ProfilerGetRuntimeCallStatsRequest : IChromiumRequest<ProfilerGetRuntimeCallStatsResponse>
+internal partial class ProfilerGetRuntimeCallStatsRequest : IChromiumRequest<ProfilerGetRuntimeCallStatsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Profiler.getRuntimeCallStats";
@@ -18971,7 +18971,7 @@ public string Command { get; } = "Profiler.getRuntimeCallStats";
 /// <summary>
 /// Response from <see cref="ProfilerGetRuntimeCallStatsRequest"/>
 /// </summary>
-internal class ProfilerGetRuntimeCallStatsResponse : IChromiumResponse
+internal partial class ProfilerGetRuntimeCallStatsResponse: IChromiumResponse
 {
 /// <summary>
 /// Collected counter information.
@@ -18983,7 +18983,7 @@ public CounterInfo[] Result { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Profiler.consoleProfileFinished</c>
 /// </remarks>
-internal class ProfilerConsoleProfileFinishedChromiumEvent : IChromiumEvent
+internal partial class ProfilerConsoleProfileFinishedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Profiler.consoleProfileFinished";
 /// <summary>
@@ -19008,7 +19008,7 @@ public string Title { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Profiler.consoleProfileStarted</c>
 /// </remarks>
-internal class ProfilerConsoleProfileStartedChromiumEvent : IChromiumEvent
+internal partial class ProfilerConsoleProfileStartedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Profiler.consoleProfileStarted";
 /// <summary>
@@ -19029,7 +19029,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Runtime
 /// <summary>
 /// Mirror object referencing original JavaScript object.
 /// </summary>
-internal class RemoteObject: IRemoteObject
+internal partial class RemoteObject
 {
 /// <summary>
 /// Object type.
@@ -19071,7 +19071,7 @@ public CustomPreview CustomPreview { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class CustomPreview
+internal partial class CustomPreview
 {
 /// <summary>
 /// The JSON-stringified result of formatter.header(object, config) call.
@@ -19087,7 +19087,7 @@ public string BodyGetterId { get; set; }}
 /// <summary>
 /// Object containing abbreviated remote object value.
 /// </summary>
-internal class ObjectPreview
+internal partial class ObjectPreview
 {
 /// <summary>
 /// Object type.
@@ -19116,7 +19116,7 @@ public EntryPreview[] Entries { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class PropertyPreview
+internal partial class PropertyPreview
 {
 /// <summary>
 /// Property name.
@@ -19141,7 +19141,7 @@ public string Subtype { get; set; }}
 /// <summary>
 /// 
 /// </summary>
-internal class EntryPreview
+internal partial class EntryPreview
 {
 /// <summary>
 /// Preview of the key. Specified for map-like collection entries.
@@ -19154,7 +19154,7 @@ public ObjectPreview Value { get; set; }}
 /// <summary>
 /// Object property descriptor.
 /// </summary>
-internal class PropertyDescriptor
+internal partial class PropertyDescriptor
 {
 /// <summary>
 /// Property name or symbol description.
@@ -19203,7 +19203,7 @@ public RemoteObject Symbol { get; set; }}
 /// <summary>
 /// Object internal property descriptor. This property isn't normally visible in JavaScript code.
 /// </summary>
-internal class InternalPropertyDescriptor
+internal partial class InternalPropertyDescriptor
 {
 /// <summary>
 /// Conventional property name.
@@ -19216,7 +19216,7 @@ public RemoteObject Value { get; set; }}
 /// <summary>
 /// Object private field descriptor.
 /// </summary>
-internal class PrivatePropertyDescriptor
+internal partial class PrivatePropertyDescriptor
 {
 /// <summary>
 /// Private property name.
@@ -19240,7 +19240,7 @@ public RemoteObject Set { get; set; }}
 /// Represents function call argument. Either remote object id `objectId`, primitive `value`,
 /// unserializable primitive value or neither of (for undefined) them should be specified.
 /// </summary>
-internal class CallArgument
+internal partial class CallArgument
 {
 /// <summary>
 /// Primitive value or serializable javascript object.
@@ -19257,7 +19257,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Description of an isolated world.
 /// </summary>
-internal class ExecutionContextDescription
+internal partial class ExecutionContextDescription
 {
 /// <summary>
 /// Unique id of the execution context. It can be used to specify in which execution context
@@ -19280,7 +19280,7 @@ public object AuxData { get; set; }}
 /// Detailed information about exception (or error) that was thrown during script compilation or
 /// execution.
 /// </summary>
-internal class ExceptionDetails
+internal partial class ExceptionDetails
 {
 /// <summary>
 /// Exception id.
@@ -19321,7 +19321,7 @@ public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Stack entry for runtime errors and assertions.
 /// </summary>
-internal class CallFrame
+internal partial class CallFrame
 {
 /// <summary>
 /// JavaScript function name.
@@ -19346,7 +19346,7 @@ public int? ColumnNumber { get; set; }}
 /// <summary>
 /// Call frames for assertions or error messages.
 /// </summary>
-internal class StackTrace
+internal partial class StackTrace
 {
 /// <summary>
 /// String label of this stack trace. For async traces this may be a name of the function that
@@ -19369,7 +19369,7 @@ public StackTraceId ParentId { get; set; }}
 /// If `debuggerId` is set stack trace comes from another debugger and can be resolved there. This
 /// allows to track cross-debugger calls. See `Runtime.StackTrace` and `Debugger.paused` for usages.
 /// </summary>
-internal class StackTraceId
+internal partial class StackTraceId
 {
 /// <summary>
 /// 
@@ -19385,7 +19385,7 @@ public string DebuggerId { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.awaitPromise</c>
 /// </remarks>
-internal class RuntimeAwaitPromiseRequest : IChromiumRequest<RuntimeAwaitPromiseResponse>
+internal partial class RuntimeAwaitPromiseRequest : IChromiumRequest<RuntimeAwaitPromiseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.awaitPromise";
@@ -19404,7 +19404,7 @@ public bool? GeneratePreview { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeAwaitPromiseRequest"/>
 /// </summary>
-internal class RuntimeAwaitPromiseResponse : IChromiumResponse
+internal partial class RuntimeAwaitPromiseResponse: IChromiumResponse
 {
 /// <summary>
 /// Promise result. Will contain rejected value if promise was rejected.
@@ -19421,7 +19421,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.callFunctionOn</c>
 /// </remarks>
-internal class RuntimeCallFunctionOnRequest : IChromiumRequest<RuntimeCallFunctionOnResponse>
+internal partial class RuntimeCallFunctionOnRequest : IChromiumRequest<RuntimeCallFunctionOnResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.callFunctionOn";
@@ -19474,7 +19474,7 @@ public string ObjectGroup { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeCallFunctionOnRequest"/>
 /// </summary>
-internal class RuntimeCallFunctionOnResponse : IChromiumResponse
+internal partial class RuntimeCallFunctionOnResponse: IChromiumResponse
 {
 /// <summary>
 /// Call result.
@@ -19490,7 +19490,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.compileScript</c>
 /// </remarks>
-internal class RuntimeCompileScriptRequest : IChromiumRequest<RuntimeCompileScriptResponse>
+internal partial class RuntimeCompileScriptRequest : IChromiumRequest<RuntimeCompileScriptResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.compileScript";
@@ -19514,7 +19514,7 @@ public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeCompileScriptRequest"/>
 /// </summary>
-internal class RuntimeCompileScriptResponse : IChromiumResponse
+internal partial class RuntimeCompileScriptResponse: IChromiumResponse
 {
 /// <summary>
 /// Id of the script.
@@ -19530,7 +19530,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.disable</c>
 /// </remarks>
-internal class RuntimeDisableRequest : IChromiumRequest<RuntimeDisableResponse>
+internal partial class RuntimeDisableRequest : IChromiumRequest<RuntimeDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.disable";
@@ -19538,7 +19538,7 @@ public string Command { get; } = "Runtime.disable";
 /// <summary>
 /// Response from <see cref="RuntimeDisableRequest"/>
 /// </summary>
-internal class RuntimeDisableResponse : IChromiumResponse
+internal partial class RuntimeDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19547,7 +19547,7 @@ internal class RuntimeDisableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.discardConsoleEntries</c>
 /// </remarks>
-internal class RuntimeDiscardConsoleEntriesRequest : IChromiumRequest<RuntimeDiscardConsoleEntriesResponse>
+internal partial class RuntimeDiscardConsoleEntriesRequest : IChromiumRequest<RuntimeDiscardConsoleEntriesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.discardConsoleEntries";
@@ -19555,7 +19555,7 @@ public string Command { get; } = "Runtime.discardConsoleEntries";
 /// <summary>
 /// Response from <see cref="RuntimeDiscardConsoleEntriesRequest"/>
 /// </summary>
-internal class RuntimeDiscardConsoleEntriesResponse : IChromiumResponse
+internal partial class RuntimeDiscardConsoleEntriesResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19566,7 +19566,7 @@ internal class RuntimeDiscardConsoleEntriesResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.enable</c>
 /// </remarks>
-internal class RuntimeEnableRequest : IChromiumRequest<RuntimeEnableResponse>
+internal partial class RuntimeEnableRequest : IChromiumRequest<RuntimeEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.enable";
@@ -19574,7 +19574,7 @@ public string Command { get; } = "Runtime.enable";
 /// <summary>
 /// Response from <see cref="RuntimeEnableRequest"/>
 /// </summary>
-internal class RuntimeEnableResponse : IChromiumResponse
+internal partial class RuntimeEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19583,7 +19583,7 @@ internal class RuntimeEnableResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.evaluate</c>
 /// </remarks>
-internal class RuntimeEvaluateRequest : IChromiumRequest<RuntimeEvaluateResponse>
+internal partial class RuntimeEvaluateRequest : IChromiumRequest<RuntimeEvaluateResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.evaluate";
@@ -19646,7 +19646,7 @@ public bool? ReplMode { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeEvaluateRequest"/>
 /// </summary>
-internal class RuntimeEvaluateResponse : IChromiumResponse
+internal partial class RuntimeEvaluateResponse: IChromiumResponse
 {
 /// <summary>
 /// Evaluation result.
@@ -19662,7 +19662,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.getIsolateId</c>
 /// </remarks>
-internal class RuntimeGetIsolateIdRequest : IChromiumRequest<RuntimeGetIsolateIdResponse>
+internal partial class RuntimeGetIsolateIdRequest : IChromiumRequest<RuntimeGetIsolateIdResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.getIsolateId";
@@ -19670,7 +19670,7 @@ public string Command { get; } = "Runtime.getIsolateId";
 /// <summary>
 /// Response from <see cref="RuntimeGetIsolateIdRequest"/>
 /// </summary>
-internal class RuntimeGetIsolateIdResponse : IChromiumResponse
+internal partial class RuntimeGetIsolateIdResponse: IChromiumResponse
 {
 /// <summary>
 /// The isolate id.
@@ -19683,7 +19683,7 @@ public string Id { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.getHeapUsage</c>
 /// </remarks>
-internal class RuntimeGetHeapUsageRequest : IChromiumRequest<RuntimeGetHeapUsageResponse>
+internal partial class RuntimeGetHeapUsageRequest : IChromiumRequest<RuntimeGetHeapUsageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.getHeapUsage";
@@ -19691,7 +19691,7 @@ public string Command { get; } = "Runtime.getHeapUsage";
 /// <summary>
 /// Response from <see cref="RuntimeGetHeapUsageRequest"/>
 /// </summary>
-internal class RuntimeGetHeapUsageResponse : IChromiumResponse
+internal partial class RuntimeGetHeapUsageResponse: IChromiumResponse
 {
 /// <summary>
 /// Used heap size in bytes.
@@ -19708,7 +19708,7 @@ public double? TotalSize { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.getProperties</c>
 /// </remarks>
-internal class RuntimeGetPropertiesRequest : IChromiumRequest<RuntimeGetPropertiesResponse>
+internal partial class RuntimeGetPropertiesRequest : IChromiumRequest<RuntimeGetPropertiesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.getProperties";
@@ -19733,7 +19733,7 @@ public bool? GeneratePreview { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeGetPropertiesRequest"/>
 /// </summary>
-internal class RuntimeGetPropertiesResponse : IChromiumResponse
+internal partial class RuntimeGetPropertiesResponse: IChromiumResponse
 {
 /// <summary>
 /// Object properties.
@@ -19757,7 +19757,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.globalLexicalScopeNames</c>
 /// </remarks>
-internal class RuntimeGlobalLexicalScopeNamesRequest : IChromiumRequest<RuntimeGlobalLexicalScopeNamesResponse>
+internal partial class RuntimeGlobalLexicalScopeNamesRequest : IChromiumRequest<RuntimeGlobalLexicalScopeNamesResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.globalLexicalScopeNames";
@@ -19768,7 +19768,7 @@ public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeGlobalLexicalScopeNamesRequest"/>
 /// </summary>
-internal class RuntimeGlobalLexicalScopeNamesResponse : IChromiumResponse
+internal partial class RuntimeGlobalLexicalScopeNamesResponse: IChromiumResponse
 {
 /// <summary>
 /// 
@@ -19780,7 +19780,7 @@ public string[] Names { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.queryObjects</c>
 /// </remarks>
-internal class RuntimeQueryObjectsRequest : IChromiumRequest<RuntimeQueryObjectsResponse>
+internal partial class RuntimeQueryObjectsRequest : IChromiumRequest<RuntimeQueryObjectsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.queryObjects";
@@ -19795,7 +19795,7 @@ public string ObjectGroup { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeQueryObjectsRequest"/>
 /// </summary>
-internal class RuntimeQueryObjectsResponse : IChromiumResponse
+internal partial class RuntimeQueryObjectsResponse: IChromiumResponse
 {
 /// <summary>
 /// Array with objects.
@@ -19807,7 +19807,7 @@ public RemoteObject Objects { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.releaseObject</c>
 /// </remarks>
-internal class RuntimeReleaseObjectRequest : IChromiumRequest<RuntimeReleaseObjectResponse>
+internal partial class RuntimeReleaseObjectRequest : IChromiumRequest<RuntimeReleaseObjectResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.releaseObject";
@@ -19818,7 +19818,7 @@ public string ObjectId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeReleaseObjectRequest"/>
 /// </summary>
-internal class RuntimeReleaseObjectResponse : IChromiumResponse
+internal partial class RuntimeReleaseObjectResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19827,7 +19827,7 @@ internal class RuntimeReleaseObjectResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.releaseObjectGroup</c>
 /// </remarks>
-internal class RuntimeReleaseObjectGroupRequest : IChromiumRequest<RuntimeReleaseObjectGroupResponse>
+internal partial class RuntimeReleaseObjectGroupRequest : IChromiumRequest<RuntimeReleaseObjectGroupResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.releaseObjectGroup";
@@ -19838,7 +19838,7 @@ public string ObjectGroup { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeReleaseObjectGroupRequest"/>
 /// </summary>
-internal class RuntimeReleaseObjectGroupResponse : IChromiumResponse
+internal partial class RuntimeReleaseObjectGroupResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19847,7 +19847,7 @@ internal class RuntimeReleaseObjectGroupResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.runIfWaitingForDebugger</c>
 /// </remarks>
-internal class RuntimeRunIfWaitingForDebuggerRequest : IChromiumRequest<RuntimeRunIfWaitingForDebuggerResponse>
+internal partial class RuntimeRunIfWaitingForDebuggerRequest : IChromiumRequest<RuntimeRunIfWaitingForDebuggerResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.runIfWaitingForDebugger";
@@ -19855,7 +19855,7 @@ public string Command { get; } = "Runtime.runIfWaitingForDebugger";
 /// <summary>
 /// Response from <see cref="RuntimeRunIfWaitingForDebuggerRequest"/>
 /// </summary>
-internal class RuntimeRunIfWaitingForDebuggerResponse : IChromiumResponse
+internal partial class RuntimeRunIfWaitingForDebuggerResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19864,7 +19864,7 @@ internal class RuntimeRunIfWaitingForDebuggerResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.runScript</c>
 /// </remarks>
-internal class RuntimeRunScriptRequest : IChromiumRequest<RuntimeRunScriptResponse>
+internal partial class RuntimeRunScriptRequest : IChromiumRequest<RuntimeRunScriptResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.runScript";
@@ -19906,7 +19906,7 @@ public bool? AwaitPromise { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeRunScriptRequest"/>
 /// </summary>
-internal class RuntimeRunScriptResponse : IChromiumResponse
+internal partial class RuntimeRunScriptResponse: IChromiumResponse
 {
 /// <summary>
 /// Run result.
@@ -19922,7 +19922,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Will send the command <c>Runtime.setAsyncCallStackDepth</c>
 /// </remarks>
-internal class RuntimeSetAsyncCallStackDepthRequest : IChromiumRequest<RuntimeSetAsyncCallStackDepthResponse>
+internal partial class RuntimeSetAsyncCallStackDepthRequest : IChromiumRequest<RuntimeSetAsyncCallStackDepthResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.setAsyncCallStackDepth";
@@ -19934,7 +19934,7 @@ public int? MaxDepth { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeSetAsyncCallStackDepthRequest"/>
 /// </summary>
-internal class RuntimeSetAsyncCallStackDepthResponse : IChromiumResponse
+internal partial class RuntimeSetAsyncCallStackDepthResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19943,7 +19943,7 @@ internal class RuntimeSetAsyncCallStackDepthResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.setCustomObjectFormatterEnabled</c>
 /// </remarks>
-internal class RuntimeSetCustomObjectFormatterEnabledRequest : IChromiumRequest<RuntimeSetCustomObjectFormatterEnabledResponse>
+internal partial class RuntimeSetCustomObjectFormatterEnabledRequest : IChromiumRequest<RuntimeSetCustomObjectFormatterEnabledResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.setCustomObjectFormatterEnabled";
@@ -19954,7 +19954,7 @@ public bool? Enabled { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeSetCustomObjectFormatterEnabledRequest"/>
 /// </summary>
-internal class RuntimeSetCustomObjectFormatterEnabledResponse : IChromiumResponse
+internal partial class RuntimeSetCustomObjectFormatterEnabledResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19963,7 +19963,7 @@ internal class RuntimeSetCustomObjectFormatterEnabledResponse : IChromiumRespons
 /// <remarks>
 /// Will send the command <c>Runtime.setMaxCallStackSizeToCapture</c>
 /// </remarks>
-internal class RuntimeSetMaxCallStackSizeToCaptureRequest : IChromiumRequest<RuntimeSetMaxCallStackSizeToCaptureResponse>
+internal partial class RuntimeSetMaxCallStackSizeToCaptureRequest : IChromiumRequest<RuntimeSetMaxCallStackSizeToCaptureResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.setMaxCallStackSizeToCapture";
@@ -19974,7 +19974,7 @@ public int? Size { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeSetMaxCallStackSizeToCaptureRequest"/>
 /// </summary>
-internal class RuntimeSetMaxCallStackSizeToCaptureResponse : IChromiumResponse
+internal partial class RuntimeSetMaxCallStackSizeToCaptureResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -19984,7 +19984,7 @@ internal class RuntimeSetMaxCallStackSizeToCaptureResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.terminateExecution</c>
 /// </remarks>
-internal class RuntimeTerminateExecutionRequest : IChromiumRequest<RuntimeTerminateExecutionResponse>
+internal partial class RuntimeTerminateExecutionRequest : IChromiumRequest<RuntimeTerminateExecutionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.terminateExecution";
@@ -19992,7 +19992,7 @@ public string Command { get; } = "Runtime.terminateExecution";
 /// <summary>
 /// Response from <see cref="RuntimeTerminateExecutionRequest"/>
 /// </summary>
-internal class RuntimeTerminateExecutionResponse : IChromiumResponse
+internal partial class RuntimeTerminateExecutionResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -20008,7 +20008,7 @@ internal class RuntimeTerminateExecutionResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.addBinding</c>
 /// </remarks>
-internal class RuntimeAddBindingRequest : IChromiumRequest<RuntimeAddBindingResponse>
+internal partial class RuntimeAddBindingRequest : IChromiumRequest<RuntimeAddBindingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.addBinding";
@@ -20023,7 +20023,7 @@ public int? ExecutionContextId { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeAddBindingRequest"/>
 /// </summary>
-internal class RuntimeAddBindingResponse : IChromiumResponse
+internal partial class RuntimeAddBindingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -20033,7 +20033,7 @@ internal class RuntimeAddBindingResponse : IChromiumResponse
 /// <remarks>
 /// Will send the command <c>Runtime.removeBinding</c>
 /// </remarks>
-internal class RuntimeRemoveBindingRequest : IChromiumRequest<RuntimeRemoveBindingResponse>
+internal partial class RuntimeRemoveBindingRequest : IChromiumRequest<RuntimeRemoveBindingResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.removeBinding";
@@ -20044,7 +20044,7 @@ public string Name { get; set; }}
 /// <summary>
 /// Response from <see cref="RuntimeRemoveBindingRequest"/>
 /// </summary>
-internal class RuntimeRemoveBindingResponse : IChromiumResponse
+internal partial class RuntimeRemoveBindingResponse: IChromiumResponse
 {
 }
 /// <summary>
@@ -20053,7 +20053,7 @@ internal class RuntimeRemoveBindingResponse : IChromiumResponse
 /// <remarks>
 /// Matches on the event <c>Runtime.bindingCalled</c>
 /// </remarks>
-internal class RuntimeBindingCalledChromiumEvent : IChromiumEvent
+internal partial class RuntimeBindingCalledChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.bindingCalled";
 /// <summary>
@@ -20074,7 +20074,7 @@ public int? ExecutionContextId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Runtime.consoleAPICalled</c>
 /// </remarks>
-internal class RuntimeConsoleAPICalledChromiumEvent : IChromiumEvent
+internal partial class RuntimeConsoleAPICalledChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.consoleAPICalled";
 /// <summary>
@@ -20111,7 +20111,7 @@ public string Context { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Runtime.exceptionRevoked</c>
 /// </remarks>
-internal class RuntimeExceptionRevokedChromiumEvent : IChromiumEvent
+internal partial class RuntimeExceptionRevokedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.exceptionRevoked";
 /// <summary>
@@ -20128,7 +20128,7 @@ public int? ExceptionId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Runtime.exceptionThrown</c>
 /// </remarks>
-internal class RuntimeExceptionThrownChromiumEvent : IChromiumEvent
+internal partial class RuntimeExceptionThrownChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.exceptionThrown";
 /// <summary>
@@ -20145,7 +20145,7 @@ public ExceptionDetails ExceptionDetails { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Runtime.executionContextCreated</c>
 /// </remarks>
-internal class RuntimeExecutionContextCreatedChromiumEvent : IChromiumEvent
+internal partial class RuntimeExecutionContextCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.executionContextCreated";
 /// <summary>
@@ -20158,7 +20158,7 @@ public ExecutionContextDescription Context { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Runtime.executionContextDestroyed</c>
 /// </remarks>
-internal class RuntimeExecutionContextDestroyedChromiumEvent : IChromiumEvent
+internal partial class RuntimeExecutionContextDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.executionContextDestroyed";
 /// <summary>
@@ -20171,7 +20171,7 @@ public int? ExecutionContextId { get; set; }}
 /// <remarks>
 /// Matches on the event <c>Runtime.executionContextsCleared</c>
 /// </remarks>
-internal class RuntimeExecutionContextsClearedChromiumEvent : IChromiumEvent
+internal partial class RuntimeExecutionContextsClearedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.executionContextsCleared";
 }
@@ -20182,7 +20182,7 @@ public string InternalName { get; } = "Runtime.executionContextsCleared";
 /// <remarks>
 /// Matches on the event <c>Runtime.inspectRequested</c>
 /// </remarks>
-internal class RuntimeInspectRequestedChromiumEvent : IChromiumEvent
+internal partial class RuntimeInspectRequestedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.inspectRequested";
 /// <summary>
@@ -20199,7 +20199,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Schema
 /// <summary>
 /// Description of the protocol domain.
 /// </summary>
-internal class Domain
+internal partial class Domain
 {
 /// <summary>
 /// Domain name.
@@ -20215,7 +20215,7 @@ public string Version { get; set; }}
 /// <remarks>
 /// Will send the command <c>Schema.getDomains</c>
 /// </remarks>
-internal class SchemaGetDomainsRequest : IChromiumRequest<SchemaGetDomainsResponse>
+internal partial class SchemaGetDomainsRequest : IChromiumRequest<SchemaGetDomainsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Schema.getDomains";
@@ -20223,7 +20223,7 @@ public string Command { get; } = "Schema.getDomains";
 /// <summary>
 /// Response from <see cref="SchemaGetDomainsRequest"/>
 /// </summary>
-internal class SchemaGetDomainsResponse : IChromiumResponse
+internal partial class SchemaGetDomainsResponse: IChromiumResponse
 {
 /// <summary>
 /// List of supported domains.

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Firefox
@@ -7,19 +8,24 @@ namespace PlaywrightSharp.Firefox
         private readonly string _browserContextId;
         private readonly FirefoxConnection _connection;
         private readonly BrowserContextOptions _browserContextOptions;
+        private readonly FirefoxBrowser _browser;
 
-        public FirefoxBrowserContext(string browserContextId, FirefoxConnection connection, BrowserContextOptions browserContextOptions)
+        public FirefoxBrowserContext(string browserContextId, FirefoxConnection connection, BrowserContextOptions browserContextOptions, FirefoxBrowser browser)
         {
             _browserContextId = browserContextId;
             _connection = connection;
             _browserContextOptions = browserContextOptions;
+            _browser = browser;
         }
 
         public BrowserContext BrowserContext { get; set; }
 
-        public Task<IPage[]> GetPagesAsync()
+        public async Task<IPage[]> GetPagesAsync()
         {
-            throw new System.NotImplementedException();
+            var targets = _browser.GetAllTargets()
+                .Where(target => target.BrowserContext == BrowserContext && target.Type == TargetType.Page);
+            var pages = await Task.WhenAll(targets.Select(target => target.GetPageAsync())).ConfigureAwait(false);
+            return pages.Where(page => page != null).ToArray();
         }
 
         public Task<IPage> NewPage()

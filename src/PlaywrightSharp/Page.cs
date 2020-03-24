@@ -522,6 +522,33 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose() => _screenshotter?.Dispose();
 
+        internal void RemoveWorker(string workerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddWorker(string workerId, Worker worker)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddConsoleMessage(ConsoleType type, IJSHandle[] args, ConsoleMessageLocation location, string text = null)
+        {
+            var message = new ConsoleMessage(type, text, args, location);
+            bool intercepted = FrameManager.InterceptConsoleMessage(message);
+            if (intercepted || Console.GetInvocationList().Length == 0)
+            {
+                foreach (var arg in args)
+                {
+                    arg.DisposeAsync();
+                }
+            }
+            else
+            {
+                Console?.Invoke(this, new ConsoleEventArgs(message));
+            }
+        }
+
         internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
 
         internal void DidDisconnected() => _disconnected = true;

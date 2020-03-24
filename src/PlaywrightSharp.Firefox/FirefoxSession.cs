@@ -1,26 +1,28 @@
 using System;
 using System.Collections.Concurrent;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Messaging;
 using PlaywrightSharp.Firefox.Protocol;
-using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Messaging;
 
 namespace PlaywrightSharp.Firefox
 {
     internal class FirefoxSession
     {
-        private readonly TargetInfoType _targetType;
+        private readonly string _targetType;
         private readonly string _sessionId;
+        private readonly Func<int, IFirefoxRequest<IFirefoxResponse>, Task> _rawSend;
         private readonly string _closeReason = string.Empty;
         private readonly ConcurrentDictionary<int, MessageTask<IFirefoxResponse>> _callbacks = new ConcurrentDictionary<int, MessageTask<IFirefoxResponse>>();
         private bool _disposed = false;
 
-        public FirefoxSession(FirefoxConnection connection, TargetInfoType targetType, string sessionId)
+        public FirefoxSession(FirefoxConnection connection, string targetType, string sessionId, Func<int, IFirefoxRequest<IFirefoxResponse>, Task> rawSend)
         {
             Connection = connection;
             _targetType = targetType;
             _sessionId = sessionId;
+            _rawSend = rawSend;
 
             Connection.MessageReceived += OnMessageReceived;
             connection.Disconnected += OnDisconnected;
@@ -59,13 +61,7 @@ namespace PlaywrightSharp.Firefox
 
             try
             {
-                await Connection.RawSendAsync(new ConnectionRequest
-                {
-                    Id = id,
-                    Method = request.Command,
-                    Params = request,
-                    SessionId = _sessionId,
-                }).ConfigureAwait(false);
+                await _rawSend(id, (IFirefoxRequest<IFirefoxResponse>)request).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -103,9 +99,13 @@ namespace PlaywrightSharp.Firefox
                 }
                 else
                 {
-                    var result = FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result.Value.GetRawText());
+                    var result = FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText());
                     callback.TaskWrapper.TrySetResult(result);
                 }
+            }
+            else if (obj.Params?.ValueKind == JsonValueKind.Object)
+            {
+                OnMessageReceived(this, FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText()));
             }
         }
 
