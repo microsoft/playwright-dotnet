@@ -11,6 +11,7 @@ namespace PlaywrightSharp
         private readonly Frame _parentFrame;
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
+        private int _setContentCounter;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -174,9 +175,32 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
-        public Task SetContentAsync(string html, NavigationOptions options = null)
+        public async Task SetContentAsync(string html, NavigationOptions options = null)
         {
-            throw new System.NotImplementedException();
+            string tag = $"--playwright--set--content--{Id}--${++_setContentCounter}--";
+            var context = await GetUtilityContextAsync().ConfigureAwait(false);
+            LifecycleWatcher watcher;
+
+            Page.FrameManager.ConsoleMessageTags.set(tag, () => {
+                // Clear lifecycle right after document.open() - see 'tag' below.
+                this._page._frameManager.clearFrameLifecycle(this);
+                watcher = new LifecycleWatcher(this, options, false /* supportUrlMatch */);
+            });
+            await context.evaluate((html, tag) => {
+                window.stop();
+                document.open();
+                console.debug(tag);  // eslint-disable-line no-console
+                document.write(html);
+                document.close();
+            }, html, tag);
+            assert(watcher!, 'Was not able to clear lifecycle in setContent');
+            const error = await Promise.race([
+                watcher!.timeoutOrTerminationPromise,
+                watcher!.lifecyclePromise,
+            ]);
+            watcher!.dispose();
+            if (error)
+                throw error;
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>

@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 
@@ -62,11 +61,11 @@ namespace PlaywrightSharp
         {
             Viewport overridenViewport = null;
             var viewport = _page.Viewport;
-            Size? viewportSize = null;
+            Size viewportSize = null;
 
             if (viewport == null)
             {
-                viewportSize = await _page.EvaluateAsync<Size?>(@"() => {
+                viewportSize = await _page.EvaluateAsync<Size>(@"() => {
                   if (!document.body || !document.documentElement)
                     return;
                   return {
@@ -83,7 +82,7 @@ namespace PlaywrightSharp
 
             if (options.FullPage && !_page.Delegate.CanScreenshotOutsideViewport())
             {
-                var fullPageRect = await _page.EvaluateAsync<Size?>(@"() => {
+                var fullPageRect = await _page.EvaluateAsync<Size>(@"() => {
                   if (!document.body || !document.documentElement)
                     return null;
                   return {
@@ -105,13 +104,9 @@ namespace PlaywrightSharp
                     throw new PlaywrightSharpException(ScreenshotDuringNavigationError);
                 }
 
-                if (viewport != null)
-                {
-                    overridenViewport = viewport.Clone();
-                }
-
-                overridenViewport.Height = fullPageRect.Value.Height;
-                overridenViewport.Width = fullPageRect.Value.Width;
+                overridenViewport = viewport != null ? viewport.Clone() : new Viewport();
+                overridenViewport.Height = fullPageRect.Height;
+                overridenViewport.Width = fullPageRect.Width;
 
                 await _page.SetViewportAsync(overridenViewport).ConfigureAwait(false);
             }
@@ -120,7 +115,7 @@ namespace PlaywrightSharp
                 options.Clip = TrimClipToViewport(viewport, options.Clip);
             }
 
-            var result = await ScreenshotAsync(format, options, overridenViewport ?? viewport).ConfigureAwait(false);
+            byte[] result = await ScreenshotAsync(format, options, overridenViewport ?? viewport).ConfigureAwait(false);
 
             if (overridenViewport != null)
             {
@@ -130,7 +125,7 @@ namespace PlaywrightSharp
                 }
                 else
                 {
-                    await _page.Delegate.ResetViewportAsync(viewportSize.Value).ConfigureAwait(false);
+                    await _page.Delegate.ResetViewportAsync(viewportSize).ConfigureAwait(false);
                 }
             }
 

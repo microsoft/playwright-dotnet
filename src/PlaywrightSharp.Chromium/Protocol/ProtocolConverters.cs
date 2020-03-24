@@ -39,5 +39,23 @@ namespace PlaywrightSharp.Chromium.Protocol
 
             return mask;
         }
+
+        internal static string ToStringFormat(this ScreenshotFormat format)
+            => format switch
+            {
+                ScreenshotFormat.Jpeg => "jpeg",
+                ScreenshotFormat.Png => "png",
+                _ => string.Empty,
+            };
+
+        internal static Page.Viewport ToViewportProtocol(this Clip clip)
+            => new Page.Viewport
+            {
+                Height = clip.Height,
+                Width = clip.Width,
+                X = clip.X,
+                Y = clip.Y,
+                Scale = 1,
+            };
     }
 }

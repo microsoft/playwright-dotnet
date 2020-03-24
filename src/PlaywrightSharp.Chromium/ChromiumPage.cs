@@ -145,13 +145,32 @@ namespace PlaywrightSharp.Chromium
             };
         }
 
-        public bool CanScreenshotOutsideViewport() => throw new NotImplementedException();
+        public bool CanScreenshotOutsideViewport() => false;
 
-        public Task ResetViewportAsync(Size viewportSize) => throw new NotImplementedException();
+        public Task ResetViewportAsync(Size viewportSize)
+            => Client.SendAsync(new EmulationSetDeviceMetricsOverrideRequest
+            {
+                Mobile = false,
+                Width = 0,
+                Height = 0,
+                DeviceScaleFactor = 0,
+            });
 
         public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
 
-        public Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport) => throw new NotImplementedException();
+        public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
+        {
+            await Client.SendAsync(new PageBringToFrontRequest()).ConfigureAwait(false);
+            var clip = options.Clip != null ? options.Clip.ToViewportProtocol() : null;
+
+            var result = await Client.SendAsync(new PageCaptureScreenshotRequest
+            {
+                Format = format.ToStringFormat(),
+                Quality = options.Quality,
+                Clip = clip,
+            }).ConfigureAwait(false);
+            return result.Data;
+        }
 
         internal async Task InitializeAsync()
         {

@@ -9,22 +9,22 @@ namespace PlaywrightSharp
         /// <summary>
         /// x-coordinate of top-left corner of clip area.
         /// </summary>
-        public decimal X { get; set; }
+        public double X { get; set; }
 
         /// <summary>
         /// y-coordinate of top-left corner of clip area.
         /// </summary>
-        public decimal Y { get; set; }
+        public double Y { get; set; }
 
         /// <summary>
         /// Width of clipping area.
         /// </summary>
-        public decimal Width { get; set; }
+        public double Width { get; set; }
 
         /// <summary>
         /// Height of clipping area.
         /// </summary>
-        public decimal Height { get; set; }
+        public double Height { get; set; }
 
         /// <summary>
         /// Scale of the webpage rendering. Defaults to 1.

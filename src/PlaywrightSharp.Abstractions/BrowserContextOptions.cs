@@ -54,7 +54,7 @@ namespace PlaywrightSharp
         public BrowserContextOptions Clone()
         {
             var copy = (BrowserContextOptions)MemberwiseClone();
-            copy.Viewport = Viewport.Clone();
+            copy.Viewport = Viewport?.Clone();
             return copy;
         }
     }
