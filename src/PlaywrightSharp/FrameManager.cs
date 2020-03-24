@@ -9,6 +9,7 @@ namespace PlaywrightSharp
     internal class FrameManager
     {
         private readonly Page _page;
+        private readonly ConcurrentDictionary<string, Action> _consoleMessageTags = new ConcurrentDictionary<string, Action>();
 
         public FrameManager(Page page)
         {
@@ -23,7 +24,11 @@ namespace PlaywrightSharp
 
         internal IFrame FrameAttached(string frameId, string parentFrameId)
         {
-            Frames.TryGetValue(parentFrameId, out var parentFrame);
+            Frame parentFrame = null;
+            if (parentFrameId != null)
+            {
+                Frames.TryGetValue(parentFrameId, out parentFrame);
+            }
 
             if (parentFrame == null)
             {
@@ -111,6 +116,23 @@ namespace PlaywrightSharp
             List<Frame> frames = new List<Frame>();
             CollectFrames(MainFrame, frames);
             return frames.ToArray();
+        }
+
+        internal bool InterceptConsoleMessage(ConsoleMessage message)
+        {
+            if (message.Type == ConsoleType.Debug)
+            {
+                return false;
+            }
+
+            string tag = message.Text;
+            if (_consoleMessageTags.TryRemove(tag, out var handler))
+            {
+                handler();
+                return true;
+            }
+
+            return false;
         }
 
         private void ClearWebSockets(Frame frame)

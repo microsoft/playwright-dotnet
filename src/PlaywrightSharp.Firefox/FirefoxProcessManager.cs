@@ -345,10 +345,6 @@ namespace PlaywrightSharp.Firefox
                             throw;
                         }
                     }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.Message);
-                    }
                     finally
                     {
                         cts?.Dispose();

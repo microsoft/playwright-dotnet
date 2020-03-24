@@ -31,5 +31,17 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         }
 
         protected abstract Task GenerateTypesAsync(StringBuilder builder, RevisionInfo revision);
+
+        protected void GenerateEventDefinition(StringBuilder builder, string eventName)
+            => builder.AppendLine($"internal partial class {eventName}{Project}Event : I{Project}Event");
+
+        protected void GenerateTypeDefinition(StringBuilder builder, string typeName)
+            => builder.AppendLine($"internal partial class {typeName}");
+
+        protected void GenerateRequestDefinition(StringBuilder builder, string typeName)
+            => builder.AppendLine($"internal partial class {typeName}Request : I{Project}Request<{typeName}Response>");
+
+        protected void GenerateResponseDefinition(StringBuilder builder, string typeName)
+            => builder.AppendLine($"internal partial class {typeName}Response: I{Project}Response");
     }
 }
