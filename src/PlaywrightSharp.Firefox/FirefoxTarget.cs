@@ -49,12 +49,8 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
         public async Task<IPage> GetPageAsync()
         {
-            if (PageTask == null)
-            {
-                PageTask = CreatePageAsync();
-            }
-
-            return await (PageTask ?? Task.FromResult<Page>(null)).ConfigureAwait(false);
+            PageTask ??= CreatePageAsync();
+            return await PageTask.ConfigureAwait(false);
         }
 
         public Task<IWorker> GetWorkerAsync()
