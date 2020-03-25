@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -135,11 +136,53 @@ namespace PlaywrightSharp
             return false;
         }
 
-        private void ClearWebSockets(Frame frame)
+        internal void SetConsoleMessageTag(string tag, Action handler) => _consoleMessageTags[tag] = handler;
+
+        internal void ClearFrameLifecycle(Frame frame)
         {
+            frame.FiredLifecycleEvents.Clear();
+
+            // Keep the current navigation request if any.
+            frame.InflightRequests = frame.InflightRequests.FindAll(request => request.DocumentId == frame.LastDocumentId);
+            StopNetworkIdleTimer(frame, "networkidle0");
+            if (frame.InflightRequests.Count == 0)
+            {
+                StartNetworkIdleTimer(frame, "networkidle0");
+            }
+
+            StopNetworkIdleTimer(frame, "networkidle2");
+            if (frame.InflightRequests.Count <= 2)
+            {
+                StartNetworkIdleTimer(frame, "networkidle2");
+            }
         }
 
-        private void ClearFrameLifecycle(Frame frame)
+        private void StartNetworkIdleTimer(Frame frame, string lifecycleEvent)
+        {
+            if (frame.FiredLifecycleEvents.Contains(lifecycleEvent))
+            {
+                return;
+            }
+
+            frame.NetworkIdleTimers[lifecycleEvent] = NetworkIdleTimer();
+            CancellationTokenSource NetworkIdleTimer()
+            {
+                var cts = new CancellationTokenSource();
+                _ = Task.Delay(500, cts.Token).ContinueWith(_ => FrameLifecycleEvent(frame.Id, lifecycleEvent), TaskScheduler.Default);
+                return cts;
+            }
+        }
+
+        private void StopNetworkIdleTimer(Frame frame, string lifecycleEvent)
+        {
+            if (frame.NetworkIdleTimers.TryRemove(lifecycleEvent, out var cts))
+            {
+                cts.Cancel();
+                cts.Dispose();
+            }
+        }
+
+        private void ClearWebSockets(Frame frame)
         {
         }
 

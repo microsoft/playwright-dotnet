@@ -33,9 +33,9 @@ namespace PlaywrightSharp.Firefox
             _context = context;
             _openerResolver = openerResolver;
 
-            Page = new Page(this, _context);
             RawKeyboard = new FirefoxRawKeyboard(session);
             RawMouse = new FirefoxRawMouse(session);
+            Page = new Page(this, _context);
 
             session.MessageReceived += OnMessageReceived;
         }

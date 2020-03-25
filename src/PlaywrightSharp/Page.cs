@@ -301,9 +301,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, NavigationOptions)"/>
         public Task SetContentAsync(string html, NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.SetContentAsync(html, options);
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, WaitUntilNavigation)"/>
         public Task SetContentAsync(string html, WaitUntilNavigation waitUntil)

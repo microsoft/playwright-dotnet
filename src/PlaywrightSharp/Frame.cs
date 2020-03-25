@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -11,6 +13,7 @@ namespace PlaywrightSharp
         private readonly Frame _parentFrame;
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
+        private int _setContentCounter = 0;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -57,6 +60,10 @@ namespace PlaywrightSharp
         internal List<Frame> ChildFrames { get; } = new List<Frame>();
 
         internal string LastDocumentId { get; set; }
+
+        internal List<Request> InflightRequests { get; set; } = new List<Request>();
+
+        internal ConcurrentDictionary<string, CancellationTokenSource> NetworkIdleTimers { get; } = new ConcurrentDictionary<string, CancellationTokenSource>();
 
         /// <inheritdoc cref="IFrame.GetTitleAsync" />
         public async Task<string> GetTitleAsync()
@@ -181,9 +188,28 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
-        public Task SetContentAsync(string html, NavigationOptions options = null)
+        public async Task SetContentAsync(string html, NavigationOptions options = null)
         {
-            throw new System.NotImplementedException();
+            string tag = $"--playwright--set--content--{Id}--{Interlocked.Increment(ref _setContentCounter)}--";
+            var context = await GetUtilityContextAsync().ConfigureAwait(false);
+            LifecycleWatcher watcher;
+            Page.FrameManager.SetConsoleMessageTag(tag, () =>
+            {
+                Page.FrameManager.ClearFrameLifecycle(this);
+                watcher = new LifecycleWatcher(this, options);
+            });
+
+            await context.EvaluateAsync<object>(
+                @"(html, tag) => {
+                window.stop();
+                document.open();
+                console.debug(tag);
+                document.write(html);
+                document.close();
+            }",
+                html,
+                tag).ConfigureAwait(false);
+
         }
 
         /// <inheritdoc cref="IFrame.GetContentAsync"/>
