@@ -91,16 +91,6 @@ namespace PlaywrightSharp.Helpers
             return false;
         }
 
-        /// <summary>
-        /// Converts the page function to a function text.
-        /// </summary>
-        /// <param name="pageFunction">The page function.</param>
-        /// <returns>The valid function text.</returns>
-        public static string ToFunctionText(this string pageFunction)
-        {
-            return pageFunction;
-        }
-
         private static bool IsQuoted(this string value)
             => value.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && value.EndsWith("\"", StringComparison.OrdinalIgnoreCase);
     }
