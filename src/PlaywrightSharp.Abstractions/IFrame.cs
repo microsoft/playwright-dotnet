@@ -49,6 +49,13 @@ namespace PlaywrightSharp
         string Id { get; set; }
 
         /// <summary>
+        /// Returns page's title.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the action completed, yielding the frame's title.</returns>
+        /// <seealso cref="IPage.GetTitleAsync"/>
+        Task<string> GetTitleAsync();
+
+        /// <summary>
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>

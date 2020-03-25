@@ -115,7 +115,7 @@ internal partial class RemoteObject
 public Runtime.RemoteObjectType Type { get; set; }
 public Runtime.RemoteObjectSubtype Subtype { get; set; }
 public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
+public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
 public object Value { get; set; }
 }
 internal partial class ObjectProperty
@@ -133,13 +133,13 @@ internal partial class ExceptionDetails
 {
 public string Text { get; set; }
 public string Stack { get; set; }
-public JsonElement? Value { get; set; }
+public object Value { get; set; }
 }
 internal partial class CallFunctionArgument
 {
 public string ObjectId { get; set; }
 public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
-public JsonElement? Value { get; set; }
+public object Value { get; set; }
 }
 internal enum RemoteObjectType
 {
@@ -486,7 +486,7 @@ internal partial class PageBindingCalledFirefoxEvent : IFirefoxEvent
 public string InternalName { get; } = "Page.bindingCalled";
 public string ExecutionContextId { get; set; }
 public string Name { get; set; }
-public JsonElement? Payload { get; set; }
+public object Payload { get; set; }
 }
 internal partial class PageFileChooserOpenedFirefoxEvent : IFirefoxEvent
 {
@@ -852,7 +852,7 @@ internal partial class RuntimeExecutionContextCreatedFirefoxEvent : IFirefoxEven
 {
 public string InternalName { get; } = "Runtime.executionContextCreated";
 public string ExecutionContextId { get; set; }
-public JsonElement? AuxData { get; set; }
+public object AuxData { get; set; }
 }
 internal partial class RuntimeExecutionContextDestroyedFirefoxEvent : IFirefoxEvent
 {

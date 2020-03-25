@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.title</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageTitleTests : PlaywrightSharpPageBaseTest
     {
-        internal PageTitleTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageTitleTests(ITestOutputHelper output) : base(output)
         {
         }
 

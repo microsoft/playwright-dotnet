@@ -58,6 +58,13 @@ namespace PlaywrightSharp
 
         internal string LastDocumentId { get; set; }
 
+        /// <inheritdoc cref="IFrame.GetTitleAsync" />
+        public async Task<string> GetTitleAsync()
+        {
+            var context = await GetUtilityContextAsync().ConfigureAwait(false);
+            return await context.EvaluateAsync<string>("() => document.title").ConfigureAwait(false);
+        }
+
         /// <inheritdoc cref="IFrame.AddScriptTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
         {

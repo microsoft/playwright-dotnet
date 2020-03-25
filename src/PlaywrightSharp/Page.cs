@@ -354,10 +354,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.GetTitleAsync"/>
-        public Task<string> GetTitleAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc cref="IPage.GetOpenerAsync"/>
         public Task<IPage> GetOpenerAsync()
