@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Firefox
                     return default;
                 }
 
-                return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type);
+                return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type.Value);
             }
 
             object CreateHandle(RemoteObject remoteObject) => new JSHandle(frameExecutionContext, remoteObject);
