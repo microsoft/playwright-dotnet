@@ -54,20 +54,21 @@ namespace PlaywrightSharp.Firefox
         public Task ClosePageAsync(bool runBeforeUnload)
             => _session.SendAsync(new PageCloseRequest { RunBeforeUnload = runBeforeUnload });
 
-        public Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle)
+        public async Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle)
         {
-            throw new NotImplementedException();
+            var result = await _session.SendAsync(new PageGetContentQuadsRequest
+            {
+                FrameId = elementHandle.FrameExecutionContext.Frame.Id,
+                ObjectId = elementHandle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            return Array.ConvertAll(result.Quads, quad => (Quad[])quad);
         }
 
         public Task<LayoutMetric> GetLayoutViewportAsync()
-        {
-            throw new NotImplementedException();
-        }
+            => Page.EvaluateAsync<LayoutMetric>("() => ({ width: innerWidth, height: innerHeight })");
 
         public bool IsElementHandle(IRemoteObject remoteObject)
-        {
-            throw new NotImplementedException();
-        }
+            => ((RemoteObject)remoteObject).Subtype == RemoteObjectSubtype.Node;
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
@@ -223,7 +224,7 @@ namespace PlaywrightSharp.Firefox
                 {
                     frame.ContextCreated(ContextType.Utility, context);
                 }
-                else if (auxData.Name == null)
+                else if (string.IsNullOrEmpty(auxData.Name))
                 {
                     frame.ContextCreated(ContextType.Main, context);
                 }

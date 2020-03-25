@@ -12,6 +12,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>click.spec.js</playwright-file>
     ///<playwright-describe>Page.click</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ClickTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

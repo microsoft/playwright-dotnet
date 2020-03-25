@@ -450,10 +450,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.GetContentAsync"/>
-        public Task<string> GetContentAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string> GetContentAsync() => MainFrame.GetContentAsync();
 
         /// <inheritdoc cref="IPage.QuerySelectorAllAsync(string)"/>
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector)

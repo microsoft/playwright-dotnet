@@ -186,6 +186,20 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc cref="IFrame.GetContentAsync"/>
+        public async Task<string> GetContentAsync()
+        {
+            var context = await GetUtilityContextAsync().ConfigureAwait(false);
+            return await context.EvaluateAsync<string>(@"() => {
+                let retVal = '';
+                if (document.doctype)
+                    retVal = new XMLSerializer().serializeToString(document.doctype);
+                if (document.documentElement)
+                    retVal += document.documentElement.outerHTML;
+                return retVal;
+            }").ConfigureAwait(false);
+        }
+
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
         {

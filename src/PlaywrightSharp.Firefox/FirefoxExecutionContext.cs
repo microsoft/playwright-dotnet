@@ -49,9 +49,25 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        public Task ReleaseHandleAsync(JSHandle handle)
+        public async Task ReleaseHandleAsync(JSHandle handle)
         {
-            throw new System.NotImplementedException();
+            if (handle.RemoteObject?.ObjectId == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await _session.SendAsync(new RuntimeDisposeObjectRequest
+                {
+                    ExecutionContextId = _executionContextId,
+                    ObjectId = handle.RemoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (PlaywrightSharpException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+            }
         }
 
         private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, FrameExecutionContext context)
@@ -62,7 +78,7 @@ namespace PlaywrightSharp.Firefox
                 return DeserializeValue<T>(remoteObject);
             }
 
-            return (T)CreateHandle(remoteObject, context);
+            return (T)context.CreateHandle(remoteObject);
         }
 
         private void CheckException(ExceptionDetails exceptionDetails)

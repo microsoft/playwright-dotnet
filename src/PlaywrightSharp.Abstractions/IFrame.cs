@@ -117,6 +117,12 @@ namespace PlaywrightSharp
         Task SetContentAsync(string html, NavigationOptions options = null);
 
         /// <summary>
+        /// Gets the full HTML contents of the page, including the doctype.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the html content is retrieved, yielding the HTML content.</returns>
+        Task<string> GetContentAsync();
+
+        /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.
         /// </summary>
         /// <param name="options">add script tag options.</param>
