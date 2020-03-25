@@ -572,5 +572,7 @@ namespace PlaywrightSharp
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
         internal void OnLoad() => Load?.Invoke(this, new EventArgs());
+
+        internal void OnPageError(PageErrorEventArgs args) => PageError?.Invoke(this, args);
     }
 }

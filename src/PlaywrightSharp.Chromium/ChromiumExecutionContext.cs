@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Chromium
 
                 if (result.ExceptionDetails != null)
                 {
-                    throw new PlaywrightSharpException($"Evaluation failed: {GetExceptionMessage(result.ExceptionDetails)}");
+                    throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
                 }
 
                 remoteObject = result.Result;
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Chromium
 
                 if (result.ExceptionDetails != null)
                 {
-                    throw new PlaywrightSharpException($"Evaluation failed: {GetExceptionMessage(result.ExceptionDetails)}");
+                    throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
                 }
 
                 remoteObject = result.Result;
@@ -76,7 +76,19 @@ namespace PlaywrightSharp.Chromium
 
         public Task ReleaseHandleAsync(JSHandle handle) => ReleaseObjectAsync(_client, handle.RemoteObject);
 
-        private static object ValueFromUnserializableValue(RemoteObject remoteObject, string unserializableValue)
+        public string HandleToString(IJSHandle handle, bool includeType)
+        {
+            var remote = ((JSHandle)handle).RemoteObject;
+            if (!string.IsNullOrEmpty(remote.ObjectId))
+            {
+                string type = string.IsNullOrEmpty(remote.Subtype) ? remote.Type : remote.Subtype;
+                return "JSHandle@" + type;
+            }
+
+            return (includeType ? "JSHandle:" : string.Empty) + GetValueFromRemoteObject<string>(remote);
+        }
+
+        private static object ValueFromUnserializableValue(IRemoteObject remoteObject, string unserializableValue)
         {
             if (
                 remoteObject.Type == RemoteObjectType.Bigint &&
@@ -159,7 +171,7 @@ namespace PlaywrightSharp.Chromium
             };
         }
 
-        private object GetValueFromRemoteObject<T>(RemoteObject remoteObject)
+        private object GetValueFromRemoteObject<T>(IRemoteObject remoteObject)
         {
             string unserializableValue = remoteObject.UnserializableValue;
 
@@ -176,27 +188,6 @@ namespace PlaywrightSharp.Chromium
             }
 
             return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
-        }
-
-        private object GetExceptionMessage(ExceptionDetails exceptionDetails)
-        {
-            if (exceptionDetails.Exception != null)
-            {
-                return exceptionDetails.Exception.Description ?? exceptionDetails.Exception.Value;
-            }
-
-            string message = exceptionDetails.Text;
-            if (exceptionDetails.StackTrace != null)
-            {
-                foreach (var callframe in exceptionDetails.StackTrace.CallFrames)
-                {
-                    string location = $"{callframe.Url}:{callframe.LineNumber}:{callframe.ColumnNumber}";
-                    string functionName = string.IsNullOrEmpty(callframe.FunctionName) ? "<anonymous>" : callframe.FunctionName;
-                    message += $"\n at ${functionName} (${location})";
-                }
-            }
-
-            return message;
         }
 
         private async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)

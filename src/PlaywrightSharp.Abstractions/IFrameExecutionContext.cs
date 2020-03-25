@@ -23,6 +23,19 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(bool returnByValue, string script, params object[] args);
 
         /// <summary>
+        /// Executes a script in the frame's context.
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to script.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <seealso cref="IPage.EvaluateAsync{T}(string, object[])"/>
+        /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved.</returns>
+        Task EvaluateAsync(string script, params object[] args);
+
+        /// <summary>
         /// Returns the injected <see cref="IJSHandle"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the injected <see cref="IJSHandle"/> is resolved, yeilding the <see cref="IJSHandle"/>.</returns>

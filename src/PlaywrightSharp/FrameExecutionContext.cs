@@ -63,6 +63,8 @@ namespace PlaywrightSharp
             return result;
         }
 
+        public Task EvaluateAsync(string script, params object[] args) => EvaluateAsync<JsonElement?>(true, script, args);
+
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => EvaluateAsync<IJSHandle>(false, script, args);
 
         public Task<IElementHandle> QuerySelectorAsync(string selector)

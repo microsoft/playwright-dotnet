@@ -57,5 +57,26 @@ namespace PlaywrightSharp.Chromium.Protocol
                 Y = clip.Y,
                 Scale = 1,
             };
+
+        internal static string ToExceptionMessage(this Runtime.ExceptionDetails exceptionDetails)
+        {
+            if (exceptionDetails.Exception != null)
+            {
+                return exceptionDetails.Exception.Description ?? exceptionDetails.Exception.Value.ToString();
+            }
+
+            string message = exceptionDetails.Text;
+            if (exceptionDetails.StackTrace != null)
+            {
+                foreach (var callframe in exceptionDetails.StackTrace.CallFrames)
+                {
+                    string location = $"{callframe.Url}:{callframe.LineNumber}:{callframe.ColumnNumber}";
+                    string functionName = string.IsNullOrEmpty(callframe.FunctionName) ? "<anonymous>" : callframe.FunctionName;
+                    message += $"\n at ${functionName} (${location})";
+                }
+            }
+
+            return message;
+        }
     }
 }

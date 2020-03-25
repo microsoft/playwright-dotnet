@@ -41,6 +41,8 @@ namespace PlaywrightSharp.Chromium
         {
         }
 
+        internal static ChromiumConnection FromSession(ChromiumSession client) => client.Connection;
+
         internal int GetMessageId() => Interlocked.Increment(ref _lastId);
 
         internal Task RawSendAsync(int id, string method, object args, string sessionId)

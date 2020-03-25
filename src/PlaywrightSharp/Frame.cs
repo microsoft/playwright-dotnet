@@ -179,28 +179,41 @@ namespace PlaywrightSharp
         {
             string tag = $"--playwright--set--content--{Id}--${++_setContentCounter}--";
             var context = await GetUtilityContextAsync().ConfigureAwait(false);
-            LifecycleWatcher watcher;
+            LifecycleWatcher watcher = null;
 
-            Page.FrameManager.ConsoleMessageTags.set(tag, () => {
+            Page.FrameManager.ConsoleMessageTags.TryAdd(tag, () =>
+            {
                 // Clear lifecycle right after document.open() - see 'tag' below.
-                this._page._frameManager.clearFrameLifecycle(this);
-                watcher = new LifecycleWatcher(this, options, false /* supportUrlMatch */);
+                Page.FrameManager.ClearFrameLifecycle(this);
+                watcher = new LifecycleWatcher(this, options);
             });
-            await context.evaluate((html, tag) => {
-                window.stop();
-                document.open();
-                console.debug(tag);  // eslint-disable-line no-console
-                document.write(html);
-                document.close();
-            }, html, tag);
-            assert(watcher!, 'Was not able to clear lifecycle in setContent');
-            const error = await Promise.race([
-                watcher!.timeoutOrTerminationPromise,
-                watcher!.lifecyclePromise,
-            ]);
-            watcher!.dispose();
-            if (error)
-                throw error;
+
+            await context.EvaluateAsync(
+                @"(html, tag) => {
+                    window.stop();
+                    document.open();
+                    console.debug(tag);  // eslint-disable-line no-console
+                    document.write(html);
+                    document.close();
+                }",
+                html,
+                tag).ConfigureAwait(false);
+
+            if (watcher == null)
+            {
+                throw new PlaywrightSharpException("Was not able to clear lifecycle in SetContentAsync");
+            }
+
+            var timeoutTask = watcher.TimeoutOrTerminationTask;
+            await Task.WhenAny(
+                    timeoutTask,
+                    watcher.LifecycleTask).ConfigureAwait(false);
+
+            watcher.Dispose();
+            if (timeoutTask.IsFaulted)
+            {
+                await timeoutTask.ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
