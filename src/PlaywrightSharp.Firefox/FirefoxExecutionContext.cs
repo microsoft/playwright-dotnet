@@ -145,21 +145,14 @@ namespace PlaywrightSharp.Firefox
             };
 
         private object ValueFromType<T>(JsonElement value, RemoteObjectType objectType)
-        {
-            switch (objectType)
+            => objectType switch
             {
-                case RemoteObjectType.Object:
-                    return value.ToObject<T>();
-                case RemoteObjectType.Undefined:
-                    return null;
-                case RemoteObjectType.Number:
-                case RemoteObjectType.Bigint:
-                    return value.GetDouble();
-                case RemoteObjectType.Boolean:
-                    return value.GetBoolean();
-                default: // string, symbol, function
-                    return value.ToObject<T>();
-            }
-        }
+                RemoteObjectType.Object => value.ToObject<T>(),
+                RemoteObjectType.Undefined => null,
+                RemoteObjectType.Number => value.GetDouble(),
+                RemoteObjectType.Bigint => value.GetDouble(),
+                RemoteObjectType.Boolean => value.GetBoolean(),
+                _ => value.ToObject<T>()
+            };
     }
 }
