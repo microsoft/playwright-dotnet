@@ -108,12 +108,13 @@ namespace PlaywrightSharp.Firefox
             };
         }
 
-        private CallFunctionArgument ToCallArgument(IRemoteObject remoteObject) => new CallFunctionArgument
-        {
-            Value = remoteObject.Value,
-            UnserializableValue = RemoteObject.GetUnserializableValueFromRaw(remoteObject.UnserializableValue),
-            ObjectId = remoteObject.ObjectId,
-        };
+        private CallFunctionArgument ToCallArgument(IRemoteObject remoteObject)
+            => new CallFunctionArgument
+            {
+                Value = remoteObject.Value,
+                UnserializableValue = RemoteObject.GetUnserializableValueFromRaw(remoteObject.UnserializableValue),
+                ObjectId = remoteObject.ObjectId,
+            };
 
         private T DeserializeValue<T>(RemoteObject remoteObject)
         {
