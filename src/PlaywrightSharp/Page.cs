@@ -13,7 +13,6 @@ namespace PlaywrightSharp
     {
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private bool _disconnected;
-        private Screenshotter _screenshotter;
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -26,7 +25,7 @@ namespace PlaywrightSharp
 
             PageState = new PageState { Viewport = browserContext.Options.Viewport };
 
-            _screenshotter = new Screenshotter(this);
+            Screenshotter = new Screenshotter(this);
         }
 
         /// <inheritdoc cref="IPage.Console"/>
@@ -132,6 +131,8 @@ namespace PlaywrightSharp
         internal PageState PageState { get; }
 
         internal IPageDelegate Delegate { get; }
+
+        internal Screenshotter Screenshotter { get; }
 
         /// <inheritdoc cref="IPage.AddScriptTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
@@ -268,10 +269,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.QuerySelectorAsync(string)"/>
-        public Task<IElementHandle> QuerySelectorAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
 
         /// <inheritdoc cref="IPage.QuerySelectorEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
@@ -293,7 +291,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.ScreenshotAsync(ScreenshotOptions)"/>
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null)
-            => _screenshotter.ScreenshotPageAsync(options);
+            => Screenshotter.ScreenshotPageAsync(options);
 
         /// <inheritdoc cref="IPage.SetCacheEnabledAsync(bool)"/>
         public Task SetCacheEnabledAsync(bool enabled = true)
@@ -520,7 +518,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
-        public void Dispose() => _screenshotter?.Dispose();
+        public void Dispose() => Screenshotter?.Dispose();
 
         internal void RemoveWorker(string workerId)
         {

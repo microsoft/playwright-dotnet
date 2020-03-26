@@ -16,13 +16,14 @@ namespace PlaywrightSharp.Chromium
         private const string EvaluationScriptUrl = "__playwright_evaluation_script__";
         private static readonly Regex _sourceUrlRegex = new Regex("/^[\040\t] *\\/\\/[@#] sourceURL=\\s*(\\S*?)\\s*$", RegexOptions.Compiled);
         private readonly ChromiumSession _client;
-        private readonly int _contextId;
 
         public ChromiumExecutionContext(ChromiumSession client, ExecutionContextDescription contextPayload)
         {
             _client = client;
-            _contextId = contextPayload.Id.Value;
+            ContextId = contextPayload.Id.Value;
         }
+
+        internal int ContextId { get; }
 
         public async Task EvaluateAsync(FrameExecutionContext context, bool returnByValue, string script, object[] args)
             => await EvaluateAsync<object>(context, returnByValue, script, args).ConfigureAwait(false);
@@ -37,7 +38,7 @@ namespace PlaywrightSharp.Chromium
                 var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
                 {
                     FunctionDeclaration = $"{script}\n{suffix}\n",
-                    ExecutionContextId = _contextId,
+                    ExecutionContextId = ContextId,
                     Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
                     ReturnByValue = returnByValue,
                     AwaitPromise = true,
@@ -57,7 +58,7 @@ namespace PlaywrightSharp.Chromium
                 var result = await _client.SendAsync(new RuntimeEvaluateRequest
                 {
                     Expression = expressionWithSourceUrl,
-                    ContextId = _contextId,
+                    ContextId = ContextId,
                     ReturnByValue = returnByValue,
                     AwaitPromise = true,
                     UserGesture = true,

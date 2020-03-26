@@ -10,7 +10,7 @@ namespace PlaywrightSharp
         private const string ScreenshotDuringNavigationError = "Cannot take a screenshot while page is navigating";
 
         private readonly Page _page;
-        private readonly TaskQueue _screenshotTaskQueue = new TaskQueue();
+        private readonly TaskQueue _queue = new TaskQueue();
 
         public Screenshotter(Page page)
         {
@@ -18,9 +18,17 @@ namespace PlaywrightSharp
         }
 
         public Task<byte[]> ScreenshotPageAsync(ScreenshotOptions options)
-            => _screenshotTaskQueue.Enqueue(() => PerformScreenshot(ValidateScreenshotOptions(options), options));
+            => _queue.Enqueue(() => PerformScreenshot(ValidateScreenshotOptions(options), options));
 
-        public void Dispose() => _screenshotTaskQueue?.Dispose();
+        public void Dispose() => _queue?.Dispose();
+
+        internal Task<byte[]> ScreenshotElementAsync(ElementHandle handle, ScreenshotOptions options)
+        {
+            var format = ValidateScreenshotOptions(options);
+            var rewrittenOptions = options.Clone();
+
+            return _queue.Enqueue(() => PerformScreenshotElementAsync(handle, format, rewrittenOptions));
+        }
 
         private ScreenshotFormat ValidateScreenshotOptions(ScreenshotOptions options)
         {
@@ -61,11 +69,11 @@ namespace PlaywrightSharp
         {
             Viewport overridenViewport = null;
             var viewport = _page.Viewport;
-            Size viewportSize = null;
+            Viewport viewportSize = null;
 
             if (viewport == null)
             {
-                viewportSize = await _page.EvaluateAsync<Size>(@"() => {
+                viewportSize = await _page.EvaluateAsync<Viewport>(@"() => {
                   if (!document.body || !document.documentElement)
                     return;
                   return {
@@ -132,6 +140,100 @@ namespace PlaywrightSharp
             return result;
         }
 
+        private async Task<byte[]> PerformScreenshotElementAsync(ElementHandle handle, ScreenshotFormat format, ScreenshotOptions options)
+        {
+            Viewport overridenViewport = null;
+            Viewport viewportSize = null;
+
+            var maybeBoundingBox = await _page.Delegate.GetBoundingBoxForScreenshotAsync(handle).ConfigureAwait(false);
+
+            if (maybeBoundingBox == null)
+            {
+                throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
+            }
+
+            var boundingBox = maybeBoundingBox;
+
+            if (boundingBox.Width == 0)
+            {
+                throw new PlaywrightSharpException("Node has 0 width");
+            }
+
+            if (boundingBox.Height == 0)
+            {
+                throw new PlaywrightSharpException("Node has 0 height");
+            }
+
+            boundingBox = EnclosingIntRect(boundingBox);
+
+            var viewport = _page.Viewport;
+
+            if (!_page.Delegate.CanScreenshotOutsideViewport())
+            {
+                if (viewport == null)
+                {
+                    var maybeViewportSize = await _page.EvaluateAsync<Viewport>(@"() => {
+                        if (!document.body || !document.documentElement)
+                            return;
+                        return {
+                            width: Math.max(document.body.offsetWidth, document.documentElement.offsetWidth),
+                            height: Math.max(document.body.offsetHeight, document.documentElement.offsetHeight),
+                        };
+                    }").ConfigureAwait(false);
+
+                    if (maybeViewportSize == null)
+                    {
+                        throw new PlaywrightSharpException(ScreenshotDuringNavigationError);
+                    }
+
+                    viewportSize = maybeViewportSize;
+                }
+                else
+                {
+                    viewportSize = viewport;
+                }
+
+                if (boundingBox.Width > viewportSize.Width || boundingBox.Height > viewportSize.Height)
+                {
+                    overridenViewport = (viewport ?? viewportSize).Clone();
+                    overridenViewport.Width = Convert.ToInt32(Math.Max(viewportSize.Width, boundingBox.Width));
+                    overridenViewport.Height = Convert.ToInt32(Math.Max(viewportSize.Height, boundingBox.Height));
+                    await _page.SetViewportAsync(overridenViewport).ConfigureAwait(false);
+                }
+
+                await handle.ScrollIntoViewIfNeededAsync().ConfigureAwait(false);
+                maybeBoundingBox = await _page.Delegate.GetBoundingBoxForScreenshotAsync(handle).ConfigureAwait(false);
+
+                if (maybeBoundingBox == null)
+                {
+                    throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
+                }
+
+                boundingBox = EnclosingIntRect(maybeBoundingBox!);
+            }
+
+            if (overridenViewport == null)
+            {
+                options.Clip = boundingBox;
+            }
+
+            byte[] result = await ScreenshotAsync(format, options, overridenViewport ?? viewport).ConfigureAwait(false);
+
+            if (overridenViewport != null)
+            {
+                if (viewport != null)
+                {
+                    await _page.SetViewportAsync(viewport).ConfigureAwait(false);
+                }
+                else
+                {
+                    await _page.Delegate.ResetViewportAsync(viewportSize).ConfigureAwait(false);
+                }
+            }
+
+            return result;
+        }
+
         private async Task<byte[]> ScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
         {
             bool shouldSetDefaultBackground = options.OmitBackground && format == ScreenshotFormat.Png;
@@ -151,9 +253,25 @@ namespace PlaywrightSharp
             return result;
         }
 
-        private Clip TrimClipToViewport(Viewport viewport, Clip clip)
+        private Rect TrimClipToViewport(Viewport viewport, Rect clip)
         {
             throw new NotImplementedException();
+        }
+
+        private Rect EnclosingIntRect(Rect rect)
+        {
+            double x = Math.Floor(rect.X + 1e-3);
+            double y = Math.Floor(rect.Y + 1e-3);
+            double x2 = Math.Ceiling(rect.X + rect.Width - 1e-3);
+            double y2 = Math.Ceiling(rect.Y + rect.Height - 1e-3);
+
+            return new Rect
+            {
+                X = x,
+                Y = y,
+                Width = x2 - x,
+                Height = y2 - y,
+            };
         }
     }
 }

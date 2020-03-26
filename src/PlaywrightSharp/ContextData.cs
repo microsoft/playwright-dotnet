@@ -6,12 +6,12 @@ namespace PlaywrightSharp
 {
     internal class ContextData
     {
-        public TaskCompletionSource<IFrameExecutionContext> ContextTsc { get; set; } = new TaskCompletionSource<IFrameExecutionContext>();
+        public TaskCompletionSource<FrameExecutionContext> ContextTsc { get; set; } = new TaskCompletionSource<FrameExecutionContext>();
 
         public List<RerunnableTask> RerunnableTasks { get; } = new List<RerunnableTask>();
 
-        public Task<IFrameExecutionContext> ContextTask => ContextTsc.Task;
+        public Task<FrameExecutionContext> ContextTask => ContextTsc.Task;
 
-        public IFrameExecutionContext Context { get; set; }
+        public FrameExecutionContext Context { get; set; }
     }
 }

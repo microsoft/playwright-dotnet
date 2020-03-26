@@ -32,7 +32,7 @@ namespace PlaywrightSharp
                 return await Delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
             }
 
-            List<Task<IElementHandle>> toDispose = new List<Task<IElementHandle>>();
+            List<Task<ElementHandle>> toDispose = new List<Task<ElementHandle>>();
 
             var adoptedTasks = args.Select<object, Task<object>>(arg =>
             {
@@ -41,7 +41,7 @@ namespace PlaywrightSharp
                     return Task.FromResult(arg);
                 }
 
-                var adopted = Frame.Page.Delegate.AdoptElementHandleAsync(arg, this);
+                var adopted = Frame.Page.Delegate.AdoptElementHandleAsync(arg as ElementHandle, this);
                 toDispose.Add(adopted);
                 return adopted.ContinueWith(t => (object)t.Result, TaskScheduler.Default);
             });
@@ -67,9 +67,20 @@ namespace PlaywrightSharp
 
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => EvaluateAsync<IJSHandle>(false, script, args);
 
-        public Task<IElementHandle> QuerySelectorAsync(string selector)
+        public async Task<IElementHandle> QuerySelectorAsync(string selector, IElementHandle scope = null)
         {
-            throw new NotImplementedException();
+            var handle = await EvaluateHandleAsync(
+                "(injected, selector, scope) => injected.querySelector(selector, scope || document)",
+                await GetInjectedAsync().ConfigureAwait(false),
+                Dom.NormalizeSelector(selector),
+                scope).ConfigureAwait(false);
+
+            if (!(handle is ElementHandle))
+            {
+                await handle.DisposeAsync().ConfigureAwait(false);
+            }
+
+            return handle as ElementHandle;
         }
 
         public async Task<IJSHandle> GetInjectedAsync()

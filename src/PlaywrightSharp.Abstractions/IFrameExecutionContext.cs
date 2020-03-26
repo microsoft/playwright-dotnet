@@ -71,9 +71,10 @@ namespace PlaywrightSharp
         /// The method runs <c>document.querySelector</c> within the element. If no element matches the selector, the return value resolve to <c>null</c>.
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
+        /// <param name="scope">Scope.</param>
         /// <returns>
         /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an <see cref="IElementHandle"/>.
         /// </returns>
-        Task<IElementHandle> QuerySelectorAsync(string selector);
+        Task<IElementHandle> QuerySelectorAsync(string selector, IElementHandle scope = null);
     }
 }

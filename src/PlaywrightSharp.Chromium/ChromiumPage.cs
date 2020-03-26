@@ -97,9 +97,14 @@ namespace PlaywrightSharp.Chromium
         public Task ClosePageAsync(bool runBeforeUnload)
             => runBeforeUnload ? Client.SendAsync(new PageCloseRequest()) : _browser.ClosePageAsync(this);
 
-        public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        public async Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
         {
-            throw new NotImplementedException();
+            var nodeInfo = await Client.SendAsync(new DOMDescribeNodeRequest
+            {
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+
+            return await AdoptBackendNodeIdAsync(nodeInfo.Node.BackendNodeId.Value, to).ConfigureAwait(false);
         }
 
         public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject?.Subtype == "node";
@@ -149,7 +154,7 @@ namespace PlaywrightSharp.Chromium
 
         public bool CanScreenshotOutsideViewport() => false;
 
-        public Task ResetViewportAsync(Size viewportSize)
+        public Task ResetViewportAsync(Viewport viewport)
             => Client.SendAsync(new EmulationSetDeviceMetricsOverrideRequest
             {
                 Mobile = false,
@@ -172,6 +177,58 @@ namespace PlaywrightSharp.Chromium
                 Clip = clip,
             }).ConfigureAwait(false);
             return result.Data;
+        }
+
+        public async Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
+        {
+            var rect = await handle.GetBoundingBoxAsync().ConfigureAwait(false);
+            if (rect == null)
+            {
+                return rect;
+            }
+
+            var layout = await Client.SendAsync(new PageGetLayoutMetricsRequest()).ConfigureAwait(false);
+
+            rect.X += layout.LayoutViewport.PageX.Value;
+            rect.Y += layout.LayoutViewport.PageY.Value;
+
+            return rect;
+        }
+
+        public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
+        {
+            DOMGetBoxModelResponse result = null;
+
+            try
+            {
+                result = await Client.SendAsync(new DOMGetBoxModelRequest
+                {
+                    ObjectId = handle.RemoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            double?[] quad = result.Model.Border;
+            double x = Math.Min(quad[0].Value, Math.Min(quad[2].Value, Math.Min(quad[4].Value, quad[6].Value)));
+            double y = Math.Min(quad[1].Value, Math.Min(quad[3].Value, Math.Min(quad[5].Value, quad[7].Value)));
+            double width = Math.Max(quad[0].Value, Math.Max(quad[2].Value, Math.Max(quad[4].Value, quad[6].Value))) - x;
+            double height = Math.Max(quad[1].Value, Math.Max(quad[3].Value, Math.Max(quad[5].Value, quad[7].Value))) - y;
+
+            return new Rect
+            {
+                X = x,
+                Y = y,
+                Width = width,
+                Height = height,
+            };
         }
 
         internal async Task InitializeAsync()
@@ -243,6 +300,31 @@ namespace PlaywrightSharp.Chromium
         }
 
         internal void DidClose() => Page.DidClose();
+
+        private async Task<ElementHandle> AdoptBackendNodeIdAsync(int backendNodeId, FrameExecutionContext to)
+        {
+            DOMResolveNodeResponse result = null;
+
+            try
+            {
+                result = await Client.SendAsync(new DOMResolveNodeRequest
+                {
+                    BackendNodeId = backendNodeId,
+                    ExecutionContextId = ((ChromiumExecutionContext)to.Delegate).ContextId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            if (result == null || result.Object.Subtype == "null")
+            {
+                throw new PlaywrightSharpException("Unable to adopt element handle from a different document");
+            }
+
+            return to.CreateHandle(result.Object) as ElementHandle;
+        }
 
         private async void Client_MessageReceived(object sender, IChromiumEvent e)
         {

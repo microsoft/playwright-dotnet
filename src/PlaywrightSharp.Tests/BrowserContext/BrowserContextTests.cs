@@ -169,7 +169,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 Viewport = new Viewport
                 {
                     Width = 456,
-                    Height =  789
+                    Height = 789
                 }
             });
 
@@ -178,7 +178,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
             Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
 
-            var screenshot = await page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });
@@ -236,14 +236,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 ::-webkit-scrollbar{
                     display: none;
                 }
-                </styl >
+                </style>
                 <div class=""to-screenshot""></div>
                 <div class=""to-screenshot""></div>
                 <div class=""to-screenshot""></div>
             ");
             var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
-            var screenshot = await elementHandle.ScreenshotAsync();
+            byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.NotEmpty(screenshot);
             var sizeAfter = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             Assert.Equal(sizeBefore, sizeAfter);

@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Chromium.Protocol
                 _ => string.Empty,
             };
 
-        internal static Page.Viewport ToViewportProtocol(this Clip clip)
+        internal static Page.Viewport ToViewportProtocol(this Rect clip)
             => new Page.Viewport
             {
                 Height = clip.Height,

@@ -157,9 +157,19 @@ namespace PlaywrightSharp
             => GoToAsync(url, new GoToOptions { WaitUntil = new[] { waitUntil } });
 
         /// <inheritdoc cref="IJSHandle.GetPropertyAsync"/>
-        public Task<IElementHandle> QuerySelectorAsync(string selector)
+        public async Task<IElementHandle> QuerySelectorAsync(string selector)
         {
-            throw new System.NotImplementedException();
+            var utilityContext = await GetUtilityContextAsync().ConfigureAwait(false);
+            var mainContext = await GetMainContextAsync().ConfigureAwait(false);
+            var handle = await utilityContext.QuerySelectorAsync(selector).ConfigureAwait(false) as ElementHandle;
+            if (handle != null && handle.Context != mainContext)
+            {
+                var adopted = await Page.Delegate.AdoptElementHandleAsync(handle, mainContext).ConfigureAwait(false);
+                await handle.DisposeAsync().ConfigureAwait(false);
+                return adopted;
+            }
+
+            return handle;
         }
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync(string, string, object[])"/>
@@ -234,7 +244,7 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        internal Task<IFrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
+        internal Task<FrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
 
         internal void OnDetached()
         {
@@ -267,7 +277,7 @@ namespace PlaywrightSharp
             }
         }
 
-        private void SetContext(ContextType contextType, IFrameExecutionContext context)
+        private void SetContext(ContextType contextType, FrameExecutionContext context)
         {
             var data = _contextData[contextType];
             data.Context = context;
@@ -283,13 +293,13 @@ namespace PlaywrightSharp
             }
             else
             {
-                data.ContextTsc = new TaskCompletionSource<IFrameExecutionContext>();
+                data.ContextTsc = new TaskCompletionSource<FrameExecutionContext>();
             }
         }
 
-        private Task<IFrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
+        private Task<FrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
 
-        private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
+        private Task<FrameExecutionContext> GetContextAsync(ContextType contextType)
         {
             if (_detached)
             {

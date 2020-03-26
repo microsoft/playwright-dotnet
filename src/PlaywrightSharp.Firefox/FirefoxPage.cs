@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Firefox
 
         internal Page Page { get; }
 
-        public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        public Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
         {
             throw new System.NotImplementedException();
         }
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Firefox
 
         public bool CanScreenshotOutsideViewport() => throw new NotImplementedException();
 
-        public Task ResetViewportAsync(Size viewportSize) => throw new NotImplementedException();
+        public Task ResetViewportAsync(Viewport viewport) => throw new NotImplementedException();
 
         public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
 
@@ -86,6 +86,16 @@ namespace PlaywrightSharp.Firefox
         public Task SetViewportAsync(Viewport viewport)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
+        {
+            throw new NotImplementedException();
         }
 
         internal async Task InitializeAsync()
