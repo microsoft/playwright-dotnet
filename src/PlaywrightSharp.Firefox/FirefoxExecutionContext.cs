@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Firefox
             var unserializableValue = remoteObject.UnserializableValue;
             if (unserializableValue != null)
             {
-                return (T)ValueFromUnserializableValue(remoteObject, unserializableValue.Value);
+                return (T)ValueFromUnserializableValue(unserializableValue.Value);
             }
 
             if (remoteObject.Value == null)
@@ -134,9 +134,8 @@ namespace PlaywrightSharp.Firefox
 
         private object CreateHandle(RemoteObject remoteObject, FrameExecutionContext context) => new JSHandle(context, remoteObject);
 
-        private object ValueFromUnserializableValue(RemoteObject remoteObject, RemoteObjectUnserializableValue unserializableValue)
-        {
-            return unserializableValue switch
+        private object ValueFromUnserializableValue(RemoteObjectUnserializableValue unserializableValue)
+            => unserializableValue switch
             {
                 RemoteObjectUnserializableValue.NegativeZero => -0,
                 RemoteObjectUnserializableValue.NaN => double.NaN,
@@ -144,7 +143,6 @@ namespace PlaywrightSharp.Firefox
                 RemoteObjectUnserializableValue.NegativeInfinity => double.NegativeInfinity,
                 _ => throw new Exception("Unsupported unserializable value: " + unserializableValue),
             };
-        }
 
         private object ValueFromType<T>(JsonElement value, RemoteObjectType objectType)
         {
