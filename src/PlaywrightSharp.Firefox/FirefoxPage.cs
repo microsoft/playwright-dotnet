@@ -25,6 +25,7 @@ namespace PlaywrightSharp.Firefox
         private readonly IBrowserContext _context;
         private readonly Func<Task<Page>> _openerResolver;
         private readonly ConcurrentDictionary<string, WorkerSession> _workers = new ConcurrentDictionary<string, WorkerSession>();
+        private readonly ConcurrentDictionary<string, FrameExecutionContext> _contextIdToContext = new ConcurrentDictionary<string, FrameExecutionContext>();
 
         public FirefoxPage(FirefoxSession session, IBrowserContext context, Func<Task<Page>> openerResolver)
         {
@@ -51,9 +52,7 @@ namespace PlaywrightSharp.Firefox
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _session.SendAsync(new PageCloseRequest { RunBeforeUnload = runBeforeUnload });
 
         public Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle)
         {
@@ -70,9 +69,15 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
-        public Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
+        public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
-            throw new System.NotImplementedException();
+            var response = await _session.SendAsync(new PageNavigateRequest
+            {
+                Url = url,
+                Referer = referrer,
+                FrameId = frame.Id,
+            }).ConfigureAwait(false);
+            return new GotoResult { NewDocumentId = response.NavigationId, IsSameDocument = response.NavigationId == null };
         }
 
         public Task SetViewportAsync(Viewport viewport)
@@ -132,6 +137,7 @@ namespace PlaywrightSharp.Firefox
             switch (e)
             {
                 case PageEventFiredFirefoxEvent pageEventFired:
+                    OnEventFired(pageEventFired);
                     break;
                 case PageFrameAttachedFirefoxEvent pageFrameAttached:
                     OnFrameAttached(pageFrameAttached);
@@ -148,8 +154,10 @@ namespace PlaywrightSharp.Firefox
                 case PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation:
                     break;
                 case RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated:
+                    OnExecutionContextCreated(runtimeExecutionContextCreated);
                     break;
                 case RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed:
+                    OnExecutionContextDestroyed(runtimeExecutionContextDestroyed);
                     break;
                 case PageUncaughtErrorFirefoxEvent pageUncaughtError:
                     break;
@@ -173,6 +181,19 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
+        private void OnEventFired(PageEventFiredFirefoxEvent pageEventFired)
+        {
+            if (pageEventFired.Name == EventFiredName.Load)
+            {
+                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, "load");
+            }
+
+            if (pageEventFired.Name == EventFiredName.DOMContentLoaded)
+            {
+                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, "domcontentloaded");
+            }
+        }
+
         private void OnFrameAttached(PageFrameAttachedFirefoxEvent pageFrameAttached)
             => Page.FrameManager.FrameAttached(pageFrameAttached.FrameId, pageFrameAttached.ParentFrameId);
 
@@ -187,6 +208,36 @@ namespace PlaywrightSharp.Firefox
             }
 
             Page.FrameManager.FrameCommittedNewDocumentNavigation(pageNavigationCommitted.FrameId, pageNavigationCommitted.Url, pageNavigationCommitted.Name ?? string.Empty, pageNavigationCommitted.NavigationId ?? string.Empty, false);
+        }
+
+        private void OnExecutionContextCreated(RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated)
+        {
+            var auxData = runtimeExecutionContextCreated.AuxData != null
+                ? ((JsonElement)runtimeExecutionContextCreated.AuxData).ToObject<AuxData>()
+                : null;
+            if (auxData?.FrameId != null && Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out var frame))
+            {
+                var firefoxDelegate = new FirefoxExecutionContext(_session, runtimeExecutionContextCreated.ExecutionContextId);
+                var context = new FrameExecutionContext(firefoxDelegate, frame);
+                if (auxData.Name == UtilityWorldName)
+                {
+                    frame.ContextCreated(ContextType.Utility, context);
+                }
+                else if (auxData.Name == null)
+                {
+                    frame.ContextCreated(ContextType.Main, context);
+                }
+
+                _contextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
+            }
+        }
+
+        private void OnExecutionContextDestroyed(RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed)
+        {
+            if (_contextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
+            {
+                context.Frame.ContextDestroyed(context);
+            }
         }
 
         private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)
@@ -272,6 +323,13 @@ namespace PlaywrightSharp.Firefox
             public string FrameId { get; }
 
             public FirefoxSession Session { get; }
+        }
+
+        private class AuxData
+        {
+            public string FrameId { get; set; }
+
+            public string Name { get; set; }
         }
     }
 }

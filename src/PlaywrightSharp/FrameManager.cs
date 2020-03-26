@@ -86,26 +86,26 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        internal void FrameLifecycleEvent(string frameId, string e)
+        internal void FrameLifecycleEvent(string frameId, string name)
         {
             if (!Frames.TryGetValue(frameId, out var frame))
             {
                 return;
             }
 
-            frame.FiredLifecycleEvents.Add(e);
+            frame.FiredLifecycleEvents.Add(name);
 
             foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnLifecycleEvent(frame);
             }
 
-            if (frame == MainFrame && e == "load")
+            if (frame == MainFrame && name == "load")
             {
                 _page.OnLoad();
             }
 
-            if (frame == MainFrame && e == "domcontentloaded")
+            if (frame == MainFrame && name == "domcontentloaded")
             {
                 _page.OnDOMContentLoaded();
             }
