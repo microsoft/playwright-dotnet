@@ -28,8 +28,6 @@ namespace PlaywrightSharp.Firefox
                     ReturnByValue = returnByValue,
                     ExecutionContextId = _executionContextId,
                 }).ConfigureAwait(false);
-
-                // TODO: rewriteError
                 return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
             }
 
@@ -41,8 +39,6 @@ namespace PlaywrightSharp.Firefox
                 ReturnByValue = returnByValue,
                 ExecutionContextId = _executionContextId,
             });
-
-            // TODO: validate request
             {
                 var payload = await callFunctionTask.ConfigureAwait(false);
                 return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
@@ -86,25 +82,12 @@ namespace PlaywrightSharp.Firefox
             {
                 case int integer when integer == -0:
                     return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeZero };
-
-                case double d:
-                    if (double.IsPositiveInfinity(d))
-                    {
-                        return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.Infinity };
-                    }
-
-                    if (double.IsNegativeInfinity(d))
-                    {
-                        return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeZero };
-                    }
-
-                    if (double.IsNaN(d))
-                    {
-                        return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NaN };
-                    }
-
-                    break;
-
+                case double d when double.IsPositiveInfinity(d):
+                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.Infinity };
+                case double d when double.IsNegativeInfinity(d):
+                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeZero };
+                case double d when double.IsNaN(d):
+                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NaN };
                 case JSHandle objectHandle:
                     if (objectHandle.Context != context)
                     {
