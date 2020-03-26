@@ -18,7 +18,7 @@ namespace PlaywrightSharp
 
         /// <summary>
         /// Internal mouse implementation.
-        /// </summary>a
+        /// </summary>
         IRawMouse RawMouse { get; }
 
         /// <summary>
