@@ -177,12 +177,12 @@ namespace PlaywrightSharp.Chromium
 
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
         {
-            var transport = await BrowserHelper.CreateTransportAsync(options: options).ConfigureAwait(continueOnCapturedContext: false);
-            var connection = new ChromiumConnection(transport: transport);
-            var response = await connection.RootSession.SendAsync(request: new TargetGetBrowserContextsRequest()).ConfigureAwait(continueOnCapturedContext: false);
-            var browser = new ChromiumBrowser(app: app, connection: connection, browserContextIds: response.BrowserContextIds);
-            await connection.RootSession.SendAsync(request: new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(continueOnCapturedContext: false);
-            await browser.WaitForTargetAsync(predicate: t => t.Type == TargetType.Page).ConfigureAwait(continueOnCapturedContext: false);
+            var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
+            var connection = new ChromiumConnection(transport);
+            var response = await connection.RootSession.SendAsync(new TargetGetBrowserContextsRequest()).ConfigureAwait(false);
+            var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);
+            await connection.RootSession.SendAsync(new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
+            await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
             return browser;
         }
 

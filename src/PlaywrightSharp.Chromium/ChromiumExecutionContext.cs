@@ -35,19 +35,28 @@ namespace PlaywrightSharp.Chromium
 
             if (script.IsJavascriptFunction())
             {
-                var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
-                {
-                    FunctionDeclaration = $"{script}\n{suffix}\n",
-                    ExecutionContextId = ContextId,
-                    Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
-                    ReturnByValue = returnByValue,
-                    AwaitPromise = true,
-                    UserGesture = true,
-                }).ConfigureAwait(false);
+                RuntimeCallFunctionOnResponse result = null;
 
-                if (result.ExceptionDetails != null)
+                try
                 {
-                    throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
+                    result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
+                    {
+                        FunctionDeclaration = $"{script}\n{suffix}\n",
+                        ExecutionContextId = ContextId,
+                        Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
+                        ReturnByValue = returnByValue,
+                        AwaitPromise = true,
+                        UserGesture = true,
+                    }).ConfigureAwait(false);
+
+                    if (result.ExceptionDetails != null)
+                    {
+                        throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = RewriteError(ex);
                 }
 
                 remoteObject = result.Result;
@@ -89,7 +98,30 @@ namespace PlaywrightSharp.Chromium
             return (includeType ? "JSHandle:" : string.Empty) + GetValueFromRemoteObject<string>(remote);
         }
 
-        private static object ValueFromUnserializableValue(IRemoteObject remoteObject, string unserializableValue)
+        private RuntimeCallFunctionOnResponse RewriteError(Exception ex)
+        {
+            if (ex.Message.Contains("Object reference chain is too long"))
+            {
+                return new RuntimeCallFunctionOnResponse { Result = new RemoteObject { Type = "undefined" } };
+            }
+
+            if (ex.Message.Contains("Object couldn\'t be returned by value"))
+            {
+                return new RuntimeCallFunctionOnResponse { Result = new RemoteObject { Type = "undefined" } };
+            }
+
+            if (
+                ex.Message.EndsWith("Cannot find context with specified id") ||
+                ex.Message.EndsWith("Inspected target navigated or closed") ||
+                ex.Message.EndsWith("Execution context was destroyed."))
+            {
+                throw new PlaywrightSharpException("Execution context was destroyed, most likely because of a navigation.");
+            }
+
+            throw ex;
+        }
+
+        private object ValueFromUnserializableValue(IRemoteObject remoteObject, string unserializableValue)
         {
             if (
                 remoteObject.Type == RemoteObjectType.Bigint &&

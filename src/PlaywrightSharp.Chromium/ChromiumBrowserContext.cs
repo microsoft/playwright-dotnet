@@ -19,6 +19,7 @@ namespace PlaywrightSharp
 
         private readonly ChromiumSession _client;
         private readonly string _contextId;
+        private readonly ChromiumBrowser _browser;
 
         internal ChromiumBrowserContext(ChromiumSession client, ChromiumBrowser chromiumBrowser) : this(client, chromiumBrowser, null, null)
         {
@@ -31,7 +32,7 @@ namespace PlaywrightSharp
             BrowserContextOptions options)
         {
             _client = client;
-            Browser = chromiumBrowser;
+            _browser = chromiumBrowser;
             _contextId = contextId;
             Options = options;
         }
@@ -42,13 +43,11 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IBrowserContextDelegate.BrowserContext"/>
         public BrowserContext BrowserContext { get; set; }
 
-        private ChromiumBrowser Browser { get; }
-
         /// <inheritdoc cref="IBrowserContextDelegate.GetPagesAsync"/>
         public async Task<IPage[]> GetPagesAsync()
         {
             var pageTasks =
-                Browser.GetAllTargets()
+                _browser.GetAllTargets()
                 .Where(target => target.BrowserContext == BrowserContext && target.Type == TargetType.Page)
                 .Select(t => t.PageAsync());
 
@@ -72,7 +71,7 @@ namespace PlaywrightSharp
 
             string targetId = (await _client.SendAsync(createTargetRequest)
                 .ConfigureAwait(false)).TargetId;
-            var target = Browser.TargetsMap[targetId];
+            var target = _browser.TargetsMap[targetId];
             await target.InitializedTask.ConfigureAwait(false);
             return await target.PageAsync().ConfigureAwait(false);
         }
@@ -103,7 +102,7 @@ namespace PlaywrightSharp
             }
 
             await _client.SendAsync(new TargetDisposeBrowserContextRequest { BrowserContextId = _contextId }).ConfigureAwait(false);
-            Browser.RemoveContext(_contextId);
+            _browser.RemoveContext(_contextId);
         }
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetPermissionsAsync(string, ContextPermission[])"/>
