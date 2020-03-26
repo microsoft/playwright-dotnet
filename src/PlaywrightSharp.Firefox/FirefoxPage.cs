@@ -163,6 +163,7 @@ namespace PlaywrightSharp.Firefox
                 case PageUncaughtErrorFirefoxEvent pageUncaughtError:
                     break;
                 case RuntimeConsoleFirefoxEvent runtimeConsole:
+                    OnConosle(runtimeConsole);
                     break;
                 case PageDialogOpenedFirefoxEvent pageDialogOpened:
                     break;
@@ -239,6 +240,16 @@ namespace PlaywrightSharp.Firefox
             {
                 context.Frame.ContextDestroyed(context);
             }
+        }
+
+        private void OnConosle(RuntimeConsoleFirefoxEvent runtimeConsole)
+        {
+            var context = _contextIdToContext[runtimeConsole.ExecutionContextId];
+
+            var type = runtimeConsole.GetConsoleType();
+            var location = runtimeConsole.ToConsoleMessageLocation();
+
+            Page.AddConsoleMessage(type, Array.ConvertAll(runtimeConsole.Args, arg => context.CreateHandle(arg)), location);
         }
 
         private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)

@@ -192,7 +192,7 @@ namespace PlaywrightSharp
         {
             string tag = $"--playwright--set--content--{Id}--{Interlocked.Increment(ref _setContentCounter)}--";
             var context = await GetUtilityContextAsync().ConfigureAwait(false);
-            LifecycleWatcher watcher;
+            LifecycleWatcher watcher = null;
             Page.FrameManager.SetConsoleMessageTag(tag, () =>
             {
                 Page.FrameManager.ClearFrameLifecycle(this);
@@ -210,6 +210,14 @@ namespace PlaywrightSharp
                 html,
                 tag).ConfigureAwait(false);
 
+            using (watcher)
+            {
+                var watcherTask = await Task.WhenAny(
+                    watcher.TimeoutOrTerminationTask,
+                    watcher.LifecycleTask).ConfigureAwait(false);
+
+                await watcherTask.ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc cref="IFrame.GetContentAsync"/>

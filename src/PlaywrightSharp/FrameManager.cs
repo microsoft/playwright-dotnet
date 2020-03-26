@@ -121,7 +121,7 @@ namespace PlaywrightSharp
 
         internal bool InterceptConsoleMessage(ConsoleMessage message)
         {
-            if (message.Type == ConsoleType.Debug)
+            if (message.Type != ConsoleType.Debug)
             {
                 return false;
             }
