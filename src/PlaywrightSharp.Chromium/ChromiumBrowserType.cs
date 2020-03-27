@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
 using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -54,11 +52,6 @@ namespace PlaywrightSharp.Chromium
         };
 
         /// <inheritdoc cref="IBrowserType"/>
-        public ChromiumBrowserType()
-        {
-        }
-
-        /// <inheritdoc cref="IBrowserType"/>
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
 
         /// <inheritdoc cref="IBrowserType"/>
@@ -72,15 +65,17 @@ namespace PlaywrightSharp.Chromium
         {
             options = options == null ? new ConnectOptions() : options.Clone();
 
-            if (!string.IsNullOrEmpty(options.BrowserURL))
+            if (string.IsNullOrEmpty(options.BrowserURL))
             {
-                if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) && options.TransportFactory != null)
-                {
-                    throw new ArgumentException("Exactly one of BrowserWSEndpoint or TransportFactory must be passed to connect");
-                }
-
-                options.BrowserWSEndpoint = await GetWSEndpointAsync(options.BrowserURL).ConfigureAwait(false);
+                return await ChromiumBrowser.ConnectAsync(options).ConfigureAwait(false);
             }
+
+            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) && options.TransportFactory != null)
+            {
+                throw new ArgumentException("Exactly one of BrowserWSEndpoint or TransportFactory must be passed to connect");
+            }
+
+            options.BrowserWSEndpoint = await GetWsEndpointAsync(options.BrowserURL).ConfigureAwait(false);
 
             return await ChromiumBrowser.ConnectAsync(options).ConfigureAwait(false);
         }
@@ -100,12 +95,12 @@ namespace PlaywrightSharp.Chromium
             string host = options?.Host ?? "https://storage.googleapis.com";
             var platform = options?.Platform ?? GetPlatform();
 
-            Func<Platform, string, BrowserFetcherConfig> paramsGetter = (platform, revision) =>
+            BrowserFetcherConfig ParamsGetter(Platform platformParam, string revision)
             {
                 string archiveName = string.Empty;
                 string executablePath = string.Empty;
 
-                switch (platform)
+                switch (platformParam)
                 {
                     case Platform.Linux:
                         archiveName = "chrome-linux";
@@ -127,12 +122,12 @@ namespace PlaywrightSharp.Chromium
 
                 return new BrowserFetcherConfig
                 {
-                    DownloadURL = string.Format(CultureInfo.InvariantCulture, downloadUrls[platform], host, revision, archiveName),
+                    DownloadURL = string.Format(CultureInfo.InvariantCulture, downloadUrls[platformParam], host, revision, archiveName),
                     ExecutablePath = executablePath,
                 };
-            };
+            }
 
-            return new BrowserFetcher(path, platform, PreferredRevision.ToString(CultureInfo.InvariantCulture.NumberFormat), paramsGetter);
+            return new BrowserFetcher(path, platform, PreferredRevision.ToString(CultureInfo.InvariantCulture.NumberFormat), ParamsGetter);
         }
 
         /// <inheritdoc cref="IBrowserType"/>
@@ -252,26 +247,26 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private async Task<string> GetWSEndpointAsync(string browserURL)
+        private static async Task<string> GetWsEndpointAsync(string browserUrl)
         {
             try
             {
-                if (Uri.TryCreate(new Uri(browserURL), "/json/version", out var endpointURL))
+                if (Uri.TryCreate(new Uri(browserUrl), "/json/version", out var endpointUrl))
                 {
                     string data;
                     using (var client = new HttpClient())
                     {
-                        data = await client.GetStringAsync(endpointURL).ConfigureAwait(false);
+                        data = await client.GetStringAsync(endpointUrl).ConfigureAwait(false);
                     }
 
                     return JsonSerializer.Deserialize<WSEndpointResponse>(data).WebSocketDebuggerUrl;
                 }
 
-                throw new MessageException($"Invalid URL {browserURL}");
+                throw new MessageException($"Invalid URL {browserUrl}");
             }
             catch (Exception ex)
             {
-                throw new MessageException($"Failed to fetch browser webSocket url from {browserURL}.", ex);
+                throw new MessageException($"Failed to fetch browser webSocket url from {browserUrl}.", ex);
             }
         }
 

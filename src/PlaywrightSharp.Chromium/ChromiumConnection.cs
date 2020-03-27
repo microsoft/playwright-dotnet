@@ -31,8 +31,6 @@ namespace PlaywrightSharp.Chromium
             _asyncSessions = new AsyncDictionaryHelper<string, ChromiumSession>(_sessions, "Session {0} not found");
         }
 
-        public event EventHandler<IChromiumEvent> MessageReceived;
-
         public event EventHandler Disconnected;
 
         public ChromiumSession RootSession { get; set; }
@@ -42,6 +40,8 @@ namespace PlaywrightSharp.Chromium
         public void Dispose()
         {
         }
+
+        internal static ChromiumConnection FromSession(ChromiumSession client) => client.Connection;
 
         internal int GetMessageId() => Interlocked.Increment(ref _lastId);
 
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Chromium
             try
             {
                 string response = e.Message;
-                ConnectionResponse obj = null;
+                ConnectionResponse obj;
 
                 try
                 {
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            MessageReceived?.Invoke(this, param);
+            GetSession(obj.SessionId ?? string.Empty).OnMessageReceived(param);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace PlaywrightSharp
                     timeout).ConfigureAwait(false);
             };
 
-        private static string NormalizeSelector(string selector)
+        internal static string NormalizeSelector(string selector)
         {
             int eqIndex = selector.IndexOf('=');
             if (eqIndex != -1 && _selectorMatch.IsMatch(selector.Substring(0, eqIndex).Trim()))

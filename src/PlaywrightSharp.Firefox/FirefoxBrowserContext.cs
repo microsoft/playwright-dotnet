@@ -41,6 +41,8 @@ namespace PlaywrightSharp.Firefox
             throw new System.NotImplementedException();
         }
 
+        public Task CloseAsync() => throw new System.NotImplementedException();
+
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
         {
             throw new System.NotImplementedException();

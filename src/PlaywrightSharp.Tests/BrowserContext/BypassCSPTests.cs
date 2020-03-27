@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP meta tag</playwright-it>
         [Fact]
-        public async Task ShouldBypassCSPmetatag()
+        public async Task ShouldBypassCSPMetatag()
         {
             // Make sure CSP prohibits addScriptTag.
             var page = await NewPageAsync();

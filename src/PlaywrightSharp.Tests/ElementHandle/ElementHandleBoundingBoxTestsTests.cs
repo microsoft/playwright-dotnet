@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.GetBoundingBoxAsync();
-            Assert.Equal(new BoundingBox(x: 100, y: 50, width: 50, height: 50), box);
+            Assert.Equal(new Rect(x: 100, y: 50, width: 50, height: 50), box);
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
             var box = await elementHandle.GetBoundingBoxAsync();
-            Assert.Equal(new BoundingBox(x: 24, y: 224, width: 268, height: 18), box);
+            Assert.Equal(new Rect(x: 24, y: 224, width: 268, height: 18), box);
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             var elementHandle = await Page.QuerySelectorAsync("div");
             await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
             var box = await elementHandle.GetBoundingBoxAsync();
-            Assert.Equal(new BoundingBox(x: 8, y: 8, width: 100, height: 200), box);
+            Assert.Equal(new Rect(x: 8, y: 8, width: 100, height: 200), box);
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                   </svg>");
             var element = await Page.QuerySelectorAsync("#therect");
             var pwBoundingBox = await element.GetBoundingBoxAsync();
-            var webBoundingBox = await Page.EvaluateAsync<BoundingBox>(@"e => {
+            var webBoundingBox = await Page.EvaluateAsync<Rect>(@"e => {
                     const rect = e.getBoundingClientRect();
                     return { x: rect.x, y: rect.y, width: rect.width, height: rect.height};
                 }", element);

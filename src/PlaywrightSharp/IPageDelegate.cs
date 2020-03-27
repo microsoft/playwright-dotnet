@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
@@ -32,10 +33,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// Adopt argument.
         /// </summary>
-        /// <param name="arg">Argument to adpopt.</param>
-        /// <param name="frameExecutionContext">Execution context.</param>
+        /// <param name="handle">Argument to adpopt.</param>
+        /// <param name="to">Execution context.</param>
         /// <returns>A <see cref="Task"/> that completes when the argument is adopted, yielding the <see cref="ElementHandle"/>.</returns>
-        Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext);
+        Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to);
+
+        /// <summary>
+        /// Gets the element's bounding box.
+        /// </summary>
+        /// <param name="handle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the bounding box is evaluated, yielding a <see cref="Rect"/> representing the bounding box.</returns>
+        Task<Rect> GetBoundingBoxAsync(ElementHandle handle);
 
         /// <summary>
         /// Sets the viewport.
@@ -86,5 +94,41 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the metrics are returned by the browser, yielding its <see cref="LayoutMetric"/>.</returns>
         Task<LayoutMetric> GetLayoutViewportAsync();
+
+        /// <summary>
+        /// Evaluates if <see cref="Screenshotter"/> can take a full page screenshot.
+        /// </summary>
+        /// <returns>Whether the <see cref="Screenshotter"/> can take a full page screenshot.</returns>
+        bool CanScreenshotOutsideViewport();
+
+        /// <summary>
+        /// Resets the viewport.
+        /// </summary>
+        /// <param name="viewport">Viewport to reset to.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task ResetViewportAsync(Viewport viewport);
+
+        /// <summary>
+        /// Sets the background color of the page.
+        /// </summary>
+        /// <param name="color">Color to set.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task SetBackgroundColorAsync(Color? color = null);
+
+        /// <summary>
+        /// Performs the screenshot action.
+        /// </summary>
+        /// <param name="format">Screenshot format.</param>
+        /// <param name="options">Options.</param>
+        /// <param name="viewport">Viewport.</param>
+        /// <returns>A <see cref="Task"/> that completes when the screenshot was taken, yielding the screenshot as a <see cref="byte"/> array.</returns>
+        Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport);
+
+        /// <summary>
+        ///  Gets the element's bounding box.
+        /// </summary>
+        /// <param name="handle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the bounding box was built, yielding the <see cref="ElementHandle"/> <see cref="global::PlaywrightSharp.Rect"/>.</returns>
+        Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle);
     }
 }

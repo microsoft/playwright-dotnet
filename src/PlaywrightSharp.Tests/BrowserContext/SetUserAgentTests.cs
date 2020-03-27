@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 UserAgent = "foobar"
             };
 
-            var context = await NewContextAsync(options);
+            await NewContextAsync(options);
 
             options.UserAgent = "wrong";
 

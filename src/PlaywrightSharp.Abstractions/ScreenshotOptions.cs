@@ -1,3 +1,5 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Specifies clipping region of the page.
         /// </summary>
-        public Clip Clip { get; set; }
+        public Rect Clip { get; set; }
 
         /// <summary>
         /// Hides default white background and allows capturing screenshots with transparency. Defaults to <c>false</c>.
@@ -24,6 +26,13 @@ namespace PlaywrightSharp
         /// Specify screenshot type, can be either jpeg or png. Defaults to 'png'.
         /// </summary>
         /// <value>The type.</value>
-        public ScreenshotType? Type { get; set; }
+        public ScreenshotFormat? Type { get; set; }
+
+        /// <summary>
+        /// The quality of the image, between 0-100. Not applicable to png images.
+        /// </summary>
+        public int? Quality { get; set; }
+
+        internal ScreenshotOptions Clone() => (ScreenshotOptions)MemberwiseClone();
     }
 }

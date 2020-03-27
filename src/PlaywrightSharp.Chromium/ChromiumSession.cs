@@ -13,15 +13,12 @@ namespace PlaywrightSharp.Chromium
         private readonly string _sessionId;
         private readonly string _closeReason = string.Empty;
         private readonly ConcurrentDictionary<int, MessageTask<IChromiumResponse>> _callbacks = new ConcurrentDictionary<int, MessageTask<IChromiumResponse>>();
-        private ChromiumConnection _connection;
 
         public ChromiumSession(ChromiumConnection chromiumConnection, TargetType targetType, string sessionId)
         {
-            _connection = chromiumConnection;
+            Connection = chromiumConnection;
             _targetType = targetType;
             _sessionId = sessionId;
-
-            chromiumConnection.MessageReceived += OnMessageReceived;
         }
 
         public event EventHandler<IChromiumEvent> MessageReceived;
@@ -30,10 +27,12 @@ namespace PlaywrightSharp.Chromium
 
         public bool IsClosed { get; internal set; }
 
+        internal ChromiumConnection Connection { get; set; }
+
         internal async Task<TChromiumResponse> SendAsync<TChromiumResponse>(IChromiumRequest<TChromiumResponse> request, bool waitForCallback = true)
             where TChromiumResponse : IChromiumResponse
         {
-            if (_connection == null)
+            if (Connection == null)
             {
                 throw new MessageException(
                     $"Protocol error ({request.Command}): Session closed. " +
@@ -41,7 +40,7 @@ namespace PlaywrightSharp.Chromium
                     $"Close reason: {_closeReason}");
             }
 
-            int id = _connection.GetMessageId();
+            int id = Connection.GetMessageId();
             MessageTask<IChromiumResponse> callback = null;
             if (waitForCallback)
             {
@@ -55,7 +54,7 @@ namespace PlaywrightSharp.Chromium
 
             try
             {
-                await _connection.RawSendAsync(id, request.Command, request, _sessionId).ConfigureAwait(false);
+                await Connection.RawSendAsync(id, request.Command, request, _sessionId).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -77,7 +76,7 @@ namespace PlaywrightSharp.Chromium
             }
 
             _callbacks.Clear();
-            _connection = null;
+            Connection = null;
             Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
@@ -93,16 +92,13 @@ namespace PlaywrightSharp.Chromium
                 }
                 else
                 {
-                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result.Value.GetRawText());
+                    var result = ChromiumProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText());
                     callback.TaskWrapper.TrySetResult(result);
                 }
             }
         }
 
-        internal void OnMessageReceived(object sender, IChromiumEvent e)
-        {
-            MessageReceived?.Invoke(this, e);
-        }
+        internal void OnMessageReceived(IChromiumEvent e) => MessageReceived?.Invoke(this, e);
 
         internal Task DetachAsync()
         {

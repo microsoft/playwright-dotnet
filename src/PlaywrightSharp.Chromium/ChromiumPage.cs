@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -8,9 +9,11 @@ using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
+using PlaywrightSharp.Chromium.Protocol.Network;
 using PlaywrightSharp.Chromium.Protocol.Page;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Chromium.Protocol.Security;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
@@ -74,24 +77,34 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetViewportAsync(Viewport viewport)
         {
-            throw new NotImplementedException();
+            bool isLandscape = viewport.Width > viewport.Height;
+            var screenOrientation = isLandscape
+                ? new ScreenOrientation { Angle = 90, Type = "landscapePrimary" }
+                : new ScreenOrientation { Angle = 0, Type = "portraitPrimary" };
+
+            return Task.WhenAll(
+                Client.SendAsync(new EmulationSetDeviceMetricsOverrideRequest
+                {
+                    Mobile = viewport.IsMobile,
+                    Width = viewport.Width,
+                    Height = viewport.Height,
+                    DeviceScaleFactor = viewport.DeviceScaleFactor,
+                    ScreenOrientation = screenOrientation,
+                }),
+                Client.SendAsync(new EmulationSetTouchEmulationEnabledRequest { Enabled = viewport.IsMobile }));
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)
-        {
-            if (runBeforeUnload)
-            {
-                return Client.SendAsync(new PageCloseRequest());
-            }
-            else
-            {
-                return _browser.ClosePageAsync(this);
-            }
-        }
+            => runBeforeUnload ? Client.SendAsync(new PageCloseRequest()) : _browser.ClosePageAsync(this);
 
-        public Task<IElementHandle> AdoptElementHandleAsync(object arg, FrameExecutionContext frameExecutionContext)
+        public async Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
         {
-            throw new NotImplementedException();
+            var nodeInfo = await Client.SendAsync(new DOMDescribeNodeRequest
+            {
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+
+            return await AdoptBackendNodeIdAsync(nodeInfo.Node.BackendNodeId.Value, to).ConfigureAwait(false);
         }
 
         public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject?.Subtype == "node";
@@ -103,12 +116,7 @@ namespace PlaywrightSharp.Chromium
                 ObjectId = handle.RemoteObject.ObjectId,
             }).ConfigureAwait(false);
 
-            if (result == null)
-            {
-                return null;
-            }
-
-            return result.Quads.Select(quad => new[]
+            return result?.Quads.Select(quad => new[]
             {
                 new Quad
                 {
@@ -141,6 +149,85 @@ namespace PlaywrightSharp.Chromium
             {
                 Width = layoutMetrics.LayoutViewport.ClientWidth.Value,
                 Height = layoutMetrics.LayoutViewport.ClientHeight.Value,
+            };
+        }
+
+        public bool CanScreenshotOutsideViewport() => false;
+
+        public Task ResetViewportAsync(Viewport viewport)
+            => Client.SendAsync(new EmulationSetDeviceMetricsOverrideRequest
+            {
+                Mobile = false,
+                Width = 0,
+                Height = 0,
+                DeviceScaleFactor = 0,
+            });
+
+        public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
+
+        public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
+        {
+            await Client.SendAsync(new PageBringToFrontRequest()).ConfigureAwait(false);
+            var clip = options.Clip != null ? options.Clip.ToViewportProtocol() : null;
+
+            var result = await Client.SendAsync(new PageCaptureScreenshotRequest
+            {
+                Format = format.ToStringFormat(),
+                Quality = options.Quality,
+                Clip = clip,
+            }).ConfigureAwait(false);
+            return result.Data;
+        }
+
+        public async Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
+        {
+            var rect = await handle.GetBoundingBoxAsync().ConfigureAwait(false);
+            if (rect == null)
+            {
+                return rect;
+            }
+
+            var layout = await Client.SendAsync(new PageGetLayoutMetricsRequest()).ConfigureAwait(false);
+
+            rect.X += layout.LayoutViewport.PageX.Value;
+            rect.Y += layout.LayoutViewport.PageY.Value;
+
+            return rect;
+        }
+
+        public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
+        {
+            DOMGetBoxModelResponse result = null;
+
+            try
+            {
+                result = await Client.SendAsync(new DOMGetBoxModelRequest
+                {
+                    ObjectId = handle.RemoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            double?[] quad = result.Model.Border;
+            double x = Math.Min(quad[0].Value, Math.Min(quad[2].Value, Math.Min(quad[4].Value, quad[6].Value)));
+            double y = Math.Min(quad[1].Value, Math.Min(quad[3].Value, Math.Min(quad[5].Value, quad[7].Value)));
+            double width = Math.Max(quad[0].Value, Math.Max(quad[2].Value, Math.Max(quad[4].Value, quad[6].Value))) - x;
+            double height = Math.Max(quad[1].Value, Math.Max(quad[3].Value, Math.Max(quad[5].Value, quad[7].Value))) - y;
+
+            return new Rect
+            {
+                X = x,
+                Y = y,
+                Width = width,
+                Height = height,
             };
         }
 
@@ -214,7 +301,32 @@ namespace PlaywrightSharp.Chromium
 
         internal void DidClose() => Page.DidClose();
 
-        private void Client_MessageReceived(object sender, IChromiumEvent e)
+        private async Task<ElementHandle> AdoptBackendNodeIdAsync(int backendNodeId, FrameExecutionContext to)
+        {
+            DOMResolveNodeResponse result = null;
+
+            try
+            {
+                result = await Client.SendAsync(new DOMResolveNodeRequest
+                {
+                    BackendNodeId = backendNodeId,
+                    ExecutionContextId = ((ChromiumExecutionContext)to.Delegate).ContextId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            if (result == null || result.Object.Subtype == "null")
+            {
+                throw new PlaywrightSharpException("Unable to adopt element handle from a different document");
+            }
+
+            return to.CreateHandle(result.Object) as ElementHandle;
+        }
+
+        private async void Client_MessageReceived(object sender, IChromiumEvent e)
         {
             try
             {
@@ -238,6 +350,12 @@ namespace PlaywrightSharp.Chromium
                     case RuntimeExecutionContextsClearedChromiumEvent runtimeExecutionContextsCleared:
                         OnExecutionContextsCleared();
                         break;
+                    case TargetAttachedToTargetChromiumEvent targetAttachedToTarget:
+                        await OnAttachedToTargetAsync(targetAttachedToTarget).ConfigureAwait(false);
+                        break;
+                    case RuntimeConsoleAPICalledChromiumEvent runtimeConsoleAPICalled:
+                        OnConsoleAPI(runtimeConsoleAPICalled);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -250,6 +368,94 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.Message);
             }
         }
+
+        private void OnConsoleAPI(RuntimeConsoleAPICalledChromiumEvent e)
+        {
+            if (!e.ExecutionContextId.HasValue || e.ExecutionContextId == 0)
+            {
+                // DevTools protocol stores the last 1000 console messages. These
+                // messages are always reported even for removed execution contexts. In
+                // this case, they are marked with executionContextId = 0 and are
+                // reported upon enabling Runtime agent.
+                //
+                // Ignore these messages since:
+                // - there's no execution context we can use to operate with message
+                //   arguments
+                // - these messages are reported before Playwright clients can subscribe
+                //   to the 'console'
+                //   page event.
+                //
+                // @see https://github.com/GoogleChrome/puppeteer/issues/3865
+                return;
+            }
+
+            var context = _contextIdToContext[e.ExecutionContextId.Value];
+            var values = e.Args.Select(arg => context.CreateHandle(arg));
+            Page.AddConsoleMessage(e.Type.ToEnum<ConsoleType>(), values.ToArray(), ToConsoleMessageLocation(e.StackTrace));
+        }
+
+        private async Task OnAttachedToTargetAsync(TargetAttachedToTargetChromiumEvent e)
+        {
+            if (e.TargetInfo.Type != "worker")
+            {
+                return;
+            }
+
+            string url = e.TargetInfo.Url;
+            var session = ChromiumConnection.FromSession(Client).GetSession(e.SessionId);
+            var worker = new Worker(url);
+            Page.AddWorker(e.SessionId, worker);
+
+            void HandleRuntimeExecutionContextCreated(object sender, IChromiumEvent e)
+            {
+                switch (e)
+                {
+                    case RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated:
+
+                        worker.CreateExecutionContext(new ChromiumExecutionContext(session, runtimeExecutionContextCreated.Context));
+                        session.MessageReceived -= HandleRuntimeExecutionContextCreated;
+                        break;
+
+                    case RuntimeConsoleAPICalledChromiumEvent runtimeConsoleAPICalled:
+                        var args = runtimeConsoleAPICalled.Args.Select(o =>
+                            worker.ExistingExecutionContext.CreateHandle(o));
+                        Page.AddConsoleMessage(
+                            runtimeConsoleAPICalled.Type.ToEnum<ConsoleType>(),
+                            args.ToArray(),
+                            ToConsoleMessageLocation(runtimeConsoleAPICalled.StackTrace));
+                        break;
+
+                    case RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown:
+                        Page.OnPageError(ExceptionToError(runtimeExceptionThrown.ExceptionDetails));
+                        break;
+                }
+            }
+
+            session.MessageReceived += HandleRuntimeExecutionContextCreated;
+
+            try
+            {
+                await Task.WhenAll(
+                    session.SendAsync(new RuntimeEnableRequest()),
+                    session.SendAsync(new NetworkEnableRequest())).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            _networkManager.InstrumentNetworkEvents(session);
+        }
+
+        private ConsoleMessageLocation ToConsoleMessageLocation(StackTrace stackTrace)
+            => stackTrace != null && stackTrace.CallFrames.Length > 0
+                ? new ConsoleMessageLocation
+                {
+                    URL = stackTrace.CallFrames[0].Url,
+                    LineNumber = stackTrace.CallFrames[0].LineNumber,
+                    ColumnNumber = stackTrace.CallFrames[0].ColumnNumber,
+                }
+                : new ConsoleMessageLocation();
 
         private void OnExecutionContextsCleared()
         {
@@ -361,5 +567,8 @@ namespace PlaywrightSharp.Chromium
         private void OnFrameAttached(PageFrameAttachedChromiumEvent e) => OnFrameAttached(e.FrameId, e.ParentFrameId);
 
         private void OnFrameAttached(string frameId, string parentFrameId) => Page.FrameManager.FrameAttached(frameId, parentFrameId);
+
+        private PageErrorEventArgs ExceptionToError(ExceptionDetails exceptionDetails)
+            => new PageErrorEventArgs(exceptionDetails.ToExceptionMessage());
     }
 }

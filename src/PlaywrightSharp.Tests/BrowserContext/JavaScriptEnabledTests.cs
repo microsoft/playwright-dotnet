@@ -26,14 +26,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await page.EvaluateAsync("something"));
 
-            if (TestConstants.IsWebKit)
-            {
-                Assert.Contains("Can\'t find variable: something", exception.Message);
-            }
-            else
-            {
-                Assert.Contains("something is not defined", exception.Message);
-            }
+            Assert.Contains(
+                TestConstants.IsWebKit ? "Can\'t find variable: something" : "something is not defined",
+                exception.Message);
 
             page = await NewPageAsync();
             await page.GoToAsync("data:text/html, <script>var something = 'forbidden'</script>");

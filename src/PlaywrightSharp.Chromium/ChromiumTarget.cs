@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Chromium
             BrowserContext = browserContext;
             PageTask = null;
 
-            _ = _initializedTaskWrapper.Task.ContinueWith(
+            _initializedTaskWrapper.Task.ContinueWith(
                 async initializedTask =>
                 {
                     bool success = initializedTask.Result;
@@ -104,12 +104,7 @@ namespace PlaywrightSharp.Chromium
                 return Task.FromResult<Worker>(null);
             }
 
-            if (_workerTask == null)
-            {
-                _workerTask = WorkerInternalAsync();
-            }
-
-            return _workerTask;
+            return _workerTask ?? (_workerTask = WorkerInternalAsync());
         }
 
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
@@ -139,7 +134,6 @@ namespace PlaywrightSharp.Chromium
             {
                 IsInitialized = true;
                 _initializedTaskWrapper.TrySetResult(true);
-                return;
             }
         }
 

@@ -43,7 +43,7 @@ namespace PlaywrightSharp
         /// Returns an array of all open browser contexts.
         /// In a newly created browser, this will return a single instance of <seealso cref="IBrowserContext"/>.
         /// </summary>
-        IBrowserContext[] BrowserContexts { get; }
+        IEnumerable<IBrowserContext> BrowserContexts { get; }
 
         /// <summary>
         /// Returns the default browser context.

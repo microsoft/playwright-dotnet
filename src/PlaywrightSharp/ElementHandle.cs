@@ -43,10 +43,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.GetBoundingBoxAsync"/>
-        public Task<BoundingBox> GetBoundingBoxAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<Rect> GetBoundingBoxAsync() => _page.Delegate.GetBoundingBoxAsync(this);
 
         /// <inheritdoc cref="IElementHandle.GetContentFrameAsync"/>
         public Task<IFrame> GetContentFrameAsync()
@@ -116,9 +113,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.ScreenshotAsync"/>
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+            => _page.Screenshotter.ScreenshotElementAsync(this, options ?? new ScreenshotOptions());
 
         /// <inheritdoc cref="IElementHandle.ScrollIntoViewIfNeededAsync"/>
         public async Task ScrollIntoViewIfNeededAsync()
@@ -172,6 +167,8 @@ namespace PlaywrightSharp
         {
             throw new NotImplementedException();
         }
+
+        internal Task DisposeAsync() => Task.CompletedTask;
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, ClickOptions options)
         {

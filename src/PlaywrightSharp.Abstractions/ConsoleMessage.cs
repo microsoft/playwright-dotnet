@@ -29,12 +29,6 @@ namespace PlaywrightSharp
         public ConsoleType Type { get; }
 
         /// <summary>
-        /// Gets the console text.
-        /// </summary>
-        /// <value>The text.</value>
-        public string Text { get; }
-
-        /// <summary>
         /// Gets the arguments.
         /// </summary>
         /// <value>The arguments.</value>
@@ -44,5 +38,11 @@ namespace PlaywrightSharp
         /// Gets the location.
         /// </summary>
         public ConsoleMessageLocation Location { get; }
+
+        /// <summary>
+        /// Gets the console text.
+        /// </summary>
+        /// <value>The text.</value>
+        internal string Text { get; }
     }
 }

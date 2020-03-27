@@ -45,6 +45,11 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
+        public string HandleToString(IJSHandle arg, bool includeType)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task ReleaseHandleAsync(JSHandle handle)
         {
             throw new System.NotImplementedException();
