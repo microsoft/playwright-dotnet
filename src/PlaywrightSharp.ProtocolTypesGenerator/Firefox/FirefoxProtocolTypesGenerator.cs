@@ -189,12 +189,18 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     enumBuilder.AppendLine("}");
                 }
 
+                bool optional = false;
+                if (obj.TryGetProperty("$optional", out var optionalElement))
+                {
+                    optional = optionalElement.GetBoolean();
+                }
+
                 return type switch
                 {
                     "string" => "string",
                     "boolean" => "bool?",
                     "number" => "double?",
-                    "enum" when _knownTypes.TryGetValue(obj.GetProperty("$values").GetRawText(), out string enumName) => enumName,
+                    "enum" when _knownTypes.TryGetValue(obj.GetProperty("$values").GetRawText(), out string enumName) => enumName + (optional ? "?" : string.Empty),
                     "any" => isResponse ? "JsonElement?" : "object",
                     "object" => isResponse ? "JsonElement?" : "object",
                     "array" => ConvertJsTypeToCsharp(builder, domain, name, objectName, obj.GetProperty("$items"), enumBuilder, false) + "[]",

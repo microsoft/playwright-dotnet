@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Firefox.Protocol.Target;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -28,9 +29,11 @@ namespace PlaywrightSharp.Firefox
             return pages.Where(page => page != null).ToArray();
         }
 
-        public Task<IPage> NewPage()
+        public async Task<IPage> NewPage()
         {
-            throw new System.NotImplementedException();
+            var response = await _connection.SendAsync(new TargetNewPageRequest { BrowserContextId = _browserContextId }).ConfigureAwait(false);
+            var target = _browser.TargetsMap[response.TargetId];
+            return await target.GetPageAsync().ConfigureAwait(false);
         }
 
         public Task SetGeolocationAsync(GeolocationOption geolocation)

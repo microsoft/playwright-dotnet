@@ -1,3 +1,4 @@
+using System;
 using PlaywrightSharp.Firefox.Helper;
 
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
@@ -8,6 +9,16 @@ namespace PlaywrightSharp.Firefox.Protocol.Runtime
 
         string IRemoteObject.Subtype => Subtype.ToString();
 
-        string IRemoteObject.UnserializableValue => UnserializableValue.ToStringValue();
+        string IRemoteObject.UnserializableValue => UnserializableValue?.ToStringValue();
+
+        internal static RemoteObjectUnserializableValue GetUnserializableValueFromRaw(string value)
+            => value switch
+            {
+                "Infinity" => RemoteObjectUnserializableValue.Infinity,
+                "-Infinity" => RemoteObjectUnserializableValue.NegativeInfinity,
+                "-0" => RemoteObjectUnserializableValue.NegativeZero,
+                "NaN" => RemoteObjectUnserializableValue.NaN,
+                _ => throw new ArgumentOutOfRangeException(nameof(value))
+            };
     }
 }

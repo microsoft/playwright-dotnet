@@ -22,7 +22,7 @@ public string Domain { get; set; }
 public string Path { get; set; }
 public bool? Secure { get; set; }
 public bool? HttpOnly { get; set; }
-public Browser.CookieOptionsSameSite SameSite { get; set; }
+public Browser.CookieOptionsSameSite? SameSite { get; set; }
 public double? Expires { get; set; }
 }
 internal partial class Cookie
@@ -112,10 +112,10 @@ namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
 internal partial class RemoteObject
 {
-public Runtime.RemoteObjectType Type { get; set; }
-public Runtime.RemoteObjectSubtype Subtype { get; set; }
+public Runtime.RemoteObjectType? Type { get; set; }
+public Runtime.RemoteObjectSubtype? Subtype { get; set; }
 public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
+public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
 public object Value { get; set; }
 }
 internal partial class ObjectProperty
@@ -133,13 +133,13 @@ internal partial class ExceptionDetails
 {
 public string Text { get; set; }
 public string Stack { get; set; }
-public JsonElement? Value { get; set; }
+public object Value { get; set; }
 }
 internal partial class CallFunctionArgument
 {
 public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue UnserializableValue { get; set; }
-public JsonElement? Value { get; set; }
+public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
+public object Value { get; set; }
 }
 internal enum RemoteObjectType
 {
@@ -211,7 +211,7 @@ public bool? Editable { get; set; }
 public bool? Busy { get; set; }
 public bool? Multiline { get; set; }
 public bool? Readonly { get; set; }
-public Accessibility.AXTreeChecked Checked { get; set; }
+public Accessibility.AXTreeChecked? Checked { get; set; }
 public bool? Expanded { get; set; }
 public bool? Disabled { get; set; }
 public bool? Multiselectable { get; set; }
@@ -486,7 +486,7 @@ internal partial class PageBindingCalledFirefoxEvent : IFirefoxEvent
 public string InternalName { get; } = "Page.bindingCalled";
 public string ExecutionContextId { get; set; }
 public string Name { get; set; }
-public JsonElement? Payload { get; set; }
+public object Payload { get; set; }
 }
 internal partial class PageFileChooserOpenedFirefoxEvent : IFirefoxEvent
 {
@@ -571,8 +571,8 @@ internal partial class PageSetEmulatedMediaRequest : IFirefoxRequest<PageSetEmul
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setEmulatedMedia";
-public Page.SetEmulatedMediaType Type { get; set; }
-public Page.SetEmulatedMediaColorScheme ColorScheme { get; set; }
+public Page.SetEmulatedMediaType? Type { get; set; }
+public Page.SetEmulatedMediaColorScheme? ColorScheme { get; set; }
 }
 internal partial class PageSetEmulatedMediaResponse: IFirefoxResponse
 {
@@ -852,7 +852,7 @@ internal partial class RuntimeExecutionContextCreatedFirefoxEvent : IFirefoxEven
 {
 public string InternalName { get; } = "Runtime.executionContextCreated";
 public string ExecutionContextId { get; set; }
-public JsonElement? AuxData { get; set; }
+public object AuxData { get; set; }
 }
 internal partial class RuntimeExecutionContextDestroyedFirefoxEvent : IFirefoxEvent
 {
