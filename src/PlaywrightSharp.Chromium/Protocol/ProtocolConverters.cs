@@ -39,5 +39,44 @@ namespace PlaywrightSharp.Chromium.Protocol
 
             return mask;
         }
+
+        internal static string ToStringFormat(this ScreenshotFormat format)
+            => format switch
+            {
+                ScreenshotFormat.Jpeg => "jpeg",
+                ScreenshotFormat.Png => "png",
+                _ => string.Empty,
+            };
+
+        internal static Page.Viewport ToViewportProtocol(this Rect clip)
+            => new Page.Viewport
+            {
+                Height = clip.Height,
+                Width = clip.Width,
+                X = clip.X,
+                Y = clip.Y,
+                Scale = 1,
+            };
+
+        internal static string ToExceptionMessage(this Runtime.ExceptionDetails exceptionDetails)
+        {
+            if (exceptionDetails.Exception != null)
+            {
+                return exceptionDetails.Exception.Description ?? exceptionDetails.Exception.Value.ToString();
+            }
+
+            string message = exceptionDetails.Text;
+            if (exceptionDetails.StackTrace != null)
+            {
+                foreach (var callframe in exceptionDetails.StackTrace.CallFrames)
+                {
+                    string location = $"{callframe.Url}:{callframe.LineNumber}:{callframe.ColumnNumber}";
+                    string functionName = string.IsNullOrEmpty(callframe.FunctionName) ? "<anonymous>" : callframe.FunctionName;
+                    message += $"\n at ${functionName} (${location})";
+                }
+            }
+
+            return message;
+        }
     }
 }

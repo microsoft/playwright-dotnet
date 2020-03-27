@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
     internal class FrameManager
     {
         private readonly Page _page;
-        private readonly ConcurrentDictionary<string, Action> _consoleMessageTags = new ConcurrentDictionary<string, Action>();
 
         public FrameManager(Page page)
         {
             _page = page;
         }
+
+        internal ConcurrentDictionary<string, Action> ConsoleMessageTags { get; } = new ConcurrentDictionary<string, Action>();
 
         internal List<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
@@ -126,8 +128,8 @@ namespace PlaywrightSharp
                 return false;
             }
 
-            string tag = message.Text;
-            if (_consoleMessageTags.TryRemove(tag, out var handler))
+            string tag = message.GetText();
+            if (ConsoleMessageTags.TryRemove(tag, out var handler))
             {
                 handler();
                 return true;
@@ -135,8 +137,6 @@ namespace PlaywrightSharp
 
             return false;
         }
-
-        internal void SetConsoleMessageTag(string tag, Action handler) => _consoleMessageTags[tag] = handler;
 
         internal void ClearFrameLifecycle(Frame frame)
         {

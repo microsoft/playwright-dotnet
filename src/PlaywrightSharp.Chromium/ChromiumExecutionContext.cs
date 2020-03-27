@@ -16,13 +16,14 @@ namespace PlaywrightSharp.Chromium
         private const string EvaluationScriptUrl = "__playwright_evaluation_script__";
         private static readonly Regex _sourceUrlRegex = new Regex("/^[\040\t] *\\/\\/[@#] sourceURL=\\s*(\\S*?)\\s*$", RegexOptions.Compiled);
         private readonly ChromiumSession _client;
-        private readonly int _contextId;
 
         public ChromiumExecutionContext(ChromiumSession client, ExecutionContextDescription contextPayload)
         {
             _client = client;
-            _contextId = contextPayload.Id.Value;
+            ContextId = contextPayload.Id.Value;
         }
+
+        internal int ContextId { get; }
 
         public async Task EvaluateAsync(FrameExecutionContext context, bool returnByValue, string script, object[] args)
             => await EvaluateAsync<object>(context, returnByValue, script, args).ConfigureAwait(false);
@@ -34,19 +35,28 @@ namespace PlaywrightSharp.Chromium
 
             if (script.IsJavascriptFunction())
             {
-                var result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
-                {
-                    FunctionDeclaration = $"{script}\n{suffix}\n",
-                    ExecutionContextId = _contextId,
-                    Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
-                    ReturnByValue = returnByValue,
-                    AwaitPromise = true,
-                    UserGesture = true,
-                }).ConfigureAwait(false);
+                RuntimeCallFunctionOnResponse result = null;
 
-                if (result.ExceptionDetails != null)
+                try
                 {
-                    throw new PlaywrightSharpException($"Evaluation failed: {GetExceptionMessage(result.ExceptionDetails)}");
+                    result = await _client.SendAsync(new RuntimeCallFunctionOnRequest
+                    {
+                        FunctionDeclaration = $"{script}\n{suffix}\n",
+                        ExecutionContextId = ContextId,
+                        Arguments = args.Select(a => FormatArgument(a, context)).ToArray(),
+                        ReturnByValue = returnByValue,
+                        AwaitPromise = true,
+                        UserGesture = true,
+                    }).ConfigureAwait(false);
+
+                    if (result.ExceptionDetails != null)
+                    {
+                        throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = RewriteError(ex);
                 }
 
                 remoteObject = result.Result;
@@ -57,7 +67,7 @@ namespace PlaywrightSharp.Chromium
                 var result = await _client.SendAsync(new RuntimeEvaluateRequest
                 {
                     Expression = expressionWithSourceUrl,
-                    ContextId = _contextId,
+                    ContextId = ContextId,
                     ReturnByValue = returnByValue,
                     AwaitPromise = true,
                     UserGesture = true,
@@ -65,7 +75,7 @@ namespace PlaywrightSharp.Chromium
 
                 if (result.ExceptionDetails != null)
                 {
-                    throw new PlaywrightSharpException($"Evaluation failed: {GetExceptionMessage(result.ExceptionDetails)}");
+                    throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
                 }
 
                 remoteObject = result.Result;
@@ -76,7 +86,42 @@ namespace PlaywrightSharp.Chromium
 
         public Task ReleaseHandleAsync(JSHandle handle) => ReleaseObjectAsync(_client, handle.RemoteObject);
 
-        private static object ValueFromUnserializableValue(RemoteObject remoteObject, string unserializableValue)
+        public string HandleToString(IJSHandle handle, bool includeType)
+        {
+            var remote = ((JSHandle)handle).RemoteObject;
+            if (!string.IsNullOrEmpty(remote.ObjectId))
+            {
+                string type = string.IsNullOrEmpty(remote.Subtype) ? remote.Type : remote.Subtype;
+                return "JSHandle@" + type;
+            }
+
+            return (includeType ? "JSHandle:" : string.Empty) + GetValueFromRemoteObject<string>(remote);
+        }
+
+        private RuntimeCallFunctionOnResponse RewriteError(Exception ex)
+        {
+            if (ex.Message.Contains("Object reference chain is too long"))
+            {
+                return new RuntimeCallFunctionOnResponse { Result = new RemoteObject { Type = "undefined" } };
+            }
+
+            if (ex.Message.Contains("Object couldn\'t be returned by value"))
+            {
+                return new RuntimeCallFunctionOnResponse { Result = new RemoteObject { Type = "undefined" } };
+            }
+
+            if (
+                ex.Message.EndsWith("Cannot find context with specified id") ||
+                ex.Message.EndsWith("Inspected target navigated or closed") ||
+                ex.Message.EndsWith("Execution context was destroyed."))
+            {
+                throw new PlaywrightSharpException("Execution context was destroyed, most likely because of a navigation.");
+            }
+
+            throw ex;
+        }
+
+        private object ValueFromUnserializableValue(IRemoteObject remoteObject, string unserializableValue)
         {
             if (
                 remoteObject.Type == RemoteObjectType.Bigint &&
@@ -159,7 +204,7 @@ namespace PlaywrightSharp.Chromium
             };
         }
 
-        private object GetValueFromRemoteObject<T>(RemoteObject remoteObject)
+        private object GetValueFromRemoteObject<T>(IRemoteObject remoteObject)
         {
             string unserializableValue = remoteObject.UnserializableValue;
 
@@ -176,27 +221,6 @@ namespace PlaywrightSharp.Chromium
             }
 
             return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
-        }
-
-        private object GetExceptionMessage(ExceptionDetails exceptionDetails)
-        {
-            if (exceptionDetails.Exception != null)
-            {
-                return exceptionDetails.Exception.Description ?? exceptionDetails.Exception.Value;
-            }
-
-            string message = exceptionDetails.Text;
-            if (exceptionDetails.StackTrace != null)
-            {
-                foreach (var callframe in exceptionDetails.StackTrace.CallFrames)
-                {
-                    string location = $"{callframe.Url}:{callframe.LineNumber}:{callframe.ColumnNumber}";
-                    string functionName = string.IsNullOrEmpty(callframe.FunctionName) ? "<anonymous>" : callframe.FunctionName;
-                    message += $"\n at ${functionName} (${location})";
-                }
-            }
-
-            return message;
         }
 
         private async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)

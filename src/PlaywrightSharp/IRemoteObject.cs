@@ -6,6 +6,11 @@ namespace PlaywrightSharp
     internal interface IRemoteObject
     {
         /// <summary>
+        /// Type.
+        /// </summary>
+        string Type { get; }
+
+        /// <summary>
         /// Object subtype hint. Specified for `object` type values only.
         /// </summary>
         string Subtype { get; }

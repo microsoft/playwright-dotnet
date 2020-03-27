@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class SetUserAgentTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
@@ -77,7 +79,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 UserAgent = "foobar"
             };
 
-            var context = await NewContextAsync(options);
+            await NewContextAsync(options);
 
             options.UserAgent = "wrong";
 

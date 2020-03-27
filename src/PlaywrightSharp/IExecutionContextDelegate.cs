@@ -28,5 +28,13 @@ namespace PlaywrightSharp
         /// <param name="handle">Handle to be released.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task ReleaseHandleAsync(JSHandle handle);
+
+        /// <summary>
+        /// Converts an <see cref="IJSHandle"/> to string.
+        /// </summary>
+        /// <param name="handle"><see cref="IJSHandle"/> to parse.</param>
+        /// <param name="includeType">Whether to include the type or not.</param>
+        /// <returns>An <see cref="string"/> representation of the handle.</returns>
+        string HandleToString(IJSHandle handle, bool includeType);
     }
 }

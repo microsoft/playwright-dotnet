@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -8,7 +8,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext</playwright-describe>
-    public class BrowserContextTests : PlaywrightSharpBrowserContextBaseTest
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
+    public class BrowserContextTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public BrowserContextTests(ITestOutputHelper output) : base(output)
@@ -22,7 +24,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldHaveDefaultContext()
         {
             Assert.Single(Browser.BrowserContexts);
-            var defaultContext = Browser.BrowserContexts[0];
+            var defaultContext = Browser.BrowserContexts.First();
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(defaultContext.CloseAsync);
             Assert.Same(defaultContext, Browser.DefaultContext);
             Assert.Contains("cannot be closed", exception.Message);
@@ -36,7 +38,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             Assert.Single(Browser.BrowserContexts);
             var context = await Browser.NewContextAsync();
-            Assert.Equal(2, Browser.BrowserContexts.Length);
+            Assert.Equal(2, Browser.BrowserContexts.Count());
             Assert.Contains(context, Browser.BrowserContexts);
             await context.CloseAsync();
             Assert.Single(Browser.BrowserContexts);
@@ -119,17 +121,17 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var page = await NewPageAsync(new BrowserContextOptions
             {
-                Viewport =
+                Viewport = new Viewport
                 {
                     Width = 456,
-                    Height =  789
+                    Height = 789
                 }
             });
 
             Assert.Equal(456, page.Viewport.Width);
             Assert.Equal(789, page.Viewport.Height);
             Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -146,7 +148,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.GoToAsync(TestConstants.EmptyPage + "/grid.html");
 
             var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            var screenshot = await page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });
@@ -164,10 +166,10 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var page = await NewPageAsync(new BrowserContextOptions
             {
-                Viewport =
+                Viewport = new Viewport
                 {
                     Width = 456,
-                    Height =  789
+                    Height = 789
                 }
             });
 
@@ -176,7 +178,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
             Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
 
-            var screenshot = await page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });
@@ -234,14 +236,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 ::-webkit-scrollbar{
                     display: none;
                 }
-                </styl >
+                </style>
                 <div class=""to-screenshot""></div>
                 <div class=""to-screenshot""></div>
                 <div class=""to-screenshot""></div>
             ");
             var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
-            var screenshot = await elementHandle.ScreenshotAsync();
+            byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.NotEmpty(screenshot);
             var sizeAfter = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             Assert.Equal(sizeBefore, sizeAfter);

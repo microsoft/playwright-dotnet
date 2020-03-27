@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
-                Clip = new Clip
+                Clip = new Rect
                 {
                     X = 50,
                     Y = 100,
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
-                Clip = new Clip
+                Clip = new Rect
                 {
 
                     X = 50,
@@ -95,7 +95,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.ScreenshotAsync(new ScreenshotOptions
             {
-                Clip = new Clip
+                Clip = new Rect
                 {
 
                     X = 50,
@@ -126,7 +126,7 @@ namespace PlaywrightSharp.Tests.Page
             {
                 tasks.Add(Page.ScreenshotAsync(new ScreenshotOptions
                 {
-                    Clip = new Clip
+                    Clip = new Rect
                     {
                         X = 50 * i,
                         Y = 0,
@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests.Page
             {
                 screenshotTasks.Add(pageTasks[i].Result.ScreenshotAsync(new ScreenshotOptions
                 {
-                    Clip = new Clip
+                    Clip = new Rect
                     {
                         X = 50 * i,
                         Y = 0,
@@ -264,7 +264,7 @@ namespace PlaywrightSharp.Tests.Page
             var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 OmitBackground = true,
-                Type = ScreenshotType.Jpeg
+                Type = ScreenshotFormat.Jpeg
             });
             Assert.True(ScreenshotHelper.PixelMatch("white.jpg", screenshot));
         }
@@ -277,7 +277,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
-                Clip = new Clip
+                Clip = new Rect
                 {
                     X = 0,
                     Y = 0,

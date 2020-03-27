@@ -89,8 +89,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets the bounding box of the element (relative to the main frame), or null if the element is not visible.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the <see cref="BoundingBox"/> is resolved, yielding element's <see cref="BoundingBox"/>.</returns>
-        Task<BoundingBox> GetBoundingBoxAsync();
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="Rect"/> is resolved, yielding element's <see cref="Rect"/>.</returns>
+        Task<Rect> GetBoundingBoxAsync();
 
         /// <summary>
         /// Gets the element's visible ratio.

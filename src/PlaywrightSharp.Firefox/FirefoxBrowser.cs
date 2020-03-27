@@ -43,13 +43,24 @@ namespace PlaywrightSharp.Firefox
         public event EventHandler Disconnected;
 
         /// <inheritdoc cref="IBrowser.BrowserContexts"/>
-        public IBrowserContext[] BrowserContexts => null;
+        public IEnumerable<IBrowserContext> BrowserContexts
+        {
+            get
+            {
+                yield return DefaultContext;
+
+                foreach (var context in _contexts.Values)
+                {
+                    yield return context;
+                }
+            }
+        }
 
         /// <inheritdoc cref="IBrowser.DefaultContext"/>
         public IBrowserContext DefaultContext { get; }
 
         /// <summary>
-        /// Dafault wait time in milliseconds. Defaults to 30 seconds.
+        /// Default wait time in milliseconds. Defaults to 30 seconds.
         /// </summary>
         public int DefaultWaitForTimeout { get; set; } = Playwright.DefaultTimeout;
 

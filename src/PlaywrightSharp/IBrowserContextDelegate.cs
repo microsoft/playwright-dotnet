@@ -15,7 +15,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Creates a new page in the context.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the new page is created, yielding the <see cref="global::PlaywrightSharp.IPage"/>.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the new page is created, yielding the <see cref="IPage"/>.</returns>
         Task<IPage> NewPage();
 
         /// <summary>
@@ -40,5 +40,11 @@ namespace PlaywrightSharp
         /// <param name="geolocation">Geolocation.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task SetGeolocationAsync(GeolocationOption geolocation);
+
+        /// <summary>
+        /// Closes the current context.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task CloseAsync();
     }
 }

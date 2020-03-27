@@ -89,7 +89,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<T> EvaluateAsync<T>(string script, params object[] args)
         {
-            var context = await GeMainContextAsync().ConfigureAwait(false);
+            var context = await GetMainContextAsync().ConfigureAwait(false);
             return await context.EvaluateAsync<T>(script, args).ConfigureAwait(false);
         }
 
@@ -102,7 +102,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
         {
-            var context = await GeMainContextAsync().ConfigureAwait(false);
+            var context = await GetMainContextAsync().ConfigureAwait(false);
             return await context.EvaluateHandleAsync(script, args).ConfigureAwait(false);
         }
 
@@ -170,9 +170,19 @@ namespace PlaywrightSharp
             => GoToAsync(url, new GoToOptions { WaitUntil = new[] { waitUntil } });
 
         /// <inheritdoc cref="IJSHandle.GetPropertyAsync"/>
-        public Task<IElementHandle> QuerySelectorAsync(string selector)
+        public async Task<IElementHandle> QuerySelectorAsync(string selector)
         {
-            throw new System.NotImplementedException();
+            var utilityContext = await GetUtilityContextAsync().ConfigureAwait(false);
+            var mainContext = await GetMainContextAsync().ConfigureAwait(false);
+            var handle = await utilityContext.QuerySelectorAsync(selector).ConfigureAwait(false) as ElementHandle;
+            if (handle != null && handle.Context != mainContext)
+            {
+                var adopted = await Page.Delegate.AdoptElementHandleAsync(handle, mainContext).ConfigureAwait(false);
+                await handle.DisposeAsync().ConfigureAwait(false);
+                return adopted;
+            }
+
+            return handle;
         }
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync(string, string, object[])"/>
@@ -190,33 +200,42 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
         public async Task SetContentAsync(string html, NavigationOptions options = null)
         {
-            string tag = $"--playwright--set--content--{Id}--{Interlocked.Increment(ref _setContentCounter)}--";
+            string tag = $"--playwright--set--content--{Id}--${++_setContentCounter}--";
             var context = await GetUtilityContextAsync().ConfigureAwait(false);
             LifecycleWatcher watcher = null;
-            Page.FrameManager.SetConsoleMessageTag(tag, () =>
+
+            Page.FrameManager.ConsoleMessageTags.TryAdd(tag, () =>
             {
+                // Clear lifecycle right after document.open() - see 'tag' below.
                 Page.FrameManager.ClearFrameLifecycle(this);
                 watcher = new LifecycleWatcher(this, options);
             });
 
-            await context.EvaluateAsync<object>(
+            await context.EvaluateAsync(
                 @"(html, tag) => {
-                window.stop();
-                document.open();
-                console.debug(tag);
-                document.write(html);
-                document.close();
-            }",
+                    window.stop();
+                    document.open();
+                    console.debug(tag);  // eslint-disable-line no-console
+                    document.write(html);
+                    document.close();
+                }",
                 html,
                 tag).ConfigureAwait(false);
 
-            using (watcher)
+            if (watcher == null)
             {
-                var watcherTask = await Task.WhenAny(
-                    watcher.TimeoutOrTerminationTask,
+                throw new PlaywrightSharpException("Was not able to clear lifecycle in SetContentAsync");
+            }
+
+            var timeoutTask = watcher.TimeoutOrTerminationTask;
+            await Task.WhenAny(
+                    timeoutTask,
                     watcher.LifecycleTask).ConfigureAwait(false);
 
-                await watcherTask.ConfigureAwait(false);
+            watcher.Dispose();
+            if (timeoutTask.IsFaulted)
+            {
+                await timeoutTask.ConfigureAwait(false);
             }
         }
 
@@ -252,7 +271,7 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        internal Task<IFrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
+        internal Task<FrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
 
         internal void OnDetached()
         {
@@ -285,7 +304,7 @@ namespace PlaywrightSharp
             }
         }
 
-        private void SetContext(ContextType contextType, IFrameExecutionContext context)
+        private void SetContext(ContextType contextType, FrameExecutionContext context)
         {
             var data = _contextData[contextType];
             data.Context = context;
@@ -301,13 +320,13 @@ namespace PlaywrightSharp
             }
             else
             {
-                data.ContextTsc = new TaskCompletionSource<IFrameExecutionContext>();
+                data.ContextTsc = new TaskCompletionSource<FrameExecutionContext>();
             }
         }
 
-        private Task<IFrameExecutionContext> GeMainContextAsync() => GetContextAsync(ContextType.Main);
+        private Task<FrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
 
-        private Task<IFrameExecutionContext> GetContextAsync(ContextType contextType)
+        private Task<FrameExecutionContext> GetContextAsync(ContextType contextType)
         {
             if (_detached)
             {

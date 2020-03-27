@@ -17,16 +17,14 @@ namespace PlaywrightSharp.Chromium
     {
         private readonly IBrowserApp _app;
         private readonly ChromiumConnection _connection;
-        private readonly string[] _browserContextIds;
         private readonly ChromiumSession _session;
         private readonly Dictionary<string, IBrowserContext> _contexts;
         private bool _isClosed;
 
-        internal ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
+        private ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
         {
             _app = app;
             _connection = connection;
-            _browserContextIds = browserContextIds;
             _session = connection.RootSession;
 
             DefaultContext = new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this));
@@ -39,35 +37,46 @@ namespace PlaywrightSharp.Chromium
             _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.TargetChanged"/>
         public event EventHandler<TargetChangedArgs> TargetChanged;
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.TargetCreated"/>
         public event EventHandler<TargetChangedArgs> TargetCreated;
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.TargetDestroyed"/>
         public event EventHandler<TargetChangedArgs> TargetDestroyed;
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.Disconnected"/>
         public event EventHandler Disconnected;
 
-        /// <inheritdoc cref="IBrowser"/>
-        public IBrowserContext[] BrowserContexts => null;
+        /// <inheritdoc cref="IBrowser.BrowserContexts"/>
+        public IEnumerable<IBrowserContext> BrowserContexts
+        {
+            get
+            {
+                yield return DefaultContext;
 
-        /// <inheritdoc cref="IBrowser"/>
+                foreach (var context in _contexts.Values)
+                {
+                    yield return context;
+                }
+            }
+        }
+
+        /// <inheritdoc cref="IBrowser.Disconnected"/>
         public IBrowserContext DefaultContext { get; }
 
         /// <summary>
-        /// Dafault wait time in milliseconds. Defaults to 30 seconds.
+        /// Default wait time in milliseconds. Defaults to 30 seconds.
         /// </summary>
         public int DefaultWaitForTimeout { get; set; } = Playwright.DefaultTimeout;
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.IsConnected"/>
         public bool IsConnected => false;
 
         internal ConcurrentDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.CloseAsync"/>
         public async Task CloseAsync()
         {
             if (!_isClosed)
@@ -81,7 +90,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.DisconnectAsync"/>
         public Task DisconnectAsync()
         {
             var disconnectedTcs = new TaskCompletionSource<bool>();
@@ -98,7 +107,7 @@ namespace PlaywrightSharp.Chromium
         public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 #endif
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.NewContextAsync"/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
         {
             string browserContextId = (await _session.SendAsync(new TargetCreateBrowserContextRequest()).ConfigureAwait(false)).BrowserContextId;
@@ -108,7 +117,7 @@ namespace PlaywrightSharp.Chromium
             return context;
         }
 
-        /// <inheritdoc cref="IBrowser"/>
+        /// <inheritdoc cref="IBrowser.WaitForTargetAsync"/>
         public async Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null)
         {
             int timeout = options?.Timeout ?? DefaultWaitForTimeout;
@@ -181,6 +190,8 @@ namespace PlaywrightSharp.Chromium
 
         internal Task ClosePageAsync(ChromiumPage page)
             => _session.SendAsync(new TargetCloseTargetRequest { TargetId = page.Target.TargetId });
+
+        internal void RemoveContext(string contextId) => _contexts.Remove(contextId);
 
         private async void Session_MessageReceived(object sender, IChromiumEvent e)
         {

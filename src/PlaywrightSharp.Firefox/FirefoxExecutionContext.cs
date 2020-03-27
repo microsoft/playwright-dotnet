@@ -70,6 +70,17 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
+        public string HandleToString(IJSHandle handle, bool includeType)
+        {
+            var payload = ((JSHandle)handle).RemoteObject;
+            if (payload.ObjectId != null)
+            {
+                return "JSHandle@" + (payload.Subtype ?? payload.Type);
+            }
+
+            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<string>((RemoteObject)payload);
+        }
+
         private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, FrameExecutionContext context)
         {
             CheckException(exceptionDetails);
@@ -78,7 +89,7 @@ namespace PlaywrightSharp.Firefox
                 return DeserializeValue<T>(remoteObject);
             }
 
-            return (T)CreateHandle(remoteObject, context);
+            return (T)context.CreateHandle(remoteObject);
         }
 
         private void CheckException(ExceptionDetails exceptionDetails)
@@ -151,8 +162,6 @@ namespace PlaywrightSharp.Firefox
 
             return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type ?? RemoteObjectType.Object);
         }
-
-        private object CreateHandle(RemoteObject remoteObject, FrameExecutionContext context) => new JSHandle(context, remoteObject);
 
         private object ValueFromUnserializableValue(RemoteObjectUnserializableValue unserializableValue)
             => unserializableValue switch

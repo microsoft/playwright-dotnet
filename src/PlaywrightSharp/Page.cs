@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -10,10 +9,10 @@ using PlaywrightSharp.Input;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage"/>
-    public class Page : IPage
+    public sealed class Page : IPage, IDisposable
     {
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
-        private bool _disconnected = false;
+        private bool _disconnected;
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -23,6 +22,10 @@ namespace PlaywrightSharp
             BrowserContext = browserContext;
             Keyboard = new Keyboard(Delegate.RawKeyboard);
             Mouse = new Mouse(Delegate.RawMouse, Keyboard);
+
+            PageState = new PageState { Viewport = browserContext.Options.Viewport };
+
+            Screenshotter = new Screenshotter(this);
         }
 
         /// <inheritdoc cref="IPage.Console"/>
@@ -86,10 +89,10 @@ namespace PlaywrightSharp
         public IFrame MainFrame => FrameManager.MainFrame;
 
         /// <inheritdoc cref="IPage.BrowserContext"/>
-        public virtual IBrowserContext BrowserContext { get; internal set; }
+        public IBrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc cref="IPage.Viewport"/>
-        public Viewport Viewport => null;
+        public Viewport Viewport => PageState.Viewport;
 
         /// <inheritdoc cref="IPage.Accessibility"/>
         public IAccessibility Accessibility => null;
@@ -123,11 +126,13 @@ namespace PlaywrightSharp
 
         internal FrameManager FrameManager { get; }
 
-        internal bool HasPopupEventListeners => Popup?.GetInvocationList().Any() == true;
+        internal bool HasPopupEventListeners => Popup?.GetInvocationList().Length > 0;
 
-        internal PageState PageState { get; } = new PageState();
+        internal PageState PageState { get; }
 
         internal IPageDelegate Delegate { get; }
+
+        internal Screenshotter Screenshotter { get; }
 
         /// <inheritdoc cref="IPage.AddScriptTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
@@ -264,10 +269,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.QuerySelectorAsync(string)"/>
-        public Task<IElementHandle> QuerySelectorAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
 
         /// <inheritdoc cref="IPage.QuerySelectorEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
@@ -289,9 +291,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.ScreenshotAsync(ScreenshotOptions)"/>
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+            => Screenshotter.ScreenshotPageAsync(options);
 
         /// <inheritdoc cref="IPage.SetCacheEnabledAsync(bool)"/>
         public Task SetCacheEnabledAsync(bool enabled = true)
@@ -300,8 +300,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, NavigationOptions)"/>
-        public Task SetContentAsync(string html, NavigationOptions options = null)
-            => MainFrame.SetContentAsync(html, options);
+        public Task SetContentAsync(string html, NavigationOptions options = null) => MainFrame.SetContentAsync(html, options);
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, WaitUntilNavigation)"/>
         public Task SetContentAsync(string html, WaitUntilNavigation waitUntil)
@@ -334,9 +333,23 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>
-        public Task SetViewportAsync(Viewport viewport)
+        public async Task SetViewportAsync(Viewport viewport)
         {
-            throw new NotImplementedException();
+            if (viewport == null)
+            {
+                throw new ArgumentNullException(nameof(viewport));
+            }
+
+            bool oldIsMobile = PageState.Viewport?.IsMobile ?? false;
+            bool newIsMobile = viewport.IsMobile;
+            PageState.Viewport = viewport.Clone();
+
+            await Delegate.SetViewportAsync(viewport).ConfigureAwait(false);
+
+            if (oldIsMobile != newIsMobile)
+            {
+                await ReloadAsync().ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc cref="IPage.TripleClickAsync(string, ClickOptions)"/>
@@ -498,6 +511,9 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        public void Dispose() => Screenshotter?.Dispose();
+
         internal void RemoveWorker(string workerId)
         {
             throw new NotImplementedException();
@@ -512,7 +528,7 @@ namespace PlaywrightSharp
         {
             var message = new ConsoleMessage(type, text, args, location);
             bool intercepted = FrameManager.InterceptConsoleMessage(message);
-            if (intercepted || Console.GetInvocationList().Length == 0)
+            if (intercepted || Console?.GetInvocationList().Length == 0)
             {
                 foreach (var arg in args)
                 {
@@ -548,5 +564,7 @@ namespace PlaywrightSharp
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
         internal void OnLoad() => Load?.Invoke(this, new EventArgs());
+
+        internal void OnPageError(PageErrorEventArgs args) => PageError?.Invoke(this, args);
     }
 }
