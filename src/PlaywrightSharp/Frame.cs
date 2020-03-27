@@ -109,9 +109,9 @@ namespace PlaywrightSharp
 
                 if (!string.IsNullOrEmpty(options.Path))
                 {
-                    string contents = File.ReadAllText(options.Path);
-                    contents += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
-                    return await context.EvaluateHandleAsync(addScriptContent, contents, options.Type)
+                    string content = File.ReadAllText(options.Path);
+                    content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
+                    return await context.EvaluateHandleAsync(addScriptContent, content, options.Type)
                         .ConfigureAwait(false) as ElementHandle;
                 }
 
@@ -456,7 +456,7 @@ namespace PlaywrightSharp
 
         private Task<IJSHandle> ScheduleRerunnableTaskAsync(
             Func<IFrameExecutionContext,
-                Task<IJSHandle>> task,
+            Task<IJSHandle>> task,
             ContextType contextType,
             int? timeout,
             string title)

@@ -42,7 +42,7 @@ namespace PlaywrightSharp
         /// Gets the element's bounding box.
         /// </summary>
         /// <param name="handle">Element to evaluate.</param>
-        /// <returns>A <see cref="Task"/> that completes when the bounding box is evaluated, yielding a <see cref="global::PlaywrightSharp.Rect"/> representing the bounding box.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the bounding box is evaluated, yielding a <see cref="Rect"/> representing the bounding box.</returns>
         Task<Rect> GetBoundingBoxAsync(ElementHandle handle);
 
         /// <summary>
