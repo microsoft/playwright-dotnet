@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,12 +29,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             page = await NewPageAsync(new BrowserContextOptions { UserAgent = "foobar" });
 
-            var userAgentTask = Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString());
-            await Task.WhenAll(
-                userAgentTask,
+            var (userAgent, _) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
                 page.GoToAsync(TestConstants.EmptyPage)
             );
-            Assert.Equal("foobar", userAgentTask.Result);
+            Assert.Equal("foobar", userAgent);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -45,13 +45,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await NewPageAsync();
             Assert.Contains("Mozilla", await page.EvaluateAsync<string>("navigator.userAgent"));
             await page.SetUserAgentAsync("foobar");
-            var userAgentTask = Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]);
 
-            await Task.WhenAll(
-              userAgentTask,
-              FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.EmptyPage));
-
-            Assert.Equal("foobar", userAgentTask.Result);
+            var (userAgent, _) = await TaskUtils.WhenAll(
+                Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
+                FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.EmptyPage)
+            );
+            Assert.Equal("foobar", userAgent);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -82,13 +81,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await NewContextAsync(options);
 
             options.UserAgent = "wrong";
-
-            var userAgentTask = Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString());
-            await Task.WhenAll(
-                userAgentTask,
+            var (userAgent, _) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
                 page.GoToAsync(TestConstants.EmptyPage)
             );
-            Assert.Equal("foobar", userAgentTask.Result);
+            Assert.Equal("foobar", userAgent);
         }
     }
 }
