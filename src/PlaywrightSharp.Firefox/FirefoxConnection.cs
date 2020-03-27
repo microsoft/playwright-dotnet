@@ -135,9 +135,10 @@ namespace PlaywrightSharp.Firefox
                 return;
             }
 
+            IFirefoxEvent param = null;
             if (obj.Params?.ValueKind == JsonValueKind.Object)
             {
-                var param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
+                param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
                 if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
                 {
                     string sessionId = targetAttachedToTarget.SessionId;
@@ -159,8 +160,6 @@ namespace PlaywrightSharp.Firefox
                         session.OnClosed(targetDetachedFromTarget.InternalName);
                     }
                 }
-
-                MessageReceived?.Invoke(this, param);
             }
 
             if (obj.SessionId != null)
@@ -177,6 +176,10 @@ namespace PlaywrightSharp.Firefox
                 {
                     callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText()));
                 }
+            }
+            else if (param != null)
+            {
+                MessageReceived?.Invoke(this, param);
             }
         }
     }

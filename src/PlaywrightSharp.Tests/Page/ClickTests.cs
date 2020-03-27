@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -174,7 +175,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
             var messages = new List<string>();
-            Page.Console += (sender, e) => messages.Add(e.Message.Text);
+            Page.Console += (sender, e) => messages.Add(e.Message.GetText());
 
             for (int i = 0; i < 11; ++i)
             {
