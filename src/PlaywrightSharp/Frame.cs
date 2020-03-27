@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -21,16 +22,12 @@ namespace PlaywrightSharp
 
             _contextData = new Dictionary<ContextType, ContextData>
             {
-                [ContextType.Main] = new ContextData(),
-                [ContextType.Utility] = new ContextData(),
+                [ContextType.Main] = new ContextData(), [ContextType.Utility] = new ContextData(),
             };
             SetContext(ContextType.Main, null);
             SetContext(ContextType.Utility, null);
 
-            if (_parentFrame != null)
-            {
-                _parentFrame.ChildFrames.Add(this);
-            }
+            _parentFrame?.ChildFrames.Add(this);
         }
 
         /// <inheritdoc cref="IFrame.ChildFrames"/>
@@ -67,9 +64,59 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.AddScriptTagAsync(AddTagOptions)"/>
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
+        public async Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
         {
-            throw new System.NotImplementedException();
+            const string addScriptUrl = @"async function addScriptUrl(url, type) {
+                const script = document.createElement('script');
+                script.src = url;
+                if (type)
+                    script.type = type;
+                const promise = new Promise((res, rej) => {
+                    script.onload = res;
+                    script.onerror = rej;
+                });
+                document.head.appendChild(script);
+                await promise;
+                return script;
+            }";
+
+            const string addScriptContent = @"function addScriptContent(content, type = 'text/javascript') {
+                const script = document.createElement('script');
+                script.type = type;
+                script.text = content;
+                let error = null;
+                script.onerror = e => error = e;
+                document.head.appendChild(script);
+                if (error)
+                    throw error;
+                return script;
+            }";
+
+            if (options == null || (string.IsNullOrEmpty(options.Url) && string.IsNullOrEmpty(options.Path) && string.IsNullOrEmpty(options.Content)))
+            {
+                throw new PlaywrightSharpException("Provide an object with a `url`, `path` or `content` property");
+            }
+
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            return await RaceWithCSPErrorAsync(async () =>
+            {
+                if (!string.IsNullOrEmpty(options.Url))
+                {
+                    return await context.EvaluateHandleAsync(addScriptUrl, options.Url, options.Type)
+                        .ConfigureAwait(false) as ElementHandle;
+                }
+
+                if (!string.IsNullOrEmpty(options.Path))
+                {
+                    string contents = File.ReadAllText(options.Path);
+                    contents += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
+                    return await context.EvaluateHandleAsync(addScriptContent, contents, options.Type)
+                        .ConfigureAwait(false) as ElementHandle;
+                }
+
+                return await context.EvaluateHandleAsync(addScriptContent, options.Content, options.Type)
+                    .ConfigureAwait(false) as ElementHandle;
+            }).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.ClickAsync(string, ClickOptions)"/>
@@ -132,7 +179,7 @@ namespace PlaywrightSharp
 
                 await task.ConfigureAwait(false);
 
-                var tasks = new List<Task>() { watcher.TimeoutOrTerminationTask };
+                var tasks = new List<Task> { watcher.TimeoutOrTerminationTask };
                 if (!string.IsNullOrEmpty(navigateTask.Result.NewDocumentId))
                 {
                     watcher.SetExpectedDocumentId(navigateTask.Result.NewDocumentId, url);
@@ -223,8 +270,8 @@ namespace PlaywrightSharp
 
             var timeoutTask = watcher.TimeoutOrTerminationTask;
             await Task.WhenAny(
-                    timeoutTask,
-                    watcher.LifecycleTask).ConfigureAwait(false);
+                timeoutTask,
+                watcher.LifecycleTask).ConfigureAwait(false);
 
             watcher.Dispose();
             if (timeoutTask.IsFaulted)
@@ -284,6 +331,31 @@ namespace PlaywrightSharp
             }
         }
 
+        private async Task<IElementHandle> RaceWithCSPErrorAsync(Func<Task<ElementHandle>> func)
+        {
+            var errorTcs = new TaskCompletionSource<string>();
+            var actionTask = func();
+
+            void ConsoleEventHandler(object sender, ConsoleEventArgs e)
+            {
+                if (e.Message.Type == ConsoleType.Error && e.Message.Text.Contains("Content Security Policy"))
+                {
+                    errorTcs.TrySetResult(e.Message.Text);
+                }
+            }
+
+            Page.Console += ConsoleEventHandler;
+
+            await Task.WhenAny(actionTask, errorTcs.Task).ConfigureAwait(false);
+
+            if (errorTcs.Task.IsCompleted)
+            {
+                throw new PlaywrightSharpException(errorTcs.Task.Result);
+            }
+
+            return await actionTask.ConfigureAwait(false);
+        }
+
         private void SetContext(ContextType contextType, FrameExecutionContext context)
         {
             var data = _contextData[contextType];
@@ -310,7 +382,8 @@ namespace PlaywrightSharp
         {
             if (_detached)
             {
-                throw new PlaywrightSharpException($"Execution Context is not available in detached frame \"{Url}\" (are you trying to evaluate ?)");
+                throw new PlaywrightSharpException(
+                    $"Execution Context is not available in detached frame \"{Url}\" (are you trying to evaluate ?)");
             }
 
             return _contextData[contextType].ContextTask;
@@ -325,14 +398,10 @@ namespace PlaywrightSharp
 
             if (options.WaitFor != WaitForOption.NoWait)
             {
-                var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, options.WaitFor, options.Timeout).ConfigureAwait(false);
+                var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, options.WaitFor, options.Timeout)
+                    .ConfigureAwait(false);
 
-                if (maybeHandle == null)
-                {
-                    throw new PlaywrightSharpException($"No node found for selector: {SelectorToString(selector, options.WaitFor)}");
-                }
-
-                handle = maybeHandle;
+                handle = maybeHandle ?? throw new PlaywrightSharpException($"No node found for selector: {SelectorToString(selector, options.WaitFor)}");
             }
             else
             {
@@ -361,10 +430,17 @@ namespace PlaywrightSharp
             return $"{label}{selector}";
         }
 
-        private async Task<ElementHandle> WaitForSelectorInUtilityContextAsync(string selector, WaitForOption waitFor, int? timeout)
+        private async Task<ElementHandle> WaitForSelectorInUtilityContextAsync(
+            string selector,
+            WaitForOption waitFor,
+            int? timeout)
         {
             var task = Dom.GetWaitForSelectorFunction(selector, waitFor, timeout);
-            var result = await ScheduleRerunnableTaskAsync(task, ContextType.Utility, timeout, $"selector \"{SelectorToString(selector, waitFor)}\"").ConfigureAwait(false);
+            var result = await ScheduleRerunnableTaskAsync(
+                task,
+                ContextType.Utility,
+                timeout,
+                $"selector \"{SelectorToString(selector, waitFor)}\"").ConfigureAwait(false);
 
             if (!(result is ElementHandle))
             {
@@ -375,7 +451,12 @@ namespace PlaywrightSharp
             return result as ElementHandle;
         }
 
-        private Task<IJSHandle> ScheduleRerunnableTaskAsync(Func<IFrameExecutionContext, Task<IJSHandle>> task, ContextType contextType, int? timeout, string title)
+        private Task<IJSHandle> ScheduleRerunnableTaskAsync(
+            Func<IFrameExecutionContext,
+                Task<IJSHandle>> task,
+            ContextType contextType,
+            int? timeout,
+            string title)
         {
             var data = _contextData[contextType];
             var rerunnableTask = new RerunnableTask(data, task, timeout, title);
