@@ -195,6 +195,21 @@ namespace PlaywrightSharp.Chromium
             return rect;
         }
 
+        public async Task<IFrame> GetContentFrameAsync(ElementHandle handle)
+        {
+            var nodeInfo = await Client.SendAsync(new DOMDescribeNodeRequest
+            {
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+
+            if (nodeInfo == null || string.IsNullOrEmpty(nodeInfo.Node.FrameId))
+            {
+                return null;
+            }
+
+            return Page.FrameManager.Frames[nodeInfo.Node.FrameId];
+        }
+
         public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
             DOMGetBoxModelResponse result = null;

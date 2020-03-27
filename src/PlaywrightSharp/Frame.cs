@@ -22,7 +22,8 @@ namespace PlaywrightSharp
 
             _contextData = new Dictionary<ContextType, ContextData>
             {
-                [ContextType.Main] = new ContextData(), [ContextType.Utility] = new ContextData(),
+                [ContextType.Main] = new ContextData(),
+                [ContextType.Utility] = new ContextData(),
             };
             SetContext(ContextType.Main, null);
             SetContext(ContextType.Utility, null);
@@ -114,8 +115,10 @@ namespace PlaywrightSharp
                         .ConfigureAwait(false) as ElementHandle;
                 }
 
-                return await context.EvaluateHandleAsync(addScriptContent, options.Content, options.Type)
-                    .ConfigureAwait(false) as ElementHandle;
+                return await context.EvaluateHandleAsync(
+                    addScriptContent,
+                    options.Content,
+                    string.IsNullOrEmpty(options.Type) ? "text/javascript" : options.Type).ConfigureAwait(false) as ElementHandle;
             }).ConfigureAwait(false);
         }
 

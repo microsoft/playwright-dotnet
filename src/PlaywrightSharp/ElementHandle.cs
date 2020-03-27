@@ -46,9 +46,15 @@ namespace PlaywrightSharp
         public Task<Rect> GetBoundingBoxAsync() => _page.Delegate.GetBoundingBoxAsync(this);
 
         /// <inheritdoc cref="IElementHandle.GetContentFrameAsync"/>
-        public Task<IFrame> GetContentFrameAsync()
+        public async Task<IFrame> GetContentFrameAsync()
         {
-            throw new NotImplementedException();
+            bool isFrameElement = await EvaluateInUtilityAsync<bool>("node => node && (node.nodeName === 'IFRAME' || node.nodeName === 'FRAME')").ConfigureAwait(false);
+            if (!isFrameElement)
+            {
+                return null;
+            }
+
+            return await _page.Delegate.GetContentFrameAsync(this).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
@@ -169,6 +175,14 @@ namespace PlaywrightSharp
         }
 
         internal Task DisposeAsync() => Task.CompletedTask;
+
+        private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
+        {
+            var utility = await FrameExecutionContext.Frame.GetUtilityContextAsync().ConfigureAwait(false);
+            var list = new List<object>(args);
+            list.Insert(0, this);
+            return await utility.EvaluateAsync<T>(pageFunction, list.ToArray()).ConfigureAwait(false);
+        }
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, ClickOptions options)
         {
