@@ -8,8 +8,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
     public class BypassCSPTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>

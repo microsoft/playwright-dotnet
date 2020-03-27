@@ -8,8 +8,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
     public class SetUserAgentTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
