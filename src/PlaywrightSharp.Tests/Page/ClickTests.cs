@@ -524,7 +524,7 @@ button.style.position = 'absolute';
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.QuerySelectorEvaluateAsync("button", "button.style.height = button.style.width = '2000px'");
+            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.height = button.style.width = '2000px'");
             await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.

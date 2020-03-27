@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Firefox
             _executionContextId = executionContextId;
         }
 
-        public async Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args)
+        public async Task<T> EvaluateAsync<T>(ExecutionContext context, bool returnByValue, string pageFunction, object[] args)
         {
             if (!pageFunction.IsJavascriptFunction())
             {
@@ -30,14 +30,14 @@ namespace PlaywrightSharp.Firefox
                 }).ConfigureAwait(false);
 
                 // TODO: rewriteError
-                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
+                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, context);
             }
 
             string functionText = pageFunction;
             var callFunctionTask = _session.SendAsync(new RuntimeCallFunctionRequest
             {
                 FunctionDeclaration = functionText,
-                Args = Array.ConvertAll(args, arg => FormatArgument(arg, frameExecutionContext)),
+                Args = Array.ConvertAll(args, arg => FormatArgument(arg, context)),
                 ReturnByValue = returnByValue,
                 ExecutionContextId = _executionContextId,
             });
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Firefox
             // TODO: validate request
             {
                 var payload = await callFunctionTask.ConfigureAwait(false);
-                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
+                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, context);
             }
         }
 
@@ -81,7 +81,7 @@ namespace PlaywrightSharp.Firefox
             return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<string>((RemoteObject)payload);
         }
 
-        private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, FrameExecutionContext context)
+        private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, ExecutionContext context)
         {
             CheckException(exceptionDetails);
             if (returnByValue)
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private CallFunctionArgument FormatArgument(object arg, FrameExecutionContext context)
+        private CallFunctionArgument FormatArgument(object arg, ExecutionContext context)
         {
             switch (arg)
             {

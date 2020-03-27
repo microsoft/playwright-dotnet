@@ -21,6 +21,19 @@ namespace PlaywrightSharp
 
         internal IRemoteObject RemoteObject { get; set; }
 
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync{T}(string, object[])"/>
+        public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args)
+        {
+            object[] newArgs = new object[args.Length + 1];
+            newArgs[0] = this;
+            args.CopyTo(newArgs, 1);
+            return Context.EvaluateAsync<T>(pageFunction, newArgs);
+        }
+
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync(string, object[])"/>
+        public Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args)
+            => EvaluateAsync<JsonElement?>(pageFunction, args);
+
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
         Task IJSHandle.DisposeAsync()
         {

@@ -21,7 +21,7 @@ namespace PlaywrightSharp
 
         public Frame Frame { get; set; }
 
-        public Task<T> EvaluateAsync<T>(string script, params object[] args) => EvaluateAsync<T>(true, script, args);
+        public override Task<T> EvaluateAsync<T>(string script, params object[] args) => EvaluateAsync<T>(true, script, args);
 
         public async Task<T> EvaluateAsync<T>(bool returnByValue, string script, params object[] args)
         {
@@ -106,7 +106,7 @@ namespace PlaywrightSharp
             return await _injectedTask.ConfigureAwait(false);
         }
 
-        internal override IJSHandle CreateHandle(IRemoteObject remoteObject)
+        public override IJSHandle CreateHandle(IRemoteObject remoteObject)
         {
             if (Frame.Page.Delegate.IsElementHandle(remoteObject))
             {

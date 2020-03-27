@@ -186,15 +186,21 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync(string, string, object[])"/>
-        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args) => QuerySelectorEvaluateAsync<object>(selector, script, args);
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync{T}(string, string, object[])"/>
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
+        public async Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
         {
-            throw new System.NotImplementedException();
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            var elementHandle = await context.QuerySelectorAsync(selector).ConfigureAwait(false);
+            if (elementHandle == null)
+            {
+                throw new SelectorException("failed to find element matching selector", selector);
+            }
+
+            var result = await elementHandle.EvaluateAsync<T>(script, args).ConfigureAwait(false);
+            await elementHandle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
 
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>

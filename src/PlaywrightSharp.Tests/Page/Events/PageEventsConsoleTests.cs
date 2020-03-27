@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;

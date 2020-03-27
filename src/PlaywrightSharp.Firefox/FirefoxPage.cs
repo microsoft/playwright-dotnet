@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Firefox
         {
             var result = await _session.SendAsync(new PageGetContentQuadsRequest
             {
-                FrameId = elementHandle.FrameExecutionContext.Frame.Id,
+                FrameId = elementHandle.Context.Frame.Id,
                 ObjectId = elementHandle.RemoteObject.ObjectId,
             }).ConfigureAwait(false);
             return Array.ConvertAll(result.Quads, quad => (Quad[])quad);
@@ -100,9 +100,36 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
-        public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
+        public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
-            throw new NotImplementedException();
+            var quads = await GetContentQuadsAsync(handle).ConfigureAwait(false);
+            if (quads?.Length == 0)
+            {
+                return null;
+            }
+
+            double minX = double.PositiveInfinity;
+            double maxX = double.NegativeInfinity;
+            double minY = double.PositiveInfinity;
+            double maxY = double.NegativeInfinity;
+            foreach (var quad in quads)
+            {
+                foreach (var point in quad)
+                {
+                    minX = Math.Min(minX, point.X);
+                    maxX = Math.Max(maxX, point.X);
+                    minY = Math.Min(minY, point.Y);
+                    maxY = Math.Max(maxY, point.Y);
+                }
+            }
+
+            return new Rect
+            {
+                X = minX,
+                Y = minY,
+                Width = maxX - minX,
+                Height = maxY - minY,
+            };
         }
 
         internal async Task InitializeAsync()
