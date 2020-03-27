@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Helper;
 using PlaywrightSharp.Firefox.Input;
