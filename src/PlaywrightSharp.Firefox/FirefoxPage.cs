@@ -225,28 +225,6 @@ namespace PlaywrightSharp.Firefox
                 {
                     frame.ContextCreated(ContextType.Utility, context);
                 }
-                else if (auxData.Name == null)
-                {
-                    frame.ContextCreated(ContextType.Main, context);
-                }
-
-                _contextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
-            }
-        }
-
-        private void OnExecutionContextCreated(RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated)
-        {
-            var auxData = runtimeExecutionContextCreated.AuxData != null
-                ? ((JsonElement)runtimeExecutionContextCreated.AuxData).ToObject<AuxData>()
-                : null;
-            if (auxData?.FrameId != null && Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out var frame))
-            {
-                var firefoxDelegate = new FirefoxExecutionContext(_session, runtimeExecutionContextCreated.ExecutionContextId);
-                var context = new FrameExecutionContext(firefoxDelegate, frame);
-                if (auxData.Name == UtilityWorldName)
-                {
-                    frame.ContextCreated(ContextType.Utility, context);
-                }
                 else if (string.IsNullOrEmpty(auxData.Name))
                 {
                     frame.ContextCreated(ContextType.Main, context);
