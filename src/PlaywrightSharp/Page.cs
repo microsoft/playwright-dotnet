@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -534,7 +533,7 @@ namespace PlaywrightSharp
         {
             var message = new ConsoleMessage(type, text, args, location);
             bool intercepted = FrameManager.InterceptConsoleMessage(message);
-            if (intercepted || Console?.GetInvocationList().Length == 0)
+            if (intercepted || Console?.GetInvocationList()?.Length == 0)
             {
                 foreach (var arg in args)
                 {
