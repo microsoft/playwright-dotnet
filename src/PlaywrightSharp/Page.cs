@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -302,10 +303,21 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.SetExtraHttpHeadersAsync(IReadOnlyDictionary{string, string})"/>
-        public Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers)
+        /// <inheritdoc cref="IPage.SetExtraHttpHeadersAsync(IDictionary{string, string})"/>
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
         {
-            throw new NotImplementedException();
+            if (headers == null)
+            {
+                throw new ArgumentNullException(nameof(headers));
+            }
+
+            PageState.ExtraHTTPHeaders.Clear();
+            foreach (var header in headers)
+            {
+                PageState.ExtraHTTPHeaders[header.Key.ToLower()] = header.Value;
+            }
+
+            return Delegate.SetExtraHttpHeadersAsync(headers);
         }
 
         /// <inheritdoc cref="IPage.SetOfflineModeAsync(bool)"/>

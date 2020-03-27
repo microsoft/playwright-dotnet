@@ -10,13 +10,14 @@ namespace PlaywrightSharp.Firefox
     internal class FirefoxExecutionContext : IExecutionContextDelegate
     {
         private readonly FirefoxSession _session;
-        private readonly string _executionContextId;
 
         public FirefoxExecutionContext(FirefoxSession workerSession, string executionContextId)
         {
             _session = workerSession;
-            _executionContextId = executionContextId;
+            ExecutionContextId = executionContextId;
         }
+
+        internal string ExecutionContextId { get; }
 
         public async Task<T> EvaluateAsync<T>(ExecutionContext context, bool returnByValue, string pageFunction, object[] args)
         {
@@ -26,7 +27,7 @@ namespace PlaywrightSharp.Firefox
                 {
                     Expression = pageFunction.Trim(),
                     ReturnByValue = returnByValue,
-                    ExecutionContextId = _executionContextId,
+                    ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
 
                 // TODO: rewriteError
@@ -39,7 +40,7 @@ namespace PlaywrightSharp.Firefox
                 FunctionDeclaration = functionText,
                 Args = Array.ConvertAll(args, arg => FormatArgument(arg, context)),
                 ReturnByValue = returnByValue,
-                ExecutionContextId = _executionContextId,
+                ExecutionContextId = ExecutionContextId,
             });
 
             // TODO: validate request
@@ -60,7 +61,7 @@ namespace PlaywrightSharp.Firefox
             {
                 await _session.SendAsync(new RuntimeDisposeObjectRequest
                 {
-                    ExecutionContextId = _executionContextId,
+                    ExecutionContextId = ExecutionContextId,
                     ObjectId = handle.RemoteObject.ObjectId,
                 }).ConfigureAwait(false);
             }

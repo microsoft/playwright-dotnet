@@ -112,12 +112,12 @@ namespace PlaywrightSharp.Chromium
                         break;
                     case Platform.Win32:
                     case Platform.Win64:
-                    {
-                        // Windows archive name changed at r591479.
-                        archiveName = int.TryParse(revision, out int revisionNumber) && revisionNumber > 591479 ? "chrome-win" : "chrome-win32";
-                        executablePath = Path.Combine(archiveName, "chrome.exe");
-                        break;
-                    }
+                        {
+                            // Windows archive name changed at r591479.
+                            archiveName = int.TryParse(revision, out int revisionNumber) && revisionNumber > 591479 ? "chrome-win" : "chrome-win32";
+                            executablePath = Path.Combine(archiveName, "chrome.exe");
+                            break;
+                        }
                 }
 
                 return new BrowserFetcherConfig

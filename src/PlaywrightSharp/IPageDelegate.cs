@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -128,7 +129,21 @@ namespace PlaywrightSharp
         ///  Gets the element's bounding box.
         /// </summary>
         /// <param name="handle">Element to evaluate.</param>
-        /// <returns>A <see cref="Task"/> that completes when the bounding box was built, yielding the <see cref="ElementHandle"/> <see cref="global::PlaywrightSharp.Rect"/>.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the bounding box was built, yielding the <see cref="ElementHandle"/> <see cref="Rect"/>.</returns>
         Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle);
+
+        /// <summary>
+        /// Gets the element's frame content.
+        /// </summary>
+        /// <param name="handle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the content frame is resolved, yielding the <see cref="Frame"/>.</returns>
+        Task<Frame> GetContentFrameAsync(ElementHandle handle);
+
+        /// <summary>
+        /// Sets extra HTTP headers that will be sent with every request the page initiates.
+        /// </summary>
+        /// <param name="headers">Additional http headers to be sent with every request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
+        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
     }
 }

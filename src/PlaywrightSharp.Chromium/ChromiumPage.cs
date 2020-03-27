@@ -231,6 +231,16 @@ namespace PlaywrightSharp.Chromium
             };
         }
 
+        public Task<Frame> GetContentFrameAsync(ElementHandle handle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => Client.SendAsync(new NetworkSetExtraHTTPHeadersRequest
+        {
+            Headers = headers,
+        });
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());

@@ -10,10 +10,10 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IFrame"/>
     public class Frame : IFrame
     {
-        private readonly Frame _parentFrame;
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
         private int _setContentCounter = 0;
+        private Frame _parentFrame;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -45,7 +45,7 @@ namespace PlaywrightSharp
         public string Url { get; set; }
 
         /// <inheritdoc cref="IFrame.ParentFrame"/>
-        public IFrame ParentFrame => null;
+        public IFrame ParentFrame => _parentFrame;
 
         /// <inheritdoc cref="IFrame.Detached"/>
         public bool Detached { get; set; }
@@ -281,6 +281,17 @@ namespace PlaywrightSharp
 
         internal void OnDetached()
         {
+            Detached = true;
+            foreach (var data in _contextData.Values)
+            {
+                foreach (var rerunnableTask in data.RerunnableTasks)
+                {
+                    rerunnableTask.Terminate(new PlaywrightSharpException("waitForFunction failed: frame got detached."));
+                }
+            }
+
+            _parentFrame?.ChildFrames.Remove(this);
+            _parentFrame = null;
         }
 
         internal void ContextCreated(ContextType contextType, FrameExecutionContext context)

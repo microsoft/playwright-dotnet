@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Chromium
 
         public bool IsClosed { get; internal set; }
 
-        internal ChromiumConnection Connection { get; set;  }
+        internal ChromiumConnection Connection { get; set; }
 
         internal async Task<TChromiumResponse> SendAsync<TChromiumResponse>(IChromiumRequest<TChromiumResponse> request, bool waitForCallback = true)
             where TChromiumResponse : IChromiumResponse

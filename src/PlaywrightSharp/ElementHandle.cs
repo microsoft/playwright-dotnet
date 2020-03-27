@@ -35,9 +35,15 @@ namespace PlaywrightSharp
         public Task<Rect> GetBoundingBoxAsync() => _page.Delegate.GetBoundingBoxAsync(this);
 
         /// <inheritdoc cref="IElementHandle.GetContentFrameAsync"/>
-        public Task<IFrame> GetContentFrameAsync()
+        public async Task<IFrame> GetContentFrameAsync()
         {
-            throw new NotImplementedException();
+            bool isFrameElement = await EvaluateInUtilityAsync<bool>("node => node && (node.nodeName === 'IFRAME' || node.nodeName === 'FRAME')").ConfigureAwait(false);
+            if (!isFrameElement)
+            {
+                return null;
+            }
+
+            return await _page.Delegate.GetContentFrameAsync(this).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
@@ -186,11 +192,10 @@ namespace PlaywrightSharp
 
             var r = await ViewportPointAndScrollAsync(relativePoint.Value).ConfigureAwait(false);
 
-            if (r.ScrollX != null || r.ScrollY != null)
+            if (r.ScrollX != 0 || r.ScrollY != 0)
             {
                 string error = await EvaluateInUtilityAsync<string>(
-                    @"(element, scrollX, scrollY) =>
-                    {
+                    @"(element, scrollX, scrollY) => {
                         if (!element.ownerDocument || !element.ownerDocument.defaultView)
                             return 'Node does not have a containing window';
                         element.ownerDocument.defaultView.scrollBy(scrollX, scrollY);
@@ -206,7 +211,7 @@ namespace PlaywrightSharp
 
                 r = await ViewportPointAndScrollAsync(relativePoint.Value).ConfigureAwait(false);
 
-                if (r.ScrollX != null || r.ScrollY != null)
+                if (r.ScrollX != 0 || r.ScrollY != 0)
                 {
                     throw new PlaywrightSharpException("Failed to scroll relative point into viewport");
                 }

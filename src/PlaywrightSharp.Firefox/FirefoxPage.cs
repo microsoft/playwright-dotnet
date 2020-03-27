@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Helper;
@@ -47,9 +48,15 @@ namespace PlaywrightSharp.Firefox
 
         internal Page Page { get; }
 
-        public Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
+        public async Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
         {
-            throw new System.NotImplementedException();
+            var result = await _session.SendAsync(new PageAdoptNodeRequest
+            {
+                FrameId = handle.Context.Frame.Id,
+                ObjectId = handle.RemoteObject.ObjectId,
+                ExecutionContextId = ((FirefoxExecutionContext)to.Delegate).ExecutionContextId,
+            }).ConfigureAwait(false);
+            return to.CreateHandle(result.RemoteObject) as ElementHandle;
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)
@@ -90,10 +97,18 @@ namespace PlaywrightSharp.Firefox
             return new GotoResult { NewDocumentId = response.NavigationId, IsSameDocument = response.NavigationId == null };
         }
 
-        public Task SetViewportAsync(Viewport viewport)
+        public Task SetViewportAsync(Viewport viewport) => _session.SendAsync(new PageSetViewportRequest
         {
-            throw new System.NotImplementedException();
-        }
+            Viewport = new Protocol.Page.Viewport
+            {
+                Width = viewport.Width,
+                Height = viewport.Height,
+                IsMobile = viewport.IsMobile,
+                DeviceScaleFactor = viewport.DeviceScaleFactor,
+                HasTouch = viewport.IsMobile,
+                IsLandscape = viewport.Width > viewport.Height,
+            },
+        });
 
         public Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
         {
@@ -131,6 +146,30 @@ namespace PlaywrightSharp.Firefox
                 Height = maxY - minY,
             };
         }
+
+        public async Task<Frame> GetContentFrameAsync(ElementHandle handle)
+        {
+            var response = await _session.SendAsync(new PageDescribeNodeRequest
+            {
+                FrameId = handle.Context.Frame.Id,
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(response.ContentFrameId))
+            {
+                return null;
+            }
+
+            return Page.FrameManager.Frames[response.ContentFrameId];
+        }
+
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => _session.SendAsync(new NetworkSetExtraHTTPHeadersRequest
+        {
+            Headers = headers.Select(pair => new HTTPHeader
+            {
+                Name = pair.Key,
+                Value = pair.Value,
+            }).ToArray(),
+        });
 
         internal async Task InitializeAsync()
         {

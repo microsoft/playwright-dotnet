@@ -723,7 +723,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
-        Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers);
+        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
 
         /// <summary>
         /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.

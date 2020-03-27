@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "PlaywrightSharp.Tests": {
+      "commandName": "Project"
+    }
+  }
+}
