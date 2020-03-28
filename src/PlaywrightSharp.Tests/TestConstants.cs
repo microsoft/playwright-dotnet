@@ -22,6 +22,7 @@ namespace PlaywrightSharp.Tests
             Environment.GetEnvironmentVariable("PRODUCT");
 
         public const string TestFixtureCollectionName = "PlaywrightSharpLoaderFixture collection";
+        public const string TestFixtureBrowserCollectionName = "PlaywrightSharpBrowserLoaderFixture collection";
         public const int Port = 8081;
         public const int HttpsPort = Port + 1;
         public const string ServerUrl = "http://localhost:8081";

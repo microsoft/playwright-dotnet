@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public virtual void Dispose()
         {
             Task.WaitAll(Server.StopAsync(), HttpsServer.StopAsync());
         }

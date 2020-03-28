@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
-using PlaywrightSharp.Chromium;
 using Xunit;
 
 namespace PlaywrightSharp.Tests.BaseTests
@@ -37,9 +35,9 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public virtual async Task InitializeAsync()
-            => Browser = await Playwright.LaunchAsync(DefaultOptions ?? TestConstants.GetDefaultBrowserOptions());
+            => Browser = PlaywrightSharpBrowserLoaderFixture.Browser ?? await Playwright.LaunchAsync(DefaultOptions ?? TestConstants.GetDefaultBrowserOptions());
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        public virtual Task DisposeAsync() => Browser.CloseAsync();
+        public virtual Task DisposeAsync() => PlaywrightSharpBrowserLoaderFixture.Browser == null ? Browser.CloseAsync() : Task.CompletedTask;
     }
 }
