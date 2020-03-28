@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests
         public const string AboutBlank = "about:blank";
         public const string CrossProcessHttpPrefix = "http://127.0.0.1:8081";
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
-        public static readonly string CrossProcessUrl = ServerIpUrl;
+        public const string CrossProcessUrl = ServerIpUrl;
 
         internal static LaunchOptions GetDefaultBrowserOptions()
             => new LaunchOptions
@@ -65,17 +65,16 @@ namespace PlaywrightSharp.Tests
         }
 
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
-        public static readonly DeviceDescriptor IPhone = null;
-        public static readonly DeviceDescriptor IPhoneLandscape = null;
-        public static ILoggerFactory LoggerFactory { get; private set; }
+        public static readonly DeviceDescriptor IPhone = GetNewBrowserType().Devices[DeviceDescriptorName.IPhone6];
+        public static readonly DeviceDescriptor IPhoneLandscape = GetNewBrowserType().Devices[DeviceDescriptorName.IPhone6Landscape];
+        private static ILoggerFactory LoggerFactory { get; set; }
         public static string FileToUpload => Path.Combine(Directory.GetCurrentDirectory(), "Assets", "file-to-upload.txt");
 
-        //TODO
-        internal static bool IsWebKit = Product.Equals(WebkitProduct);
-        internal static bool IsFirefox = Product.Equals(FirefoxProduct);
-        internal static bool IsChromium = Product.Equals(ChromiumProduct);
-        internal static bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        internal static bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        internal static readonly bool IsWebKit = Product.Equals(WebkitProduct);
+        internal static readonly bool IsFirefox = Product.Equals(FirefoxProduct);
+        internal static readonly bool IsChromium = Product.Equals(ChromiumProduct);
+        internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>()
         {
