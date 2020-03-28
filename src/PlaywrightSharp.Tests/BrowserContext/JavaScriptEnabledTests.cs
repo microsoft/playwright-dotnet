@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class JavaScriptEnabledTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
