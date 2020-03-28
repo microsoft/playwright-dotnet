@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var page = await NewPageAsync();
             Assert.Contains("Mozilla", await page.EvaluateAsync<string>("navigator.userAgent"));
-            page = await NewPageAsync(new BrowserContextOptions {UserAgent = "foobar"});
+            page = await NewPageAsync(new BrowserContextOptions { UserAgent = "foobar" });
             var userAgentTask = Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]);
 
             await Task.WhenAll(
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
-            page = await NewPageAsync(new BrowserContextOptions {UserAgent = TestConstants.IPhone.UserAgent});
+            page = await NewPageAsync(new BrowserContextOptions { UserAgent = TestConstants.IPhone.UserAgent });
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 UserAgent = "foobar"
             };
 
-            var context  = await NewContextAsync(options);
+            var context = await NewContextAsync(options);
             options.UserAgent = "wrong";
             var page = await context.NewPageAsync();
 
