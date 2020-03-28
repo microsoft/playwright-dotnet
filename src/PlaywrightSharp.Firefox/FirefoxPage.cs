@@ -104,6 +104,11 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
+        public Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
+        {
+            throw new NotImplementedException();
+        }
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>

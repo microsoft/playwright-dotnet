@@ -83,9 +83,11 @@ namespace PlaywrightSharp.Helpers
             var parser = new JavaScriptParser(script);
             var program = parser.ParseScript();
 
-            if (program.Body.Count > 0 && program.Body[0] is ExpressionStatement expression)
+            if (program.Body.Count > 0)
             {
-                return expression.Expression.Type == Nodes.ArrowFunctionExpression;
+                return
+                    (program.Body[0] is ExpressionStatement expression && expression.Expression.Type == Nodes.ArrowFunctionExpression) ||
+                    program.Body[0] is FunctionDeclaration;
             }
 
             return false;
