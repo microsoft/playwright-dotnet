@@ -323,12 +323,6 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.SetUserAgentAsync(string)"/>
-        public Task SetUserAgentAsync(string userAgent)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>
         public async Task SetViewportAsync(Viewport viewport)
         {
