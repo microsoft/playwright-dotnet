@@ -17,7 +17,8 @@ namespace PlaywrightSharp.Chromium
 
         internal Task InitializeAsync() => _client.SendAsync(new NetworkEnableRequest());
 
-        internal Task SetUserAgentAsync(string userAgent) => Task.CompletedTask;
+        internal Task SetUserAgentAsync(string userAgent)
+            => _client.SendAsync(new NetworkSetUserAgentOverrideRequest { UserAgent = userAgent });
 
         internal void InstrumentNetworkEvents(ChromiumSession session)
         {

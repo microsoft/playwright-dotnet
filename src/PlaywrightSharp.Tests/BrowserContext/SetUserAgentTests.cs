@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var page = await NewPageAsync();
             Assert.Contains("Mozilla", await page.EvaluateAsync<string>("navigator.userAgent"));
-            await page.SetUserAgentAsync("foobar");
+            page = await NewPageAsync(new BrowserContextOptions { UserAgent = "foobar" });
 
             var (userAgent, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
@@ -57,12 +57,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should emulate device user-agent</playwright-it>
         [Fact]
-        public async Task ShouldSimulateDeviceUserAgent()
+        public async Task ShouldEmulateDeviceUserAgent()
         {
             var page = await NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
-            await page.SetUserAgentAsync(TestConstants.IPhone.UserAgent);
+            page = await NewPageAsync(new BrowserContextOptions { UserAgent = TestConstants.IPhone.UserAgent });
+            await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
 
@@ -72,15 +73,15 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldMakeACopyOfDefaultOptions()
         {
-            var page = await NewPageAsync();
             var options = new BrowserContextOptions
             {
                 UserAgent = "foobar"
             };
 
-            await NewContextAsync(options);
-
+            var context = await NewContextAsync(options);
             options.UserAgent = "wrong";
+            var page = await context.NewPageAsync();
+
             var (userAgent, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
                 page.GoToAsync(TestConstants.EmptyPage)

@@ -247,8 +247,8 @@ namespace PlaywrightSharp.Firefox
             ["toolkit.startup.max_resumed_crashes"] = -1,
         };
 
-        /// <inheritdoc cref="IBrowserType.Devices"/>
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
+        /// <inheritdoc cref="IBrowserType"/>
+        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => DeviceDescriptors.ToReadOnly();
 
         /// <inheritdoc cref="IBrowserType.ExecutablePath"/>
         public string ExecutablePath => ResolveExecutablePath();

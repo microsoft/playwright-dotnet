@@ -334,8 +334,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var exception = await Assert.ThrowsAsync<SelectorException>(()
-                => Page.ClickAsync("button.does-not-exist"));
-            Assert.Equal("No node found for selector: button.does-not-exist", exception.Message);
+                => Page.ClickAsync("button.does-not-exist", new ClickOptions { WaitFor = WaitForOption.NoWait }));
+            Assert.Equal("No node found for selector", exception.Message);
             Assert.Equal("button.does-not-exist", exception.Selector);
         }
 

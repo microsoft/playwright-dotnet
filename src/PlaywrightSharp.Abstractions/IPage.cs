@@ -766,13 +766,6 @@ namespace PlaywrightSharp
         Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args);
 
         /// <summary>
-        /// Sets the user agent to be used in this page.
-        /// </summary>
-        /// <param name="userAgent">Specific user agent to use in this page.</param>
-        /// <returns>A <see cref="Task"/> that completes when the user agent is changed.</returns>
-        Task SetUserAgentAsync(string userAgent);
-
-        /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.
         /// </summary>
         /// <param name="options">add script tag options.</param>

@@ -22,6 +22,7 @@ namespace PlaywrightSharp.TestServer
             if (!_server.GzipRoutes.Contains(context.Request.Path))
             {
                 await _next(context);
+                return;
             }
 
             var response = context.Response.Body;

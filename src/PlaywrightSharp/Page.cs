@@ -135,10 +135,7 @@ namespace PlaywrightSharp
         internal Screenshotter Screenshotter { get; }
 
         /// <inheritdoc cref="IPage.AddScriptTagAsync(AddTagOptions)"/>
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => MainFrame.AddScriptTagAsync(options);
 
         /// <inheritdoc cref="IPage.AuthenticateAsync(Credentials)"/>
         public Task AuthenticateAsync(Credentials credentials)
@@ -327,12 +324,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.SetRequestInterceptionAsync(bool)"/>
         public Task SetRequestInterceptionAsync(bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage.SetUserAgentAsync(string)"/>
-        public Task SetUserAgentAsync(string userAgent)
         {
             throw new NotImplementedException();
         }

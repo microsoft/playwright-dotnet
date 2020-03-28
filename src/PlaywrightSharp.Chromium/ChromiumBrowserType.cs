@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Chromium
         };
 
         /// <inheritdoc cref="IBrowserType"/>
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
+        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => DeviceDescriptors.ToReadOnly();
 
         /// <inheritdoc cref="IBrowserType"/>
         public string ExecutablePath => ResolveExecutablePath();

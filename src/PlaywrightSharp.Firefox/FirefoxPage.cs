@@ -147,7 +147,7 @@ namespace PlaywrightSharp.Firefox
             };
         }
 
-        public async Task<Frame> GetContentFrameAsync(ElementHandle handle)
+        public async Task<IFrame> GetContentFrameAsync(ElementHandle handle)
         {
             var response = await _session.SendAsync(new PageDescribeNodeRequest
             {

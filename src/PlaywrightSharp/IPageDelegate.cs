@@ -47,6 +47,13 @@ namespace PlaywrightSharp
         Task<Rect> GetBoundingBoxAsync(ElementHandle handle);
 
         /// <summary>
+        /// Gets the iFrame representation of an <see cref="IElementHandle"/>.
+        /// </summary>
+        /// <param name="elementHandle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="IFrame"/> is found, yielding the <see cref="IFrame"/>.</returns>
+        Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle);
+
+        /// <summary>
         /// Sets the viewport.
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.
         /// <see cref="SetViewportAsync(Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
@@ -131,13 +138,6 @@ namespace PlaywrightSharp
         /// <param name="handle">Element to evaluate.</param>
         /// <returns>A <see cref="Task"/> that completes when the bounding box was built, yielding the <see cref="ElementHandle"/> <see cref="Rect"/>.</returns>
         Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle);
-
-        /// <summary>
-        /// Gets the element's frame content.
-        /// </summary>
-        /// <param name="handle">Element to evaluate.</param>
-        /// <returns>A <see cref="Task"/> that completes when the content frame is resolved, yielding the <see cref="Frame"/>.</returns>
-        Task<Frame> GetContentFrameAsync(ElementHandle handle);
 
         /// <summary>
         /// Sets extra HTTP headers that will be sent with every request the page initiates.
