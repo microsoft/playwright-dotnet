@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Esprima.Ast;
 using PlaywrightSharp.Accessibility;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
