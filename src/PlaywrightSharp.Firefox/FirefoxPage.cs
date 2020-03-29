@@ -45,6 +45,8 @@ namespace PlaywrightSharp.Firefox
 
         public IRawMouse RawMouse { get; }
 
+        public Dictionary<int, FrameExecutionContext> ContextIdToContext { get; }
+
         internal Page Page { get; }
 
         public Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
@@ -100,6 +102,8 @@ namespace PlaywrightSharp.Firefox
         }
 
         public Task ExposeBindingAsync(string name, string functionString) => throw new NotImplementedException();
+
+        public Task EvaluateOnNewDocumentAsync(string source) => throw new NotImplementedException();
 
         public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
