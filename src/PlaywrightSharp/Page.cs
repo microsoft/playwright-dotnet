@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Esprima.Ast;
 using PlaywrightSharp.Accessibility;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
@@ -12,6 +15,7 @@ namespace PlaywrightSharp
     public sealed class Page : IPage, IDisposable
     {
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
+        private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
         private bool _disconnected;
 
         /// <inheritdoc cref="IPage"/>
@@ -185,44 +189,33 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.EvaluateOnNewDocumentAsync(string, object[])"/>
         public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args)
         {
-            throw new NotImplementedException();
+            string source = GetEvaluationString(pageFunction, args);
+            return Delegate.EvaluateOnNewDocumentAsync(source);
         }
 
         /// <inheritdoc cref="IPage.ExposeFunctionAsync(string, Action)"/>
         public Task ExposeFunctionAsync(string name, Action playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc cref="IPage.ExposeFunctionAsync{TResult}(string, Func{TResult})"/>
         public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc cref="IPage.ExposeFunctionAsync{T, TResult}(string, Func{T, TResult})"/>
         public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc cref="IPage.ExposeFunctionAsync{T1, T2, TResult}(string, Func{T1, T2, TResult})"/>
         public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc cref="IPage.ExposeFunctionAsync{T1, T2, T3, TResult}(string, Func{T1, T2, T3, TResult})"/>
         public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc cref="IPage.ExposeFunctionAsync{T1, T2, T3, T4, TResult}(string, Func{T1, T2, T3, T4, TResult})"/>
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc cref="IPage.FillAsync(string, string, FillOptions)"/>
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null)
@@ -377,10 +370,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions)"/>
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(options);
 
         /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitUntilNavigation)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
@@ -508,6 +498,18 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose() => Screenshotter?.Dispose();
 
+        internal static string GetEvaluationString(string fun, params object[] args)
+        {
+            return $"({fun})({string.Join(",", args.Select(SerializeArgument))})";
+
+            string SerializeArgument(object arg)
+            {
+                return arg == null
+                    ? "undefined"
+                    : JsonSerializer.Serialize(arg, JsonHelper.DefaultJsonSerializerOptions);
+            }
+        }
+
         internal void RemoveWorker(string workerId)
         {
             throw new NotImplementedException();
@@ -560,5 +562,96 @@ namespace PlaywrightSharp
         internal void OnLoad() => Load?.Invoke(this, new EventArgs());
 
         internal void OnPageError(PageErrorEventArgs args) => PageError?.Invoke(this, args);
+
+        internal async Task OnBindingCalledAsync(string payload, IFrameExecutionContext context)
+        {
+            var bindingPayload = JsonSerializer.Deserialize<BindingPayload>(payload, JsonHelper.DefaultJsonSerializerOptions);
+            const string taskResultPropertyName = "Result";
+            const string deliverResult = @"function deliverResult(name, seq, result) {
+                window[name]['callbacks'].get(seq).resolve(result);
+                window[name]['callbacks'].delete(seq);
+            }";
+
+            const string deliverError = @"function deliverError(name, seq, message, stack) {
+                const error = new Error(message);
+                error.stack = stack;
+                window[name]['callbacks'].get(seq).reject(error);
+                window[name]['callbacks'].delete(seq);
+            }";
+
+            string expression;
+
+            try
+            {
+                var binding = _pageBindings[bindingPayload.Name];
+                var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
+                var args = bindingPayload.Args.Select((arg, i) => JsonSerializer.Deserialize(arg.GetRawText(), methodParams[0], JsonHelper.DefaultJsonSerializerOptions)).ToArray();
+
+                var result = binding.DynamicInvoke(args);
+                if (result is Task taskResult)
+                {
+                    await taskResult.ConfigureAwait(false);
+
+                    if (taskResult.GetType().IsGenericType)
+                    {
+                        // the task is already awaited and therefore the call to property Result will not deadlock
+                        result = taskResult.GetType().GetProperty(taskResultPropertyName).GetValue(taskResult);
+                    }
+                }
+
+                expression = GetEvaluationString(deliverResult, bindingPayload.Name, bindingPayload.Seq, result);
+            }
+            catch (Exception ex)
+            {
+                expression = GetEvaluationString(deliverError, bindingPayload.Name, bindingPayload.Seq, ex.Message, ex.StackTrace);
+            }
+
+            try
+            {
+                await context.EvaluateAsync(expression).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private async Task ExposeFunctionAsync(string name, Delegate puppeteerFunction)
+        {
+            if (_pageBindings.ContainsKey(name))
+            {
+                throw new PlaywrightSharpException($"Failed to add page binding with name {name}: window['{name}'] already exists!");
+            }
+
+            _pageBindings.Add(name, puppeteerFunction);
+
+            const string addPageBinding = @"function addPageBinding(bindingName) {
+                const binding = window[bindingName];
+                window[bindingName] = (...args) => {
+                    const me = window[bindingName];
+                    let callbacks = me['callbacks'];
+                    if (!callbacks) {
+                        callbacks = new Map();
+                        me['callbacks'] = callbacks;
+                    }
+                    const seq = (me['lastSeq'] || 0) + 1;
+                    me['lastSeq'] = seq;
+                    const promise = new Promise((resolve, reject) => callbacks.set(seq, { resolve, reject }));
+                    binding(JSON.stringify({ name: bindingName, seq, args }));
+                    return promise;
+                };
+            }";
+
+            await Delegate.ExposeBindingAsync(name, GetEvaluationString(addPageBinding, name)).ConfigureAwait(false);
+        }
+
+        private class BindingPayload
+        {
+            public string Name { get; set; }
+
+            public JsonElement[] Args { get; set; }
+
+            public int Seq { get; set; }
+        }
     }
 }

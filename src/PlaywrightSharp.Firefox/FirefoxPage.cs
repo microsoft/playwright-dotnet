@@ -99,6 +99,8 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
+        public Task ExposeBindingAsync(string name, string functionString) => throw new NotImplementedException();
+
         public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
             throw new NotImplementedException();

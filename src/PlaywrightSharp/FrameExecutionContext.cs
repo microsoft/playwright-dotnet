@@ -25,26 +25,27 @@ namespace PlaywrightSharp
 
         public async Task<T> EvaluateAsync<T>(bool returnByValue, string script, params object[] args)
         {
-            Func<object, bool> needsAdoption = (object value) => value is ElementHandle elementHandle && elementHandle.Context != this;
+            bool NeedsAdoption(object value) => value is ElementHandle elementHandle && elementHandle.Context != this;
 
-            if (!args.Any(needsAdoption))
+            if (args == null || !args.Any(NeedsAdoption))
             {
                 return await Delegate.EvaluateAsync<T>(this, returnByValue, script, args).ConfigureAwait(false);
             }
 
             List<Task<ElementHandle>> toDispose = new List<Task<ElementHandle>>();
 
-            var adoptedTasks = args.Select<object, Task<object>>(arg =>
+            var adoptedTasks = args.Select<object, Task<object>>(async (arg) =>
             {
-                if (!needsAdoption(arg))
+                if (!NeedsAdoption(arg))
                 {
                     return Task.FromResult(arg);
                 }
 
                 var adopted = Frame.Page.Delegate.AdoptElementHandleAsync(arg as ElementHandle, this);
                 toDispose.Add(adopted);
-                return adopted.ContinueWith(t => (object)t.Result, TaskScheduler.Default);
-            });
+                await adopted.ConfigureAwait(false);
+                return adopted.Result;
+            }).ToArray();
 
             await Task.WhenAll(adoptedTasks).ConfigureAwait(false);
 

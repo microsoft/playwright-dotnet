@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -13,9 +11,12 @@ namespace PlaywrightSharp.Tests.Evaluation
 {
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluate</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageEvaluateTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEvaluateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -25,7 +26,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldWork()
         {
-            var result = await Page.EvaluateAsync<int>("() => 7 * 3");
+            int result = await Page.EvaluateAsync<int>("() => 7 * 3");
             Assert.Equal(21, result);
         }
 
@@ -35,7 +36,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferNaN()
         {
-            var result = await Page.EvaluateAsync<double>("a => a", double.NaN);
+            double result = await Page.EvaluateAsync<double>("a => a", double.NaN);
             Assert.Equal(double.NaN, result);
         }
 
@@ -45,7 +46,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferNegative0()
         {
-            var result = await Page.EvaluateAsync<int>("a => a", -0);
+            int result = await Page.EvaluateAsync<int>("a => a", -0);
             Assert.Equal(-0, result);
         }
 
@@ -55,7 +56,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferInfinity()
         {
-            var result = await Page.EvaluateAsync<double>("a => a", double.PositiveInfinity);
+            double result = await Page.EvaluateAsync<double>("a => a", double.PositiveInfinity);
             Assert.Equal(double.PositiveInfinity, result);
         }
 
@@ -65,7 +66,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferNegativeInfinity()
         {
-            var result = await Page.EvaluateAsync<double>("a => a", double.NegativeInfinity);
+            double result = await Page.EvaluateAsync<double>("a => a", double.NegativeInfinity);
             Assert.Equal(double.NegativeInfinity, result);
         }
 
@@ -85,7 +86,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferArraysAsArraysNotObjects()
         {
-            var result = await Page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
+            bool result = await Page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
             Assert.True(result);
         }
 
@@ -116,11 +117,11 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldReturnUndefinedForObjectsWithSymbols()
         {
             Assert.Null(await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"));
-            Assert.Equal(JsonDocument.Parse("{}"), await Page.EvaluateAsync<JsonDocument>(@"() => {
+            Assert.Equal(JsonDocument.Parse("{}").RootElement.ToJson(), (await Page.EvaluateAsync<JsonElement>(@"() => {
                 var a = { };
                 a[Symbol('foo4')] = 42;
                 return a;
-            }"));
+            }")).ToJson());
             Assert.Null(await Page.EvaluateAsync<object>(@"() => {
                 return { foo: [{ a: Symbol('foo4') }] };
             }"));
@@ -140,7 +141,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldWorkWithUnicodeChars()
         {
-            var result = await Page.EvaluateAsync<int>("a => a['中文字符'], { '中文字符': 42}");
+            int result = await Page.EvaluateAsync<int>("a => a['中文字符']", new Dictionary<string, int> { ["中文字符"] = 42 });
             Assert.Equal(42, result);
         }
 
@@ -163,7 +164,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldAwaitPromise()
         {
-            var result = await Page.EvaluateAsync<int>("() => Promise.resolve(8 * 7)");
+            int result = await Page.EvaluateAsync<int>("() => Promise.resolve(8 * 7)");
             Assert.Equal(56, result);
         }
 
@@ -171,7 +172,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should work right after framenavigated</playwright-it>
         [Fact]
-        public async Task ShouldWorkRightAfterFramenavigated()
+        public async Task ShouldWorkRightAfterFrameNavigated()
         {
             Task<int> frameEvaluation = null;
             Page.FrameNavigated += (sender, e) =>
@@ -205,11 +206,8 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkFromInsideAnExposedFunction()
         {
             // Setup inpage callback, which calls Page.evaluate
-            await Page.ExposeFunctionAsync("callController", async (int a, int b) =>
-            {
-                return await Page.EvaluateAsync<int>("(a, b) => a * b", a, b);
-            });
-            var result = await Page.EvaluateAsync<int>(@"async function() {
+            await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("(a, b) => a * b", a, b));
+            int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await callController(9, 3);
             }");
             Assert.Equal(27, result);
@@ -252,9 +250,8 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldReturnComplexObjects()
         {
             var obj = new { foo = "bar!" };
-            var result = await Page.EvaluateAsync<object>("a => a", obj);
-            Assert.NotSame(obj, result);
-            Assert.Equal(obj, result);
+            var result = await Page.EvaluateAsync<JsonElement>("a => a", obj);
+            Assert.Equal("bar!", result.GetProperty("foo").GetString());
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -263,7 +260,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldReturnNaN()
         {
-            var result = await Page.EvaluateAsync<double>("() => NaN");
+            double result = await Page.EvaluateAsync<double>("() => NaN");
             Assert.Equal(double.NaN, result);
         }
 
@@ -273,7 +270,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldReturnNegative0()
         {
-            var result = await Page.EvaluateAsync<int>("() => -0");
+            int result = await Page.EvaluateAsync<int>("() => -0");
             Assert.Equal(-0, result);
         }
 
@@ -283,7 +280,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldReturnInfinity()
         {
-            var result = await Page.EvaluateAsync<double>("() => Infinity");
+            double result = await Page.EvaluateAsync<double>("() => Infinity");
             Assert.Equal(double.PositiveInfinity, result);
         }
 
@@ -293,7 +290,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldReturnNegativeInfinity()
         {
-            var result = await Page.EvaluateAsync<double>("() => Infinity");
+            double result = await Page.EvaluateAsync<double>("() => -Infinity");
             Assert.Equal(double.NegativeInfinity, result);
         }
 
@@ -303,7 +300,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldAcceptUndefinedAsOneOfMultipleParameters()
         {
-            var result = await Page.EvaluateAsync<bool>("(a, b) => Object.is (a, undefined) && Object.is (b, 'foo')", null, "foo");
+            bool result = await Page.EvaluateAsync<bool>("(a, b) => Object.is (a, undefined) && Object.is (b, 'foo')", null, "foo");
             Assert.True(result);
         }
 
@@ -320,21 +317,21 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-it>should properly serialize undefined fields</playwright-it>
         [Fact]
         public async Task ShouldProperlySerializeUndefinedFields()
-            => Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: undefined})"));
+            => Assert.Empty(await Page.EvaluateAsync<Dictionary<string, object>>("() => ({a: undefined})"));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize null arguments</playwright-it>
         [Fact]
         public async Task ShouldProperlySerializeNullArguments()
-            => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));
+            => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", new object[] { null }));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize null fields</playwright-it>
         [Fact]
         public async Task ShouldProperlySerializeNullFields()
-            => Assert.Equal(new { a = (object)null }, await Page.EvaluateAsync<object>("() => ({ a: null}))"));
+            => Assert.Equal(JsonValueKind.Null, (await Page.EvaluateAsync<JsonElement>("() => ({ a: null})")).GetProperty("a").ValueKind);
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
@@ -365,11 +362,11 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldBeAbleToThrowATrickyError()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
-            var error = await Page.EvaluateAsync<JsonElement>(@"errorText => {
+            var exceptionText = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
+            var error = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<JsonElement>(@"errorText => {
                 throw new Error(errorText);
-            }", exception.Message);
-            Assert.Contains(error.GetProperty("message").GetString(), exception.Message);
+            }", exceptionText.Message));
+            Assert.Contains(exceptionText.Message, error.Message);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -394,7 +391,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldAcceptAStringWithComments()
         {
-            var result = await Page.EvaluateAsync<int>("2 + 5;\n// do some math!");
+            int result = await Page.EvaluateAsync<int>("2 + 5;\n// do some math!");
             Assert.Equal(7, result);
         }
 
@@ -406,7 +403,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
             await Page.SetContentAsync("<section>42</section>");
             var element = await Page.QuerySelectorAsync("section");
-            var text = await Page.EvaluateAsync<string>("e => e.textContent", element);
+            string text = await Page.EvaluateAsync<string>("e => e.textContent", element);
             Assert.Equal("42", text);
         }
 
@@ -421,7 +418,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.NotNull(element);
             await element.DisposeAsync();
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("e => e.textContent", element));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("e => e.textContent", element));
             Assert.Contains("JSHandle is disposed", exception.Message);
         }
 
@@ -431,7 +428,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldSimulateAUserGesture()
         {
-            var result = await Page.EvaluateAsync<bool>(@"() => {
+            bool result = await Page.EvaluateAsync<bool>(@"() => {
                 document.body.appendChild(document.createTextNode('test'));
                 document.execCommand('selectAll');
                 return document.execCommand('copy');
@@ -477,7 +474,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
         {
-            var a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
+            string a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
             Assert.Equal(100 * 1024 * 1024, a.Length);
         }
 
@@ -500,8 +497,8 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkEvenWhenJSONIsSetToNull()
         {
             await Page.EvaluateAsync<object>("() => { window.JSON.stringify = null; window.JSON = null; }");
-            var result = await Page.EvaluateAsync<object>("() => ({ abc: 123})");
-            Assert.Equal(new { abc = 123 }, result);
+            var result = await Page.EvaluateAsync<JsonElement>("() => ({ abc: 123})");
+            Assert.Equal(123, result.GetProperty("abc").GetInt32());
         }
     }
 }

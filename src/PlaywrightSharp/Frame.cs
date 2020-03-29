@@ -138,10 +138,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => EvaluateAsync<JsonElement?>(script, args);
 
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
@@ -284,9 +281,22 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
+        public async Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
         {
-            throw new System.NotImplementedException();
+            using var watcher = new LifecycleWatcher(this, options);
+            var errorTask = watcher.TimeoutOrTerminationTask;
+
+            await Task.WhenAny(
+                errorTask,
+                watcher.SameDocumentNavigationTask,
+                watcher.NewDocumentNavigationTask).ConfigureAwait(false);
+
+            if (errorTask.IsCompleted)
+            {
+                await errorTask.ConfigureAwait(false);
+            }
+
+            return watcher.NavigationResponse;
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitUntilNavigation)"/>
