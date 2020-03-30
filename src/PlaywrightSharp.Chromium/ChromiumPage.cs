@@ -111,10 +111,19 @@ namespace PlaywrightSharp.Chromium
 
         public async Task<Quad[][]> GetContentQuadsAsync(ElementHandle handle)
         {
-            var result = await Client.SendAsync(new DOMGetContentQuadsRequest
+            DOMGetContentQuadsResponse result = null;
+
+            try
             {
-                ObjectId = handle.RemoteObject.ObjectId,
-            }).ConfigureAwait(false);
+                result = await Client.SendAsync(new DOMGetContentQuadsRequest
+                {
+                    ObjectId = handle.RemoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
 
             return result?.Quads.Select(quad => new[]
             {
