@@ -47,11 +47,7 @@ namespace PlaywrightSharp.Firefox
         internal Task<Page> PageTask { get; set; }
 
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
-        public async Task<IPage> GetPageAsync()
-        {
-            PageTask ??= CreatePageAsync();
-            return await PageTask.ConfigureAwait(false);
-        }
+        public async Task<IPage> GetPageAsync() => await CreatePageAsync().ConfigureAwait(false);
 
         public Task<IWorker> GetWorkerAsync()
         {
@@ -60,39 +56,49 @@ namespace PlaywrightSharp.Firefox
 
         internal void DidClose() => _page?.DidClose();
 
-        private async Task<Page> CreatePageAsync()
+        internal Task<Page> CreatePageAsync()
         {
             if (Type != TargetType.Page)
             {
                 throw new PlaywrightSharpException($"Cannot create page for \"{Type}\" target");
             }
 
-            FirefoxPage firefoxPage;
             if (PageTask == null)
             {
-                var session = await _connection.CreateSessionAsync(_targetId).ConfigureAwait(false);
-                firefoxPage = new FirefoxPage(session, BrowserContext, () =>
+                async Task<Page> CreatePageInternalAsync()
                 {
-                    var openerTarget = Opener;
-                    if (openerTarget == null)
+                    if (_page != null)
                     {
-                        return Task.FromResult<Page>(null);
+                        return _page;
                     }
 
-                    return openerTarget.PageTask;
-                });
-                _page = firefoxPage.Page;
-                void DisconnectedEventHandler(object sender, EventArgs e)
-                {
-                    _page.DidDisconnected();
-                    session.Disconnected -= DisconnectedEventHandler;
+                    var session = await _connection.CreateSessionAsync(_targetId).ConfigureAwait(false);
+                    FirefoxPage firefoxPage = new FirefoxPage(session, BrowserContext, () =>
+                    {
+                        var openerTarget = Opener;
+                        if (openerTarget == null)
+                        {
+                            return Task.FromResult<Page>(null);
+                        }
+
+                        return openerTarget.PageTask;
+                    });
+                    _page = firefoxPage.Page;
+                    void DisconnectedEventHandler(object sender, EventArgs e)
+                    {
+                        _page.DidDisconnected();
+                        session.Disconnected -= DisconnectedEventHandler;
+                    }
+
+                    session.Disconnected += DisconnectedEventHandler;
+                    await firefoxPage.InitializeAsync().ConfigureAwait(false);
+                    return _page;
                 }
 
-                session.Disconnected += DisconnectedEventHandler;
-                await firefoxPage.InitializeAsync().ConfigureAwait(false);
+                PageTask = CreatePageInternalAsync();
             }
 
-            return _page;
+            return PageTask;
         }
     }
 }

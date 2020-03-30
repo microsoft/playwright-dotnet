@@ -41,7 +41,19 @@ namespace PlaywrightSharp.Firefox
             throw new System.NotImplementedException();
         }
 
-        public Task CloseAsync() => throw new System.NotImplementedException();
+        public async Task CloseAsync()
+        {
+            if (_browserContextId == null)
+            {
+                throw new PlaywrightSharpException("Non-incognito profiles cannot be closed");
+            }
+
+            await _connection.SendAsync(new TargetRemoveBrowserContextRequest
+            {
+                BrowserContextId = _browserContextId,
+            }).ConfigureAwait(false);
+            _browser.Contexts.Remove(_browserContextId);
+        }
 
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
         {

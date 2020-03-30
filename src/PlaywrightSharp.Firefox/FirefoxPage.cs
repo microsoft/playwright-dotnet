@@ -14,6 +14,7 @@ using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Messaging;
+using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -65,13 +66,22 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
-        public bool CanScreenshotOutsideViewport() => throw new NotImplementedException();
+        public bool CanScreenshotOutsideViewport() => true;
 
         public Task ResetViewportAsync(Viewport viewport) => throw new NotImplementedException();
 
         public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
 
-        public Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport) => throw new NotImplementedException();
+        public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
+        {
+            var response = await _session.SendAsync(new PageScreenshotRequest
+            {
+                MimeType = format == ScreenshotFormat.Jpeg ? ScreenshotMimeType.ImageJpeg : ScreenshotMimeType.ImagePng,
+                FullPage = options.FullPage,
+                Clip = options.Clip,
+            }).ConfigureAwait(false);
+            return Convert.FromBase64String(response.Data);
+        }
 
         public bool IsElementHandle(IRemoteObject remoteObject)
         {
@@ -89,10 +99,18 @@ namespace PlaywrightSharp.Firefox
             return new GotoResult { NewDocumentId = response.NavigationId, IsSameDocument = response.NavigationId == null };
         }
 
-        public Task SetViewportAsync(Viewport viewport)
+        public Task SetViewportAsync(Viewport viewport) => _session.SendAsync(new PageSetViewportRequest
         {
-            throw new System.NotImplementedException();
-        }
+            Viewport = new Protocol.Page.Viewport
+            {
+                Width = viewport.Width,
+                Height = viewport.Height,
+                IsMobile = viewport.IsMobile,
+                DeviceScaleFactor = viewport.DeviceScaleFactor,
+                HasTouch = viewport.IsMobile,
+                IsLandscape = viewport.Width > viewport.Height,
+            },
+        });
 
         public Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
         {
@@ -247,7 +265,7 @@ namespace PlaywrightSharp.Firefox
                 {
                     frame.ContextCreated(ContextType.Utility, context);
                 }
-                else if (auxData.Name == null)
+                else if (string.IsNullOrEmpty(auxData.Name))
                 {
                     frame.ContextCreated(ContextType.Main, context);
                 }
@@ -282,7 +300,7 @@ namespace PlaywrightSharp.Firefox
                             Id = id,
                             Method = request.Command,
                             Params = request,
-                        }.ToJson(),
+                        }.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions),
                     }).ConfigureAwait(false);
                 }
                 catch (Exception e)

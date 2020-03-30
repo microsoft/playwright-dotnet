@@ -17,13 +17,12 @@ namespace PlaywrightSharp.Firefox
     {
         private readonly IBrowserApp _app;
         private readonly FirefoxConnection _connection;
-        private readonly Dictionary<string, IBrowserContext> _contexts;
 
         internal FirefoxBrowser(IBrowserApp app, FirefoxConnection connection, string[] browserContextIds)
         {
             _app = app;
             _connection = connection;
-            _contexts = browserContextIds.ToDictionary(id => id, id => (IBrowserContext)CreateBrowserContext(id));
+            Contexts = browserContextIds.ToDictionary(id => id, id => (IBrowserContext)CreateBrowserContext(id));
             DefaultContext = CreateBrowserContext(null);
 
             _connection.Disconnected += OnDisconnected;
@@ -49,7 +48,7 @@ namespace PlaywrightSharp.Firefox
             {
                 yield return DefaultContext;
 
-                foreach (var context in _contexts.Values)
+                foreach (var context in Contexts.Values)
                 {
                     yield return context;
                 }
@@ -68,6 +67,8 @@ namespace PlaywrightSharp.Firefox
         public bool IsConnected => !_connection.IsClosed;
 
         internal ConcurrentDictionary<string, FirefoxTarget> TargetsMap { get; } = new ConcurrentDictionary<string, FirefoxTarget>();
+
+        internal Dictionary<string, IBrowserContext> Contexts { get; }
 
         /// <inheritdoc cref="IBrowser.CloseAsync"/>
         public async Task CloseAsync()
@@ -107,7 +108,7 @@ namespace PlaywrightSharp.Firefox
 
             var context = CreateBrowserContext(browserContextId, options);
             await context.InitializeAsync().ConfigureAwait(false);
-            _contexts[browserContextId] = context;
+            Contexts[browserContextId] = context;
             return context;
         }
 
@@ -193,7 +194,7 @@ namespace PlaywrightSharp.Firefox
             string openerId = payload.OpenerId;
             var type = payload.Type;
 
-            var context = browserContextId != null ? _contexts[browserContextId] : DefaultContext;
+            var context = browserContextId != null ? Contexts[browserContextId] : DefaultContext;
             var target = new FirefoxTarget(_connection, this, context, targetId, type, url, openerId);
             TargetsMap[targetId] = target;
             var opener = target.Opener;
@@ -203,7 +204,7 @@ namespace PlaywrightSharp.Firefox
                 var page = await opener.PageTask.ConfigureAwait(false);
                 if (page.HasPopupEventListeners)
                 {
-                    var popupPage = await target.PageTask.ConfigureAwait(false);
+                    var popupPage = await target.CreatePageAsync().ConfigureAwait(false);
                     popupPage.OnPopup(this);
                 }
             }
@@ -231,9 +232,7 @@ namespace PlaywrightSharp.Firefox
         }
 
         private BrowserContext CreateBrowserContext(string browserContextId, BrowserContextOptions options = null)
-        {
-            return new BrowserContext(new FirefoxBrowserContext(browserContextId, _connection, options ?? new BrowserContextOptions(), this));
-        }
+            => new BrowserContext(new FirefoxBrowserContext(browserContextId, _connection, options ?? new BrowserContextOptions(), this), options);
 
         private void OnDisconnected(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, EventArgs.Empty);
     }
