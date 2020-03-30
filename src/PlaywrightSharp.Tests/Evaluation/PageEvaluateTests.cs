@@ -117,7 +117,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldReturnUndefinedForObjectsWithSymbols()
         {
             Assert.Null(await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"));
-            Assert.Equal(JsonDocument.Parse("{}").RootElement.ToJson(), (await Page.EvaluateAsync<JsonElement>(@"() => {
+            Assert.Equal("{}", (await Page.EvaluateAsync<JsonElement>(@"() => {
                 var a = { };
                 a[Symbol('foo4')] = 42;
                 return a;
