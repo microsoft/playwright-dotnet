@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.click</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ElementHandleClickTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandleClickTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandleClickTests(ITestOutputHelper output) : base(output)
         {
         }
 

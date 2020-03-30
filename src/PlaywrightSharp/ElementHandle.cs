@@ -254,7 +254,7 @@ namespace PlaywrightSharp
 
         private async Task<Point> ClickablePointAsync()
         {
-            Func<Point[], int> computeQuadArea = (quad) =>
+            static int ComputeQuadArea(Point[] quad)
             {
                 // Compute sum of all directed areas of adjacent triangles
                 // https://en.wikipedia.org/wiki/Polygon#Simple_polygons
@@ -267,7 +267,7 @@ namespace PlaywrightSharp
                 }
 
                 return Math.Abs(area);
-            };
+            }
 
             var quadsTask = _page.Delegate.GetContentQuadsAsync(this);
             var metricsTask = _page.Delegate.GetLayoutViewportAsync();
@@ -276,22 +276,22 @@ namespace PlaywrightSharp
             var quads = quadsTask.Result;
             var metrics = metricsTask.Result;
 
-            Func<Quad[], Point[]> intersectQuadWithViewport = (quad) =>
-             {
-                 return quad.Select(point => new Point
-                 {
-                     X = Convert.ToInt32(Math.Min(Math.Max(point.X, 0), metrics.Width)),
-                     Y = Convert.ToInt32(Math.Min(Math.Max(point.Y, 0), metrics.Height)),
-                 }).ToArray();
-             };
+            Point[] IntersectQuadWithViewport(Quad[] quad)
+            {
+                return quad.Select(point => new Point
+                {
+                    X = Convert.ToInt32(Math.Min(Math.Max(point.X, 0), metrics.Width)),
+                    Y = Convert.ToInt32(Math.Min(Math.Max(point.Y, 0), metrics.Height)),
+                }).ToArray();
+            }
 
             if (quads == null || quads.Length == 0)
             {
                 throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
             }
 
-            var filtered = quads.Select(quad => intersectQuadWithViewport(quad)).Where(quad => computeQuadArea(quad) > 1);
-            if (!filtered.Any())
+            var filtered = quads.Select(IntersectQuadWithViewport).Where(quad => ComputeQuadArea(quad) > 1).ToArray();
+            if (filtered.Length == 0)
             {
                 throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
             }
