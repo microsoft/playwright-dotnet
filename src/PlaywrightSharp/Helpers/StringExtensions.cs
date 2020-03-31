@@ -64,9 +64,9 @@ namespace PlaywrightSharp.Helpers
 
             var result = new Dictionary<string, string>();
 
-            foreach (string keyvalue in query.Split('&'))
+            foreach (string keyValue in query.Split('&'))
             {
-                string[] pair = keyvalue.Split('=');
+                string[] pair = keyValue.Split('=');
                 result[pair[0]] = pair[1];
             }
 
@@ -74,23 +74,43 @@ namespace PlaywrightSharp.Helpers
         }
 
         /// <summary>
-        /// Determin if the script is a javascript function and not an expression.
+        /// Determine if the script is a javascript function and not an expression.
         /// </summary>
         /// <param name="script">Script to evaluate.</param>
         /// <returns>Whether the script is a function or not.</returns>
-        public static bool IsJavascriptFunction(this string script)
+        public static bool IsJavascriptFunction(ref string script)
         {
-            var parser = new JavaScriptParser(script);
-            var program = parser.ParseScript();
-
-            if (program.Body.Count > 0)
+            try
             {
-                return
-                    (program.Body[0] is ExpressionStatement expression && expression.Expression.Type == Nodes.ArrowFunctionExpression) ||
-                    program.Body[0] is FunctionDeclaration;
-            }
+                var parser = new JavaScriptParser(script);
+                var program = parser.ParseScript();
 
-            return false;
+                if (program.Body.Count > 0)
+                {
+                    return
+                        (program.Body[0] is ExpressionStatement expression && expression.Expression.Type == Nodes.ArrowFunctionExpression) ||
+                        program.Body[0] is FunctionDeclaration;
+                }
+
+                return false;
+            }
+            catch (ParserException)
+            {
+                // Retry using parenthesis
+                script = $"({script})";
+                var parser = new JavaScriptParser(script);
+                var program = parser.ParseScript();
+
+                if (program.Body.Count > 0)
+                {
+                    return
+                        program.Body.Count > 0 &&
+                        program.Body[0] is ExpressionStatement expression &&
+                        expression.Expression.Type == Nodes.FunctionExpression;
+                }
+
+                return false;
+            }
         }
 
         private static bool IsQuoted(this string value)

@@ -1,11 +1,8 @@
-using System;
-using System.Text.Json;
-
 namespace PlaywrightSharp
 {
     internal class ExecutionContext
     {
-        public ExecutionContext(IExecutionContextDelegate executionContextDelegate)
+        protected ExecutionContext(IExecutionContextDelegate executionContextDelegate)
         {
             Delegate = executionContextDelegate;
         }

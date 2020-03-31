@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -16,6 +17,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Accessibility
 /// <summary>
 /// Enum of possible property types.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AXValueType
 {
 [System.Runtime.Serialization.EnumMember(Value = "boolean")]Boolean,
@@ -38,6 +40,7 @@ internal enum AXValueType
 /// <summary>
 /// Enum of possible property sources.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AXValueSourceType
 {
 [System.Runtime.Serialization.EnumMember(Value = "attribute")]Attribute,
@@ -49,6 +52,7 @@ internal enum AXValueSourceType
 /// <summary>
 /// Enum of possible native property sources (as a subtype of a particular AXValueSourceType).
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AXValueNativeSourceType
 {
 [System.Runtime.Serialization.EnumMember(Value = "figcaption")]Figcaption,
@@ -67,6 +71,7 @@ internal partial class AXValueSource
 /// <summary>
 /// What type of source this is.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AXValueSourceType Type { get; set; }
 /// <summary>
 /// The value of this property source.
@@ -87,6 +92,7 @@ public bool? Superseded { get; set; }
 /// <summary>
 /// The native markup source for this value, e.g. a &lt;label&gt; element.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AXValueNativeSourceType NativeSource { get; set; }
 /// <summary>
 /// The value, such as a node or node list, of the native source.
@@ -125,6 +131,7 @@ internal partial class AXProperty
 /// <summary>
 /// The name of this property.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AXPropertyName Name { get; set; }
 /// <summary>
 /// The value of this property.
@@ -138,6 +145,7 @@ internal partial class AXValue
 /// <summary>
 /// The type of this value.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AXValueType Type { get; set; }
 /// <summary>
 /// The computed value of this property.
@@ -159,6 +167,7 @@ public AXValueSource[] Sources { get; set; }}
 /// - from 'checked' to 'selected': states which apply to widgets
 /// - from 'activedescendant' to 'owns' - relationships between elements other than parent/child/sibling.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AXPropertyName
 {
 [System.Runtime.Serialization.EnumMember(Value = "busy")]Busy,
@@ -947,6 +956,7 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
 /// Every Background Service operates independently, but they share the same
 /// API.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ServiceName
 {
 [System.Runtime.Serialization.EnumMember(Value = "backgroundFetch")]BackgroundFetch,
@@ -988,6 +998,7 @@ public string ServiceWorkerRegistrationId { get; set; }
 /// <summary>
 /// The Background Service this event belongs to.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceName Service { get; set; }
 /// <summary>
 /// A description of the event.
@@ -1014,6 +1025,7 @@ public string Command { get; } = "BackgroundService.startObserving";
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceStartObservingRequest"/>
@@ -1034,6 +1046,7 @@ public string Command { get; } = "BackgroundService.stopObserving";
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceStopObservingRequest"/>
@@ -1058,6 +1071,7 @@ public bool? ShouldRecord { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceSetRecordingRequest"/>
@@ -1078,6 +1092,7 @@ public string Command { get; } = "BackgroundService.clearEvents";
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceName Service { get; set; }}
 /// <summary>
 /// Response from <see cref="BackgroundServiceClearEventsRequest"/>
@@ -1101,6 +1116,7 @@ public bool? IsRecording { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceName Service { get; set; }}
 /// <summary>
 /// Called with all existing backgroundServiceEvents when enabled, and all new
@@ -1122,6 +1138,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Browser
 /// <summary>
 /// The state of the browser window.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum WindowState
 {
 [System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
@@ -1152,10 +1169,12 @@ public int? Height { get; set; }
 /// <summary>
 /// The window state. Default to normal.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public WindowState WindowState { get; set; }}
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PermissionType
 {
 [System.Runtime.Serialization.EnumMember(Value = "accessibilityEvents")]AccessibilityEvents,
@@ -1182,6 +1201,7 @@ internal enum PermissionType
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PermissionSetting
 {
 [System.Runtime.Serialization.EnumMember(Value = "granted")]Granted,
@@ -1274,6 +1294,7 @@ public PermissionDescriptor Permission { get; set; }
 /// <summary>
 /// Setting of the permission.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public PermissionSetting Setting { get; set; }
 /// <summary>
 /// Context to override. When omitted, default browser context is used.
@@ -1606,6 +1627,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CSS
 /// stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via
 /// inspector" rules), "regular" for regular stylesheets.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum StyleSheetOrigin
 {
 [System.Runtime.Serialization.EnumMember(Value = "injected")]Injected,
@@ -1701,6 +1723,7 @@ public string SourceMapURL { get; set; }
 /// <summary>
 /// Stylesheet origin.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StyleSheetOrigin Origin { get; set; }
 /// <summary>
 /// Stylesheet title.
@@ -1760,6 +1783,7 @@ public SelectorList SelectorList { get; set; }
 /// <summary>
 /// Parent stylesheet's origin.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StyleSheetOrigin Origin { get; set; }
 /// <summary>
 /// Associated style declaration.
@@ -2057,6 +2081,7 @@ public string StyleSheetId { get; set; }
 /// <summary>
 /// Parent stylesheet's origin.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StyleSheetOrigin Origin { get; set; }
 /// <summary>
 /// Associated key text.
@@ -2723,6 +2748,7 @@ namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
 /// <summary>
 /// type of HTTP response cached
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CachedResponseType
 {
 [System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
@@ -2763,6 +2789,7 @@ public string ResponseStatusText { get; set; }
 /// <summary>
 /// HTTP response type
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CachedResponseType ResponseType { get; set; }
 /// <summary>
 /// Response headers
@@ -3119,6 +3146,7 @@ public int? BackendNodeId { get; set; }}
 /// <summary>
 /// Pseudo element type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PseudoType
 {
 [System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
@@ -3140,6 +3168,7 @@ internal enum PseudoType
 /// <summary>
 /// Shadow root type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ShadowRootType
 {
 [System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
@@ -3228,10 +3257,12 @@ public string Value { get; set; }
 /// <summary>
 /// Pseudo element type for this node.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public PseudoType PseudoType { get; set; }
 /// <summary>
 /// Shadow root type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ShadowRootType ShadowRootType { get; set; }
 /// <summary>
 /// Frame ID for frame owner elements.
@@ -4737,6 +4768,7 @@ namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
 /// <summary>
 /// DOM breakpoint type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum DOMBreakpointType
 {
 [System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
@@ -4837,6 +4869,7 @@ public int? NodeId { get; set; }
 /// <summary>
 /// Type of the breakpoint to remove.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public DOMBreakpointType Type { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveDOMBreakpointRequest"/>
@@ -4925,6 +4958,7 @@ public int? NodeId { get; set; }
 /// <summary>
 /// Type of the operation to stop upon.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public DOMBreakpointType Type { get; set; }}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetDOMBreakpointRequest"/>
@@ -5998,6 +6032,7 @@ public string Value { get; set; }}
 /// pauseIfNetworkFetchesPending: The virtual time base may not advance if there are any pending
 /// resource fetches.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum VirtualTimePolicy
 {
 [System.Runtime.Serialization.EnumMember(Value = "advance")]Advance,
@@ -6419,6 +6454,7 @@ public string Command { get; } = "Emulation.setVirtualTimePolicy";
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public VirtualTimePolicy Policy { get; set; }
 /// <summary>
 /// If set, after this many virtual milliseconds have elapsed virtual time will be paused and a
@@ -7172,6 +7208,7 @@ public double? Id { get; set; }}
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum GestureSourceType
 {
 [System.Runtime.Serialization.EnumMember(Value = "default")]Default,
@@ -7180,6 +7217,7 @@ internal enum GestureSourceType
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum MouseButton
 {
 [System.Runtime.Serialization.EnumMember(Value = "none")]None,
@@ -7321,6 +7359,7 @@ public double? Timestamp { get; set; }
 /// <summary>
 /// Mouse button (default: "none").
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public MouseButton Button { get; set; }
 /// <summary>
 /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
@@ -7410,6 +7449,7 @@ public int? Y { get; set; }
 /// <summary>
 /// Mouse button. Only "none", "left", "right" are supported.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public MouseButton Button { get; set; }
 /// <summary>
 /// Time at which the event occurred (default: current time).
@@ -7488,6 +7528,7 @@ public int? RelativeSpeed { get; set; }
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public GestureSourceType GestureSourceType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizePinchGestureRequest"/>
@@ -7543,6 +7584,7 @@ public int? Speed { get; set; }
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public GestureSourceType GestureSourceType { get; set; }
 /// <summary>
 /// The number of times to repeat the gesture (default: 0).
@@ -7592,6 +7634,7 @@ public int? TapCount { get; set; }
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public GestureSourceType GestureSourceType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizeTapGestureRequest"/>
@@ -8208,6 +8251,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Memory
 /// <summary>
 /// Memory pressure level.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PressureLevel
 {
 [System.Runtime.Serialization.EnumMember(Value = "moderate")]Moderate,
@@ -8359,6 +8403,7 @@ public string Command { get; } = "Memory.simulatePressureNotification";
 /// <summary>
 /// Memory pressure level of the notification.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public PressureLevel Level { get; set; }}
 /// <summary>
 /// Response from <see cref="MemorySimulatePressureNotificationRequest"/>
@@ -8476,6 +8521,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Network
 /// <summary>
 /// Resource type as it was perceived by the rendering engine.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ResourceType
 {
 [System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
@@ -8497,6 +8543,7 @@ internal enum ResourceType
 /// <summary>
 /// Network level fetch failure reason.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ErrorReason
 {
 [System.Runtime.Serialization.EnumMember(Value = "Failed")]Failed,
@@ -8522,6 +8569,7 @@ internal partial class Headers
 /// <summary>
 /// The underlying connection technology that the browser is supposedly using.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ConnectionType
 {
 [System.Runtime.Serialization.EnumMember(Value = "none")]None,
@@ -8537,6 +8585,7 @@ internal enum ConnectionType
 /// Represents the cookie's 'SameSite' status:
 /// https://tools.ietf.org/html/draft-west-first-party-cookies
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CookieSameSite
 {
 [System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict,
@@ -8546,6 +8595,7 @@ internal enum CookieSameSite
 /// Represents the cookie's 'Priority' status:
 /// https://tools.ietf.org/html/draft-west-cookie-priority-00
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CookiePriority
 {
 [System.Runtime.Serialization.EnumMember(Value = "Low")]Low,
@@ -8624,6 +8674,7 @@ public double? ReceiveHeadersEnd { get; set; }}
 /// <summary>
 /// Loading priority of a resource request.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ResourcePriority
 {
 [System.Runtime.Serialization.EnumMember(Value = "VeryLow")]VeryLow,
@@ -8667,6 +8718,7 @@ public Security.MixedContentType MixedContentType { get; set; }
 /// <summary>
 /// Priority of the resource request at the time request is sent.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourcePriority InitialPriority { get; set; }
 /// <summary>
 /// The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/
@@ -8769,10 +8821,12 @@ public SignedCertificateTimestamp[] SignedCertificateTimestampList { get; set; }
 /// <summary>
 /// Whether the request complied with Certificate Transparency policy
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CertificateTransparencyCompliance CertificateTransparencyCompliance { get; set; }}
 /// <summary>
 /// Whether the request complied with Certificate Transparency policy.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CertificateTransparencyCompliance
 {
 [System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown,
@@ -8781,6 +8835,7 @@ internal enum CertificateTransparencyCompliance
 /// <summary>
 /// The reason why request was blocked.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum BlockedReason
 {
 [System.Runtime.Serialization.EnumMember(Value = "other")]Other,
@@ -8945,6 +9000,7 @@ public string Url { get; set; }
 /// <summary>
 /// Type of this resource.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourceType Type { get; set; }
 /// <summary>
 /// Cached response data.
@@ -9020,14 +9076,17 @@ public bool? Session { get; set; }
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CookieSameSite SameSite { get; set; }
 /// <summary>
 /// Cookie Priority
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CookiePriority Priority { get; set; }}
 /// <summary>
 /// Types of reasons why a cookie may not be stored from a response.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SetCookieBlockedReason
 {
 [System.Runtime.Serialization.EnumMember(Value = "SecureOnly")]SecureOnly,
@@ -9045,6 +9104,7 @@ internal enum SetCookieBlockedReason
 /// <summary>
 /// Types of reasons why a cookie may not be sent with a request.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CookieBlockedReason
 {
 [System.Runtime.Serialization.EnumMember(Value = "SecureOnly")]SecureOnly,
@@ -9126,6 +9186,7 @@ public bool? HttpOnly { get; set; }
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CookieSameSite SameSite { get; set; }
 /// <summary>
 /// Cookie expiration date, session cookie if not set
@@ -9134,6 +9195,7 @@ public double? Expires { get; set; }
 /// <summary>
 /// Cookie Priority.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CookiePriority Priority { get; set; }}
 /// <summary>
 /// Authorization challenge for HTTP status code 401 or 407.
@@ -9181,6 +9243,7 @@ public string Password { get; set; }}
 /// Stages of the interception to begin intercepting. Request will intercept before the request is
 /// sent. Response will intercept after the response is received.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum InterceptionStage
 {
 [System.Runtime.Serialization.EnumMember(Value = "Request")]Request,
@@ -9198,10 +9261,12 @@ public string UrlPattern { get; set; }
 /// <summary>
 /// If set, only requests for matching resource types will be intercepted.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourceType ResourceType { get; set; }
 /// <summary>
 /// Stage at wich to begin intercepting requests. Default is Request.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public InterceptionStage InterceptionStage { get; set; }}
 /// <summary>
 /// Information about a signed exchange signature.
@@ -9274,6 +9339,7 @@ public string HeaderIntegrity { get; set; }}
 /// <summary>
 /// Field type for a signed exchange related error.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SignedExchangeErrorField
 {
 [System.Runtime.Serialization.EnumMember(Value = "signatureSig")]SignatureSig,
@@ -9298,6 +9364,7 @@ public int? SignatureIndex { get; set; }
 /// <summary>
 /// The field which caused the error.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SignedExchangeErrorField ErrorField { get; set; }}
 /// <summary>
 /// Information about a signed exchange response.
@@ -9437,6 +9504,7 @@ public string InterceptionId { get; set; }
 /// marked with `isNavigationRequest` also cancels the navigation. Must not be set in response
 /// to an authChallenge.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ErrorReason ErrorReason { get; set; }
 /// <summary>
 /// If set the requests completes using with the provided base64 encoded raw response, including
@@ -9551,6 +9619,7 @@ public double? UploadThroughput { get; set; }
 /// <summary>
 /// Connection type if known.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ConnectionType ConnectionType { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkEmulateNetworkConditionsRequest"/>
@@ -9916,6 +9985,7 @@ public bool? HttpOnly { get; set; }
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CookieSameSite SameSite { get; set; }
 /// <summary>
 /// Cookie expiration date, session cookie if not set
@@ -9924,6 +9994,7 @@ public double? Expires { get; set; }
 /// <summary>
 /// Cookie Priority type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CookiePriority Priority { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetCookieRequest"/>
@@ -10122,6 +10193,7 @@ public double? Timestamp { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourceType Type { get; set; }
 /// <summary>
 /// User friendly error message.
@@ -10134,6 +10206,7 @@ public bool? Canceled { get; set; }
 /// <summary>
 /// The reason why loading was blocked, if any.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public BlockedReason BlockedReason { get; set; }}
 /// <summary>
 /// Fired when HTTP request has finished loading.
@@ -10189,6 +10262,7 @@ public string FrameId { get; set; }
 /// <summary>
 /// How the requested resource will be used.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourceType ResourceType { get; set; }
 /// <summary>
 /// Whether this is a navigation request, which can abort the navigation completely.
@@ -10212,6 +10286,7 @@ public AuthChallenge AuthChallenge { get; set; }
 /// Response error if intercepted at response stage or if redirect occurred while intercepting
 /// request.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ErrorReason ResponseErrorReason { get; set; }
 /// <summary>
 /// Response code if intercepted at response stage or if redirect occurred while intercepting
@@ -10285,6 +10360,7 @@ public Response RedirectResponse { get; set; }
 /// <summary>
 /// Type of this resource.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourceType Type { get; set; }
 /// <summary>
 /// Frame identifier.
@@ -10310,6 +10386,7 @@ public string RequestId { get; set; }
 /// <summary>
 /// New priority
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourcePriority NewPriority { get; set; }
 /// <summary>
 /// Timestamp.
@@ -10356,6 +10433,7 @@ public double? Timestamp { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ResourceType Type { get; set; }
 /// <summary>
 /// Response data.
@@ -10626,6 +10704,7 @@ public DOM.RGBA CssGridColor { get; set; }}
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum InspectMode
 {
 [System.Runtime.Serialization.EnumMember(Value = "searchForNode")]SearchForNode,
@@ -10862,6 +10941,7 @@ public string Command { get; } = "Overlay.setInspectMode";
 /// <summary>
 /// Set an inspection mode.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public InspectMode Mode { get; set; }
 /// <summary>
 /// A descriptor for the highlight appearance of hovered-over nodes. May be omitted if `enabled
@@ -11214,6 +11294,7 @@ public FrameTree[] ChildFrames { get; set; }}
 /// <summary>
 /// Transition type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum TransitionType
 {
 [System.Runtime.Serialization.EnumMember(Value = "link")]Link,
@@ -11253,6 +11334,7 @@ public string Title { get; set; }
 /// <summary>
 /// Transition type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public TransitionType TransitionType { get; set; }}
 /// <summary>
 /// Screencast frame metadata.
@@ -11290,6 +11372,7 @@ public double? Timestamp { get; set; }}
 /// <summary>
 /// Javascript dialog type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum DialogType
 {
 [System.Runtime.Serialization.EnumMember(Value = "alert")]Alert,
@@ -11458,6 +11541,7 @@ public int? Fixed { get; set; }}
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ClientNavigationReason
 {
 [System.Runtime.Serialization.EnumMember(Value = "formSubmissionGet")]FormSubmissionGet,
@@ -12016,6 +12100,7 @@ public string Referrer { get; set; }
 /// <summary>
 /// Intended transition type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public TransitionType TransitionType { get; set; }
 /// <summary>
 /// Frame id to navigate, if not specified navigates the top frame.
@@ -12950,6 +13035,7 @@ public string FrameId { get; set; }
 /// <summary>
 /// The reason for the navigation.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ClientNavigationReason Reason { get; set; }
 /// <summary>
 /// The destination URL for the requested navigation.
@@ -13083,6 +13169,7 @@ public string Message { get; set; }
 /// <summary>
 /// Dialog type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public DialogType Type { get; set; }
 /// <summary>
 /// True iff browser is capable showing or acting on the given dialog. When browser has no
@@ -13343,6 +13430,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Security
 /// A description of mixed content (HTTP resources on HTTPS pages), as defined by
 /// https://www.w3.org/TR/mixed-content/#categories
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum MixedContentType
 {
 [System.Runtime.Serialization.EnumMember(Value = "blockable")]Blockable,
@@ -13351,6 +13439,7 @@ internal enum MixedContentType
 /// <summary>
 /// The security level of a page or resource.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SecurityState
 {
 [System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown,
@@ -13439,6 +13528,7 @@ public bool? ObsoleteSslSignature { get; set; }}
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SafetyTipStatus
 {
 [System.Runtime.Serialization.EnumMember(Value = "badReputation")]BadReputation,
@@ -13451,6 +13541,7 @@ internal partial class SafetyTipInfo
 /// <summary>
 /// Describes whether the page triggers any safety tips or reputation warnings. Default is unknown.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SafetyTipStatus SafetyTipStatus { get; set; }
 /// <summary>
 /// The URL the safety tip suggested ("Did you mean?"). Only filled in for lookalike matches.
@@ -13464,6 +13555,7 @@ internal partial class VisibleSecurityState
 /// <summary>
 /// The security level of the page.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SecurityState SecurityState { get; set; }
 /// <summary>
 /// Security state details about the page certificate.
@@ -13485,6 +13577,7 @@ internal partial class SecurityStateExplanation
 /// <summary>
 /// Security state representing the severity of the factor being explained.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SecurityState SecurityState { get; set; }
 /// <summary>
 /// Title describing the type of factor.
@@ -13501,6 +13594,7 @@ public string Description { get; set; }
 /// <summary>
 /// The type of mixed content described by the explanation.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public MixedContentType MixedContentType { get; set; }
 /// <summary>
 /// Page certificate.
@@ -13538,15 +13632,18 @@ public bool? DisplayedContentWithCertErrors { get; set; }
 /// <summary>
 /// Always set to unknown.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SecurityState RanInsecureContentStyle { get; set; }
 /// <summary>
 /// Always set to unknown.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SecurityState DisplayedInsecureContentStyle { get; set; }}
 /// <summary>
 /// The action to take when a certificate error occurs. continue will continue processing the
 /// request and cancel will cancel the request.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CertificateErrorAction
 {
 [System.Runtime.Serialization.EnumMember(Value = "continue")]Continue,
@@ -13622,6 +13719,7 @@ public int? EventId { get; set; }
 /// <summary>
 /// The action to take on the certificate error.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public CertificateErrorAction Action { get; set; }}
 /// <summary>
 /// Response from <see cref="SecurityHandleCertificateErrorRequest"/>
@@ -13699,6 +13797,7 @@ public string InternalName { get; } = "Security.securityStateChanged";
 /// <summary>
 /// Security state.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public SecurityState SecurityState { get; set; }
 /// <summary>
 /// True if the page was loaded over cryptographic transport such as HTTPS.
@@ -13740,6 +13839,7 @@ public bool? IsDeleted { get; set; }}
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ServiceWorkerVersionRunningStatus
 {
 [System.Runtime.Serialization.EnumMember(Value = "stopped")]Stopped,
@@ -13749,6 +13849,7 @@ internal enum ServiceWorkerVersionRunningStatus
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ServiceWorkerVersionStatus
 {
 [System.Runtime.Serialization.EnumMember(Value = "new")]New,
@@ -13777,10 +13878,12 @@ public string ScriptURL { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceWorkerVersionRunningStatus RunningStatus { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ServiceWorkerVersionStatus Status { get; set; }
 /// <summary>
 /// The Last-Modified header value of the main script.
@@ -14152,6 +14255,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Storage
 /// <summary>
 /// Enum of possible storage types.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum StorageType
 {
 [System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
@@ -14173,6 +14277,7 @@ internal partial class UsageForType
 /// <summary>
 /// Name of storage type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StorageType StorageType { get; set; }
 /// <summary>
 /// Storage usage (bytes).
@@ -14542,6 +14647,7 @@ public int? MaxFramerateDenominator { get; set; }}
 /// <summary>
 /// YUV subsampling type of the pixels of a given image.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SubsamplingFormat
 {
 [System.Runtime.Serialization.EnumMember(Value = "yuv420")]Yuv420,
@@ -14550,6 +14656,7 @@ internal enum SubsamplingFormat
 /// <summary>
 /// Image format of a given image.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ImageType
 {
 [System.Runtime.Serialization.EnumMember(Value = "jpeg")]Jpeg,
@@ -14564,6 +14671,7 @@ internal partial class ImageDecodeAcceleratorCapability
 /// <summary>
 /// Image coded, e.g. Jpeg.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ImageType ImageType { get; set; }
 /// <summary>
 /// Maximum supported dimensions of the image in pixels.
@@ -15374,6 +15482,7 @@ public MemoryDumpConfig MemoryDumpConfig { get; set; }}
 /// Data format of a trace. Can be either the legacy JSON format or the
 /// protocol buffer format. Note that the JSON format will be deprecated soon.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum StreamFormat
 {
 [System.Runtime.Serialization.EnumMember(Value = "json")]Json,
@@ -15381,6 +15490,7 @@ internal enum StreamFormat
 /// <summary>
 /// Compression type to use for traces returned via streams.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum StreamCompression
 {
 [System.Runtime.Serialization.EnumMember(Value = "none")]None,
@@ -15500,11 +15610,13 @@ public string TransferMode { get; set; }
 /// Trace data format to use. This only applies when using `ReturnAsStream`
 /// transfer mode (defaults to `json`).
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StreamFormat StreamFormat { get; set; }
 /// <summary>
 /// Compression format to use. This only applies when using `ReturnAsStream`
 /// transfer mode (defaults to `none`)
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StreamCompression StreamCompression { get; set; }
 /// <summary>
 /// 
@@ -15575,10 +15687,12 @@ public string Stream { get; set; }
 /// <summary>
 /// Trace data format of returned stream.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StreamFormat TraceFormat { get; set; }
 /// <summary>
 /// Compression format of returned stream.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public StreamCompression StreamCompression { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Fetch
@@ -15588,6 +15702,7 @@ namespace PlaywrightSharp.Chromium.Protocol.Fetch
 /// sent. Response will intercept after the response is received (but before response
 /// body is received.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum RequestStage
 {
 [System.Runtime.Serialization.EnumMember(Value = "Request")]Request,
@@ -15609,6 +15724,7 @@ public Network.ResourceType ResourceType { get; set; }
 /// <summary>
 /// Stage at wich to begin intercepting requests. Default is Request.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public RequestStage RequestStage { get; set; }}
 /// <summary>
 /// Response HTTP header entry
@@ -15987,6 +16103,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAudio
 /// <summary>
 /// Enum of BaseAudioContext types
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ContextType
 {
 [System.Runtime.Serialization.EnumMember(Value = "realtime")]Realtime,
@@ -15994,6 +16111,7 @@ internal enum ContextType
 /// <summary>
 /// Enum of AudioContextState from the spec
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ContextState
 {
 [System.Runtime.Serialization.EnumMember(Value = "suspended")]Suspended,
@@ -16002,6 +16120,7 @@ internal enum ContextState
 /// <summary>
 /// Enum of AudioNode::ChannelCountMode from the spec
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ChannelCountMode
 {
 [System.Runtime.Serialization.EnumMember(Value = "clamped-max")]ClampedMax,
@@ -16010,6 +16129,7 @@ internal enum ChannelCountMode
 /// <summary>
 /// Enum of AudioNode::ChannelInterpretation from the spec
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ChannelInterpretation
 {
 [System.Runtime.Serialization.EnumMember(Value = "discrete")]Discrete,
@@ -16017,6 +16137,7 @@ internal enum ChannelInterpretation
 /// <summary>
 /// Enum of AudioParam::AutomationRate from the spec
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AutomationRate
 {
 [System.Runtime.Serialization.EnumMember(Value = "a-rate")]ARate,
@@ -16056,10 +16177,12 @@ public string ContextId { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ContextType ContextType { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ContextState ContextState { get; set; }
 /// <summary>
 /// 
@@ -16122,10 +16245,12 @@ public double? ChannelCount { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ChannelCountMode ChannelCountMode { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public ChannelInterpretation ChannelInterpretation { get; set; }}
 /// <summary>
 /// Protocol object for AudioParam
@@ -16151,6 +16276,7 @@ public string ParamType { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AutomationRate Rate { get; set; }
 /// <summary>
 /// 
@@ -16468,6 +16594,7 @@ namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AuthenticatorProtocol
 {
 [System.Runtime.Serialization.EnumMember(Value = "u2f")]U2F,
@@ -16475,6 +16602,7 @@ internal enum AuthenticatorProtocol
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AuthenticatorTransport
 {
 [System.Runtime.Serialization.EnumMember(Value = "usb")]Usb,
@@ -16490,10 +16618,12 @@ internal partial class VirtualAuthenticatorOptions
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AuthenticatorProtocol Protocol { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public AuthenticatorTransport Transport { get; set; }
 /// <summary>
 /// Defaults to false.
@@ -16787,6 +16917,7 @@ public string Value { get; set; }}
 /// <summary>
 /// Break out events into different types
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PlayerEventType
 {
 [System.Runtime.Serialization.EnumMember(Value = "playbackEvent")]PlaybackEvent,
@@ -16800,6 +16931,7 @@ internal partial class PlayerEvent
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public PlayerEventType Type { get; set; }
 /// <summary>
 /// Events are timestamped relative to the start of the player creation
