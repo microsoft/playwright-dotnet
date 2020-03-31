@@ -37,9 +37,66 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
-        public Task FillAsync(string text)
+        public async Task FillAsync(string text)
         {
-            throw new NotImplementedException();
+            string error = await EvaluateInUtilityAsync<string>(@"(node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE)
+                    return 'Node is not of type HTMLElement';
+                const element = node;
+                if (!element.isConnected)
+                    return 'Element is not attached to the DOM';
+                if (!element.ownerDocument || !element.ownerDocument.defaultView)
+                    return 'Element does not belong to a window';
+                const style = element.ownerDocument.defaultView.getComputedStyle(element);
+                if (!style || style.visibility === 'hidden')
+                    return 'Element is hidden';
+                if (!element.offsetParent && element.tagName !== 'BODY')
+                    return 'Element is not visible';
+                if (element.nodeName.toLowerCase() === 'input') {
+                    const input = element;
+                    const type = input.getAttribute('type') || '';
+                    const kTextInputTypes = new Set(['', 'email', 'password', 'search', 'tel', 'text', 'url']);
+                    if (!kTextInputTypes.has(type.toLowerCase()))
+                        return 'Cannot fill input of type ""' + type + '"".';
+                    if (input.disabled)
+                    return 'Cannot fill a disabled input.';
+                if (input.readOnly)
+                    return 'Cannot fill a readonly input.';
+                input.select();
+                input.focus();
+                }
+                else if (element.nodeName.toLowerCase() === 'textarea') {
+                    const textarea = element;
+                    if (textarea.disabled)
+                        return 'Cannot fill a disabled textarea.';
+                    if (textarea.readOnly)
+                        return 'Cannot fill a readonly textarea.';
+                    textarea.selectionStart = 0;
+                    textarea.selectionEnd = textarea.value.length;
+                    textarea.focus();
+                }
+                else if (element.isContentEditable) {
+                    const range = element.ownerDocument.createRange();
+                    range.selectNodeContents(element);
+                    const selection = element.ownerDocument.defaultView.getSelection();
+                    if (!selection)
+                        return 'Element belongs to invisible iframe.';
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    element.focus();
+                }
+                else {
+                    return 'Element is not an <input>, <textarea> or [contenteditable] element.';
+                }
+                return '';
+            }").ConfigureAwait(false);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                throw new PlaywrightSharpException(error);
+            }
+
+            await _page.Keyboard.SendCharactersAsync(text).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.GetBoundingBoxAsync"/>
@@ -124,7 +181,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IElementHandle.ScrollIntoViewIfNeededAsync"/>
         public async Task ScrollIntoViewIfNeededAsync()
         {
-            string error = await EvaluateInUtility<string>(
+            string error = await EvaluateInUtilityAsync<string>(
                 @"async (node, pageJavascriptEnabled) => {
                     if (!node.isConnected)
                         return 'Node is detached from document';

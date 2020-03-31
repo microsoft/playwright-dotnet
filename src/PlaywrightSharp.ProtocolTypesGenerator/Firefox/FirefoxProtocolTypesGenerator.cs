@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -219,7 +220,9 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
         private async Task<string> ConvertProtocolJsToJson(RevisionInfo revision)
         {
             string protocolJs = "chrome/juggler/content/protocol/Protocol.js";
-            string zipFile = Path.Combine(Directory.GetParent(revision.ExecutablePath).FullName, "omni.ja");
+            string zipFile = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? Path.Combine(Directory.GetParent(revision.ExecutablePath).FullName, "..", "Resources", "omni.ja")
+                : Path.Combine(Directory.GetParent(revision.ExecutablePath).FullName, "omni.ja");
             using var zip = ZipFile.OpenRead(zipFile);
             using var reader = new StreamReader(zip.GetEntry(protocolJs).Open());
             string js = await reader.ReadToEndAsync().ConfigureAwait(false);

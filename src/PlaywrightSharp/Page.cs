@@ -225,10 +225,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.FillAsync(string, string, FillOptions)"/>
-        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
 
         /// <inheritdoc cref="IPage.FocusAsync(string)"/>
         public Task FocusAsync(string selector)

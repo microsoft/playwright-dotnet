@@ -37,10 +37,7 @@ namespace PlaywrightSharp.Input
         }
 
         /// <inheritdoc cref="IKeyboard.SendCharactersAsync(string)"/>
-        public Task SendCharactersAsync(string charText)
-        {
-            throw new NotImplementedException();
-        }
+        public Task SendCharactersAsync(string text) => _raw.SendTextAsync(text);
 
         /// <inheritdoc cref="IKeyboard.TypeAsync(string, TypeOptions)"/>
         public Task TypeAsync(string text, TypeOptions options = null)
