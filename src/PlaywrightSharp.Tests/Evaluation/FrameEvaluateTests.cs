@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Evaluation
 {
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {
-        internal FrameEvaluateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public FrameEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -49,9 +52,9 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             Assert.Equal(2, Page.Frames.Length);
-            Assert.False(true, "TODO: complete test: expect(page._delegate._contextIdToContext.size).toBe(4);");
+            Assert.Equal(4, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.False(true, "TODO: complete test: expect(page._delegate._contextIdToContext.size).toBe(2);");
+            Assert.Equal(2, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -62,9 +65,9 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             Assert.Equal(2, Page.Frames.Length);
-            Assert.False(true, "TODO: complete test: expect(page._delegate._contextIdToContext.size).toBe(4);");
+            Assert.Equal(4, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
-            Assert.False(true, "TODO: complete test: expect(page._delegate._contextIdToContext.size).toBe(2);");
+            Assert.Equal(2, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>

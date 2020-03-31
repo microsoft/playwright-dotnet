@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Chromium
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
             RemoteObject remoteObject = null;
 
-            if (script.IsJavascriptFunction())
+            if (StringExtensions.IsJavascriptFunction(ref script))
             {
                 RuntimeCallFunctionOnResponse result = null;
 
@@ -48,15 +48,15 @@ namespace PlaywrightSharp.Chromium
                         AwaitPromise = true,
                         UserGesture = true,
                     }).ConfigureAwait(false);
-
-                    if (result.ExceptionDetails != null)
-                    {
-                        throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
-                    }
                 }
                 catch (Exception ex)
                 {
                     result = RewriteError(ex);
+                }
+
+                if (result.ExceptionDetails != null)
+                {
+                    throw new PlaywrightSharpException($"Evaluation failed: {result.ExceptionDetails.ToExceptionMessage()}");
                 }
 
                 remoteObject = result.Result;
@@ -98,6 +98,26 @@ namespace PlaywrightSharp.Chromium
             return (includeType ? "JSHandle:" : string.Empty) + GetValueFromRemoteObject<string>(remote);
         }
 
+        public async Task<T> HandleJSONValueAsync<T>(IJSHandle handle)
+        {
+            var remoteObject = ((JSHandle)handle).RemoteObject;
+
+            if (!string.IsNullOrEmpty(remoteObject.ObjectId))
+            {
+                var response = await _client.SendAsync(new RuntimeCallFunctionOnRequest
+                {
+                    FunctionDeclaration = "function() { return this; }",
+                    ObjectId = remoteObject.ObjectId,
+                    ReturnByValue = true,
+                    AwaitPromise = true,
+                }).ConfigureAwait(false);
+
+                return (T)GetValueFromRemoteObject<T>(response.Result);
+            }
+
+            return (T)GetValueFromRemoteObject<T>(remoteObject);
+        }
+
         private RuntimeCallFunctionOnResponse RewriteError(Exception ex)
         {
             if (ex.Message.Contains("Object reference chain is too long"))
@@ -105,7 +125,7 @@ namespace PlaywrightSharp.Chromium
                 return new RuntimeCallFunctionOnResponse { Result = new RemoteObject { Type = "undefined" } };
             }
 
-            if (ex.Message.Contains("Object couldn\'t be returned by value"))
+            if (ex.Message.Contains("Object couldn't be returned by value"))
             {
                 return new RuntimeCallFunctionOnResponse { Result = new RemoteObject { Type = "undefined" } };
             }

@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Evaluation
 {
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageEvaluateOnNewDocumentTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEvaluateOnNewDocumentTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEvaluateOnNewDocumentTests(ITestOutputHelper output) : base(output)
         {
         }
 

@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Firefox
 
         public async Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args)
         {
-            if (!pageFunction.IsJavascriptFunction())
+            if (!StringExtensions.IsJavascriptFunction(ref pageFunction))
             {
                 var payload = await _session.SendAsync(new RuntimeEvaluateRequest
                 {
@@ -49,6 +49,8 @@ namespace PlaywrightSharp.Firefox
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle) => throw new NotImplementedException();
 
         public Task ReleaseHandleAsync(JSHandle handle)
         {

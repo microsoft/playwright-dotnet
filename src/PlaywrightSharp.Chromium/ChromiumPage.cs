@@ -29,7 +29,6 @@ namespace PlaywrightSharp.Chromium
         private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
         private readonly ISet<string> _isolatedWorlds = new HashSet<string>();
-        private readonly Dictionary<int, FrameExecutionContext> _contextIdToContext = new Dictionary<int, FrameExecutionContext>();
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
@@ -49,6 +48,8 @@ namespace PlaywrightSharp.Chromium
         public IRawKeyboard RawKeyboard { get; }
 
         public IRawMouse RawMouse { get; }
+
+        public Dictionary<int, FrameExecutionContext> ContextIdToContext { get; } = new Dictionary<int, FrameExecutionContext>();
 
         internal Page Page { get; }
 
@@ -203,6 +204,24 @@ namespace PlaywrightSharp.Chromium
 
             return rect;
         }
+
+        public async Task ExposeBindingAsync(string name, string functionString)
+        {
+            await Client.SendAsync(new RuntimeAddBindingRequest { Name = name }).ConfigureAwait(false);
+            await Client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest { Source = functionString }).ConfigureAwait(false);
+
+            try
+            {
+                await Task.WhenAll(Page.Frames.Select(frame => frame.EvaluateAsync(functionString))).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
+
+        public Task EvaluateOnNewDocumentAsync(string source)
+            => Client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest { Source = source });
 
         public async Task<IFrame> GetContentFrameAsync(ElementHandle handle)
         {
@@ -380,6 +399,9 @@ namespace PlaywrightSharp.Chromium
                     case RuntimeConsoleAPICalledChromiumEvent runtimeConsoleAPICalled:
                         OnConsoleAPI(runtimeConsoleAPICalled);
                         break;
+                    case RuntimeBindingCalledChromiumEvent runtimeBindingCalled:
+                        await OnBindingCalled(runtimeBindingCalled).ConfigureAwait(false);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -391,6 +413,12 @@ namespace PlaywrightSharp.Chromium
                 */
                 Client.OnClosed(ex.Message);
             }
+        }
+
+        private Task OnBindingCalled(RuntimeBindingCalledChromiumEvent e)
+        {
+            var context = ContextIdToContext[e.ExecutionContextId.Value];
+            return Page.OnBindingCalledAsync(e.Payload, context);
         }
 
         private void OnConsoleAPI(RuntimeConsoleAPICalledChromiumEvent e)
@@ -413,7 +441,7 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            var context = _contextIdToContext[e.ExecutionContextId.Value];
+            var context = ContextIdToContext[e.ExecutionContextId.Value];
             var values = e.Args.Select(arg => context.CreateHandle(arg));
             Page.AddConsoleMessage(e.Type.ToEnum<ConsoleType>(), values.ToArray(), ToConsoleMessageLocation(e.StackTrace));
         }
@@ -483,7 +511,7 @@ namespace PlaywrightSharp.Chromium
 
         private void OnExecutionContextsCleared()
         {
-            foreach (int contextId in _contextIdToContext.Keys)
+            foreach (int contextId in ContextIdToContext.Keys)
             {
                 OnExecutionContextDestroyed(contextId);
             }
@@ -491,12 +519,12 @@ namespace PlaywrightSharp.Chromium
 
         private void OnExecutionContextDestroyed(int executionContextId)
         {
-            if (!_contextIdToContext.TryGetValue(executionContextId, out var context))
+            if (!ContextIdToContext.TryGetValue(executionContextId, out var context))
             {
                 return;
             }
 
-            _contextIdToContext.Remove(executionContextId);
+            ContextIdToContext.Remove(executionContextId);
             context.Frame.ContextDestroyed(context);
         }
 
@@ -530,7 +558,7 @@ namespace PlaywrightSharp.Chromium
                 frame.ContextCreated(ContextType.Utility, context);
             }
 
-            _contextIdToContext[contextPayload.Id.Value] = context;
+            ContextIdToContext[contextPayload.Id.Value] = context;
         }
 
         private void OnLifecycleEvent(PageLifecycleEventChromiumEvent e)
