@@ -58,9 +58,9 @@ namespace PlaywrightSharp
         /// <summary>
         /// Dispatches a <c>keypress</c> and <c>input</c> event. This does not send a <c>keydown</c> or <c>keyup</c> event.
         /// </summary>
-        /// <param name="charText">Character to send into the page.</param>
+        /// <param name="text">Character to send into the page.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SendCharactersAsync(string charText);
+        Task SendCharactersAsync(string text);
 
         /// <summary>
         /// Ensure click modifiers.
