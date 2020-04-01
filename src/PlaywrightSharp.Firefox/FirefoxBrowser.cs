@@ -201,11 +201,11 @@ namespace PlaywrightSharp.Firefox
 
             if (opener?.PageTask != null)
             {
-                var page = await opener.PageTask.ConfigureAwait(false);
-                if (page.HasPopupEventListeners)
+                var openerPage = await opener.PageTask.ConfigureAwait(false);
+                if (openerPage.HasPopupEventListeners)
                 {
-                    var popupPage = await target.CreatePageAsync().ConfigureAwait(false);
-                    popupPage.OnPopup(this);
+                    var popupPage = await target.GetPageAsync().ConfigureAwait(false);
+                    openerPage.OnPopup(popupPage);
                 }
             }
 

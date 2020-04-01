@@ -22,32 +22,45 @@ namespace PlaywrightSharp.Firefox
         {
             if (!StringExtensions.IsJavascriptFunction(ref pageFunction))
             {
-                var payload = await _session.SendAsync(new RuntimeEvaluateRequest
+                var result = await _session.SendAsync(new RuntimeEvaluateRequest
                 {
                     Expression = pageFunction.Trim(),
                     ReturnByValue = returnByValue,
                     ExecutionContextId = _executionContextId,
                 }).ConfigureAwait(false);
-                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
+                return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, frameExecutionContext);
             }
 
-            string functionText = pageFunction;
-            var callFunctionTask = _session.SendAsync(new RuntimeCallFunctionRequest
+            RuntimeCallFunctionResponse payload = null;
+
+            try
             {
-                FunctionDeclaration = functionText,
-                Args = Array.ConvertAll(args, arg => FormatArgument(arg, frameExecutionContext)),
-                ReturnByValue = returnByValue,
-                ExecutionContextId = _executionContextId,
-            });
-            {
-                var payload = await callFunctionTask.ConfigureAwait(false);
-                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
+                string functionText = pageFunction;
+                payload = await _session.SendAsync(new RuntimeCallFunctionRequest
+                {
+                    FunctionDeclaration = functionText,
+                    Args = Array.ConvertAll(args, arg => FormatArgument(arg, frameExecutionContext)),
+                    ReturnByValue = returnByValue,
+                    ExecutionContextId = _executionContextId,
+                }).ConfigureAwait(false);
             }
+            catch (Exception ex)
+            {
+                payload = RewriteError(ex);
+            }
+
+            return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
         }
 
-        public string HandleToString(IJSHandle arg, bool includeType)
+        public string HandleToString(IJSHandle handle, bool includeType)
         {
-            throw new System.NotImplementedException();
+            var payload = ((JSHandle)handle).RemoteObject;
+            if (!string.IsNullOrEmpty(payload.ObjectId))
+            {
+                return "JSHandle@" + (string.IsNullOrEmpty(payload.Subtype) ? payload.Type : payload.Subtype);
+            }
+
+            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue(payload);
         }
 
         public Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle) => throw new NotImplementedException();
@@ -57,12 +70,27 @@ namespace PlaywrightSharp.Firefox
             throw new System.NotImplementedException();
         }
 
+        private RuntimeCallFunctionResponse RewriteError(Exception error)
+        {
+            if (error.Message.Contains("Ccyclic object value") || error.Message.Contains("Object is not serializable"))
+            {
+                return new RuntimeCallFunctionResponse { Result = new RemoteObject { Type = RemoteObjectType.Undefined, Value = null } };
+            }
+
+            if (error.Message.Contains("Failed to find execution context with id") || error.Message.Contains("Execution context was destroyed!"))
+            {
+                throw new PlaywrightSharpException("Execution context was destroyed, most likely because of a navigation.");
+            }
+
+            throw error;
+        }
+
         private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, FrameExecutionContext context)
         {
             CheckException(exceptionDetails);
             if (returnByValue)
             {
-                return DeserializeValue<T>(remoteObject);
+                return (T)DeserializeValue(remoteObject);
             }
 
             return (T)CreateHandle(remoteObject, context);
@@ -123,21 +151,15 @@ namespace PlaywrightSharp.Firefox
                 ObjectId = remoteObject.ObjectId,
             };
 
-        private T DeserializeValue<T>(RemoteObject remoteObject)
-        {
-            var unserializableValue = remoteObject.UnserializableValue;
-            if (unserializableValue != null)
+        private object DeserializeValue(IRemoteObject remoteObject)
+            => remoteObject.UnserializableValue switch
             {
-                return (T)ValueFromUnserializableValue(unserializableValue.Value);
-            }
-
-            if (remoteObject.Value == null)
-            {
-                return default;
-            }
-
-            return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type ?? RemoteObjectType.Object);
-        }
+                "Infinity" => double.PositiveInfinity,
+                "-Infinity" => double.NegativeInfinity,
+                "-0" => -0,
+                "NaN" => double.NaN,
+                _ => remoteObject.UnserializableValue,
+            };
 
         private object CreateHandle(RemoteObject remoteObject, FrameExecutionContext context) => new JSHandle(context, remoteObject);
 

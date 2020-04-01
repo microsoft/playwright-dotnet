@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json;
@@ -25,7 +26,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="FrameExecutionContext"/> map.
         /// </summary>
-        Dictionary<int, FrameExecutionContext> ContextIdToContext { get; }
+        ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; }
 
         /// <summary>
         /// Navigates a frame to an url.

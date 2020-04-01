@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Helper;
@@ -27,7 +28,6 @@ namespace PlaywrightSharp.Firefox
         private readonly IBrowserContext _context;
         private readonly Func<Task<Page>> _openerResolver;
         private readonly ConcurrentDictionary<string, WorkerSession> _workers = new ConcurrentDictionary<string, WorkerSession>();
-        private readonly ConcurrentDictionary<string, FrameExecutionContext> _contextIdToContext = new ConcurrentDictionary<string, FrameExecutionContext>();
 
         public FirefoxPage(FirefoxSession session, IBrowserContext context, Func<Task<Page>> openerResolver)
         {
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Firefox
 
         public IRawMouse RawMouse { get; }
 
-        public Dictionary<int, FrameExecutionContext> ContextIdToContext { get; }
+        public ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; } = new ConcurrentDictionary<object, FrameExecutionContext>();
 
         internal Page Page { get; }
 
@@ -85,10 +85,7 @@ namespace PlaywrightSharp.Firefox
             return Convert.FromBase64String(response.Data);
         }
 
-        public bool IsElementHandle(IRemoteObject remoteObject)
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject.Subtype == "node";
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
@@ -210,6 +207,7 @@ namespace PlaywrightSharp.Firefox
                 case PageUncaughtErrorFirefoxEvent pageUncaughtError:
                     break;
                 case RuntimeConsoleFirefoxEvent runtimeConsole:
+                    OnConsole(runtimeConsole);
                     break;
                 case PageDialogOpenedFirefoxEvent pageDialogOpened:
                     break;
@@ -227,6 +225,20 @@ namespace PlaywrightSharp.Firefox
                     OnDispatchMessageFromWorker(pageDispatchMessageFromWorker);
                     break;
             }
+        }
+
+        private void OnConsole(RuntimeConsoleFirefoxEvent e)
+        {
+            var context = ContextIdToContext[e.ExecutionContextId];
+            Page.AddConsoleMessage(
+                e.Type.ToEnum<ConsoleType>(),
+                e.Args.Select(arg => context.CreateHandle(arg)).ToArray(),
+                new ConsoleMessageLocation
+                {
+                    URL = e.Location.Url,
+                    LineNumber = Convert.ToInt32(e.Location.LineNumber),
+                    ColumnNumber = Convert.ToInt32(e.Location.ColumnNumber),
+                });
         }
 
         private void OnEventFired(PageEventFiredFirefoxEvent pageEventFired)
@@ -276,13 +288,13 @@ namespace PlaywrightSharp.Firefox
                     frame.ContextCreated(ContextType.Main, context);
                 }
 
-                _contextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
+                ContextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
             }
         }
 
         private void OnExecutionContextDestroyed(RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed)
         {
-            if (_contextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
+            if (ContextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
             {
                 context.Frame.ContextDestroyed(context);
             }

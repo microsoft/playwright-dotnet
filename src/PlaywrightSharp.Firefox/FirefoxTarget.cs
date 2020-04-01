@@ -47,12 +47,15 @@ namespace PlaywrightSharp.Firefox
         internal Task<Page> PageTask { get; set; }
 
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
-        public async Task<IPage> GetPageAsync() => await CreatePageAsync().ConfigureAwait(false);
+        async Task<IPage> ITarget.GetPageAsync() => await GetPageAsync().ConfigureAwait(false);
 
+        /// <inheritdoc cref="ITarget.GetWorkerAsync"/>
         public Task<IWorker> GetWorkerAsync()
         {
             throw new NotImplementedException();
         }
+
+        internal Task<Page> GetPageAsync() => CreatePageAsync();
 
         internal void DidClose() => _page?.DidClose();
 
