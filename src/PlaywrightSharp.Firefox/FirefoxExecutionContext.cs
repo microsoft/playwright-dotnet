@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Firefox
 
         public Task ReleaseHandleAsync(JSHandle handle)
         {
-            if (handle?.RemoteObject?.ObjectId == null)
+            if (string.IsNullOrEmpty(handle?.RemoteObject.ObjectId))
             {
                 return Task.CompletedTask;
             }
