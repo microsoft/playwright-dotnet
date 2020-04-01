@@ -174,9 +174,9 @@ namespace PlaywrightSharp.Firefox
                     tasks.Add(_session.SendAsync(new PageSetBypassCSPRequest { Enabled = true }));
                 }
 
-                if (options.JavaScriptEnabled)
+                if (!options.JavaScriptEnabled)
                 {
-                    tasks.Add(_session.SendAsync(new PageSetJavascriptEnabledRequest { Enabled = true }));
+                    tasks.Add(_session.SendAsync(new PageSetJavascriptEnabledRequest { Enabled = false }));
                 }
 
                 if (options.UserAgent != null)
