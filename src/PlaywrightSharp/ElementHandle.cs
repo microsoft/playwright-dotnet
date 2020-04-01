@@ -127,10 +127,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.HoverAsync"/>
-        public Task HoverAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.MoveAsync(point.X, point.Y), options);
 
         /// <inheritdoc cref="IElementHandle.PressAsync"/>
         public Task PressAsync(string key, PressOptions options = null)
@@ -241,7 +238,7 @@ namespace PlaywrightSharp
             return await utility.EvaluateAsync<T>(pageFunction, list.ToArray()).ConfigureAwait(false);
         }
 
-        private async Task PerformPointerActionAsync(Func<Point, Task> action, ClickOptions options)
+        private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {
             var point = await EnsurePointerActionPointAsync(options?.RelativePoint).ConfigureAwait(false);
             Modifier[] restoreModifiers = null;

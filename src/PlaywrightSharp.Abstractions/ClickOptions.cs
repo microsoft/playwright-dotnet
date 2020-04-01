@@ -6,7 +6,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Options to use when clicking.
     /// </summary>
-    public class ClickOptions : WaitForSelectorOptions
+    public class ClickOptions : WaitForSelectorOptions, IPointerActionOptions
     {
         /// <summary>
         /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults to 0.
