@@ -136,9 +136,19 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
-        public Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
+        public async Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
         {
-            throw new NotImplementedException();
+            var response = await _session.SendAsync(new PageDescribeNodeRequest
+            {
+                FrameId = elementHandle.FrameExecutionContext.Frame.Id,
+                ObjectId = elementHandle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(response.ContentFrameId))
+            {
+                return null;
+            }
+
+            return Page.FrameManager.Frames[response.ContentFrameId];
         }
 
         internal async Task InitializeAsync()
@@ -242,7 +252,7 @@ namespace PlaywrightSharp.Firefox
         {
             var context = ContextIdToContext[e.ExecutionContextId];
             Page.AddConsoleMessage(
-                e.Type.ToEnum<ConsoleType>(),
+                e.GetConsoleType(),
                 e.Args.Select(arg => context.CreateHandle(arg)).ToArray(),
                 new ConsoleMessageLocation
                 {

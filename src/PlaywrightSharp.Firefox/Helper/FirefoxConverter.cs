@@ -7,7 +7,8 @@ namespace PlaywrightSharp.Firefox.Helper
 {
     internal static class FirefoxConverter
     {
-        public static ConsoleType GetConsoleType(this RuntimeConsoleFirefoxEvent runtimeConsole) => runtimeConsole.Type.ToEnum<ConsoleType>();
+        public static ConsoleType GetConsoleType(this RuntimeConsoleFirefoxEvent runtimeConsole)
+            => runtimeConsole.Type == "warn" ? ConsoleType.Warning : runtimeConsole.Type.ToEnum<ConsoleType>();
 
         public static string ToStringValue(this RemoteObjectUnserializableValue value)
         {
