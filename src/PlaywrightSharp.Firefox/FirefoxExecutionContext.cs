@@ -10,13 +10,14 @@ namespace PlaywrightSharp.Firefox
     internal class FirefoxExecutionContext : IExecutionContextDelegate
     {
         private readonly FirefoxSession _session;
-        private readonly string _executionContextId;
 
         public FirefoxExecutionContext(FirefoxSession workerSession, string executionContextId)
         {
             _session = workerSession;
-            _executionContextId = executionContextId;
+            ExecutionContextId = executionContextId;
         }
+
+        internal string ExecutionContextId { get; }
 
         public async Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args)
         {
@@ -26,7 +27,7 @@ namespace PlaywrightSharp.Firefox
                 {
                     Expression = pageFunction.Trim(),
                     ReturnByValue = returnByValue,
-                    ExecutionContextId = _executionContextId,
+                    ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
                 return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, frameExecutionContext);
             }
@@ -41,7 +42,7 @@ namespace PlaywrightSharp.Firefox
                     FunctionDeclaration = functionText,
                     Args = Array.ConvertAll(args, arg => FormatArgument(arg, frameExecutionContext)),
                     ReturnByValue = returnByValue,
-                    ExecutionContextId = _executionContextId,
+                    ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -60,19 +61,28 @@ namespace PlaywrightSharp.Firefox
                 return "JSHandle@" + (string.IsNullOrEmpty(payload.Subtype) ? payload.Type : payload.Subtype);
             }
 
-            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue(payload);
+            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<object>((RemoteObject)payload);
         }
 
         public Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle) => throw new NotImplementedException();
 
         public Task ReleaseHandleAsync(JSHandle handle)
         {
-            throw new System.NotImplementedException();
+            if (handle?.RemoteObject?.ObjectId == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            return _session.SendAsync(new RuntimeDisposeObjectRequest
+            {
+                ExecutionContextId = ExecutionContextId,
+                ObjectId = handle.RemoteObject.ObjectId,
+            });
         }
 
         private RuntimeCallFunctionResponse RewriteError(Exception error)
         {
-            if (error.Message.Contains("Ccyclic object value") || error.Message.Contains("Object is not serializable"))
+            if (error.Message.Contains("Cyclic object value") || error.Message.Contains("Object is not serializable"))
             {
                 return new RuntimeCallFunctionResponse { Result = new RemoteObject { Type = RemoteObjectType.Undefined, Value = null } };
             }
@@ -90,10 +100,10 @@ namespace PlaywrightSharp.Firefox
             CheckException(exceptionDetails);
             if (returnByValue)
             {
-                return (T)DeserializeValue(remoteObject);
+                return DeserializeValue<T>(remoteObject);
             }
 
-            return (T)CreateHandle(remoteObject, context);
+            return (T)context.CreateHandle(remoteObject);
         }
 
         private void CheckException(ExceptionDetails exceptionDetails)
@@ -151,17 +161,21 @@ namespace PlaywrightSharp.Firefox
                 ObjectId = remoteObject.ObjectId,
             };
 
-        private object DeserializeValue(IRemoteObject remoteObject)
-            => remoteObject.UnserializableValue switch
+        private T DeserializeValue<T>(RemoteObject remoteObject)
+        {
+            var unserializableValue = remoteObject.UnserializableValue;
+            if (unserializableValue != null)
             {
-                "Infinity" => double.PositiveInfinity,
-                "-Infinity" => double.NegativeInfinity,
-                "-0" => -0,
-                "NaN" => double.NaN,
-                _ => remoteObject.UnserializableValue,
-            };
+                return (T)ValueFromUnserializableValue(unserializableValue.Value);
+            }
 
-        private object CreateHandle(RemoteObject remoteObject, FrameExecutionContext context) => new JSHandle(context, remoteObject);
+            if (remoteObject.Value == null)
+            {
+                return default;
+            }
+
+            return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type ?? RemoteObjectType.Object);
+        }
 
         private object ValueFromUnserializableValue(RemoteObjectUnserializableValue unserializableValue)
             => unserializableValue switch

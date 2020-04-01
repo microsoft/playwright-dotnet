@@ -11,13 +11,14 @@ namespace PlaywrightSharp.Firefox.Protocol.Runtime
 
         string IRemoteObject.UnserializableValue => UnserializableValue?.ToStringValue();
 
-        internal static RemoteObjectUnserializableValue GetUnserializableValueFromRaw(string value)
+        internal static RemoteObjectUnserializableValue? GetUnserializableValueFromRaw(string value)
             => value switch
             {
                 "Infinity" => RemoteObjectUnserializableValue.Infinity,
                 "-Infinity" => RemoteObjectUnserializableValue.NegativeInfinity,
                 "-0" => RemoteObjectUnserializableValue.NegativeZero,
                 "NaN" => RemoteObjectUnserializableValue.NaN,
+                null => null,
                 _ => throw new ArgumentOutOfRangeException(nameof(value))
             };
     }

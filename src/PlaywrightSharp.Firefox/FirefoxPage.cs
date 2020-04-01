@@ -50,9 +50,15 @@ namespace PlaywrightSharp.Firefox
 
         internal Page Page { get; }
 
-        public Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
+        public async Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
         {
-            throw new System.NotImplementedException();
+            var result = await _session.SendAsync(new PageAdoptNodeRequest
+            {
+                FrameId = handle.FrameExecutionContext.Frame.Id,
+                ObjectId = handle.RemoteObject.ObjectId,
+                ExecutionContextId = ((FirefoxExecutionContext)to.Delegate).ExecutionContextId,
+            }).ConfigureAwait(false);
+            return to.CreateHandle(result.RemoteObject) as ElementHandle;
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)
@@ -85,7 +91,7 @@ namespace PlaywrightSharp.Firefox
             return Convert.FromBase64String(response.Data);
         }
 
-        public bool IsElementHandle(IRemoteObject remoteObject) => remoteObject.Subtype == "node";
+        public bool IsElementHandle(IRemoteObject remoteObject) => ((RemoteObject)remoteObject).Subtype == RemoteObjectSubtype.Node;
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
@@ -111,9 +117,14 @@ namespace PlaywrightSharp.Firefox
             },
         });
 
-        public Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
+        public async Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
         {
-            throw new NotImplementedException();
+            var response = await _session.SendAsync(new PageGetBoundingBoxRequest
+            {
+                FrameId = handle.FrameExecutionContext.Frame.Id,
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            return response.BoundingBox;
         }
 
         public Task ExposeBindingAsync(string name, string functionString) => throw new NotImplementedException();

@@ -243,7 +243,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
         public async Task SetContentAsync(string html, NavigationOptions options = null)
         {
-            string tag = $"--playwright--set--content--{Id}--${++_setContentCounter}--";
+            string tag = $"--playwright--set--content--{Id}--{++_setContentCounter}--";
             var context = await GetUtilityContextAsync().ConfigureAwait(false);
             LifecycleWatcher watcher = null;
 

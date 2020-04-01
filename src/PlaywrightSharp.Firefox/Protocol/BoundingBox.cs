@@ -9,5 +9,13 @@ namespace PlaywrightSharp.Firefox.Protocol.Page
             Height = rect.Height,
             Width = rect.Width,
         };
+
+        public static implicit operator Rect(BoundingBox boundingBox) => boundingBox == null ? null : new Rect
+        {
+            X = (double)boundingBox.X,
+            Y = (double)boundingBox.Y,
+            Height = (double)boundingBox.Height,
+            Width = (double)boundingBox.Width,
+        };
     }
 }
