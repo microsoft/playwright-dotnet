@@ -271,7 +271,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldReturnNegative0()
         {
-            int result = await Page.EvaluateAsync<int>("() => -0");
+            double result = await Page.EvaluateAsync<double>("() => -0");
             Assert.Equal(-0, result);
         }
 

@@ -146,7 +146,7 @@ namespace PlaywrightSharp.Firefox
                 case double d when double.IsPositiveInfinity(d):
                     return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.Infinity };
                 case double d when double.IsNegativeInfinity(d):
-                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeZero };
+                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeInfinity };
                 case double d when double.IsNaN(d):
                     return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NaN };
                 case JSHandle objectHandle:
@@ -182,8 +182,7 @@ namespace PlaywrightSharp.Firefox
             var unserializableValue = remoteObject.UnserializableValue;
             if (unserializableValue != null)
             {
-                object raw = ValueFromUnserializableValue(unserializableValue.Value);
-                return (T)raw;
+                return (T)ValueFromUnserializableValue(unserializableValue.Value);
             }
 
             if (remoteObject.Value == null)
