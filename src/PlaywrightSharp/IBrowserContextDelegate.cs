@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -46,5 +47,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task CloseAsync();
+
+        /// <summary>
+        /// Gets all the existing pages in the context.
+        /// </summary>
+        /// <returns>A list of pages.</returns>
+        IEnumerable<IPage> GetExistingPages();
     }
 }

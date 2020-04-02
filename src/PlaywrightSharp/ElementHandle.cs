@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Esprima.Ast;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
@@ -21,8 +23,12 @@ namespace PlaywrightSharp
 
         internal FrameExecutionContext FrameExecutionContext { get; set; }
 
-        /// <inheritdoc cref="IElementHandle"/>
+        /// <inheritdoc cref="IElementHandle.ClickAsync(ClickOptions)"/>
         public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.ClickAsync(point.X, point.Y, options), options);
+
+        /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
+        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
+            => FrameExecutionContext.EvaluateHandleAsync(script, args.InsertAt(0, this));
 
         /// <inheritdoc cref="IElementHandle.EvaluateAsync{T}(string, object[])"/>
         public Task<T> EvaluateAsync<T>(string script, params object[] args)
@@ -115,9 +121,24 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
-        public Task<IFrame> GetOwnerFrameAsync()
+        public async Task<IFrame> GetOwnerFrameAsync()
         {
-            throw new NotImplementedException();
+            string frameId = await _page.Delegate.GetOwnerFrameAsync(this).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(frameId))
+            {
+                return null;
+            }
+
+            var pages = _page.BrowserContext.GetExistingPages();
+            foreach (var page in pages)
+            {
+                if (((Page)page).FrameManager.Frames.TryGetValue(frameId, out var frame))
+                {
+                    return frame;
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc cref="IElementHandle.GetVisibleRatioAsync"/>
@@ -233,9 +254,7 @@ namespace PlaywrightSharp
         private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
         {
             var utility = await FrameExecutionContext.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            var list = new List<object>(args);
-            list.Insert(0, this);
-            return await utility.EvaluateAsync<T>(pageFunction, list.ToArray()).ConfigureAwait(false);
+            return await utility.EvaluateAsync<T>(pageFunction, args.InsertAt(0, this)).ConfigureAwait(false);
         }
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)

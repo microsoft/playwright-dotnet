@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Protocol.Target;
@@ -54,6 +55,8 @@ namespace PlaywrightSharp.Firefox
             }).ConfigureAwait(false);
             _browser.Contexts.Remove(_browserContextId);
         }
+
+        public IEnumerable<IPage> GetExistingPages() => throw new System.NotImplementedException();
 
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
         {

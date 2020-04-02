@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Firefox
 
         public async Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args)
         {
-            if (!StringExtensions.IsJavascriptFunction(ref pageFunction))
+            if (!pageFunction.IsJavascriptFunction())
             {
                 var result = await _session.SendAsync(new RuntimeEvaluateRequest
                 {

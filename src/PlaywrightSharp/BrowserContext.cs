@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -71,6 +73,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IBrowserContext.ClearPermissionsAsync"/>
         public Task ClearPermissionsAsync() => throw new System.NotImplementedException();
+
+        /// <inheritdoc cref="IBrowserContext.GetExistingPages"/>
+        public IEnumerable<IPage> GetExistingPages() => _delegate.GetExistingPages();
 
         /// <inheritdoc cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/>
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)

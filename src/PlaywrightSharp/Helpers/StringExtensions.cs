@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Helpers
         /// </summary>
         /// <param name="script">Script to evaluate.</param>
         /// <returns>Whether the script is a function or not.</returns>
-        public static bool IsJavascriptFunction(ref string script)
+        public static bool IsJavascriptFunction(this string script)
         {
             try
             {
@@ -97,8 +97,7 @@ namespace PlaywrightSharp.Helpers
             catch (ParserException)
             {
                 // Retry using parenthesis
-                script = $"({script})";
-                var parser = new JavaScriptParser(script);
+                var parser = new JavaScriptParser($"({script})");
                 var program = parser.ParseScript();
 
                 if (program.Body.Count > 0)

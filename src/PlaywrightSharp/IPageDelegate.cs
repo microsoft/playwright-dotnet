@@ -170,5 +170,12 @@ namespace PlaywrightSharp
         /// </example>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved.</returns>
         Task EvaluateOnNewDocumentAsync(string source);
+
+        /// <summary>
+        /// Get's the frame ID associated to the <see cref="ElementHandle"/>.
+        /// </summary>
+        /// <param name="elementHandle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the frame is found, yielding its frame ID.</returns>
+        Task<string> GetOwnerFrameAsync(ElementHandle elementHandle);
     }
 }

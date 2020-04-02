@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Helpers
         {
         }
 
-        public TempDirectory(string path)
+        private TempDirectory(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Helpers
             }
 
             Directory.CreateDirectory(path);
-            this.Path = path;
+            Path = path;
         }
 
         ~TempDirectory()
@@ -43,23 +43,12 @@ namespace PlaywrightSharp.Helpers
 
         public override string ToString() => Path;
 
-        public Task DeleteAsync(CancellationToken cancellationToken = default)
-            => _deleteTask ?? (_deleteTask = DeleteAsync(Path, cancellationToken));
-
-        protected void Dispose(bool disposing)
-        {
-            if (_deleteTask == null && disposing)
-            {
-                _ = DeleteAsync();
-            }
-        }
-
         private static async Task DeleteAsync(string path, CancellationToken cancellationToken = default)
         {
-            const int minDelayInMsec = 200;
-            const int maxDelayInMsec = 8000;
+            const int minDelayInMs = 200;
+            const int maxDelayInMs = 8000;
 
-            var retryDelay = minDelayInMsec;
+            int retryDelay = minDelayInMs;
             while (true)
             {
                 if (!Directory.Exists(path))
@@ -76,11 +65,22 @@ namespace PlaywrightSharp.Helpers
                 catch (IOException)
                 {
                     await Task.Delay(retryDelay, cancellationToken).ConfigureAwait(false);
-                    if (retryDelay < maxDelayInMsec)
+                    if (retryDelay < maxDelayInMs)
                     {
-                        retryDelay = Math.Min(2 * retryDelay, maxDelayInMsec);
+                        retryDelay = Math.Min(2 * retryDelay, maxDelayInMs);
                     }
                 }
+            }
+        }
+
+        private Task DeleteAsync(CancellationToken cancellationToken = default)
+            => _deleteTask ??= DeleteAsync(Path, cancellationToken);
+
+        private void Dispose(bool disposing)
+        {
+            if (_deleteTask == null && disposing)
+            {
+                _ = DeleteAsync();
             }
         }
     }
