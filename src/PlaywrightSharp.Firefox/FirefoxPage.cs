@@ -130,7 +130,11 @@ namespace PlaywrightSharp.Firefox
 
         public Task ExposeBindingAsync(string name, string functionString) => throw new NotImplementedException();
 
-        public Task EvaluateOnNewDocumentAsync(string source) => throw new NotImplementedException();
+        public Task EvaluateOnNewDocumentAsync(string source)
+            => _session.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            {
+                Script = source,
+            });
 
         public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
