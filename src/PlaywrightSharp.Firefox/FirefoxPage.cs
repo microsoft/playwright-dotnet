@@ -128,7 +128,15 @@ namespace PlaywrightSharp.Firefox
             return response.BoundingBox;
         }
 
-        public Task ExposeBindingAsync(string name, string functionString) => throw new NotImplementedException();
+        public async Task ExposeBindingAsync(string name, string functionString)
+        {
+            await _session.SendAsync(new PageAddBindingRequest { Name = name }).ConfigureAwait(false);
+            await _session.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            {
+                Script = functionString,
+            }).ConfigureAwait(false);
+            await Task.WhenAll(Array.ConvertAll(Page.Frames, frame => frame.EvaluateAsync(functionString))).ConfigureAwait(false);
+        }
 
         public Task EvaluateOnNewDocumentAsync(string source)
             => _session.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
@@ -239,6 +247,7 @@ namespace PlaywrightSharp.Firefox
                 case PageDialogOpenedFirefoxEvent pageDialogOpened:
                     break;
                 case PageBindingCalledFirefoxEvent pageBindingCalled:
+                    OnBindingCalled(pageBindingCalled);
                     break;
                 case PageFileChooserOpenedFirefoxEvent pageFileChooserOpened:
                     break;
@@ -339,6 +348,12 @@ namespace PlaywrightSharp.Firefox
                     ContextIdToContext.TryRemove(pair.Key, out _);
                 }
             }
+        }
+
+        private void OnBindingCalled(PageBindingCalledFirefoxEvent pageBindingCalled)
+        {
+            var context = ContextIdToContext[pageBindingCalled.ExecutionContextId];
+            _ = Page.OnBindingCalledAsync(pageBindingCalled.Payload.ToString(), context);
         }
 
         private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)
