@@ -553,6 +553,8 @@ namespace PlaywrightSharp
 
         internal void OnFrameAttached(IFrame frame) => FrameAttached?.Invoke(this, new FrameEventArgs(frame));
 
+        internal void OnFrameDetached(IFrame frame) => FrameDetached?.Invoke(this, new FrameEventArgs(frame));
+
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
         internal void OnLoad() => Load?.Invoke(this, new EventArgs());

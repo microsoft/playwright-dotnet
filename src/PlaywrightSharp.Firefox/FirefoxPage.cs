@@ -40,6 +40,7 @@ namespace PlaywrightSharp.Firefox
             RawMouse = new FirefoxRawMouse(session);
 
             session.MessageReceived += OnMessageReceived;
+            Page.FrameDetached += RemoveContextsForFrame;
         }
 
         public IRawKeyboard RawKeyboard { get; }
@@ -209,6 +210,7 @@ namespace PlaywrightSharp.Firefox
                     OnFrameAttached(pageFrameAttached);
                     break;
                 case PageFrameDetachedFirefoxEvent pageFrameDetached:
+                    OnFrameDetached(pageFrameDetached);
                     break;
                 case PageNavigationAbortedFirefoxEvent pageNavigationAborted:
                     break;
@@ -278,6 +280,9 @@ namespace PlaywrightSharp.Firefox
         private void OnFrameAttached(PageFrameAttachedFirefoxEvent pageFrameAttached)
             => Page.FrameManager.FrameAttached(pageFrameAttached.FrameId, pageFrameAttached.ParentFrameId);
 
+        private void OnFrameDetached(PageFrameDetachedFirefoxEvent pageFrameDetached)
+            => Page.FrameManager.FrameDetached(pageFrameDetached.FrameId);
+
         private void OnNavigationCommitted(PageNavigationCommittedFirefoxEvent pageNavigationCommitted)
         {
             foreach (var pair in _workers)
@@ -318,6 +323,17 @@ namespace PlaywrightSharp.Firefox
             if (ContextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
             {
                 context.Frame.ContextDestroyed(context);
+            }
+        }
+
+        private void RemoveContextsForFrame(object sender, FrameEventArgs e)
+        {
+            foreach (var pair in ContextIdToContext)
+            {
+                if (pair.Value.Frame == e.Frame)
+                {
+                    ContextIdToContext.TryRemove(pair.Key, out _);
+                }
             }
         }
 
