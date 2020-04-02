@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.hover</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ElementHandleHoverTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandleHoverTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandleHoverTests(ITestOutputHelper output) : base(output)
         {
         }
 
