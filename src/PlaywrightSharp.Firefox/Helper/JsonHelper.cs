@@ -1,5 +1,8 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
-using PlaywrightSharp.Firefox.Protocol;
+using System.Text.Json.Serialization;
+using System.Text.Unicode;
+using PlaywrightSharp.Firefox.Protocol.Runtime;
 using DefaultJsonHelper = PlaywrightSharp.Helpers.JsonHelper;
 
 namespace PlaywrightSharp.Firefox.Helper
@@ -14,8 +17,7 @@ namespace PlaywrightSharp.Firefox.Helper
                 IgnoreNullValues = DefaultJsonHelper.DefaultJsonSerializerOptions.IgnoreNullValues,
                 Converters =
                 {
-                    new RemoteObjectUnserializableValueConverter(),
-                    DefaultJsonHelper.DefaultJsonSerializerOptions.Converters[0],
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
                 },
             };
         }

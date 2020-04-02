@@ -21,54 +21,36 @@ namespace PlaywrightSharp.Firefox
 
         public async Task<T> EvaluateAsync<T>(ExecutionContext context, bool returnByValue, string pageFunction, object[] args)
         {
-            if (!pageFunction.IsJavascriptFunction())
+            if (!StringExtensions.IsJavascriptFunction(ref pageFunction))
             {
-                var payload = await _session.SendAsync(new RuntimeEvaluateRequest
+                var result = await _session.SendAsync(new RuntimeEvaluateRequest
                 {
                     Expression = pageFunction.Trim(),
                     ReturnByValue = returnByValue,
                     ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
-
-                // TODO: rewriteError
-                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, context);
+                return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, context);
             }
 
-            string functionText = pageFunction;
-            var callFunctionTask = _session.SendAsync(new RuntimeCallFunctionRequest
-            {
-                FunctionDeclaration = functionText,
-                Args = Array.ConvertAll(args, arg => FormatArgument(arg, context)),
-                ReturnByValue = returnByValue,
-                ExecutionContextId = ExecutionContextId,
-            });
-
-            // TODO: validate request
-            {
-                var payload = await callFunctionTask.ConfigureAwait(false);
-                return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, context);
-            }
-        }
-
-        public async Task ReleaseHandleAsync(JSHandle handle)
-        {
-            if (handle.RemoteObject?.ObjectId == null)
-            {
-                return;
-            }
+            RuntimeCallFunctionResponse payload = null;
 
             try
             {
-                await _session.SendAsync(new RuntimeDisposeObjectRequest
+                string functionText = pageFunction;
+                payload = await _session.SendAsync(new RuntimeCallFunctionRequest
                 {
+                    FunctionDeclaration = functionText,
+                    Args = Array.ConvertAll(args, arg => FormatArgument(arg, context)),
+                    ReturnByValue = returnByValue,
                     ExecutionContextId = ExecutionContextId,
-                    ObjectId = handle.RemoteObject.ObjectId,
                 }).ConfigureAwait(false);
             }
-            catch (PlaywrightSharpException e)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(e);
+                payload = RewriteError(ex);
             }
+
+            return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, context);
         }
 
         public string HandleToString(IJSHandle handle, bool includeType)
@@ -80,6 +62,37 @@ namespace PlaywrightSharp.Firefox
             }
 
             return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<string>((RemoteObject)payload);
+        }
+
+        public Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle) => throw new NotImplementedException();
+
+        public Task ReleaseHandleAsync(JSHandle handle)
+        {
+            if (string.IsNullOrEmpty(handle?.RemoteObject.ObjectId))
+            {
+                return Task.CompletedTask;
+            }
+
+            return _session.SendAsync(new RuntimeDisposeObjectRequest
+            {
+                ExecutionContextId = ExecutionContextId,
+                ObjectId = handle.RemoteObject.ObjectId,
+            });
+        }
+
+        private RuntimeCallFunctionResponse RewriteError(Exception error)
+        {
+            if (error.Message.Contains("Cyclic object value") || error.Message.Contains("Object is not serializable"))
+            {
+                return new RuntimeCallFunctionResponse { Result = new RemoteObject { Type = RemoteObjectType.Undefined, Value = null } };
+            }
+
+            if (error.Message.Contains("Failed to find execution context with id") || error.Message.Contains("Execution context was destroyed!"))
+            {
+                throw new PlaywrightSharpException("Execution context was destroyed, most likely because of a navigation.");
+            }
+
+            throw error;
         }
 
         private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, ExecutionContext context)

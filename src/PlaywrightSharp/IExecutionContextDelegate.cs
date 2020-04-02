@@ -36,5 +36,13 @@ namespace PlaywrightSharp
         /// <param name="includeType">Whether to include the type or not.</param>
         /// <returns>An <see cref="string"/> representation of the handle.</returns>
         string HandleToString(IJSHandle handle, bool includeType);
+
+        /// <summary>
+        /// Get a JSON representation of an <see cref="IJSHandle"/>.
+        /// </summary>
+        /// <param name="jsHandle">Handle to evaluate.</param>
+        /// <typeparam name="T">Type to convert the JSON object to.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when the JSON value is obtained and parsed, yielding a parsed object.</returns>
+        Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle);
     }
 }

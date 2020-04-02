@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
@@ -10,6 +9,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class SetUserAgentTests : PlaywrightSharpBrowserContextBaseTest
     {
@@ -47,9 +47,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
             page = await NewPageAsync(new BrowserContextOptions { UserAgent = "foobar" });
 
             var (userAgent, _) = await TaskUtils.WhenAll(
-                Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
-                FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.EmptyPage)
-            );
+              Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
+              FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.EmptyPage));
+
             Assert.Equal("foobar", userAgent);
         }
 

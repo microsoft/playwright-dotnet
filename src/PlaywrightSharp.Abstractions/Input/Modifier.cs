@@ -1,7 +1,7 @@
 namespace PlaywrightSharp.Input
 {
     /// <summary>
-    /// Modifiers for <see cref="ClickOptions.Modifiers"/>.
+    /// Modifiers for <see cref="IPointerActionOptions.Modifiers"/>.
     /// </summary>
     public enum Modifier
     {

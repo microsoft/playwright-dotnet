@@ -18,7 +18,8 @@ namespace PlaywrightSharp.Firefox.Protocol.Runtime
                 "-Infinity" => RemoteObjectUnserializableValue.NegativeInfinity,
                 "-0" => RemoteObjectUnserializableValue.NegativeZero,
                 "NaN" => RemoteObjectUnserializableValue.NaN,
-                _ => null
+                null => null,
+                _ => throw new ArgumentOutOfRangeException(nameof(value))
             };
     }
 }

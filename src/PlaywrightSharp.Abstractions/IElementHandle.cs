@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -70,8 +69,9 @@ namespace PlaywrightSharp
         /// <summary>
         /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to hover over the center of the element.
         /// </summary>
+        /// <param name="options">Hover options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully hovered.</returns>
-        Task HoverAsync();
+        Task HoverAsync(PointerActionOptions options = null);
 
         /// <summary>
         /// Tries to scroll element into view, unless it is completely visible as defined by <see href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"/>'s <b>ratio</b>.

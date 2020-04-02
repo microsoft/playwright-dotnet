@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -9,6 +10,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserContextTests : PlaywrightSharpBrowserBaseTest
     {
@@ -56,12 +58,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var popupTargetCompletion = new TaskCompletionSource<IPage>();
             page.Popup += (sender, e) => popupTargetCompletion.SetResult(e.Page);
 
-            await Task.WhenAll(
+            var (popupTarget, _) = await TaskUtils.WhenAll(
                 popupTargetCompletion.Task,
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage)
             );
 
-            var popupTarget = await popupTargetCompletion.Task;
             Assert.Same(context, popupTarget.BrowserContext);
             await context.CloseAsync();
         }

@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Firefox
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, FirefoxJsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException ex)
                 {

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
@@ -144,10 +145,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => EvaluateAsync<JsonElement?>(script, args);
 
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
@@ -157,9 +155,11 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.FillAsync(string, string, WaitForSelectorOptions)"/>
-        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null)
+        public async Task FillAsync(string selector, string text, WaitForSelectorOptions options = null)
         {
-            throw new System.NotImplementedException();
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.FillAsync(text).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.GoToAsync(string, GoToOptions)"/>
@@ -256,7 +256,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
         public async Task SetContentAsync(string html, NavigationOptions options = null)
         {
-            string tag = $"--playwright--set--content--{Id}--${++_setContentCounter}--";
+            string tag = $"--playwright--set--content--{Id}--{++_setContentCounter}--";
             var context = await GetUtilityContextAsync().ConfigureAwait(false);
             LifecycleWatcher watcher = null;
 
@@ -310,9 +310,22 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
+        public async Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
         {
-            throw new System.NotImplementedException();
+            using var watcher = new LifecycleWatcher(this, options);
+            var errorTask = watcher.TimeoutOrTerminationTask;
+
+            await Task.WhenAny(
+                errorTask,
+                watcher.SameDocumentNavigationTask,
+                watcher.NewDocumentNavigationTask).ConfigureAwait(false);
+
+            if (errorTask.IsCompleted)
+            {
+                await errorTask.ConfigureAwait(false);
+            }
+
+            return watcher.NavigationResponse;
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitUntilNavigation)"/>
@@ -378,9 +391,9 @@ namespace PlaywrightSharp
 
             void ConsoleEventHandler(object sender, ConsoleEventArgs e)
             {
-                if (e.Message.Type == ConsoleType.Error && e.Message.Text.Contains("Content Security Policy"))
+                if (e.Message.Type == ConsoleType.Error && e.Message.GetText().Contains("Content Security Policy"))
                 {
-                    errorTcs.TrySetResult(e.Message.Text);
+                    errorTcs.TrySetResult(e.Message.GetText());
                 }
             }
 
@@ -429,16 +442,16 @@ namespace PlaywrightSharp
             return _contextData[contextType].ContextTask;
         }
 
-        private async Task<IElementHandle> OptionallyWaitForSelectorInUtilityContextAsync(string selector, ClickOptions options)
+        private async Task<IElementHandle> OptionallyWaitForSelectorInUtilityContextAsync(string selector, WaitForSelectorOptions options)
         {
-            options ??= new ClickOptions();
-            options.Timeout ??= Page.DefaultTimeout;
+            var waitFor = options?.WaitFor ?? WaitForOption.Visible;
+            int timeout = options?.Timeout ?? Page.DefaultTimeout;
 
             IElementHandle handle;
 
-            if (options.WaitFor != WaitForOption.NoWait)
+            if (waitFor != WaitForOption.NoWait)
             {
-                var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, options.WaitFor, options.Timeout)
+                var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, waitFor, timeout)
                     .ConfigureAwait(false);
 
                 handle = maybeHandle ?? throw new SelectorException($"No node found for selector", SelectorToString(selector, options.WaitFor));

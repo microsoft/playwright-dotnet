@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Firefox.Input
@@ -6,6 +7,11 @@ namespace PlaywrightSharp.Firefox.Input
     {
         public FirefoxRawKeyboard(FirefoxSession session)
         {
+        }
+
+        public Task SendTextAsync(string text)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

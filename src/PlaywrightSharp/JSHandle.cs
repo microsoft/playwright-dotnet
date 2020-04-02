@@ -7,17 +7,15 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IJSHandle"/>
     public class JSHandle : IJSHandle
     {
-        private bool _disposed;
-
         internal JSHandle(ExecutionContext context, IRemoteObject remoteObject)
         {
             RemoteObject = remoteObject;
             Context = context;
         }
 
-        internal ExecutionContext Context { get; set; }
+        internal ExecutionContext Context { get; }
 
-        internal bool Disposed { get; }
+        internal bool Disposed { get; private set; }
 
         internal IRemoteObject RemoteObject { get; set; }
 
@@ -37,20 +35,17 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
         Task IJSHandle.DisposeAsync()
         {
-            if (_disposed)
+            if (Disposed)
             {
                 return Task.CompletedTask;
             }
 
-            _disposed = true;
+            Disposed = true;
             return Context.Delegate.ReleaseHandleAsync(this);
         }
 
         /// <inheritdoc cref="IJSHandle.GetJsonValueAsync{T}"/>
-        public Task<T> GetJsonValueAsync<T>()
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<T> GetJsonValueAsync<T>() => Context.Delegate.HandleJSONValueAsync<T>(this);
 
         /// <inheritdoc cref="IJSHandle.GetPropertiesAsync"/>
         public Task<IReadOnlyDictionary<string, IJSHandle>> GetPropertiesAsync()

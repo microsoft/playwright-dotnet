@@ -15,6 +15,7 @@ using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Messaging;
+using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -27,7 +28,6 @@ namespace PlaywrightSharp.Firefox
         private readonly IBrowserContext _context;
         private readonly Func<Task<Page>> _openerResolver;
         private readonly ConcurrentDictionary<string, WorkerSession> _workers = new ConcurrentDictionary<string, WorkerSession>();
-        private readonly ConcurrentDictionary<string, FrameExecutionContext> _contextIdToContext = new ConcurrentDictionary<string, FrameExecutionContext>();
 
         public FirefoxPage(FirefoxSession session, IBrowserContext context, Func<Task<Page>> openerResolver)
         {
@@ -45,6 +45,8 @@ namespace PlaywrightSharp.Firefox
         public IRawKeyboard RawKeyboard { get; }
 
         public IRawMouse RawMouse { get; }
+
+        public ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; } = new ConcurrentDictionary<object, FrameExecutionContext>();
 
         internal Page Page { get; }
 
@@ -75,16 +77,24 @@ namespace PlaywrightSharp.Firefox
         public Task<LayoutMetric> GetLayoutViewportAsync()
             => Page.EvaluateAsync<LayoutMetric>("() => ({ width: innerWidth, height: innerHeight })");
 
-        public bool CanScreenshotOutsideViewport() => throw new NotImplementedException();
+        public bool CanScreenshotOutsideViewport() => true;
 
         public Task ResetViewportAsync(Viewport viewport) => throw new NotImplementedException();
 
         public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
 
-        public Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport) => throw new NotImplementedException();
+        public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
+        {
+            var response = await _session.SendAsync(new PageScreenshotRequest
+            {
+                MimeType = format == ScreenshotFormat.Jpeg ? ScreenshotMimeType.ImageJpeg : ScreenshotMimeType.ImagePng,
+                FullPage = options.FullPage,
+                Clip = options.Clip,
+            }).ConfigureAwait(false);
+            return Convert.FromBase64String(response.Data);
+        }
 
-        public bool IsElementHandle(IRemoteObject remoteObject)
-            => ((RemoteObject)remoteObject).Subtype == RemoteObjectSubtype.Node;
+        public bool IsElementHandle(IRemoteObject remoteObject) => ((RemoteObject)remoteObject).Subtype == RemoteObjectSubtype.Node;
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
@@ -110,9 +120,14 @@ namespace PlaywrightSharp.Firefox
             },
         });
 
-        public Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
+        public async Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle)
         {
-            throw new NotImplementedException();
+            var response = await _session.SendAsync(new PageGetBoundingBoxRequest
+            {
+                FrameId = handle.Context.Frame.Id,
+                ObjectId = handle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            return response.BoundingBox;
         }
 
         public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
@@ -147,12 +162,12 @@ namespace PlaywrightSharp.Firefox
             };
         }
 
-        public async Task<IFrame> GetContentFrameAsync(ElementHandle handle)
+        public async Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
         {
             var response = await _session.SendAsync(new PageDescribeNodeRequest
             {
-                FrameId = handle.Context.Frame.Id,
-                ObjectId = handle.RemoteObject.ObjectId,
+                FrameId = elementHandle.Context.Frame.Id,
+                ObjectId = elementHandle.RemoteObject.ObjectId,
             }).ConfigureAwait(false);
             if (string.IsNullOrEmpty(response.ContentFrameId))
             {
@@ -170,6 +185,16 @@ namespace PlaywrightSharp.Firefox
                 Value = pair.Value,
             }).ToArray(),
         });
+
+        public Task ExposeBindingAsync(string name, string functionString)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EvaluateOnNewDocumentAsync(string source)
+        {
+            throw new NotImplementedException();
+        }
 
         internal async Task InitializeAsync()
         {
@@ -194,9 +219,9 @@ namespace PlaywrightSharp.Firefox
                     tasks.Add(_session.SendAsync(new PageSetBypassCSPRequest { Enabled = true }));
                 }
 
-                if (options.JavaScriptEnabled)
+                if (!options.JavaScriptEnabled)
                 {
-                    tasks.Add(_session.SendAsync(new PageSetJavascriptEnabledRequest { Enabled = true }));
+                    tasks.Add(_session.SendAsync(new PageSetJavascriptEnabledRequest { Enabled = false }));
                 }
 
                 if (options.UserAgent != null)
@@ -315,13 +340,13 @@ namespace PlaywrightSharp.Firefox
                     frame.ContextCreated(ContextType.Main, context);
                 }
 
-                _contextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
+                ContextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
             }
         }
 
         private void OnExecutionContextDestroyed(RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed)
         {
-            if (_contextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
+            if (ContextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
             {
                 context.Frame.ContextDestroyed(context);
             }
@@ -329,7 +354,7 @@ namespace PlaywrightSharp.Firefox
 
         private void OnConsole(RuntimeConsoleFirefoxEvent runtimeConsole)
         {
-            var context = _contextIdToContext[runtimeConsole.ExecutionContextId];
+            var context = ContextIdToContext[runtimeConsole.ExecutionContextId];
 
             var type = runtimeConsole.GetConsoleType();
             var location = runtimeConsole.ToConsoleMessageLocation();
@@ -355,7 +380,7 @@ namespace PlaywrightSharp.Firefox
                             Id = id,
                             Method = request.Command,
                             Params = request,
-                        }.ToJson(),
+                        }.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions),
                     }).ConfigureAwait(false);
                 }
                 catch (Exception e)
