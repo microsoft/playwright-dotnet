@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
@@ -243,7 +244,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
         public async Task SetContentAsync(string html, NavigationOptions options = null)
         {
-            string tag = $"--playwright--set--content--{Id}--${++_setContentCounter}--";
+            string tag = $"--playwright--set--content--{Id}--{++_setContentCounter}--";
             var context = await GetUtilityContextAsync().ConfigureAwait(false);
             LifecycleWatcher watcher = null;
 
@@ -353,9 +354,9 @@ namespace PlaywrightSharp
 
             void ConsoleEventHandler(object sender, ConsoleEventArgs e)
             {
-                if (e.Message.Type == ConsoleType.Error && e.Message.Text.Contains("Content Security Policy"))
+                if (e.Message.Type == ConsoleType.Error && e.Message.GetText().Contains("Content Security Policy"))
                 {
-                    errorTcs.TrySetResult(e.Message.Text);
+                    errorTcs.TrySetResult(e.Message.GetText());
                 }
             }
 
@@ -407,7 +408,7 @@ namespace PlaywrightSharp
         private async Task<IElementHandle> OptionallyWaitForSelectorInUtilityContextAsync(string selector, WaitForSelectorOptions options)
         {
             var waitFor = options?.WaitFor ?? WaitForOption.Visible;
-            var timeout = options?.Timeout ?? Page.DefaultTimeout;
+            int timeout = options?.Timeout ?? Page.DefaultTimeout;
 
             IElementHandle handle;
 

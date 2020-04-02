@@ -15,6 +15,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
     internal class FirefoxProtocolTypesGenerator : ProtocolTypesGeneratorBase
     {
         private readonly IDictionary<string, string> _knownTypes = new Dictionary<string, string>();
+        private readonly List<string> _knownEnums = new List<string>();
         private readonly IDictionary<string, string> _specialEnumFields = new Dictionary<string, string>
         {
             ["RemoteObjectUnserializableValue.Infinity"] = "Infinity",
@@ -102,6 +103,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                         }
 
                         string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, methodDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder, false);
+
+                        if (_knownEnums.Contains(csharpType))
+                        {
+                            builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
+                        }
+
                         builder.AppendLine($"public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
                     }
                 }
@@ -171,11 +178,13 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                 {
                     string enumName = objectName.ToPascalCase() + name.ToPascalCase();
                     _knownTypes.Add(values.GetRawText(), $"{domain}.{enumName}");
+                    _knownEnums.Add($"{domain}.{enumName}");
+                    enumBuilder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
                     enumBuilder.AppendLine($"internal enum {enumName}");
                     enumBuilder.AppendLine("{");
                     foreach (var value in values.EnumerateArray())
                     {
-                        if (_specialEnumFields.TryGetValue($"{enumName}.{value.ToString()}", out string fieldName))
+                        if (_specialEnumFields.TryGetValue($"{enumName}.{value}", out string fieldName))
                         {
                             enumBuilder.Append(ProtocolCodeGeneratorUtilities.CreateEnumField(value.ToString(), fieldName));
                         }

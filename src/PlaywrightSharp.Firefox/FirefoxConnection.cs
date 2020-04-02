@@ -8,6 +8,7 @@ using PlaywrightSharp.Firefox.Protocol;
 using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Messaging;
+using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -74,7 +75,7 @@ namespace PlaywrightSharp.Firefox
             return (TFirefoxResponse)result;
         }
 
-        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson());
+        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions));
 
         internal void Close(string closeReason)
         {
@@ -105,7 +106,7 @@ namespace PlaywrightSharp.Firefox
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, FirefoxJsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException ex)
                 {

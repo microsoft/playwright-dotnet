@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace PlaywrightSharp.Chromium
 
         public IRawMouse RawMouse { get; }
 
-        public Dictionary<int, FrameExecutionContext> ContextIdToContext { get; } = new Dictionary<int, FrameExecutionContext>();
+        public ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; } = new ConcurrentDictionary<object, FrameExecutionContext>();
 
         internal Page Page { get; }
 
@@ -524,7 +525,7 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            ContextIdToContext.Remove(executionContextId);
+            ContextIdToContext.TryRemove(executionContextId, out _);
             context.Frame.ContextDestroyed(context);
         }
 

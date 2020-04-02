@@ -44,14 +44,14 @@ namespace PlaywrightSharp.Protocol
             }
         }
 
-        public static TProtocolResponse ParseResponse(string command, string json)
+        public static TProtocolResponse ParseResponse(string command, string json, JsonSerializerOptions options = null)
             => ResponsesMapper.TryGetValue(command, out var type)
-                ? (TProtocolResponse)JsonSerializer.Deserialize(json, type, JsonHelper.DefaultJsonSerializerOptions)
+                ? (TProtocolResponse)JsonSerializer.Deserialize(json, type, options ?? JsonHelper.DefaultJsonSerializerOptions)
                 : default;
 
-        public static TProtocolEvent ParseEvent(string method, string json)
+        public static TProtocolEvent ParseEvent(string method, string json, JsonSerializerOptions options = null)
             => EventsMapper.TryGetValue(method, out var type)
-                ? (TProtocolEvent)JsonSerializer.Deserialize(json, type, JsonHelper.DefaultJsonSerializerOptions)
+                ? (TProtocolEvent)JsonSerializer.Deserialize(json, type, options ?? JsonHelper.DefaultJsonSerializerOptions)
                 : default;
     }
 }
