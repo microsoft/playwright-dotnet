@@ -197,11 +197,16 @@ namespace PlaywrightSharp.Firefox
         {
             switch (unserializableValue)
             {
-                case RemoteObjectUnserializableValue.NegativeZero: return -0;
-                case RemoteObjectUnserializableValue.NaN: return double.NaN;
-                case RemoteObjectUnserializableValue.Infinity: return double.PositiveInfinity;
-                case RemoteObjectUnserializableValue.NegativeInfinity: return double.NegativeInfinity;
-                default: throw new Exception("Unsupported unserializable value: " + unserializableValue);
+                case RemoteObjectUnserializableValue.NegativeZero:
+                    return -0;
+                case RemoteObjectUnserializableValue.NaN:
+                    return double.NaN;
+                case RemoteObjectUnserializableValue.Infinity:
+                    return double.PositiveInfinity;
+                case RemoteObjectUnserializableValue.NegativeInfinity:
+                    return double.NegativeInfinity;
+                default:
+                    throw new Exception("Unsupported unserializable value: " + unserializableValue);
             }
         }
     }
