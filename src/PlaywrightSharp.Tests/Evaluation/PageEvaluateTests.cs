@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferNegative0()
         {
-            int result = await Page.EvaluateAsync<int>("a => a", -0);
+            double result = await Page.EvaluateAsync<double>("a => a", -0);
             Assert.Equal(-0, result);
         }
 

@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Firefox
             {
                 ExecutionContextId = ExecutionContextId,
                 ReturnByValue = true,
-                FunctionDeclaration = "e => e.toString()",
+                FunctionDeclaration = "e => e",
                 Args = new[] { ToCallArgument(payload) },
             }).ConfigureAwait(false);
             return DeserializeValue<T>(simpleValue.Result);
@@ -182,7 +182,8 @@ namespace PlaywrightSharp.Firefox
             var unserializableValue = remoteObject.UnserializableValue;
             if (unserializableValue != null)
             {
-                return (T)ValueFromUnserializableValue(unserializableValue.Value);
+                object raw = ValueFromUnserializableValue(unserializableValue.Value);
+                return (T)raw;
             }
 
             if (remoteObject.Value == null)
