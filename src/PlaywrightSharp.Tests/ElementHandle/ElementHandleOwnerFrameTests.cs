@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
     public class ElementHandleOwnerFrameTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public  ElementHandleOwnerFrameTests(ITestOutputHelper output) : base(output)
+        public ElementHandleOwnerFrameTests(ITestOutputHelper output) : base(output)
         {
         }
 
