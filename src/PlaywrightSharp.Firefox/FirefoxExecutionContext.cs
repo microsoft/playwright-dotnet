@@ -64,7 +64,23 @@ namespace PlaywrightSharp.Firefox
             return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<object>((RemoteObject)payload);
         }
 
-        public Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle) => throw new NotImplementedException();
+        public async Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle)
+        {
+            var payload = (RemoteObject)((JSHandle)jsHandle).RemoteObject;
+            if (string.IsNullOrEmpty(payload.ObjectId))
+            {
+                return DeserializeValue<T>(payload);
+            }
+
+            var simpleValue = await _session.SendAsync(new RuntimeCallFunctionRequest
+            {
+                ExecutionContextId = ExecutionContextId,
+                ReturnByValue = true,
+                FunctionDeclaration = "e => e.toString()",
+                Args = new[] { ToCallArgument(payload) },
+            }).ConfigureAwait(false);
+            return DeserializeValue<T>(simpleValue.Result);
+        }
 
         public Task ReleaseHandleAsync(JSHandle handle)
         {
@@ -192,7 +208,7 @@ namespace PlaywrightSharp.Firefox
             {
                 RemoteObjectType.Object => value.ToObject<T>(),
                 RemoteObjectType.Undefined => null,
-                RemoteObjectType.Number => value.GetDouble(),
+                RemoteObjectType.Number => typeof(T) == typeof(int) ? value.GetInt32() : value.GetDouble(),
                 RemoteObjectType.Bigint => value.GetDouble(),
                 RemoteObjectType.Boolean => value.GetBoolean(),
                 _ => value.ToObject<T>()
