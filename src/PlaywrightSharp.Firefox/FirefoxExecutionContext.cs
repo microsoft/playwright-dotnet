@@ -190,28 +190,19 @@ namespace PlaywrightSharp.Firefox
                 return default;
             }
 
-            return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type ?? RemoteObjectType.Object);
+            return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
         }
 
         private object ValueFromUnserializableValue(RemoteObjectUnserializableValue unserializableValue)
-            => unserializableValue switch
+        {
+            switch (unserializableValue)
             {
-                RemoteObjectUnserializableValue.NegativeZero => -0,
-                RemoteObjectUnserializableValue.NaN => double.NaN,
-                RemoteObjectUnserializableValue.Infinity => double.PositiveInfinity,
-                RemoteObjectUnserializableValue.NegativeInfinity => double.NegativeInfinity,
-                _ => throw new Exception("Unsupported unserializable value: " + unserializableValue),
-            };
-
-        private object ValueFromType<T>(JsonElement value, RemoteObjectType objectType)
-            => objectType switch
-            {
-                RemoteObjectType.Object => value.ToObject<T>(),
-                RemoteObjectType.Undefined => null,
-                RemoteObjectType.Number => typeof(T) == typeof(int) ? value.GetInt32() : value.GetDouble(),
-                RemoteObjectType.Bigint => value.GetDouble(),
-                RemoteObjectType.Boolean => value.GetBoolean(),
-                _ => value.ToObject<T>()
-            };
+                case RemoteObjectUnserializableValue.NegativeZero: return -0;
+                case RemoteObjectUnserializableValue.NaN: return double.NaN;
+                case RemoteObjectUnserializableValue.Infinity: return double.PositiveInfinity;
+                case RemoteObjectUnserializableValue.NegativeInfinity: return double.NegativeInfinity;
+                default: throw new Exception("Unsupported unserializable value: " + unserializableValue);
+            }
+        }
     }
 }
