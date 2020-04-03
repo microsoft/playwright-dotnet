@@ -121,31 +121,6 @@ namespace PlaywrightSharp
         Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
 
         /// <summary>
-        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
-        /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
-        /// <typeparam name="T">Type to parse the result to.</typeparam>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<T> EvaluateAsync<T>(string script, params object[] args);
-
-        /// <summary>
-        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
-        /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
-
-        /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="filePath">The file paths or files.</param>

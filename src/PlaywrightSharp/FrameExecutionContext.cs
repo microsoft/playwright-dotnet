@@ -21,9 +21,7 @@ namespace PlaywrightSharp
 
         public Frame Frame { get; set; }
 
-        public Task<T> EvaluateAsync<T>(string script, params object[] args) => EvaluateAsync<T>(true, script, args);
-
-        public async Task<T> EvaluateAsync<T>(bool returnByValue, string script, params object[] args)
+        public override async Task<T> EvaluateAsync<T>(bool returnByValue, string script, params object[] args)
         {
             bool NeedsAdoption(object value) => value is ElementHandle elementHandle && elementHandle.Context != this;
 
@@ -57,16 +55,12 @@ namespace PlaywrightSharp
             finally
             {
                 await Task.WhenAll(toDispose
-                    .Select(handlePromise => handlePromise.ContinueWith(handleTask => handleTask.Result.DisposeAsync(), TaskScheduler.Default)))
+                        .Select(handlePromise => handlePromise.ContinueWith(handleTask => handleTask.Result.DisposeAsync(), TaskScheduler.Default)))
                     .ConfigureAwait(false);
             }
 
             return result;
         }
-
-        public Task EvaluateAsync(string script, params object[] args) => EvaluateAsync<JsonElement?>(true, script, args);
-
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => EvaluateAsync<IJSHandle>(false, script, args);
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector, IElementHandle scope = null)
         {

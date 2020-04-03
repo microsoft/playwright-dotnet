@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
@@ -25,17 +24,17 @@ namespace PlaywrightSharp.Chromium
 
         internal int ContextId { get; }
 
-        public async Task EvaluateAsync(FrameExecutionContext context, bool returnByValue, string script, object[] args)
+        public async Task EvaluateAsync(ExecutionContext context, bool returnByValue, string script, object[] args)
             => await EvaluateAsync<object>(context, returnByValue, script, args).ConfigureAwait(false);
 
-        public async Task<T> EvaluateAsync<T>(FrameExecutionContext context, bool returnByValue, string script, object[] args)
+        public async Task<T> EvaluateAsync<T>(ExecutionContext context, bool returnByValue, string script, object[] args)
         {
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
             RemoteObject remoteObject = null;
 
             if (script.IsJavascriptFunction())
             {
-                RuntimeCallFunctionOnResponse result = null;
+                RuntimeCallFunctionOnResponse result;
 
                 try
                 {
@@ -165,7 +164,7 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private CallArgument FormatArgument(object arg, FrameExecutionContext context)
+        private CallArgument FormatArgument(object arg, ExecutionContext context)
         {
             switch (arg)
             {
@@ -240,7 +239,7 @@ namespace PlaywrightSharp.Chromium
                 return default(T);
             }
 
-            return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
+            return ((JsonElement)remoteObject.Value).ToObject<T>();
         }
 
         private async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -12,6 +11,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>click.spec.js</playwright-file>
     ///<playwright-describe>Page.click</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ClickTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -36,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldClickSvg()
         {
-            await Page.SetContentAsync($@"
+            await Page.SetContentAsync(@"
                 <svg height=""100"" width=""100"">
                   <circle onclick=""javascript:window.__CLICKED=42"" cx=""50"" cy=""50"" r=""40"" stroke=""black"" stroke-width=""3"" fill=""red""/>
                 </svg>
@@ -63,11 +64,11 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldClickOnASpanWithAnInlineElementInside()
         {
-            await Page.SetContentAsync($@"
+            await Page.SetContentAsync(@"
                 <style>
-                span::before {{
+                span::before {
                     content: 'q';
-                }}
+                }
                 </style>
                 <span onclick='javascript:window.CLICKED=42'></span>
             ");
@@ -136,12 +137,12 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldClickWhenOneOfInlineBoxChildrenIsOutsideOfViewport()
         {
-            await Page.SetContentAsync($@"
+            await Page.SetContentAsync(@"
             <style>
-            i {{
+            i {
                 position: absolute;
                 top: -1000px;
-            }}
+            }
             </style>
             <span onclick='javascript:window.CLICKED = 42;'><i>woof</i><b>doggo</b></span>
             ");
@@ -522,7 +523,7 @@ button.style.position = 'absolute';
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.QuerySelectorEvaluateAsync("button", "button.style.height = button.style.width = '2000px'");
+            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.height = button.style.width = '2000px'");
             await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
@@ -587,7 +588,7 @@ button.style.position = 'absolute';
         [SkipBrowserAndPlatformFact(skipChromium: true)]
         public async Task ShouldClickAnOffscreenElementWhenScrollBehaviorIsSmooth()
         {
-            await Page.SetContentAsync(@$"
+            await Page.SetContentAsync(@"
             <div style=""border: 1px solid black; height: 500px; overflow: auto; width: 500px; scroll-behavior: smooth"">
                 <button style=""margin-top: 2000px"" onClick=""window.clicked = true"" >hi</button>
             </div>");

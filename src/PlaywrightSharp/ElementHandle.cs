@@ -30,18 +30,6 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
             => FrameExecutionContext.EvaluateHandleAsync(script, args.InsertAt(0, this));
 
-        /// <inheritdoc cref="IElementHandle.EvaluateAsync{T}(string, object[])"/>
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IElementHandle.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)
         {

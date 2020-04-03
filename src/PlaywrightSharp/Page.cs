@@ -259,15 +259,11 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.QuerySelectorEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.QuerySelectorEvaluateAsync(selector, script, args);
 
         /// <inheritdoc cref="IPage.QuerySelectorEvaluateAsync{T}(string, string, object[])"/>
         public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.QuerySelectorEvaluateAsync<T>(selector, script, args);
 
         /// <inheritdoc cref="IPage.ReloadAsync(NavigationOptions)"/>
         public Task<IResponse> ReloadAsync(NavigationOptions options = null)

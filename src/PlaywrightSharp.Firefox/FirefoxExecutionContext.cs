@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
@@ -19,7 +18,7 @@ namespace PlaywrightSharp.Firefox
 
         internal string ExecutionContextId { get; }
 
-        public async Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args)
+        public async Task<T> EvaluateAsync<T>(ExecutionContext executionContext, bool returnByValue, string pageFunction, object[] args)
         {
             if (!pageFunction.IsJavascriptFunction())
             {
@@ -29,10 +28,10 @@ namespace PlaywrightSharp.Firefox
                     ReturnByValue = returnByValue,
                     ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
-                return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, frameExecutionContext);
+                return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, executionContext);
             }
 
-            RuntimeCallFunctionResponse payload = null;
+            RuntimeCallFunctionResponse payload;
 
             try
             {
@@ -40,7 +39,7 @@ namespace PlaywrightSharp.Firefox
                 payload = await _session.SendAsync(new RuntimeCallFunctionRequest
                 {
                     FunctionDeclaration = functionText,
-                    Args = Array.ConvertAll(args, arg => FormatArgument(arg, frameExecutionContext)),
+                    Args = Array.ConvertAll(args, arg => FormatArgument(arg, executionContext)),
                     ReturnByValue = returnByValue,
                     ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
@@ -50,7 +49,7 @@ namespace PlaywrightSharp.Firefox
                 payload = RewriteError(ex);
             }
 
-            return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
+            return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, executionContext);
         }
 
         public string HandleToString(IJSHandle handle, bool includeType)
@@ -111,7 +110,7 @@ namespace PlaywrightSharp.Firefox
             throw error;
         }
 
-        private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, FrameExecutionContext context)
+        private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, ExecutionContext context)
         {
             CheckException(exceptionDetails);
             if (returnByValue)
@@ -137,7 +136,7 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private CallFunctionArgument FormatArgument(object arg, FrameExecutionContext context)
+        private CallFunctionArgument FormatArgument(object arg, ExecutionContext context)
         {
             switch (arg)
             {
@@ -190,7 +189,7 @@ namespace PlaywrightSharp.Firefox
                 return default;
             }
 
-            return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
+            return ((JsonElement)remoteObject.Value).ToObject<T>();
         }
 
         private object ValueFromUnserializableValue(RemoteObjectUnserializableValue unserializableValue)

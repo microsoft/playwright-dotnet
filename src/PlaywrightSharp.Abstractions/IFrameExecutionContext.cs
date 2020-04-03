@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -32,13 +33,13 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <seealso cref="IPage.EvaluateAsync{T}(string, object[])"/>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
-        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved.</returns>
-        Task EvaluateAsync(string script, params object[] args);
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result as a <see cref="JsonElement"/>.</returns>
+        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
 
         /// <summary>
         /// Returns the injected <see cref="IJSHandle"/>.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the injected <see cref="IJSHandle"/> is resolved, yeilding the <see cref="IJSHandle"/>.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the injected <see cref="IJSHandle"/> is resolved, yielding the <see cref="IJSHandle"/>.</returns>
         Task<IJSHandle> GetInjectedAsync();
 
         /// <summary>

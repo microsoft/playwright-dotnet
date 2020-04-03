@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
@@ -45,5 +47,13 @@ namespace PlaywrightSharp
         {
             throw new System.NotImplementedException();
         }
+
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync{T}(string, object[])"/>
+        public Task<T> EvaluateAsync<T>(string script, params object[] args)
+            => Context.EvaluateAsync<T>(script, args.InsertAt(0, this));
+
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync(string, object[])"/>
+        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
+            => Context.EvaluateAsync(script, args.InsertAt(0, this));
     }
 }
