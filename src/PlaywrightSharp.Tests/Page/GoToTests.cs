@@ -12,8 +12,6 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.goto</playwright-describe>
-    [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
     public class GoToTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
