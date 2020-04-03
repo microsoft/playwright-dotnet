@@ -12,6 +12,7 @@ namespace PlaywrightSharp.Tests.Evaluation
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluate</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageEvaluateTests : PlaywrightSharpPageBaseTest
     {
@@ -76,7 +77,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldTransferArrays()
         {
-            var result = await Page.EvaluateAsync<int[]>("a => a", new[] { 1, 2, 3 });
+            int[] result = await Page.EvaluateAsync<int[]>("a => a", new[] { 1, 2, 3 });
             Assert.Equal(new[] { 1, 2, 3 }, result);
         }
 
@@ -346,7 +347,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact]
         public async Task ShouldFailForCircularObject()
         {
-            var result = await Page.EvaluateAsync<object>(@"() => {
+            object result = await Page.EvaluateAsync<object>(@"() => {
                 var a = { };
                 var b = { a };
                 a.b = b;
@@ -461,7 +462,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
-            var result = await Page.EvaluateAsync<int[]>(@"() => {
+            int[] result = await Page.EvaluateAsync<int[]>(@"() => {
                 window.location = '/empty.html';
                 return [42];
             }");

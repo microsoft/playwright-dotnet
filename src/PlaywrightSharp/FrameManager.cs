@@ -58,6 +58,14 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void FrameDetached(string frameId)
+        {
+            if (frameId != null && Frames.TryGetValue(frameId, out var frame))
+            {
+                RemoveFramesRecursively(frame);
+            }
+        }
+
         internal void FrameCommittedNewDocumentNavigation(string frameId, string url, string name, string documentId, bool initial)
         {
             Frames.TryGetValue(frameId, out var frame);
@@ -211,7 +219,12 @@ namespace PlaywrightSharp
 
             frame.OnDetached();
             Frames.TryRemove(frame.Id, out _);
-            _page.OnFrameAttached(frame);
+            foreach (var watcher in LifecycleWatchers)
+            {
+                watcher.OnFrameDetached(frame);
+            }
+
+            _page.OnFrameDetached(frame);
         }
 
         private void CollectFrames(Frame frame, List<Frame> frames)

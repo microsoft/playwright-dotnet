@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Evaluation
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {

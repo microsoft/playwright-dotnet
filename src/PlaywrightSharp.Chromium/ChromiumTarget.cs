@@ -14,7 +14,6 @@ namespace PlaywrightSharp.Chromium
         private readonly Func<Task<ChromiumSession>> _sessionFactory;
         private readonly TaskCompletionSource<bool> _initializedTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         private Task<Worker> _workerTask;
-        private Page _page;
 
         internal ChromiumTarget(
             TargetInfo targetInfo,
@@ -93,6 +92,8 @@ namespace PlaywrightSharp.Chromium
 
         internal Task<Page> PageTask { get; set; }
 
+        internal ChromiumPage ChromiumPage { get; set; }
+
         /// <summary>
         /// If the target is not of type `"service_worker"` or `"shared_worker"`, returns `null`.
         /// </summary>
@@ -142,18 +143,18 @@ namespace PlaywrightSharp.Chromium
             throw new NotImplementedException();
         }
 
-        internal void DidClose() => _page?.DidClose();
+        internal void DidClose() => ChromiumPage?.DidClose();
 
         private static Task<Worker> WorkerInternalAsync() => Task.FromResult<Worker>(null);
 
         private async Task<Page> CreatePageAsync()
         {
             var client = await _sessionFactory().ConfigureAwait(false);
-            var chromiumPage = new ChromiumPage(client, _browser, BrowserContext);
-            _page = chromiumPage.Page;
-            chromiumPage.Target = this;
+            ChromiumPage = new ChromiumPage(client, _browser, BrowserContext);
+            var page = ChromiumPage.Page;
+            ChromiumPage.Target = this;
 
-            client.Disconnected += (sender, e) => _page.DidDisconnected();
+            client.Disconnected += (sender, e) => page.DidDisconnected();
 
             client.MessageReceived += (sender, e) =>
             {
@@ -166,7 +167,7 @@ namespace PlaywrightSharp.Chromium
                 }
             };
 
-            await chromiumPage.InitializeAsync().ConfigureAwait(false);
+            await ChromiumPage.InitializeAsync().ConfigureAwait(false);
             await client.SendAsync(new TargetSetAutoAttachRequest
             {
                 AutoAttach = true,
@@ -174,7 +175,7 @@ namespace PlaywrightSharp.Chromium
                 Flatten = true,
             }).ConfigureAwait(false);
 
-            return _page;
+            return page;
         }
     }
 }

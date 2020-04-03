@@ -105,6 +105,18 @@ namespace PlaywrightSharp
             _browser.RemoveContext(_contextId);
         }
 
+        /// <inheritdoc cref="IBrowserContextDelegate.GetExistingPages"/>
+        public IEnumerable<IPage> GetExistingPages()
+        {
+            foreach (var target in _browser.GetAllTargets())
+            {
+                if (target.BrowserContext == BrowserContext && target.ChromiumPage != null)
+                {
+                    yield return target.ChromiumPage.Page;
+                }
+            }
+        }
+
         /// <inheritdoc cref="IBrowserContextDelegate.SetPermissionsAsync(string, ContextPermission[])"/>
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
         {

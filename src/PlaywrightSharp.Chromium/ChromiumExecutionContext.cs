@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Chromium
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
             RemoteObject remoteObject = null;
 
-            if (StringExtensions.IsJavascriptFunction(ref script))
+            if (script.IsJavascriptFunction())
             {
                 RuntimeCallFunctionOnResponse result = null;
 

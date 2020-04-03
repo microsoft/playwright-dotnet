@@ -40,6 +40,7 @@ namespace PlaywrightSharp.Firefox
             Page = new Page(this, _context);
 
             session.MessageReceived += OnMessageReceived;
+            Page.FrameDetached += RemoveContextsForFrame;
         }
 
         public IRawKeyboard RawKeyboard { get; }
@@ -162,6 +163,24 @@ namespace PlaywrightSharp.Firefox
             };
         }
 
+        public async Task ExposeBindingAsync(string name, string functionString)
+        {
+            await _session.SendAsync(new PageAddBindingRequest { Name = name }).ConfigureAwait(false);
+            await _session.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            {
+                Script = functionString,
+            }).ConfigureAwait(false);
+            await Task.WhenAll(Array.ConvertAll(Page.Frames, frame => frame.EvaluateAsync(functionString))).ConfigureAwait(false);
+        }
+
+        public Task EvaluateOnNewDocumentAsync(string source)
+            => _session.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
+            {
+                Script = source,
+            });
+
+        public Task<string> GetOwnerFrameAsync(ElementHandle elementHandle) => throw new NotImplementedException();
+
         public async Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
         {
             var response = await _session.SendAsync(new PageDescribeNodeRequest
@@ -185,16 +204,6 @@ namespace PlaywrightSharp.Firefox
                 Value = pair.Value,
             }).ToArray(),
         });
-
-        public Task ExposeBindingAsync(string name, string functionString)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task EvaluateOnNewDocumentAsync(string source)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 
@@ -256,6 +265,7 @@ namespace PlaywrightSharp.Firefox
                     OnFrameAttached(pageFrameAttached);
                     break;
                 case PageFrameDetachedFirefoxEvent pageFrameDetached:
+                    OnFrameDetached(pageFrameDetached);
                     break;
                 case PageNavigationAbortedFirefoxEvent pageNavigationAborted:
                     break;
@@ -281,6 +291,7 @@ namespace PlaywrightSharp.Firefox
                 case PageDialogOpenedFirefoxEvent pageDialogOpened:
                     break;
                 case PageBindingCalledFirefoxEvent pageBindingCalled:
+                    OnBindingCalled(pageBindingCalled);
                     break;
                 case PageFileChooserOpenedFirefoxEvent pageFileChooserOpened:
                     break;
@@ -311,6 +322,9 @@ namespace PlaywrightSharp.Firefox
 
         private void OnFrameAttached(PageFrameAttachedFirefoxEvent pageFrameAttached)
             => Page.FrameManager.FrameAttached(pageFrameAttached.FrameId, pageFrameAttached.ParentFrameId);
+
+        private void OnFrameDetached(PageFrameDetachedFirefoxEvent pageFrameDetached)
+            => Page.FrameManager.FrameDetached(pageFrameDetached.FrameId);
 
         private void OnNavigationCommitted(PageNavigationCommittedFirefoxEvent pageNavigationCommitted)
         {
@@ -356,6 +370,23 @@ namespace PlaywrightSharp.Firefox
             {
                 context.Frame.ContextDestroyed(context);
             }
+        }
+
+        private void RemoveContextsForFrame(object sender, FrameEventArgs e)
+        {
+            foreach (var pair in ContextIdToContext)
+            {
+                if (pair.Value.Frame == e.Frame)
+                {
+                    ContextIdToContext.TryRemove(pair.Key, out _);
+                }
+            }
+        }
+
+        private void OnBindingCalled(PageBindingCalledFirefoxEvent pageBindingCalled)
+        {
+            var context = ContextIdToContext[pageBindingCalled.ExecutionContextId];
+            _ = Page.OnBindingCalledAsync(pageBindingCalled.Payload.ToString(), context);
         }
 
         private void OnConsole(RuntimeConsoleFirefoxEvent runtimeConsole)

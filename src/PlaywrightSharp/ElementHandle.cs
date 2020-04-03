@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Esprima.Ast;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
@@ -30,6 +31,10 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.TripleClickAsync(ClickOptions)"/>
         public Task TripleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.TripleClickAsync(point.X, point.Y, options), options);
+
+        /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
+        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
+            => Context.EvaluateHandleAsync(script, args.InsertAt(0, this));
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)
@@ -110,9 +115,24 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
-        public Task<IFrame> GetOwnerFrameAsync()
+        public async Task<IFrame> GetOwnerFrameAsync()
         {
-            throw new NotImplementedException();
+            string frameId = await _page.Delegate.GetOwnerFrameAsync(this).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(frameId))
+            {
+                return null;
+            }
+
+            var pages = _page.BrowserContext.GetExistingPages();
+            foreach (var page in pages)
+            {
+                if (((Page)page).FrameManager.Frames.TryGetValue(frameId, out var frame))
+                {
+                    return frame;
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc cref="IElementHandle.GetVisibleRatioAsync"/>

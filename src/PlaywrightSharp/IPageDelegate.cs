@@ -172,6 +172,13 @@ namespace PlaywrightSharp
         Task EvaluateOnNewDocumentAsync(string source);
 
         /// <summary>
+        /// Get's the frame ID associated to the <see cref="ElementHandle"/>.
+        /// </summary>
+        /// <param name="elementHandle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the frame is found, yielding its frame ID.</returns>
+        Task<string> GetOwnerFrameAsync(ElementHandle elementHandle);
+
+        /// <summary>
         /// Sets extra HTTP headers that will be sent with every request the page initiates.
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
