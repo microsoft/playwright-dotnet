@@ -37,7 +37,6 @@
     <ItemGroup>
         <Folder Include="Transport\" />
         <Folder Include="Resources\" />
-        <Folder Include="Input\" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Esprima" Version="1.0.1270" />

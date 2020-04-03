@@ -109,6 +109,20 @@ namespace PlaywrightSharp
         Task ClickAsync(ClickOptions options = null);
 
         /// <summary>
+        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to double click in the center of the element.
+        /// </summary>
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully double clicked.</returns>
+        Task DoubleClickAsync(ClickOptions options = null);
+
+        /// <summary>
+        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to triple click in the center of the element.
+        /// </summary>
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully  triple clicked.</returns>
+        Task TripleClickAsync(ClickOptions options = null);
+
+        /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="filePath">The file paths or files.</param>

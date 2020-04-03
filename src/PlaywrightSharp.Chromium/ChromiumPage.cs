@@ -280,6 +280,8 @@ namespace PlaywrightSharp.Chromium
             Headers = headers,
         });
 
+        public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());

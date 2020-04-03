@@ -75,7 +75,7 @@ namespace PlaywrightSharp
 
             if (!initial)
             {
-                foreach (var watcher in LifecycleWatchers)
+                foreach (var watcher in LifecycleWatchers.ToArray())
                 {
                     watcher.OnCommittedNewDocumentNavigation(frame);
                 }
@@ -87,6 +87,22 @@ namespace PlaywrightSharp
         internal Task FrameCommittedNewDocumentNavigation(string id, string url, string v, object loaderId)
         {
             throw new NotImplementedException();
+        }
+
+        internal void FrameCommittedSameDocumentNavigation(string frameId, string url)
+        {
+            if (!Frames.TryGetValue(frameId, out var frame))
+            {
+                return;
+            }
+
+            frame.Url = url;
+            foreach (var watcher in LifecycleWatchers)
+            {
+                watcher.OnNavigatedWithinDocument(frame);
+            }
+
+            _page.OnFrameNavigated(frame);
         }
 
         internal void FrameLifecycleEvent(string frameId, string name)

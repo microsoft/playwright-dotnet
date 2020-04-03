@@ -137,6 +137,22 @@ namespace PlaywrightSharp
             await handle.DisposeAsync().ConfigureAwait(false);
         }
 
+        /// <inheritdoc cref="IFrame.DoubleClickAsync(string, ClickOptions)"/>
+        public async Task DoubleClickAsync(string selector, ClickOptions options = null)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.DoubleClickAsync(options).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
+        /// <inheritdoc cref="IFrame.TripleClickAsync(string, ClickOptions)"/>
+        public async Task TripleClickAsync(string selector, ClickOptions options = null)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.TripleClickAsync(options).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
         /// <inheritdoc cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         public async Task<T> EvaluateAsync<T>(string script, params object[] args)
         {

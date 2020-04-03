@@ -22,8 +22,14 @@ namespace PlaywrightSharp
 
         internal new FrameExecutionContext Context { get; set; }
 
-        /// <inheritdoc cref="IElementHandle"/>
+        /// <inheritdoc cref="IElementHandle.ClickAsync(ClickOptions)"/>
         public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.ClickAsync(point.X, point.Y, options), options);
+
+        /// <inheritdoc cref="IElementHandle.DoubleClickAsync(ClickOptions)"/>
+        public Task DoubleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.DoubleClickAsync(point.X, point.Y, options), options);
+
+        /// <inheritdoc cref="IElementHandle.TripleClickAsync(ClickOptions)"/>
+        public Task TripleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.TripleClickAsync(point.X, point.Y, options), options);
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)

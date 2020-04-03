@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Tests.Page
                 page.ClickAsync("a"),
                 page.WaitForNavigationAsync()
             );
-            Assert.Equal(TestConstants.ServerUrl + "/wrappedlink.html#clicked", Page.Url);
+            Assert.Equal(TestConstants.ServerUrl + "/wrappedlink.html#clicked", page.Url);
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -163,8 +163,10 @@ namespace PlaywrightSharp.Tests.Page
             const string text = "This is the text that we are going to try to select. Let's see how it goes.";
             await Page.FillAsync("textarea", text);
             await Page.TripleClickAsync("textarea");
-
-            Assert.Equal(text, await Page.EvaluateAsync<string>("window.getSelection().toString()"));
+            Assert.Equal(text, await Page.EvaluateAsync<string>(@"() => {
+                const textarea = document.querySelector('textarea');
+                return textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+            }"));
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -255,20 +257,21 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWaitForVisible()
         {
+            bool done = false;
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
 
-            var clickTask = Page.ClickAsync("button");
+            var clicked = Page.ClickAsync("button").ContinueWith(_ => done = true);
 
             for (int i = 0; i < 5; i++)
             {
                 await Page.EvaluateAsync("1");
             }
-            Assert.False(clickTask.IsCompleted);
+            Assert.False(done);
 
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'block'");
-
-            Assert.True(clickTask.IsCompleted);
+            await clicked;
+            Assert.True(done);
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
@@ -379,7 +382,7 @@ namespace PlaywrightSharp.Tests.Page
                });
             }");
             var button = await Page.QuerySelectorAsync("button");
-            await button.ClickAsync(new ClickOptions { ClickCount = 2 });
+            await button.DoubleClickAsync();
             Assert.True(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }

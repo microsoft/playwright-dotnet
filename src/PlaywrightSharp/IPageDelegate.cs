@@ -177,5 +177,11 @@ namespace PlaywrightSharp
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
+
+        /// <summary>
+        /// Reloads the page.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the redirect action completes.</returns>
+        Task ReloadAsync();
     }
 }

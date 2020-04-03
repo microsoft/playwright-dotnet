@@ -133,7 +133,7 @@ namespace PlaywrightSharp.Firefox
         public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
             var quads = await GetContentQuadsAsync(handle).ConfigureAwait(false);
-            if (quads?.Length == 0)
+            if (quads == null || quads.Length == 0)
             {
                 return null;
             }
@@ -195,6 +195,8 @@ namespace PlaywrightSharp.Firefox
         {
             throw new NotImplementedException();
         }
+
+        public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 
         internal async Task InitializeAsync()
         {
@@ -263,6 +265,7 @@ namespace PlaywrightSharp.Firefox
                 case PageNavigationStartedFirefoxEvent pageNavigationStarted:
                     break;
                 case PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation:
+                    OnSameDocumentNavigation(pageSameDocumentNavigation);
                     break;
                 case RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated:
                     OnExecutionContextCreated(runtimeExecutionContextCreated);
@@ -321,6 +324,9 @@ namespace PlaywrightSharp.Firefox
 
             Page.FrameManager.FrameCommittedNewDocumentNavigation(pageNavigationCommitted.FrameId, pageNavigationCommitted.Url, pageNavigationCommitted.Name ?? string.Empty, pageNavigationCommitted.NavigationId ?? string.Empty, false);
         }
+
+        private void OnSameDocumentNavigation(PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation)
+            => Page.FrameManager.FrameCommittedSameDocumentNavigation(pageSameDocumentNavigation.FrameId, pageSameDocumentNavigation.Url);
 
         private void OnExecutionContextCreated(RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated)
         {
