@@ -224,6 +224,37 @@ namespace PlaywrightSharp.Chromium
         public Task EvaluateOnNewDocumentAsync(string source)
             => Client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest { Source = source });
 
+        public async Task<string> GetOwnerFrameAsync(ElementHandle handle)
+        {
+            // document.documentElement has frameId of the owner frame.
+            var documentElement = await handle.EvaluateHandleAsync(@"node => {
+                const doc = node;
+                if (doc.documentElement && doc.documentElement.ownerDocument === doc)
+                    return doc.documentElement;
+                return node.ownerDocument ? node.ownerDocument.documentElement : null;
+            }").ConfigureAwait(false) as ElementHandle;
+
+            if (documentElement == null)
+            {
+                return null;
+            }
+
+            var remoteObject = documentElement.RemoteObject;
+            if (string.IsNullOrEmpty(remoteObject.ObjectId))
+            {
+                return null;
+            }
+
+            var nodeInfo = await Client.SendAsync(new DOMDescribeNodeRequest
+            {
+                ObjectId = remoteObject.ObjectId,
+            }).ConfigureAwait(false);
+
+            string frameId = nodeInfo?.Node?.FrameId;
+            await documentElement.DisposeAsync().ConfigureAwait(false);
+            return frameId;
+        }
+
         public async Task<IFrame> GetContentFrameAsync(ElementHandle handle)
         {
             var nodeInfo = await Client.SendAsync(new DOMDescribeNodeRequest

@@ -144,6 +144,8 @@ namespace PlaywrightSharp.Firefox
                 Script = source,
             });
 
+        public Task<string> GetOwnerFrameAsync(ElementHandle elementHandle) => throw new NotImplementedException();
+
         public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
         {
             throw new NotImplementedException();
