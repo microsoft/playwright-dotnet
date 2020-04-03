@@ -64,7 +64,23 @@ namespace PlaywrightSharp.Firefox
             return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<object>((RemoteObject)payload);
         }
 
-        public Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle) => throw new NotImplementedException();
+        public async Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle)
+        {
+            var payload = (RemoteObject)((JSHandle)jsHandle).RemoteObject;
+            if (string.IsNullOrEmpty(payload.ObjectId))
+            {
+                return DeserializeValue<T>(payload);
+            }
+
+            var simpleValue = await _session.SendAsync(new RuntimeCallFunctionRequest
+            {
+                ExecutionContextId = ExecutionContextId,
+                ReturnByValue = true,
+                FunctionDeclaration = "e => e",
+                Args = new[] { ToCallArgument(payload) },
+            }).ConfigureAwait(false);
+            return DeserializeValue<T>(simpleValue.Result);
+        }
 
         public Task ReleaseHandleAsync(JSHandle handle)
         {
@@ -130,7 +146,7 @@ namespace PlaywrightSharp.Firefox
                 case double d when double.IsPositiveInfinity(d):
                     return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.Infinity };
                 case double d when double.IsNegativeInfinity(d):
-                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeZero };
+                    return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NegativeInfinity };
                 case double d when double.IsNaN(d):
                     return new CallFunctionArgument { UnserializableValue = RemoteObjectUnserializableValue.NaN };
                 case JSHandle objectHandle:
@@ -174,28 +190,24 @@ namespace PlaywrightSharp.Firefox
                 return default;
             }
 
-            return typeof(T) == typeof(JsonElement) ? (T)remoteObject.Value : (T)ValueFromType<T>((JsonElement)remoteObject.Value, remoteObject.Type ?? RemoteObjectType.Object);
+            return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
         }
 
         private object ValueFromUnserializableValue(RemoteObjectUnserializableValue unserializableValue)
-            => unserializableValue switch
+        {
+            switch (unserializableValue)
             {
-                RemoteObjectUnserializableValue.NegativeZero => -0,
-                RemoteObjectUnserializableValue.NaN => double.NaN,
-                RemoteObjectUnserializableValue.Infinity => double.PositiveInfinity,
-                RemoteObjectUnserializableValue.NegativeInfinity => double.NegativeInfinity,
-                _ => throw new Exception("Unsupported unserializable value: " + unserializableValue),
-            };
-
-        private object ValueFromType<T>(JsonElement value, RemoteObjectType objectType)
-            => objectType switch
-            {
-                RemoteObjectType.Object => value.ToObject<T>(),
-                RemoteObjectType.Undefined => null,
-                RemoteObjectType.Number => value.GetDouble(),
-                RemoteObjectType.Bigint => value.GetDouble(),
-                RemoteObjectType.Boolean => value.GetBoolean(),
-                _ => value.ToObject<T>()
-            };
+                case RemoteObjectUnserializableValue.NegativeZero:
+                    return -0;
+                case RemoteObjectUnserializableValue.NaN:
+                    return double.NaN;
+                case RemoteObjectUnserializableValue.Infinity:
+                    return double.PositiveInfinity;
+                case RemoteObjectUnserializableValue.NegativeInfinity:
+                    return double.NegativeInfinity;
+                default:
+                    throw new Exception("Unsupported unserializable value: " + unserializableValue);
+            }
+        }
     }
 }
