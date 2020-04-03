@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
     public class ElementHandleVisibleRatioTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public  ElementHandleVisibleRatioTests(ITestOutputHelper output) : base(output)
+        public ElementHandleVisibleRatioTests(ITestOutputHelper output) : base(output)
         {
         }
 
