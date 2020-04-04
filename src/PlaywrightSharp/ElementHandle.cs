@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Esprima.Ast;
 using PlaywrightSharp.Helpers;
@@ -321,9 +322,78 @@ namespace PlaywrightSharp
             return await utility.EvaluateAsync<T>(script, this, args).ConfigureAwait(false);
         }
 
-        private Task<PointAndScroll> ViewportPointAndScrollAsync(Point value)
+        private async Task<PointAndScroll> ViewportPointAndScrollAsync(Point relativePoint)
         {
-            throw new NotImplementedException();
+            var boxTask = GetBoundingBoxAsync();
+            var borderTask = EvaluateInUtility<Point>(@"(node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE || !node.ownerDocument || !node.ownerDocument.defaultView)
+                    return { x: 0, y: 0 };
+                const style = node.ownerDocument.defaultView.getComputedStyle(node);
+                return { x: parseInt(style.borderLeftWidth || '', 10), y: parseInt(style.borderTopWidth || '', 10) };
+            }");
+
+            await Task.WhenAll(
+                boxTask,
+                borderTask.ContinueWith(
+                    t => System.Diagnostics.Debug.WriteLine(t.Exception?.Message),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnFaulted,
+                    TaskScheduler.Default)).ConfigureAwait(false);
+
+            Rect box = boxTask.Result;
+            Point? border = borderTask.IsFaulted ? (Point?)null : borderTask.Result;
+
+            var point = new Point
+            {
+                X = relativePoint.X,
+                Y = relativePoint.Y,
+            };
+
+            if (box != null)
+            {
+                point.X += Convert.ToInt32(box.X);
+                point.Y += Convert.ToInt32(box.Y);
+            }
+
+            if (border != null)
+            {
+                // Make point relative to the padding box to align with offsetX/offsetY.
+                point.X += border.Value.X;
+                point.Y += border.Value.Y;
+            }
+
+            var metrics = await _page.Delegate.GetLayoutViewportAsync().ConfigureAwait(false);
+
+            // Give 20 extra pixels to avoid any issues on viewport edge.
+            double scrollX = 0;
+
+            if (point.X < 20)
+            {
+                scrollX = point.X - 20;
+            }
+
+            if (point.X > metrics.Width - 20)
+            {
+                scrollX = point.X - metrics.Width + 20;
+            }
+
+            double scrollY = 0;
+            if (point.Y < 20)
+            {
+                scrollY = point.Y - 20;
+            }
+
+            if (point.Y > metrics.Height - 20)
+            {
+                scrollY = point.Y - metrics.Height + 20;
+            }
+
+            return new PointAndScroll
+            {
+                Point = point,
+                ScrollX = scrollX,
+                ScrollY = scrollY,
+            };
         }
 
         private async Task<Point> ClickablePointAsync()
