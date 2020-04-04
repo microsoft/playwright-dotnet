@@ -177,7 +177,7 @@ namespace PlaywrightSharp.Tests.Page
 
             for (int i = 0; i < 11; ++i)
             {
-                // We might've scrolled to click a button - reset to (0, 0).
+                // We might have scrolled to click a button - reset to (0, 0).
                 await Page.EvaluateAsync("() => window.scrollTo(0, 0)");
                 await Page.ClickAsync($"#btn{i}");
             }
