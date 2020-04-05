@@ -137,9 +137,22 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.GetVisibleRatioAsync"/>
         public Task<double> GetVisibleRatioAsync()
-        {
-            throw new NotImplementedException();
-        }
+            => EvaluateInUtility<double>(@"async (node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE)
+                    throw new Error('Node is not of type HTMLElement');
+                const element = node;
+                const visibleRatio = await new Promise(resolve => {
+                    const observer = new IntersectionObserver(entries => {
+                        resolve(entries[0].intersectionRatio);
+                        observer.disconnect();
+                    });
+                    observer.observe(element);
+                    // Firefox doesn't call IntersectionObserver callback unless
+                    // there are rafs.
+                    requestAnimationFrame(() => { });
+                });
+                return visibleRatio;
+            }");
 
         /// <inheritdoc cref="IElementHandle.HoverAsync"/>
         public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.MoveAsync(point.X, point.Y), options);

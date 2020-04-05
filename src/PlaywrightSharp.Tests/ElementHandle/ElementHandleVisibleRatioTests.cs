@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.visibleRatio</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ElementHandleVisibleRatioTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandleVisibleRatioTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandleVisibleRatioTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -21,10 +24,10 @@ namespace PlaywrightSharp.Tests.ElementHandle
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
-            for (var i = 0; i < 11; ++i)
+            for (int i = 0; i < 11; ++i)
             {
                 var button = await Page.QuerySelectorAsync("#btn" + i);
-                var ratio = await button.GetVisibleRatioAsync();
+                double ratio = await button.GetVisibleRatioAsync();
                 Assert.Equal(10 - i, Math.Round(ratio * 10));
             }
         }
@@ -37,10 +40,10 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
             await Page.EvaluateAsync("() => delete window['Node']");
-            for (var i = 0; i < 11; ++i)
+            for (int i = 0; i < 11; ++i)
             {
                 var button = await Page.QuerySelectorAsync("#btn" + i);
-                var ratio = await button.GetVisibleRatioAsync();
+                double ratio = await button.GetVisibleRatioAsync();
                 Assert.Equal(10 - i, Math.Round(ratio * 10));
             }
         }
