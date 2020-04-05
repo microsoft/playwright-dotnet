@@ -137,7 +137,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.GetVisibleRatioAsync"/>
         public Task<double> GetVisibleRatioAsync()
-            => EvaluateInUtility<double>(@"async (node) => {
+            => EvaluateInUtilityAsync<double>(@"async (node) => {
                 if (node.nodeType !== Node.ELEMENT_NODE)
                     throw new Error('Node is not of type HTMLElement');
                 const element = node;
