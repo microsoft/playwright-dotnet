@@ -12,9 +12,9 @@ namespace PlaywrightSharp
             new Dictionary<WaitUntilNavigation, string>
             {
                 [WaitUntilNavigation.Load] = "load",
-                [WaitUntilNavigation.DOMContentLoaded] = "DOMContentLoaded",
-                [WaitUntilNavigation.Networkidle0] = "networkIdle",
-                [WaitUntilNavigation.Networkidle2] = "networkAlmostIdle",
+                [WaitUntilNavigation.DOMContentLoaded] = "domcontentloaded",
+                [WaitUntilNavigation.Networkidle0] = "networkidle0",
+                [WaitUntilNavigation.Networkidle2] = "networkidle2",
             };
 
         private static readonly WaitUntilNavigation[] _defaultWaitUntil = { WaitUntilNavigation.Load };
@@ -49,7 +49,7 @@ namespace PlaywrightSharp
                 return protocolEvent;
             });
 
-            _timeout = frame.Page.DefaultNavigationTimeout;
+            _timeout = _options?.Timeout ?? frame.Page.DefaultNavigationTimeout;
             _frame = frame;
             _sameDocumentNavigationTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             _lifecycleTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);

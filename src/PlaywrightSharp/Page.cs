@@ -289,9 +289,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, WaitUntilNavigation)"/>
         public Task SetContentAsync(string html, WaitUntilNavigation waitUntil)
-        {
-            throw new NotImplementedException();
-        }
+            => SetContentAsync(html, new NavigationOptions { WaitUntil = new[] { waitUntil } });
 
         /// <inheritdoc cref="IPage.SetExtraHttpHeadersAsync(IDictionary{string, string})"/>
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
