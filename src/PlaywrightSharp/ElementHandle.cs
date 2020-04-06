@@ -316,14 +316,16 @@ namespace PlaywrightSharp
         private async Task<PointAndScroll> ViewportPointAndScrollAsync(Point relativePoint)
         {
             // TODO: debug log
-            var (box, border) = await TaskUtils.WhenAll(
-                GetBoundingBoxAsync(),
-                EvaluateInUtilityAsync<Point>(@"node => {
+            var boxTask = GetBoundingBoxAsync();
+            var borderTask = EvaluateInUtilityAsync<Point>(@"node => {
                     if (node.nodeType !== Node.ELEMENT_NODE || !node.ownerDocument || !node.ownerDocument.defaultView)
                         return { x: 0, y: 0 };
                     const style = node.ownerDocument.defaultView.getComputedStyle(node);
                     return { x: parseInt(style.borderLeftWidth || '', 10), y: parseInt(style.borderTopWidth || '', 10) };
-                }")).ConfigureAwait(false);
+                }");
+            await Task.WhenAll(boxTask, borderTask).ConfigureAwait(false);
+            var box = boxTask.Result;
+            var border = borderTask.Result;
             var point = new Point { X = relativePoint.X, Y = relativePoint.Y };
             if (box != null)
             {
