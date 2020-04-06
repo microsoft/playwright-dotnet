@@ -413,6 +413,12 @@ namespace PlaywrightSharp.Chromium
                     case PageFrameNavigatedChromiumEvent pageFrameNavigated:
                         OnFrameNavigated(pageFrameNavigated.Frame, false);
                         break;
+                    case PageNavigatedWithinDocumentChromiumEvent pageNavigatedWithinDocument:
+                        OnFrameNavigatedWithinDocument(pageNavigatedWithinDocument.FrameId, pageNavigatedWithinDocument.Url);
+                        break;
+                    case PageFrameDetachedChromiumEvent frameDetached:
+                        OnFrameDetached(frameDetached.FrameId);
+                        break;
                     case PageLifecycleEventChromiumEvent pageLifecycleEvent:
                         OnLifecycleEvent(pageLifecycleEvent);
                         break;
@@ -446,6 +452,11 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.Message);
             }
         }
+
+        private void OnFrameNavigatedWithinDocument(string frameId, string url)
+            => Page.FrameManager.FrameCommittedSameDocumentNavigation(frameId, url);
+
+        private void OnFrameDetached(string frameId) => Page.FrameManager.FrameDetached(frameId);
 
         private Task OnBindingCalled(RuntimeBindingCalledChromiumEvent e)
         {

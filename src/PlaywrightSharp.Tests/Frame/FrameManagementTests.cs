@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame Management</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class FrameManagementTests : PlaywrightSharpPageBaseTest
     {
-        internal FrameManagementTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public FrameManagementTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -93,7 +96,7 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact]
         public async Task ShouldNotSendAttachDetachEventsForMainFrame()
         {
-            var hasEvents = false;
+            bool hasEvents = false;
             Page.FrameAttached += (sender, e) => hasEvents = true;
             Page.FrameDetached += (sender, e) => hasEvents = true;
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -213,19 +216,19 @@ namespace PlaywrightSharp.Tests.Frame
                 window.frame.remove();
             }");
             Assert.True(frame1.Detached);
-            var frameattached = new TaskCompletionSource<IFrame>();
+            var frameAttached = new TaskCompletionSource<IFrame>();
             void WaitFrameAttached(object sender, FrameEventArgs e)
             {
-                frameattached.TrySetResult(e.Frame);
+                frameAttached.TrySetResult(e.Frame);
                 Page.FrameAttached -= WaitFrameAttached;
             }
             Page.FrameAttached += WaitFrameAttached;
 
             await Task.WhenAll(
-              frameattached.Task,
+              frameAttached.Task,
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
-            var frame2 = frameattached.Task.Result;
+            var frame2 = frameAttached.Task.Result;
             Assert.False(frame2.Detached);
             Assert.NotSame(frame1, frame2);
         }
