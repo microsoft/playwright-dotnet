@@ -31,7 +31,6 @@ namespace PlaywrightSharp.Tests.BaseTests
             ControlledBrowserApp = null;
         }
 
-
         private async Task SetupWebAsync()
         {
             ControlledBrowserApp = await TestConstants.GetNewBrowserType().LaunchBrowserAppAsync();
