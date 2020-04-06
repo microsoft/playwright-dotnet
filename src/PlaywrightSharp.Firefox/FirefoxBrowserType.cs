@@ -259,7 +259,12 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowserType.ConnectAsync(ConnectOptions)"/>
         public Task<IBrowser> ConnectAsync(ConnectOptions options = null)
         {
-            throw new NotImplementedException();
+            if (options?.BrowserURL != null)
+            {
+                throw new PlaywrightSharpException("Option \"BrowserURL\" is not supported by Firefox");
+            }
+
+            return FirefoxBrowser.ConnectAsync(options);
         }
 
         /// <inheritdoc cref="IBrowserType.CreateBrowserFetcher(BrowserFetcherOptions)"/>
