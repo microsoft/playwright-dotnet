@@ -4,16 +4,13 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-[assembly: TestFramework("PlaywrightSharp.Tests.BaseTests.PlaywrightAssemblyFixture", "PlaywrightSharp.Tests")]
-[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
-
 namespace PlaywrightSharp.Tests.BaseTests
 {
     /// <inheritdoc/>
-    public class PlaywrightAssemblyFixture : XunitTestAssemblyRunner
+    public class PlaywrightXunitTestAssemblyRunner : XunitTestAssemblyRunner
     {
         /// <inheritdoc/>
-        public PlaywrightAssemblyFixture(ITestAssembly testAssembly, IEnumerable<IXunitTestCase> testCases, IMessageSink diagnosticMessageSink, IMessageSink executionMessageSink, ITestFrameworkExecutionOptions executionOptions) : base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)
+        public PlaywrightXunitTestAssemblyRunner(ITestAssembly testAssembly, IEnumerable<IXunitTestCase> testCases, IMessageSink diagnosticMessageSink, IMessageSink executionMessageSink, ITestFrameworkExecutionOptions executionOptions) : base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)
         {
         }
 
