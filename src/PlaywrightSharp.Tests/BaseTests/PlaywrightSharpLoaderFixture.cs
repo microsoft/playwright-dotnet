@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpLoaderFixture : IDisposable
     {
+        private static readonly object _lock = new object();
         private static bool started = false;
         internal static SimpleServer Server { get; private set; }
         internal static SimpleServer HttpsServer { get; private set; }
@@ -26,23 +27,32 @@ namespace PlaywrightSharp.Tests.BaseTests
             Task.WaitAll(Server.StopAsync(), HttpsServer.StopAsync());
         }
 
-        private async Task SetupAsync()
+        private Task SetupAsync()
         {
-            if (started)
+            if (!started)
             {
-                return;
+                lock (_lock)
+                {
+                    if (started)
+                    {
+                        return Task.CompletedTask;
+                    }
+
+                    started = true;
+
+                    var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher().DownloadAsync();
+
+                    Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
+                    HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
+
+                    var serverStart = Server.StartAsync();
+                    var httpsServerStart = HttpsServer.StartAsync();
+
+                    return Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
+                }
             }
-            started = true;
 
-            var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher().DownloadAsync();
-
-            Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
-            HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
-
-            var serverStart = Server.StartAsync();
-            var httpsServerStart = HttpsServer.StartAsync();
-
-            await Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
+            return Task.CompletedTask;
         }
     }
 }
