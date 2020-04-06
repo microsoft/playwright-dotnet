@@ -56,9 +56,9 @@ namespace PlaywrightSharp.Firefox
         public string HandleToString(IJSHandle handle, bool includeType)
         {
             var payload = ((JSHandle)handle).RemoteObject;
-            if (payload.ObjectId != null)
+            if (!string.IsNullOrEmpty(payload.ObjectId))
             {
-                return "JSHandle@" + (payload.Subtype ?? payload.Type);
+                return "JSHandle@" + (string.IsNullOrEmpty(payload.Subtype) ? payload.Type : payload.Subtype);
             }
 
             return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<string>((RemoteObject)payload);

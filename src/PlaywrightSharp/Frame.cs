@@ -287,7 +287,7 @@ namespace PlaywrightSharp
                 @"(html, tag) => {
                     window.stop();
                     document.open();
-                    console.debug(tag);  // eslint-disable-line no-console
+                    console.debug(tag);
                     document.write(html);
                     document.close();
                 }",
