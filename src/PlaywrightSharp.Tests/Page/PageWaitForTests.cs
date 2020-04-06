@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -11,6 +8,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Page.WaitFor</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageWaitForTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

@@ -395,11 +395,12 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
+        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args)
+            => MainFrame.WaitForFunctionAsync(pageFunction, options, args);
+
         /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, object[])"/>
-        public Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args) => WaitForFunctionAsync(pageFunction, null, args);
 
         /// <inheritdoc cref="IPage.QuerySelectorAllEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args)
@@ -455,23 +456,12 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
-        public Task<IJSHandle> WaitForFunctionAsync(string script, WaitForFunctionOptions options = null, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IPage.WaitForTimeoutAsync(int)"/>
-        public Task WaitForTimeoutAsync(int timeout)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc cref="IPage.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.WaitForSelectorAsync(selector, options);
 
         /// <inheritdoc cref="IPage.WaitForSelectorEvaluateAsync(string, string, WaitForSelectorOptions, object[])"/>
         public Task<IElementHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForSelectorOptions options = null, params object[] args)
