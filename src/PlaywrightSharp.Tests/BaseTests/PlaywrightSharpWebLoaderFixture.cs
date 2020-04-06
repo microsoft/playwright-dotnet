@@ -6,7 +6,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// <summary>
     /// This class setup web tests.
     /// </summary>
-    public class PlaywrightSharpWebLoaderFixture : PlaywrightSharpLoaderFixture, IDisposable
+    public class PlaywrightSharpWebLoaderFixture : IDisposable
     {
         /// <inheritdoc/>
         public PlaywrightSharpWebLoaderFixture() : base()
