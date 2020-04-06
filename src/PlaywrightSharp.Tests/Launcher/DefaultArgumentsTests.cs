@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests.Launcher
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class DefaultArgumentsTests : PlaywrightSharpBrowserContextBaseTest
+    public class DefaultArgumentsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public DefaultArgumentsTests(ITestOutputHelper output) : base(output)

@@ -1,7 +1,7 @@
-using System.IO;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit;
+using System.Collections.Generic;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
@@ -10,22 +10,23 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest, IAsyncLifetime
     {
-        internal IBrowser Browser { get; set; }
+        internal IBrowser Browser => PlaywrightSharpBrowserLoaderFixture.Browser;
+        internal IBrowserApp BrowserApp => PlaywrightSharpBrowserLoaderFixture.BrowserApp;
+
+        private readonly List<IBrowserContext> _contexts = new List<IBrowserContext>();
 
         internal LaunchOptions DefaultOptions { get; set; }
 
         internal PlaywrightSharpBrowserBaseTest(ITestOutputHelper output) : base(output)
         {
-            BaseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "workspace");
-            var dirInfo = new DirectoryInfo(BaseDirectory);
-
-            if (!dirInfo.Exists)
-            {
-                dirInfo.Create();
-            }
         }
 
-        internal Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null) => Browser.NewContextAsync(options);
+        internal async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
+        {
+            var context = await Browser.NewContextAsync(options);
+            _contexts.Add(context);
+            return context;
+        }
 
         internal async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
@@ -34,10 +35,22 @@ namespace PlaywrightSharp.Tests.BaseTests
         }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        public virtual async Task InitializeAsync()
-            => Browser = PlaywrightSharpBrowserLoaderFixture.Browser ?? await Playwright.LaunchAsync(DefaultOptions ?? TestConstants.GetDefaultBrowserOptions());
+        public async Task InitializeAsync()
+        {
+            await AdditionalInitializeAsync();
+        }
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        public virtual Task DisposeAsync() => PlaywrightSharpBrowserLoaderFixture.Browser == null ? Browser.CloseAsync() : Task.CompletedTask;
+        public async Task DisposeAsync()
+        {
+            await Task.WhenAll(_contexts.ConvertAll(context => context.CloseAsync()));
+            await AdditionalDisposeAsync();
+        }
+
+        /// <inheritdoc/>
+        protected virtual Task AdditionalInitializeAsync() => Task.CompletedTask;
+
+        /// <inheritdoc/>
+        protected virtual Task AdditionalDisposeAsync() => Task.CompletedTask;
     }
 }

@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Mono.Unix;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -27,9 +23,9 @@ namespace PlaywrightSharp.Tests.Chromium
         }
 
         /// <inheritdoc/>
-        public override async Task DisposeAsync()
+        protected override async Task AdditionalDisposeAsync()
         {
-            await base.DisposeAsync();
+            await base.AdditionalDisposeAsync();
 
             int attempts = 0;
             const int maxAttempts = 5;

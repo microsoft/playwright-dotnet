@@ -9,8 +9,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
-    public class SetUserAgentTests : PlaywrightSharpBrowserContextBaseTest
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+    public class SetUserAgentTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public SetUserAgentTests(ITestOutputHelper output) : base(output)
