@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
-using PlaywrightSharp.Chromium;
 using Xunit;
 
 namespace PlaywrightSharp.Tests.BaseTests

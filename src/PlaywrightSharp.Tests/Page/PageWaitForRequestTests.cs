@@ -1,7 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
