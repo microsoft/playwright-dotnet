@@ -19,10 +19,8 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal static IBrowser HostBrowser { get; private set; }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             HostBrowserApp.CloseAsync().GetAwaiter().GetResult();
             HostBrowserApp = null;
             HostBrowser = null;

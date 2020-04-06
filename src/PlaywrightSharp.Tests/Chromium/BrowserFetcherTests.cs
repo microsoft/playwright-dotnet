@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>BrowserFetcher</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class BrowserFetcherTests : PlaywrightSharpBrowserBaseTest, IDisposable
+    public class BrowserFetcherTests : PlaywrightSharpBaseTest, IDisposable
     {
         private readonly TempDirectory _downloadsFolder;
 

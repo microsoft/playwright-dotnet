@@ -18,9 +18,8 @@ namespace PlaywrightSharp.Tests.BaseTests
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
             BrowserApp.CloseAsync().GetAwaiter().GetResult();
             BrowserApp = null;
             Browser = null;
