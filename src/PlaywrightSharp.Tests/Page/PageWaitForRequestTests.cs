@@ -10,9 +10,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForRequest</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class PageWaitForRequestTests : PlaywrightSharpPageBaseTest
     {
-        internal PageWaitForRequestTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageWaitForRequestTests(ITestOutputHelper output) : base(output)
         {
         }
 

@@ -374,10 +374,40 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
             => MainFrame.WaitForNavigationAsync(waitUntil);
 
+        /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
+        public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
+        {
+            int timeout = options?.Timeout ?? DefaultTimeout;
+            var tsc = new TaskCompletionSource<IRequest>();
+            void RequestEventHandler(object sender, RequestEventArgs e)
+            {
+                if (regex.IsMatch(e.Request.Url))
+                {
+                    tsc.TrySetResult(e.Request);
+                    Request -= RequestEventHandler;
+                }
+            }
+
+            Request += RequestEventHandler;
+            return tsc.Task.WithTimeout(timeout);
+        }
+
         /// <inheritdoc cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
         public Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
         {
-            throw new NotImplementedException();
+            int timeout = options?.Timeout ?? DefaultTimeout;
+            var tsc = new TaskCompletionSource<IRequest>();
+            void RequestEventHandler(object sender, RequestEventArgs e)
+            {
+                if (url.Equals(e.Request.Url))
+                {
+                    tsc.TrySetResult(e.Request);
+                    Request -= RequestEventHandler;
+                }
+            }
+
+            Request += RequestEventHandler;
+            return tsc.Task.WithTimeout(timeout);
         }
 
         /// <inheritdoc cref="IPage.WaitForResponseAsync(string, WaitForOptions)"/>
@@ -388,12 +418,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.GetPdfAsync(string)"/>
         public Task GetPdfAsync(string file) => throw new NotImplementedException();
-
-        /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
-        public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args)
@@ -518,6 +542,8 @@ namespace PlaywrightSharp
         }
 
         internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
+
+        internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
 
         internal void DidDisconnected() => _disconnected = true;
 

@@ -181,6 +181,24 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void RequestStarted(Request request)
+        {
+            InflightRequestStarted(request);
+            var frame = request.Frame as Frame;
+            if (request.DocumentId != null && frame != null && request.RedirectChain.Length != 0)
+            {
+                foreach (var watcher in LifecycleWatchers.ToArray())
+                {
+                    watcher.OnNavigationRequest(frame, request);
+                }
+
+                if (!request.IsFavicon)
+                {
+                    _page.OnRequest(request);
+                }
+            }
+        }
+
         private void StartNetworkIdleTimer(Frame frame, string lifecycleEvent)
         {
             if (frame.FiredLifecycleEvents.Contains(lifecycleEvent))
@@ -233,6 +251,26 @@ namespace PlaywrightSharp
             foreach (var subframe in frame.ChildFrames)
             {
                 CollectFrames(subframe, frames);
+            }
+        }
+
+        private void InflightRequestStarted(Request request)
+        {
+            var frame = request.Frame as Frame;
+            if (frame == null || request.IsFavicon)
+            {
+                return;
+            }
+
+            frame.InflightRequests.Add(request);
+            if (frame.InflightRequests.Count == 1)
+            {
+                StopNetworkIdleTimer(frame, "networkidle0");
+            }
+
+            if (frame.InflightRequests.Count == 3)
+            {
+                StopNetworkIdleTimer(frame, "networkidle2");
             }
         }
     }
