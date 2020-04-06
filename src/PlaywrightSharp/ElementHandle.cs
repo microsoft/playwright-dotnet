@@ -34,7 +34,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
-            => Context.EvaluateHandleAsync(script, args.InsertAt(0, this));
+            => Context.EvaluateHandleAsync(script, args.Prepend(this));
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)
@@ -425,10 +425,7 @@ namespace PlaywrightSharp
         private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
         {
             var utility = await Context.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            object[] newArgs = new object[args.Length + 1];
-            newArgs[0] = this;
-            args.CopyTo(newArgs, 1);
-            return await utility.EvaluateAsync<T>(pageFunction, newArgs).ConfigureAwait(false);
+            return await utility.EvaluateAsync<T>(pageFunction, args.Prepend(this)).ConfigureAwait(false);
         }
     }
 }
