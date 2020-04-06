@@ -128,7 +128,7 @@ namespace PlaywrightSharp
             }
 
             frame.Url = url;
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnNavigatedWithinDocument(frame);
             }

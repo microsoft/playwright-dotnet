@@ -224,11 +224,11 @@ namespace PlaywrightSharp.Tests.Frame
             }
             Page.FrameAttached += WaitFrameAttached;
 
-            await Task.WhenAll(
+            var (frame2, _) = await TaskUtils.WhenAll(
               frameAttached.Task,
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
-            var frame2 = frameAttached.Task.Result;
+
             Assert.False(frame2.Detached);
             Assert.NotSame(frame1, frame2);
         }
