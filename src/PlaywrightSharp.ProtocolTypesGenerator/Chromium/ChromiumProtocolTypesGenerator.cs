@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
         protected override async Task GenerateTypesAsync(StringBuilder builder, RevisionInfo revision)
         {
             using var process = Process.Start(revision.ExecutablePath, "--remote-debugging-port=9222 --headless");
-            using var stream = await _httpClient.GetStreamAsync(new Uri("http://localhost:9222/json/protocol")).ConfigureAwait(false);
+            await using var stream = await _httpClient.GetStreamAsync(new Uri("http://localhost:9222/json/protocol")).ConfigureAwait(false);
             var response = await JsonSerializer.DeserializeAsync<ChromiumProtocolDomainsContainer>(stream, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -49,29 +50,31 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
             {
                 foreach (var type in domain.Types ?? Array.Empty<ChromiumProtocolDomainType>())
                 {
-                    if (type.Type == "array")
+                    switch (type.Type)
                     {
-                        string itemType = ConvertJsToCsharp(type?.Items?.Type, false);
-                        if (itemType != null)
-                        {
-                            _knownTypes[type.Id] = itemType + "[]";
-                            _knownTypes[$"{domain.Domain}.{type.Id}"] = itemType + "[]";
-                        }
-                    }
-                    else if (type.Type == "string" && type.Enum == null)
-                    {
-                        _knownTypes[type.Id] = "string";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "string";
-                    }
-                    else if (type.Type == "integer")
-                    {
-                        _knownTypes[type.Id] = "int?";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "int?";
-                    }
-                    else if (type.Type == "number")
-                    {
-                        _knownTypes[type.Id] = "double?";
-                        _knownTypes[$"{domain.Domain}.{type.Id}"] = "double?";
+                        case "array":
+
+                            string itemType = ConvertJsToCsharp(type?.Items?.Type, false);
+                            if (itemType != null)
+                            {
+                                _knownTypes[type.Id] = itemType + "[]";
+                                _knownTypes[$"{domain.Domain}.{type.Id}"] = itemType + "[]";
+                            }
+
+                            break;
+
+                        case "string" when type.Enum == null:
+                            _knownTypes[type.Id] = "string";
+                            _knownTypes[$"{domain.Domain}.{type.Id}"] = "string";
+                            break;
+                        case "integer":
+                            _knownTypes[type.Id] = "int?";
+                            _knownTypes[$"{domain.Domain}.{type.Id}"] = "int?";
+                            break;
+                        case "number":
+                            _knownTypes[type.Id] = "double?";
+                            _knownTypes[$"{domain.Domain}.{type.Id}"] = "double?";
+                            break;
                     }
                 }
             }
@@ -96,6 +99,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     builder.AppendLine("/// <summary>");
                     builder.Append("/// ").AppendLine(FormatDocs(type.Description));
                     builder.AppendLine("/// </summary>");
+                    builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
                     builder.Append("internal enum ").AppendLine(type.Id);
                     builder.AppendLine("{");
                     builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
@@ -108,7 +112,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                     builder.AppendLine("/// </summary>");
                     GenerateTypeDefinition(builder, type.Id);
                     builder.AppendLine("{");
-                    builder.AppendJoin("\n", NormalizeProperties(type.Properties, false));
+                    builder.AppendJoin("\n", NormalizeProperties(domain, type.Properties, false));
                     builder.AppendLine("}");
                 }
             }
@@ -140,7 +144,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.AppendLine("{");
                 builder.AppendLine("[System.Text.Json.Serialization.JsonIgnore]");
                 builder.Append("public string Command { get; } = \"").Append(domain.Domain).Append('.').Append(command.Name).AppendLine("\";");
-                builder.AppendJoin("\n", NormalizeProperties(command.Parameters, false));
+                builder.AppendJoin("\n", NormalizeProperties(domain, command.Parameters, false));
                 builder.AppendLine("}");
 
                 // response
@@ -149,7 +153,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 builder.AppendLine("/// </summary>");
                 GenerateResponseDefinition(builder, baseName);
                 builder.AppendLine("{");
-                builder.AppendJoin("\n", NormalizeProperties(command.Returns, true));
+                builder.AppendJoin("\n", NormalizeProperties(domain, command.Returns, true));
                 builder.AppendLine("}");
             }
         }
@@ -173,7 +177,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 GenerateEventDefinition(builder, domain.Domain + eventName);
                 builder.AppendLine("{");
                 builder.Append("public string InternalName { get; } = \"").Append(domain.Domain).Append('.').Append(e.Name).AppendLine("\";");
-                builder.AppendJoin("\n", NormalizeProperties(e.Parameters, false));
+                builder.AppendJoin("\n", NormalizeProperties(domain, e.Parameters, false));
                 builder.AppendLine("}");
             }
         }
@@ -217,7 +221,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 _ => null
             };
 
-        private string[] NormalizeProperties(ChromiumProtocolDomainProperty[] properties, bool isResponse)
+        private string[] NormalizeProperties(ChromiumProtocolDomain domain, ChromiumProtocolDomainProperty[] properties, bool isResponse)
         {
             if (properties == null)
             {
@@ -229,8 +233,14 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Chromium
                 var builder = new StringBuilder()
                     .AppendLine("/// <summary>")
                     .Append("/// ").AppendLine(FormatDocs(property.Description))
-                    .AppendLine("/// </summary>")
-                    .Append("public ")
+                    .AppendLine("/// </summary>");
+
+                if (domain.Types?.Any(t => t.Enum != null && t.Id == property.Ref) == true)
+                {
+                    builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
+                }
+
+                builder.Append("public ")
                     .Append(GetTypeOfProperty(property, isResponse))
                     .Append(' ').Append(property.Name.ToPascalCase()).Append(' ')
                     .Append("{ get; set; }");

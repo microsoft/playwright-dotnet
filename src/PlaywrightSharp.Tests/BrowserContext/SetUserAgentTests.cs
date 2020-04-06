@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -9,6 +8,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class SetUserAgentTests : PlaywrightSharpBrowserContextBaseTest
     {
@@ -28,12 +28,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             page = await NewPageAsync(new BrowserContextOptions { UserAgent = "foobar" });
 
-            var userAgentTask = Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString());
-            await Task.WhenAll(
-                userAgentTask,
+            var (userAgent, _) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
                 page.GoToAsync(TestConstants.EmptyPage)
             );
-            Assert.Equal("foobar", userAgentTask.Result);
+            Assert.Equal("foobar", userAgent);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -45,13 +44,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await NewPageAsync();
             Assert.Contains("Mozilla", await page.EvaluateAsync<string>("navigator.userAgent"));
             page = await NewPageAsync(new BrowserContextOptions { UserAgent = "foobar" });
-            var userAgentTask = Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]);
 
-            await Task.WhenAll(
-              userAgentTask,
+            var (userAgent, _) = await TaskUtils.WhenAll(
+              Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
               FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.EmptyPage));
 
-            Assert.Equal("foobar", userAgentTask.Result);
+            Assert.Equal("foobar", userAgent);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -83,12 +81,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             options.UserAgent = "wrong";
             var page = await context.NewPageAsync();
 
-            var userAgentTask = Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString());
-            await Task.WhenAll(
-                userAgentTask,
+            var (userAgent, _) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
                 page.GoToAsync(TestConstants.EmptyPage)
             );
-            Assert.Equal("foobar", userAgentTask.Result);
+            Assert.Equal("foobar", userAgent);
         }
     }
 }

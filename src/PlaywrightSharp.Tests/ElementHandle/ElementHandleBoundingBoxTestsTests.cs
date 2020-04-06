@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ElementHandleBoundingBoxTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandleBoundingBoxTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandleBoundingBoxTests(ITestOutputHelper output) : base(output)
         {
         }
 

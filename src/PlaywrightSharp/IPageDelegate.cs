@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,6 +22,11 @@ namespace PlaywrightSharp
         /// Internal mouse implementation.
         /// </summary>
         IRawMouse RawMouse { get; }
+
+        /// <summary>
+        /// <see cref="FrameExecutionContext"/> map.
+        /// </summary>
+        ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; }
 
         /// <summary>
         /// Navigates a frame to an url.
@@ -135,7 +142,40 @@ namespace PlaywrightSharp
         ///  Gets the element's bounding box.
         /// </summary>
         /// <param name="handle">Element to evaluate.</param>
-        /// <returns>A <see cref="Task"/> that completes when the bounding box was built, yielding the <see cref="ElementHandle"/> <see cref="global::PlaywrightSharp.Rect"/>.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the bounding box was built, yielding the <see cref="ElementHandle"/> <see cref="Rect"/>.</returns>
         Task<Rect> GetBoundingBoxForScreenshotAsync(ElementHandle handle);
+
+        /// <summary>
+        /// Adds a function in the browser.
+        /// </summary>
+        /// <param name="name">Function name.</param>
+        /// <param name="functionString">Function string.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task ExposeBindingAsync(string name, string functionString);
+
+        /// <summary>
+        /// Adds a function which would be invoked in one of the following scenarios:
+        /// - whenever the page is navigated
+        /// - whenever the child frame is attached or navigated. In this case, the function is invoked in the context of the newly attached frame.
+        /// </summary>
+        /// <param name="source">Expression to be evaluated in browser context.</param>
+        /// <remarks>
+        /// The function is invoked after the document was created but before any of its scripts were run. This is useful to amend JavaScript environment, e.g. to seed <c>Math.random</c>.
+        /// </remarks>
+        /// <example>
+        /// An example of overriding the navigator.languages property before the page loads:
+        /// <code>
+        /// await page.EvaluateOnNewDocumentAsync("() => window.__example = true");
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved.</returns>
+        Task EvaluateOnNewDocumentAsync(string source);
+
+        /// <summary>
+        /// Get's the frame ID associated to the <see cref="ElementHandle"/>.
+        /// </summary>
+        /// <param name="elementHandle">Element to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the frame is found, yielding its frame ID.</returns>
+        Task<string> GetOwnerFrameAsync(ElementHandle elementHandle);
     }
 }

@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -38,6 +39,7 @@ public bool? Secure { get; set; }
 public bool? Session { get; set; }
 public Browser.CookieOptionsSameSite SameSite { get; set; }
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CookieOptionsSameSite
 {
 [System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict,
@@ -55,6 +57,7 @@ public string BrowserContextId { get; set; }
 public string Url { get; set; }
 public string OpenerId { get; set; }
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum TargetInfoType
 {
 [System.Runtime.Serialization.EnumMember(Value = "page")]Page,
@@ -141,6 +144,7 @@ public string ObjectId { get; set; }
 public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
 public object Value { get; set; }
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum RemoteObjectType
 {
 [System.Runtime.Serialization.EnumMember(Value = "object")]Object,
@@ -152,6 +156,7 @@ internal enum RemoteObjectType
 [System.Runtime.Serialization.EnumMember(Value = "symbol")]Symbol,
 [System.Runtime.Serialization.EnumMember(Value = "bigint")]Bigint,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum RemoteObjectSubtype
 {
 [System.Runtime.Serialization.EnumMember(Value = "array")]Array,
@@ -168,6 +173,7 @@ internal enum RemoteObjectSubtype
 [System.Runtime.Serialization.EnumMember(Value = "promise")]Promise,
 [System.Runtime.Serialization.EnumMember(Value = "typedarray")]Typedarray,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum RemoteObjectUnserializableValue
 {
 [System.Runtime.Serialization.EnumMember(Value = "Infinity")]Infinity,
@@ -226,6 +232,7 @@ public double? Level { get; set; }
 public string Tag { get; set; }
 public bool? FoundObject { get; set; }
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AXTreeChecked
 {
 [System.Runtime.Serialization.EnumMember(Value = "mixed")]Mixed,
@@ -310,6 +317,7 @@ internal partial class BrowserGetCookiesResponse: IFirefoxResponse
 {
 public Browser.Cookie[] Cookies { get; set; }
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PermissionsGrantPermissions
 {
 [System.Runtime.Serialization.EnumMember(Value = "geo")]Geo,
@@ -709,6 +717,7 @@ internal partial class PageScreenshotRequest : IFirefoxRequest<PageScreenshotRes
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.screenshot";
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public Page.ScreenshotMimeType MimeType { get; set; }
 public bool? FullPage { get; set; }
 public Page.BoundingBox Clip { get; set; }
@@ -746,6 +755,7 @@ internal partial class PageDispatchTouchEventRequest : IFirefoxRequest<PageDispa
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.dispatchTouchEvent";
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public Page.DispatchTouchEventType Type { get; set; }
 public Page.TouchPoint[] TouchPoints { get; set; }
 public double? Modifiers { get; set; }
@@ -809,11 +819,13 @@ public string Message { get; set; }
 internal partial class PageSendMessageToWorkerResponse: IFirefoxResponse
 {
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum EventFiredName
 {
 [System.Runtime.Serialization.EnumMember(Value = "load")]Load,
 [System.Runtime.Serialization.EnumMember(Value = "DOMContentLoaded")]DOMContentLoaded,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum DialogOpenedType
 {
 [System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt,
@@ -821,23 +833,27 @@ internal enum DialogOpenedType
 [System.Runtime.Serialization.EnumMember(Value = "confirm")]Confirm,
 [System.Runtime.Serialization.EnumMember(Value = "beforeunload")]Beforeunload,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SetEmulatedMediaType
 {
 [System.Runtime.Serialization.EnumMember(Value = "screen")]Screen,
 [System.Runtime.Serialization.EnumMember(Value = "print")]Print,
 [System.Runtime.Serialization.EnumMember(Value = "")]Empty,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SetEmulatedMediaColorScheme
 {
 [System.Runtime.Serialization.EnumMember(Value = "dark")]Dark,
 [System.Runtime.Serialization.EnumMember(Value = "light")]Light,
 [System.Runtime.Serialization.EnumMember(Value = "no-preference")]NoPreference,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ScreenshotMimeType
 {
 [System.Runtime.Serialization.EnumMember(Value = "image/png")]ImagePng,
 [System.Runtime.Serialization.EnumMember(Value = "image/jpeg")]ImageJpeg,
 }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum DispatchTouchEventType
 {
 [System.Runtime.Serialization.EnumMember(Value = "touchStart")]TouchStart,

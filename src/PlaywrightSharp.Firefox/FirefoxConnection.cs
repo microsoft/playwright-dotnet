@@ -8,6 +8,7 @@ using PlaywrightSharp.Firefox.Protocol;
 using PlaywrightSharp.Firefox.Protocol.Target;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Messaging;
+using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -74,7 +75,7 @@ namespace PlaywrightSharp.Firefox
             return (TFirefoxResponse)result;
         }
 
-        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson());
+        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions));
 
         internal void Close(string closeReason)
         {
@@ -105,7 +106,7 @@ namespace PlaywrightSharp.Firefox
 
                 try
                 {
-                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, FirefoxJsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException ex)
                 {
@@ -134,9 +135,10 @@ namespace PlaywrightSharp.Firefox
                 return;
             }
 
+            IFirefoxEvent param = null;
             if (obj.Params?.ValueKind == JsonValueKind.Object)
             {
-                var param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
+                param = FirefoxProtocolTypes.ParseEvent(obj.Method, obj.Params.Value.GetRawText());
                 if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
                 {
                     string sessionId = targetAttachedToTarget.SessionId;
@@ -158,8 +160,6 @@ namespace PlaywrightSharp.Firefox
                         session.OnClosed(targetDetachedFromTarget.InternalName);
                     }
                 }
-
-                MessageReceived?.Invoke(this, param);
             }
 
             if (obj.SessionId != null)
@@ -176,6 +176,10 @@ namespace PlaywrightSharp.Firefox
                 {
                     callback.TaskWrapper.TrySetResult(FirefoxProtocolTypes.ParseResponse(callback.Method, obj.Result?.GetRawText()));
                 }
+            }
+            else if (param != null)
+            {
+                MessageReceived.Invoke(this, param);
             }
         }
     }

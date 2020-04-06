@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class ElementHandleContentFrameTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandleContentFrameTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandleContentFrameTests(ITestOutputHelper output) : base(output)
         {
         }
 

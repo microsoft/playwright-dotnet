@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Esprima.Ast;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
@@ -21,8 +23,12 @@ namespace PlaywrightSharp
 
         internal FrameExecutionContext FrameExecutionContext { get; set; }
 
-        /// <inheritdoc cref="IElementHandle"/>
+        /// <inheritdoc cref="IElementHandle.ClickAsync(ClickOptions)"/>
         public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.ClickAsync(point.X, point.Y, options), options);
+
+        /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
+        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
+            => FrameExecutionContext.EvaluateHandleAsync(script, args.InsertAt(0, this));
 
         /// <inheritdoc cref="IElementHandle.EvaluateAsync{T}(string, object[])"/>
         public Task<T> EvaluateAsync<T>(string script, params object[] args)
@@ -37,9 +43,66 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
-        public Task FillAsync(string text)
+        public async Task FillAsync(string text)
         {
-            throw new NotImplementedException();
+            string error = await EvaluateInUtilityAsync<string>(@"(node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE)
+                    return 'Node is not of type HTMLElement';
+                const element = node;
+                if (!element.isConnected)
+                    return 'Element is not attached to the DOM';
+                if (!element.ownerDocument || !element.ownerDocument.defaultView)
+                    return 'Element does not belong to a window';
+                const style = element.ownerDocument.defaultView.getComputedStyle(element);
+                if (!style || style.visibility === 'hidden')
+                    return 'Element is hidden';
+                if (!element.offsetParent && element.tagName !== 'BODY')
+                    return 'Element is not visible';
+                if (element.nodeName.toLowerCase() === 'input') {
+                    const input = element;
+                    const type = input.getAttribute('type') || '';
+                    const kTextInputTypes = new Set(['', 'email', 'password', 'search', 'tel', 'text', 'url']);
+                    if (!kTextInputTypes.has(type.toLowerCase()))
+                        return 'Cannot fill input of type ""' + type + '"".';
+                    if (input.disabled)
+                    return 'Cannot fill a disabled input.';
+                if (input.readOnly)
+                    return 'Cannot fill a readonly input.';
+                input.select();
+                input.focus();
+                }
+                else if (element.nodeName.toLowerCase() === 'textarea') {
+                    const textarea = element;
+                    if (textarea.disabled)
+                        return 'Cannot fill a disabled textarea.';
+                    if (textarea.readOnly)
+                        return 'Cannot fill a readonly textarea.';
+                    textarea.selectionStart = 0;
+                    textarea.selectionEnd = textarea.value.length;
+                    textarea.focus();
+                }
+                else if (element.isContentEditable) {
+                    const range = element.ownerDocument.createRange();
+                    range.selectNodeContents(element);
+                    const selection = element.ownerDocument.defaultView.getSelection();
+                    if (!selection)
+                        return 'Element belongs to invisible iframe.';
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    element.focus();
+                }
+                else {
+                    return 'Element is not an <input>, <textarea> or [contenteditable] element.';
+                }
+                return '';
+            }").ConfigureAwait(false);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                throw new PlaywrightSharpException(error);
+            }
+
+            await _page.Keyboard.SendCharactersAsync(text).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.GetBoundingBoxAsync"/>
@@ -58,22 +121,47 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
-        public Task<IFrame> GetOwnerFrameAsync()
+        public async Task<IFrame> GetOwnerFrameAsync()
         {
-            throw new NotImplementedException();
+            string frameId = await _page.Delegate.GetOwnerFrameAsync(this).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(frameId))
+            {
+                return null;
+            }
+
+            var pages = _page.BrowserContext.GetExistingPages();
+            foreach (var page in pages)
+            {
+                if (((Page)page).FrameManager.Frames.TryGetValue(frameId, out var frame))
+                {
+                    return frame;
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc cref="IElementHandle.GetVisibleRatioAsync"/>
         public Task<double> GetVisibleRatioAsync()
-        {
-            throw new NotImplementedException();
-        }
+            => EvaluateInUtility<double>(@"async (node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE)
+                    throw new Error('Node is not of type HTMLElement');
+                const element = node;
+                const visibleRatio = await new Promise(resolve => {
+                    const observer = new IntersectionObserver(entries => {
+                        resolve(entries[0].intersectionRatio);
+                        observer.disconnect();
+                    });
+                    observer.observe(element);
+                    // Firefox doesn't call IntersectionObserver callback unless
+                    // there are rafs.
+                    requestAnimationFrame(() => { });
+                });
+                return visibleRatio;
+            }");
 
         /// <inheritdoc cref="IElementHandle.HoverAsync"/>
-        public Task HoverAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.MoveAsync(point.X, point.Y), options);
 
         /// <inheritdoc cref="IElementHandle.PressAsync"/>
         public Task PressAsync(string key, PressOptions options = null)
@@ -124,7 +212,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IElementHandle.ScrollIntoViewIfNeededAsync"/>
         public async Task ScrollIntoViewIfNeededAsync()
         {
-            string error = await EvaluateInUtility<string>(
+            string error = await EvaluateInUtilityAsync<string>(
                 @"async (node, pageJavascriptEnabled) => {
                     if (!node.isConnected)
                         return 'Node is detached from document';
@@ -179,12 +267,10 @@ namespace PlaywrightSharp
         private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
         {
             var utility = await FrameExecutionContext.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            var list = new List<object>(args);
-            list.Insert(0, this);
-            return await utility.EvaluateAsync<T>(pageFunction, list.ToArray()).ConfigureAwait(false);
+            return await utility.EvaluateAsync<T>(pageFunction, args.InsertAt(0, this)).ConfigureAwait(false);
         }
 
-        private async Task PerformPointerActionAsync(Func<Point, Task> action, ClickOptions options)
+        private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {
             var point = await EnsurePointerActionPointAsync(options?.RelativePoint).ConfigureAwait(false);
             Modifier[] restoreModifiers = null;
@@ -254,7 +340,7 @@ namespace PlaywrightSharp
 
         private async Task<Point> ClickablePointAsync()
         {
-            Func<Point[], int> computeQuadArea = (quad) =>
+            static int ComputeQuadArea(Point[] quad)
             {
                 // Compute sum of all directed areas of adjacent triangles
                 // https://en.wikipedia.org/wiki/Polygon#Simple_polygons
@@ -267,7 +353,7 @@ namespace PlaywrightSharp
                 }
 
                 return Math.Abs(area);
-            };
+            }
 
             var quadsTask = _page.Delegate.GetContentQuadsAsync(this);
             var metricsTask = _page.Delegate.GetLayoutViewportAsync();
@@ -276,22 +362,22 @@ namespace PlaywrightSharp
             var quads = quadsTask.Result;
             var metrics = metricsTask.Result;
 
-            Func<Quad[], Point[]> intersectQuadWithViewport = (quad) =>
-             {
-                 return quad.Select(point => new Point
-                 {
-                     X = Convert.ToInt32(Math.Min(Math.Max(point.X, 0), metrics.Width)),
-                     Y = Convert.ToInt32(Math.Min(Math.Max(point.Y, 0), metrics.Height)),
-                 }).ToArray();
-             };
+            Point[] IntersectQuadWithViewport(Quad[] quad)
+            {
+                return quad.Select(point => new Point
+                {
+                    X = Convert.ToInt32(Math.Min(Math.Max(point.X, 0), metrics.Width)),
+                    Y = Convert.ToInt32(Math.Min(Math.Max(point.Y, 0), metrics.Height)),
+                }).ToArray();
+            }
 
             if (quads == null || quads.Length == 0)
             {
                 throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
             }
 
-            var filtered = quads.Select(quad => intersectQuadWithViewport(quad)).Where(quad => computeQuadArea(quad) > 1);
-            if (!filtered.Any())
+            var filtered = quads.Select(IntersectQuadWithViewport).Where(quad => ComputeQuadArea(quad) > 1).ToArray();
+            if (filtered.Length == 0)
             {
                 throw new PlaywrightSharpException("Node is either not visible or not an HTMLElement");
             }
