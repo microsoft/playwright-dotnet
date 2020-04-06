@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.TestServer;
 
@@ -9,6 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpLoaderFixture : IDisposable
     {
+        private static bool started = false;
         internal static SimpleServer Server { get; private set; }
         internal static SimpleServer HttpsServer { get; private set; }
 
@@ -26,6 +28,12 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         private async Task SetupAsync()
         {
+            if (started)
+            {
+                return;
+            }
+            started = true;
+
             var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher().DownloadAsync();
 
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
