@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.connect</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class ConnectTests : PlaywrightSharpBrowserContextBaseTest
+    public class ConnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ConnectTests(ITestOutputHelper output) : base(output)

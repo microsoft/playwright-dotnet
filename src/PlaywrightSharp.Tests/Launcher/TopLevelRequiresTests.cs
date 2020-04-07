@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Top-level requires</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class TopLevelRequiresTests : PlaywrightSharpBrowserContextBaseTest
+    public class TopLevelRequiresTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public TopLevelRequiresTests(ITestOutputHelper output) : base(output)

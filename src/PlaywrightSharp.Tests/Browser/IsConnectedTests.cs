@@ -7,7 +7,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.isConnected</playwright-describe>
-    public class IsConnectedTests : PlaywrightSharpBrowserContextBaseTest
+    public class IsConnectedTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public IsConnectedTests(ITestOutputHelper output) : base(output)

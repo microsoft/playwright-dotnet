@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.executablePath</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class ExecutablePathTests : PlaywrightSharpBrowserContextBaseTest
+    public class ExecutablePathTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ExecutablePathTests(ITestOutputHelper output) : base(output)

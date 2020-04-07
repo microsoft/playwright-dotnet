@@ -7,7 +7,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
-    public class CloseTests : PlaywrightSharpBrowserContextBaseTest
+    public class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public CloseTests(ITestOutputHelper output) : base(output)
