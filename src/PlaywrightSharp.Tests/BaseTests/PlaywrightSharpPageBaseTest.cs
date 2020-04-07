@@ -17,18 +17,19 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal IPage Page { get; private set; }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        protected override async Task AdditionalInitializeAsync()
+        public override async Task InitializeAsync()
         {
+            await base.InitializeAsync();
             Context = await NewContextAsync();
             Page = await Context.NewPageAsync();
         }
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        protected override Task AdditionalDisposeAsync()
+        public override async Task DisposeAsync()
         {
+            await base.DisposeAsync(); 
             Context = null;
             Page = null;
-            return Task.CompletedTask;
         }
 
         /// <summary>

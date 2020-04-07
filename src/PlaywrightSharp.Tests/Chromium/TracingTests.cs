@@ -22,10 +22,10 @@ namespace PlaywrightSharp.Tests.Chromium
             _file = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         }
 
-        /// <inheritdoc/>
-        protected override async Task AdditionalDisposeAsync()
+        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
+        public override async Task DisposeAsync()
         {
-            await base.AdditionalDisposeAsync();
+            await base.DisposeAsync();
 
             int attempts = 0;
             const int maxAttempts = 5;

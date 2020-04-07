@@ -8,7 +8,6 @@ using Xunit.Sdk;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
-
     /// <inheritdoc/>
     public class PlaywrightXunitTestFramework : XunitTestFramework
     {
@@ -17,6 +16,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
         }
 
+        /// <inheritdoc/>
         protected override ITestFrameworkExecutor CreateExecutor(AssemblyName assemblyName)
             => new PlaywrightXunitTestFrameworkExecutor(assemblyName, SourceInformationProvider, DiagnosticMessageSink);
     }

@@ -35,22 +35,9 @@ namespace PlaywrightSharp.Tests.BaseTests
         }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        public async Task InitializeAsync()
-        {
-            await AdditionalInitializeAsync();
-        }
+        public virtual Task InitializeAsync() => Task.CompletedTask;
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        public async Task DisposeAsync()
-        {
-            await Task.WhenAll(_contexts.ConvertAll(context => context.CloseAsync()));
-            await AdditionalDisposeAsync();
-        }
-
-        /// <inheritdoc/>
-        protected virtual Task AdditionalInitializeAsync() => Task.CompletedTask;
-
-        /// <inheritdoc/>
-        protected virtual Task AdditionalDisposeAsync() => Task.CompletedTask;
+        public virtual Task DisposeAsync() => Task.WhenAll(_contexts.ConvertAll(context => context.CloseAsync()));
     }
 }
