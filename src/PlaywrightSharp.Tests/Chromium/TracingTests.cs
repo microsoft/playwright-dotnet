@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Mono.Unix;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -26,7 +22,7 @@ namespace PlaywrightSharp.Tests.Chromium
             _file = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         public override async Task DisposeAsync()
         {
             await base.DisposeAsync();

@@ -1,10 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,7 +8,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Top-level requires</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class TopLevelRequiresTests : PlaywrightSharpBrowserContextBaseTest
+    public class TopLevelRequiresTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public TopLevelRequiresTests(ITestOutputHelper output) : base(output)

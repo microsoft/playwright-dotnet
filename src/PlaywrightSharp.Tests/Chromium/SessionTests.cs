@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Mono.Unix;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Debugger;
 using PlaywrightSharp.Chromium.Protocol.Network;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;

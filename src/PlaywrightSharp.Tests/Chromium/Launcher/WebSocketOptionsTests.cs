@@ -1,5 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -10,7 +8,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
 {
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
-    public class WebSocketOptionsTests : PlaywrightSharpBrowserContextBaseTest
+    public class WebSocketOptionsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public WebSocketOptionsTests(ITestOutputHelper output) : base(output)

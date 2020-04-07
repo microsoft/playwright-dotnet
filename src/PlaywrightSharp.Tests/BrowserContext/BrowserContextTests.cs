@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-describe>BrowserContext</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>

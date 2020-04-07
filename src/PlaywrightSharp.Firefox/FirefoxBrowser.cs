@@ -157,6 +157,8 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
+        internal static Task<IBrowser> ConnectAsync(ConnectOptions options) => ConnectAsync(null, options);
+
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)
         {
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);

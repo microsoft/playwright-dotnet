@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -13,7 +9,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.launch |webSocket| option</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class LaunchWebSocketOptionTests : PlaywrightSharpBrowserContextBaseTest
+    public class LaunchWebSocketOptionTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public LaunchWebSocketOptionTests(ITestOutputHelper output) : base(output)

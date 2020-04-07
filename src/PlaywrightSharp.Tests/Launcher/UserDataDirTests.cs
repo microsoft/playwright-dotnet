@@ -1,7 +1,5 @@
-using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
@@ -15,7 +13,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class UserDataDirTests : PlaywrightSharpBrowserContextBaseTest
+    public class UserDataDirTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public UserDataDirTests(ITestOutputHelper output) : base(output)

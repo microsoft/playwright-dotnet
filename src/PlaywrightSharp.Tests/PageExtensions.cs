@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 
 namespace PlaywrightSharp.Tests

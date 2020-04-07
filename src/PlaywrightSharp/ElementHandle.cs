@@ -34,7 +34,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
-            => Context.EvaluateHandleAsync(script, args.InsertAt(0, this));
+            => Context.EvaluateHandleAsync(script, args.Prepend(this));
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)
@@ -316,14 +316,16 @@ namespace PlaywrightSharp
         private async Task<PointAndScroll> ViewportPointAndScrollAsync(Point relativePoint)
         {
             // TODO: debug log
-            var (box, border) = await TaskUtils.WhenAll(
-                GetBoundingBoxAsync(),
-                EvaluateInUtilityAsync<Point>(@"node => {
+            var boxTask = GetBoundingBoxAsync();
+            var borderTask = EvaluateInUtilityAsync<Point>(@"node => {
                     if (node.nodeType !== Node.ELEMENT_NODE || !node.ownerDocument || !node.ownerDocument.defaultView)
                         return { x: 0, y: 0 };
                     const style = node.ownerDocument.defaultView.getComputedStyle(node);
                     return { x: parseInt(style.borderLeftWidth || '', 10), y: parseInt(style.borderTopWidth || '', 10) };
-                }")).ConfigureAwait(false);
+                }");
+            await Task.WhenAll(boxTask, borderTask).ConfigureAwait(false);
+            var box = boxTask.Result;
+            var border = borderTask.Result;
             var point = new Point { X = relativePoint.X, Y = relativePoint.Y };
             if (box != null)
             {
@@ -425,10 +427,7 @@ namespace PlaywrightSharp
         private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
         {
             var utility = await Context.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            object[] newArgs = new object[args.Length + 1];
-            newArgs[0] = this;
-            args.CopyTo(newArgs, 1);
-            return await utility.EvaluateAsync<T>(pageFunction, newArgs).ConfigureAwait(false);
+            return await utility.EvaluateAsync<T>(pageFunction, args.Prepend(this)).ConfigureAwait(false);
         }
     }
 }
