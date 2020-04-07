@@ -93,7 +93,8 @@ namespace PlaywrightSharp.Firefox
             {
                 return _session.SendAsync(new RuntimeDisposeObjectRequest
                 {
-                    ExecutionContextId = ExecutionContextId, ObjectId = handle.RemoteObject.ObjectId,
+                    ExecutionContextId = ExecutionContextId,
+                    ObjectId = handle.RemoteObject.ObjectId,
                 });
             }
             catch (Exception ex)
