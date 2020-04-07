@@ -12,7 +12,7 @@
 Playwright Sharp is a .NET port of the official [Node.JS Playwright API](https://github.com/microsoft/playwright). 
 
 # Monthly reports
- * [April 2020](http://www.hardkoded.com/blog/puppeteer-sharp-monthly-aug-2019)
+ * [April 2020](https://www.hardkoded.com/blogs/playwright-sharp-monthly-apr-2020)
  * [March 2020](https://www.hardkoded.com/blogs/playwright-sharp-monthly-march-2020)
 
 # Useful links
