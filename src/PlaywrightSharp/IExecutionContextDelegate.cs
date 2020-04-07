@@ -20,7 +20,7 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args);
+        Task<T> EvaluateAsync<T>(ExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args);
 
         /// <summary>
         /// Releases a <see cref="JSHandle"/>.
@@ -32,10 +32,10 @@ namespace PlaywrightSharp
         /// <summary>
         /// Converts an <see cref="IJSHandle"/> to string.
         /// </summary>
-        /// <param name="arg"><see cref="IJSHandle"/> to parse.</param>
+        /// <param name="handle"><see cref="IJSHandle"/> to parse.</param>
         /// <param name="includeType">Whether to include the type or not.</param>
         /// <returns>An <see cref="string"/> representation of the handle.</returns>
-        string HandleToString(IJSHandle arg, bool includeType);
+        string HandleToString(IJSHandle handle, bool includeType);
 
         /// <summary>
         /// Get a JSON representation of an <see cref="IJSHandle"/>.

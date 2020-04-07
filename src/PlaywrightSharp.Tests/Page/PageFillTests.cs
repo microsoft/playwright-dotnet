@@ -171,13 +171,13 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'none'");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.FillAsync("input", "some value", new FillOptions { WaitFor = WaitForOption.NoWait }));
+                => Page.FillAsync("input", "some value", new WaitForSelectorOptions { WaitFor = WaitForOption.NoWait }));
             Assert.Equal("Element is not visible", exception.Message);
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.QuerySelectorEvaluateAsync("input", "i => i.style.visibility = 'hidden'");
             exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.FillAsync("input", "some value", new FillOptions { WaitFor = WaitForOption.NoWait }));
+                => Page.FillAsync("input", "some value", new WaitForSelectorOptions { WaitFor = WaitForOption.NoWait }));
             Assert.Equal("Element is hidden", exception.Message);
         }
 

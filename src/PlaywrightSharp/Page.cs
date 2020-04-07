@@ -149,6 +149,12 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.ClickAsync(string, ClickOptions)"/>
         public Task ClickAsync(string selector, ClickOptions options = null) => MainFrame.ClickAsync(selector, options);
 
+        /// <inheritdoc cref="IPage.DoubleClickAsync(string, ClickOptions)"/>
+        public Task DoubleClickAsync(string selector, ClickOptions options = null) => MainFrame.DoubleClickAsync(selector, options);
+
+        /// <inheritdoc cref="IPage.TripleClickAsync(string, ClickOptions)"/>
+        public Task TripleClickAsync(string selector, ClickOptions options = null) => MainFrame.TripleClickAsync(selector, options);
+
         /// <inheritdoc cref="IPage.CloseAsync(PageCloseOptions)"/>
         public async Task CloseAsync(PageCloseOptions options = null)
         {
@@ -216,9 +222,6 @@ namespace PlaywrightSharp
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
             => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc cref="IPage.FillAsync(string, string, FillOptions)"/>
-        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
-
         /// <inheritdoc cref="IPage.FocusAsync(string)"/>
         public Task FocusAsync(string selector)
         {
@@ -258,21 +261,17 @@ namespace PlaywrightSharp
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
 
         /// <inheritdoc cref="IPage.QuerySelectorEvaluateAsync(string, string, object[])"/>
-        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args) => MainFrame.QuerySelectorEvaluateAsync(selector, script, args);
 
         /// <inheritdoc cref="IPage.QuerySelectorEvaluateAsync{T}(string, string, object[])"/>
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args) => MainFrame.QuerySelectorEvaluateAsync<T>(selector, script, args);
 
         /// <inheritdoc cref="IPage.ReloadAsync(NavigationOptions)"/>
-        public Task<IResponse> ReloadAsync(NavigationOptions options = null)
+        public async Task<IResponse> ReloadAsync(NavigationOptions options = null)
         {
-            throw new NotImplementedException();
+            var waitTask = WaitForNavigationAsync(new WaitForNavigationOptions(options));
+            await Delegate.ReloadAsync().ConfigureAwait(false);
+            return await waitTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IPage.ScreenshotAsync(ScreenshotOptions)"/>
@@ -294,10 +293,21 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.SetExtraHttpHeadersAsync(IReadOnlyDictionary{string, string})"/>
-        public Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers)
+        /// <inheritdoc cref="IPage.SetExtraHttpHeadersAsync(IDictionary{string, string})"/>
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
         {
-            throw new NotImplementedException();
+            if (headers == null)
+            {
+                throw new ArgumentNullException(nameof(headers));
+            }
+
+            PageState.ExtraHTTPHeaders.Clear();
+            foreach (var header in headers)
+            {
+                PageState.ExtraHTTPHeaders[header.Key.ToLower()] = header.Value;
+            }
+
+            return Delegate.SetExtraHttpHeadersAsync(headers);
         }
 
         /// <inheritdoc cref="IPage.SetOfflineModeAsync(bool)"/>
@@ -332,12 +342,6 @@ namespace PlaywrightSharp
             }
         }
 
-        /// <inheritdoc cref="IPage.TripleClickAsync(string, ClickOptions)"/>
-        public Task TripleClickAsync(string selector, ClickOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IPage.TypeAsync(string, string, TypeOptions)"/>
         public Task TypeAsync(string selector, string text, TypeOptions options = null)
         {
@@ -370,9 +374,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitUntilNavigation)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.WaitForNavigationAsync(waitUntil);
 
         /// <inheritdoc cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
         public Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -413,11 +415,8 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.FillAsync(string, string, FillOptions)"/>
-        public Task FillAsync(string selector, string text, FillOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc cref="IPage.FillAsync(string, string, WaitForSelectorOptions)"/>
+        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, string[])"/>
         public Task<string[]> SelectAsync(string selector, params string[] values)
@@ -438,10 +437,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.GetContentAsync"/>
-        public Task<string> GetContentAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string> GetContentAsync() => MainFrame.GetContentAsync();
 
         /// <inheritdoc cref="IPage.QuerySelectorAllAsync(string)"/>
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector)
@@ -583,9 +579,9 @@ namespace PlaywrightSharp
             {
                 var binding = _pageBindings[bindingPayload.Name];
                 var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
-                var args = bindingPayload.Args.Select((arg, i) => JsonSerializer.Deserialize(arg.GetRawText(), methodParams[0], JsonHelper.DefaultJsonSerializerOptions)).ToArray();
+                object[] args = bindingPayload.Args.Select((arg, i) => JsonSerializer.Deserialize(arg.GetRawText(), methodParams[0], JsonHelper.DefaultJsonSerializerOptions)).ToArray();
 
-                var result = binding.DynamicInvoke(args);
+                object result = binding.DynamicInvoke(args);
                 if (result is Task taskResult)
                 {
                     await taskResult.ConfigureAwait(false);

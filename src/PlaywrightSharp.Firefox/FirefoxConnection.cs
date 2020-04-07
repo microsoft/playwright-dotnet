@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Firefox
             }
             else if (param != null)
             {
-                MessageReceived.Invoke(this, param);
+                MessageReceived?.Invoke(this, param);
             }
         }
     }

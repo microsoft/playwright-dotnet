@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Firefox
         {
             foreach (var callback in _callbacks)
             {
-                callback.Value.TaskWrapper.TrySetException(new PlaywrightSharpException($"Protocol error ({callback.Value.Method}): Target closed. {reason}"));
+                callback.Value.TaskWrapper.TrySetException(new TargetClosedException($"Protocol error ({callback.Value.Method}): Target closed. {reason}"));
             }
 
             _callbacks.Clear();

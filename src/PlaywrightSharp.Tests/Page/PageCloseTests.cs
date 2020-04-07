@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -53,7 +52,7 @@ namespace PlaywrightSharp.Tests.Page
             // We have to interact with a page so that 'beforeunload' handlers
             // fire.
             await newPage.ClickAsync("body");
-            var pageClosingPromise = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
+            var pageClosingTask = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
             var dialog = await newPage.WaitForEvent<DialogEventArgs>(PageEvent.Dialog).ContinueWith(task => task.Result.Dialog);
             Assert.Equal(DialogType.BeforeUnload, dialog.DialogType);
             Assert.Empty(dialog.DefaultValue);
@@ -71,7 +70,7 @@ namespace PlaywrightSharp.Tests.Page
             }
 
             await dialog.AcceptAsync();
-            await pageClosingPromise;
+            await pageClosingTask;
         }
 
         ///<playwright-file>page.spec.js</playwright-file>

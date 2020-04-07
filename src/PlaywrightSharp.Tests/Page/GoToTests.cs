@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Net;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
@@ -38,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
 
-            var url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
+            string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
             IFrame requestFrame = null;
             Page.Request += (sender, e) =>
             {
@@ -351,7 +350,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
-            var loaded = false;
+            bool loaded = false;
             void OnLoad(object sender, EventArgs e)
             {
                 loaded = true;
@@ -435,7 +434,7 @@ namespace PlaywrightSharp.Tests.Page
             var requests = new List<IRequest>();
             Page.Request += (sender, e) => requests.Add(e.Request);
 
-            var dataUrl = "data:text/html,<div>yo</div>";
+            string dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataUrl);
             Assert.Equal(HttpStatusCode.OK, response.Status);
             Assert.Single(requests);
@@ -475,7 +474,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
-            var url = TestConstants.HttpsPrefix + "/redirect/1.html";
+            string url = TestConstants.HttpsPrefix + "/redirect/1.html";
             var exception = await Assert.ThrowsAnyAsync<NavigationException>(async () => await Page.GoToAsync(url));
             Assert.Contains(url, exception.Message);
             Assert.Contains(url, exception.Url);
@@ -516,7 +515,7 @@ namespace PlaywrightSharp.Tests.Page
                 ["referer"] = "http://microsoft.com/"
             });
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () =>
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
                 {
                     Referer = "http://google.com/"

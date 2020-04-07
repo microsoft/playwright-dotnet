@@ -306,6 +306,14 @@ namespace PlaywrightSharp.Chromium
             };
         }
 
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+            => Client.SendAsync(new NetworkSetExtraHTTPHeadersRequest
+            {
+                Headers = headers,
+            });
+
+        public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -410,11 +418,17 @@ namespace PlaywrightSharp.Chromium
                     case PageFrameAttachedChromiumEvent pageFrameAttached:
                         OnFrameAttached(pageFrameAttached);
                         break;
+                    case PageFrameDetachedChromiumEvent pageFrameDetached:
+                        OnFrameDetached(pageFrameDetached);
+                        break;
                     case PageFrameNavigatedChromiumEvent pageFrameNavigated:
                         OnFrameNavigated(pageFrameNavigated.Frame, false);
                         break;
                     case PageLifecycleEventChromiumEvent pageLifecycleEvent:
                         OnLifecycleEvent(pageLifecycleEvent);
+                        break;
+                    case PageNavigatedWithinDocumentChromiumEvent pageNavigatedWithinDocument:
+                        OnNavigatedWithinDocument(pageNavigatedWithinDocument);
                         break;
                     case RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated:
                         OnExecutionContextCreated(runtimeExecutionContextCreated.Context);
@@ -605,6 +619,9 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        private void OnNavigatedWithinDocument(PageNavigatedWithinDocumentChromiumEvent e)
+            => Page.FrameManager.FrameCommittedSameDocumentNavigation(e.FrameId, e.Url);
+
         private void OnFrameNavigated(Protocol.Page.Frame frame, bool initial)
             => Page.FrameManager.FrameCommittedNewDocumentNavigation(frame.Id, frame.Url, frame.Name ?? string.Empty, frame.LoaderId, initial);
 
@@ -649,6 +666,9 @@ namespace PlaywrightSharp.Chromium
         }
 
         private void OnFrameAttached(PageFrameAttachedChromiumEvent e) => OnFrameAttached(e.FrameId, e.ParentFrameId);
+
+        private void OnFrameDetached(PageFrameDetachedChromiumEvent e)
+            => Page.FrameManager.FrameDetached(e.FrameId);
 
         private void OnFrameAttached(string frameId, string parentFrameId) => Page.FrameManager.FrameAttached(frameId, parentFrameId);
 

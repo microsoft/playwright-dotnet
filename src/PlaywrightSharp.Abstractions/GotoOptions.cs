@@ -6,7 +6,7 @@ namespace PlaywrightSharp
     public class GoToOptions : NavigationOptions
     {
         /// <summary>
-        /// Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.IReadOnlyDictionary{string, string})"/>.
+        /// Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.IDictionary{string, string})"/>.
         /// </summary>
         /// <value>The referer.</value>
         public string Referer { get; set; }
