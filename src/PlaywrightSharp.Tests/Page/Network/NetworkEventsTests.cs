@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;

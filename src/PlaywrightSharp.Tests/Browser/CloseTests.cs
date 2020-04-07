@@ -1,10 +1,4 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,7 +7,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
-    public class CloseTests : PlaywrightSharpBrowserContextBaseTest
+    public class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public CloseTests(ITestOutputHelper output) : base(output)

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;

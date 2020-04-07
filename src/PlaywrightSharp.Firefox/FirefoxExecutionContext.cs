@@ -82,18 +82,25 @@ namespace PlaywrightSharp.Firefox
             return DeserializeValue<T>(simpleValue.Result);
         }
 
-        public Task ReleaseHandleAsync(JSHandle handle)
+        public async Task ReleaseHandleAsync(JSHandle handle)
         {
             if (string.IsNullOrEmpty(handle?.RemoteObject.ObjectId))
             {
-                return Task.CompletedTask;
+                return;
             }
 
-            return _session.SendAsync(new RuntimeDisposeObjectRequest
+            try
             {
-                ExecutionContextId = ExecutionContextId,
-                ObjectId = handle.RemoteObject.ObjectId,
-            });
+                await _session.SendAsync(new RuntimeDisposeObjectRequest
+                {
+                    ExecutionContextId = ExecutionContextId,
+                    ObjectId = handle.RemoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+            }
         }
 
         private RuntimeCallFunctionResponse RewriteError(Exception error)

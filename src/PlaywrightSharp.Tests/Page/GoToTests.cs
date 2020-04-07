@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Net;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;

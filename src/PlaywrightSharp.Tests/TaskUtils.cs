@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Helpers
+namespace PlaywrightSharp.Tests
 {
     internal static class TaskUtils
     {

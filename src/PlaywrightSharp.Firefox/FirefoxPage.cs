@@ -196,14 +196,15 @@ namespace PlaywrightSharp.Firefox
             return Page.FrameManager.Frames[response.ContentFrameId];
         }
 
-        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => _session.SendAsync(new NetworkSetExtraHTTPHeadersRequest
-        {
-            Headers = headers.Select(pair => new HTTPHeader
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+            => _session.SendAsync(new NetworkSetExtraHTTPHeadersRequest
             {
-                Name = pair.Key,
-                Value = pair.Value,
-            }).ToArray(),
-        });
+                Headers = headers.Select(pair => new HTTPHeader
+                {
+                    Name = pair.Key,
+                    Value = pair.Value,
+                }).ToArray(),
+            });
 
         public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 
