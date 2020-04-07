@@ -99,6 +99,7 @@ namespace PlaywrightSharp.Firefox
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+                return Task.CompletedTask;
             }
         }
 
