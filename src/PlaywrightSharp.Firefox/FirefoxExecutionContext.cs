@@ -89,11 +89,17 @@ namespace PlaywrightSharp.Firefox
                 return Task.CompletedTask;
             }
 
-            return _session.SendAsync(new RuntimeDisposeObjectRequest
+            try
             {
-                ExecutionContextId = ExecutionContextId,
-                ObjectId = handle.RemoteObject.ObjectId,
-            });
+                return _session.SendAsync(new RuntimeDisposeObjectRequest
+                {
+                    ExecutionContextId = ExecutionContextId, ObjectId = handle.RemoteObject.ObjectId,
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+            }
         }
 
         private RuntimeCallFunctionResponse RewriteError(Exception error)
