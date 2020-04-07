@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>click.spec.js</playwright-file>
     ///<playwright-describe>Page.click</playwright-describe>
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ClickTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -523,7 +522,7 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click a very large button with relative point</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldClickAVeryLargeButtonWithRelativePoint()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");

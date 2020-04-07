@@ -306,10 +306,11 @@ namespace PlaywrightSharp.Chromium
             };
         }
 
-        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => Client.SendAsync(new NetworkSetExtraHTTPHeadersRequest
-        {
-            Headers = headers,
-        });
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+            => Client.SendAsync(new NetworkSetExtraHTTPHeadersRequest
+            {
+                Headers = headers,
+            });
 
         public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
 

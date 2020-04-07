@@ -10,8 +10,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
-    public class JavaScriptEnabledTests : PlaywrightSharpBrowserContextBaseTest
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+    public class JavaScriptEnabledTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public JavaScriptEnabledTests(ITestOutputHelper output) : base(output)

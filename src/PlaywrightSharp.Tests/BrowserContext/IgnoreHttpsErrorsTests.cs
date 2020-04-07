@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
@@ -11,7 +10,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
-    public class IgnoreHttpsErrorsTests : PlaywrightSharpBrowserContextBaseTest
+    public class IgnoreHttpsErrorsTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public IgnoreHttpsErrorsTests(ITestOutputHelper output) : base(output)

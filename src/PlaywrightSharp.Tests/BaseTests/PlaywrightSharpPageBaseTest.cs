@@ -5,28 +5,31 @@ using Xunit;
 namespace PlaywrightSharp.Tests.BaseTests
 {
     /// <summary>
-    /// Based on <see cref="PlaywrightSharpBrowserContextBaseTest"/>, this class will create a new Page.
+    /// Based on <see cref="PlaywrightSharpBrowserBaseTest"/>, this class will create a new Page.
     /// </summary>
-    public class PlaywrightSharpPageBaseTest : PlaywrightSharpBrowserContextBaseTest
+    public class PlaywrightSharpPageBaseTest : PlaywrightSharpBrowserBaseTest
     {
         internal PlaywrightSharpPageBaseTest(ITestOutputHelper output) : base(output)
         {
         }
 
-        internal IPage Page { get; set; }
+        internal IBrowserContext Context { get; private set; }
+        internal IPage Page { get; private set; }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+            Context = await NewContextAsync();
             Page = await Context.NewPageAsync();
         }
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         public override async Task DisposeAsync()
         {
-            await Page.CloseAsync();
             await base.DisposeAsync();
+            Context = null;
+            Page = null;
         }
 
         /// <summary>

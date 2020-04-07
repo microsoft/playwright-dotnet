@@ -1,10 +1,6 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -16,7 +12,7 @@ namespace PlaywrightSharp.Tests.Launcher
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class DefaultArgumentsTests : PlaywrightSharpBrowserContextBaseTest
+    public class DefaultArgumentsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public DefaultArgumentsTests(ITestOutputHelper output) : base(output)

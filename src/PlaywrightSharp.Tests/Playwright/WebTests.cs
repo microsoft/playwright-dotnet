@@ -10,9 +10,9 @@ namespace PlaywrightSharp.Tests.Playwright
     // I don't know yet if this will be a valid test for us, we will see when we implement it.
     ///<playwright-file>web.spec.js</playwright-file>
     ///<playwright-describe>Web SDK</playwright-describe>
-    public class WebTests : PlaywrightSharpPageBaseTest
+    public class WebTests : PlaywrightSharpBaseTest, IAsyncLifetime
     {
-        IBrowserApp _controlledBrowser = null;
+        internal IPage Page { get; private set; }
 
         /// <inheritdoc/>
         public WebTests(ITestOutputHelper output) : base(output)
@@ -20,22 +20,21 @@ namespace PlaywrightSharp.Tests.Playwright
         }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        public override async Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            await base.InitializeAsync();
-            _controlledBrowser = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            Page = await PlaywrightSharpWebLoaderFixture.HostBrowser.DefaultContext.NewPageAsync();
             await Page.GoToAsync(TestConstants.ServerUrl + "/test/assets/playwrightweb.html");
             await Page.EvaluateAsync(
                 "(product, connectOptions) => setup(product, connectOptions)",
-                TestConstants.Product.ToLower(),
-                _controlledBrowser.ConnectOptions);
+                TestConstants.Product.ToLower(), PlaywrightSharpWebLoaderFixture.ControlledBrowserApp.ConnectOptions);
         }
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        public override async Task DisposeAsync()
+        public async Task DisposeAsync()
         {
             await Page.EvaluateAsync("() => teardown()");
-            await Task.WhenAll(_controlledBrowser.CloseAsync(), base.DisposeAsync());
+            await Page.CloseAsync();
+            Page = null;
         }
 
         ///<playwright-file>web.spec.js</playwright-file>

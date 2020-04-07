@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact]
         public async Task ShouldNotSendAttachDetachEventsForMainFrame()
         {
-            var hasEvents = false;
+            bool hasEvents = false;
             Page.FrameAttached += (sender, e) => hasEvents = true;
             Page.FrameDetached += (sender, e) => hasEvents = true;
             await Page.GoToAsync(TestConstants.EmptyPage);
