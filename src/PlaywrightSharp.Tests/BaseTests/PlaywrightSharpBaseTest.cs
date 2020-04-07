@@ -15,8 +15,8 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal string BaseDirectory { get; set; }
         internal IBrowserType Playwright { get; set; }
 
-        internal SimpleServer Server => PlaywrightSharpLoaderFixture.Server;
-        internal SimpleServer HttpsServer => PlaywrightSharpLoaderFixture.HttpsServer;
+        internal SimpleServer Server => PlaywrightSharpLoader.Server;
+        internal SimpleServer HttpsServer => PlaywrightSharpLoader.HttpsServer;
 
         internal PlaywrightSharpBaseTest(ITestOutputHelper output)
         {

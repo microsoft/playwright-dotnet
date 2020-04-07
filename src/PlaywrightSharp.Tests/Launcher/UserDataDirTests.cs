@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class UserDataDirTests : PlaywrightSharpBrowserContextBaseTest
+    public class UserDataDirTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public UserDataDirTests(ITestOutputHelper output) : base(output)

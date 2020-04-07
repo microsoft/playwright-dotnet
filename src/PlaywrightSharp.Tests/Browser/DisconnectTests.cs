@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.disconnect</playwright-describe>
-    public class DisconnectTests : PlaywrightSharpBrowserContextBaseTest
+    public class DisconnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public DisconnectTests(ITestOutputHelper output) : base(output)
