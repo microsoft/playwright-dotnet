@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Protocol;
 using PlaywrightSharp.Firefox.Protocol.Network;
@@ -57,7 +59,7 @@ namespace PlaywrightSharp.Firefox
             var redirectChain = new List<Request>();
             if (redirectd != null)
             {
-                redirectChain = new List<Request>(redirectd.Request.RawRedirectChain);
+                redirectChain = new List<Request>(redirectd.Request.RedirectChain);
                 redirectChain.Add(redirectd.Request);
                 _requests.TryRemove(redirectd.Id, out var _);
             }
@@ -69,12 +71,50 @@ namespace PlaywrightSharp.Firefox
 
         private void OnResponseReceived(NetworkResponseReceivedFirefoxEvent e)
         {
-            throw new NotImplementedException();
+            if (!_requests.TryGetValue(e.RequestId, out var request))
+            {
+                return;
+            }
+
+            Func<Task<byte[]>> getResponseBody = async () =>
+            {
+                var response = await _session.SendAsync(new NetworkGetResponseBodyRequest
+                {
+                    RequestId = request.Id,
+                }).ConfigureAwait(false);
+                if (response.Evicted == true)
+                {
+                    throw new PlaywrightSharpException($"Response body for {request.Request.Method} {request.Request.Url} was evicted!");
+                }
+
+                return Convert.FromBase64String(response.Base64Body);
+            };
+            var headers = e.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value);
+            var response = new Response(request.Request, (HttpStatusCode)e.Status, e.StatusText, headers, getResponseBody);
         }
 
         private void OnRequestFinished(NetworkRequestFinishedFirefoxEvent e)
         {
-            throw new NotImplementedException();
+            if (!_requests.TryGetValue(e.RequestId, out var request))
+            {
+                return;
+            }
+
+            var response = request.Request.Response;
+
+            // Keep redirected requests in the map for future reference in redirectChain.
+            bool isRedirected = (int)response.Status >= 300 && (int)response.Status <= 399;
+            if (isRedirected)
+            {
+                response.RequestFinished(new PlaywrightSharpException("Response body is unavailable for redirect responses"));
+            }
+            else
+            {
+                _requests.TryRemove(request.Id, out var _);
+                response.RequestFinished();
+            }
+
+            _page.FrameManager.RequestFinished(request.Request);
         }
 
         private void OnRequestFailed(NetworkRequestFailedFirefoxEvent e)

@@ -184,18 +184,27 @@ namespace PlaywrightSharp
         internal void RequestStarted(Request request)
         {
             InflightRequestStarted(request);
-            var frame = request.Frame as Frame;
-            if (request.DocumentId != null && frame != null && request.RedirectChain.Length != 0)
+            var frame = request.Frame;
+            if (request.DocumentId != null && frame != null && request.RedirectChain.Length == 0)
             {
                 foreach (var watcher in LifecycleWatchers.ToArray())
                 {
                     watcher.OnNavigationRequest(frame, request);
                 }
+            }
 
-                if (!request.IsFavicon)
-                {
-                    _page.OnRequest(request);
-                }
+            if (!request.IsFavicon)
+            {
+                _page.OnRequest(request);
+            }
+        }
+
+        internal void RequestFinished(Request request)
+        {
+            InflightRequestFinished(request);
+            if (!request.IsFavicon)
+            {
+                _page.OnRequestFinished(request);
             }
         }
 
@@ -256,7 +265,7 @@ namespace PlaywrightSharp
 
         private void InflightRequestStarted(Request request)
         {
-            var frame = request.Frame as Frame;
+            var frame = request.Frame;
             if (frame == null || request.IsFavicon)
             {
                 return;
@@ -269,6 +278,30 @@ namespace PlaywrightSharp
             }
 
             if (frame.InflightRequests.Count == 3)
+            {
+                StopNetworkIdleTimer(frame, "networkidle2");
+            }
+        }
+
+        private void InflightRequestFinished(Request request)
+        {
+            var frame = request.Frame;
+            if (frame == null || request.IsFavicon)
+            {
+                return;
+            }
+
+            if (!frame.InflightRequests.Remove(request))
+            {
+                return;
+            }
+
+            if (frame.InflightRequests.Count == 0)
+            {
+                StopNetworkIdleTimer(frame, "networkidle0");
+            }
+
+            if (frame.InflightRequests.Count == 2)
             {
                 StopNetworkIdleTimer(frame, "networkidle2");
             }

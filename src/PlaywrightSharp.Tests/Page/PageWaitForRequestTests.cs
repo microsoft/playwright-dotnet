@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForRequest</playwright-describe>
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForRequestTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -26,8 +26,9 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png");
             var (request, _) = await TaskUtils.WhenAll(
-                Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png"),
+                task,
                 Page.EvaluateAsync(@"() => {
                   fetch('/digits/1.png');
                   fetch('/digits/2.png');

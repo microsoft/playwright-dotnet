@@ -545,6 +545,8 @@ namespace PlaywrightSharp
 
         internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
 
+        internal void OnRequestFinished(IRequest request) => RequestFinished?.Invoke(this, new RequestEventArgs(request));
+
         internal void DidDisconnected() => _disconnected = true;
 
         internal void DidClose()

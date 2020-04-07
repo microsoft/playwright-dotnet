@@ -23,7 +23,7 @@ namespace PlaywrightSharp
 
             _delegate = requestDelegate;
             Frame = frame;
-            RawRedirectChain = redirectChain;
+            RedirectChain = redirectChain;
             FinalRequest = this;
             foreach (var request in redirectChain)
             {
@@ -57,7 +57,7 @@ namespace PlaywrightSharp
         public string PostData { get; }
 
         /// <inheritdoc cref="IRequest.Frame"/>
-        public IFrame Frame { get; }
+        IFrame IRequest.Frame => Frame;
 
         /// <inheritdoc cref="IRequest.IsNavigationRequest"/>
         public bool IsNavigationRequest { get; }
@@ -66,10 +66,10 @@ namespace PlaywrightSharp
         public ResourceType ResourceType { get; }
 
         /// <inheritdoc cref="IRequest.RedirectChain"/>
-        public IRequest[] RedirectChain => RawRedirectChain;
+        IRequest[] IRequest.RedirectChain => RedirectChain;
 
         /// <inheritdoc cref="IRequest.Response"/>
-        public IResponse Response { get; private set; }
+        IResponse IRequest.Response => Response;
 
         /// <inheritdoc cref="IRequest.Failure"/>
         public string Failure { get; }
@@ -80,7 +80,11 @@ namespace PlaywrightSharp
 
         internal Request FinalRequest { get; private set; }
 
-        internal Request[] RawRedirectChain { get; }
+        internal Response Response { get; private set; }
+
+        internal Frame Frame { get; }
+
+        internal Request[] RedirectChain { get; }
 
         internal Task<Response> WaitForFinished => _waitForFinishedTsc.Task;
 
@@ -151,7 +155,7 @@ namespace PlaywrightSharp
         private string StripFragmentFromUrl(string url)
         {
             int hashIndex = url.IndexOf("#");
-            if (hashIndex != -1)
+            if (hashIndex == -1)
             {
                 return url;
             }
