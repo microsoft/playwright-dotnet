@@ -356,8 +356,49 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
-        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
+        public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
+            int timeout = options?.Timeout ?? DefaultTimeout;
+            switch (e)
+            {
+                case PageEvent.Load:
+                    break;
+                case PageEvent.DOMContentLoaded:
+                    break;
+                case PageEvent.Console:
+                    break;
+                case PageEvent.Popup:
+                    break;
+                case PageEvent.Dialog:
+                    break;
+                case PageEvent.Request when typeof(T) == typeof(RequestEventArgs):
+                    var requestTsc = new TaskCompletionSource<T>();
+                    void RequestEventHandler(object sender, RequestEventArgs e)
+                    {
+                        var genericEvent = (T)(object)e;
+                        if (options?.Predicate != null && options.Predicate(genericEvent))
+                        {
+                            requestTsc.SetResult(genericEvent);
+                            Request -= RequestEventHandler;
+                        }
+                    }
+
+                    Request += RequestEventHandler;
+                    return await requestTsc.Task.WithTimeout(timeout).ConfigureAwait(false);
+                case PageEvent.FileChooser:
+                    break;
+                case PageEvent.Response:
+                    break;
+                case PageEvent.Error:
+                    break;
+                case PageEvent.PageError:
+                    break;
+                case PageEvent.WorkerCreated:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
+            }
+
             throw new NotImplementedException();
         }
 

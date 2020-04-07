@@ -16,6 +16,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets or sets the timeout to use when waiting for events in milliseconds.
         /// </summary>
-        public int Timeout { get; set; }
+        public int? Timeout { get; set; }
     }
 }
