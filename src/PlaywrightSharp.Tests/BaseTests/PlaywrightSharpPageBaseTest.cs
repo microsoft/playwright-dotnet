@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         public override async Task DisposeAsync()
         {
-            await base.DisposeAsync(); 
+            await base.DisposeAsync();
             Context = null;
             Page = null;
         }
