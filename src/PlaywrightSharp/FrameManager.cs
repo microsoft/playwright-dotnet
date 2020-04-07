@@ -199,6 +199,14 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void RequestReceivedResponse(Response response)
+        {
+            if (!response.Request.IsFavicon)
+            {
+                _page.OnResponse(response);
+            }
+        }
+
         internal void RequestFinished(Request request)
         {
             InflightRequestFinished(request);

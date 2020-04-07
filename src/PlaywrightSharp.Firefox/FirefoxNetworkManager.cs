@@ -91,6 +91,7 @@ namespace PlaywrightSharp.Firefox
             };
             var headers = e.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value);
             var response = new Response(request.Request, (HttpStatusCode)e.Status, e.StatusText, headers, getResponseBody);
+            _page.FrameManager.RequestReceivedResponse(response);
         }
 
         private void OnRequestFinished(NetworkRequestFinishedFirefoxEvent e)

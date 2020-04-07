@@ -36,7 +36,9 @@ namespace PlaywrightSharp
 
         public bool Ok { get; }
 
-        public IRequest Request { get; }
+        IRequest IResponse.Request => Request;
+
+        public Request Request { get; }
 
         internal Task Finished => _finishedTsc.Task;
 

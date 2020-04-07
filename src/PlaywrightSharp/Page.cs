@@ -387,8 +387,20 @@ namespace PlaywrightSharp
                     return await requestTsc.Task.WithTimeout(timeout).ConfigureAwait(false);
                 case PageEvent.FileChooser:
                     break;
-                case PageEvent.Response:
-                    break;
+                case PageEvent.Response when typeof(T) == typeof(ResponseEventArgs):
+                    var responseTsc = new TaskCompletionSource<T>();
+                    void ResponseEventHandler(object sender, ResponseEventArgs e)
+                    {
+                        var genericEvent = (T)(object)e;
+                        if (options?.Predicate != null && options.Predicate(genericEvent))
+                        {
+                            responseTsc.SetResult(genericEvent);
+                            Response -= ResponseEventHandler;
+                        }
+                    }
+
+                    Response += ResponseEventHandler;
+                    return await responseTsc.Task.WithTimeout(timeout).ConfigureAwait(false);
                 case PageEvent.Error:
                     break;
                 case PageEvent.PageError:
@@ -454,7 +466,19 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.WaitForResponseAsync(string, WaitForOptions)"/>
         public Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
         {
-            throw new NotImplementedException();
+            int timeout = options?.Timeout ?? DefaultTimeout;
+            var tsc = new TaskCompletionSource<IResponse>();
+            void ResponseEventHandler(object sender, ResponseEventArgs e)
+            {
+                if (url.Equals(e.Response.Url))
+                {
+                    tsc.TrySetResult(e.Response);
+                    Response -= ResponseEventHandler;
+                }
+            }
+
+            Response += ResponseEventHandler;
+            return tsc.Task.WithTimeout(timeout);
         }
 
         /// <inheritdoc cref="IPage.GetPdfAsync(string)"/>
@@ -587,6 +611,8 @@ namespace PlaywrightSharp
         internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
 
         internal void OnRequestFinished(IRequest request) => RequestFinished?.Invoke(this, new RequestEventArgs(request));
+
+        internal void OnResponse(IResponse response) => Response?.Invoke(this, new ResponseEventArgs(response));
 
         internal void DidDisconnected() => _disconnected = true;
 
