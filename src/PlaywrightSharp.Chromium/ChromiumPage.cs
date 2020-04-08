@@ -611,11 +611,11 @@ namespace PlaywrightSharp.Chromium
         {
             if (e.Name == "load")
             {
-                Page.FrameManager.FrameLifecycleEvent(e.FrameId, "load");
+                Page.FrameManager.FrameLifecycleEvent(e.FrameId, WaitUntilNavigation.Load);
             }
             else if (e.Name == "DOMContentLoaded")
             {
-                Page.FrameManager.FrameLifecycleEvent(e.FrameId, "domcontentloaded");
+                Page.FrameManager.FrameLifecycleEvent(e.FrameId, WaitUntilNavigation.DOMContentLoaded);
             }
         }
 
