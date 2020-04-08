@@ -18,29 +18,23 @@ namespace PlaywrightSharp
         internal ElementHandle(FrameExecutionContext context, IRemoteObject remoteObject) : base(context, remoteObject)
         {
             _page = context.Frame.Page;
-            FrameExecutionContext = context;
+            Context = context;
         }
 
-        internal FrameExecutionContext FrameExecutionContext { get; set; }
+        internal new FrameExecutionContext Context { get; set; }
 
         /// <inheritdoc cref="IElementHandle.ClickAsync(ClickOptions)"/>
         public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.ClickAsync(point.X, point.Y, options), options);
 
+        /// <inheritdoc cref="IElementHandle.DoubleClickAsync(ClickOptions)"/>
+        public Task DoubleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.DoubleClickAsync(point.X, point.Y, options), options);
+
+        /// <inheritdoc cref="IElementHandle.TripleClickAsync(ClickOptions)"/>
+        public Task TripleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.TripleClickAsync(point.X, point.Y, options), options);
+
         /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
-            => FrameExecutionContext.EvaluateHandleAsync(script, args.InsertAt(0, this));
-
-        /// <inheritdoc cref="IElementHandle.EvaluateAsync{T}(string, object[])"/>
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IElementHandle.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+            => Context.EvaluateHandleAsync(script, args.Prepend(this));
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)
@@ -143,7 +137,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.GetVisibleRatioAsync"/>
         public Task<double> GetVisibleRatioAsync()
-            => EvaluateInUtility<double>(@"async (node) => {
+            => EvaluateInUtilityAsync<double>(@"async (node) => {
                 if (node.nodeType !== Node.ELEMENT_NODE)
                     throw new Error('Node is not of type HTMLElement');
                 const element = node;
@@ -241,7 +235,6 @@ namespace PlaywrightSharp
                     }
                     return '';
                 }",
-                this,
                 _page.BrowserContext.Options.JavaScriptEnabled).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(error))
@@ -263,12 +256,6 @@ namespace PlaywrightSharp
         }
 
         internal Task DisposeAsync() => Task.CompletedTask;
-
-        private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
-        {
-            var utility = await FrameExecutionContext.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            return await utility.EvaluateAsync<T>(pageFunction, args.InsertAt(0, this)).ConfigureAwait(false);
-        }
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {
@@ -298,11 +285,10 @@ namespace PlaywrightSharp
 
             var r = await ViewportPointAndScrollAsync(relativePoint.Value).ConfigureAwait(false);
 
-            if (r.ScrollX != null || r.ScrollY != null)
+            if (r.ScrollX != 0 || r.ScrollY != 0)
             {
-                string error = await EvaluateInUtility<string>(
-                    @"(element, scrollX, scrollY) =>
-                    {
+                string error = await EvaluateInUtilityAsync<string>(
+                    @"(element, scrollX, scrollY) => {
                         if (!element.ownerDocument || !element.ownerDocument.defaultView)
                             return 'Node does not have a containing window';
                         element.ownerDocument.defaultView.scrollBy(scrollX, scrollY);
@@ -318,7 +304,7 @@ namespace PlaywrightSharp
 
                 r = await ViewportPointAndScrollAsync(relativePoint.Value).ConfigureAwait(false);
 
-                if (r.ScrollX != null || r.ScrollY != null)
+                if (r.ScrollX != 0 || r.ScrollY != 0)
                 {
                     throw new PlaywrightSharpException("Failed to scroll relative point into viewport");
                 }
@@ -327,15 +313,60 @@ namespace PlaywrightSharp
             return r.Point;
         }
 
-        private async Task<T> EvaluateInUtility<T>(string script, params object[] args)
+        private async Task<PointAndScroll> ViewportPointAndScrollAsync(Point relativePoint)
         {
-            var utility = await FrameExecutionContext.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            return await utility.EvaluateAsync<T>(script, this, args).ConfigureAwait(false);
-        }
+            // TODO: debug log
+            var boxTask = GetBoundingBoxAsync();
+            var borderTask = EvaluateInUtilityAsync<Point>(@"node => {
+                    if (node.nodeType !== Node.ELEMENT_NODE || !node.ownerDocument || !node.ownerDocument.defaultView)
+                        return { x: 0, y: 0 };
+                    const style = node.ownerDocument.defaultView.getComputedStyle(node);
+                    return { x: parseInt(style.borderLeftWidth || '', 10), y: parseInt(style.borderTopWidth || '', 10) };
+                }");
+            await Task.WhenAll(boxTask, borderTask).ConfigureAwait(false);
+            var box = boxTask.Result;
+            var border = borderTask.Result;
+            var point = new Point { X = relativePoint.X, Y = relativePoint.Y };
+            if (box != null)
+            {
+                point = new Point { X = point.X + (int)box.X, Y = point.Y + (int)box.Y };
+            }
 
-        private Task<PointAndScroll> ViewportPointAndScrollAsync(Point value)
-        {
-            throw new NotImplementedException();
+            if (border != null)
+            {
+                // Make point relative to the padding box to align with offsetX/offsetY.
+                point = new Point { X = point.X + border.X, Y = point.Y + border.Y };
+            }
+
+            var metrics = await _page.Delegate.GetLayoutViewportAsync().ConfigureAwait(false);
+            int scrollX = 0;
+            if (point.X < 20)
+            {
+                scrollX = point.X - 20;
+            }
+
+            if (point.X > metrics.Width - 20)
+            {
+                scrollX = point.X - metrics.Width + 20;
+            }
+
+            int scrollY = 0;
+            if (point.Y < 20)
+            {
+                scrollY = point.Y - 20;
+            }
+
+            if (point.Y > metrics.Height - 20)
+            {
+                scrollY = point.Y - metrics.Height + 20;
+            }
+
+            return new PointAndScroll
+            {
+                Point = point,
+                ScrollX = scrollX,
+                ScrollY = scrollY,
+            };
         }
 
         private async Task<Point> ClickablePointAsync()
@@ -391,6 +422,12 @@ namespace PlaywrightSharp
             }
 
             return result;
+        }
+
+        private async Task<T> EvaluateInUtilityAsync<T>(string pageFunction, params object[] args)
+        {
+            var utility = await Context.Frame.GetUtilityContextAsync().ConfigureAwait(false);
+            return await utility.EvaluateAsync<T>(pageFunction, args.Prepend(this)).ConfigureAwait(false);
         }
     }
 }

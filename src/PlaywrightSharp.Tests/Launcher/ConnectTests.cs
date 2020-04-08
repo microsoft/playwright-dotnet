@@ -1,7 +1,4 @@
-using System;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -14,7 +11,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.connect</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class ConnectTests : PlaywrightSharpBrowserContextBaseTest
+    public class ConnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ConnectTests(ITestOutputHelper output) : base(output)

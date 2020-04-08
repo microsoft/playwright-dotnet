@@ -1,14 +1,17 @@
-using System.Collections.Generic;
-
 namespace PlaywrightSharp.Helpers
 {
     internal static class ArrayExtensions
     {
-        public static T[] InsertAt<T>(this T[] array, int index, T value)
+        public static T[] Prepend<T>(this T[] array, params T[] values)
         {
-            var list = new List<T>(array);
-            list.Insert(index, value);
-            return list.ToArray();
+            var newArray = new T[array.Length + values.Length];
+            for (int i = 0; i < values.Length; ++i)
+            {
+                newArray[i] = values[i];
+            }
+
+            array.CopyTo(newArray, values.Length);
+            return newArray;
         }
     }
 }

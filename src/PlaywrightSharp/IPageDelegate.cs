@@ -177,5 +177,18 @@ namespace PlaywrightSharp
         /// <param name="elementHandle">Element to evaluate.</param>
         /// <returns>A <see cref="Task"/> that completes when the frame is found, yielding its frame ID.</returns>
         Task<string> GetOwnerFrameAsync(ElementHandle elementHandle);
+
+        /// <summary>
+        /// Sets extra HTTP headers that will be sent with every request the page initiates.
+        /// </summary>
+        /// <param name="headers">Additional http headers to be sent with every request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
+        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
+
+        /// <summary>
+        /// Reloads the page.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the redirect action completes.</returns>
+        Task ReloadAsync();
     }
 }

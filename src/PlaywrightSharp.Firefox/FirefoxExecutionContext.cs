@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Firefox
 
         internal string ExecutionContextId { get; }
 
-        public async Task<T> EvaluateAsync<T>(FrameExecutionContext frameExecutionContext, bool returnByValue, string pageFunction, object[] args)
+        public async Task<T> EvaluateAsync<T>(ExecutionContext context, bool returnByValue, string pageFunction, object[] args)
         {
             if (!pageFunction.IsJavascriptFunction())
             {
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Firefox
                     ReturnByValue = returnByValue,
                     ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
-                return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, frameExecutionContext);
+                return ExtractResult<T>(result.ExceptionDetails, result.Result, returnByValue, context);
             }
 
             RuntimeCallFunctionResponse payload = null;
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Firefox
                 payload = await _session.SendAsync(new RuntimeCallFunctionRequest
                 {
                     FunctionDeclaration = functionText,
-                    Args = Array.ConvertAll(args, arg => FormatArgument(arg, frameExecutionContext)),
+                    Args = Array.ConvertAll(args, arg => FormatArgument(arg, context)),
                     ReturnByValue = returnByValue,
                     ExecutionContextId = ExecutionContextId,
                 }).ConfigureAwait(false);
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Firefox
                 payload = RewriteError(ex);
             }
 
-            return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, frameExecutionContext);
+            return ExtractResult<T>(payload.ExceptionDetails, payload.Result, returnByValue, context);
         }
 
         public string HandleToString(IJSHandle handle, bool includeType)
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Firefox
                 return "JSHandle@" + (string.IsNullOrEmpty(payload.Subtype) ? payload.Type : payload.Subtype);
             }
 
-            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<object>((RemoteObject)payload);
+            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<string>((RemoteObject)payload);
         }
 
         public async Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle)
@@ -82,18 +82,25 @@ namespace PlaywrightSharp.Firefox
             return DeserializeValue<T>(simpleValue.Result);
         }
 
-        public Task ReleaseHandleAsync(JSHandle handle)
+        public async Task ReleaseHandleAsync(JSHandle handle)
         {
             if (string.IsNullOrEmpty(handle?.RemoteObject.ObjectId))
             {
-                return Task.CompletedTask;
+                return;
             }
 
-            return _session.SendAsync(new RuntimeDisposeObjectRequest
+            try
             {
-                ExecutionContextId = ExecutionContextId,
-                ObjectId = handle.RemoteObject.ObjectId,
-            });
+                await _session.SendAsync(new RuntimeDisposeObjectRequest
+                {
+                    ExecutionContextId = ExecutionContextId,
+                    ObjectId = handle.RemoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+            }
         }
 
         private RuntimeCallFunctionResponse RewriteError(Exception error)
@@ -111,7 +118,7 @@ namespace PlaywrightSharp.Firefox
             throw error;
         }
 
-        private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, FrameExecutionContext context)
+        private T ExtractResult<T>(ExceptionDetails exceptionDetails, RemoteObject remoteObject, bool returnByValue, ExecutionContext context)
         {
             CheckException(exceptionDetails);
             if (returnByValue)
@@ -137,7 +144,7 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private CallFunctionArgument FormatArgument(object arg, FrameExecutionContext context)
+        private CallFunctionArgument FormatArgument(object arg, ExecutionContext context)
         {
             switch (arg)
             {

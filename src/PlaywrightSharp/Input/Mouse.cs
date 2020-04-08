@@ -23,7 +23,8 @@ namespace PlaywrightSharp.Input
         /// <inheritdoc cref="IMouse.ClickAsync(double, double, ClickOptions)"/>
         public async Task ClickAsync(double x, double y, ClickOptions options = null)
         {
-            if ((options?.Delay ?? 0) != 0)
+            options ??= new ClickOptions();
+            if (options.Delay != 0)
             {
                 await Task.WhenAll(
                   MoveAsync(x, y),
@@ -39,6 +40,64 @@ namespace PlaywrightSharp.Input
                   MoveAsync(x, y),
                   DownAsync(options),
                   UpAsync(options)).ConfigureAwait(false);
+            }
+        }
+
+        /// <inheritdoc cref="IMouse.DoubleClickAsync(double, double, ClickOptions)"/>
+        public async Task DoubleClickAsync(double x, double y, ClickOptions options = null)
+        {
+            options ??= new ClickOptions();
+            if (options.Delay != 0)
+            {
+                await MoveAsync(x, y).ConfigureAwait(false);
+                await DownAsync(options?.WithClickCount(1)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await UpAsync(options?.WithClickCount(1)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await DownAsync(options?.WithClickCount(2)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await UpAsync(options?.WithClickCount(2)).ConfigureAwait(false);
+            }
+            else
+            {
+                await Task.WhenAll(
+                    MoveAsync(x, y),
+                    DownAsync(options?.WithClickCount(1)),
+                    UpAsync(options?.WithClickCount(1)),
+                    DownAsync(options?.WithClickCount(2)),
+                    UpAsync(options?.WithClickCount(2))).ConfigureAwait(false);
+            }
+        }
+
+        /// <inheritdoc cref="IMouse.TripleClickAsync(double, double, ClickOptions)"/>
+        public async Task TripleClickAsync(double x, double y, ClickOptions options = null)
+        {
+            options ??= new ClickOptions();
+            if (options.Delay != 0)
+            {
+                await MoveAsync(x, y).ConfigureAwait(false);
+                await DownAsync(options?.WithClickCount(1)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await UpAsync(options?.WithClickCount(1)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await DownAsync(options?.WithClickCount(2)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await UpAsync(options?.WithClickCount(2)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await DownAsync(options?.WithClickCount(3)).ConfigureAwait(false);
+                await Task.Delay(options.Delay).ConfigureAwait(false);
+                await UpAsync(options?.WithClickCount(3)).ConfigureAwait(false);
+            }
+            else
+            {
+                await Task.WhenAll(
+                    MoveAsync(x, y),
+                    DownAsync(options?.WithClickCount(1)),
+                    UpAsync(options?.WithClickCount(1)),
+                    DownAsync(options?.WithClickCount(2)),
+                    UpAsync(options?.WithClickCount(2)),
+                    DownAsync(options?.WithClickCount(3)),
+                    UpAsync(options?.WithClickCount(3))).ConfigureAwait(false);
             }
         }
 

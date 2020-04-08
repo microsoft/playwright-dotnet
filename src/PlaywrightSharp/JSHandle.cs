@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
@@ -18,6 +19,14 @@ namespace PlaywrightSharp
         internal bool Disposed { get; private set; }
 
         internal IRemoteObject RemoteObject { get; set; }
+
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync{T}(string, object[])"/>
+        public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args)
+            => Context.EvaluateAsync<T>(pageFunction, args.Prepend(this));
+
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync(string, object[])"/>
+        public Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args)
+            => EvaluateAsync<JsonElement?>(pageFunction, args);
 
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
         Task IJSHandle.DisposeAsync()

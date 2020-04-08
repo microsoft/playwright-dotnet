@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluateHandle</playwright-describe>
     [Trait("Category", "chromium")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FrameEvaluateHandleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

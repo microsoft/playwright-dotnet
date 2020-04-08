@@ -102,13 +102,6 @@ namespace PlaywrightSharp
         Task<double> GetVisibleRatioAsync();
 
         /// <summary>
-        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
-        /// </summary>
-        /// <param name="options">click options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
-        Task ClickAsync(ClickOptions options = null);
-
-        /// <summary>
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
@@ -121,29 +114,25 @@ namespace PlaywrightSharp
         Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
 
         /// <summary>
-        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
+        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
-        /// <typeparam name="T">Type to parse the result to.</typeparam>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<T> EvaluateAsync<T>(string script, params object[] args);
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
+        Task ClickAsync(ClickOptions options = null);
 
         /// <summary>
-        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
+        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to double click in the center of the element.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// <see cref="IJSHandle"/> instances can be passed as arguments.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully double clicked.</returns>
+        Task DoubleClickAsync(ClickOptions options = null);
+
+        /// <summary>
+        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to triple click in the center of the element.
+        /// </summary>
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully  triple clicked.</returns>
+        Task TripleClickAsync(ClickOptions options = null);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.

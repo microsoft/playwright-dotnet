@@ -573,7 +573,7 @@ namespace PlaywrightSharp
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
-        Task FillAsync(string selector, string text, FillOptions options = null);
+        Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
 
         /// <summary>
         /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
@@ -723,7 +723,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
-        Task SetExtraHttpHeadersAsync(IReadOnlyDictionary<string, string> headers);
+        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
 
         /// <summary>
         /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
@@ -789,6 +789,14 @@ namespace PlaywrightSharp
         /// <param name="options">click options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
         Task ClickAsync(string selector, ClickOptions options = null);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to double click in the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully double clicked.</returns>
+        Task DoubleClickAsync(string selector, ClickOptions options = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to triple click in the center of the element.

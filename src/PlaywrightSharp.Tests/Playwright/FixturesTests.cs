@@ -12,8 +12,8 @@ namespace PlaywrightSharp.Tests.Playwright
     ///<playwright-file>fixtures.spec.js</playwright-file>
     ///<playwright-describe>Fixtures</playwright-describe>
     [Trait("Category", "chromium")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
-    public class FixturesTests : PlaywrightSharpBrowserContextBaseTest
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+    public class FixturesTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public FixturesTests(ITestOutputHelper output) : base(output)
@@ -174,7 +174,7 @@ namespace PlaywrightSharp.Tests.Playwright
 #if DEBUG
             string build = "Debug";
 #else
-            
+
             var build = "Release";
 #endif
 #if NETCOREAPP

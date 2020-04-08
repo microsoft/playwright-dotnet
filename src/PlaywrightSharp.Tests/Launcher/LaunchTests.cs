@@ -1,7 +1,5 @@
-using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -13,7 +11,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.launch</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class LaunchTests : PlaywrightSharpBrowserContextBaseTest
+    public class LaunchTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public LaunchTests(ITestOutputHelper output) : base(output)

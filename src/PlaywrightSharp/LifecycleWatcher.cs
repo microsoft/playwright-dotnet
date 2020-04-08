@@ -34,7 +34,7 @@ namespace PlaywrightSharp
 
         public LifecycleWatcher(Frame frame, NavigationOptions options)
         {
-            _options = options != null && options is NavigationOptions ? (WaitForNavigationOptions)options : new WaitForNavigationOptions();
+            _options = options != null ? options as WaitForNavigationOptions ?? new WaitForNavigationOptions(options) : new WaitForNavigationOptions();
             _frame = frame;
 
             _expectedLifecycle = (_options.WaitUntil ?? _defaultWaitUntil).Select(w =>

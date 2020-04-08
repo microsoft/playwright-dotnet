@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;

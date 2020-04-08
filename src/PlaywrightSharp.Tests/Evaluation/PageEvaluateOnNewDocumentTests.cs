@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Tests.Evaluation
     ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEvaluateOnNewDocumentTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

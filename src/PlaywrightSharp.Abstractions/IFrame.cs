@@ -117,6 +117,12 @@ namespace PlaywrightSharp
         Task SetContentAsync(string html, NavigationOptions options = null);
 
         /// <summary>
+        /// Gets the full HTML contents of the page, including the doctype.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the html content is retrieved, yielding the HTML content.</returns>
+        Task<string> GetContentAsync();
+
+        /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.
         /// </summary>
         /// <param name="options">add script tag options.</param>
@@ -197,6 +203,22 @@ namespace PlaywrightSharp
         /// <param name="options">click options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
         Task ClickAsync(string selector, ClickOptions options = null);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to double click in the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully double clicked.</returns>
+        Task DoubleClickAsync(string selector, ClickOptions options = null);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to triple click in the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">click options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully triple clicked.</returns>
+        Task TripleClickAsync(string selector, ClickOptions options = null);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.

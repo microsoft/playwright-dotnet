@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 
@@ -12,7 +14,8 @@ namespace PlaywrightSharp
     {
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
-        private int _setContentCounter;
+        private int _setContentCounter = 0;
+        private Frame _parentFrame;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -59,6 +62,10 @@ namespace PlaywrightSharp
         internal List<Frame> ChildFrames { get; } = new List<Frame>();
 
         internal string LastDocumentId { get; set; }
+
+        internal List<Request> InflightRequests { get; set; } = new List<Request>();
+
+        internal ConcurrentDictionary<string, CancellationTokenSource> NetworkIdleTimers { get; } = new ConcurrentDictionary<string, CancellationTokenSource>();
 
         /// <inheritdoc cref="IFrame.GetTitleAsync" />
         public async Task<string> GetTitleAsync()
@@ -130,6 +137,22 @@ namespace PlaywrightSharp
         {
             var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
             await handle.ClickAsync(options).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
+        /// <inheritdoc cref="IFrame.DoubleClickAsync(string, ClickOptions)"/>
+        public async Task DoubleClickAsync(string selector, ClickOptions options = null)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.DoubleClickAsync(options).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
+        /// <inheritdoc cref="IFrame.TripleClickAsync(string, ClickOptions)"/>
+        public async Task TripleClickAsync(string selector, ClickOptions options = null)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.TripleClickAsync(options).ConfigureAwait(false);
             await handle.DisposeAsync().ConfigureAwait(false);
         }
 
@@ -232,15 +255,21 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync(string, string, object[])"/>
-        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args) => QuerySelectorEvaluateAsync<object>(selector, script, args);
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync{T}(string, string, object[])"/>
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
+        public async Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
         {
-            throw new System.NotImplementedException();
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            var elementHandle = await context.QuerySelectorAsync(selector).ConfigureAwait(false);
+            if (elementHandle == null)
+            {
+                throw new SelectorException("failed to find element matching selector", selector);
+            }
+
+            var result = await elementHandle.EvaluateAsync<T>(script, args).ConfigureAwait(false);
+            await elementHandle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
 
         /// <inheritdoc cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
@@ -283,6 +312,20 @@ namespace PlaywrightSharp
             {
                 await timeoutTask.ConfigureAwait(false);
             }
+        }
+
+        /// <inheritdoc cref="IFrame.GetContentAsync"/>
+        public async Task<string> GetContentAsync()
+        {
+            var context = await GetUtilityContextAsync().ConfigureAwait(false);
+            return await context.EvaluateAsync<string>(@"() => {
+                let retVal = '';
+                if (document.doctype)
+                    retVal = new XMLSerializer().serializeToString(document.doctype);
+                if (document.documentElement)
+                    retVal += document.documentElement.outerHTML;
+                return retVal;
+            }").ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
@@ -430,7 +473,7 @@ namespace PlaywrightSharp
                 var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, waitFor, timeout)
                     .ConfigureAwait(false);
 
-                handle = maybeHandle ?? throw new PlaywrightSharpException($"No node found for selector: {SelectorToString(selector, waitFor)}");
+                handle = maybeHandle ?? throw new SelectorException($"No node found for selector", SelectorToString(selector, options.WaitFor));
             }
             else
             {
@@ -439,7 +482,7 @@ namespace PlaywrightSharp
 
                 if (maybeHandle == null)
                 {
-                    throw new PlaywrightSharpException($"No node found for selector: {selector}");
+                    throw new SelectorException($"No node found for selector", selector);
                 }
 
                 handle = maybeHandle!;

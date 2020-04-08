@@ -35,9 +35,9 @@ namespace PlaywrightSharp.Firefox
             _context = context;
             _openerResolver = openerResolver;
 
-            Page = new Page(this, _context);
             RawKeyboard = new FirefoxRawKeyboard(session);
             RawMouse = new FirefoxRawMouse(session);
+            Page = new Page(this, _context);
 
             session.MessageReceived += OnMessageReceived;
             Page.FrameDetached += RemoveContextsForFrame;
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Firefox
         {
             var result = await _session.SendAsync(new PageAdoptNodeRequest
             {
-                FrameId = handle.FrameExecutionContext.Frame.Id,
+                FrameId = handle.Context.Frame.Id,
                 ObjectId = handle.RemoteObject.ObjectId,
                 ExecutionContextId = ((FirefoxExecutionContext)to.Delegate).ExecutionContextId,
             }).ConfigureAwait(false);
@@ -65,15 +65,18 @@ namespace PlaywrightSharp.Firefox
         public Task ClosePageAsync(bool runBeforeUnload)
             => _session.SendAsync(new PageCloseRequest { RunBeforeUnload = runBeforeUnload });
 
-        public Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle)
+        public async Task<Quad[][]> GetContentQuadsAsync(ElementHandle elementHandle)
         {
-            throw new NotImplementedException();
+            var result = await _session.SendAsync(new PageGetContentQuadsRequest
+            {
+                FrameId = elementHandle.Context.Frame.Id,
+                ObjectId = elementHandle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            return Array.ConvertAll(result.Quads, quad => (Quad[])quad);
         }
 
         public Task<LayoutMetric> GetLayoutViewportAsync()
-        {
-            throw new NotImplementedException();
-        }
+            => Page.EvaluateAsync<LayoutMetric>("() => ({ width: innerWidth, height: innerHeight })");
 
         public bool CanScreenshotOutsideViewport() => true;
 
@@ -122,10 +125,42 @@ namespace PlaywrightSharp.Firefox
         {
             var response = await _session.SendAsync(new PageGetBoundingBoxRequest
             {
-                FrameId = handle.FrameExecutionContext.Frame.Id,
+                FrameId = handle.Context.Frame.Id,
                 ObjectId = handle.RemoteObject.ObjectId,
             }).ConfigureAwait(false);
             return response.BoundingBox;
+        }
+
+        public async Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
+        {
+            var quads = await GetContentQuadsAsync(handle).ConfigureAwait(false);
+            if (quads == null || quads.Length == 0)
+            {
+                return null;
+            }
+
+            double minX = double.PositiveInfinity;
+            double maxX = double.NegativeInfinity;
+            double minY = double.PositiveInfinity;
+            double maxY = double.NegativeInfinity;
+            foreach (var quad in quads)
+            {
+                foreach (var point in quad)
+                {
+                    minX = Math.Min(minX, point.X);
+                    maxX = Math.Max(maxX, point.X);
+                    minY = Math.Min(minY, point.Y);
+                    maxY = Math.Max(maxY, point.Y);
+                }
+            }
+
+            return new Rect
+            {
+                X = minX,
+                Y = minY,
+                Width = maxX - minX,
+                Height = maxY - minY,
+            };
         }
 
         public async Task ExposeBindingAsync(string name, string functionString)
@@ -146,16 +181,11 @@ namespace PlaywrightSharp.Firefox
 
         public Task<string> GetOwnerFrameAsync(ElementHandle elementHandle) => throw new NotImplementedException();
 
-        public Task<Rect> GetBoundingBoxAsync(ElementHandle handle)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
         {
             var response = await _session.SendAsync(new PageDescribeNodeRequest
             {
-                FrameId = elementHandle.FrameExecutionContext.Frame.Id,
+                FrameId = elementHandle.Context.Frame.Id,
                 ObjectId = elementHandle.RemoteObject.ObjectId,
             }).ConfigureAwait(false);
             if (string.IsNullOrEmpty(response.ContentFrameId))
@@ -165,6 +195,18 @@ namespace PlaywrightSharp.Firefox
 
             return Page.FrameManager.Frames[response.ContentFrameId];
         }
+
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+            => _session.SendAsync(new NetworkSetExtraHTTPHeadersRequest
+            {
+                Headers = headers.Select(pair => new HTTPHeader
+                {
+                    Name = pair.Key,
+                    Value = pair.Value,
+                }).ToArray(),
+            });
+
+        public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 
         internal async Task InitializeAsync()
         {
@@ -234,6 +276,7 @@ namespace PlaywrightSharp.Firefox
                 case PageNavigationStartedFirefoxEvent pageNavigationStarted:
                     break;
                 case PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation:
+                    OnSameDocumentNavigation(pageSameDocumentNavigation);
                     break;
                 case RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated:
                     OnExecutionContextCreated(runtimeExecutionContextCreated);
@@ -263,20 +306,6 @@ namespace PlaywrightSharp.Firefox
                     OnDispatchMessageFromWorker(pageDispatchMessageFromWorker);
                     break;
             }
-        }
-
-        private void OnConsole(RuntimeConsoleFirefoxEvent e)
-        {
-            var context = ContextIdToContext[e.ExecutionContextId];
-            Page.AddConsoleMessage(
-                e.GetConsoleType(),
-                e.Args.Select(arg => context.CreateHandle(arg)).ToArray(),
-                new ConsoleMessageLocation
-                {
-                    URL = e.Location.Url,
-                    LineNumber = Convert.ToInt32(e.Location.LineNumber),
-                    ColumnNumber = Convert.ToInt32(e.Location.ColumnNumber),
-                });
         }
 
         private void OnEventFired(PageEventFiredFirefoxEvent pageEventFired)
@@ -310,6 +339,9 @@ namespace PlaywrightSharp.Firefox
 
             Page.FrameManager.FrameCommittedNewDocumentNavigation(pageNavigationCommitted.FrameId, pageNavigationCommitted.Url, pageNavigationCommitted.Name ?? string.Empty, pageNavigationCommitted.NavigationId ?? string.Empty, false);
         }
+
+        private void OnSameDocumentNavigation(PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation)
+            => Page.FrameManager.FrameCommittedSameDocumentNavigation(pageSameDocumentNavigation.FrameId, pageSameDocumentNavigation.Url);
 
         private void OnExecutionContextCreated(RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated)
         {
@@ -356,6 +388,16 @@ namespace PlaywrightSharp.Firefox
         {
             var context = ContextIdToContext[pageBindingCalled.ExecutionContextId];
             _ = Page.OnBindingCalledAsync(pageBindingCalled.Payload.ToString(), context);
+        }
+
+        private void OnConsole(RuntimeConsoleFirefoxEvent runtimeConsole)
+        {
+            var context = ContextIdToContext[runtimeConsole.ExecutionContextId];
+
+            var type = runtimeConsole.GetConsoleType();
+            var location = runtimeConsole.ToConsoleMessageLocation();
+
+            Page.AddConsoleMessage(type, Array.ConvertAll(runtimeConsole.Args, arg => context.CreateHandle(arg)), location);
         }
 
         private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)

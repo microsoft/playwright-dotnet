@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -12,6 +12,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>click.spec.js</playwright-file>
     ///<playwright-describe>Page.click</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ClickTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -127,7 +129,7 @@ namespace PlaywrightSharp.Tests.Page
                 page.ClickAsync("a"),
                 page.WaitForNavigationAsync()
             );
-            Assert.Equal(TestConstants.ServerUrl + "/wrappedlink.html#clicked", Page.Url);
+            Assert.Equal(TestConstants.ServerUrl + "/wrappedlink.html#clicked", page.Url);
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -160,8 +162,10 @@ namespace PlaywrightSharp.Tests.Page
             const string text = "This is the text that we are going to try to select. Let's see how it goes.";
             await Page.FillAsync("textarea", text);
             await Page.TripleClickAsync("textarea");
-
-            Assert.Equal(text, await Page.EvaluateAsync<string>("window.getSelection().toString()"));
+            Assert.Equal(text, await Page.EvaluateAsync<string>(@"() => {
+                const textarea = document.querySelector('textarea');
+                return textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+            }"));
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -172,7 +176,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
             var messages = new List<string>();
-            Page.Console += (sender, e) => messages.Add(e.Message.Text);
+            Page.Console += (sender, e) => messages.Add(e.Message.GetText());
 
             for (int i = 0; i < 11; ++i)
             {
@@ -252,20 +256,21 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWaitForVisible()
         {
+            bool done = false;
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
 
-            var clickTask = Page.ClickAsync("button");
+            var clicked = Page.ClickAsync("button").ContinueWith(_ => done = true);
 
             for (int i = 0; i < 5; i++)
             {
                 await Page.EvaluateAsync("1");
             }
-            Assert.False(clickTask.IsCompleted);
+            Assert.False(done);
 
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'block'");
-
-            Assert.True(clickTask.IsCompleted);
+            await clicked;
+            Assert.True(done);
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
@@ -331,8 +336,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var exception = await Assert.ThrowsAsync<SelectorException>(()
-                => Page.ClickAsync("button.does-not-exist"));
-            Assert.Equal("No node found for selector: button.does-not-exist", exception.Message);
+                => Page.ClickAsync("button.does-not-exist", new ClickOptions { WaitFor = WaitForOption.NoWait }));
+            Assert.Equal("No node found for selector", exception.Message);
             Assert.Equal("button.does-not-exist", exception.Selector);
         }
 
@@ -376,7 +381,7 @@ namespace PlaywrightSharp.Tests.Page
                });
             }");
             var button = await Page.QuerySelectorAsync("button");
-            await button.ClickAsync(new ClickOptions { ClickCount = 2 });
+            await button.DoubleClickAsync();
             Assert.True(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -517,12 +522,12 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click a very large button with relative point</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldClickAVeryLargeButtonWithRelativePoint()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.QuerySelectorEvaluateAsync("button", "button.style.height = button.style.width = '2000px'");
+            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.height = button.style.width = '2000px'");
             await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.

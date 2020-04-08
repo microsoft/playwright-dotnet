@@ -1,10 +1,4 @@
-using System;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,7 +9,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.executablePath</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class ExecutablePathTests : PlaywrightSharpBrowserContextBaseTest
+    public class ExecutablePathTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ExecutablePathTests(ITestOutputHelper output) : base(output)

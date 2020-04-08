@@ -14,5 +14,15 @@ namespace PlaywrightSharp.Chromium.Input
         }
 
         public Task SendTextAsync(string text) => _client.SendAsync(new InputInsertTextRequest { Text = text });
+
+        public Task KeyDownAsync(Modifier[] modifiers, string code, int keyCode, int keyCodeWithoutLocation, string key, double location, bool autoRepeat, string text)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task KeyUpAsync(Modifier[] modifiers, string code, int keyCode, int keyCodeWithoutLocation, string key, double location)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
