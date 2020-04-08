@@ -13,7 +13,7 @@ using PlaywrightSharp.Helpers;
 namespace PlaywrightSharp.Webkit
 {
     /// <inheritdoc cref="IBrowserType"/>
-    public class WebkitBrowserType : IBrowserType
+    public class WebkitBrowserType : BrowserTypeBase
     {
         /// <summary>
         /// Preferred revision.
@@ -22,23 +22,17 @@ namespace PlaywrightSharp.Webkit
 
         private static string _cachedMacVersion;
 
-        /// <inheritdoc cref="IBrowserType.Devices"/>
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => null;
-
-        /// <inheritdoc cref="IBrowserType.ExecutablePath"/>
-        public string ExecutablePath => null;
-
         /// <inheritdoc cref="IBrowserType.Name"/>
-        public string Name => "webkit";
+        public override string Name => "webkit";
 
         /// <inheritdoc cref="IBrowserType.ConnectAsync(ConnectOptions)"/>
-        public Task<IBrowser> ConnectAsync(ConnectOptions options = null)
+        public override Task<IBrowser> ConnectAsync(ConnectOptions options = null)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IBrowserType.CreateBrowserFetcher(BrowserFetcherOptions)"/>
-        public IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null)
+        public override IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null)
         {
             var downloadUrls = new Dictionary<Platform, string>
             {
@@ -69,37 +63,27 @@ namespace PlaywrightSharp.Webkit
         }
 
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
-        public string[] GetDefaultArgs(BrowserArgOptions options = null)
+        public override string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
-        public Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+        public override Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchBrowserAppAsync(LaunchOptions)"/>
-        public Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
+        public override Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
         {
             throw new NotImplementedException();
         }
 
-        private static void SetEnvVariables(IDictionary<string, string> environment, IDictionary<string, string> customEnv, IDictionary realEnv)
+        internal override Platform GetPlatform()
         {
-            foreach (DictionaryEntry item in realEnv)
-            {
-                environment[item.Key.ToString()] = item.Value.ToString();
-            }
-
-            if (customEnv != null)
-            {
-                foreach (var item in customEnv)
-                {
-                    environment[item.Key] = item.Value;
-                }
-            }
+            var platform = base.GetPlatform();
+            return platform == Platform.Win32 ? Platform.Win64 : platform;
         }
 
         private string GetMacVersion()
@@ -129,61 +113,12 @@ namespace PlaywrightSharp.Webkit
             return _cachedMacVersion;
         }
 
-        private string GetWebkitExecutablePath(LaunchOptions options)
-        {
-            string chromeExecutable = options.ExecutablePath;
-            if (string.IsNullOrEmpty(chromeExecutable))
-            {
-                chromeExecutable = ResolveExecutablePath();
-            }
-
-            if (!File.Exists(chromeExecutable))
-            {
-                throw new FileNotFoundException("Failed to launch chrome! path to executable does not exist", chromeExecutable);
-            }
-
-            return chromeExecutable;
-        }
-
-        private string ResolveExecutablePath()
-        {
-            var browserFetcher = CreateBrowserFetcher();
-            var revisionInfo = browserFetcher.GetRevisionInfo();
-
-            if (!revisionInfo.Local)
-            {
-                throw new FileNotFoundException("Webkit revision is not downloaded. Run BrowserFetcher.DownloadAsync or download Webkit manually", revisionInfo.ExecutablePath);
-            }
-
-            return revisionInfo.ExecutablePath;
-        }
-
         private (List<string> webkitArgs, TempDirectory tempUserDataDir) PrepareWebkitArgs(LaunchOptions options)
         {
             var webkitArgs = new List<string>();
             var tempUserDataDir = new TempDirectory();
 
             return (webkitArgs, tempUserDataDir);
-        }
-
-        private Platform GetPlatform()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return Platform.MacOS;
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return Platform.Linux;
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return Platform.Win64;
-            }
-
-            return Platform.Unknown;
         }
     }
 }
