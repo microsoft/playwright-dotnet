@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Firefox.Input
 
         public Task SendTextAsync(string text) => _session.SendAsync(new PageInsertTextRequest { Text = text });
 
-        public Task KeyDownAsync(Modifier[] modifiers, string code, int keyCode, int keyCodeWithoutLocation, string key, double location, bool autoRepeat, string text)
+        public Task KeyDownAsync(Modifier[] modifiers, string code, int keyCode, int keyCodeWithoutLocation, string key, int location, bool autoRepeat, string text)
         {
             if (code == "MetaLeft")
             {
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Firefox.Input
             });
         }
 
-        public Task KeyUpAsync(Modifier[] modifiers, string code, int keyCode, int keyCodeWithoutLocation, string key, double location)
+        public Task KeyUpAsync(Modifier[] modifiers, string code, int keyCode, int keyCodeWithoutLocation, string key, int location)
         {
             if (code == "MetaLeft")
             {
