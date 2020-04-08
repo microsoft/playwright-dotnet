@@ -427,14 +427,8 @@ namespace PlaywrightSharp.Chromium
                     case PageNavigatedWithinDocumentChromiumEvent pageNavigatedWithinDocument:
                         OnFrameNavigatedWithinDocument(pageNavigatedWithinDocument.FrameId, pageNavigatedWithinDocument.Url);
                         break;
-                    case PageFrameDetachedChromiumEvent frameDetached:
-                        OnFrameDetached(frameDetached.FrameId);
-                        break;
                     case PageLifecycleEventChromiumEvent pageLifecycleEvent:
                         OnLifecycleEvent(pageLifecycleEvent);
-                        break;
-                    case PageNavigatedWithinDocumentChromiumEvent pageNavigatedWithinDocument:
-                        OnNavigatedWithinDocument(pageNavigatedWithinDocument);
                         break;
                     case RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated:
                         OnExecutionContextCreated(runtimeExecutionContextCreated.Context);

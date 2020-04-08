@@ -15,7 +15,6 @@ namespace PlaywrightSharp
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
         private int _setContentCounter = 0;
-        private Frame _parentFrame;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {

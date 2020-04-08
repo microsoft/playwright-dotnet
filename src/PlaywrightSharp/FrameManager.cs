@@ -138,22 +138,6 @@ namespace PlaywrightSharp
             }
         }
 
-        internal void FrameCommittedSameDocumentNavigation(string frameId, string url)
-        {
-            if (!Frames.TryGetValue(frameId, out var frame))
-            {
-                return;
-            }
-
-            frame.Url = url;
-            foreach (var watcher in LifecycleWatchers.ToArray())
-            {
-                watcher.OnNavigatedWithinDocument(frame);
-            }
-
-            _page.OnFrameNavigated(frame);
-        }
-
         internal IFrame[] GetFrames()
         {
             List<Frame> frames = new List<Frame>();
