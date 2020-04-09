@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.getProperty</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class JSHandleGetPropertyTests : PlaywrightSharpPageBaseTest
     {
-        internal JSHandleGetPropertyTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public JSHandleGetPropertyTests(ITestOutputHelper output) : base(output)
         {
         }
 

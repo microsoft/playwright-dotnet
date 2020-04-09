@@ -18,18 +18,10 @@ namespace PlaywrightSharp
 
         internal bool Disposed { get; private set; }
 
-        internal IRemoteObject RemoteObject { get; set; }
-
-        /// <inheritdoc cref="IJSHandle.EvaluateAsync{T}(string, object[])"/>
-        public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args)
-            => Context.EvaluateAsync<T>(pageFunction, args.Prepend(this));
-
-        /// <inheritdoc cref="IJSHandle.EvaluateAsync(string, object[])"/>
-        public Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args)
-            => EvaluateAsync<JsonElement?>(pageFunction, args);
+        internal IRemoteObject RemoteObject { get; }
 
         /// <inheritdoc cref="IJSHandle.DisposeAsync"/>
-        Task IJSHandle.DisposeAsync()
+        public Task DisposeAsync()
         {
             if (Disposed)
             {
@@ -40,6 +32,14 @@ namespace PlaywrightSharp
             return Context.Delegate.ReleaseHandleAsync(this);
         }
 
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync{T}(string, object[])"/>
+        public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args)
+            => Context.EvaluateAsync<T>(pageFunction, args.Prepend(this));
+
+        /// <inheritdoc cref="IJSHandle.EvaluateAsync(string, object[])"/>
+        public Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args)
+            => EvaluateAsync<JsonElement?>(pageFunction, args);
+
         /// <inheritdoc cref="IJSHandle.GetJsonValueAsync{T}"/>
         public Task<T> GetJsonValueAsync<T>() => Context.Delegate.HandleJSONValueAsync<T>(this);
 
@@ -47,9 +47,23 @@ namespace PlaywrightSharp
         public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync() => Context.Delegate.GetPropertiesAsync(this);
 
         /// <inheritdoc cref="IJSHandle.GetPropertyAsync(string)"/>
-        public Task<IJSHandle> GetPropertyAsync(string propertyName)
+        public async Task<IJSHandle> GetPropertyAsync(string propertyName)
         {
-            throw new System.NotImplementedException();
+            var objectHandle = await EvaluateHandleAsync(
+                @"(object, propertyName) => {
+                    const result = { __proto__: null };
+                    result[propertyName] = object[propertyName];
+                    return result;
+                }",
+                propertyName).ConfigureAwait(false);
+
+            var properties = await objectHandle.GetPropertiesAsync().ConfigureAwait(false);
+            properties.TryGetValue(propertyName, out var result);
+            await objectHandle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
+
+        private Task<JSHandle> EvaluateHandleAsync(string pageFunction, params object[] args)
+            => Context.EvaluateHandleAsync(pageFunction, args.Prepend(this));
     }
 }

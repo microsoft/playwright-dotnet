@@ -70,6 +70,6 @@ namespace PlaywrightSharp
         /// Disposes the Handle. It will mark the JSHandle as disposed and release the <see cref="IJSHandle"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the handle is disposed.</returns>
-        internal Task DisposeAsync();
+        Task DisposeAsync();
     }
 }

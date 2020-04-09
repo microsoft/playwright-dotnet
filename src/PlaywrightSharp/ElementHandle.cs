@@ -33,8 +33,8 @@ namespace PlaywrightSharp
         public Task TripleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.TripleClickAsync(point.X, point.Y, options), options);
 
         /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
-            => Context.EvaluateHandleAsync(script, args.Prepend(this));
+        public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
+            => await Context.EvaluateHandleAsync(script, args.Prepend(this)).ConfigureAwait(false);
 
         /// <inheritdoc cref="IElementHandle.FillAsync(string)"/>
         public async Task FillAsync(string text)
@@ -254,8 +254,6 @@ namespace PlaywrightSharp
         {
             throw new NotImplementedException();
         }
-
-        internal Task DisposeAsync() => Task.CompletedTask;
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {
