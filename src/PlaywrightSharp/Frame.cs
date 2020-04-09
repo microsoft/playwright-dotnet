@@ -15,13 +15,12 @@ namespace PlaywrightSharp
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
         private int _setContentCounter = 0;
-        private Frame _parentFrame;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {
             Page = page;
             Id = frameId;
-            _parentFrame = parentFrame;
+            ParentFrame = parentFrame;
 
             _contextData = new Dictionary<ContextType, ContextData>
             {
@@ -31,7 +30,7 @@ namespace PlaywrightSharp
             SetContext(ContextType.Main, null);
             SetContext(ContextType.Utility, null);
 
-            _parentFrame?.ChildFrames.Add(this);
+            ParentFrame?.ChildFrames.Add(this);
         }
 
         /// <inheritdoc cref="IFrame.ChildFrames"/>
@@ -44,7 +43,10 @@ namespace PlaywrightSharp
         public string Url { get; set; }
 
         /// <inheritdoc cref="IFrame.ParentFrame"/>
-        public IFrame ParentFrame => _parentFrame;
+        IFrame IFrame.ParentFrame => ParentFrame;
+
+        /// <inheritdoc cref="IFrame.ParentFrame"/>
+        public Frame ParentFrame { get; private set; }
 
         /// <inheritdoc cref="IFrame.Detached"/>
         public bool Detached { get; set; }
@@ -62,8 +64,7 @@ namespace PlaywrightSharp
 
         internal List<Request> InflightRequests { get; set; } = new List<Request>();
 
-        internal ConcurrentDictionary<WaitUntilNavigation, CancellationTokenSource> NetworkIdleTimers { get; }
-            = new ConcurrentDictionary<WaitUntilNavigation, CancellationTokenSource>();
+        internal ConcurrentDictionary<WaitUntilNavigation, CancellationTokenSource> NetworkIdleTimers { get; } = new ConcurrentDictionary<WaitUntilNavigation, CancellationTokenSource>();
 
         /// <inheritdoc cref="IFrame.GetTitleAsync" />
         public async Task<string> GetTitleAsync()
@@ -370,8 +371,8 @@ namespace PlaywrightSharp
                 }
             }
 
-            _parentFrame?.ChildFrames.Remove(this);
-            _parentFrame = null;
+            ParentFrame?.ChildFrames.Remove(this);
+            ParentFrame = null;
         }
 
         internal void ContextCreated(ContextType contextType, FrameExecutionContext context)
