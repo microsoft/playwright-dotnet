@@ -74,7 +74,7 @@ namespace PlaywrightSharp
 
             if (!revisionInfo.Local)
             {
-                throw new FileNotFoundException("Chromium revision is not downloaded. Run BrowserFetcher.DownloadAsync or download Chromium manually", revisionInfo.ExecutablePath);
+                throw new FileNotFoundException($"{Name} revision is not downloaded. Run BrowserFetcher.DownloadAsync or download {Name} manually", revisionInfo.ExecutablePath);
             }
 
             return revisionInfo.ExecutablePath;
