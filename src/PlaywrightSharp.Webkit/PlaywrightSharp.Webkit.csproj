@@ -27,4 +27,7 @@
             <_Parameter1>PlaywrightSharp.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Macross.Json.Extensions" Version="1.2.1" />
+  </ItemGroup>
 </Project>
