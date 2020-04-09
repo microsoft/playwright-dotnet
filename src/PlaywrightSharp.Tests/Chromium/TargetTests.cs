@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Mono.Unix;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Protocol.Page;
-using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;

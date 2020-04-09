@@ -52,11 +52,6 @@ namespace PlaywrightSharp.Tests
                 Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
                 Timeout = 0,
                 LogProcess = true,
-#if NETCOREAPP
-                EnqueueTransportMessages = false
-#else
-                EnqueueTransportMessages = true
-#endif
             };
 
         public static LaunchOptions GetHeadfulOptions()

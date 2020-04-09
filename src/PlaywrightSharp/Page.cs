@@ -165,7 +165,7 @@ namespace PlaywrightSharp
 
             if (_disconnected)
             {
-                throw new PlaywrightSharpException("Protocol error: Connection closed. Most likely the page has been closed.");
+                throw new TargetClosedException("Protocol error: Connection closed. Most likely the page has been closed.");
             }
 
             bool runBeforeUnload = options?.RunBeforeUnload ?? false;

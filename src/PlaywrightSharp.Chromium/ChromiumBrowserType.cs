@@ -173,7 +173,6 @@ namespace PlaywrightSharp.Chromium
         {
             var app = await LaunchBrowserAppAsync(options).ConfigureAwait(false);
             var connectOptions = app.ConnectOptions;
-            connectOptions.EnqueueTransportMessages = options?.EnqueueTransportMessages ?? false;
             return await ChromiumBrowser.ConnectAsync(app, connectOptions).ConfigureAwait(false);
         }
 

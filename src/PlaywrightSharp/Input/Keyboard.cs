@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Input
             }
 
             string text = options?.Text ?? description.Text;
-            return _raw.KeyDownAsync(_pressedModifiers.ToArray(), description.Code, description.KeyCode, description.KeyCodeWithoutLocation, description.Key, description.Location, autoRepeat, text);
+            return _raw.KeyDownAsync(_pressedModifiers.ToArray(), description.Code, description.KeyCode, description.KeyCodeWithoutLocation, description.Key, Convert.ToInt32(description.Location), autoRepeat, text);
         }
 
         /// <inheritdoc cref="IKeyboard.EnsureModifiersAsync(Modifier[])"/>
@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Input
             }
 
             _pressedKeys.Remove(key);
-            return _raw.KeyUpAsync(_pressedModifiers.ToArray(), description.Code, description.KeyCode, description.KeyCodeWithoutLocation, description.Key, description.Location);
+            return _raw.KeyUpAsync(_pressedModifiers.ToArray(), description.Code, description.KeyCode, description.KeyCodeWithoutLocation, description.Key, Convert.ToInt32(description.Location));
         }
 
         private KeyDescription GetKeyDescriptionForString(string keyString)

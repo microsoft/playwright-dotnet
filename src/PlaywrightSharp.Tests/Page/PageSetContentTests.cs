@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setContent</playwright-describe>
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetContentTests : PlaywrightSharpPageBaseTest
     {
         const string expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
