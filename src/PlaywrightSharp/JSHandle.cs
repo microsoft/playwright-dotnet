@@ -44,10 +44,7 @@ namespace PlaywrightSharp
         public Task<T> GetJsonValueAsync<T>() => Context.Delegate.HandleJSONValueAsync<T>(this);
 
         /// <inheritdoc cref="IJSHandle.GetPropertiesAsync"/>
-        public Task<IReadOnlyDictionary<string, IJSHandle>> GetPropertiesAsync()
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync() => Context.Delegate.GetPropertiesAsync(this);
 
         /// <inheritdoc cref="IJSHandle.GetPropertyAsync(string)"/>
         public Task<IJSHandle> GetPropertyAsync(string propertyName)

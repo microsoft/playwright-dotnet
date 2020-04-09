@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -44,5 +45,12 @@ namespace PlaywrightSharp
         /// <typeparam name="T">Type to convert the JSON object to.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the JSON value is obtained and parsed, yielding a parsed object.</returns>
         Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle);
+
+        /// <summary>
+        /// Returns a <see cref="IReadOnlyDictionary{TKey, TValue}"/> with property names as keys and <see cref="IJSHandle"/> instances for the property values.
+        /// </summary>
+        /// <param name="handle">Handle to evaluate.</param>
+        /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding a <see cref="IReadOnlyDictionary{TKey, TValue}"/>.</returns>
+        Task<IDictionary<string, IJSHandle>> GetPropertiesAsync(JSHandle handle);
     }
 }
