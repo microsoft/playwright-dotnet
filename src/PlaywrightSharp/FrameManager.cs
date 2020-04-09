@@ -113,7 +113,7 @@ namespace PlaywrightSharp
             _page.OnFrameNavigated(frame);
         }
 
-        internal void FrameLifecycleEvent(string frameId, string name)
+        internal void FrameLifecycleEvent(string frameId, WaitUntilNavigation name)
         {
             if (!Frames.TryGetValue(frameId, out var frame))
             {
@@ -127,12 +127,12 @@ namespace PlaywrightSharp
                 watcher.OnLifecycleEvent(frame);
             }
 
-            if (frame == MainFrame && name == "load")
+            if (frame == MainFrame && name == WaitUntilNavigation.Load)
             {
                 _page.OnLoad();
             }
 
-            if (frame == MainFrame && name == "domcontentloaded")
+            if (frame == MainFrame && name == WaitUntilNavigation.DOMContentLoaded)
             {
                 _page.OnDOMContentLoaded();
             }
@@ -168,16 +168,16 @@ namespace PlaywrightSharp
 
             // Keep the current navigation request if any.
             frame.InflightRequests = frame.InflightRequests.FindAll(request => request.DocumentId == frame.LastDocumentId);
-            StopNetworkIdleTimer(frame, "networkidle0");
+            StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
             if (frame.InflightRequests.Count == 0)
             {
-                StartNetworkIdleTimer(frame, "networkidle0");
+                StartNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
             }
 
-            StopNetworkIdleTimer(frame, "networkidle2");
+            StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             if (frame.InflightRequests.Count <= 2)
             {
-                StartNetworkIdleTimer(frame, "networkidle2");
+                StartNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             }
         }
 
@@ -216,7 +216,7 @@ namespace PlaywrightSharp
             }
         }
 
-        private void StartNetworkIdleTimer(Frame frame, string lifecycleEvent)
+        private void StartNetworkIdleTimer(Frame frame, WaitUntilNavigation lifecycleEvent)
         {
             if (frame.FiredLifecycleEvents.Contains(lifecycleEvent))
             {
@@ -232,7 +232,7 @@ namespace PlaywrightSharp
             }
         }
 
-        private void StopNetworkIdleTimer(Frame frame, string lifecycleEvent)
+        private void StopNetworkIdleTimer(Frame frame, WaitUntilNavigation lifecycleEvent)
         {
             if (frame.NetworkIdleTimers.TryRemove(lifecycleEvent, out var cts))
             {
@@ -282,12 +282,12 @@ namespace PlaywrightSharp
             frame.InflightRequests.Add(request);
             if (frame.InflightRequests.Count == 1)
             {
-                StopNetworkIdleTimer(frame, "networkidle0");
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
             }
 
             if (frame.InflightRequests.Count == 3)
             {
-                StopNetworkIdleTimer(frame, "networkidle2");
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             }
         }
 
@@ -306,12 +306,12 @@ namespace PlaywrightSharp
 
             if (frame.InflightRequests.Count == 0)
             {
-                StopNetworkIdleTimer(frame, "networkidle0");
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
             }
 
             if (frame.InflightRequests.Count == 2)
             {
-                StopNetworkIdleTimer(frame, "networkidle2");
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             }
         }
     }

@@ -14,15 +14,12 @@ namespace PlaywrightSharp.Transport
         /// </summary>
         public static readonly TransportTaskScheduler DefaultTransportScheduler = ScheduleTransportTask;
         private readonly WebSocket _webSocket;
-        private readonly bool _enqueueTransportMessages;
         private readonly TaskQueue _socketQueue = new TaskQueue();
         private CancellationTokenSource _readerCancellationSource = new CancellationTokenSource();
 
-        public WebSocketTransport(WebSocket webSocket, TransportTaskScheduler scheduler, bool enqueueTransportMessages)
+        private WebSocketTransport(WebSocket webSocket, TransportTaskScheduler scheduler)
         {
             _webSocket = webSocket;
-            _enqueueTransportMessages = enqueueTransportMessages;
-
             scheduler(GetResponseAsync, _readerCancellationSource.Token);
         }
 
@@ -47,9 +44,7 @@ namespace PlaywrightSharp.Transport
             byte[] encoded = Encoding.UTF8.GetBytes(message);
             var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
             System.Diagnostics.Debug.WriteLine($"SEND ► {message}");
-            Task SendCoreAsync() => _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, default);
-
-            return _enqueueTransportMessages ? _socketQueue.Enqueue(SendCoreAsync) : SendCoreAsync();
+            return _socketQueue.Enqueue(() => _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, default));
         }
 
         public void Dispose()
@@ -61,13 +56,10 @@ namespace PlaywrightSharp.Transport
             _readerCancellationSource?.Dispose();
         }
 
-        internal static Task<IConnectionTransport> CreateAsync(ConnectOptions options)
-            => CreateAsync(options.BrowserWSEndpoint, options.EnqueueTransportMessages);
-
-        internal static async Task<IConnectionTransport> CreateAsync(string browserWSEndpoint, bool enqueueTransportMessages)
+        internal static async Task<IConnectionTransport> CreateAsync(ConnectOptions options)
         {
-            var webSocket = await CreateWebSocket(browserWSEndpoint).ConfigureAwait(false);
-            return new WebSocketTransport(webSocket, DefaultTransportScheduler, enqueueTransportMessages);
+            var webSocket = await CreateWebSocket(options.BrowserWSEndpoint).ConfigureAwait(false);
+            return new WebSocketTransport(webSocket, DefaultTransportScheduler);
         }
 
         private static async Task<WebSocket> CreateWebSocket(string url)
