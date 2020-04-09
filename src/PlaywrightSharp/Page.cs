@@ -165,7 +165,7 @@ namespace PlaywrightSharp
 
             if (_disconnected)
             {
-                throw new PlaywrightSharpException("Protocol error: Connection closed. Most likely the page has been closed.");
+                throw new TargetClosedException("Protocol error: Connection closed. Most likely the page has been closed.");
             }
 
             bool runBeforeUnload = options?.RunBeforeUnload ?? false;
@@ -289,9 +289,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, WaitUntilNavigation)"/>
         public Task SetContentAsync(string html, WaitUntilNavigation waitUntil)
-        {
-            throw new NotImplementedException();
-        }
+            => SetContentAsync(html, new NavigationOptions { WaitUntil = new[] { waitUntil } });
 
         /// <inheritdoc cref="IPage.SetExtraHttpHeadersAsync(IDictionary{string, string})"/>
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)

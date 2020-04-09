@@ -56,7 +56,7 @@ namespace PlaywrightSharp
 
         internal Page Page { get; }
 
-        internal IList<string> FiredLifecycleEvents { get; } = new List<string>();
+        internal IList<WaitUntilNavigation> FiredLifecycleEvents { get; } = new List<WaitUntilNavigation>();
 
         internal List<Frame> ChildFrames { get; } = new List<Frame>();
 
@@ -64,7 +64,7 @@ namespace PlaywrightSharp
 
         internal List<Request> InflightRequests { get; set; } = new List<Request>();
 
-        internal ConcurrentDictionary<string, CancellationTokenSource> NetworkIdleTimers { get; } = new ConcurrentDictionary<string, CancellationTokenSource>();
+        internal ConcurrentDictionary<WaitUntilNavigation, CancellationTokenSource> NetworkIdleTimers { get; } = new ConcurrentDictionary<WaitUntilNavigation, CancellationTokenSource>();
 
         /// <inheritdoc cref="IFrame.GetTitleAsync" />
         public async Task<string> GetTitleAsync()

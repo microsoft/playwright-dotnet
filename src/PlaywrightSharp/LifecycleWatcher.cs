@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 
@@ -8,19 +7,10 @@ namespace PlaywrightSharp
 {
     internal class LifecycleWatcher : IDisposable
     {
-        private static readonly Dictionary<WaitUntilNavigation, string> _protocolLifecycle =
-            new Dictionary<WaitUntilNavigation, string>
-            {
-                [WaitUntilNavigation.Load] = "load",
-                [WaitUntilNavigation.DOMContentLoaded] = "DOMContentLoaded",
-                [WaitUntilNavigation.Networkidle0] = "networkIdle",
-                [WaitUntilNavigation.Networkidle2] = "networkAlmostIdle",
-            };
-
         private static readonly WaitUntilNavigation[] _defaultWaitUntil = { WaitUntilNavigation.Load };
 
         private readonly Frame _frame;
-        private readonly IEnumerable<string> _expectedLifecycle;
+        private readonly WaitUntilNavigation[] _expectedLifecycle;
         private readonly int _timeout;
         private readonly WaitForNavigationOptions _options;
         private readonly TaskCompletionSource<bool> _newDocumentNavigationTaskWrapper;
@@ -36,20 +26,8 @@ namespace PlaywrightSharp
         {
             _options = options != null ? options as WaitForNavigationOptions ?? new WaitForNavigationOptions(options) : new WaitForNavigationOptions();
             _frame = frame;
-
-            _expectedLifecycle = (_options.WaitUntil ?? _defaultWaitUntil).Select(w =>
-            {
-                string protocolEvent = _protocolLifecycle.GetValueOrDefault(w);
-
-                if (protocolEvent == null)
-                {
-                    throw new PlaywrightSharpException($"Unknown value for options.waitUntil: {w}");
-                }
-
-                return protocolEvent;
-            });
-
-            _timeout = frame.Page.DefaultNavigationTimeout;
+            _expectedLifecycle = _options.WaitUntil ?? _defaultWaitUntil;
+            _timeout = _options?.Timeout ?? frame.Page.DefaultNavigationTimeout;
             _frame = frame;
             _sameDocumentNavigationTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             _lifecycleTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -236,9 +214,9 @@ namespace PlaywrightSharp
 
         private void Terminate(PlaywrightSharpException ex) => _terminationTaskWrapper.TrySetException(ex);
 
-        private bool CheckLifecycleRecursively(Frame frame, IEnumerable<string> expectedLifecycle)
+        private bool CheckLifecycleRecursively(Frame frame, IEnumerable<WaitUntilNavigation> expectedLifecycle)
         {
-            foreach (string item in expectedLifecycle)
+            foreach (var item in expectedLifecycle)
             {
                 if (!frame.FiredLifecycleEvents.Contains(item))
                 {

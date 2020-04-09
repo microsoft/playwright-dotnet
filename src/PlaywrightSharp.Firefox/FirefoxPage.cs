@@ -312,12 +312,12 @@ namespace PlaywrightSharp.Firefox
         {
             if (pageEventFired.Name == EventFiredName.Load)
             {
-                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, "load");
+                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, WaitUntilNavigation.Load);
             }
 
             if (pageEventFired.Name == EventFiredName.DOMContentLoaded)
             {
-                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, "domcontentloaded");
+                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, WaitUntilNavigation.DOMContentLoaded);
             }
         }
 
