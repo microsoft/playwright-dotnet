@@ -42,15 +42,7 @@ namespace PlaywrightSharp
                 selector = NormalizeSelector(selector);
             }
 
-            return async context =>
-            {
-                object[] arguments = new object[args.Length + 4];
-                arguments[0] = await context.GetInjectedAsync().ConfigureAwait(false);
-                arguments[1] = selector;
-                arguments[2] = predicateBody;
-                arguments[3] = polling;
-                args.CopyTo(arguments, 3);
-                return await context.EvaluateHandleAsync(
+            return async context => await context.EvaluateHandleAsync(
                 @"(injected, selector, predicateBody, polling, timeout, ...args) => {
                     const innerPredicate = new Function('...args', predicateBody);
                     if (polling === 'raf')
@@ -58,15 +50,13 @@ namespace PlaywrightSharp
                     if (polling === 'mutation')
                       return injected.pollMutation(selector, predicate, timeout);
                     return injected.pollInterval(selector, polling, predicate, timeout);
-                  
                     function predicate(element) {
                       if (selector === undefined)
                         return innerPredicate(...args);
                       return innerPredicate(element, ...args);
                     }
                   }",
-                arguments).ConfigureAwait(false);
-            };
+                args.Prepend(await context.GetInjectedAsync().ConfigureAwait(false), selector, predicateBody, polling)).ConfigureAwait(false);
         }
 
         internal static string NormalizeSelector(string selector)

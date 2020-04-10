@@ -353,9 +353,20 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
+        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
         {
-            throw new System.NotImplementedException();
+            int timeout = options?.Timeout ?? Page.DefaultTimeout;
+            var visibility = options?.WaitFor ?? WaitForOption.Any;
+            var handle = await WaitForSelectorInUtilityContextAsync(selector, visibility, timeout).ConfigureAwait(false);
+            var mainContext = await GetMainContextAsync().ConfigureAwait(false);
+            if (handle != null && handle.Context != mainContext)
+            {
+                var adopted = await Page.Delegate.AdoptElementHandleAsync(handle, mainContext).ConfigureAwait(false);
+                await handle.DisposeAsync().ConfigureAwait(false);
+                return adopted;
+            }
+
+            return handle;
         }
 
         /// <inheritdoc cref="IFrame.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
