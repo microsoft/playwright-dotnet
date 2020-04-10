@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ namespace PlaywrightSharp
     {
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
+        private readonly Dictionary<PageEvent, EventInfo> _pageEventsMap = ((PageEvent[])Enum.GetValues(typeof(PageEvent)))
+            .ToDictionary(x => x, x => typeof(Page).GetEvent(x.ToString()));
+
         private bool _disconnected;
 
         /// <inheritdoc cref="IPage"/>
@@ -356,37 +360,44 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
-        public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
+        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
-            switch (e)
+            ValidateArgumentsTypes();
+            var info = _pageEventsMap[e];
+            var eventTsc = new TaskCompletionSource<T>();
+            void PageEventHandler(object sender, T e)
             {
-                case PageEvent.Load:
-                    break;
-                case PageEvent.DOMContentLoaded:
-                    break;
-                case PageEvent.Console:
-                    break;
-                case PageEvent.Popup:
-                    break;
-                case PageEvent.Dialog:
-                    break;
-                case PageEvent.Request when options is WaitForEventOptions<RequestEventArgs> requestOptions:
-                    return (T)(object)(await WaitForRequestInternalAsync(requestOptions?.Predicate, options?.Timeout).ConfigureAwait(false));
-                case PageEvent.FileChooser:
-                    break;
-                case PageEvent.Response when options is WaitForEventOptions<ResponseEventArgs> responseOptions:
-                    return (T)(object)(await WaitForResponseInternalAsync(responseOptions?.Predicate, options?.Timeout).ConfigureAwait(false));
-                case PageEvent.Error:
-                    break;
-                case PageEvent.PageError:
-                    break;
-                case PageEvent.WorkerCreated:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
+                if (options?.Predicate == null || options.Predicate(e))
+                {
+                    eventTsc.TrySetResult(e);
+                    info.RemoveEventHandler(this, (EventHandler<T>)PageEventHandler);
+                }
             }
 
-            throw new NotImplementedException();
+            info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
+            return eventTsc.Task.WithTimeout(options?.Timeout ?? DefaultTimeout);
+
+            void ValidateArgumentsTypes()
+            {
+                switch (e)
+                {
+                    case PageEvent.Load when options is WaitForEventOptions<EventArgs>:
+                    case PageEvent.DOMContentLoaded when options is WaitForEventOptions<EventArgs>:
+                    case PageEvent.Close when options is WaitForEventOptions<EventArgs>:
+                    case PageEvent.Console when options is WaitForEventOptions<ConsoleEventArgs>:
+                    case PageEvent.Popup when options is WaitForEventOptions<PopupEventArgs>:
+                    case PageEvent.Dialog when options is WaitForEventOptions<DialogEventArgs>:
+                    case PageEvent.Request when options is WaitForEventOptions<RequestEventArgs> requestOptions:
+                    case PageEvent.FileChooser when options is WaitForEventOptions<FileChooserEventArgs>:
+                    case PageEvent.Response when options is WaitForEventOptions<ResponseEventArgs> responseOptions:
+                    case PageEvent.Error when options is WaitForEventOptions<ErrorEventArgs>:
+                    case PageEvent.PageError when options is WaitForEventOptions<PageErrorEventArgs>:
+                    case PageEvent.WorkerCreated when options is WaitForEventOptions<WorkerEventArgs>:
+                        return;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
+            }
         }
 
         /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
