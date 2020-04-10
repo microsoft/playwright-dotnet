@@ -385,19 +385,19 @@ namespace PlaywrightSharp
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="script">Function to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
         /// <param name="options">Wait options.</param>
         /// <param name="args">Arguments to pass to <c>script</c>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string script, WaitForFunctionOptions options = null, params object[] args);
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="script">Function to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to <c>script</c>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args);
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.

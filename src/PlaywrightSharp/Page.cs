@@ -396,10 +396,11 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, object[])"/>
-        public Task<IJSHandle> WaitForFunctionAsync(string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args) => WaitForFunctionAsync(pageFunction, null, args);
+
+        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
+        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args)
+            => MainFrame.WaitForFunctionAsync(pageFunction, options, args);
 
         /// <inheritdoc cref="IPage.QuerySelectorAllEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args)
@@ -451,12 +452,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
         public Task WaitForEvent(PageEvent e)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
-        public Task<IJSHandle> WaitForFunctionAsync(string script, WaitForFunctionOptions options = null, params object[] args)
         {
             throw new NotImplementedException();
         }
