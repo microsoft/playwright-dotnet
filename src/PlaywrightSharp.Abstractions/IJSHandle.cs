@@ -52,9 +52,9 @@ namespace PlaywrightSharp
         Task<IJSHandle> GetPropertyAsync(string propertyName);
 
         /// <summary>
-        /// Returns a <see cref="IReadOnlyDictionary{TKey, TValue}"/> with property names as keys and <see cref="IJSHandle"/> instances for the property values.
+        /// Returns a <see cref="IDictionary{TKey, TValue}"/> with property names as keys and <see cref="IJSHandle"/> instances for the property values.
         /// </summary>
-        /// <returns>a <see cref="Task"/> that completes when the evaluation is completed, yielding a <see cref="IReadOnlyDictionary{TKey, TValue}"/>.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the evaluation is completed, yielding a <see cref="IDictionary{TKey, TValue}"/>.</returns>
         /// <example>
         /// <code>
         /// var handle = await page.EvaluateExpressionHandle("({window, document})");
@@ -64,12 +64,12 @@ namespace PlaywrightSharp
         /// await handle.DisposeAsync();
         /// </code>
         /// </example>
-        Task<IReadOnlyDictionary<string, IJSHandle>> GetPropertiesAsync();
+        Task<IDictionary<string, IJSHandle>> GetPropertiesAsync();
 
         /// <summary>
         /// Disposes the Handle. It will mark the JSHandle as disposed and release the <see cref="IJSHandle"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the handle is disposed.</returns>
-        internal Task DisposeAsync();
+        Task DisposeAsync();
     }
 }
