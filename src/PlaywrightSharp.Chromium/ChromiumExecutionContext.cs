@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium.Helpers;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
@@ -116,6 +116,26 @@ namespace PlaywrightSharp.Chromium
             }
 
             return (T)GetValueFromRemoteObject<T>(remoteObject);
+        }
+
+        public async Task<IDictionary<string, IJSHandle>> GetPropertiesAsync(JSHandle handle)
+        {
+            string objectId = handle.RemoteObject.ObjectId;
+
+            if (string.IsNullOrEmpty(objectId))
+            {
+                return new Dictionary<string, IJSHandle>();
+            }
+
+            var response = await _client.SendAsync(new RuntimeGetPropertiesRequest
+            {
+                ObjectId = objectId,
+                OwnProperties = true,
+            }).ConfigureAwait(false);
+
+            return response.Result
+                .Where(property => property.Enumerable.Value)
+                .ToDictionary(property => property.Name, property => handle.Context.CreateHandle(property.Value));
         }
 
         private RuntimeCallFunctionOnResponse RewriteError(Exception ex)
@@ -240,7 +260,7 @@ namespace PlaywrightSharp.Chromium
                 return default(T);
             }
 
-            return remoteObject != null ? ((JsonElement)remoteObject.Value).ToObject<T>() : default;
+            return ((JsonElement)remoteObject.Value).ToObject<T>();
         }
 
         private async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)

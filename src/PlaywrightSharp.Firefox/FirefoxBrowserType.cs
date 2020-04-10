@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Protocol.Browser;
@@ -14,7 +11,7 @@ using PlaywrightSharp.Helpers;
 namespace PlaywrightSharp.Firefox
 {
     /// <inheritdoc cref="IBrowserType"/>
-    public class FirefoxBrowserType : IBrowserType
+    public class FirefoxBrowserType : BrowserTypeBase
     {
         /// <summary>
         /// Preferred revision.
@@ -247,17 +244,11 @@ namespace PlaywrightSharp.Firefox
             ["toolkit.startup.max_resumed_crashes"] = -1,
         };
 
-        /// <inheritdoc cref="IBrowserType"/>
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => DeviceDescriptors.ToReadOnly();
-
-        /// <inheritdoc cref="IBrowserType.ExecutablePath"/>
-        public string ExecutablePath => ResolveExecutablePath();
-
         /// <inheritdoc cref="IBrowserType.Name"/>
-        public string Name => "firefox";
+        public override string Name => "firefox";
 
         /// <inheritdoc cref="IBrowserType.ConnectAsync(ConnectOptions)"/>
-        public Task<IBrowser> ConnectAsync(ConnectOptions options = null)
+        public override Task<IBrowser> ConnectAsync(ConnectOptions options = null)
         {
             if (options?.BrowserURL != null)
             {
@@ -268,7 +259,7 @@ namespace PlaywrightSharp.Firefox
         }
 
         /// <inheritdoc cref="IBrowserType.CreateBrowserFetcher(BrowserFetcherOptions)"/>
-        public IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null)
+        public override IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null)
         {
             var downloadUrls = new Dictionary<Platform, string>
             {
@@ -310,7 +301,7 @@ namespace PlaywrightSharp.Firefox
         }
 
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
-        public string[] GetDefaultArgs(BrowserArgOptions options = null)
+        public override string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
             bool devtools = options?.Devtools ?? false;
             bool headless = options?.Headless ?? !devtools;
@@ -349,7 +340,7 @@ namespace PlaywrightSharp.Firefox
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
-        public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+        public override async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
             var app = await LaunchBrowserAppAsync(options).ConfigureAwait(false);
             var connectOptions = app.ConnectOptions;
@@ -357,12 +348,12 @@ namespace PlaywrightSharp.Firefox
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchBrowserAppAsync(LaunchOptions)"/>
-        public async Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
+        public override async Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null)
         {
             options ??= new LaunchOptions();
 
             var (firefoxArguments, tempProfileDir) = PrepareFirefoxArgs(options);
-            string firefoxExecutable = GetFirefoxExecutablePath(options);
+            string firefoxExecutable = GetBrowserExecutablePath(options);
             BrowserApp browserApp = null;
 
             var process = new FirefoxProcessManager(
@@ -410,22 +401,6 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private static void SetEnvVariables(IDictionary<string, string> environment, IDictionary<string, string> customEnv, IDictionary realEnv)
-        {
-            foreach (DictionaryEntry item in realEnv)
-            {
-                environment[item.Key.ToString()] = item.Value.ToString();
-            }
-
-            if (customEnv != null)
-            {
-                foreach (var item in customEnv)
-                {
-                    environment[item.Key] = item.Value;
-                }
-            }
-        }
-
         private (List<string> firefoxArguments, TempDirectory temporaryProfileDir) PrepareFirefoxArgs(LaunchOptions options)
         {
             var firefoxArguments = new List<string>();
@@ -455,55 +430,6 @@ namespace PlaywrightSharp.Firefox
             }
 
             return (firefoxArguments, temporaryProfileDir);
-        }
-
-        private string GetFirefoxExecutablePath(LaunchOptions options)
-        {
-            string firefoxExecutable = options.ExecutablePath;
-            if (string.IsNullOrEmpty(firefoxExecutable))
-            {
-                firefoxExecutable = ResolveExecutablePath();
-            }
-
-            if (!File.Exists(firefoxExecutable))
-            {
-                throw new FileNotFoundException("Failed to launch firefox! path to executable does not exist", firefoxExecutable);
-            }
-
-            return firefoxExecutable;
-        }
-
-        private string ResolveExecutablePath()
-        {
-            var browserFetcher = CreateBrowserFetcher();
-            var revisionInfo = browserFetcher.GetRevisionInfo();
-
-            if (!revisionInfo.Local)
-            {
-                throw new FileNotFoundException("Firefox revision is not downloaded. Run BrowserFetcher.DownloadAsync or download Firefox manually", revisionInfo.ExecutablePath);
-            }
-
-            return revisionInfo.ExecutablePath;
-        }
-
-        private Platform GetPlatform()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return Platform.MacOS;
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return Platform.Linux;
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return RuntimeInformation.OSArchitecture == Architecture.X64 ? Platform.Win64 : Platform.Win32;
-            }
-
-            return Platform.Unknown;
         }
 
         private TempDirectory CreateProfile(IDictionary<string, object> extraPrefs = null)

@@ -1,5 +1,5 @@
 using System;
-using System.Numerics;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
@@ -81,6 +81,8 @@ namespace PlaywrightSharp.Firefox
             }).ConfigureAwait(false);
             return DeserializeValue<T>(simpleValue.Result);
         }
+
+        public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync(JSHandle handle) => throw new NotImplementedException();
 
         public async Task ReleaseHandleAsync(JSHandle handle)
         {
