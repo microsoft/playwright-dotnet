@@ -358,7 +358,6 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
         public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
-            int timeout = options?.Timeout ?? DefaultTimeout;
             switch (e)
             {
                 case PageEvent.Load:
@@ -371,36 +370,12 @@ namespace PlaywrightSharp
                     break;
                 case PageEvent.Dialog:
                     break;
-                case PageEvent.Request when typeof(T) == typeof(RequestEventArgs):
-                    var requestTsc = new TaskCompletionSource<T>();
-                    void RequestEventHandler(object sender, RequestEventArgs e)
-                    {
-                        var genericEvent = (T)(object)e;
-                        if (options?.Predicate != null && options.Predicate(genericEvent))
-                        {
-                            requestTsc.SetResult(genericEvent);
-                            Request -= RequestEventHandler;
-                        }
-                    }
-
-                    Request += RequestEventHandler;
-                    return await requestTsc.Task.WithTimeout(timeout).ConfigureAwait(false);
+                case PageEvent.Request when options is WaitForEventOptions<RequestEventArgs> requestOptions:
+                    return (T)(object)(await WaitForRequestInternalAsync(requestOptions?.Predicate, options?.Timeout).ConfigureAwait(false));
                 case PageEvent.FileChooser:
                     break;
-                case PageEvent.Response when typeof(T) == typeof(ResponseEventArgs):
-                    var responseTsc = new TaskCompletionSource<T>();
-                    void ResponseEventHandler(object sender, ResponseEventArgs e)
-                    {
-                        var genericEvent = (T)(object)e;
-                        if (options?.Predicate != null && options.Predicate(genericEvent))
-                        {
-                            responseTsc.SetResult(genericEvent);
-                            Response -= ResponseEventHandler;
-                        }
-                    }
-
-                    Response += ResponseEventHandler;
-                    return await responseTsc.Task.WithTimeout(timeout).ConfigureAwait(false);
+                case PageEvent.Response when options is WaitForEventOptions<ResponseEventArgs> responseOptions:
+                    return (T)(object)(await WaitForResponseInternalAsync(responseOptions?.Predicate, options?.Timeout).ConfigureAwait(false));
                 case PageEvent.Error:
                     break;
                 case PageEvent.PageError:
@@ -411,6 +386,12 @@ namespace PlaywrightSharp
                     throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
             }
 
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
+        public Task WaitForEvent(PageEvent e)
+        {
             throw new NotImplementedException();
         }
 
@@ -428,57 +409,24 @@ namespace PlaywrightSharp
             => MainFrame.WaitForNavigationAsync(waitUntil);
 
         /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
-        public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
+        public async Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
         {
-            int timeout = options?.Timeout ?? DefaultTimeout;
-            var tsc = new TaskCompletionSource<IRequest>();
-            void RequestEventHandler(object sender, RequestEventArgs e)
-            {
-                if (regex.IsMatch(e.Request.Url))
-                {
-                    tsc.TrySetResult(e.Request);
-                    Request -= RequestEventHandler;
-                }
-            }
-
-            Request += RequestEventHandler;
-            return tsc.Task.WithTimeout(timeout);
+            var result = await WaitForRequestInternalAsync(e => regex.IsMatch(e.Request.Url), options?.Timeout).ConfigureAwait(false);
+            return result.Request;
         }
 
         /// <inheritdoc cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
-        public Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
+        public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
         {
-            int timeout = options?.Timeout ?? DefaultTimeout;
-            var tsc = new TaskCompletionSource<IRequest>();
-            void RequestEventHandler(object sender, RequestEventArgs e)
-            {
-                if (url.Equals(e.Request.Url))
-                {
-                    tsc.TrySetResult(e.Request);
-                    Request -= RequestEventHandler;
-                }
-            }
-
-            Request += RequestEventHandler;
-            return tsc.Task.WithTimeout(timeout);
+            var result = await WaitForRequestInternalAsync(e => e.Request.Url.Equals(url), options?.Timeout).ConfigureAwait(false);
+            return result.Request;
         }
 
         /// <inheritdoc cref="IPage.WaitForResponseAsync(string, WaitForOptions)"/>
-        public Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
+        public async Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
         {
-            int timeout = options?.Timeout ?? DefaultTimeout;
-            var tsc = new TaskCompletionSource<IResponse>();
-            void ResponseEventHandler(object sender, ResponseEventArgs e)
-            {
-                if (url.Equals(e.Response.Url))
-                {
-                    tsc.TrySetResult(e.Response);
-                    Response -= ResponseEventHandler;
-                }
-            }
-
-            Response += ResponseEventHandler;
-            return tsc.Task.WithTimeout(timeout);
+            var result = await WaitForResponseInternalAsync(e => e.Response.Url.Equals(url), options?.Timeout).ConfigureAwait(false);
+            return result.Response;
         }
 
         /// <inheritdoc cref="IPage.GetPdfAsync(string)"/>
@@ -535,12 +483,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.AddStyleTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
-        public Task WaitForEvent(PageEvent e)
         {
             throw new NotImplementedException();
         }
@@ -693,14 +635,14 @@ namespace PlaywrightSharp
             }
         }
 
-        private async Task ExposeFunctionAsync(string name, Delegate puppeteerFunction)
+        private async Task ExposeFunctionAsync(string name, Delegate playwrightFunction)
         {
             if (_pageBindings.ContainsKey(name))
             {
                 throw new PlaywrightSharpException($"Failed to add page binding with name {name}: window['{name}'] already exists!");
             }
 
-            _pageBindings.Add(name, puppeteerFunction);
+            _pageBindings.Add(name, playwrightFunction);
 
             const string addPageBinding = @"function addPageBinding(bindingName) {
                 const binding = window[bindingName];
@@ -720,6 +662,38 @@ namespace PlaywrightSharp
             }";
 
             await Delegate.ExposeBindingAsync(name, GetEvaluationString(addPageBinding, name)).ConfigureAwait(false);
+        }
+
+        private Task<RequestEventArgs> WaitForRequestInternalAsync(Func<RequestEventArgs, bool> predicate, int? timeout = null)
+        {
+            var requestTsc = new TaskCompletionSource<RequestEventArgs>();
+            void RequestEventHandler(object sender, RequestEventArgs e)
+            {
+                if (predicate == null || predicate(e))
+                {
+                    requestTsc.SetResult(e);
+                    Request -= RequestEventHandler;
+                }
+            }
+
+            Request += RequestEventHandler;
+            return requestTsc.Task.WithTimeout(timeout ?? DefaultTimeout);
+        }
+
+        private Task<ResponseEventArgs> WaitForResponseInternalAsync(Func<ResponseEventArgs, bool> predicate, int? timeout)
+        {
+            var tsc = new TaskCompletionSource<ResponseEventArgs>();
+            void ResponseEventHandler(object sender, ResponseEventArgs e)
+            {
+                if (predicate == null || predicate(e))
+                {
+                    tsc.TrySetResult(e);
+                    Response -= ResponseEventHandler;
+                }
+            }
+
+            Response += ResponseEventHandler;
+            return tsc.Task.WithTimeout(timeout ?? DefaultTimeout);
         }
 
         private class BindingPayload
