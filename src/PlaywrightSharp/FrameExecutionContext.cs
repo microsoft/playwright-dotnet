@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -12,14 +10,14 @@ namespace PlaywrightSharp
     internal class FrameExecutionContext : ExecutionContext, IFrameExecutionContext
     {
         private int _injectedGeneration = -1;
-        private Task<IJSHandle> _injectedTask;
+        private Task<JSHandle> _injectedTask;
 
         internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame) : base(executionContextDelegate)
         {
             Frame = frame;
         }
 
-        public Frame Frame { get; set; }
+        public Frame Frame { get; }
 
         public override Task<T> EvaluateAsync<T>(string script, params object[] args) => EvaluateAsync<T>(true, script, args);
 
@@ -66,8 +64,6 @@ namespace PlaywrightSharp
 
         public Task EvaluateAsync(string script, params object[] args) => EvaluateAsync<JsonElement?>(true, script, args);
 
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => EvaluateAsync<IJSHandle>(false, script, args);
-
         public async Task<IElementHandle> QuerySelectorAsync(string selector, IElementHandle scope = null)
         {
             var handle = await EvaluateHandleAsync(
@@ -84,7 +80,7 @@ namespace PlaywrightSharp
             return handle as ElementHandle;
         }
 
-        public async Task<IJSHandle> GetInjectedAsync()
+        public async Task<JSHandle> GetInjectedAsync()
         {
             var selectors = Selectors.Instance.Value;
             if (_injectedTask != null && selectors.Generation != _injectedGeneration)
