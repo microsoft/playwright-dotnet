@@ -457,10 +457,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForTimeoutAsync(int)"/>
-        public Task WaitForTimeoutAsync(int timeout)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc cref="IPage.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
