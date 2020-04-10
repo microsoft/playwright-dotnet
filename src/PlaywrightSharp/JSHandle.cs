@@ -63,6 +63,9 @@ namespace PlaywrightSharp
             return result;
         }
 
+        /// <inheritdoc cref="object.ToString()"/>
+        public override string ToString() => Context.Delegate.HandleToString(this, true /* includeType */);
+
         private Task<JSHandle> EvaluateHandleAsync(string pageFunction, params object[] args)
             => Context.EvaluateHandleAsync(pageFunction, args.Prepend(this));
     }

@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.toString</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class JSHandleToStringTests : PlaywrightSharpPageBaseTest
     {
-        internal JSHandleToStringTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public JSHandleToStringTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -55,7 +58,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
             Assert.Equal("JSHandle@function", (await Page.EvaluateHandleAsync("(function(){})")).ToString());
             Assert.Equal("JSHandle:12", (await Page.EvaluateHandleAsync("12")).ToString());
-            Assert.Equal("JSHandle:true", (await Page.EvaluateHandleAsync("true")).ToString());
+            Assert.Equal("JSHandle:True", (await Page.EvaluateHandleAsync("true")).ToString());
             Assert.Equal("JSHandle:undefined", (await Page.EvaluateHandleAsync("undefined")).ToString());
             Assert.Equal("JSHandle:foo", (await Page.EvaluateHandleAsync("\"foo\"")).ToString());
             Assert.Equal("JSHandle@symbol", (await Page.EvaluateHandleAsync("Symbol()")).ToString());
@@ -69,7 +72,6 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("JSHandle@weakmap", (await Page.EvaluateHandleAsync("new WeakMap()")).ToString());
             Assert.Equal("JSHandle@weakset", (await Page.EvaluateHandleAsync("new WeakSet()")).ToString());
             Assert.Equal("JSHandle@error", (await Page.EvaluateHandleAsync("new Error()")).ToString());
-            // TODO(yurys): change subtype from array to typedarray in WebKit.
             Assert.Equal(TestConstants.IsWebKit ? "JSHandle@array" : "JSHandle@typedarray", (await Page.EvaluateHandleAsync("new Int32Array()")).ToString());
             Assert.Equal("JSHandle@proxy", (await Page.EvaluateHandleAsync("new Proxy({}, {})")).ToString());
         }
