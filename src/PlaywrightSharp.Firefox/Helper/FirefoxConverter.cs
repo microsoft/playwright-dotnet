@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using PlaywrightSharp.Firefox.Protocol.Network;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -24,6 +25,35 @@ namespace PlaywrightSharp.Firefox.Helper
             LineNumber = (int?)runtimeConsole.Location.LineNumber,
             URL = runtimeConsole.Location.Url,
         };
+
+        public static ResourceType GetResourceType(this NetworkRequestWillBeSentFirefoxEvent networkRequestWillBeSent)
+            => networkRequestWillBeSent.Cause switch
+            {
+                "TYPE_INVALID" => ResourceType.Other,
+                "TYPE_OTHER" => ResourceType.Other,
+                "TYPE_SCRIPT" => ResourceType.Script,
+                "TYPE_IMAGE" => ResourceType.Image,
+                "TYPE_STYLESHEET" => ResourceType.StyleSheet,
+                "TYPE_OBJECT" => ResourceType.Other,
+                "TYPE_DOCUMENT" => ResourceType.Document,
+                "TYPE_SUBDOCUMENT" => ResourceType.Document,
+                "TYPE_REFRESH" => ResourceType.Document,
+                "TYPE_XBL" => ResourceType.Other,
+                "TYPE_PING" => ResourceType.Other,
+                "TYPE_XMLHTTPREQUEST" => ResourceType.Xhr,
+                "TYPE_OBJECT_SUBREQUEST" => ResourceType.Other,
+                "TYPE_DTD" => ResourceType.Other,
+                "TYPE_FONT" => ResourceType.Font,
+                "TYPE_MEDIA" => ResourceType.Media,
+                "TYPE_WEBSOCKET" => ResourceType.WebSocket,
+                "TYPE_CSP_REPORT" => ResourceType.Other,
+                "TYPE_XSLT" => ResourceType.Other,
+                "TYPE_BEACON" => ResourceType.Other,
+                "TYPE_FETCH" => ResourceType.Fetch,
+                "TYPE_IMAGESET" => ResourceType.Image,
+                "TYPE_WEB_MANIFEST" => ResourceType.Manifest,
+                _ => ResourceType.Other
+            };
 
         public static int ToModifiersMask(this Modifier[] modifiers)
         {

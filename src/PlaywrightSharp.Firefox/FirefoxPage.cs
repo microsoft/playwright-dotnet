@@ -28,6 +28,7 @@ namespace PlaywrightSharp.Firefox
         private readonly IBrowserContext _context;
         private readonly Func<Task<Page>> _openerResolver;
         private readonly ConcurrentDictionary<string, WorkerSession> _workers = new ConcurrentDictionary<string, WorkerSession>();
+        private readonly FirefoxNetworkManager _networkManager;
 
         public FirefoxPage(FirefoxSession session, IBrowserContext context, Func<Task<Page>> openerResolver)
         {
@@ -38,6 +39,7 @@ namespace PlaywrightSharp.Firefox
             RawKeyboard = new FirefoxRawKeyboard(session);
             RawMouse = new FirefoxRawMouse(session);
             Page = new Page(this, _context);
+            _networkManager = new FirefoxNetworkManager(session, Page);
 
             session.MessageReceived += OnMessageReceived;
             Page.FrameDetached += RemoveContextsForFrame;

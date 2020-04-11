@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForRequest</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForRequestTests : PlaywrightSharpPageBaseTest
     {
-        internal PageWaitForRequestTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageWaitForRequestTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -22,8 +25,9 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png");
             var (request, _) = await TaskUtils.WhenAll(
-                Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png"),
+                task,
                 Page.EvaluateAsync(@"() => {
                   fetch('/digits/1.png');
                   fetch('/digits/2.png');
@@ -40,11 +44,12 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            var task = Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png"
+            });
             var (requestEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
-                {
-                    Predicate = e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png"
-                }),
+                task,
                 Page.EvaluateAsync<string>(@"() => {
                     fetch('/digits/1.png');
                     fetch('/digits/2.png');
@@ -74,6 +79,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldRespectDefaultTimeout()
         {
+            Page.DefaultTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
                 {
@@ -88,9 +94,10 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png", new WaitForOptions { Timeout = 0 });
             var (request, _) = await TaskUtils.WhenAll(
-                Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png", new WaitForOptions { Timeout = 0 }),
-                Page.EvaluateAsync<string>(@"() => setTimeout(() => {
+                task,
+                Page.EvaluateAsync(@"() => setTimeout(() => {
                     fetch('/digits/1.png');
                     fetch('/digits/2.png');
                     fetch('/digits/3.png');
@@ -106,8 +113,9 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithUrlMatch()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            var task = Page.WaitForRequestAsync(new Regex(@"/digits/\d.png"));
             var (request, _) = await TaskUtils.WhenAll(
-                Page.WaitForRequestAsync(new Regex("digits\\d\\.png")),
+                task,
                 Page.EvaluateAsync<string>(@"() => {
                     fetch('/digits/1.png');
                 }")

@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.SetRequestInterceptionAsync(true);
-            page.Request += async (sender, e) => await e.Request.RespondAsync(
+            page.Request += async (sender, e) => await e.Request.FulfillAsync(
                 new ResponseData { Body = "{ body: 'YO, GOOGLE.COM'}" });
             await page.EvaluateHandleAsync(@"() => {
                     const frame = document.createElement('iframe');
