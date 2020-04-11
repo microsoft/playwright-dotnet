@@ -363,8 +363,8 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
         public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
-            ValidateArgumentsTypes();
             var info = _pageEventsMap[e];
+            ValidateArgumentsTypes();
             var eventTsc = new TaskCompletionSource<T>();
             void PageEventHandler(object sender, T e)
             {
@@ -380,21 +380,10 @@ namespace PlaywrightSharp
 
             void ValidateArgumentsTypes()
             {
-                switch (e)
+                if ((info.EventHandlerType.GenericTypeArguments.Length == 0 && typeof(T) == typeof(EventArgs))
+                    || info.EventHandlerType.GenericTypeArguments[0] == typeof(T))
                 {
-                    case PageEvent.Load when options is WaitForEventOptions<EventArgs>:
-                    case PageEvent.DOMContentLoaded when options is WaitForEventOptions<EventArgs>:
-                    case PageEvent.Close when options is WaitForEventOptions<EventArgs>:
-                    case PageEvent.Console when options is WaitForEventOptions<ConsoleEventArgs>:
-                    case PageEvent.Popup when options is WaitForEventOptions<PopupEventArgs>:
-                    case PageEvent.Dialog when options is WaitForEventOptions<DialogEventArgs>:
-                    case PageEvent.Request when options is WaitForEventOptions<RequestEventArgs> requestOptions:
-                    case PageEvent.FileChooser when options is WaitForEventOptions<FileChooserEventArgs>:
-                    case PageEvent.Response when options is WaitForEventOptions<ResponseEventArgs> responseOptions:
-                    case PageEvent.Error when options is WaitForEventOptions<ErrorEventArgs>:
-                    case PageEvent.PageError when options is WaitForEventOptions<PageErrorEventArgs>:
-                    case PageEvent.WorkerCreated when options is WaitForEventOptions<WorkerEventArgs>:
-                        return;
+                    return;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
