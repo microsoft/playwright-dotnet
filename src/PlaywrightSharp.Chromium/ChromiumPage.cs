@@ -175,18 +175,7 @@ namespace PlaywrightSharp.Chromium
             });
 
         public Task SetBackgroundColorAsync(Color? color = null)
-            => Client.SendAsync(new EmulationSetDefaultBackgroundColorOverrideRequest
-            {
-                Color = color == null
-                    ? null
-                    : new RGBA
-                    {
-                        A = color.Value.A,
-                        R = color.Value.R,
-                        B = color.Value.B,
-                        G = color.Value.G,
-                    },
-            });
+            => Client.SendAsync(new EmulationSetDefaultBackgroundColorOverrideRequest { Color = color });
 
         public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
         {

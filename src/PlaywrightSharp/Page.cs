@@ -439,9 +439,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.QuerySelectorAllAsync(string)"/>
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.QuerySelectorAllAsync(selector);
 
         /// <inheritdoc cref="IPage.AddStyleTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)

@@ -197,6 +197,15 @@ namespace PlaywrightSharp
         Task<IElementHandle> QuerySelectorAsync(string selector);
 
         /// <summary>
+        /// The method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
+        /// </returns>
+        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
+
+        /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
         /// </summary>
         /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>

@@ -159,12 +159,12 @@ namespace PlaywrightSharp
 
             if (boundingBox.Width == 0)
             {
-                throw new PlaywrightSharpException("Node has 0 width");
+                throw new PlaywrightSharpException("Node has 0 width.");
             }
 
             if (boundingBox.Height == 0)
             {
-                throw new PlaywrightSharpException("Node has 0 height");
+                throw new PlaywrightSharpException("Node has 0 height.");
             }
 
             boundingBox = EnclosingIntRect(boundingBox);

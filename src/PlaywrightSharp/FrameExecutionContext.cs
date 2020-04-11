@@ -113,13 +113,42 @@ namespace PlaywrightSharp
             return base.CreateHandle(remoteObject);
         }
 
+        public async Task<IElementHandle[]> QuerySelectorAllAsync(string selector, ElementHandle scope = null)
+        {
+            var arrayHandle = await QuerySelectorArrayAsync(selector, scope).ConfigureAwait(false);
+            var properties = await arrayHandle.GetPropertiesAsync().ConfigureAwait(false);
+            await arrayHandle.DisposeAsync().ConfigureAwait(false);
+            List<IElementHandle> result = new List<IElementHandle>();
+            List<Task> disposeTasks = new List<Task>();
+
+            foreach (var property in properties.Values)
+            {
+                if (property is ElementHandle handle)
+                {
+                    result.Add(handle);
+                }
+                else
+                {
+                    disposeTasks.Add(property.DisposeAsync());
+                }
+            }
+
+            await Task.WhenAll(disposeTasks).ConfigureAwait(false);
+            return result.ToArray();
+        }
+
         private async Task<string> GetInjectedSource()
         {
             using var stream = typeof(FrameExecutionContext).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.injectedSource.ts");
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return await reader.ReadToEndAsync().ConfigureAwait(false);
-            }
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
+
+        private async Task<JSHandle> QuerySelectorArrayAsync(string selector, ElementHandle scope)
+            => await EvaluateHandleAsync(
+                "(injected, selector, scope) => injected.querySelectorAll(selector, scope || document)",
+                await GetInjectedAsync().ConfigureAwait(false),
+                Dom.NormalizeSelector(selector),
+                scope).ConfigureAwait(false);
     }
 }
