@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
-        ///<playwright-it>should clicp rect</playwright-it>
+        ///<playwright-it>should clip rect</playwright-it>
         [Fact]
         public async Task ShouldClipRect()
         {
@@ -72,7 +72,6 @@ namespace PlaywrightSharp.Tests.Page
             {
                 Clip = new Rect
                 {
-
                     X = 50,
                     Y = 450,
                     Width = 1000,
@@ -94,7 +93,6 @@ namespace PlaywrightSharp.Tests.Page
             {
                 Clip = new Rect
                 {
-
                     X = 50,
                     Y = 650,
                     Width = 100,
@@ -168,7 +166,7 @@ namespace PlaywrightSharp.Tests.Page
                 Height = 500
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
+            await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });
@@ -187,14 +185,14 @@ namespace PlaywrightSharp.Tests.Page
             var pageTasks = new List<Task<IPage>>();
             for (int i = 0; i < n; i++)
             {
-                async Task<IPage> func()
+                async Task<IPage> Func()
                 {
                     var page = await Context.NewPageAsync();
                     await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
                     return page;
                 }
 
-                pageTasks.Add(func());
+                pageTasks.Add(Func());
             }
 
             await Task.WhenAll(pageTasks);
@@ -393,7 +391,6 @@ namespace PlaywrightSharp.Tests.Page
                 }
                 catch (Exception ex) when (ex.Message.Contains("Cannot take a screenshot while page is navigating"))
                 {
-
                 }
             }
         }
