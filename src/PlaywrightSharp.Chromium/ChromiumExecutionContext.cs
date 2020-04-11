@@ -25,9 +25,6 @@ namespace PlaywrightSharp.Chromium
 
         internal int ContextId { get; }
 
-        public async Task EvaluateAsync(FrameExecutionContext context, bool returnByValue, string script, object[] args)
-            => await EvaluateAsync<object>(context, returnByValue, script, args).ConfigureAwait(false);
-
         public async Task<T> EvaluateAsync<T>(ExecutionContext context, bool returnByValue, string script, object[] args)
         {
             string suffix = $"//# sourceURL={EvaluationScriptUrl}";
