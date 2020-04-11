@@ -20,6 +20,8 @@ jobs:
           sudo apt-get install libgbm-dev xvfb apt-transport-https
           sudo apt-get update
           sudo apt-get install dotnet-sdk-3.1
+      - name: Fix Permissions
+        run: sudo chmod a+rwx ./src/PlaywrightSharp.Tests/Screenshots
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
