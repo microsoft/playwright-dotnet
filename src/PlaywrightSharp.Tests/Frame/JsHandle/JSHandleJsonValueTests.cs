@@ -1,4 +1,6 @@
+using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -7,9 +9,12 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class JSHandleJsonValueTests : PlaywrightSharpPageBaseTest
     {
-        internal JSHandleJsonValueTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public JSHandleJsonValueTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -20,8 +25,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => ({ foo: 'bar'})");
-            var json = await aHandle.GetJsonValueAsync<object>();
-            Assert.Equal(new { foo = "bar" }, json);
+            var json = await aHandle.GetJsonValueAsync<JsonElement>();
+            Assert.Equal("bar", json.GetProperty("foo").GetString());
         }
 
         ///<playwright-file>jshandle.spec.js</playwright-file>
@@ -32,7 +37,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
             var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
             object json = await dateHandle.GetJsonValueAsync<object>();
-            Assert.Equal(new { }, json);
+            Assert.Equal("{}", json.ToJson());
         }
 
         ///<playwright-file>jshandle.spec.js</playwright-file>
@@ -42,7 +47,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldThrowForCircularObjects()
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
             if (TestConstants.IsWebKit)
             {
                 Assert.Contains("Object has too long reference chain", exception.Message);
@@ -64,8 +69,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldWorkWithTrickyValues()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => ({ a: 1})");
-            var json = await aHandle.GetJsonValueAsync<object>();
-            Assert.Equal(new { a = 1 }, json);
+            var json = await aHandle.GetJsonValueAsync<JsonElement>();
+            Assert.Equal(1, json.GetProperty("a").GetInt32());
         }
     }
 }

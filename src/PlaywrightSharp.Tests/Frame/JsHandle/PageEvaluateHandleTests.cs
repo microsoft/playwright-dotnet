@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluateHandle</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEvaluateHandleTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEvaluateHandleTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEvaluateHandleTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -30,7 +33,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldAcceptObjectHandleAsAnArgument()
         {
             var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
-            var text = await Page.EvaluateAsync<string>("e => e.userAgent", navigatorHandle);
+            string text = await Page.EvaluateAsync<string>("e => e.userAgent", navigatorHandle);
             Assert.Contains("Mozilla", text);
         }
 
@@ -41,7 +44,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldAcceptObjectHandleToPrimitiveTypes()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 5");
-            var isFive = await Page.EvaluateAsync<bool>("e => Object.is (e, 5)", aHandle);
+            bool isFive = await Page.EvaluateAsync<bool>("e => Object.is (e, 5)", aHandle);
             Assert.True(isFive);
         }
 
@@ -52,7 +55,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldWarnOnNestedObjectHandles()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => document.body");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(
                 () => Page.EvaluateHandleAsync("opts => opts.elem.querySelector('p')", new { elem = aHandle }));
             Assert.Contains("Are you passing a nested JSHandle?", exception.Message);
         }

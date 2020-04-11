@@ -1,4 +1,3 @@
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -13,6 +12,7 @@ namespace PlaywrightSharp.Helpers
                 IgnoreNullValues = true,
                 Converters =
                 {
+                    new JSHandleConverter(),
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
                 },
             };

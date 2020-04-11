@@ -1,4 +1,5 @@
 using System.Text.Json;
+using PlaywrightSharp.Helpers;
 using DefaultJsonHelper = PlaywrightSharp.Helpers.JsonHelper;
 
 namespace PlaywrightSharp.Firefox.Helper
