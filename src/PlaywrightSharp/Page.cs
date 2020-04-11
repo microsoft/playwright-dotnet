@@ -14,10 +14,10 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IPage"/>
     public sealed class Page : IPage, IDisposable
     {
+        private static readonly Dictionary<PageEvent, EventInfo> _pageEventsMap = ((PageEvent[])Enum.GetValues(typeof(PageEvent)))
+            .ToDictionary(x => x, x => typeof(Page).GetEvent(x.ToString()));
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
-        private readonly Dictionary<PageEvent, EventInfo> _pageEventsMap = ((PageEvent[])Enum.GetValues(typeof(PageEvent)))
-            .ToDictionary(x => x, x => typeof(Page).GetEvent(x.ToString()));
 
         private bool _disconnected;
 
