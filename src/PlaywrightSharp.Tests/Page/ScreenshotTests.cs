@@ -10,6 +10,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>screenshot.spec.js</playwright-file>
     ///<playwright-describe>Page.screenshot</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ScreenshotTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -72,8 +74,8 @@ namespace PlaywrightSharp.Tests.Page
                 {
 
                     X = 50,
-                    Y = 600,
-                    Width = 100,
+                    Y = 450,
+                    Width = 1000,
                     Height = 100,
                 }
             });
@@ -236,8 +238,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetViewportAsync(new Viewport
             {
-                Width = 100,
-                Height = 100
+                Width = 50,
+                Height = 150
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
             byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
@@ -361,8 +363,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetViewportAsync(new Viewport
             {
-                Width = 500,
-                Height = 500
+                Width = 640,
+                Height = 480
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/screenshots/webgl.html");
             byte[] screenshot = await Page.ScreenshotAsync();

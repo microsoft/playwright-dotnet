@@ -18,7 +18,10 @@ namespace PlaywrightSharp
         }
 
         public Task<byte[]> ScreenshotPageAsync(ScreenshotOptions options)
-            => _queue.Enqueue(() => PerformScreenshot(ValidateScreenshotOptions(options), options));
+        {
+            options ??= new ScreenshotOptions();
+            return _queue.Enqueue(() => PerformScreenshot(ValidateScreenshotOptions(options), options));
+        }
 
         public void Dispose() => _queue?.Dispose();
 
@@ -255,7 +258,36 @@ namespace PlaywrightSharp
 
         private Rect TrimClipToViewport(Viewport viewport, Rect clip)
         {
-            throw new NotImplementedException();
+            if (clip == null || viewport == null)
+            {
+                return clip;
+            }
+
+            var p1 = new Point
+            {
+                X = (int)Math.Min(clip.X, viewport.Width),
+                Y = (int)Math.Min(clip.Y, viewport.Height),
+            };
+            var p2 = new Point
+            {
+                X = (int)Math.Min(clip.X + clip.Width, viewport.Width),
+                Y = (int)Math.Min(clip.Y + clip.Height, viewport.Height),
+            };
+
+            var result = new Rect
+            {
+                X = p1.X,
+                Y = p1.Y,
+                Width = p2.X - p1.X,
+                Height = p2.Y - p1.Y,
+            };
+
+            if (result.Width <= 0 || result.Height <= 0)
+            {
+                throw new PlaywrightSharpException("Clipped area is either empty or outside the viewport");
+            }
+
+            return result;
         }
 
         private Rect EnclosingIntRect(Rect rect)

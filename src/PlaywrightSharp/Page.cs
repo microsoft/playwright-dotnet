@@ -480,10 +480,8 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.ScreenshotBase64Async(ScreenshotOptions)"/>
-        public Task<string> ScreenshotBase64Async(ScreenshotOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<string> ScreenshotBase64Async(ScreenshotOptions options = null)
+            => Convert.ToBase64String(await ScreenshotAsync(options).ConfigureAwait(false));
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose() => Screenshotter?.Dispose();
