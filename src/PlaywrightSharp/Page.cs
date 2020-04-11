@@ -412,21 +412,33 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
         public async Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
         {
-            var result = await WaitForRequestInternalAsync(e => regex.IsMatch(e.Request.Url), options?.Timeout).ConfigureAwait(false);
+            var result = await WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => regex.IsMatch(e.Request.Url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
         {
-            var result = await WaitForRequestInternalAsync(e => e.Request.Url.Equals(url), options?.Timeout).ConfigureAwait(false);
+            var result = await WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => e.Request.Url.Equals(url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc cref="IPage.WaitForResponseAsync(string, WaitForOptions)"/>
         public async Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
         {
-            var result = await WaitForResponseInternalAsync(e => e.Response.Url.Equals(url), options?.Timeout).ConfigureAwait(false);
+            var result = await WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs>
+            {
+                Predicate = e => e.Response.Url.Equals(url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
             return result.Response;
         }
 
@@ -663,38 +675,6 @@ namespace PlaywrightSharp
             }";
 
             await Delegate.ExposeBindingAsync(name, GetEvaluationString(addPageBinding, name)).ConfigureAwait(false);
-        }
-
-        private Task<RequestEventArgs> WaitForRequestInternalAsync(Func<RequestEventArgs, bool> predicate, int? timeout = null)
-        {
-            var requestTsc = new TaskCompletionSource<RequestEventArgs>();
-            void RequestEventHandler(object sender, RequestEventArgs e)
-            {
-                if (predicate == null || predicate(e))
-                {
-                    requestTsc.SetResult(e);
-                    Request -= RequestEventHandler;
-                }
-            }
-
-            Request += RequestEventHandler;
-            return requestTsc.Task.WithTimeout(timeout ?? DefaultTimeout);
-        }
-
-        private Task<ResponseEventArgs> WaitForResponseInternalAsync(Func<ResponseEventArgs, bool> predicate, int? timeout)
-        {
-            var tsc = new TaskCompletionSource<ResponseEventArgs>();
-            void ResponseEventHandler(object sender, ResponseEventArgs e)
-            {
-                if (predicate == null || predicate(e))
-                {
-                    tsc.TrySetResult(e);
-                    Response -= ResponseEventHandler;
-                }
-            }
-
-            Response += ResponseEventHandler;
-            return tsc.Task.WithTimeout(timeout ?? DefaultTimeout);
         }
 
         private class BindingPayload
