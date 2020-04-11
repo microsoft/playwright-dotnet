@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Chromium
                 return "JSHandle@" + type;
             }
 
-            return (includeType ? "JSHandle:" : string.Empty) + GetValueFromRemoteObject<string>(remote);
+            return (includeType ? "JSHandle:" : string.Empty) + GetStringFromRemoteObject(remote);
         }
 
         public async Task<T> HandleJSONValueAsync<T>(IJSHandle handle)
@@ -134,6 +134,11 @@ namespace PlaywrightSharp.Chromium
                 .Where(property => property.Enumerable.Value)
                 .ToDictionary(property => property.Name, property => handle.Context.CreateHandle(property.Value));
         }
+
+        private string GetStringFromRemoteObject(IRemoteObject remote)
+            => remote.Type == "undefined"
+                ? "undefined"
+                : GetValueFromRemoteObject<object>(remote)?.ToString() ?? "null";
 
         private RuntimeCallFunctionOnResponse RewriteError(Exception ex)
         {
