@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
     public class ElementHandleScreenshotTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public  ElementHandleScreenshotTests(ITestOutputHelper output) : base(output)
+        public ElementHandleScreenshotTests(ITestOutputHelper output) : base(output)
         {
         }
 
