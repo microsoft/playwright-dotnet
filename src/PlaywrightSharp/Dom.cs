@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
@@ -31,6 +32,32 @@ namespace PlaywrightSharp
                     waitFor.ToString().ToLower(),
                     timeout).ConfigureAwait(false);
             };
+
+        internal static Func<IFrameExecutionContext, Task<IJSHandle>> GetWaitForFunctionTask(string selector, string pageFunction, WaitForFunctionOptions options, params object[] args)
+        {
+            var polling = options?.Polling ?? WaitForFunctionPollingOption.Raf;
+            string predicateBody = pageFunction.IsJavascriptFunction() ? $"return ({pageFunction})(...args)" : $"return ({pageFunction})";
+            if (selector != null)
+            {
+                selector = NormalizeSelector(selector);
+            }
+
+            return async context => await context.EvaluateHandleAsync(
+                @"(injected, selector, predicateBody, polling, timeout, ...args) => {
+                    const innerPredicate = new Function('...args', predicateBody);
+                    if (polling === 'raf')
+                      return injected.pollRaf(selector, predicate, timeout);
+                    if (polling === 'mutation')
+                      return injected.pollMutation(selector, predicate, timeout);
+                    return injected.pollInterval(selector, polling, predicate, timeout);
+                    function predicate(element) {
+                      if (selector === undefined)
+                        return innerPredicate(...args);
+                      return innerPredicate(element, ...args);
+                    }
+                  }",
+                args.Prepend(await context.GetInjectedAsync().ConfigureAwait(false), selector, predicateBody, polling)).ConfigureAwait(false);
+        }
 
         internal static string NormalizeSelector(string selector)
         {

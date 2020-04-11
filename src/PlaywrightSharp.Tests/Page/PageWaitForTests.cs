@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Page.WaitFor</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
