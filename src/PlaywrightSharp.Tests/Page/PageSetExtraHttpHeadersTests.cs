@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetExtraHttpHeadersTests : PlaywrightSharpPageBaseTest
     {
-        internal PageSetExtraHttpHeadersTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageSetExtraHttpHeadersTests(ITestOutputHelper output) : base(output)
         {
         }
 
