@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Page
             {
                 FullPage = true
             });
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullPage.png", screenshot));
+            Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullpage.png", screenshot));
         }
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
