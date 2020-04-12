@@ -243,15 +243,31 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.GoBackAsync(NavigationOptions)"/>
-        public Task<IResponse> GoBackAsync(NavigationOptions options = null)
+        public async Task<IResponse> GoBackAsync(NavigationOptions options = null)
         {
-            throw new NotImplementedException();
+            var waitTask = WaitForNavigationAsync(new WaitForNavigationOptions(options));
+            bool result = await Delegate.GoBackAsync().ConfigureAwait(false);
+            if (!result)
+            {
+                _ = waitTask.ContinueWith(_ => { }, TaskScheduler.Default);
+                return null;
+            }
+
+            return await waitTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IPage.GoForwardAsync(NavigationOptions)"/>
-        public Task<IResponse> GoForwardAsync(NavigationOptions options = null)
+        public async Task<IResponse> GoForwardAsync(NavigationOptions options = null)
         {
-            throw new NotImplementedException();
+            var waitTask = WaitForNavigationAsync(new WaitForNavigationOptions(options));
+            bool result = await Delegate.GoForwardAsync().ConfigureAwait(false);
+            if (!result)
+            {
+                _ = waitTask.ContinueWith(_ => { }, TaskScheduler.Default);
+                return null;
+            }
+
+            return await waitTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IPage.GoToAsync(string, GoToOptions)"/>

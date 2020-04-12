@@ -19,6 +19,7 @@ namespace PlaywrightSharp
             StatusText = statusText;
             Url = request.Url;
             Headers = headers;
+            Ok = status == 0 || (status >= HttpStatusCode.OK && status < (HttpStatusCode)300);
             _getResponseBodyCallback = getResponseBodyCallback;
             _finishedTsc = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             request.SetResponse(this);

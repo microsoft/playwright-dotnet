@@ -210,6 +210,18 @@ namespace PlaywrightSharp.Firefox
 
         public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 
+        public async Task<bool> GoBackAsync()
+        {
+            var result = await _session.SendAsync(new PageGoBackRequest { FrameId = Page.MainFrame.Id }).ConfigureAwait(false);
+            return result.NavigationId != null;
+        }
+
+        public async Task<bool> GoForwardAsync()
+        {
+            var result = await _session.SendAsync(new PageGoForwardRequest { FrameId = Page.MainFrame.Id }).ConfigureAwait(false);
+            return result.NavigationId != null;
+        }
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>
