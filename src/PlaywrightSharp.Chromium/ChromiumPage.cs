@@ -174,12 +174,13 @@ namespace PlaywrightSharp.Chromium
                 DeviceScaleFactor = 0,
             });
 
-        public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
+        public Task SetBackgroundColorAsync(Color? color = null)
+            => Client.SendAsync(new EmulationSetDefaultBackgroundColorOverrideRequest { Color = color });
 
         public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
         {
             await Client.SendAsync(new PageBringToFrontRequest()).ConfigureAwait(false);
-            var clip = options.Clip != null ? options.Clip.ToViewportProtocol() : null;
+            var clip = options.Clip?.ToViewportProtocol();
 
             var result = await Client.SendAsync(new PageCaptureScreenshotRequest
             {

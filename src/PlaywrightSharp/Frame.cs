@@ -237,7 +237,7 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil)
             => GoToAsync(url, new GoToOptions { WaitUntil = new[] { waitUntil } });
 
-        /// <inheritdoc cref="IJSHandle.GetPropertyAsync"/>
+        /// <inheritdoc cref="IFrame.QuerySelectorAsync"/>
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
         {
             var utilityContext = await GetUtilityContextAsync().ConfigureAwait(false);
@@ -251,6 +251,13 @@ namespace PlaywrightSharp
             }
 
             return handle;
+        }
+
+        /// <inheritdoc cref="IFrame.QuerySelectorAllAsync"/>
+        public async Task<IElementHandle[]> QuerySelectorAllAsync(string selector)
+        {
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            return await context.QuerySelectorAllAsync(selector).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.QuerySelectorEvaluateAsync(string, string, object[])"/>

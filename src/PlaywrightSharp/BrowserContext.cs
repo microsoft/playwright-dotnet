@@ -16,6 +16,12 @@ namespace PlaywrightSharp
             _delegate = browserContextDelegate;
             _delegate.BrowserContext = this;
             Options = options?.Clone() ?? new BrowserContextOptions();
+
+            Options.Viewport ??= new Viewport
+            {
+                Width = 800,
+                Height = 600,
+            };
         }
 
         /// <inheritdoc cref="IBrowserContext.Options"/>
