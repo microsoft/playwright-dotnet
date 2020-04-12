@@ -45,7 +45,7 @@ namespace PlaywrightSharp
 
         public Task<bool> NewDocumentNavigationTask => _newDocumentNavigationTaskWrapper.Task;
 
-        public IResponse NavigationResponse => _navigationRequest?.Response;
+        public Task<Response> NavigationResponseTask => _navigationRequest?.FinalRequest?.WaitForFinished ?? Task.FromResult<Response>(null);
 
         public Task TimeoutOrTerminationTask => _terminationTaskWrapper.Task.WithTimeout(_timeout);
 

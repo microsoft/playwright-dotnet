@@ -19,6 +19,7 @@ namespace PlaywrightSharp
 
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
+        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
 
         private bool _disconnected;
 
@@ -118,10 +119,18 @@ namespace PlaywrightSharp
         public IKeyboard Keyboard { get; }
 
         /// <inheritdoc cref="IPage.DefaultTimeout"/>
-        public int DefaultTimeout { get; set; }
+        public int DefaultTimeout
+        {
+            get => _timeoutSettings.Timeout;
+            set => _timeoutSettings.SetDefaultTimeout(value);
+        }
 
         /// <inheritdoc cref="IPage.DefaultNavigationTimeout"/>
-        public int DefaultNavigationTimeout { get; set; }
+        public int DefaultNavigationTimeout
+        {
+            get => _timeoutSettings.NavigationTimeout;
+            set => _timeoutSettings.SetDefaultNavigationTimeout(value);
+        }
 
         /// <inheritdoc cref="IPage.IsClosed"/>
         public bool IsClosed { get; private set; }

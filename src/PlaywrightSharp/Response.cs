@@ -28,7 +28,7 @@ namespace PlaywrightSharp
 
         public string StatusText { get; }
 
-        public IFrame Frame { get; }
+        public IFrame Frame => Request.Frame;
 
         public string Url { get; }
 

@@ -225,12 +225,12 @@ namespace PlaywrightSharp
 
                 await task.ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (PlaywrightSharpException ex)
             {
-                throw new NavigationException(ex.Message, ex);
+                throw new NavigationException(ex.Message, url);
             }
 
-            return watcher.NavigationResponse;
+            return await watcher.NavigationResponseTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.GoToAsync(string, WaitUntilNavigation)"/>
@@ -350,7 +350,7 @@ namespace PlaywrightSharp
                 await errorTask.ConfigureAwait(false);
             }
 
-            return watcher.NavigationResponse;
+            return await watcher.NavigationResponseTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitUntilNavigation)"/>
