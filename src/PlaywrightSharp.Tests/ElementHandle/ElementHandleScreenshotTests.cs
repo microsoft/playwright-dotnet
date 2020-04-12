@@ -125,7 +125,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             );
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-Viewport.png", screenshot));
+            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
             Assert.Equal(new[] { 500, 500 }, await Page.EvaluateAsync<int[]>("[window.innerWidth, window.innerHeight]"));
         }
 
