@@ -11,6 +11,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.goto</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GoToTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -219,8 +221,15 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldFailWhenNavigatingToBadUrl()
         {
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync("asdfasdf"));
-            Assert.Contains("Cannot navigate to invalid URL", exception.Message);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync("asdfasdf"));
+            if (TestConstants.IsChromium || TestConstants.IsWebKit)
+            {
+                Assert.Contains("Cannot navigate to invalid URL", exception.Message);
+            }
+            else
+            {
+                Assert.Contains("Invalid url", exception.Message);
+            }
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -233,7 +242,7 @@ namespace PlaywrightSharp.Tests.Page
             Page.RequestFinished += (sender, e) => Assert.NotNull(e.Request);
             Page.RequestFailed += (sender, e) => Assert.NotNull(e.Request);
 
-            var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 

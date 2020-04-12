@@ -14,7 +14,10 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static async Task SetupAsync()
         {
-            var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher().DownloadAsync();
+            var downloaderTask = TestConstants.GetNewBrowserType().CreateBrowserFetcher(new BrowserFetcherOptions
+            {
+                Host = !TestConstants.IsChromium ? TestConstants.BROWSER_CDN : null
+            }).DownloadAsync();
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
             HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
 

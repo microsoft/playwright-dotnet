@@ -269,11 +269,13 @@ namespace PlaywrightSharp.Firefox
                     OnFrameDetached(pageFrameDetached);
                     break;
                 case PageNavigationAbortedFirefoxEvent pageNavigationAborted:
+                    OnNavigationAborted(pageNavigationAborted);
                     break;
                 case PageNavigationCommittedFirefoxEvent pageNavigationCommitted:
                     OnNavigationCommitted(pageNavigationCommitted);
                     break;
                 case PageNavigationStartedFirefoxEvent pageNavigationStarted:
+                    OnNavigationStarted(pageNavigationStarted);
                     break;
                 case PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation:
                     OnSameDocumentNavigation(pageSameDocumentNavigation);
@@ -308,49 +310,62 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private void OnEventFired(PageEventFiredFirefoxEvent pageEventFired)
+        private void OnEventFired(PageEventFiredFirefoxEvent e)
         {
-            if (pageEventFired.Name == EventFiredName.Load)
+            if (e.Name == EventFiredName.Load)
             {
-                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, WaitUntilNavigation.Load);
+                Page.FrameManager.FrameLifecycleEvent(e.FrameId, WaitUntilNavigation.Load);
             }
 
-            if (pageEventFired.Name == EventFiredName.DOMContentLoaded)
+            if (e.Name == EventFiredName.DOMContentLoaded)
             {
-                Page.FrameManager.FrameLifecycleEvent(pageEventFired.FrameId, WaitUntilNavigation.DOMContentLoaded);
+                Page.FrameManager.FrameLifecycleEvent(e.FrameId, WaitUntilNavigation.DOMContentLoaded);
             }
         }
 
-        private void OnFrameAttached(PageFrameAttachedFirefoxEvent pageFrameAttached)
-            => Page.FrameManager.FrameAttached(pageFrameAttached.FrameId, pageFrameAttached.ParentFrameId);
+        private void OnNavigationAborted(PageNavigationAbortedFirefoxEvent e)
+        {
+            var frame = Page.FrameManager.Frames[e.FrameId];
+            foreach (var watcher in Page.FrameManager.LifecycleWatchers.ToArray())
+            {
+                watcher.OnAbortedNewDocumentNavigation(frame, e.NavigationId, e.ErrorText);
+            }
+        }
 
-        private void OnFrameDetached(PageFrameDetachedFirefoxEvent pageFrameDetached)
-            => Page.FrameManager.FrameDetached(pageFrameDetached.FrameId);
+        private void OnNavigationStarted(PageNavigationStartedFirefoxEvent e)
+        {
+        }
 
-        private void OnNavigationCommitted(PageNavigationCommittedFirefoxEvent pageNavigationCommitted)
+        private void OnFrameAttached(PageFrameAttachedFirefoxEvent e)
+            => Page.FrameManager.FrameAttached(e.FrameId, e.ParentFrameId);
+
+        private void OnFrameDetached(PageFrameDetachedFirefoxEvent e)
+            => Page.FrameManager.FrameDetached(e.FrameId);
+
+        private void OnNavigationCommitted(PageNavigationCommittedFirefoxEvent e)
         {
             foreach (var pair in _workers)
             {
-                if (pair.Key == pageNavigationCommitted.FrameId)
+                if (pair.Key == e.FrameId)
                 {
                     OnWorkerDestroyed(new PageWorkerDestroyedFirefoxEvent { WorkerId = pair.Key });
                 }
             }
 
-            Page.FrameManager.FrameCommittedNewDocumentNavigation(pageNavigationCommitted.FrameId, pageNavigationCommitted.Url, pageNavigationCommitted.Name ?? string.Empty, pageNavigationCommitted.NavigationId ?? string.Empty, false);
+            Page.FrameManager.FrameCommittedNewDocumentNavigation(e.FrameId, e.Url, e.Name ?? string.Empty, e.NavigationId ?? string.Empty, false);
         }
 
-        private void OnSameDocumentNavigation(PageSameDocumentNavigationFirefoxEvent pageSameDocumentNavigation)
-            => Page.FrameManager.FrameCommittedSameDocumentNavigation(pageSameDocumentNavigation.FrameId, pageSameDocumentNavigation.Url);
+        private void OnSameDocumentNavigation(PageSameDocumentNavigationFirefoxEvent e)
+            => Page.FrameManager.FrameCommittedSameDocumentNavigation(e.FrameId, e.Url);
 
-        private void OnExecutionContextCreated(RuntimeExecutionContextCreatedFirefoxEvent runtimeExecutionContextCreated)
+        private void OnExecutionContextCreated(RuntimeExecutionContextCreatedFirefoxEvent e)
         {
-            var auxData = runtimeExecutionContextCreated.AuxData != null
-                ? ((JsonElement)runtimeExecutionContextCreated.AuxData).ToObject<AuxData>()
+            var auxData = e.AuxData != null
+                ? ((JsonElement)e.AuxData).ToObject<AuxData>()
                 : null;
             if (auxData?.FrameId != null && Page.FrameManager.Frames.TryGetValue(auxData.FrameId, out var frame))
             {
-                var firefoxDelegate = new FirefoxExecutionContext(_session, runtimeExecutionContextCreated.ExecutionContextId);
+                var firefoxDelegate = new FirefoxExecutionContext(_session, e.ExecutionContextId);
                 var context = new FrameExecutionContext(firefoxDelegate, frame);
                 if (auxData.Name == UtilityWorldName)
                 {
@@ -361,13 +376,13 @@ namespace PlaywrightSharp.Firefox
                     frame.ContextCreated(ContextType.Main, context);
                 }
 
-                ContextIdToContext[runtimeExecutionContextCreated.ExecutionContextId] = context;
+                ContextIdToContext[e.ExecutionContextId] = context;
             }
         }
 
-        private void OnExecutionContextDestroyed(RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed)
+        private void OnExecutionContextDestroyed(RuntimeExecutionContextDestroyedFirefoxEvent e)
         {
-            if (ContextIdToContext.TryRemove(runtimeExecutionContextDestroyed.ExecutionContextId, out var context))
+            if (ContextIdToContext.TryRemove(e.ExecutionContextId, out var context))
             {
                 context.Frame.ContextDestroyed(context);
             }
