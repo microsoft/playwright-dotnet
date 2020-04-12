@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,8 +14,12 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IPage"/>
     public sealed class Page : IPage, IDisposable
     {
+        private static readonly Dictionary<PageEvent, EventInfo> _pageEventsMap = ((PageEvent[])Enum.GetValues(typeof(PageEvent)))
+            .ToDictionary(x => x, x => typeof(Page).GetEvent(x.ToString()));
+
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
+
         private bool _disconnected;
 
         /// <inheritdoc cref="IPage"/>
@@ -358,6 +363,36 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
         public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
+            var info = _pageEventsMap[e];
+            ValidateArgumentsTypes();
+            var eventTsc = new TaskCompletionSource<T>();
+            void PageEventHandler(object sender, T e)
+            {
+                if (options?.Predicate == null || options.Predicate(e))
+                {
+                    eventTsc.TrySetResult(e);
+                    info.RemoveEventHandler(this, (EventHandler<T>)PageEventHandler);
+                }
+            }
+
+            info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
+            return eventTsc.Task.WithTimeout(options?.Timeout ?? DefaultTimeout);
+
+            void ValidateArgumentsTypes()
+            {
+                if ((info.EventHandlerType.GenericTypeArguments.Length == 0 && typeof(T) == typeof(EventArgs))
+                    || info.EventHandlerType.GenericTypeArguments[0] == typeof(T))
+                {
+                    return;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
+            }
+        }
+
+        /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
+        public Task WaitForEvent(PageEvent e)
+        {
             throw new NotImplementedException();
         }
 
@@ -374,33 +409,48 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
             => MainFrame.WaitForNavigationAsync(waitUntil);
 
-        /// <inheritdoc cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
-        public Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
+        /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
+        public async Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
         {
-            throw new NotImplementedException();
+            var result = await WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => regex.IsMatch(e.Request.Url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
+            return result.Request;
+        }
+
+        /// <inheritdoc cref="IPage.WaitForRequestAsync(string, WaitForOptions)"/>
+        public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
+        {
+            var result = await WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => e.Request.Url.Equals(url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
+            return result.Request;
         }
 
         /// <inheritdoc cref="IPage.WaitForResponseAsync(string, WaitForOptions)"/>
-        public Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
+        public async Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
         {
-            throw new NotImplementedException();
+            var result = await WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs>
+            {
+                Predicate = e => e.Response.Url.Equals(url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
+            return result.Response;
         }
 
         /// <inheritdoc cref="IPage.GetPdfAsync(string)"/>
         public Task GetPdfAsync(string file) => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IPage.WaitForRequestAsync(Regex, WaitForOptions)"/>
-        public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, object[])"/>
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args) => WaitForFunctionAsync(pageFunction, null, args);
-
         /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args)
             => MainFrame.WaitForFunctionAsync(pageFunction, options, args);
+
+        /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, object[])"/>
+        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args) => WaitForFunctionAsync(pageFunction, null, args);
 
         /// <inheritdoc cref="IPage.QuerySelectorAllEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args)
@@ -440,18 +490,10 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.QuerySelectorAllAsync(string)"/>
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.QuerySelectorAllAsync(selector);
 
         /// <inheritdoc cref="IPage.AddStyleTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
-        public Task WaitForEvent(PageEvent e)
         {
             throw new NotImplementedException();
         }
@@ -470,10 +512,8 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.ScreenshotBase64Async(ScreenshotOptions)"/>
-        public Task<string> ScreenshotBase64Async(ScreenshotOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<string> ScreenshotBase64Async(ScreenshotOptions options = null)
+            => Convert.ToBase64String(await ScreenshotAsync(options).ConfigureAwait(false));
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose() => Screenshotter?.Dispose();
@@ -518,6 +558,12 @@ namespace PlaywrightSharp
         }
 
         internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
+
+        internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
+
+        internal void OnRequestFinished(IRequest request) => RequestFinished?.Invoke(this, new RequestEventArgs(request));
+
+        internal void OnResponse(IResponse response) => Response?.Invoke(this, new ResponseEventArgs(response));
 
         internal void DidDisconnected() => _disconnected = true;
 
@@ -598,14 +644,14 @@ namespace PlaywrightSharp
             }
         }
 
-        private async Task ExposeFunctionAsync(string name, Delegate puppeteerFunction)
+        private async Task ExposeFunctionAsync(string name, Delegate playwrightFunction)
         {
             if (_pageBindings.ContainsKey(name))
             {
                 throw new PlaywrightSharpException($"Failed to add page binding with name {name}: window['{name}'] already exists!");
             }
 
-            _pageBindings.Add(name, puppeteerFunction);
+            _pageBindings.Add(name, playwrightFunction);
 
             const string addPageBinding = @"function addPageBinding(bindingName) {
                 const binding = window[bindingName];

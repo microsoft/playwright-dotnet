@@ -6,6 +6,12 @@ namespace PlaywrightSharp
     public enum PageEvent
     {
         /// <summary>
+        /// Close event.
+        /// </summary>
+        /// <see cref="IPage.Close"/>
+        Close,
+
+        /// <summary>
         /// Load event
         /// </summary>
         /// <see cref="IPage.Load"/>

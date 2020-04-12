@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>screenshot.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleScreenshotTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandleScreenshotTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandleScreenshotTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -88,10 +91,10 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 <div class=""to-screenshot""></div>
             ");
             var elementHandles = await Page.QuerySelectorAllAsync("div.to-screenshot");
-            var screenshotTasks = elementHandles.Select(e => e.ScreenshotAsync());
+            var screenshotTasks = elementHandles.Select(e => e.ScreenshotAsync()).ToArray();
             await Task.WhenAll(screenshotTasks);
 
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-padding-border.png", screenshotTasks.ElementAt(2).Result));
+            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshotTasks.ElementAt(2).Result));
         }
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
@@ -122,7 +125,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             );
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-Viewport.png", screenshot));
+            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
             Assert.Equal(new[] { 500, 500 }, await Page.EvaluateAsync<int[]>("[window.innerWidth, window.innerHeight]"));
         }
 

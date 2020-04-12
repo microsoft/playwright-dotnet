@@ -181,6 +181,41 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void RequestStarted(Request request)
+        {
+            InflightRequestStarted(request);
+            var frame = request.Frame;
+            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null && request.RedirectChain.Length == 0)
+            {
+                foreach (var watcher in LifecycleWatchers.ToArray())
+                {
+                    watcher.OnNavigationRequest(frame, request);
+                }
+            }
+
+            if (!request.IsFavicon)
+            {
+                _page.OnRequest(request);
+            }
+        }
+
+        internal void RequestReceivedResponse(Response response)
+        {
+            if (!response.Request.IsFavicon)
+            {
+                _page.OnResponse(response);
+            }
+        }
+
+        internal void RequestFinished(Request request)
+        {
+            InflightRequestFinished(request);
+            if (!request.IsFavicon)
+            {
+                _page.OnRequestFinished(request);
+            }
+        }
+
         private void StartNetworkIdleTimer(Frame frame, WaitUntilNavigation lifecycleEvent)
         {
             if (frame.FiredLifecycleEvents.Contains(lifecycleEvent))
@@ -233,6 +268,50 @@ namespace PlaywrightSharp
             foreach (var subframe in frame.ChildFrames)
             {
                 CollectFrames(subframe, frames);
+            }
+        }
+
+        private void InflightRequestStarted(Request request)
+        {
+            var frame = request.Frame;
+            if (frame == null || request.IsFavicon)
+            {
+                return;
+            }
+
+            frame.InflightRequests.Add(request);
+            if (frame.InflightRequests.Count == 1)
+            {
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
+            }
+
+            if (frame.InflightRequests.Count == 3)
+            {
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
+            }
+        }
+
+        private void InflightRequestFinished(Request request)
+        {
+            var frame = request.Frame;
+            if (frame == null || request.IsFavicon)
+            {
+                return;
+            }
+
+            if (!frame.InflightRequests.Remove(request))
+            {
+                return;
+            }
+
+            if (frame.InflightRequests.Count == 0)
+            {
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
+            }
+
+            if (frame.InflightRequests.Count == 2)
+            {
+                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             }
         }
     }

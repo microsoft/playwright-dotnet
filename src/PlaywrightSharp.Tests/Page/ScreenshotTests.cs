@@ -10,6 +10,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>screenshot.spec.js</playwright-file>
     ///<playwright-describe>Page.screenshot</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ScreenshotTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -35,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
-        ///<playwright-it>should clicp rect</playwright-it>
+        ///<playwright-it>should clip rect</playwright-it>
         [Fact]
         public async Task ShouldClipRect()
         {
@@ -70,10 +72,9 @@ namespace PlaywrightSharp.Tests.Page
             {
                 Clip = new Rect
                 {
-
                     X = 50,
-                    Y = 600,
-                    Width = 100,
+                    Y = 450,
+                    Width = 1000,
                     Height = 100,
                 }
             });
@@ -92,7 +93,6 @@ namespace PlaywrightSharp.Tests.Page
             {
                 Clip = new Rect
                 {
-
                     X = 50,
                     Y = 650,
                     Width = 100,
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Page
             {
                 FullPage = true
             });
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullPage.png", screenshot));
+            Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullpage.png", screenshot));
         }
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.Page
                 Height = 500
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
+            await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 FullPage = true
             });
@@ -185,14 +185,14 @@ namespace PlaywrightSharp.Tests.Page
             var pageTasks = new List<Task<IPage>>();
             for (int i = 0; i < n; i++)
             {
-                async Task<IPage> func()
+                async Task<IPage> Func()
                 {
                     var page = await Context.NewPageAsync();
                     await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
                     return page;
                 }
 
-                pageTasks.Add(func());
+                pageTasks.Add(Func());
             }
 
             await Task.WhenAll(pageTasks);
@@ -236,8 +236,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetViewportAsync(new Viewport
             {
-                Width = 100,
-                Height = 100
+                Width = 50,
+                Height = 150
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
             byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
@@ -361,8 +361,8 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetViewportAsync(new Viewport
             {
-                Width = 500,
-                Height = 500
+                Width = 640,
+                Height = 480
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/screenshots/webgl.html");
             byte[] screenshot = await Page.ScreenshotAsync();
@@ -391,7 +391,6 @@ namespace PlaywrightSharp.Tests.Page
                 }
                 catch (Exception ex) when (ex.Message.Contains("Cannot take a screenshot while page is navigating"))
                 {
-
                 }
             }
         }

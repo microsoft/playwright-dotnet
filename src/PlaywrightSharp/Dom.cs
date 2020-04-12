@@ -10,7 +10,7 @@ namespace PlaywrightSharp
         private static readonly Regex _selectorMatch = new Regex("/^[a-zA-Z_0-9-]+$/", RegexOptions.Compiled);
 
         internal static Func<IFrameExecutionContext, Task<IJSHandle>> GetWaitForSelectorFunction(string selector, WaitForOption waitFor, int? timeout)
-            => async (IFrameExecutionContext context) =>
+            => async context =>
             {
                 selector = NormalizeSelector(selector);
                 return await context.EvaluateHandleAsync(
