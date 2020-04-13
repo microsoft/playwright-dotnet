@@ -546,11 +546,9 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldOverrideReferrerPolicy()
         {
-            Server.SetRoute("/grid.html", context =>
+            Server.Subscribe("/grid.html", context =>
             {
                 context.Response.Headers["Referrer-Policy"] = "no-referrer";
-                string file = File.ReadAllText(Path.Combine(PlaywrightSharpLoader.ContentRoot, "wwwroot", "grid.html"));
-                return context.Response.WriteAsync(file);
             });
 
             string referer1 = null;

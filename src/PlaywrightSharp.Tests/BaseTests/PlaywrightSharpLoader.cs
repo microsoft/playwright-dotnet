@@ -11,7 +11,6 @@ namespace PlaywrightSharp.Tests.BaseTests
     {
         internal static SimpleServer Server { get; private set; }
         internal static SimpleServer HttpsServer { get; private set; }
-        internal static string ContentRoot { get; private set; }
 
         internal static async Task SetupAsync()
         {
@@ -31,9 +30,9 @@ namespace PlaywrightSharp.Tests.BaseTests
             };
             Console.WriteLine($"Downloading browser from {host}...");
             var downloaderTask = browserFetcher.DownloadAsync();
-            ContentRoot = TestUtils.FindParentDirectory("PlaywrightSharp.TestServer");
-            Server = SimpleServer.Create(TestConstants.Port, ContentRoot);
-            HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, ContentRoot);
+
+            Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
+            HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
 
             var serverStart = Server.StartAsync();
             var httpsServerStart = HttpsServer.StartAsync();
