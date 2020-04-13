@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -77,9 +78,28 @@ namespace PlaywrightSharp.Input
         public Task SendCharactersAsync(string text) => _raw.SendTextAsync(text);
 
         /// <inheritdoc cref="IKeyboard.TypeAsync(string, TypeOptions)"/>
-        public Task TypeAsync(string text, TypeOptions options = null)
+        public async Task TypeAsync(string text, TypeOptions options = null)
         {
-            throw new NotImplementedException();
+            int delay = options?.Delay ?? 0;
+
+            var textParts = StringInfo.GetTextElementEnumerator(text);
+            while (textParts.MoveNext())
+            {
+                var letter = textParts.Current;
+                if (KeyDefinitions.ContainsKey(letter.ToString()))
+                {
+                    await PressAsync(letter.ToString(), new PressOptions { Delay = delay }).ConfigureAwait(false);
+                }
+                else
+                {
+                    if (delay > 0)
+                    {
+                        await Task.Delay(delay).ConfigureAwait(false);
+                    }
+
+                    await SendCharacterAsync(letter.ToString()).ConfigureAwait(false);
+                }
+            }
         }
 
         /// <inheritdoc cref="IKeyboard.UpAsync(string)"/>
@@ -94,6 +114,8 @@ namespace PlaywrightSharp.Input
             _pressedKeys.Remove(key);
             return _raw.KeyUpAsync(_pressedModifiers.ToArray(), description.Code, description.KeyCode, description.KeyCodeWithoutLocation, description.Key, Convert.ToInt32(description.Location));
         }
+
+        private Task SendCharacterAsync(string text) => _raw.SendTextAsync(text);
 
         private KeyDescription GetKeyDescriptionForString(string keyString)
         {
@@ -134,7 +156,7 @@ namespace PlaywrightSharp.Input
                 description.Code = definition.Code;
             }
 
-            if (definition.Location != 0)
+            if (definition.Location.HasValue && definition.Location != 0)
             {
                 description.Location = definition.Location.Value;
             }

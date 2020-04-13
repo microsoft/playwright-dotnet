@@ -178,6 +178,21 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IElementHandle.FocusAsync"/>
+        public async Task FocusAsync()
+        {
+            string errorMessage = await EvaluateInUtilityAsync<string>(@"(element) => {
+                if (!element['focus'])
+                    return 'Node is not an HTML or SVG element.';
+                element.focus();
+                return '';
+            }").ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                throw new PlaywrightSharpException(errorMessage);
+            }
+        }
+
         /// <inheritdoc cref="IElementHandle.QuerySelectorAsync"/>
         public Task<IElementHandle> QuerySelectorAsync(string selector)
         {

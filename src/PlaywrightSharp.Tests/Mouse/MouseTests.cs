@@ -9,15 +9,19 @@ namespace PlaywrightSharp.Tests.Mouse
 {
     ///<playwright-file>mouse.spec.js</playwright-file>
     ///<playwright-describe>Mouse</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class MouseTests : PlaywrightSharpPageBaseTest
     {
-        internal MouseTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public MouseTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should click the document</playwright-it>
+        [Fact]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -47,18 +51,27 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should select the text with mouse</playwright-it>
+        [Fact]
         public async Task ShouldSelectTheTextWithMouse()
         {
-            await Page.GoToAsync(TestConstants.HttpsPrefix + "/input/textarea.html");
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             const string text = "This is the text that we are going to try to select. Let\'s see how it goes.";
             await Page.Keyboard.TypeAsync(text);
             // Firefox needs an extra frame here after typing or it will fail to set the scrollTop
             await Page.EvaluateAsync("() => new Promise(requestAnimationFrame)");
             await Page.EvaluateAsync("() => document.querySelector('textarea').scrollTop = 0");
-            var dimensions = await Page.EvaluateAsync<JsonElement>("dimensions");
-            var x = dimensions.GetProperty("x").GetInt32();
-            var y = dimensions.GetProperty("y").GetInt32();
+            var dimensions = await Page.EvaluateAsync<JsonElement>(@"function dimensions() {
+              const rect = document.querySelector('textarea').getBoundingClientRect();
+              return {
+                x: rect.left,
+                y: rect.top,
+                width: rect.width,
+                height: rect.height
+              };
+            }");
+            int x = dimensions.GetProperty("x").GetInt32();
+            int y = dimensions.GetProperty("y").GetInt32();
             await Page.Mouse.MoveAsync(x + 2, y + 2);
             await Page.Mouse.DownAsync();
             await Page.Mouse.MoveAsync(200, 200);
@@ -72,9 +85,10 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should trigger hover state</playwright-it>
+        [Fact]
         public async Task ShouldTriggerHoverState()
         {
-            await Page.GoToAsync(TestConstants.HttpsPrefix + "/input/scrollable.html");
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             await Page.HoverAsync("#button-6");
             Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
             await Page.HoverAsync("#button-2");
@@ -86,9 +100,10 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should trigger hover state with removed window.Node</playwright-it>
+        [Fact]
         public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
         {
-            await Page.GoToAsync(TestConstants.HttpsPrefix + "/input/scrollable.html");
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             await Page.EvaluateAsync("() => delete window.Node");
             await Page.HoverAsync("#button-6");
             Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
@@ -97,9 +112,10 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should set modifier keys on click</playwright-it>
+        [Fact]
         public async Task ShouldSetModifierKeysOnClick()
         {
-            await Page.GoToAsync(TestConstants.HttpsPrefix + "/input/scrollable.html");
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             await Page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window.lastEvent = e, true)");
             var modifiers = new Dictionary<string, string> { ["Shift"] = "shiftKey", ["Control"] = "ctrlKey", ["Alt"] = "altKey", ["Meta"] = "metaKey" };
             // In Firefox, the Meta modifier only exists on Mac
@@ -126,6 +142,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should tween mouse movement</playwright-it>
+        [Fact]
         public async Task ShouldTweenMouseMovement()
         {
             // The test becomes flaky on WebKit without next line.
@@ -142,7 +159,7 @@ namespace PlaywrightSharp.Tests.Mouse
             }");
             await Page.Mouse.MoveAsync(200, 300, new MoveOptions { Steps = 5 });
             Assert.Equal(
-                new int[][]
+                new[]
                 {
                     new[] { 120, 140 },
                     new[] { 140, 180 },
@@ -156,6 +173,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should work with mobile viewports and cross process navigations</playwright-it>
+        [Fact]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

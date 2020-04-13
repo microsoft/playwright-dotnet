@@ -213,5 +213,11 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
         Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args);
+
+        /// <summary>
+        /// Calls focus on the element.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task FocusAsync();
     }
 }

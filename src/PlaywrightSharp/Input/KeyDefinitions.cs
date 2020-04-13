@@ -1641,5 +1641,7 @@ namespace PlaywrightSharp.Input
         };
 
         internal static KeyDefinition Get(string key) => Definitions[key];
+
+        internal static bool ContainsKey(string key) => Definitions.ContainsKey(key);
     }
 }

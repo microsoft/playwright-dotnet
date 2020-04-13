@@ -292,5 +292,21 @@ namespace PlaywrightSharp
         /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
         /// </remarks>
         Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/> and focuses it.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to focus. If there are multiple elements satisfying the selector, the first will be focused.</param>
+        /// <param name="options">Wait options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the the element matching <paramref name="selector"/> is successfully focused.</returns>
+        Task FocusAsync(string selector, WaitForSelectorOptions options);
+
+        /// <summary>
+        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to hover over the center of the element.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to hover. If there are multiple elements satisfying the selector, the first will be hovered.</param>
+        /// <param name="options">Wait options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered.</returns>
+        Task HoverAsync(string selector, WaitForSelectorOptions options = null);
     }
 }

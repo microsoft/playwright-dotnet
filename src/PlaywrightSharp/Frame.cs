@@ -359,6 +359,22 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc cref="IFrame.FocusAsync(string, WaitForSelectorOptions)"/>
+        public async Task FocusAsync(string selector, WaitForSelectorOptions options)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.FocusAsync().ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
+        /// <inheritdoc cref="IFrame.HoverAsync(string, WaitForSelectorOptions)"/>
+        public async Task HoverAsync(string selector, WaitForSelectorOptions options)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.HoverAsync().ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
         /// <inheritdoc cref="IFrame.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
         public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
         {

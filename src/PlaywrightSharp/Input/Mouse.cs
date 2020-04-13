@@ -124,8 +124,8 @@ namespace PlaywrightSharp.Input
 
             for (int i = 1; i <= steps; i++)
             {
-                double middleX = fromX + ((x - fromX) * (i / steps));
-                double middleY = fromY + ((y - fromY) * (i / steps));
+                double middleX = fromX + ((x - fromX) * ((double)i / steps));
+                double middleY = fromY + ((y - fromY) * ((double)i / steps));
                 await _raw.MoveAsync(middleX, middleY, _lastButton, _buttons, _keyboard.Modifiers).ConfigureAwait(false);
             }
         }
