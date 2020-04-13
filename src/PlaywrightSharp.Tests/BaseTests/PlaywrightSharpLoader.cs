@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static async Task SetupAsync()
         {
-            string host = !TestConstants.IsChromium ? TestConstants.BROWSER_CDN : null;
+            string host = !TestConstants.IsChromium ? TestConstants.BrowserCDN : null;
             var browserFetcher = TestConstants.GetNewBrowserType().CreateBrowserFetcher(new BrowserFetcherOptions
             {
                 Host = host
