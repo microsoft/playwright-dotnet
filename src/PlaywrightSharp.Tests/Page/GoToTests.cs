@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/frames/one-frame.html", response.Url);
 
             Assert.Equal(2, Page.Frames.Length);
-            Assert.Same(Page.Frames[1], requestFrame);
+            Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/frames/one-frame.html", response.Url);
 
             Assert.Equal(2, Page.Frames.Length);
-            Assert.Same(Page.Frames[1], requestFrame);
+            Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
