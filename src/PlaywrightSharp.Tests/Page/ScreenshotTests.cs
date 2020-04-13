@@ -11,6 +11,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>screenshot.spec.js</playwright-file>
     ///<playwright-describe>Page.screenshot</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ScreenshotTests : PlaywrightSharpPageBaseTest
     {
@@ -47,7 +48,7 @@ namespace PlaywrightSharp.Tests.Page
                 Height = 500
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 Clip = new Rect
                 {
@@ -68,7 +69,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 Clip = new Rect
                 {
@@ -250,13 +251,13 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
-        ///<playwright-it>should allow transparency</playwright-it>
+        ///<playwright-it>should render white background on jpeg file</playwright-it>
         [Fact]
         public async Task ShouldRenderWhiteBackgroundOnJpegFile()
         {
             await Page.SetViewportAsync(new Viewport { Width = 100, Height = 100 });
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 OmitBackground = true,
                 Type = ScreenshotFormat.Jpeg
@@ -270,7 +271,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWithOddClipSizeOnRetinaDisplays()
         {
-            var screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
             {
                 Clip = new Rect
                 {
