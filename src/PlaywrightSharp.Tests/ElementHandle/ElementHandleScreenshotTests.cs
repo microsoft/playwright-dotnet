@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
     ///<playwright-file>screenshot.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleScreenshotTests : PlaywrightSharpPageBaseTest
     {
@@ -47,17 +48,16 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 Height = 500
             });
             await Page.SetContentAsync(@"
-                something above
-                <style> div {
+                <div style=""height: 14px"">oooo</div>
+                <style>div {
                     border: 2px solid blue;
                     background: green;
                     width: 50px;
                     height: 50px;
                 }
                 </style>
-                <div></div>
-            ");
-            var elementHandle = await Page.QuerySelectorAsync("div");
+                <div id=""d""></div>");
+            var elementHandle = await Page.QuerySelectorAsync("div#d");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-padding-border.png", screenshot));
         }
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 Height = 500
             });
             await Page.SetContentAsync(@"
-                something above
+                <div style=""height: 14px"">oooo</div>
                 <style>
                 div.to-screenshot {
                   border: 1px solid blue;
@@ -121,8 +121,10 @@ namespace PlaywrightSharp.Tests.ElementHandle
                   display: none;
                 }
                 </style>
-                <div class='to-screenshot'></div>"
-            );
+                <div class=""to-screenshot""></div>
+                <div class=""to-screenshot""></div>
+                <div class=""to-screenshot""></div>");
+
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
@@ -141,22 +143,21 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 Height = 500
             });
             await Page.SetContentAsync(@"
-                something above
-                <style> div.above {
-                    border: 2px solid blue;
-                    background: red;
-                    height: 1500px;
+                <div style=""height: 14px"">oooo</div>
+                <style>div.above {
+                  border: 2px solid blue;
+                  background: red;
+                  height: 1500px;
                 }
                 div.to-screenshot {
-                    border: 2px solid blue;
-                    background: green;
-                    width: 50px;
-                    height: 50px;
+                  border: 2px solid blue;
+                  background: green;
+                  width: 50px;
+                  height: 50px;
                 }
                 </style>
-                <div class='above'></div>
-                <div class='to-screenshot'></div>
-            ");
+                <div class=""above""></div>
+                <div class=""to-screenshot""></div>");
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-scrolled-into-view.png", screenshot));
