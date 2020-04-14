@@ -77,7 +77,7 @@ namespace PlaywrightSharp.TestServer
                 {
                     if (isHttps)
                     {
-                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps("testCert.cer"));
+                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps());
                     }
                     else
                     {
