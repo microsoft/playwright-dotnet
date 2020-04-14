@@ -227,11 +227,9 @@ namespace PlaywrightSharp
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
             => ExposeFunctionAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc cref="IPage.FocusAsync(string)"/>
-        public Task FocusAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc cref="IPage.FocusAsync(string, WaitForSelectorOptions)"/>
+        public Task FocusAsync(string selector, WaitForSelectorOptions options = null)
+            => MainFrame.FocusAsync(selector, options);
 
         /// <inheritdoc cref="IPage.GoBackAsync(NavigationOptions)"/>
         public Task<IResponse> GoBackAsync(NavigationOptions options = null)
@@ -256,11 +254,9 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil)
              => MainFrame.GoToAsync(url, new GoToOptions { WaitUntil = waitUntil });
 
-        /// <inheritdoc cref="IPage.HoverAsync(string)"/>
-        public Task HoverAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc cref="IPage.HoverAsync(string, WaitForSelectorOptions)"/>
+        public Task HoverAsync(string selector, WaitForSelectorOptions options = null)
+            => MainFrame.HoverAsync(selector, options);
 
         /// <inheritdoc cref="IPage.QuerySelectorAsync(string)"/>
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
