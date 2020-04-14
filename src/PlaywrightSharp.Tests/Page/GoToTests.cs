@@ -445,7 +445,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should navigate to dataURL and not fire dataURL requests</playwright-it>
         [Fact]
-        public async Task ShouldNavigateToDataURLAndFireDataURLRequests()
+        public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
             Page.Request += (sender, e) => requests.Add(e.Request);
@@ -453,8 +453,7 @@ namespace PlaywrightSharp.Tests.Page
             string dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataUrl);
             Assert.Equal(HttpStatusCode.OK, response.Status);
-            Assert.Single(requests);
-            Assert.Equal(dataUrl, requests[0].Url);
+            Assert.Empty(requests);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
