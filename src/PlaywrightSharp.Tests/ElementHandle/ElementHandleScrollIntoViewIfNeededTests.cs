@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleScrollIntoViewIfNeededTests : PlaywrightSharpPageBaseTest
     {

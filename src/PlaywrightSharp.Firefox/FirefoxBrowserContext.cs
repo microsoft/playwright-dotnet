@@ -56,7 +56,9 @@ namespace PlaywrightSharp.Firefox
             _browser.Contexts.Remove(_browserContextId);
         }
 
-        public IEnumerable<IPage> GetExistingPages() => throw new System.NotImplementedException();
+        public IEnumerable<IPage> GetExistingPages() => _browser.GetAllTargets()
+                .Where(target => target.BrowserContext == BrowserContext && target.Page != null)
+                .Select(target => target.Page);
 
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
         {

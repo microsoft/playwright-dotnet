@@ -11,7 +11,6 @@ namespace PlaywrightSharp.Firefox
         private readonly FirefoxBrowser _browser;
         private readonly string _targetId;
         private readonly string _openerId;
-        private Page _page;
 
         public FirefoxTarget(FirefoxConnection connection, FirefoxBrowser firefoxBrowser, IBrowserContext context, string targetId, TargetInfoType type, string url, string openerId)
         {
@@ -46,6 +45,8 @@ namespace PlaywrightSharp.Firefox
 
         internal Task<Page> PageTask { get; set; }
 
+        internal Page Page { get; private set; }
+
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
         async Task<IPage> ITarget.GetPageAsync() => await GetPageAsync().ConfigureAwait(false);
 
@@ -57,7 +58,7 @@ namespace PlaywrightSharp.Firefox
 
         internal Task<Page> GetPageAsync() => CreatePageAsync();
 
-        internal void DidClose() => _page?.DidClose();
+        internal void DidClose() => Page?.DidClose();
 
         internal Task<Page> CreatePageAsync()
         {
@@ -70,13 +71,13 @@ namespace PlaywrightSharp.Firefox
             {
                 async Task<Page> CreatePageInternalAsync()
                 {
-                    if (_page != null)
+                    if (Page != null)
                     {
-                        return _page;
+                        return Page;
                     }
 
                     var session = await _connection.CreateSessionAsync(_targetId).ConfigureAwait(false);
-                    FirefoxPage firefoxPage = new FirefoxPage(session, BrowserContext, () =>
+                    var firefoxPage = new FirefoxPage(session, BrowserContext, () =>
                     {
                         var openerTarget = Opener;
                         if (openerTarget == null)
@@ -86,16 +87,16 @@ namespace PlaywrightSharp.Firefox
 
                         return openerTarget.PageTask;
                     });
-                    _page = firefoxPage.Page;
+                    Page = firefoxPage.Page;
                     void DisconnectedEventHandler(object sender, EventArgs e)
                     {
-                        _page.DidDisconnected();
+                        Page.DidDisconnected();
                         session.Disconnected -= DisconnectedEventHandler;
                     }
 
                     session.Disconnected += DisconnectedEventHandler;
                     await firefoxPage.InitializeAsync().ConfigureAwait(false);
-                    return _page;
+                    return Page;
                 }
 
                 PageTask = CreatePageInternalAsync();
