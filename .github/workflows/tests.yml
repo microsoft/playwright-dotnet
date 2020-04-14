@@ -67,9 +67,6 @@ jobs:
           sudo apt-get install libgbm-dev xvfb apt-transport-https
           sudo apt-get update
           sudo apt-get install dotnet-sdk-3.1
-          dotnet dev-certs https -ep lib/PlaywrightSharp.TestServer/testCert.cer
-          sudo openssl x509 -inform der -in lib/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
-          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: FIREFOX
@@ -83,11 +80,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
-      - name: Generate dev Certificate
-        run: |
-          dotnet dev-certs https -ep lib/PlaywrightSharp.TestServer/testCert.cer
-          sudo openssl x509 -inform der -in lib/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
-          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: FIREFOX

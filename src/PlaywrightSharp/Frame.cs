@@ -334,8 +334,8 @@ namespace PlaywrightSharp
             }").ConfigureAwait(false);
         }
 
-        /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
-        public async Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
+        /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
+        public async Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default)
         {
             using var watcher = new LifecycleWatcher(this, options);
             var errorTask = watcher.TimeoutOrTerminationTask;

@@ -71,13 +71,20 @@ namespace PlaywrightSharp.TestServer
                             {
                                 fileResponseContext.Context.Response.Headers["Content-Security-Policy"] = csp;
                             }
+
+                            if(fileResponseContext.Context.Request.Path.ToString().EndsWith(".html"))
+                            {
+                                fileResponseContext.Context.Response.Headers["Content-Type"] ="text/html; charset=utf-8";
+                                fileResponseContext.Context.Response.Headers["Cache-Control"] ="no-cache, no-store";
+                            }
+
                         }
                     }))
                 .UseKestrel(options =>
                 {
                     if (isHttps)
                     {
-                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps("testCert.cer"));
+                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps());
                     }
                     else
                     {

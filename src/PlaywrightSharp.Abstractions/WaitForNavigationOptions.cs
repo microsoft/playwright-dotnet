@@ -1,10 +1,11 @@
 using System;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions)"/> and <see cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>.
+    /// Options for <see cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/> and <see cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>.
     /// </summary>
     public class WaitForNavigationOptions : NavigationOptions
     {
