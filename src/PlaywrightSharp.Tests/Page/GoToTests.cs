@@ -395,7 +395,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWhenNavigatingToDataUrl()
         {
             var response = await Page.GoToAsync("data:text/html,hello");
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Null(response);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
