@@ -452,7 +452,7 @@ namespace PlaywrightSharp.Tests.Page
 
             string dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataUrl);
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Null(response);
             Assert.Empty(requests);
         }
 
