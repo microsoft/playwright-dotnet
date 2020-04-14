@@ -113,6 +113,8 @@ namespace PlaywrightSharp.TestServer
             _routes.Clear();
             _auths.Clear();
             _csp.Clear();
+            _subscribers.Clear();
+            _requestWaits.Clear();
             GzipRoutes.Clear();
             foreach (var subscriber in _subscribers.Values)
             {
