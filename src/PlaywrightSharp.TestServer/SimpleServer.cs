@@ -72,10 +72,10 @@ namespace PlaywrightSharp.TestServer
                                 fileResponseContext.Context.Response.Headers["Content-Security-Policy"] = csp;
                             }
 
-                            if(fileResponseContext.Context.Request.Path.ToString().EndsWith(".html"))
+                            if (fileResponseContext.Context.Request.Path.ToString().EndsWith(".html"))
                             {
-                                fileResponseContext.Context.Response.Headers["Content-Type"] ="text/html; charset=utf-8";
-                                fileResponseContext.Context.Response.Headers["Cache-Control"] ="no-cache, no-store";
+                                fileResponseContext.Context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                                fileResponseContext.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
                             }
 
                         }
