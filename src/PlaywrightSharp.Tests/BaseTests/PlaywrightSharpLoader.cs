@@ -14,11 +14,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static async Task SetupAsync()
         {
-            string host = !TestConstants.IsChromium ? TestConstants.BrowserCDN : null;
-            var browserFetcher = TestConstants.GetNewBrowserType().CreateBrowserFetcher(new BrowserFetcherOptions
-            {
-                Host = host
-            });
+            var browserFetcher = TestConstants.GetNewBrowserType().CreateBrowserFetcher();
             int percentage = 0;
             browserFetcher.DownloadProgressChanged += (sender, e) =>
             {
@@ -28,7 +24,7 @@ namespace PlaywrightSharp.Tests.BaseTests
                     Console.WriteLine($"[{TestConstants.Product}] downloading browser {percentage}%");
                 }
             };
-            Console.WriteLine($"Downloading browser from {host}...");
+            Console.WriteLine($"Downloading browser...");
             var downloaderTask = browserFetcher.DownloadAsync();
 
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
