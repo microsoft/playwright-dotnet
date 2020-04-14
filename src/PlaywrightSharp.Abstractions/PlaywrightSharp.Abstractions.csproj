@@ -18,6 +18,7 @@
     </PropertyGroup>
     <Import Project="../Common/Dependencies.props" />
     <ItemGroup>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
         <PackageReference Include="System.Json" Version="4.7.0" />
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
     </ItemGroup>

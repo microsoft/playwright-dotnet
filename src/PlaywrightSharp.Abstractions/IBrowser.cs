@@ -9,12 +9,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// A Browser is created when Playwright connects to a browser instance.
     /// </summary>
-    public interface IBrowser : IDisposable
-#if NETSTANDARD2_1
-#pragma warning disable SA1001 // Space after comma
-, IAsyncDisposable
-#pragma warning restore SA1001 // Space after comma
-#endif
+    public interface IBrowser : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// Raised when the url of a target changes

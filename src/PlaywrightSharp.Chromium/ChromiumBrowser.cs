@@ -102,10 +102,8 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose() => _ = CloseAsync();
 
-#if NETSTANDARD2_1
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync"/>
         public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
-#endif
 
         /// <inheritdoc cref="IBrowser.NewContextAsync"/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
