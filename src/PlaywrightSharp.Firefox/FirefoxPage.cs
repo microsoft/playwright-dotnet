@@ -181,7 +181,15 @@ namespace PlaywrightSharp.Firefox
                 Script = source,
             });
 
-        public Task<string> GetOwnerFrameAsync(ElementHandle elementHandle) => throw new NotImplementedException();
+        public async Task<string> GetOwnerFrameAsync(ElementHandle elementHandle)
+        {
+            var result = await _session.SendAsync(new PageDescribeNodeRequest
+            {
+                FrameId = elementHandle.Context.Frame.Id,
+                ObjectId = elementHandle.RemoteObject.ObjectId,
+            }).ConfigureAwait(false);
+            return result.OwnerFrameId;
+        }
 
         public async Task<IFrame> GetContentFrameAsync(ElementHandle elementHandle)
         {
