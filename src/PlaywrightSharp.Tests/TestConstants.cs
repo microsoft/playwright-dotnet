@@ -13,7 +13,6 @@ namespace PlaywrightSharp.Tests
 {
     internal static class TestConstants
     {
-        public const string BrowserCDN = "https://playwright2.blob.core.windows.net";
         public const string ChromiumProduct = "CHROMIUM";
         public const string WebkitProduct = "WEBKIT";
         public const string FirefoxProduct = "FIREFOX";
