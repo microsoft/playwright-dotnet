@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Tests.Keyboard
     public class KeyboardTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public  KeyboardTests(ITestOutputHelper output) : base(output)
+        public KeyboardTests(ITestOutputHelper output) : base(output)
         {
         }
         ///<playwright-file>keyboard.spec.js</playwright-file>
