@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -9,9 +10,12 @@ namespace PlaywrightSharp.Tests.Keyboard
 {
     ///<playwright-file>keyboard.spec.js</playwright-file>
     ///<playwright-describe>Keyboard</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class KeyboardTests : PlaywrightSharpPageBaseTest
     {
-        internal KeyboardTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public  KeyboardTests(ITestOutputHelper output) : base(output)
         {
         }
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -27,7 +31,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             }");
             string text = "Hello world. I am the text that was typed!";
             await Page.Keyboard.TypeAsync(text);
-            Assert.Equal(text, await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value)"));
+            Assert.Equal(text, await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -78,12 +82,12 @@ namespace PlaywrightSharp.Tests.Keyboard
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.PressAsync("a");
-            Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value)"));
+            Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
 
             await Page.EvaluateAsync<string>("() => window.addEventListener('keydown', e => e.preventDefault(), true)");
 
             await textarea.PressAsync("b");
-            Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value)"));
+            Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -107,10 +111,10 @@ namespace PlaywrightSharp.Tests.Keyboard
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             await Page.Keyboard.SendCharactersAsync("嗨");
-            Assert.Equal("嗨", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value)"));
+            Assert.Equal("嗨", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
             await Page.EvaluateAsync<string>("() => window.addEventListener('keydown', e => e.preventDefault(), true)");
             await Page.Keyboard.SendCharactersAsync("a");
-            Assert.Equal("嗨a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value)"));
+            Assert.Equal("嗨a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -141,7 +145,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 await keyboard.UpAsync("!");
                 Assert.Equal($"Keyup: ! Digit1 49 [{modifierKey}]", await Page.EvaluateAsync<string>("() => getResult()"));
                 await keyboard.UpAsync(modifierKey);
-                Assert.Equal("Keyup: {modifierKey} {modifierKey}Left {modifierValue} []", await Page.EvaluateAsync<string>("() => getResult()"));
+                Assert.Equal($"Keyup: {modifierKey} {modifierKey}Left {modifierValue} []", await Page.EvaluateAsync<string>("() => getResult()"));
             }
         }
 
@@ -234,7 +238,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FocusAsync("textarea");
-            await Page.EvaluateAsync<string>("() => document.querySelector('textarea').addEventListener('keydown', e => window.lastEvent = e, true)");
+            await Page.EvaluateAsync("() => document.querySelector('textarea').addEventListener('keydown', e => window.lastEvent = e, true)");
             await Page.Keyboard.DownAsync("a");
             Assert.False(await Page.EvaluateAsync<bool>("() => window.lastEvent.repeat"));
             await Page.Keyboard.PressAsync("a");
@@ -382,8 +386,11 @@ namespace PlaywrightSharp.Tests.Keyboard
                 });
             }");
             await Page.Keyboard.PressAsync("Meta");
-            string[] result = await Page.EvaluateAsync<string[]>("result");
-            string key = result[0], code = result[1], metaKey = result[2];
+            object[] result = await Page.EvaluateAsync<object[]>("result");
+            string key = result[0].ToString();
+            string code = result[1].ToString();
+            bool metaKey = ((JsonElement)result[2]).GetBoolean();
+
             if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
             {
                 Assert.Equal("OS", key);
@@ -404,11 +411,11 @@ namespace PlaywrightSharp.Tests.Keyboard
 
             if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
             {
-                Assert.False(bool.Parse(metaKey));
+                Assert.False(metaKey);
             }
             else
             {
-                Assert.True(bool.Parse(metaKey));
+                Assert.True(metaKey);
             }
         }
 

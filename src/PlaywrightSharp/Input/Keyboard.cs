@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Input
         {
             var description = GetKeyDescriptionForString(key);
             bool autoRepeat = _pressedKeys.Contains(description.Code);
-            _pressedKeys.Add(key);
+            _pressedKeys.Add(description.Code);
             if (Enum.TryParse<Modifier>(key, out var modifier))
             {
                 _pressedModifiers.Add(modifier);
@@ -77,11 +77,9 @@ namespace PlaywrightSharp.Input
         /// <inheritdoc cref="IKeyboard.SendCharactersAsync(string)"/>
         public Task SendCharactersAsync(string text) => _raw.SendTextAsync(text);
 
-        /// <inheritdoc cref="IKeyboard.TypeAsync(string, TypeOptions)"/>
-        public async Task TypeAsync(string text, TypeOptions options = null)
+        /// <inheritdoc cref="IKeyboard.TypeAsync(string, int)"/>
+        public async Task TypeAsync(string text, int delay = 0)
         {
-            int delay = options?.Delay ?? 0;
-
             var textParts = StringInfo.GetTextElementEnumerator(text);
             while (textParts.MoveNext())
             {
@@ -111,7 +109,7 @@ namespace PlaywrightSharp.Input
                 _pressedModifiers.Remove(modifier);
             }
 
-            _pressedKeys.Remove(key);
+            _pressedKeys.Remove(description.Code);
             return _raw.KeyUpAsync(_pressedModifiers.ToArray(), description.Code, description.KeyCode, description.KeyCodeWithoutLocation, description.Key, Convert.ToInt32(description.Location));
         }
 
@@ -119,6 +117,11 @@ namespace PlaywrightSharp.Input
 
         private KeyDescription GetKeyDescriptionForString(string keyString)
         {
+            if (!KeyDefinitions.ContainsKey(keyString))
+            {
+                throw new PlaywrightSharpException($"Unknown key: \"{keyString}\"");
+            }
+
             bool shift = _pressedModifiers.Contains(Modifier.Shift);
             var description = new KeyDescription
             {
