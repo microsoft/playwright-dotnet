@@ -7,6 +7,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.goBack</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GoBackTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -25,11 +27,11 @@ namespace PlaywrightSharp.Tests.Page
 
             var response = await Page.GoBackAsync();
             Assert.True(response.Ok);
-            Assert.Equal(TestConstants.EmptyPage, response.Url);
+            Assert.Contains(TestConstants.EmptyPage, response.Url);
 
             response = await Page.GoForwardAsync();
             Assert.True(response.Ok);
-            Assert.Contains("grid", response.Url);
+            Assert.Contains("/grid.html", response.Url);
 
             response = await Page.GoForwardAsync();
             Assert.Null(response);

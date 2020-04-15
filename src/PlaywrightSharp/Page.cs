@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
 using PlaywrightSharp.Helpers;
@@ -19,6 +20,7 @@ namespace PlaywrightSharp
 
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
+        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
 
         private bool _disconnected;
 
@@ -118,10 +120,18 @@ namespace PlaywrightSharp
         public IKeyboard Keyboard { get; }
 
         /// <inheritdoc cref="IPage.DefaultTimeout"/>
-        public int DefaultTimeout { get; set; }
+        public int DefaultTimeout
+        {
+            get => _timeoutSettings.Timeout;
+            set => _timeoutSettings.SetDefaultTimeout(value);
+        }
 
         /// <inheritdoc cref="IPage.DefaultNavigationTimeout"/>
-        public int DefaultNavigationTimeout { get; set; }
+        public int DefaultNavigationTimeout
+        {
+            get => _timeoutSettings.NavigationTimeout;
+            set => _timeoutSettings.SetDefaultNavigationTimeout(value);
+        }
 
         /// <inheritdoc cref="IPage.IsClosed"/>
         public bool IsClosed { get; private set; }
@@ -232,15 +242,34 @@ namespace PlaywrightSharp
             => MainFrame.FocusAsync(selector, options);
 
         /// <inheritdoc cref="IPage.GoBackAsync(NavigationOptions)"/>
-        public Task<IResponse> GoBackAsync(NavigationOptions options = null)
+        public async Task<IResponse> GoBackAsync(NavigationOptions options = null)
         {
-            throw new NotImplementedException();
+            using var cts = new CancellationTokenSource();
+
+            var waitTask = WaitForNavigationAsync(new WaitForNavigationOptions(options), cts.Token);
+            bool result = await Delegate.GoBackAsync().ConfigureAwait(false);
+
+            if (!result)
+            {
+                cts.Cancel();
+                return null;
+            }
+
+            return await waitTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IPage.GoForwardAsync(NavigationOptions)"/>
-        public Task<IResponse> GoForwardAsync(NavigationOptions options = null)
+        public async Task<IResponse> GoForwardAsync(NavigationOptions options = null)
         {
-            throw new NotImplementedException();
+            var waitTask = WaitForNavigationAsync(new WaitForNavigationOptions(options));
+            bool result = await Delegate.GoForwardAsync().ConfigureAwait(false);
+            if (!result)
+            {
+                _ = waitTask.ContinueWith(_ => { }, TaskScheduler.Default);
+                return null;
+            }
+
+            return await waitTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IPage.GoToAsync(string, GoToOptions)"/>
@@ -398,8 +427,9 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions)"/>
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(options);
+        /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
+        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default)
+            => MainFrame.WaitForNavigationAsync(options, token);
 
         /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitUntilNavigation)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)

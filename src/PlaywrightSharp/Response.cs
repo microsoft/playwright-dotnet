@@ -19,6 +19,7 @@ namespace PlaywrightSharp
             StatusText = statusText;
             Url = request.Url;
             Headers = headers;
+            Ok = status == 0 || (status >= HttpStatusCode.OK && status < (HttpStatusCode)300);
             _getResponseBodyCallback = getResponseBodyCallback;
             _finishedTsc = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             request.SetResponse(this);
@@ -28,7 +29,7 @@ namespace PlaywrightSharp
 
         public string StatusText { get; }
 
-        public IFrame Frame { get; }
+        public IFrame Frame => Request.Frame;
 
         public string Url { get; }
 

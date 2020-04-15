@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Accessibility;
 
@@ -223,7 +224,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// This setting will change the default maximum time for the following methods:
         /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(WaitForNavigationOptions)"/>
+        /// - <see cref="WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
         /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
         /// </summary>
         int DefaultNavigationTimeout { get; set; }
@@ -318,6 +319,7 @@ namespace PlaywrightSharp
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
         /// <param name="options">navigation options.</param>
+        /// <param name="token">Cancellation token.</param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
@@ -334,7 +336,7 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null);
+        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default);
 
         /// <summary>
         /// This resolves when the page navigates to a new URL or reloads.
@@ -811,7 +813,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Sets the viewport.
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.
-        /// <see cref="SetViewportAsync(Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
+        /// <see cref="SetViewportAsync(PlaywrightSharp.Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
         /// </summary>
         /// <example>
         /// <![CDATA[

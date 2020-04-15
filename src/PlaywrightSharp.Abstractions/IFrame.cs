@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -270,6 +271,7 @@ namespace PlaywrightSharp
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
         /// <param name="options">navigation options.</param>
+        /// <param name="token">Cancellation token.</param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
@@ -277,7 +279,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
         /// </remarks>
-        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null);
+        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default);
 
         /// <summary>
         /// This resolves when the frame navigates to a new URL or reloads.

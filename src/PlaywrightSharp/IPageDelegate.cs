@@ -190,5 +190,17 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the redirect action completes.</returns>
         Task ReloadAsync();
+
+        /// <summary>
+        /// Navigate to the previous page in history.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that resolves to the main resource response. If can not go back, resolves to <c>false</c>.</returns>
+        Task<bool> GoBackAsync();
+
+        /// <summary>
+        /// Navigate to the next page in history.
+        /// </summary>
+        /// <returns>Task that resolves to the main resource response. If can not go forward, resolves to <c>false</c>.</returns>
+        Task<bool> GoForwardAsync();
     }
 }

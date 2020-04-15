@@ -149,7 +149,11 @@ namespace PlaywrightSharp
         {
             Response = response;
             _waitForResponseTsc.TrySetResult(response);
-            WaitForFinished.ContinueWith(_ => _waitForFinishedTsc.TrySetResult(response), TaskScheduler.Default);
+            response.Finished.ContinueWith(
+                _ =>
+            {
+                return _waitForFinishedTsc.TrySetResult(response);
+            }, TaskScheduler.Default);
         }
 
         private string StripFragmentFromUrl(string url)

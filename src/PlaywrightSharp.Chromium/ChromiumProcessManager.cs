@@ -404,7 +404,8 @@ namespace PlaywrightSharp.Chromium
                             await Killing.EnterFromAsync(p, this).ConfigureAwait(false);
                             await waitForExitTask.ConfigureAwait(false);
                         },
-                        timeout).ConfigureAwait(false);
+                        timeout,
+                        CancellationToken.None).ConfigureAwait(false);
                 }
 
                 public override Task KillAsync(ChromiumProcessManager p) => Killing.EnterFromAsync(p, this);

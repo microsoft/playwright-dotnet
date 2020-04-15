@@ -225,12 +225,12 @@ namespace PlaywrightSharp
 
                 await task.ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (PlaywrightSharpException ex)
             {
-                throw new NavigationException(ex.Message, ex);
+                throw new NavigationException(ex.Message, url);
             }
 
-            return watcher.NavigationResponse;
+            return await watcher.NavigationResponseTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.GoToAsync(string, WaitUntilNavigation)"/>
@@ -334,8 +334,8 @@ namespace PlaywrightSharp
             }").ConfigureAwait(false);
         }
 
-        /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>
-        public async Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null)
+        /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
+        public async Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default)
         {
             using var watcher = new LifecycleWatcher(this, options);
             var errorTask = watcher.TimeoutOrTerminationTask;
@@ -350,7 +350,7 @@ namespace PlaywrightSharp
                 await errorTask.ConfigureAwait(false);
             }
 
-            return watcher.NavigationResponse;
+            return await watcher.NavigationResponseTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitUntilNavigation)"/>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 
@@ -21,8 +22,9 @@ namespace PlaywrightSharp
         private bool _hasSameDocumentNavigation;
         private string _expectedDocumentId;
         private string _targetUrl;
+        private CancellationToken _token;
 
-        public LifecycleWatcher(Frame frame, NavigationOptions options)
+        public LifecycleWatcher(Frame frame, NavigationOptions options, CancellationToken token = default)
         {
             _options = options != null ? options as WaitForNavigationOptions ?? new WaitForNavigationOptions(options) : new WaitForNavigationOptions();
             _frame = frame;
@@ -36,6 +38,8 @@ namespace PlaywrightSharp
 
             _frame.Page.FrameManager.LifecycleWatchers.Add(this);
 
+            _token = token;
+
             CheckLifecycleComplete();
         }
 
@@ -45,9 +49,9 @@ namespace PlaywrightSharp
 
         public Task<bool> NewDocumentNavigationTask => _newDocumentNavigationTaskWrapper.Task;
 
-        public IResponse NavigationResponse => _navigationRequest?.Response;
+        public Task<Response> NavigationResponseTask => _navigationRequest?.FinalRequest?.WaitForFinished ?? Task.FromResult<Response>(null);
 
-        public Task TimeoutOrTerminationTask => _terminationTaskWrapper.Task.WithTimeout(_timeout);
+        public Task TimeoutOrTerminationTask => _terminationTaskWrapper.Task.WithTimeout(_timeout, cancellationToken: _token);
 
         public Task LifecycleTask => _lifecycleTaskWrapper.Task;
 

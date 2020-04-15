@@ -14,7 +14,8 @@ namespace PlaywrightSharp.TestServer
 {
     public class SimpleServer
     {
-        private readonly IDictionary<string, Action<HttpRequest>> _requestSubscribers;
+        private readonly IDictionary<string, Action<HttpContext>> _subscribers;
+        private readonly IDictionary<string, Action<HttpContext>> _requestWaits;
         private readonly IDictionary<string, RequestDelegate> _routes;
         private readonly IDictionary<string, (string username, string password)> _auths;
         private readonly IDictionary<string, string> _csp;
@@ -26,7 +27,8 @@ namespace PlaywrightSharp.TestServer
 
         public SimpleServer(int port, string contentRoot, bool isHttps)
         {
-            _requestSubscribers = new ConcurrentDictionary<string, Action<HttpRequest>>();
+            _subscribers = new ConcurrentDictionary<string, Action<HttpContext>>();
+            _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
             _routes = new ConcurrentDictionary<string, RequestDelegate>();
             _auths = new ConcurrentDictionary<string, (string username, string password)>();
             _csp = new ConcurrentDictionary<string, string>();
@@ -45,9 +47,13 @@ namespace PlaywrightSharp.TestServer
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                             return context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied");
                         }
-                        if (_requestSubscribers.TryGetValue(context.Request.Path, out var subscriber))
+                        if (_subscribers.TryGetValue(context.Request.Path, out var subscriber))
                         {
-                            subscriber(context.Request);
+                            subscriber(context);
+                        }
+                        if (_requestWaits.TryGetValue(context.Request.Path, out var requestWait))
+                        {
+                            requestWait(context);
                         }
                         if (_routes.TryGetValue(context.Request.Path + context.Request.QueryString, out var handler))
                         {
@@ -65,13 +71,20 @@ namespace PlaywrightSharp.TestServer
                             {
                                 fileResponseContext.Context.Response.Headers["Content-Security-Policy"] = csp;
                             }
+
+                            if (fileResponseContext.Context.Request.Path.ToString().EndsWith(".html"))
+                            {
+                                fileResponseContext.Context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                                fileResponseContext.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
+                            }
+
                         }
                     }))
                 .UseKestrel(options =>
                 {
                     if (isHttps)
                     {
-                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps("testCert.cer"));
+                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps());
                     }
                     else
                     {
@@ -100,12 +113,14 @@ namespace PlaywrightSharp.TestServer
             _routes.Clear();
             _auths.Clear();
             _csp.Clear();
+            _subscribers.Clear();
+            _requestWaits.Clear();
             GzipRoutes.Clear();
-            foreach (var subscriber in _requestSubscribers.Values)
+            foreach (var subscriber in _subscribers.Values)
             {
                 subscriber(null);
             }
-            _requestSubscribers.Clear();
+            _subscribers.Clear();
         }
 
         public void EnableGzip(string path) => GzipRoutes.Add(path);
@@ -118,24 +133,24 @@ namespace PlaywrightSharp.TestServer
             return Task.CompletedTask;
         });
 
-        public void Subscribe(string path, Func<HttpRequest, Task> action)
-            => _requestSubscribers.Add(path, (httpRequest) => action(httpRequest));
+        public void Subscribe(string path, Action<HttpContext> action)
+            => _subscribers.Add(path, action);
 
         public async Task<T> WaitForRequest<T>(string path, Func<HttpRequest, T> selector)
         {
             var taskCompletion = new TaskCompletionSource<T>();
-            _requestSubscribers.Add(path, (httpRequest) =>
+            _requestWaits.Add(path, context =>
             {
-                taskCompletion.SetResult(selector(httpRequest));
+                taskCompletion.SetResult(selector(context.Request));
             });
 
             var request = await taskCompletion.Task;
-            _requestSubscribers.Remove(path);
+            _requestWaits.Remove(path);
 
             return request;
         }
 
-        public Task WaitForRequest(string path) => WaitForRequest<bool>(path, request => true);
+        public Task WaitForRequest(string path) => WaitForRequest(path, request => true);
 
         private static bool Authenticate(string username, string password, HttpContext context)
         {

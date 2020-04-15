@@ -315,6 +315,10 @@ namespace PlaywrightSharp.Chromium
 
         public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
 
+        public Task<bool> GoBackAsync() => GoAsync(-1);
+
+        public Task<bool> GoForwardAsync() => GoAsync(1);
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -384,6 +388,19 @@ namespace PlaywrightSharp.Chromium
         }
 
         internal void DidClose() => Page.DidClose();
+
+        private async Task<bool> GoAsync(int delta)
+        {
+            var history = await Client.SendAsync(new PageGetNavigationHistoryRequest()).ConfigureAwait(false);
+            var entry = history.Entries.ElementAtOrDefault((int)history.CurrentIndex + delta);
+            if (entry == null)
+            {
+                return false;
+            }
+
+            await Client.SendAsync(new PageNavigateToHistoryEntryRequest { EntryId = entry.Id }).ConfigureAwait(false);
+            return true;
+        }
 
         private async Task<ElementHandle> AdoptBackendNodeIdAsync(int backendNodeId, FrameExecutionContext to)
         {
