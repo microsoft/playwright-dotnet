@@ -24,7 +24,7 @@ namespace PlaywrightSharp
         /// Focuses the element, and sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
         /// </summary>
         /// <param name="text">A text to type into a focused element.</param>
-        /// <param name="options">Type options.</param>
+        /// <param name="delay">Delay between key press.</param>
         /// <remarks>
         /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IElementHandle.PressAsync(string, PressOptions)"/>.
         /// </remarks>
@@ -41,7 +41,7 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task TypeAsync(string text, TypeOptions options = null);
+        Task TypeAsync(string text, int delay = 0);
 
         /// <summary>
         /// Takes a screenshot of the element.

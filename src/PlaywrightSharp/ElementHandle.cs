@@ -155,9 +155,10 @@ namespace PlaywrightSharp
         public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.MoveAsync(point.X, point.Y), options);
 
         /// <inheritdoc cref="IElementHandle.PressAsync"/>
-        public Task PressAsync(string key, PressOptions options = null)
+        public async Task PressAsync(string key, PressOptions options = null)
         {
-            throw new NotImplementedException();
+            await FocusAsync().ConfigureAwait(false);
+            await _page.Keyboard.PressAsync(key, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAllAsync"/>
@@ -261,10 +262,11 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IElementHandle.SetInputFilesAsync"/>
-        public Task TypeAsync(string text, TypeOptions options = null)
+        /// <inheritdoc cref="IElementHandle.TypeAsync"/>
+        public async Task TypeAsync(string text, int delay = 0)
         {
-            throw new NotImplementedException();
+            await FocusAsync().ConfigureAwait(false);
+            await _page.Keyboard.TypeAsync(text, delay).ConfigureAwait(false);
         }
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
