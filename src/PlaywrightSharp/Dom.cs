@@ -7,6 +7,18 @@ namespace PlaywrightSharp
 {
     internal static class Dom
     {
+        internal const string SetFileInputFunction = @"async (element, payloads) => {
+            const files = await Promise.all(payloads.map(async (file) => {
+                const result = await fetch(`data:${file.type};base64,${file.data}`);
+                return new File([await result.blob()], file.name);
+            }));
+            const dt = new DataTransfer();
+            for (const file of files)
+                dt.items.add(file);
+            element.files = dt.files;
+            element.dispatchEvent(new Event('input', { 'bubbles': true }));
+        }";
+
         private static readonly Regex _selectorMatch = new Regex("/^[a-zA-Z_0-9-]+$/", RegexOptions.Compiled);
 
         internal static Func<IFrameExecutionContext, Task<IJSHandle>> GetWaitForSelectorFunction(string selector, WaitForOption waitFor, int? timeout)

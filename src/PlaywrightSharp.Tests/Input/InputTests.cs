@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Input
 {
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>input</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class InputTests : PlaywrightSharpPageBaseTest
     {
-        internal InputTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public InputTests(ITestOutputHelper output) : base(output)
         {
         }
 
