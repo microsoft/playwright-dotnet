@@ -65,5 +65,7 @@ namespace PlaywrightSharp
         /// Gets or sets the cookies SameSite value.
         /// </summary>
         public SameSite? SameSite { get; set; }
+
+        internal SetNetworkCookieParam Clone() => (SetNetworkCookieParam)MemberwiseClone();
     }
 }

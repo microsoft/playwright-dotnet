@@ -17,7 +17,7 @@ namespace PlaywrightSharp
         /// Creates a new page in the context.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the new page is created, yielding the <see cref="IPage"/>.</returns>
-        Task<IPage> NewPage();
+        Task<IPage> NewPageAsync();
 
         /// <summary>
         /// An array of all pages inside the browser context.
@@ -53,5 +53,24 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A list of pages.</returns>
         IEnumerable<IPage> GetExistingPages();
+
+        /// <summary>
+        /// Returns the context's cookies.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are sent by the browser, yielding a <see cref="t:NetworkCookie[]"/>.</returns>
+        Task<IEnumerable<NetworkCookie>> GetCookiesAsync();
+
+        /// <summary>
+        /// Clears all of the current cookies and then sets the cookies for the context.
+        /// </summary>
+        /// <param name="cookies">Cookies to set.</param>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are set.</returns>
+        Task SetCookiesAsync(params SetNetworkCookieParam[] cookies);
+
+        /// <summary>
+        /// Clears the context's cookies.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are cleared.</returns>
+        Task ClearCookiesAsync();
     }
 }
