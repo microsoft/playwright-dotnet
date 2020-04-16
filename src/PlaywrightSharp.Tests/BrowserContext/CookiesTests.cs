@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             var cookies = await Context.GetCookiesAsync();
             Assert.Single(cookies);
-            Assert.True(cookies[0].HttpOnly);
+            Assert.True(cookies.ElementAt(0).HttpOnly);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             var cookies = await Context.GetCookiesAsync();
             Assert.Single(cookies);
-            Assert.Equal(SameSite.Strict, cookies[0].SameSite);
+            Assert.Equal(SameSite.Strict, cookies.ElementAt(0).SameSite);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             var cookies = await Context.GetCookiesAsync();
             Assert.Single(cookies);
-            Assert.Equal(SameSite.Lax, cookies[0].SameSite);
+            Assert.Equal(SameSite.Lax, cookies.ElementAt(0).SameSite);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>

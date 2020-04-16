@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -59,10 +60,10 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             Assert.Single(cookies1);
             Assert.Single(cookies2);
-            Assert.Equal("page1cookie", cookies1[0].Name);
-            Assert.Equal("page1value", cookies1[0].Value);
-            Assert.Equal("page2cookie", cookies2[0].Name);
-            Assert.Equal("page2value", cookies2[0].Value);
+            Assert.Equal("page1cookie", cookies1.ElementAt(0).Name);
+            Assert.Equal("page1value", cookies1.ElementAt(0).Value);
+            Assert.Equal("page2cookie", cookies2.ElementAt(0).Name);
+            Assert.Equal("page2value", cookies2.ElementAt(0).Value);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>
@@ -116,8 +117,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var cookies = await Context.GetCookiesAsync();
 
-            Assert.True(cookies[0].Session);
-            Assert.Equal(-1, cookies[0].Expires);
+            Assert.True(cookies.ElementAt(0).Session);
+            Assert.Equal(-1, cookies.ElementAt(0).Expires);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>
