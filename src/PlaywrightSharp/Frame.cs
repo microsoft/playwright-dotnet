@@ -279,7 +279,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IFrame.QuerySelectorAllEvaluateAsync(string, string, object[])"/>
-        public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args) => QuerySelectorAllEvaluateAsync<object>(object, script, args);
+        public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args) => QuerySelectorAllEvaluateAsync<object>(selector, script, args);
 
         /// <inheritdoc cref="IFrame.QuerySelectorAllEvaluateAsync{T}(string, string, object[])"/>
         public async Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args)

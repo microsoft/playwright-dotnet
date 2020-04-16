@@ -7,7 +7,7 @@ namespace PlaywrightSharp
 {
     internal static class Dom
     {
-        private static readonly Regex _selectorMatch = new Regex("/^[a-zA-Z_0-9-]+$/", RegexOptions.Compiled);
+        private static readonly Regex _selectorMatch = new Regex("^[a-zA-Z_0-9-]+$", RegexOptions.Compiled);
 
         internal static Func<IFrameExecutionContext, Task<IJSHandle>> GetWaitForSelectorFunction(string selector, WaitForOption waitFor, int? timeout)
             => async context =>

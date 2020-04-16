@@ -162,20 +162,19 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAllAsync"/>
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+            => Context.QuerySelectorAllAsync(selector, this);
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAllEvaluateAsync"/>
-        public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task QuerySelectorAllEvaluateAsync(string selector, string pageFunction, params object[] args)
+            => QuerySelectorAllEvaluateAsync<object>(selector, pageFunction, args);
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAllEvaluateAsync{T}"/>
-        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args)
+        public async Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string pageFunction, params object[] args)
         {
-            throw new NotImplementedException();
+            var arrayHandle = await Context.QuerySelectorArrayAsync(selector, this).ConfigureAwait(false);
+            var result = await arrayHandle.EvaluateAsync<T>(pageFunction, args).ConfigureAwait(false);
+            await arrayHandle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
 
         /// <inheritdoc cref="IElementHandle.FocusAsync"/>
@@ -195,20 +194,24 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAsync"/>
         public Task<IElementHandle> QuerySelectorAsync(string selector)
-        {
-            throw new NotImplementedException();
-        }
+            => Context.QuerySelectorAsync(selector, this);
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorEvaluateAsync"/>
-        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        public Task QuerySelectorEvaluateAsync(string selector, string pageFunction, params object[] args)
+            => QuerySelectorEvaluateAsync<object>(selector, pageFunction, args);
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorEvaluateAsync{T}"/>
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args)
+        public async Task<T> QuerySelectorEvaluateAsync<T>(string selector, string pageFunction, params object[] args)
         {
-            throw new NotImplementedException();
+            var handle = await Context.QuerySelectorAsync(selector, this).ConfigureAwait(false);
+            if (handle == null)
+            {
+                throw new SelectorException($"Error: failed to find element matching selector \"{selector}\"", selector);
+            }
+
+            var result = await handle.EvaluateAsync<T>(pageFunction, args).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
 
         /// <inheritdoc cref="IElementHandle.ScreenshotAsync"/>
