@@ -58,7 +58,7 @@ namespace PlaywrightSharp
         /// Returns the context's cookies.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the cookies are sent by the browser, yielding a <see cref="t:NetworkCookie[]"/>.</returns>
-        Task<NetworkCookie[]> GetCookiesAsync();
+        Task<IEnumerable<NetworkCookie>> GetCookiesAsync();
 
         /// <summary>
         /// Clears all of the current cookies and then sets the cookies for the context.

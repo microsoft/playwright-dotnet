@@ -43,7 +43,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IBrowserContext.GetCookiesAsync(string[])"/>
-        public async Task<NetworkCookie[]> GetCookiesAsync(params string[] urls)
+        public async Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls)
             => FilterCookies(await _delegate.GetCookiesAsync().ConfigureAwait(false), urls);
 
         /// <inheritdoc cref="IBrowserContext.GetPagesAsync"/>
@@ -145,10 +145,10 @@ namespace PlaywrightSharp
             });
         }
 
-        private static NetworkCookie[] FilterCookies(NetworkCookie[] cookies, string[] urls)
+        private static IEnumerable<NetworkCookie> FilterCookies(IEnumerable<NetworkCookie> cookies, string[] urls)
         {
             var parsedUrls = Array.ConvertAll(urls, url => new Uri(url));
-            return Array.FindAll(cookies, c =>
+            return cookies.Where(c =>
             {
                 if (urls.Length == 0)
                 {

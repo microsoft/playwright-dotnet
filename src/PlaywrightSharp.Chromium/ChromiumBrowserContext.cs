@@ -130,7 +130,7 @@ namespace PlaywrightSharp
         public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies) => throw new NotImplementedException();
 
         /// <inheritdoc cref="IBrowserContextDelegate.GetCookiesAsync"/>
-        public Task<NetworkCookie[]> GetCookiesAsync()
+        public Task<IEnumerable<NetworkCookie>> GetCookiesAsync()
         {
             throw new NotImplementedException();
         }

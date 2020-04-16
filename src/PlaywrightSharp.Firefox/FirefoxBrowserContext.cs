@@ -84,10 +84,10 @@ namespace PlaywrightSharp.Firefox
             });
 
         /// <inheritdoc cref="IBrowserContextDelegate.GetCookiesAsync"/>
-        public async Task<NetworkCookie[]> GetCookiesAsync()
+        public async Task<IEnumerable<NetworkCookie>> GetCookiesAsync()
         {
             var result = await _connection.SendAsync(new BrowserGetCookiesRequest { BrowserContextId = _browserContextId }).ConfigureAwait(false);
-            return Array.ConvertAll(result.Cookies, c => (NetworkCookie)c);
+            return result.Cookies.Cast<NetworkCookie>();
         }
 
         /// <inheritdoc cref="IBrowserContextDelegate.ClearCookiesAsync"/>

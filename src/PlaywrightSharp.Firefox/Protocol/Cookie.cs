@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Firefox.Protocol.Browser
             Path = cookie.Path,
             Secure = (bool)cookie.Secure,
             HttpOnly = (bool)cookie.HttpOnly,
-            SameSite = CookieOptions.ConvertSameSite(cookie.SameSite) ?? PlaywrightSharp.SameSite.None,
+            SameSite = CookieOptions.ConvertFromCookieOptionsSameSite(cookie.SameSite) ?? PlaywrightSharp.SameSite.None,
             Expires = (double)cookie.Expires,
             Session = (bool)cookie.Session,
         };
