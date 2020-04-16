@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>cookies.spec.js</playwright-file>
     /// <playwright-describe>BrowserContext.clearCookies</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ClearCookiesTests : PlaywrightSharpPageBaseTest
     {
-        internal ClearCookiesTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ClearCookiesTests(ITestOutputHelper output) : base(output)
         {
         }
 

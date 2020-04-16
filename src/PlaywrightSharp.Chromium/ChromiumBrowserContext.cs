@@ -56,8 +56,8 @@ namespace PlaywrightSharp
             return pages.Where(p => p != null).ToArray();
         }
 
-        /// <inheritdoc cref="IBrowserContextDelegate.NewPage"/>
-        public async Task<IPage> NewPage()
+        /// <inheritdoc cref="IBrowserContextDelegate.NewPageAsync"/>
+        public async Task<IPage> NewPageAsync()
         {
             var createTargetRequest = new TargetCreateTargetRequest
             {
@@ -119,13 +119,26 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetPermissionsAsync(string, ContextPermission[])"/>
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
-        {
-            return _client.SendAsync(new BrowserGrantPermissionsRequest
+            => _client.SendAsync(new BrowserGrantPermissionsRequest
             {
                 Origin = origin,
                 BrowserContextId = _contextId,
                 Permissions = Array.ConvertAll(permissions, permission => WebPermissionToProtocol[permission]),
             });
+
+        /// <inheritdoc cref="IBrowserContextDelegate.SetCookiesAsync(SetNetworkCookieParam[])"/>
+        public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies) => throw new NotImplementedException();
+
+        /// <inheritdoc cref="IBrowserContextDelegate.GetCookiesAsync"/>
+        public Task<NetworkCookie[]> GetCookiesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IBrowserContextDelegate.ClearCookiesAsync"/>
+        public Task ClearCookiesAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>cookies.spec.js</playwright-file>
     /// <playwright-describe>BrowserContext.cookies</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class CookiesTests : PlaywrightSharpPageBaseTest
     {
-        internal CookiesTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public CookiesTests(ITestOutputHelper output) : base(output)
         {
         }
 

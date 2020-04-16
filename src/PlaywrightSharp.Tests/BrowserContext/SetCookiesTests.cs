@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -7,9 +8,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>cookies.spec.js</playwright-file>
     /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class SetCookiesTests : PlaywrightSharpPageBaseTest
     {
-        internal SetCookiesTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public SetCookiesTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -181,7 +185,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             await Page.GoToAsync(TestConstants.AboutBlank);
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async ()
                 => await Context.SetCookiesAsync(
                     new SetNetworkCookieParam
                     {
@@ -192,7 +196,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                     new SetNetworkCookieParam
                     {
                         Url = "about:blank",
-                        Name = "example-cookie",
+                        Name = "example-cookie-blank",
                         Value = "best"
                     }));
             Assert.Equal("Blank page can not have cookie \"example-cookie-blank\"", exception.Message);
@@ -205,7 +209,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GoToAsync("data:,Hello%2C%20World!");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async ()
+            var exception = await Assert.ThrowsAnyAsync<ArgumentException>(async ()
                 => await Context.SetCookiesAsync(
                     new SetNetworkCookieParam
                     {
@@ -264,7 +268,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             await Context.SetCookiesAsync(new SetNetworkCookieParam { Name = "example-cookie", Value = "best", Url = "https://www.example.com" });
             Assert.Equal(string.Empty, await Page.EvaluateAsync<string>("document.cookie"));
-            Assert.Empty(await Context.GetCookiesAsync());
             var cookie = Assert.Single(await Context.GetCookiesAsync("https://www.example.com"));
             Assert.Equal("example-cookie", cookie.Name);
             Assert.Equal("best", cookie.Value);
@@ -274,6 +277,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.False(cookie.HttpOnly);
             Assert.True(cookie.Secure);
             Assert.True(cookie.Session);
+            Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>
@@ -310,7 +314,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("localhost-cookie=best", await Page.EvaluateAsync<string>("document.cookie"));
             Assert.Equal("127-cookie=worst", await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie"));
 
-            var cookie = Assert.Single(await Context.GetCookiesAsync());
+            var cookie = Assert.Single(await Context.GetCookiesAsync(TestConstants.ServerUrl));
             Assert.Equal("localhost-cookie", cookie.Name);
             Assert.Equal("best", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
