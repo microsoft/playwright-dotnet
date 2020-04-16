@@ -93,7 +93,7 @@ namespace PlaywrightSharp
             {
                 string source = $@"
                     new ({await GetInjectedSource().ConfigureAwait(false)})([
-                      {string.Join(",\n", await selectors.GetSourcesAsync().ConfigureAwait(false))},
+                      {string.Join(",\n", selectors.Sources)},
                     ])
                   ";
                 _injectedTask = EvaluateHandleAsync(source);
@@ -137,18 +137,18 @@ namespace PlaywrightSharp
             return result.ToArray();
         }
 
+        internal async Task<JSHandle> QuerySelectorArrayAsync(string selector, ElementHandle scope = null)
+            => await EvaluateHandleAsync(
+                "(injected, selector, scope) => injected.querySelectorAll(selector, scope || document)",
+                await GetInjectedAsync().ConfigureAwait(false),
+                Dom.NormalizeSelector(selector),
+                scope).ConfigureAwait(false);
+
         private async Task<string> GetInjectedSource()
         {
             using var stream = typeof(FrameExecutionContext).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.injectedSource.ts");
             using var reader = new StreamReader(stream, Encoding.UTF8);
             return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
-
-        private async Task<JSHandle> QuerySelectorArrayAsync(string selector, ElementHandle scope)
-            => await EvaluateHandleAsync(
-                "(injected, selector, scope) => injected.querySelectorAll(selector, scope || document)",
-                await GetInjectedAsync().ConfigureAwait(false),
-                Dom.NormalizeSelector(selector),
-                scope).ConfigureAwait(false);
     }
 }

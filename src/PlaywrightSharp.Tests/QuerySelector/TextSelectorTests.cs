@@ -7,13 +7,16 @@ namespace PlaywrightSharp.Tests.QuerySelector
 {
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>text selector</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class TextSelectorTests : PlaywrightSharpPageBaseTest
     {
-        internal TextSelectorTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public TextSelectorTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        internal ISelectors Selectors { get; set; }
+        internal ISelectors Selectors { get; set; } = PlaywrightSharp.Selectors.Instance.Value;
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>

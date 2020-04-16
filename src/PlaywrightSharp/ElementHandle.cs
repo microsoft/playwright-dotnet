@@ -10,24 +10,24 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IElementHandle"/>
     public class ElementHandle : JSHandle, IElementHandle
     {
-        private readonly Page _page;
-
         internal ElementHandle(FrameExecutionContext context, IRemoteObject remoteObject) : base(context, remoteObject)
         {
-            _page = context.Frame.Page;
+            Page = context.Frame.Page;
             Context = context;
         }
 
         internal new FrameExecutionContext Context { get; set; }
 
+        internal Page Page { get; }
+
         /// <inheritdoc cref="IElementHandle.ClickAsync(ClickOptions)"/>
-        public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.ClickAsync(point.X, point.Y, options), options);
+        public Task ClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => Page.Mouse.ClickAsync(point.X, point.Y, options), options);
 
         /// <inheritdoc cref="IElementHandle.DoubleClickAsync(ClickOptions)"/>
-        public Task DoubleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.DoubleClickAsync(point.X, point.Y, options), options);
+        public Task DoubleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => Page.Mouse.DoubleClickAsync(point.X, point.Y, options), options);
 
         /// <inheritdoc cref="IElementHandle.TripleClickAsync(ClickOptions)"/>
-        public Task TripleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.TripleClickAsync(point.X, point.Y, options), options);
+        public Task TripleClickAsync(ClickOptions options = null) => PerformPointerActionAsync(point => Page.Mouse.TripleClickAsync(point.X, point.Y, options), options);
 
         /// <inheritdoc cref="IElementHandle.EvaluateHandleAsync"/>
         public async Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args)
@@ -93,11 +93,11 @@ namespace PlaywrightSharp
                 throw new PlaywrightSharpException(error);
             }
 
-            await _page.Keyboard.SendCharactersAsync(text).ConfigureAwait(false);
+            await Page.Keyboard.SendCharactersAsync(text).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.GetBoundingBoxAsync"/>
-        public Task<Rect> GetBoundingBoxAsync() => _page.Delegate.GetBoundingBoxAsync(this);
+        public Task<Rect> GetBoundingBoxAsync() => Page.Delegate.GetBoundingBoxAsync(this);
 
         /// <inheritdoc cref="IElementHandle.GetContentFrameAsync"/>
         public async Task<IFrame> GetContentFrameAsync()
@@ -108,19 +108,19 @@ namespace PlaywrightSharp
                 return null;
             }
 
-            return await _page.Delegate.GetContentFrameAsync(this).ConfigureAwait(false);
+            return await Page.Delegate.GetContentFrameAsync(this).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.GetOwnerFrameAsync"/>
         public async Task<IFrame> GetOwnerFrameAsync()
         {
-            string frameId = await _page.Delegate.GetOwnerFrameAsync(this).ConfigureAwait(false);
+            string frameId = await Page.Delegate.GetOwnerFrameAsync(this).ConfigureAwait(false);
             if (string.IsNullOrEmpty(frameId))
             {
                 return null;
             }
 
-            var pages = _page.BrowserContext.GetExistingPages();
+            var pages = Page.BrowserContext.GetExistingPages();
             foreach (var page in pages)
             {
                 if (((Page)page).FrameManager.Frames.TryGetValue(frameId, out var frame))
@@ -152,7 +152,7 @@ namespace PlaywrightSharp
             }");
 
         /// <inheritdoc cref="IElementHandle.HoverAsync"/>
-        public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => _page.Mouse.MoveAsync(point.X, point.Y), options);
+        public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => Page.Mouse.MoveAsync(point.X, point.Y), options);
 
         /// <inheritdoc cref="IElementHandle.PressAsync"/>
         public Task PressAsync(string key, PressOptions options = null)
@@ -213,7 +213,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IElementHandle.ScreenshotAsync"/>
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null)
-            => _page.Screenshotter.ScreenshotElementAsync(this, options ?? new ScreenshotOptions());
+            => Page.Screenshotter.ScreenshotElementAsync(this, options ?? new ScreenshotOptions());
 
         /// <inheritdoc cref="IElementHandle.ScrollIntoViewIfNeededAsync"/>
         public async Task ScrollIntoViewIfNeededAsync()
@@ -247,7 +247,7 @@ namespace PlaywrightSharp
                     }
                     return '';
                 }",
-                _page.BrowserContext.Options.JavaScriptEnabled).ConfigureAwait(false);
+                Page.BrowserContext.Options.JavaScriptEnabled).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -274,14 +274,14 @@ namespace PlaywrightSharp
 
             if (options?.Modifiers != null)
             {
-                restoreModifiers = await _page.Keyboard.EnsureModifiersAsync(options.Modifiers).ConfigureAwait(false);
+                restoreModifiers = await Page.Keyboard.EnsureModifiersAsync(options.Modifiers).ConfigureAwait(false);
             }
 
             await action(point).ConfigureAwait(false);
 
             if (restoreModifiers != null)
             {
-                await _page.Keyboard.EnsureModifiersAsync(restoreModifiers).ConfigureAwait(false);
+                await Page.Keyboard.EnsureModifiersAsync(restoreModifiers).ConfigureAwait(false);
             }
         }
 
@@ -348,7 +348,7 @@ namespace PlaywrightSharp
                 point = new Point { X = point.X + border.X, Y = point.Y + border.Y };
             }
 
-            var metrics = await _page.Delegate.GetLayoutViewportAsync().ConfigureAwait(false);
+            var metrics = await Page.Delegate.GetLayoutViewportAsync().ConfigureAwait(false);
             int scrollX = 0;
             if (point.X < 20)
             {
@@ -396,8 +396,8 @@ namespace PlaywrightSharp
                 return Math.Abs(area);
             }
 
-            var quadsTask = _page.Delegate.GetContentQuadsAsync(this);
-            var metricsTask = _page.Delegate.GetLayoutViewportAsync();
+            var quadsTask = Page.Delegate.GetContentQuadsAsync(this);
+            var metricsTask = Page.Delegate.GetLayoutViewportAsync();
 
             await Task.WhenAll(quadsTask, metricsTask).ConfigureAwait(false);
             var quads = quadsTask.Result;
