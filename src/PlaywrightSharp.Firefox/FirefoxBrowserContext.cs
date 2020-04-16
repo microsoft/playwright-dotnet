@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Firefox
         public async Task<IEnumerable<NetworkCookie>> GetCookiesAsync()
         {
             var result = await _connection.SendAsync(new BrowserGetCookiesRequest { BrowserContextId = _browserContextId }).ConfigureAwait(false);
-            return result.Cookies.Cast<NetworkCookie>();
+            return result.Cookies.Select(c => (NetworkCookie)c);
         }
 
         /// <inheritdoc cref="IBrowserContextDelegate.ClearCookiesAsync"/>
