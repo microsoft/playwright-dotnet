@@ -36,6 +36,7 @@ namespace PlaywrightSharp
             Method = method;
             PostData = postData;
             Headers = headers;
+            IsNavigationRequest = !string.IsNullOrEmpty(DocumentId);
 
             _waitForResponseTsc = new TaskCompletionSource<Response>(TaskCreationOptions.RunContinuationsAsynchronously);
             _waitForResponse = _waitForResponseTsc.Task;

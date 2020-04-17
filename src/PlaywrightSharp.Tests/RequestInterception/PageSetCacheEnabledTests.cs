@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     //<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetCacheEnabledTests : PlaywrightSharpPageBaseTest
     {
-        internal PageSetCacheEnabledTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageSetCacheEnabledTests(ITestOutputHelper output) : base(output)
         {
         }
 

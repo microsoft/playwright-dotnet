@@ -347,7 +347,13 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.SetRequestInterceptionAsync(bool)"/>
         public Task SetRequestInterceptionAsync(bool value)
         {
-            throw new NotImplementedException();
+            if (PageState.InterceptNetwork == value)
+            {
+                return Task.CompletedTask;
+            }
+
+            PageState.InterceptNetwork = value;
+            return Delegate.SetRequestInterceptionAsync(value);
         }
 
         /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>

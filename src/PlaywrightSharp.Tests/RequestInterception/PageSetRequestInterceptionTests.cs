@@ -13,9 +13,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.setRequestInterception</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetRequestInterceptionTests : PlaywrightSharpPageBaseTest
     {
-        internal PageSetRequestInterceptionTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageSetRequestInterceptionTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -190,7 +193,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Server.SetRedirect("/logo.png", "/pptr.png");
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
-            var status = await Page.EvaluateAsync<int>(@"async () => {
+            int status = await Page.EvaluateAsync<int>(@"async () => {
                 var request = new XMLHttpRequest();
                 request.open('GET', '/logo.png', false);  // `false` makes the request synchronous
                 request.send(null);
@@ -234,7 +237,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     await e.Request.ContinueAsync();
                 }
             };
-            var failedRequests = 0;
+            int failedRequests = 0;
             Page.RequestFailed += (sender, e) => ++failedRequests;
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(response.Ok);
@@ -339,7 +342,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal(4, redirectChain.Length);
             Assert.Contains("/non-existing-page.html", redirectChain[0].Url);
             Assert.Contains("/non-existing-page-3.html", redirectChain[2].Url);
-            for (var i = 0; i < redirectChain.Length; ++i)
+            for (int i = 0; i < redirectChain.Length; ++i)
             {
                 var request = redirectChain[i];
                 Assert.True(request.IsNavigationRequest);
@@ -385,11 +388,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public async Task ShouldWorkWithEqualRequests()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var responseCount = 1;
+            int responseCount = 1;
             Server.SetRoute("/zzz", context => context.Response.WriteAsync((responseCount++ * 11).ToString()));
             await Page.SetRequestInterceptionAsync(true);
 
-            var spinner = false;
+            bool spinner = false;
             // Cancel 2nd request.
             Page.Request += async (sender, e) =>
             {
@@ -403,7 +406,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 }
                 spinner = !spinner;
             };
-            var results = await Page.EvaluateAsync<string[]>(@"() => Promise.all([
+            string[] results = await Page.EvaluateAsync<string[]>(@"() => Promise.all([
                 fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
                 fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
                 fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
@@ -424,7 +427,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 requests.Add(e.Request);
                 await e.Request.ContinueAsync();
             };
-            var dataURL = "data:text/html,<div>yo</div>";
+            string dataURL = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataURL);
             Assert.Null(response);
             Assert.Empty(requests);
@@ -444,8 +447,8 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 requests.Add(e.Request);
                 await e.Request.ContinueAsync();
             };
-            var dataURL = "data:text/html,<div>yo</div>";
-            var text = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", dataURL);
+            string dataURL = "data:text/html,<div>yo</div>";
+            string text = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", dataURL);
             Assert.Equal("<div>yo</div>", text);
             Assert.Empty(requests);
         }
@@ -565,7 +568,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetRequestInterceptionAsync(true);
-            var intercepted = false;
+            bool intercepted = false;
             Page.Request += async (sender, e) =>
             {
                 if (e.Request.Url.Contains(TestConstants.CrossProcessHttpPrefix + "/empty.html"))

@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>interception.fulfill</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class InterceptionFulfillTests : PlaywrightSharpPageBaseTest
     {
-        internal InterceptionFulfillTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public InterceptionFulfillTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -56,12 +59,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
             {
                 e.Request.FulfillAsync(new ResponseData
                 {
-                    Status = HttpStatusCode.UpgradeRequired,
+                    Status = (HttpStatusCode)422,
                     Body = "Yo, page!"
                 });
             };
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.UpgradeRequired, response.Status);
+            Assert.Equal((HttpStatusCode)422, response.Status);
             Assert.Equal("Unprocessable Entity", response.StatusText);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
@@ -75,7 +78,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += (sender, e) =>
             {
-                var imageBuffer = File.ReadAllBytes(Path.Combine("assets", "pptr.png"));
+                byte[] imageBuffer = File.ReadAllBytes(Path.Combine("assets", "pptr.png"));
                 e.Request.FulfillAsync(new ResponseData
                 {
                     ContentType = "image/png",
@@ -106,7 +109,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     Status = HttpStatusCode.OK,
                     Headers =
                     {
-                        ["foo"] = true
+                        ["foo"] = "true"
                     },
                     Body = "Yo, page!"
                 });

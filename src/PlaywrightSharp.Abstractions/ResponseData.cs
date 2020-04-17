@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -7,7 +8,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Response that will fulfill a request.
     /// </summary>
-    public struct ResponseData
+    public class ResponseData
     {
         /// <summary>
         /// Response body (text content).
@@ -21,12 +22,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Response body (binary content).
         /// </summary>
-        public byte[] BodyData { get; set; }
+        public byte[] BodyData { get; set; } = Array.Empty<byte>();
 
         /// <summary>
         /// Response headers. Header values will be converted to a string.
         /// </summary>
-        public IDictionary<string, object> Headers { get; set; }
+        public IDictionary<string, string> Headers { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// If set, equals to setting <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"/> response header.
@@ -38,6 +39,6 @@ namespace PlaywrightSharp
         /// Response status code.
         /// </summary>
         /// <value>Status Code.</value>
-        public HttpStatusCode? Status { get; set; }
+        public HttpStatusCode Status { get; set; } = HttpStatusCode.OK;
     }
 }

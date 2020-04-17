@@ -210,5 +210,13 @@ namespace PlaywrightSharp
         /// <param name="files">Files payloads to add.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files);
+
+        /// <summary>
+        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
+        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.FulfillAsync(ResponseData)">request.FulfillAsync</see> methods.
+        /// </summary>
+        /// <param name="value">Whether to enable request interception..</param>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetRequestInterceptionAsync(bool value);
     }
 }

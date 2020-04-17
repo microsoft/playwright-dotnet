@@ -209,12 +209,12 @@ namespace PlaywrightSharp.Firefox
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
             => _session.SendAsync(new NetworkSetExtraHTTPHeadersRequest
             {
-                Headers = headers.Select(pair => new HTTPHeader
-                {
-                    Name = pair.Key,
-                    Value = pair.Value,
-                }).ToArray(),
+                Headers = headers.ToHeadersArray(),
             });
+
+        /// <inheritdoc cref="IPageDelegate.SetRequestInterceptionAsync(bool)"/>
+        public Task SetRequestInterceptionAsync(bool value)
+            => _networkManager.SetRequestInterception(value);
 
         public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 

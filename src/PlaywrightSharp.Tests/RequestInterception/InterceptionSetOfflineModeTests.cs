@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Interception.setOfflineMode</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class InterceptionSetOfflineModeTests : PlaywrightSharpPageBaseTest
     {
-        internal InterceptionSetOfflineModeTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public InterceptionSetOfflineModeTests(ITestOutputHelper output) : base(output)
         {
         }
 

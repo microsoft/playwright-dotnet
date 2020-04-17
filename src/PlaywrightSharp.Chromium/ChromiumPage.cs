@@ -313,6 +313,9 @@ namespace PlaywrightSharp.Chromium
                 Headers = headers,
             });
 
+        /// <inheritdoc cref="IPageDelegate.SetRequestInterceptionAsync(bool)"/>
+        public Task SetRequestInterceptionAsync(bool value) => throw new NotImplementedException();
+
         public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
 
         public Task<bool> GoBackAsync() => GoAsync(-1);

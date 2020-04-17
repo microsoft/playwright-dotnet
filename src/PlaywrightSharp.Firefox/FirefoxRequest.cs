@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,13 +32,35 @@ namespace PlaywrightSharp.Firefox
         }
 
         public Task ContinueAsync(Payload payload = null)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _session.SendAsync(new NetworkResumeInterceptedRequestRequest
+            {
+                RequestId = Id,
+                Method = payload?.Method?.Method,
+                Headers = payload?.Headers?.ToHeadersArray(),
+                PostData = payload?.PostData,
+            });
 
         public Task FulfillAsync(ResponseData response)
         {
-            throw new System.NotImplementedException();
+            var responseHeaders = response.Headers;
+            if (!string.IsNullOrEmpty(response.ContentType))
+            {
+                responseHeaders["content-type"] = response.ContentType;
+            }
+
+            if (response.Body.Length > 0 && !responseHeaders.ContainsKey("content-length"))
+            {
+                responseHeaders["content-length"] = response.Body.Length.ToString();
+            }
+
+            return _session.SendAsync(new NetworkFulfillInterceptedRequestRequest
+            {
+                RequestId = Id,
+                Status = (int)response.Status,
+                StatusText = response.Status.ToStatusText(),
+                Headers = responseHeaders.ToHeadersArray(),
+                Base64Body = Convert.ToBase64String(response.BodyData),
+            });
         }
     }
 }
