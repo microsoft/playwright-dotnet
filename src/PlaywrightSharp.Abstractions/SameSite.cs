@@ -6,11 +6,6 @@ namespace PlaywrightSharp
     public enum SameSite
     {
         /// <summary>
-        /// None
-        /// </summary>
-        None,
-
-        /// <summary>
         /// Strict
         /// </summary>
         Strict,
@@ -21,8 +16,8 @@ namespace PlaywrightSharp
         Lax,
 
         /// <summary>
-        /// Extended
+        /// None
         /// </summary>
-        Extended,
+        None,
     }
 }

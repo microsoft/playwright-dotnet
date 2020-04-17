@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
+using PlaywrightSharp.Chromium.Protocol.Network;
+using PlaywrightSharp.Chromium.Protocol.Storage;
 using PlaywrightSharp.Chromium.Protocol.Target;
 
 namespace PlaywrightSharp
@@ -127,18 +129,20 @@ namespace PlaywrightSharp
             });
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetCookiesAsync(SetNetworkCookieParam[])"/>
-        public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies) => throw new NotImplementedException();
+        public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies)
+            => _client.SendAsync(new StorageSetCookiesRequest
+            {
+                Cookies = Array.ConvertAll(cookies, c => (CookieParam)c),
+                BrowserContextId = _contextId,
+            });
 
         /// <inheritdoc cref="IBrowserContextDelegate.GetCookiesAsync"/>
-        public Task<IEnumerable<NetworkCookie>> GetCookiesAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<IEnumerable<NetworkCookie>> GetCookiesAsync()
+            => (await _client.SendAsync(new StorageGetCookiesRequest { BrowserContextId = _contextId }).ConfigureAwait(false))
+                .Cookies.Select(c => (NetworkCookie)c);
 
         /// <inheritdoc cref="IBrowserContextDelegate.ClearCookiesAsync"/>
-        public Task ClearCookiesAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task ClearCookiesAsync() =>
+            _client.SendAsync(new StorageClearCookiesRequest { BrowserContextId = _contextId });
     }
 }

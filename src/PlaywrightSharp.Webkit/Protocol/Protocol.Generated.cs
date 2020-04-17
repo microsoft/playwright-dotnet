@@ -507,7 +507,7 @@ public bool? Session { get; set; }
 /// Cookie Same-Site policy.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSitePolicy SameSite { get; set; }}
+public CookieSameSitePolicy? SameSite { get; set; }}
 /// <summary>
 /// Geolocation
 /// </summary>
@@ -854,6 +854,959 @@ public string LoaderId { get; set; }
 /// Localized error string.
 /// </summary>
 public string Error { get; set; }}
+}
+namespace PlaywrightSharp.Webkit.Protocol.CPUProfiler
+{
+/// <summary>
+/// CPU usage for an individual thread.
+/// </summary>
+internal partial class ThreadInfo
+{
+/// <summary>
+/// Some thread identification information.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// CPU usage for this thread. This should not exceed 100% for an individual thread.
+/// </summary>
+public double? Usage { get; set; }
+/// <summary>
+/// Type of thread. There should be a single main thread.
+/// </summary>
+public string Type { get; set; }
+/// <summary>
+/// A thread may be associated with a target, such as a Worker, in the process.
+/// </summary>
+public string TargetId { get; set; }}
+/// <summary>
+/// 
+/// </summary>
+internal partial class Event
+{
+/// <summary>
+/// 
+/// </summary>
+public double? Timestamp { get; set; }
+/// <summary>
+/// Percent of total cpu usage. If there are multiple cores the usage may be greater than 100%.
+/// </summary>
+public double? Usage { get; set; }
+/// <summary>
+/// Per-thread CPU usage information. Does not include the main thread.
+/// </summary>
+public ThreadInfo[] Threads { get; set; }}
+/// <summary>
+/// Start tracking cpu usage.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CPUProfiler.startTracking</c>
+/// </remarks>
+internal partial class CPUProfilerStartTrackingRequest : IWebkitRequest<CPUProfilerStartTrackingResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CPUProfiler.startTracking";
+}
+/// <summary>
+/// Response from <see cref="CPUProfilerStartTrackingRequest"/>
+/// </summary>
+internal partial class CPUProfilerStartTrackingResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Stop tracking cpu usage. This will produce a `trackingComplete` event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CPUProfiler.stopTracking</c>
+/// </remarks>
+internal partial class CPUProfilerStopTrackingRequest : IWebkitRequest<CPUProfilerStopTrackingResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CPUProfiler.stopTracking";
+}
+/// <summary>
+/// Response from <see cref="CPUProfilerStopTrackingRequest"/>
+/// </summary>
+internal partial class CPUProfilerStopTrackingResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Tracking started.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CPUProfiler.trackingStart</c>
+/// </remarks>
+internal partial class CPUProfilerTrackingStartWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CPUProfiler.trackingStart";
+/// <summary>
+/// 
+/// </summary>
+public double? Timestamp { get; set; }}
+/// <summary>
+/// Periodic tracking updates with event data.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CPUProfiler.trackingUpdate</c>
+/// </remarks>
+internal partial class CPUProfilerTrackingUpdateWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CPUProfiler.trackingUpdate";
+/// <summary>
+/// 
+/// </summary>
+public Event Event { get; set; }}
+/// <summary>
+/// Tracking stopped.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CPUProfiler.trackingComplete</c>
+/// </remarks>
+internal partial class CPUProfilerTrackingCompleteWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CPUProfiler.trackingComplete";
+/// <summary>
+/// 
+/// </summary>
+public double? Timestamp { get; set; }}
+}
+namespace PlaywrightSharp.Webkit.Protocol.CSS
+{
+/// <summary>
+/// This object identifies a CSS style in a unique way.
+/// </summary>
+internal partial class CSSStyleId
+{
+/// <summary>
+/// Enclosing stylesheet identifier.
+/// </summary>
+public string StyleSheetId { get; set; }
+/// <summary>
+/// The style ordinal within the stylesheet.
+/// </summary>
+public int? Ordinal { get; set; }}
+/// <summary>
+/// Stylesheet type: "user" for user stylesheets, "user-agent" for user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via inspector" rules), "regular" for regular stylesheets.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StyleSheetOrigin
+{
+[System.Runtime.Serialization.EnumMember(Value = "user")]User,
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
+[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
+/// <summary>
+/// This object identifies a CSS rule in a unique way.
+/// </summary>
+internal partial class CSSRuleId
+{
+/// <summary>
+/// Enclosing stylesheet identifier.
+/// </summary>
+public string StyleSheetId { get; set; }
+/// <summary>
+/// The rule ordinal within the stylesheet.
+/// </summary>
+public int? Ordinal { get; set; }}
+/// <summary>
+/// Pseudo-style identifier (see &lt;code&gt;enum PseudoId&lt;/code&gt; in &lt;code&gt;RenderStyleConstants.h&lt;/code&gt;).
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PseudoId
+{
+[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
+[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
+[System.Runtime.Serialization.EnumMember(Value = "highlight")]Highlight,
+[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
+[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
+[System.Runtime.Serialization.EnumMember(Value = "after")]After,
+[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
+[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer}
+/// <summary>
+/// CSS rule collection for a single pseudo style.
+/// </summary>
+internal partial class PseudoIdMatches
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public PseudoId PseudoId { get; set; }
+/// <summary>
+/// Matches of CSS rules applicable to the pseudo style.
+/// </summary>
+public RuleMatch[] Matches { get; set; }}
+/// <summary>
+/// CSS rule collection for a single pseudo style.
+/// </summary>
+internal partial class InheritedStyleEntry
+{
+/// <summary>
+/// The ancestor node's inline style, if any, in the style inheritance chain.
+/// </summary>
+public CSSStyle InlineStyle { get; set; }
+/// <summary>
+/// Matches of CSS rules matching the ancestor node in the style inheritance chain.
+/// </summary>
+public RuleMatch[] MatchedCSSRules { get; set; }}
+/// <summary>
+/// Match data for a CSS rule.
+/// </summary>
+internal partial class RuleMatch
+{
+/// <summary>
+/// CSS rule in the match.
+/// </summary>
+public CSSRule Rule { get; set; }
+/// <summary>
+/// Matching selector indices in the rule's selectorList selectors (0-based).
+/// </summary>
+public int?[] MatchingSelectors { get; set; }}
+/// <summary>
+/// CSS selector.
+/// </summary>
+internal partial class CSSSelector
+{
+/// <summary>
+/// Canonicalized selector text.
+/// </summary>
+public string Text { get; set; }
+/// <summary>
+/// Specificity (a, b, c) tuple. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
+/// </summary>
+public int?[] Specificity { get; set; }
+/// <summary>
+/// Whether or not the specificity can be dynamic. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
+/// </summary>
+public bool? Dynamic { get; set; }}
+/// <summary>
+/// Selector list data.
+/// </summary>
+internal partial class SelectorList
+{
+/// <summary>
+/// Selectors in the list.
+/// </summary>
+public CSSSelector[] Selectors { get; set; }
+/// <summary>
+/// Rule selector text.
+/// </summary>
+public string Text { get; set; }
+/// <summary>
+/// Rule selector range in the underlying resource (if available).
+/// </summary>
+public SourceRange Range { get; set; }}
+/// <summary>
+/// CSS style information for a DOM style attribute.
+/// </summary>
+internal partial class CSSStyleAttribute
+{
+/// <summary>
+/// DOM attribute name (e.g. "width").
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// CSS style generated by the respective DOM attribute.
+/// </summary>
+public CSSStyle Style { get; set; }}
+/// <summary>
+/// CSS stylesheet meta-information.
+/// </summary>
+internal partial class CSSStyleSheetHeader
+{
+/// <summary>
+/// The stylesheet identifier.
+/// </summary>
+public string StyleSheetId { get; set; }
+/// <summary>
+/// Owner frame identifier.
+/// </summary>
+public string FrameId { get; set; }
+/// <summary>
+/// Stylesheet resource URL.
+/// </summary>
+public string SourceURL { get; set; }
+/// <summary>
+/// Stylesheet origin.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public StyleSheetOrigin Origin { get; set; }
+/// <summary>
+/// Stylesheet title.
+/// </summary>
+public string Title { get; set; }
+/// <summary>
+/// Denotes whether the stylesheet is disabled.
+/// </summary>
+public bool? Disabled { get; set; }
+/// <summary>
+/// Whether this stylesheet is a &lt;style&gt; tag created by the parser. This is not set for document.written &lt;style&gt; tags.
+/// </summary>
+public bool? IsInline { get; set; }
+/// <summary>
+/// Line offset of the stylesheet within the resource (zero based).
+/// </summary>
+public double? StartLine { get; set; }
+/// <summary>
+/// Column offset of the stylesheet within the resource (zero based).
+/// </summary>
+public double? StartColumn { get; set; }}
+/// <summary>
+/// CSS stylesheet contents.
+/// </summary>
+internal partial class CSSStyleSheetBody
+{
+/// <summary>
+/// The stylesheet identifier.
+/// </summary>
+public string StyleSheetId { get; set; }
+/// <summary>
+/// Stylesheet resource URL.
+/// </summary>
+public CSSRule[] Rules { get; set; }
+/// <summary>
+/// Stylesheet resource contents (if available).
+/// </summary>
+public string Text { get; set; }}
+/// <summary>
+/// CSS rule representation.
+/// </summary>
+internal partial class CSSRule
+{
+/// <summary>
+/// The CSS rule identifier (absent for user agent stylesheet and user-specified stylesheet rules).
+/// </summary>
+public CSSRuleId RuleId { get; set; }
+/// <summary>
+/// Rule selector data.
+/// </summary>
+public SelectorList SelectorList { get; set; }
+/// <summary>
+/// Parent stylesheet resource URL (for regular rules).
+/// </summary>
+public string SourceURL { get; set; }
+/// <summary>
+/// Line ordinal of the rule selector start character in the resource.
+/// </summary>
+public int? SourceLine { get; set; }
+/// <summary>
+/// Parent stylesheet's origin.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public StyleSheetOrigin Origin { get; set; }
+/// <summary>
+/// Associated style declaration.
+/// </summary>
+public CSSStyle Style { get; set; }
+/// <summary>
+/// Grouping list array (for rules involving @media/@supports). The array enumerates CSS groupings starting with the innermost one, going outwards.
+/// </summary>
+public Grouping[] Groupings { get; set; }}
+/// <summary>
+/// Text range within a resource.
+/// </summary>
+internal partial class SourceRange
+{
+/// <summary>
+/// Start line of range.
+/// </summary>
+public int? StartLine { get; set; }
+/// <summary>
+/// Start column of range (inclusive).
+/// </summary>
+public int? StartColumn { get; set; }
+/// <summary>
+/// End line of range
+/// </summary>
+public int? EndLine { get; set; }
+/// <summary>
+/// End column of range (exclusive).
+/// </summary>
+public int? EndColumn { get; set; }}
+/// <summary>
+/// 
+/// </summary>
+internal partial class ShorthandEntry
+{
+/// <summary>
+/// Shorthand name.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// Shorthand value.
+/// </summary>
+public string Value { get; set; }}
+/// <summary>
+/// 
+/// </summary>
+internal partial class CSSPropertyInfo
+{
+/// <summary>
+/// Property name.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// Other names for this property.
+/// </summary>
+public string[] Aliases { get; set; }
+/// <summary>
+/// Longhand property names.
+/// </summary>
+public string[] Longhands { get; set; }
+/// <summary>
+/// Supported values for this property.
+/// </summary>
+public string[] Values { get; set; }
+/// <summary>
+/// Whether the property is able to be inherited.
+/// </summary>
+public bool? Inherited { get; set; }}
+/// <summary>
+/// 
+/// </summary>
+internal partial class CSSComputedStyleProperty
+{
+/// <summary>
+/// Computed style property name.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// Computed style property value.
+/// </summary>
+public string Value { get; set; }}
+/// <summary>
+/// CSS style representation.
+/// </summary>
+internal partial class CSSStyle
+{
+/// <summary>
+/// The CSS style identifier (absent for attribute styles).
+/// </summary>
+public CSSStyleId StyleId { get; set; }
+/// <summary>
+/// CSS properties in the style.
+/// </summary>
+public CSSProperty[] CssProperties { get; set; }
+/// <summary>
+/// Computed values for all shorthands found in the style.
+/// </summary>
+public ShorthandEntry[] ShorthandEntries { get; set; }
+/// <summary>
+/// Style declaration text (if available).
+/// </summary>
+public string CssText { get; set; }
+/// <summary>
+/// Style declaration range in the enclosing stylesheet (if available).
+/// </summary>
+public SourceRange Range { get; set; }
+/// <summary>
+/// The effective "width" property value from this style.
+/// </summary>
+public string Width { get; set; }
+/// <summary>
+/// The effective "height" property value from this style.
+/// </summary>
+public string Height { get; set; }}
+/// <summary>
+/// The property status: "active" if the property is effective in the style, "inactive" if the property is overridden by a same-named property in this style later on, "disabled" if the property is disabled by the user, "style" (implied if absent) if the property is reported by the browser rather than by the CSS source parser.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CSSPropertyStatus
+{
+[System.Runtime.Serialization.EnumMember(Value = "active")]Active,
+[System.Runtime.Serialization.EnumMember(Value = "inactive")]Inactive,
+[System.Runtime.Serialization.EnumMember(Value = "disabled")]Disabled,
+[System.Runtime.Serialization.EnumMember(Value = "style")]Style}
+/// <summary>
+/// CSS style effective visual dimensions and source offsets.
+/// </summary>
+internal partial class CSSProperty
+{
+/// <summary>
+/// The property name.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// The property value.
+/// </summary>
+public string Value { get; set; }
+/// <summary>
+/// The property priority (implies "" if absent).
+/// </summary>
+public string Priority { get; set; }
+/// <summary>
+/// Whether the property is implicit (implies &lt;code&gt;false&lt;/code&gt; if absent).
+/// </summary>
+public bool? Implicit { get; set; }
+/// <summary>
+/// The full property text as specified in the style.
+/// </summary>
+public string Text { get; set; }
+/// <summary>
+/// Whether the property is understood by the browser (implies &lt;code&gt;true&lt;/code&gt; if absent).
+/// </summary>
+public bool? ParsedOk { get; set; }
+/// <summary>
+/// Whether the property is active or disabled.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public CSSPropertyStatus? Status { get; set; }
+/// <summary>
+/// The entire property range in the enclosing style declaration (if available).
+/// </summary>
+public SourceRange Range { get; set; }}
+/// <summary>
+/// CSS @media (as well as other users of media queries, like @import, &lt;style&gt;, &lt;link&gt;, etc.) and @supports descriptor.
+/// </summary>
+internal partial class Grouping
+{
+/// <summary>
+/// Media query text.
+/// </summary>
+public string Text { get; set; }
+/// <summary>
+/// Source of the media query: "media-rule" if specified by a @media rule, "media-import-rule" if specified by an @import rule, "media-link-node" if specified by a "media" attribute in a linked style sheet's LINK tag, "media-style-node" if specified by a "media" attribute in an inline style sheet's STYLE tag, "supports-rule" if specified by an @supports rule, .
+/// </summary>
+public string Type { get; set; }
+/// <summary>
+/// URL of the document containing the CSS grouping.
+/// </summary>
+public string SourceURL { get; set; }}
+/// <summary>
+/// Enables the CSS agent for the given page. Clients should not assume that the CSS agent has been enabled until the result of this command is received.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.enable</c>
+/// </remarks>
+internal partial class CSSEnableRequest : IWebkitRequest<CSSEnableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.enable";
+}
+/// <summary>
+/// Response from <see cref="CSSEnableRequest"/>
+/// </summary>
+internal partial class CSSEnableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Disables the CSS agent for the given page.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.disable</c>
+/// </remarks>
+internal partial class CSSDisableRequest : IWebkitRequest<CSSDisableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.disable";
+}
+/// <summary>
+/// Response from <see cref="CSSDisableRequest"/>
+/// </summary>
+internal partial class CSSDisableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Returns requested styles for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getMatchedStylesForNode</c>
+/// </remarks>
+internal partial class CSSGetMatchedStylesForNodeRequest : IWebkitRequest<CSSGetMatchedStylesForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getMatchedStylesForNode";
+/// <summary>
+/// 
+/// </summary>
+public int? NodeId { get; set; }
+/// <summary>
+/// Whether to include pseudo styles (default: true).
+/// </summary>
+public bool? IncludePseudo { get; set; }
+/// <summary>
+/// Whether to include inherited styles (default: true).
+/// </summary>
+public bool? IncludeInherited { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
+/// </summary>
+internal partial class CSSGetMatchedStylesForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// CSS rules matching this node, from all applicable stylesheets.
+/// </summary>
+public RuleMatch[] MatchedCSSRules { get; set; }
+/// <summary>
+/// Pseudo style matches for this node.
+/// </summary>
+public PseudoIdMatches[] PseudoElements { get; set; }
+/// <summary>
+/// A chain of inherited styles (from the immediate node parent up to the DOM tree root).
+/// </summary>
+public InheritedStyleEntry[] Inherited { get; set; }}
+/// <summary>
+/// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM attributes) for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getInlineStylesForNode</c>
+/// </remarks>
+internal partial class CSSGetInlineStylesForNodeRequest : IWebkitRequest<CSSGetInlineStylesForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getInlineStylesForNode";
+/// <summary>
+/// 
+/// </summary>
+public int? NodeId { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
+/// </summary>
+internal partial class CSSGetInlineStylesForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Inline style for the specified DOM node.
+/// </summary>
+public CSSStyle InlineStyle { get; set; }
+/// <summary>
+/// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
+/// </summary>
+public CSSStyle AttributesStyle { get; set; }}
+/// <summary>
+/// Returns the computed style for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getComputedStyleForNode</c>
+/// </remarks>
+internal partial class CSSGetComputedStyleForNodeRequest : IWebkitRequest<CSSGetComputedStyleForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getComputedStyleForNode";
+/// <summary>
+/// 
+/// </summary>
+public int? NodeId { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
+/// </summary>
+internal partial class CSSGetComputedStyleForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Computed style for the specified DOM node.
+/// </summary>
+public CSSComputedStyleProperty[] ComputedStyle { get; set; }}
+/// <summary>
+/// Returns metainfo entries for all known stylesheets.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getAllStyleSheets</c>
+/// </remarks>
+internal partial class CSSGetAllStyleSheetsRequest : IWebkitRequest<CSSGetAllStyleSheetsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getAllStyleSheets";
+}
+/// <summary>
+/// Response from <see cref="CSSGetAllStyleSheetsRequest"/>
+/// </summary>
+internal partial class CSSGetAllStyleSheetsResponse: IWebkitResponse
+{
+/// <summary>
+/// Descriptor entries for all available stylesheets.
+/// </summary>
+public CSSStyleSheetHeader[] Headers { get; set; }}
+/// <summary>
+/// Returns stylesheet data for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getStyleSheet</c>
+/// </remarks>
+internal partial class CSSGetStyleSheetRequest : IWebkitRequest<CSSGetStyleSheetResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getStyleSheet";
+/// <summary>
+/// 
+/// </summary>
+public string StyleSheetId { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSGetStyleSheetRequest"/>
+/// </summary>
+internal partial class CSSGetStyleSheetResponse: IWebkitResponse
+{
+/// <summary>
+/// Stylesheet contents for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
+/// </summary>
+public CSSStyleSheetBody StyleSheet { get; set; }}
+/// <summary>
+/// Returns the current textual content and the URL for a stylesheet.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getStyleSheetText</c>
+/// </remarks>
+internal partial class CSSGetStyleSheetTextRequest : IWebkitRequest<CSSGetStyleSheetTextResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getStyleSheetText";
+/// <summary>
+/// 
+/// </summary>
+public string StyleSheetId { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSGetStyleSheetTextRequest"/>
+/// </summary>
+internal partial class CSSGetStyleSheetTextResponse: IWebkitResponse
+{
+/// <summary>
+/// The stylesheet text.
+/// </summary>
+public string Text { get; set; }}
+/// <summary>
+/// Sets the new stylesheet text, thereby invalidating all existing &lt;code&gt;CSSStyleId&lt;/code&gt;'s and &lt;code&gt;CSSRuleId&lt;/code&gt;'s contained by this stylesheet.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.setStyleSheetText</c>
+/// </remarks>
+internal partial class CSSSetStyleSheetTextRequest : IWebkitRequest<CSSSetStyleSheetTextResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.setStyleSheetText";
+/// <summary>
+/// 
+/// </summary>
+public string StyleSheetId { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public string Text { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSSetStyleSheetTextRequest"/>
+/// </summary>
+internal partial class CSSSetStyleSheetTextResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Sets the new &lt;code&gt;text&lt;/code&gt; for the respective style.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.setStyleText</c>
+/// </remarks>
+internal partial class CSSSetStyleTextRequest : IWebkitRequest<CSSSetStyleTextResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.setStyleText";
+/// <summary>
+/// 
+/// </summary>
+public CSSStyleId StyleId { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public string Text { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSSetStyleTextRequest"/>
+/// </summary>
+internal partial class CSSSetStyleTextResponse: IWebkitResponse
+{
+/// <summary>
+/// The resulting style after the text modification.
+/// </summary>
+public CSSStyle Style { get; set; }}
+/// <summary>
+/// Modifies the rule selector.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.setRuleSelector</c>
+/// </remarks>
+internal partial class CSSSetRuleSelectorRequest : IWebkitRequest<CSSSetRuleSelectorResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.setRuleSelector";
+/// <summary>
+/// 
+/// </summary>
+public CSSRuleId RuleId { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public string Selector { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSSetRuleSelectorRequest"/>
+/// </summary>
+internal partial class CSSSetRuleSelectorResponse: IWebkitResponse
+{
+/// <summary>
+/// The resulting rule after the selector modification.
+/// </summary>
+public CSSRule Rule { get; set; }}
+/// <summary>
+/// Creates a new special "inspector" stylesheet in the frame with given &lt;code&gt;frameId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.createStyleSheet</c>
+/// </remarks>
+internal partial class CSSCreateStyleSheetRequest : IWebkitRequest<CSSCreateStyleSheetResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.createStyleSheet";
+/// <summary>
+/// Identifier of the frame where the new "inspector" stylesheet should be created.
+/// </summary>
+public string FrameId { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSCreateStyleSheetRequest"/>
+/// </summary>
+internal partial class CSSCreateStyleSheetResponse: IWebkitResponse
+{
+/// <summary>
+/// Identifier of the created "inspector" stylesheet.
+/// </summary>
+public string StyleSheetId { get; set; }}
+/// <summary>
+/// Creates a new empty rule with the given &lt;code&gt;selector&lt;/code&gt; in a stylesheet with given &lt;code&gt;styleSheetId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.addRule</c>
+/// </remarks>
+internal partial class CSSAddRuleRequest : IWebkitRequest<CSSAddRuleResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.addRule";
+/// <summary>
+/// 
+/// </summary>
+public string StyleSheetId { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public string Selector { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSAddRuleRequest"/>
+/// </summary>
+internal partial class CSSAddRuleResponse: IWebkitResponse
+{
+/// <summary>
+/// The newly created rule.
+/// </summary>
+public CSSRule Rule { get; set; }}
+/// <summary>
+/// Returns all supported CSS property names.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getSupportedCSSProperties</c>
+/// </remarks>
+internal partial class CSSGetSupportedCSSPropertiesRequest : IWebkitRequest<CSSGetSupportedCSSPropertiesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getSupportedCSSProperties";
+}
+/// <summary>
+/// Response from <see cref="CSSGetSupportedCSSPropertiesRequest"/>
+/// </summary>
+internal partial class CSSGetSupportedCSSPropertiesResponse: IWebkitResponse
+{
+/// <summary>
+/// Supported property metainfo.
+/// </summary>
+public CSSPropertyInfo[] CssProperties { get; set; }}
+/// <summary>
+/// Returns all supported system font family names.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getSupportedSystemFontFamilyNames</c>
+/// </remarks>
+internal partial class CSSGetSupportedSystemFontFamilyNamesRequest : IWebkitRequest<CSSGetSupportedSystemFontFamilyNamesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getSupportedSystemFontFamilyNames";
+}
+/// <summary>
+/// Response from <see cref="CSSGetSupportedSystemFontFamilyNamesRequest"/>
+/// </summary>
+internal partial class CSSGetSupportedSystemFontFamilyNamesResponse: IWebkitResponse
+{
+/// <summary>
+/// Supported system font families.
+/// </summary>
+public string[] FontFamilyNames { get; set; }}
+/// <summary>
+/// Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.forcePseudoState</c>
+/// </remarks>
+internal partial class CSSForcePseudoStateRequest : IWebkitRequest<CSSForcePseudoStateResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.forcePseudoState";
+/// <summary>
+/// The element id for which to force the pseudo state.
+/// </summary>
+public int? NodeId { get; set; }
+/// <summary>
+/// Element pseudo classes to force when computing the element's style.
+/// </summary>
+public string[] ForcedPseudoClasses { get; set; }}
+/// <summary>
+/// Response from <see cref="CSSForcePseudoStateRequest"/>
+/// </summary>
+internal partial class CSSForcePseudoStateResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Fires whenever a MediaQuery result changes (for example, after a browser window has been resized.) The current implementation considers only viewport-dependent media features.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CSS.mediaQueryResultChanged</c>
+/// </remarks>
+internal partial class CSSMediaQueryResultChangedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CSS.mediaQueryResultChanged";
+}
+/// <summary>
+/// Fired whenever a stylesheet is changed as a result of the client operation.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CSS.styleSheetChanged</c>
+/// </remarks>
+internal partial class CSSStyleSheetChangedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CSS.styleSheetChanged";
+/// <summary>
+/// 
+/// </summary>
+public string StyleSheetId { get; set; }}
+/// <summary>
+/// Fired whenever an active document stylesheet is added.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CSS.styleSheetAdded</c>
+/// </remarks>
+internal partial class CSSStyleSheetAddedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CSS.styleSheetAdded";
+/// <summary>
+/// Added stylesheet metainfo.
+/// </summary>
+public CSSStyleSheetHeader Header { get; set; }}
+/// <summary>
+/// Fired whenever an active document stylesheet is removed.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CSS.styleSheetRemoved</c>
+/// </remarks>
+internal partial class CSSStyleSheetRemovedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CSS.styleSheetRemoved";
+/// <summary>
+/// Identifier of the removed stylesheet.
+/// </summary>
+public string StyleSheetId { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Canvas
 {
@@ -1733,2080 +2686,6 @@ public string SnapshotData { get; set; }
 /// </summary>
 public string Title { get; set; }}
 }
-namespace PlaywrightSharp.Webkit.Protocol.CPUProfiler
-{
-/// <summary>
-/// CPU usage for an individual thread.
-/// </summary>
-internal partial class ThreadInfo
-{
-/// <summary>
-/// Some thread identification information.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// CPU usage for this thread. This should not exceed 100% for an individual thread.
-/// </summary>
-public double? Usage { get; set; }
-/// <summary>
-/// Type of thread. There should be a single main thread.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// A thread may be associated with a target, such as a Worker, in the process.
-/// </summary>
-public string TargetId { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class Event
-{
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }
-/// <summary>
-/// Percent of total cpu usage. If there are multiple cores the usage may be greater than 100%.
-/// </summary>
-public double? Usage { get; set; }
-/// <summary>
-/// Per-thread CPU usage information. Does not include the main thread.
-/// </summary>
-public ThreadInfo[] Threads { get; set; }}
-/// <summary>
-/// Start tracking cpu usage.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CPUProfiler.startTracking</c>
-/// </remarks>
-internal partial class CPUProfilerStartTrackingRequest : IWebkitRequest<CPUProfilerStartTrackingResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CPUProfiler.startTracking";
-}
-/// <summary>
-/// Response from <see cref="CPUProfilerStartTrackingRequest"/>
-/// </summary>
-internal partial class CPUProfilerStartTrackingResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Stop tracking cpu usage. This will produce a `trackingComplete` event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CPUProfiler.stopTracking</c>
-/// </remarks>
-internal partial class CPUProfilerStopTrackingRequest : IWebkitRequest<CPUProfilerStopTrackingResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CPUProfiler.stopTracking";
-}
-/// <summary>
-/// Response from <see cref="CPUProfilerStopTrackingRequest"/>
-/// </summary>
-internal partial class CPUProfilerStopTrackingResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Tracking started.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CPUProfiler.trackingStart</c>
-/// </remarks>
-internal partial class CPUProfilerTrackingStartWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CPUProfiler.trackingStart";
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }}
-/// <summary>
-/// Periodic tracking updates with event data.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CPUProfiler.trackingUpdate</c>
-/// </remarks>
-internal partial class CPUProfilerTrackingUpdateWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CPUProfiler.trackingUpdate";
-/// <summary>
-/// 
-/// </summary>
-public Event Event { get; set; }}
-/// <summary>
-/// Tracking stopped.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CPUProfiler.trackingComplete</c>
-/// </remarks>
-internal partial class CPUProfilerTrackingCompleteWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CPUProfiler.trackingComplete";
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }}
-}
-namespace PlaywrightSharp.Webkit.Protocol.CSS
-{
-/// <summary>
-/// This object identifies a CSS style in a unique way.
-/// </summary>
-internal partial class CSSStyleId
-{
-/// <summary>
-/// Enclosing stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// The style ordinal within the stylesheet.
-/// </summary>
-public int? Ordinal { get; set; }}
-/// <summary>
-/// Stylesheet type: "user" for user stylesheets, "user-agent" for user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via inspector" rules), "regular" for regular stylesheets.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StyleSheetOrigin
-{
-[System.Runtime.Serialization.EnumMember(Value = "user")]User,
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
-[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
-/// <summary>
-/// This object identifies a CSS rule in a unique way.
-/// </summary>
-internal partial class CSSRuleId
-{
-/// <summary>
-/// Enclosing stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// The rule ordinal within the stylesheet.
-/// </summary>
-public int? Ordinal { get; set; }}
-/// <summary>
-/// Pseudo-style identifier (see &lt;code&gt;enum PseudoId&lt;/code&gt; in &lt;code&gt;RenderStyleConstants.h&lt;/code&gt;).
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PseudoId
-{
-[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
-[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
-[System.Runtime.Serialization.EnumMember(Value = "highlight")]Highlight,
-[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
-[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
-[System.Runtime.Serialization.EnumMember(Value = "after")]After,
-[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
-[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer}
-/// <summary>
-/// CSS rule collection for a single pseudo style.
-/// </summary>
-internal partial class PseudoIdMatches
-{
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PseudoId PseudoId { get; set; }
-/// <summary>
-/// Matches of CSS rules applicable to the pseudo style.
-/// </summary>
-public RuleMatch[] Matches { get; set; }}
-/// <summary>
-/// CSS rule collection for a single pseudo style.
-/// </summary>
-internal partial class InheritedStyleEntry
-{
-/// <summary>
-/// The ancestor node's inline style, if any, in the style inheritance chain.
-/// </summary>
-public CSSStyle InlineStyle { get; set; }
-/// <summary>
-/// Matches of CSS rules matching the ancestor node in the style inheritance chain.
-/// </summary>
-public RuleMatch[] MatchedCSSRules { get; set; }}
-/// <summary>
-/// Match data for a CSS rule.
-/// </summary>
-internal partial class RuleMatch
-{
-/// <summary>
-/// CSS rule in the match.
-/// </summary>
-public CSSRule Rule { get; set; }
-/// <summary>
-/// Matching selector indices in the rule's selectorList selectors (0-based).
-/// </summary>
-public int?[] MatchingSelectors { get; set; }}
-/// <summary>
-/// CSS selector.
-/// </summary>
-internal partial class CSSSelector
-{
-/// <summary>
-/// Canonicalized selector text.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Specificity (a, b, c) tuple. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
-/// </summary>
-public int?[] Specificity { get; set; }
-/// <summary>
-/// Whether or not the specificity can be dynamic. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
-/// </summary>
-public bool? Dynamic { get; set; }}
-/// <summary>
-/// Selector list data.
-/// </summary>
-internal partial class SelectorList
-{
-/// <summary>
-/// Selectors in the list.
-/// </summary>
-public CSSSelector[] Selectors { get; set; }
-/// <summary>
-/// Rule selector text.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Rule selector range in the underlying resource (if available).
-/// </summary>
-public SourceRange Range { get; set; }}
-/// <summary>
-/// CSS style information for a DOM style attribute.
-/// </summary>
-internal partial class CSSStyleAttribute
-{
-/// <summary>
-/// DOM attribute name (e.g. "width").
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// CSS style generated by the respective DOM attribute.
-/// </summary>
-public CSSStyle Style { get; set; }}
-/// <summary>
-/// CSS stylesheet meta-information.
-/// </summary>
-internal partial class CSSStyleSheetHeader
-{
-/// <summary>
-/// The stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// Owner frame identifier.
-/// </summary>
-public string FrameId { get; set; }
-/// <summary>
-/// Stylesheet resource URL.
-/// </summary>
-public string SourceURL { get; set; }
-/// <summary>
-/// Stylesheet origin.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
-/// <summary>
-/// Stylesheet title.
-/// </summary>
-public string Title { get; set; }
-/// <summary>
-/// Denotes whether the stylesheet is disabled.
-/// </summary>
-public bool? Disabled { get; set; }
-/// <summary>
-/// Whether this stylesheet is a &lt;style&gt; tag created by the parser. This is not set for document.written &lt;style&gt; tags.
-/// </summary>
-public bool? IsInline { get; set; }
-/// <summary>
-/// Line offset of the stylesheet within the resource (zero based).
-/// </summary>
-public double? StartLine { get; set; }
-/// <summary>
-/// Column offset of the stylesheet within the resource (zero based).
-/// </summary>
-public double? StartColumn { get; set; }}
-/// <summary>
-/// CSS stylesheet contents.
-/// </summary>
-internal partial class CSSStyleSheetBody
-{
-/// <summary>
-/// The stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// Stylesheet resource URL.
-/// </summary>
-public CSSRule[] Rules { get; set; }
-/// <summary>
-/// Stylesheet resource contents (if available).
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// CSS rule representation.
-/// </summary>
-internal partial class CSSRule
-{
-/// <summary>
-/// The CSS rule identifier (absent for user agent stylesheet and user-specified stylesheet rules).
-/// </summary>
-public CSSRuleId RuleId { get; set; }
-/// <summary>
-/// Rule selector data.
-/// </summary>
-public SelectorList SelectorList { get; set; }
-/// <summary>
-/// Parent stylesheet resource URL (for regular rules).
-/// </summary>
-public string SourceURL { get; set; }
-/// <summary>
-/// Line ordinal of the rule selector start character in the resource.
-/// </summary>
-public int? SourceLine { get; set; }
-/// <summary>
-/// Parent stylesheet's origin.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
-/// <summary>
-/// Associated style declaration.
-/// </summary>
-public CSSStyle Style { get; set; }
-/// <summary>
-/// Grouping list array (for rules involving @media/@supports). The array enumerates CSS groupings starting with the innermost one, going outwards.
-/// </summary>
-public Grouping[] Groupings { get; set; }}
-/// <summary>
-/// Text range within a resource.
-/// </summary>
-internal partial class SourceRange
-{
-/// <summary>
-/// Start line of range.
-/// </summary>
-public int? StartLine { get; set; }
-/// <summary>
-/// Start column of range (inclusive).
-/// </summary>
-public int? StartColumn { get; set; }
-/// <summary>
-/// End line of range
-/// </summary>
-public int? EndLine { get; set; }
-/// <summary>
-/// End column of range (exclusive).
-/// </summary>
-public int? EndColumn { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class ShorthandEntry
-{
-/// <summary>
-/// Shorthand name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Shorthand value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class CSSPropertyInfo
-{
-/// <summary>
-/// Property name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Other names for this property.
-/// </summary>
-public string[] Aliases { get; set; }
-/// <summary>
-/// Longhand property names.
-/// </summary>
-public string[] Longhands { get; set; }
-/// <summary>
-/// Supported values for this property.
-/// </summary>
-public string[] Values { get; set; }
-/// <summary>
-/// Whether the property is able to be inherited.
-/// </summary>
-public bool? Inherited { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class CSSComputedStyleProperty
-{
-/// <summary>
-/// Computed style property name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Computed style property value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// CSS style representation.
-/// </summary>
-internal partial class CSSStyle
-{
-/// <summary>
-/// The CSS style identifier (absent for attribute styles).
-/// </summary>
-public CSSStyleId StyleId { get; set; }
-/// <summary>
-/// CSS properties in the style.
-/// </summary>
-public CSSProperty[] CssProperties { get; set; }
-/// <summary>
-/// Computed values for all shorthands found in the style.
-/// </summary>
-public ShorthandEntry[] ShorthandEntries { get; set; }
-/// <summary>
-/// Style declaration text (if available).
-/// </summary>
-public string CssText { get; set; }
-/// <summary>
-/// Style declaration range in the enclosing stylesheet (if available).
-/// </summary>
-public SourceRange Range { get; set; }
-/// <summary>
-/// The effective "width" property value from this style.
-/// </summary>
-public string Width { get; set; }
-/// <summary>
-/// The effective "height" property value from this style.
-/// </summary>
-public string Height { get; set; }}
-/// <summary>
-/// The property status: "active" if the property is effective in the style, "inactive" if the property is overridden by a same-named property in this style later on, "disabled" if the property is disabled by the user, "style" (implied if absent) if the property is reported by the browser rather than by the CSS source parser.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CSSPropertyStatus
-{
-[System.Runtime.Serialization.EnumMember(Value = "active")]Active,
-[System.Runtime.Serialization.EnumMember(Value = "inactive")]Inactive,
-[System.Runtime.Serialization.EnumMember(Value = "disabled")]Disabled,
-[System.Runtime.Serialization.EnumMember(Value = "style")]Style}
-/// <summary>
-/// CSS style effective visual dimensions and source offsets.
-/// </summary>
-internal partial class CSSProperty
-{
-/// <summary>
-/// The property name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// The property value.
-/// </summary>
-public string Value { get; set; }
-/// <summary>
-/// The property priority (implies "" if absent).
-/// </summary>
-public string Priority { get; set; }
-/// <summary>
-/// Whether the property is implicit (implies &lt;code&gt;false&lt;/code&gt; if absent).
-/// </summary>
-public bool? Implicit { get; set; }
-/// <summary>
-/// The full property text as specified in the style.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Whether the property is understood by the browser (implies &lt;code&gt;true&lt;/code&gt; if absent).
-/// </summary>
-public bool? ParsedOk { get; set; }
-/// <summary>
-/// Whether the property is active or disabled.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CSSPropertyStatus Status { get; set; }
-/// <summary>
-/// The entire property range in the enclosing style declaration (if available).
-/// </summary>
-public SourceRange Range { get; set; }}
-/// <summary>
-/// CSS @media (as well as other users of media queries, like @import, &lt;style&gt;, &lt;link&gt;, etc.) and @supports descriptor.
-/// </summary>
-internal partial class Grouping
-{
-/// <summary>
-/// Media query text.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Source of the media query: "media-rule" if specified by a @media rule, "media-import-rule" if specified by an @import rule, "media-link-node" if specified by a "media" attribute in a linked style sheet's LINK tag, "media-style-node" if specified by a "media" attribute in an inline style sheet's STYLE tag, "supports-rule" if specified by an @supports rule, .
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// URL of the document containing the CSS grouping.
-/// </summary>
-public string SourceURL { get; set; }}
-/// <summary>
-/// Enables the CSS agent for the given page. Clients should not assume that the CSS agent has been enabled until the result of this command is received.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.enable</c>
-/// </remarks>
-internal partial class CSSEnableRequest : IWebkitRequest<CSSEnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.enable";
-}
-/// <summary>
-/// Response from <see cref="CSSEnableRequest"/>
-/// </summary>
-internal partial class CSSEnableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Disables the CSS agent for the given page.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.disable</c>
-/// </remarks>
-internal partial class CSSDisableRequest : IWebkitRequest<CSSDisableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.disable";
-}
-/// <summary>
-/// Response from <see cref="CSSDisableRequest"/>
-/// </summary>
-internal partial class CSSDisableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Returns requested styles for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getMatchedStylesForNode</c>
-/// </remarks>
-internal partial class CSSGetMatchedStylesForNodeRequest : IWebkitRequest<CSSGetMatchedStylesForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getMatchedStylesForNode";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Whether to include pseudo styles (default: true).
-/// </summary>
-public bool? IncludePseudo { get; set; }
-/// <summary>
-/// Whether to include inherited styles (default: true).
-/// </summary>
-public bool? IncludeInherited { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
-/// </summary>
-internal partial class CSSGetMatchedStylesForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// CSS rules matching this node, from all applicable stylesheets.
-/// </summary>
-public RuleMatch[] MatchedCSSRules { get; set; }
-/// <summary>
-/// Pseudo style matches for this node.
-/// </summary>
-public PseudoIdMatches[] PseudoElements { get; set; }
-/// <summary>
-/// A chain of inherited styles (from the immediate node parent up to the DOM tree root).
-/// </summary>
-public InheritedStyleEntry[] Inherited { get; set; }}
-/// <summary>
-/// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM attributes) for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getInlineStylesForNode</c>
-/// </remarks>
-internal partial class CSSGetInlineStylesForNodeRequest : IWebkitRequest<CSSGetInlineStylesForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getInlineStylesForNode";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
-/// </summary>
-internal partial class CSSGetInlineStylesForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Inline style for the specified DOM node.
-/// </summary>
-public CSSStyle InlineStyle { get; set; }
-/// <summary>
-/// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
-/// </summary>
-public CSSStyle AttributesStyle { get; set; }}
-/// <summary>
-/// Returns the computed style for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getComputedStyleForNode</c>
-/// </remarks>
-internal partial class CSSGetComputedStyleForNodeRequest : IWebkitRequest<CSSGetComputedStyleForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getComputedStyleForNode";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
-/// </summary>
-internal partial class CSSGetComputedStyleForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Computed style for the specified DOM node.
-/// </summary>
-public CSSComputedStyleProperty[] ComputedStyle { get; set; }}
-/// <summary>
-/// Returns metainfo entries for all known stylesheets.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getAllStyleSheets</c>
-/// </remarks>
-internal partial class CSSGetAllStyleSheetsRequest : IWebkitRequest<CSSGetAllStyleSheetsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getAllStyleSheets";
-}
-/// <summary>
-/// Response from <see cref="CSSGetAllStyleSheetsRequest"/>
-/// </summary>
-internal partial class CSSGetAllStyleSheetsResponse: IWebkitResponse
-{
-/// <summary>
-/// Descriptor entries for all available stylesheets.
-/// </summary>
-public CSSStyleSheetHeader[] Headers { get; set; }}
-/// <summary>
-/// Returns stylesheet data for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getStyleSheet</c>
-/// </remarks>
-internal partial class CSSGetStyleSheetRequest : IWebkitRequest<CSSGetStyleSheetResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getStyleSheet";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetStyleSheetRequest"/>
-/// </summary>
-internal partial class CSSGetStyleSheetResponse: IWebkitResponse
-{
-/// <summary>
-/// Stylesheet contents for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
-/// </summary>
-public CSSStyleSheetBody StyleSheet { get; set; }}
-/// <summary>
-/// Returns the current textual content and the URL for a stylesheet.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getStyleSheetText</c>
-/// </remarks>
-internal partial class CSSGetStyleSheetTextRequest : IWebkitRequest<CSSGetStyleSheetTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getStyleSheetText";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetStyleSheetTextRequest"/>
-/// </summary>
-internal partial class CSSGetStyleSheetTextResponse: IWebkitResponse
-{
-/// <summary>
-/// The stylesheet text.
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// Sets the new stylesheet text, thereby invalidating all existing &lt;code&gt;CSSStyleId&lt;/code&gt;'s and &lt;code&gt;CSSRuleId&lt;/code&gt;'s contained by this stylesheet.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.setStyleSheetText</c>
-/// </remarks>
-internal partial class CSSSetStyleSheetTextRequest : IWebkitRequest<CSSSetStyleSheetTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.setStyleSheetText";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSSetStyleSheetTextRequest"/>
-/// </summary>
-internal partial class CSSSetStyleSheetTextResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Sets the new &lt;code&gt;text&lt;/code&gt; for the respective style.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.setStyleText</c>
-/// </remarks>
-internal partial class CSSSetStyleTextRequest : IWebkitRequest<CSSSetStyleTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.setStyleText";
-/// <summary>
-/// 
-/// </summary>
-public CSSStyleId StyleId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSSetStyleTextRequest"/>
-/// </summary>
-internal partial class CSSSetStyleTextResponse: IWebkitResponse
-{
-/// <summary>
-/// The resulting style after the text modification.
-/// </summary>
-public CSSStyle Style { get; set; }}
-/// <summary>
-/// Modifies the rule selector.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.setRuleSelector</c>
-/// </remarks>
-internal partial class CSSSetRuleSelectorRequest : IWebkitRequest<CSSSetRuleSelectorResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.setRuleSelector";
-/// <summary>
-/// 
-/// </summary>
-public CSSRuleId RuleId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Selector { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSSetRuleSelectorRequest"/>
-/// </summary>
-internal partial class CSSSetRuleSelectorResponse: IWebkitResponse
-{
-/// <summary>
-/// The resulting rule after the selector modification.
-/// </summary>
-public CSSRule Rule { get; set; }}
-/// <summary>
-/// Creates a new special "inspector" stylesheet in the frame with given &lt;code&gt;frameId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.createStyleSheet</c>
-/// </remarks>
-internal partial class CSSCreateStyleSheetRequest : IWebkitRequest<CSSCreateStyleSheetResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.createStyleSheet";
-/// <summary>
-/// Identifier of the frame where the new "inspector" stylesheet should be created.
-/// </summary>
-public string FrameId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSCreateStyleSheetRequest"/>
-/// </summary>
-internal partial class CSSCreateStyleSheetResponse: IWebkitResponse
-{
-/// <summary>
-/// Identifier of the created "inspector" stylesheet.
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Creates a new empty rule with the given &lt;code&gt;selector&lt;/code&gt; in a stylesheet with given &lt;code&gt;styleSheetId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.addRule</c>
-/// </remarks>
-internal partial class CSSAddRuleRequest : IWebkitRequest<CSSAddRuleResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.addRule";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Selector { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSAddRuleRequest"/>
-/// </summary>
-internal partial class CSSAddRuleResponse: IWebkitResponse
-{
-/// <summary>
-/// The newly created rule.
-/// </summary>
-public CSSRule Rule { get; set; }}
-/// <summary>
-/// Returns all supported CSS property names.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getSupportedCSSProperties</c>
-/// </remarks>
-internal partial class CSSGetSupportedCSSPropertiesRequest : IWebkitRequest<CSSGetSupportedCSSPropertiesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getSupportedCSSProperties";
-}
-/// <summary>
-/// Response from <see cref="CSSGetSupportedCSSPropertiesRequest"/>
-/// </summary>
-internal partial class CSSGetSupportedCSSPropertiesResponse: IWebkitResponse
-{
-/// <summary>
-/// Supported property metainfo.
-/// </summary>
-public CSSPropertyInfo[] CssProperties { get; set; }}
-/// <summary>
-/// Returns all supported system font family names.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getSupportedSystemFontFamilyNames</c>
-/// </remarks>
-internal partial class CSSGetSupportedSystemFontFamilyNamesRequest : IWebkitRequest<CSSGetSupportedSystemFontFamilyNamesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getSupportedSystemFontFamilyNames";
-}
-/// <summary>
-/// Response from <see cref="CSSGetSupportedSystemFontFamilyNamesRequest"/>
-/// </summary>
-internal partial class CSSGetSupportedSystemFontFamilyNamesResponse: IWebkitResponse
-{
-/// <summary>
-/// Supported system font families.
-/// </summary>
-public string[] FontFamilyNames { get; set; }}
-/// <summary>
-/// Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.forcePseudoState</c>
-/// </remarks>
-internal partial class CSSForcePseudoStateRequest : IWebkitRequest<CSSForcePseudoStateResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.forcePseudoState";
-/// <summary>
-/// The element id for which to force the pseudo state.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Element pseudo classes to force when computing the element's style.
-/// </summary>
-public string[] ForcedPseudoClasses { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSForcePseudoStateRequest"/>
-/// </summary>
-internal partial class CSSForcePseudoStateResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Fires whenever a MediaQuery result changes (for example, after a browser window has been resized.) The current implementation considers only viewport-dependent media features.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.mediaQueryResultChanged</c>
-/// </remarks>
-internal partial class CSSMediaQueryResultChangedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.mediaQueryResultChanged";
-}
-/// <summary>
-/// Fired whenever a stylesheet is changed as a result of the client operation.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.styleSheetChanged</c>
-/// </remarks>
-internal partial class CSSStyleSheetChangedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.styleSheetChanged";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Fired whenever an active document stylesheet is added.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.styleSheetAdded</c>
-/// </remarks>
-internal partial class CSSStyleSheetAddedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.styleSheetAdded";
-/// <summary>
-/// Added stylesheet metainfo.
-/// </summary>
-public CSSStyleSheetHeader Header { get; set; }}
-/// <summary>
-/// Fired whenever an active document stylesheet is removed.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.styleSheetRemoved</c>
-/// </remarks>
-internal partial class CSSStyleSheetRemovedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.styleSheetRemoved";
-/// <summary>
-/// Identifier of the removed stylesheet.
-/// </summary>
-public string StyleSheetId { get; set; }}
-}
-namespace PlaywrightSharp.Webkit.Protocol.Database
-{
-/// <summary>
-/// Database object.
-/// </summary>
-internal partial class Database
-{
-/// <summary>
-/// Database ID.
-/// </summary>
-public string Id { get; set; }
-/// <summary>
-/// Database domain.
-/// </summary>
-public string Domain { get; set; }
-/// <summary>
-/// Database name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Database version.
-/// </summary>
-public string Version { get; set; }}
-/// <summary>
-/// Database error.
-/// </summary>
-internal partial class Error
-{
-/// <summary>
-/// Error message.
-/// </summary>
-public string Message { get; set; }
-/// <summary>
-/// Error code.
-/// </summary>
-public int? Code { get; set; }}
-/// <summary>
-/// Enables database tracking, database events will now be delivered to the client.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Database.enable</c>
-/// </remarks>
-internal partial class DatabaseEnableRequest : IWebkitRequest<DatabaseEnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Database.enable";
-}
-/// <summary>
-/// Response from <see cref="DatabaseEnableRequest"/>
-/// </summary>
-internal partial class DatabaseEnableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Disables database tracking, prevents database events from being sent to the client.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Database.disable</c>
-/// </remarks>
-internal partial class DatabaseDisableRequest : IWebkitRequest<DatabaseDisableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Database.disable";
-}
-/// <summary>
-/// Response from <see cref="DatabaseDisableRequest"/>
-/// </summary>
-internal partial class DatabaseDisableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// 
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Database.getDatabaseTableNames</c>
-/// </remarks>
-internal partial class DatabaseGetDatabaseTableNamesRequest : IWebkitRequest<DatabaseGetDatabaseTableNamesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Database.getDatabaseTableNames";
-/// <summary>
-/// 
-/// </summary>
-public string DatabaseId { get; set; }}
-/// <summary>
-/// Response from <see cref="DatabaseGetDatabaseTableNamesRequest"/>
-/// </summary>
-internal partial class DatabaseGetDatabaseTableNamesResponse: IWebkitResponse
-{
-/// <summary>
-/// 
-/// </summary>
-public string[] TableNames { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Database.executeSQL</c>
-/// </remarks>
-internal partial class DatabaseExecuteSQLRequest : IWebkitRequest<DatabaseExecuteSQLResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Database.executeSQL";
-/// <summary>
-/// 
-/// </summary>
-public string DatabaseId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Query { get; set; }}
-/// <summary>
-/// Response from <see cref="DatabaseExecuteSQLRequest"/>
-/// </summary>
-internal partial class DatabaseExecuteSQLResponse: IWebkitResponse
-{
-/// <summary>
-/// 
-/// </summary>
-public string[] ColumnNames { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public JsonElement?[] Values { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public Error SqlError { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Database.addDatabase</c>
-/// </remarks>
-internal partial class DatabaseAddDatabaseWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Database.addDatabase";
-/// <summary>
-/// 
-/// </summary>
-public Database Database { get; set; }}
-}
-namespace PlaywrightSharp.Webkit.Protocol.Debugger
-{
-/// <summary>
-/// Location in the source code.
-/// </summary>
-internal partial class Location
-{
-/// <summary>
-/// Script identifier as reported in the &lt;code&gt;Debugger.scriptParsed&lt;/code&gt;.
-/// </summary>
-public string ScriptId { get; set; }
-/// <summary>
-/// Line number in the script (0-based).
-/// </summary>
-public int? LineNumber { get; set; }
-/// <summary>
-/// Column number in the script (0-based).
-/// </summary>
-public int? ColumnNumber { get; set; }}
-/// <summary>
-/// Action to perform when a breakpoint is triggered.
-/// </summary>
-internal partial class BreakpointAction
-{
-/// <summary>
-/// Different kinds of breakpoint actions.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// Data associated with this breakpoint type (e.g. for type "eval" this is the JavaScript string to evaluate).
-/// </summary>
-public string Data { get; set; }
-/// <summary>
-/// A frontend-assigned identifier for this breakpoint action.
-/// </summary>
-public int? Id { get; set; }}
-/// <summary>
-/// Extra options that modify breakpoint behavior.
-/// </summary>
-internal partial class BreakpointOptions
-{
-/// <summary>
-/// Expression to use as a breakpoint condition. When specified, debugger will only stop on the breakpoint if this expression evaluates to true.
-/// </summary>
-public string Condition { get; set; }
-/// <summary>
-/// Actions to perform automatically when the breakpoint is triggered.
-/// </summary>
-public BreakpointAction[] Actions { get; set; }
-/// <summary>
-/// Automatically continue after hitting this breakpoint and running actions.
-/// </summary>
-public bool? AutoContinue { get; set; }
-/// <summary>
-/// Number of times to ignore this breakpoint, before stopping on the breakpoint and running actions.
-/// </summary>
-public int? IgnoreCount { get; set; }}
-/// <summary>
-/// Information about the function.
-/// </summary>
-internal partial class FunctionDetails
-{
-/// <summary>
-/// Location of the function.
-/// </summary>
-public Location Location { get; set; }
-/// <summary>
-/// Name of the function. Not present for anonymous functions.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Display name of the function(specified in 'displayName' property on the function object).
-/// </summary>
-public string DisplayName { get; set; }
-/// <summary>
-/// Scope chain for this closure.
-/// </summary>
-public Scope[] ScopeChain { get; set; }}
-/// <summary>
-/// JavaScript call frame. Array of call frames form the call stack.
-/// </summary>
-internal partial class CallFrame
-{
-/// <summary>
-/// Call frame identifier. This identifier is only valid while the virtual machine is paused.
-/// </summary>
-public string CallFrameId { get; set; }
-/// <summary>
-/// Name of the JavaScript function called on this call frame.
-/// </summary>
-public string FunctionName { get; set; }
-/// <summary>
-/// Location in the source code.
-/// </summary>
-public Location Location { get; set; }
-/// <summary>
-/// Scope chain for this call frame.
-/// </summary>
-public Scope[] ScopeChain { get; set; }
-/// <summary>
-/// &lt;code&gt;this&lt;/code&gt; object for this call frame.
-/// </summary>
-public Runtime.RemoteObject This { get; set; }
-/// <summary>
-/// Is the current frame tail deleted from a tail call.
-/// </summary>
-public bool? IsTailDeleted { get; set; }}
-/// <summary>
-/// Scope description.
-/// </summary>
-internal partial class Scope
-{
-/// <summary>
-/// Object representing the scope. For &lt;code&gt;global&lt;/code&gt; and &lt;code&gt;with&lt;/code&gt; scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties.
-/// </summary>
-public Runtime.RemoteObject Object { get; set; }
-/// <summary>
-/// Scope type.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// Name associated with the scope.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Location if available of the scope definition.
-/// </summary>
-public Location Location { get; set; }
-/// <summary>
-/// Whether the scope has any variables.
-/// </summary>
-public bool? Empty { get; set; }}
-/// <summary>
-/// A sample collected by evaluating a probe breakpoint action.
-/// </summary>
-internal partial class ProbeSample
-{
-/// <summary>
-/// Identifier of the probe breakpoint action that created the sample.
-/// </summary>
-public int? ProbeId { get; set; }
-/// <summary>
-/// Unique identifier for this sample.
-/// </summary>
-public int? SampleId { get; set; }
-/// <summary>
-/// A batch identifier which is the same for all samples taken at the same breakpoint hit.
-/// </summary>
-public int? BatchId { get; set; }
-/// <summary>
-/// Timestamp of when the sample was taken.
-/// </summary>
-public double? Timestamp { get; set; }
-/// <summary>
-/// Contents of the sample.
-/// </summary>
-public Runtime.RemoteObject Payload { get; set; }}
-/// <summary>
-/// The pause reason auxiliary data when paused because of an assertion.
-/// </summary>
-internal partial class AssertPauseReason
-{
-/// <summary>
-/// The console.assert message string if provided.
-/// </summary>
-public string Message { get; set; }}
-/// <summary>
-/// The pause reason auxiliary data when paused because of hitting a breakpoint.
-/// </summary>
-internal partial class BreakpointPauseReason
-{
-/// <summary>
-/// The identifier of the breakpoint causing the pause.
-/// </summary>
-public string BreakpointId { get; set; }}
-/// <summary>
-/// The pause reason auxiliary data when paused because of a Content Security Policy directive.
-/// </summary>
-internal partial class CSPViolationPauseReason
-{
-/// <summary>
-/// The CSP directive that blocked script execution.
-/// </summary>
-public string Directive { get; set; }}
-/// <summary>
-/// Enables debugger for the given page. Clients should not assume that the debugging has been enabled until the result for this command is received.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.enable</c>
-/// </remarks>
-internal partial class DebuggerEnableRequest : IWebkitRequest<DebuggerEnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.enable";
-}
-/// <summary>
-/// Response from <see cref="DebuggerEnableRequest"/>
-/// </summary>
-internal partial class DebuggerEnableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Disables debugger for given page.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.disable</c>
-/// </remarks>
-internal partial class DebuggerDisableRequest : IWebkitRequest<DebuggerDisableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.disable";
-}
-/// <summary>
-/// Response from <see cref="DebuggerDisableRequest"/>
-/// </summary>
-internal partial class DebuggerDisableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Set the async stack trace depth for the page. A value of zero disables recording of async stack traces.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setAsyncStackTraceDepth</c>
-/// </remarks>
-internal partial class DebuggerSetAsyncStackTraceDepthRequest : IWebkitRequest<DebuggerSetAsyncStackTraceDepthResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setAsyncStackTraceDepth";
-/// <summary>
-/// Async stack trace depth.
-/// </summary>
-public int? Depth { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetAsyncStackTraceDepthRequest"/>
-/// </summary>
-internal partial class DebuggerSetAsyncStackTraceDepthResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Activates / deactivates all breakpoints on the page.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setBreakpointsActive</c>
-/// </remarks>
-internal partial class DebuggerSetBreakpointsActiveRequest : IWebkitRequest<DebuggerSetBreakpointsActiveResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setBreakpointsActive";
-/// <summary>
-/// New value for breakpoints active state.
-/// </summary>
-public bool? Active { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
-/// </summary>
-internal partial class DebuggerSetBreakpointsActiveResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this command is issued, all existing parsed scripts will have breakpoints resolved and returned in &lt;code&gt;locations&lt;/code&gt; property. Further matching script parsing will result in subsequent &lt;code&gt;breakpointResolved&lt;/code&gt; events issued. This logical breakpoint will survive page reloads.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setBreakpointByUrl</c>
-/// </remarks>
-internal partial class DebuggerSetBreakpointByUrlRequest : IWebkitRequest<DebuggerSetBreakpointByUrlResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setBreakpointByUrl";
-/// <summary>
-/// Line number to set breakpoint at.
-/// </summary>
-public int? LineNumber { get; set; }
-/// <summary>
-/// URL of the resources to set breakpoint on.
-/// </summary>
-public string Url { get; set; }
-/// <summary>
-/// Regex pattern for the URLs of the resources to set breakpoints on. Either &lt;code&gt;url&lt;/code&gt; or &lt;code&gt;urlRegex&lt;/code&gt; must be specified.
-/// </summary>
-public string UrlRegex { get; set; }
-/// <summary>
-/// Offset in the line to set breakpoint at.
-/// </summary>
-public int? ColumnNumber { get; set; }
-/// <summary>
-/// Options to apply to this breakpoint to modify its behavior.
-/// </summary>
-public BreakpointOptions Options { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetBreakpointByUrlRequest"/>
-/// </summary>
-internal partial class DebuggerSetBreakpointByUrlResponse: IWebkitResponse
-{
-/// <summary>
-/// Id of the created breakpoint for further reference.
-/// </summary>
-public string BreakpointId { get; set; }
-/// <summary>
-/// List of the locations this breakpoint resolved into upon addition.
-/// </summary>
-public Location[] Locations { get; set; }}
-/// <summary>
-/// Sets JavaScript breakpoint at a given location.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setBreakpoint</c>
-/// </remarks>
-internal partial class DebuggerSetBreakpointRequest : IWebkitRequest<DebuggerSetBreakpointResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setBreakpoint";
-/// <summary>
-/// Location to set breakpoint in.
-/// </summary>
-public Location Location { get; set; }
-/// <summary>
-/// Options to apply to this breakpoint to modify its behavior.
-/// </summary>
-public BreakpointOptions Options { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetBreakpointRequest"/>
-/// </summary>
-internal partial class DebuggerSetBreakpointResponse: IWebkitResponse
-{
-/// <summary>
-/// Id of the created breakpoint for further reference.
-/// </summary>
-public string BreakpointId { get; set; }
-/// <summary>
-/// Location this breakpoint resolved into.
-/// </summary>
-public Location ActualLocation { get; set; }}
-/// <summary>
-/// Removes JavaScript breakpoint.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.removeBreakpoint</c>
-/// </remarks>
-internal partial class DebuggerRemoveBreakpointRequest : IWebkitRequest<DebuggerRemoveBreakpointResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.removeBreakpoint";
-/// <summary>
-/// 
-/// </summary>
-public string BreakpointId { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerRemoveBreakpointRequest"/>
-/// </summary>
-internal partial class DebuggerRemoveBreakpointResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Continues execution until the current evaluation completes. This will trigger either a Debugger.paused or Debugger.resumed event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.continueUntilNextRunLoop</c>
-/// </remarks>
-internal partial class DebuggerContinueUntilNextRunLoopRequest : IWebkitRequest<DebuggerContinueUntilNextRunLoopResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.continueUntilNextRunLoop";
-}
-/// <summary>
-/// Response from <see cref="DebuggerContinueUntilNextRunLoopRequest"/>
-/// </summary>
-internal partial class DebuggerContinueUntilNextRunLoopResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Continues execution until specific location is reached. This will trigger either a Debugger.paused or Debugger.resumed event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.continueToLocation</c>
-/// </remarks>
-internal partial class DebuggerContinueToLocationRequest : IWebkitRequest<DebuggerContinueToLocationResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.continueToLocation";
-/// <summary>
-/// Location to continue to.
-/// </summary>
-public Location Location { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerContinueToLocationRequest"/>
-/// </summary>
-internal partial class DebuggerContinueToLocationResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Steps over the statement. This will trigger either a Debugger.paused or Debugger.resumed event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.stepOver</c>
-/// </remarks>
-internal partial class DebuggerStepOverRequest : IWebkitRequest<DebuggerStepOverResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.stepOver";
-}
-/// <summary>
-/// Response from <see cref="DebuggerStepOverRequest"/>
-/// </summary>
-internal partial class DebuggerStepOverResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Steps into the function call. This will trigger either a Debugger.paused or Debugger.resumed event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.stepInto</c>
-/// </remarks>
-internal partial class DebuggerStepIntoRequest : IWebkitRequest<DebuggerStepIntoResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.stepInto";
-}
-/// <summary>
-/// Response from <see cref="DebuggerStepIntoRequest"/>
-/// </summary>
-internal partial class DebuggerStepIntoResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Steps out of the function call. This will trigger either a Debugger.paused or Debugger.resumed event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.stepOut</c>
-/// </remarks>
-internal partial class DebuggerStepOutRequest : IWebkitRequest<DebuggerStepOutResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.stepOut";
-}
-/// <summary>
-/// Response from <see cref="DebuggerStepOutRequest"/>
-/// </summary>
-internal partial class DebuggerStepOutResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Stops on the next JavaScript statement.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.pause</c>
-/// </remarks>
-internal partial class DebuggerPauseRequest : IWebkitRequest<DebuggerPauseResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.pause";
-}
-/// <summary>
-/// Response from <see cref="DebuggerPauseRequest"/>
-/// </summary>
-internal partial class DebuggerPauseResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Resumes JavaScript execution. This will trigger a Debugger.resumed event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.resume</c>
-/// </remarks>
-internal partial class DebuggerResumeRequest : IWebkitRequest<DebuggerResumeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.resume";
-}
-/// <summary>
-/// Response from <see cref="DebuggerResumeRequest"/>
-/// </summary>
-internal partial class DebuggerResumeResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Searches for given string in script content.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.searchInContent</c>
-/// </remarks>
-internal partial class DebuggerSearchInContentRequest : IWebkitRequest<DebuggerSearchInContentResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.searchInContent";
-/// <summary>
-/// Id of the script to search in.
-/// </summary>
-public string ScriptId { get; set; }
-/// <summary>
-/// String to search for.
-/// </summary>
-public string Query { get; set; }
-/// <summary>
-/// If true, search is case sensitive.
-/// </summary>
-public bool? CaseSensitive { get; set; }
-/// <summary>
-/// If true, treats string parameter as regex.
-/// </summary>
-public bool? IsRegex { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSearchInContentRequest"/>
-/// </summary>
-internal partial class DebuggerSearchInContentResponse: IWebkitResponse
-{
-/// <summary>
-/// List of search matches.
-/// </summary>
-public GenericTypes.SearchMatch[] Result { get; set; }}
-/// <summary>
-/// Returns source for the script with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.getScriptSource</c>
-/// </remarks>
-internal partial class DebuggerGetScriptSourceRequest : IWebkitRequest<DebuggerGetScriptSourceResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.getScriptSource";
-/// <summary>
-/// Id of the script to get source for.
-/// </summary>
-public string ScriptId { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerGetScriptSourceRequest"/>
-/// </summary>
-internal partial class DebuggerGetScriptSourceResponse: IWebkitResponse
-{
-/// <summary>
-/// Script source.
-/// </summary>
-public string ScriptSource { get; set; }}
-/// <summary>
-/// Returns detailed information on given function.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.getFunctionDetails</c>
-/// </remarks>
-internal partial class DebuggerGetFunctionDetailsRequest : IWebkitRequest<DebuggerGetFunctionDetailsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.getFunctionDetails";
-/// <summary>
-/// Id of the function to get location for.
-/// </summary>
-public string FunctionId { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerGetFunctionDetailsRequest"/>
-/// </summary>
-internal partial class DebuggerGetFunctionDetailsResponse: IWebkitResponse
-{
-/// <summary>
-/// Information about the function.
-/// </summary>
-public FunctionDetails Details { get; set; }}
-/// <summary>
-/// Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or no exceptions. Initial pause on exceptions state is &lt;code&gt;none&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setPauseOnExceptions</c>
-/// </remarks>
-internal partial class DebuggerSetPauseOnExceptionsRequest : IWebkitRequest<DebuggerSetPauseOnExceptionsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setPauseOnExceptions";
-/// <summary>
-/// Pause on exceptions mode.
-/// </summary>
-public string State { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetPauseOnExceptionsRequest"/>
-/// </summary>
-internal partial class DebuggerSetPauseOnExceptionsResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Set pause on assertions state. Assertions are console.assert assertions.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setPauseOnAssertions</c>
-/// </remarks>
-internal partial class DebuggerSetPauseOnAssertionsRequest : IWebkitRequest<DebuggerSetPauseOnAssertionsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setPauseOnAssertions";
-/// <summary>
-/// 
-/// </summary>
-public bool? Enabled { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetPauseOnAssertionsRequest"/>
-/// </summary>
-internal partial class DebuggerSetPauseOnAssertionsResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Pause when running the next JavaScript microtask.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setPauseOnMicrotasks</c>
-/// </remarks>
-internal partial class DebuggerSetPauseOnMicrotasksRequest : IWebkitRequest<DebuggerSetPauseOnMicrotasksResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setPauseOnMicrotasks";
-/// <summary>
-/// 
-/// </summary>
-public bool? Enabled { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetPauseOnMicrotasksRequest"/>
-/// </summary>
-internal partial class DebuggerSetPauseOnMicrotasksResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Change whether to pause in the debugger for internal scripts. The default value is false.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setPauseForInternalScripts</c>
-/// </remarks>
-internal partial class DebuggerSetPauseForInternalScriptsRequest : IWebkitRequest<DebuggerSetPauseForInternalScriptsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setPauseForInternalScripts";
-/// <summary>
-/// 
-/// </summary>
-public bool? ShouldPause { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetPauseForInternalScriptsRequest"/>
-/// </summary>
-internal partial class DebuggerSetPauseForInternalScriptsResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Evaluates expression on a given call frame.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.evaluateOnCallFrame</c>
-/// </remarks>
-internal partial class DebuggerEvaluateOnCallFrameRequest : IWebkitRequest<DebuggerEvaluateOnCallFrameResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.evaluateOnCallFrame";
-/// <summary>
-/// Call frame identifier to evaluate on.
-/// </summary>
-public string CallFrameId { get; set; }
-/// <summary>
-/// Expression to evaluate.
-/// </summary>
-public string Expression { get; set; }
-/// <summary>
-/// String object group name to put result into (allows rapid releasing resulting object handles using &lt;code&gt;releaseObjectGroup&lt;/code&gt;).
-/// </summary>
-public string ObjectGroup { get; set; }
-/// <summary>
-/// Specifies whether command line API should be available to the evaluated expression, defaults to false.
-/// </summary>
-public bool? IncludeCommandLineAPI { get; set; }
-/// <summary>
-/// Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.
-/// </summary>
-public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
-/// <summary>
-/// Whether the result is expected to be a JSON object that should be sent by value.
-/// </summary>
-public bool? ReturnByValue { get; set; }
-/// <summary>
-/// Whether preview should be generated for the result.
-/// </summary>
-public bool? GeneratePreview { get; set; }
-/// <summary>
-/// Whether the resulting value should be considered for saving in the $n history.
-/// </summary>
-public bool? SaveResult { get; set; }
-/// <summary>
-/// Whether the expression should be considered to be in a user gesture or not.
-/// </summary>
-public bool? EmulateUserGesture { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
-/// </summary>
-internal partial class DebuggerEvaluateOnCallFrameResponse: IWebkitResponse
-{
-/// <summary>
-/// Object wrapper for the evaluation result.
-/// </summary>
-public Runtime.RemoteObject Result { get; set; }
-/// <summary>
-/// True if the result was thrown during the evaluation.
-/// </summary>
-public bool? WasThrown { get; set; }
-/// <summary>
-/// If the result was saved, this is the $n index that can be used to access the value.
-/// </summary>
-public int? SavedResultIndex { get; set; }}
-/// <summary>
-/// Sets whether the given URL should be in the list of blackboxed scripts, which are ignored when pausing/stepping/debugging.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Debugger.setShouldBlackboxURL</c>
-/// </remarks>
-internal partial class DebuggerSetShouldBlackboxURLRequest : IWebkitRequest<DebuggerSetShouldBlackboxURLResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Debugger.setShouldBlackboxURL";
-/// <summary>
-/// 
-/// </summary>
-public string Url { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public bool? ShouldBlackbox { get; set; }
-/// <summary>
-/// If true, &lt;code&gt;url&lt;/code&gt; is case sensitive.
-/// </summary>
-public bool? CaseSensitive { get; set; }
-/// <summary>
-/// If true, treat &lt;code&gt;url&lt;/code&gt; as regular expression.
-/// </summary>
-public bool? IsRegex { get; set; }}
-/// <summary>
-/// Response from <see cref="DebuggerSetShouldBlackboxURLRequest"/>
-/// </summary>
-internal partial class DebuggerSetShouldBlackboxURLResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Called when global has been cleared and debugger client should reset its state. Happens upon navigation or reload.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.globalObjectCleared</c>
-/// </remarks>
-internal partial class DebuggerGlobalObjectClearedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.globalObjectCleared";
-}
-/// <summary>
-/// Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.scriptParsed</c>
-/// </remarks>
-internal partial class DebuggerScriptParsedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.scriptParsed";
-/// <summary>
-/// Identifier of the script parsed.
-/// </summary>
-public string ScriptId { get; set; }
-/// <summary>
-/// URL of the script parsed (if any).
-/// </summary>
-public string Url { get; set; }
-/// <summary>
-/// Line offset of the script within the resource with given URL (for script tags).
-/// </summary>
-public int? StartLine { get; set; }
-/// <summary>
-/// Column offset of the script within the resource with given URL.
-/// </summary>
-public int? StartColumn { get; set; }
-/// <summary>
-/// Last line of the script.
-/// </summary>
-public int? EndLine { get; set; }
-/// <summary>
-/// Length of the last line of the script.
-/// </summary>
-public int? EndColumn { get; set; }
-/// <summary>
-/// Determines whether this script is a user extension script.
-/// </summary>
-public bool? IsContentScript { get; set; }
-/// <summary>
-/// sourceURL name of the script (if any).
-/// </summary>
-public string SourceURL { get; set; }
-/// <summary>
-/// URL of source map associated with script (if any).
-/// </summary>
-public string SourceMapURL { get; set; }
-/// <summary>
-/// True if this script was parsed as a module.
-/// </summary>
-public bool? Module { get; set; }}
-/// <summary>
-/// Fired when virtual machine fails to parse the script.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.scriptFailedToParse</c>
-/// </remarks>
-internal partial class DebuggerScriptFailedToParseWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.scriptFailedToParse";
-/// <summary>
-/// URL of the script that failed to parse.
-/// </summary>
-public string Url { get; set; }
-/// <summary>
-/// Source text of the script that failed to parse.
-/// </summary>
-public string ScriptSource { get; set; }
-/// <summary>
-/// Line offset of the script within the resource.
-/// </summary>
-public int? StartLine { get; set; }
-/// <summary>
-/// Line with error.
-/// </summary>
-public int? ErrorLine { get; set; }
-/// <summary>
-/// Parse error message.
-/// </summary>
-public string ErrorMessage { get; set; }}
-/// <summary>
-/// Fired when breakpoint is resolved to an actual script and location.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.breakpointResolved</c>
-/// </remarks>
-internal partial class DebuggerBreakpointResolvedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.breakpointResolved";
-/// <summary>
-/// Breakpoint unique identifier.
-/// </summary>
-public string BreakpointId { get; set; }
-/// <summary>
-/// Actual breakpoint location.
-/// </summary>
-public Location Location { get; set; }}
-/// <summary>
-/// Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.paused</c>
-/// </remarks>
-internal partial class DebuggerPausedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.paused";
-/// <summary>
-/// Call stack the virtual machine stopped on.
-/// </summary>
-public CallFrame[] CallFrames { get; set; }
-/// <summary>
-/// Pause reason.
-/// </summary>
-public string Reason { get; set; }
-/// <summary>
-/// Object containing break-specific auxiliary properties.
-/// </summary>
-public object Data { get; set; }
-/// <summary>
-/// Linked list of asynchronous StackTraces.
-/// </summary>
-public Console.StackTrace AsyncStackTrace { get; set; }}
-/// <summary>
-/// Fired when the virtual machine resumed execution.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.resumed</c>
-/// </remarks>
-internal partial class DebuggerResumedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.resumed";
-}
-/// <summary>
-/// Fires when a new probe sample is collected.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.didSampleProbe</c>
-/// </remarks>
-internal partial class DebuggerDidSampleProbeWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.didSampleProbe";
-/// <summary>
-/// A collected probe sample.
-/// </summary>
-public ProbeSample Sample { get; set; }}
-/// <summary>
-/// Fired when a "sound" breakpoint action is triggered on a breakpoint.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Debugger.playBreakpointActionSound</c>
-/// </remarks>
-internal partial class DebuggerPlayBreakpointActionSoundWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Debugger.playBreakpointActionSound";
-/// <summary>
-/// Breakpoint action identifier.
-/// </summary>
-public int? BreakpointActionId { get; set; }}
-}
-namespace PlaywrightSharp.Webkit.Protocol.Dialog
-{
-/// <summary>
-/// Enables dialog domain notifications.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Dialog.enable</c>
-/// </remarks>
-internal partial class DialogEnableRequest : IWebkitRequest<DialogEnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Dialog.enable";
-}
-/// <summary>
-/// Response from <see cref="DialogEnableRequest"/>
-/// </summary>
-internal partial class DialogEnableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Disables dialog domain notifications.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Dialog.disable</c>
-/// </remarks>
-internal partial class DialogDisableRequest : IWebkitRequest<DialogDisableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Dialog.disable";
-}
-/// <summary>
-/// Response from <see cref="DialogDisableRequest"/>
-/// </summary>
-internal partial class DialogDisableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
-/// </summary>
-/// <remarks>
-/// Will send the command <c>Dialog.handleJavaScriptDialog</c>
-/// </remarks>
-internal partial class DialogHandleJavaScriptDialogRequest : IWebkitRequest<DialogHandleJavaScriptDialogResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "Dialog.handleJavaScriptDialog";
-/// <summary>
-/// Whether to accept or dismiss the dialog.
-/// </summary>
-public bool? Accept { get; set; }
-/// <summary>
-/// The text to enter into the dialog prompt before accepting. Used only if this is a prompt dialog.
-/// </summary>
-public string PromptText { get; set; }}
-/// <summary>
-/// Response from <see cref="DialogHandleJavaScriptDialogRequest"/>
-/// </summary>
-internal partial class DialogHandleJavaScriptDialogResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to open.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>Dialog.javascriptDialogOpening</c>
-/// </remarks>
-internal partial class DialogJavascriptDialogOpeningWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "Dialog.javascriptDialogOpening";
-/// <summary>
-/// Dialog type.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// Message that will be displayed by the dialog.
-/// </summary>
-public string Message { get; set; }
-/// <summary>
-/// Default dialog prompt.
-/// </summary>
-public string DefaultPrompt { get; set; }}
-}
 namespace PlaywrightSharp.Webkit.Protocol.DOM
 {
 /// <summary>
@@ -3918,17 +2797,17 @@ public string Value { get; set; }
 /// Pseudo element type for this node.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PseudoType PseudoType { get; set; }
+public PseudoType? PseudoType { get; set; }
 /// <summary>
 /// Shadow root type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ShadowRootType ShadowRootType { get; set; }
+public ShadowRootType? ShadowRootType { get; set; }
 /// <summary>
 /// Custom element state.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CustomElementState CustomElementState { get; set; }
+public CustomElementState? CustomElementState { get; set; }
 /// <summary>
 /// Content document for frame owner elements.
 /// </summary>
@@ -6040,6 +4919,1127 @@ public string OldValue { get; set; }
 /// </summary>
 public string NewValue { get; set; }}
 }
+namespace PlaywrightSharp.Webkit.Protocol.Database
+{
+/// <summary>
+/// Database object.
+/// </summary>
+internal partial class Database
+{
+/// <summary>
+/// Database ID.
+/// </summary>
+public string Id { get; set; }
+/// <summary>
+/// Database domain.
+/// </summary>
+public string Domain { get; set; }
+/// <summary>
+/// Database name.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// Database version.
+/// </summary>
+public string Version { get; set; }}
+/// <summary>
+/// Database error.
+/// </summary>
+internal partial class Error
+{
+/// <summary>
+/// Error message.
+/// </summary>
+public string Message { get; set; }
+/// <summary>
+/// Error code.
+/// </summary>
+public int? Code { get; set; }}
+/// <summary>
+/// Enables database tracking, database events will now be delivered to the client.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Database.enable</c>
+/// </remarks>
+internal partial class DatabaseEnableRequest : IWebkitRequest<DatabaseEnableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Database.enable";
+}
+/// <summary>
+/// Response from <see cref="DatabaseEnableRequest"/>
+/// </summary>
+internal partial class DatabaseEnableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Disables database tracking, prevents database events from being sent to the client.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Database.disable</c>
+/// </remarks>
+internal partial class DatabaseDisableRequest : IWebkitRequest<DatabaseDisableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Database.disable";
+}
+/// <summary>
+/// Response from <see cref="DatabaseDisableRequest"/>
+/// </summary>
+internal partial class DatabaseDisableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Database.getDatabaseTableNames</c>
+/// </remarks>
+internal partial class DatabaseGetDatabaseTableNamesRequest : IWebkitRequest<DatabaseGetDatabaseTableNamesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Database.getDatabaseTableNames";
+/// <summary>
+/// 
+/// </summary>
+public string DatabaseId { get; set; }}
+/// <summary>
+/// Response from <see cref="DatabaseGetDatabaseTableNamesRequest"/>
+/// </summary>
+internal partial class DatabaseGetDatabaseTableNamesResponse: IWebkitResponse
+{
+/// <summary>
+/// 
+/// </summary>
+public string[] TableNames { get; set; }}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Database.executeSQL</c>
+/// </remarks>
+internal partial class DatabaseExecuteSQLRequest : IWebkitRequest<DatabaseExecuteSQLResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Database.executeSQL";
+/// <summary>
+/// 
+/// </summary>
+public string DatabaseId { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public string Query { get; set; }}
+/// <summary>
+/// Response from <see cref="DatabaseExecuteSQLRequest"/>
+/// </summary>
+internal partial class DatabaseExecuteSQLResponse: IWebkitResponse
+{
+/// <summary>
+/// 
+/// </summary>
+public string[] ColumnNames { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public JsonElement?[] Values { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public Error SqlError { get; set; }}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Database.addDatabase</c>
+/// </remarks>
+internal partial class DatabaseAddDatabaseWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Database.addDatabase";
+/// <summary>
+/// 
+/// </summary>
+public Database Database { get; set; }}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Debugger
+{
+/// <summary>
+/// Location in the source code.
+/// </summary>
+internal partial class Location
+{
+/// <summary>
+/// Script identifier as reported in the &lt;code&gt;Debugger.scriptParsed&lt;/code&gt;.
+/// </summary>
+public string ScriptId { get; set; }
+/// <summary>
+/// Line number in the script (0-based).
+/// </summary>
+public int? LineNumber { get; set; }
+/// <summary>
+/// Column number in the script (0-based).
+/// </summary>
+public int? ColumnNumber { get; set; }}
+/// <summary>
+/// Action to perform when a breakpoint is triggered.
+/// </summary>
+internal partial class BreakpointAction
+{
+/// <summary>
+/// Different kinds of breakpoint actions.
+/// </summary>
+public string Type { get; set; }
+/// <summary>
+/// Data associated with this breakpoint type (e.g. for type "eval" this is the JavaScript string to evaluate).
+/// </summary>
+public string Data { get; set; }
+/// <summary>
+/// A frontend-assigned identifier for this breakpoint action.
+/// </summary>
+public int? Id { get; set; }}
+/// <summary>
+/// Extra options that modify breakpoint behavior.
+/// </summary>
+internal partial class BreakpointOptions
+{
+/// <summary>
+/// Expression to use as a breakpoint condition. When specified, debugger will only stop on the breakpoint if this expression evaluates to true.
+/// </summary>
+public string Condition { get; set; }
+/// <summary>
+/// Actions to perform automatically when the breakpoint is triggered.
+/// </summary>
+public BreakpointAction[] Actions { get; set; }
+/// <summary>
+/// Automatically continue after hitting this breakpoint and running actions.
+/// </summary>
+public bool? AutoContinue { get; set; }
+/// <summary>
+/// Number of times to ignore this breakpoint, before stopping on the breakpoint and running actions.
+/// </summary>
+public int? IgnoreCount { get; set; }}
+/// <summary>
+/// Information about the function.
+/// </summary>
+internal partial class FunctionDetails
+{
+/// <summary>
+/// Location of the function.
+/// </summary>
+public Location Location { get; set; }
+/// <summary>
+/// Name of the function. Not present for anonymous functions.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// Display name of the function(specified in 'displayName' property on the function object).
+/// </summary>
+public string DisplayName { get; set; }
+/// <summary>
+/// Scope chain for this closure.
+/// </summary>
+public Scope[] ScopeChain { get; set; }}
+/// <summary>
+/// JavaScript call frame. Array of call frames form the call stack.
+/// </summary>
+internal partial class CallFrame
+{
+/// <summary>
+/// Call frame identifier. This identifier is only valid while the virtual machine is paused.
+/// </summary>
+public string CallFrameId { get; set; }
+/// <summary>
+/// Name of the JavaScript function called on this call frame.
+/// </summary>
+public string FunctionName { get; set; }
+/// <summary>
+/// Location in the source code.
+/// </summary>
+public Location Location { get; set; }
+/// <summary>
+/// Scope chain for this call frame.
+/// </summary>
+public Scope[] ScopeChain { get; set; }
+/// <summary>
+/// &lt;code&gt;this&lt;/code&gt; object for this call frame.
+/// </summary>
+public Runtime.RemoteObject This { get; set; }
+/// <summary>
+/// Is the current frame tail deleted from a tail call.
+/// </summary>
+public bool? IsTailDeleted { get; set; }}
+/// <summary>
+/// Scope description.
+/// </summary>
+internal partial class Scope
+{
+/// <summary>
+/// Object representing the scope. For &lt;code&gt;global&lt;/code&gt; and &lt;code&gt;with&lt;/code&gt; scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties.
+/// </summary>
+public Runtime.RemoteObject Object { get; set; }
+/// <summary>
+/// Scope type.
+/// </summary>
+public string Type { get; set; }
+/// <summary>
+/// Name associated with the scope.
+/// </summary>
+public string Name { get; set; }
+/// <summary>
+/// Location if available of the scope definition.
+/// </summary>
+public Location Location { get; set; }
+/// <summary>
+/// Whether the scope has any variables.
+/// </summary>
+public bool? Empty { get; set; }}
+/// <summary>
+/// A sample collected by evaluating a probe breakpoint action.
+/// </summary>
+internal partial class ProbeSample
+{
+/// <summary>
+/// Identifier of the probe breakpoint action that created the sample.
+/// </summary>
+public int? ProbeId { get; set; }
+/// <summary>
+/// Unique identifier for this sample.
+/// </summary>
+public int? SampleId { get; set; }
+/// <summary>
+/// A batch identifier which is the same for all samples taken at the same breakpoint hit.
+/// </summary>
+public int? BatchId { get; set; }
+/// <summary>
+/// Timestamp of when the sample was taken.
+/// </summary>
+public double? Timestamp { get; set; }
+/// <summary>
+/// Contents of the sample.
+/// </summary>
+public Runtime.RemoteObject Payload { get; set; }}
+/// <summary>
+/// The pause reason auxiliary data when paused because of an assertion.
+/// </summary>
+internal partial class AssertPauseReason
+{
+/// <summary>
+/// The console.assert message string if provided.
+/// </summary>
+public string Message { get; set; }}
+/// <summary>
+/// The pause reason auxiliary data when paused because of hitting a breakpoint.
+/// </summary>
+internal partial class BreakpointPauseReason
+{
+/// <summary>
+/// The identifier of the breakpoint causing the pause.
+/// </summary>
+public string BreakpointId { get; set; }}
+/// <summary>
+/// The pause reason auxiliary data when paused because of a Content Security Policy directive.
+/// </summary>
+internal partial class CSPViolationPauseReason
+{
+/// <summary>
+/// The CSP directive that blocked script execution.
+/// </summary>
+public string Directive { get; set; }}
+/// <summary>
+/// Enables debugger for the given page. Clients should not assume that the debugging has been enabled until the result for this command is received.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.enable</c>
+/// </remarks>
+internal partial class DebuggerEnableRequest : IWebkitRequest<DebuggerEnableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.enable";
+}
+/// <summary>
+/// Response from <see cref="DebuggerEnableRequest"/>
+/// </summary>
+internal partial class DebuggerEnableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Disables debugger for given page.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.disable</c>
+/// </remarks>
+internal partial class DebuggerDisableRequest : IWebkitRequest<DebuggerDisableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.disable";
+}
+/// <summary>
+/// Response from <see cref="DebuggerDisableRequest"/>
+/// </summary>
+internal partial class DebuggerDisableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Set the async stack trace depth for the page. A value of zero disables recording of async stack traces.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setAsyncStackTraceDepth</c>
+/// </remarks>
+internal partial class DebuggerSetAsyncStackTraceDepthRequest : IWebkitRequest<DebuggerSetAsyncStackTraceDepthResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setAsyncStackTraceDepth";
+/// <summary>
+/// Async stack trace depth.
+/// </summary>
+public int? Depth { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetAsyncStackTraceDepthRequest"/>
+/// </summary>
+internal partial class DebuggerSetAsyncStackTraceDepthResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Activates / deactivates all breakpoints on the page.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setBreakpointsActive</c>
+/// </remarks>
+internal partial class DebuggerSetBreakpointsActiveRequest : IWebkitRequest<DebuggerSetBreakpointsActiveResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setBreakpointsActive";
+/// <summary>
+/// New value for breakpoints active state.
+/// </summary>
+public bool? Active { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
+/// </summary>
+internal partial class DebuggerSetBreakpointsActiveResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this command is issued, all existing parsed scripts will have breakpoints resolved and returned in &lt;code&gt;locations&lt;/code&gt; property. Further matching script parsing will result in subsequent &lt;code&gt;breakpointResolved&lt;/code&gt; events issued. This logical breakpoint will survive page reloads.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setBreakpointByUrl</c>
+/// </remarks>
+internal partial class DebuggerSetBreakpointByUrlRequest : IWebkitRequest<DebuggerSetBreakpointByUrlResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setBreakpointByUrl";
+/// <summary>
+/// Line number to set breakpoint at.
+/// </summary>
+public int? LineNumber { get; set; }
+/// <summary>
+/// URL of the resources to set breakpoint on.
+/// </summary>
+public string Url { get; set; }
+/// <summary>
+/// Regex pattern for the URLs of the resources to set breakpoints on. Either &lt;code&gt;url&lt;/code&gt; or &lt;code&gt;urlRegex&lt;/code&gt; must be specified.
+/// </summary>
+public string UrlRegex { get; set; }
+/// <summary>
+/// Offset in the line to set breakpoint at.
+/// </summary>
+public int? ColumnNumber { get; set; }
+/// <summary>
+/// Options to apply to this breakpoint to modify its behavior.
+/// </summary>
+public BreakpointOptions Options { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetBreakpointByUrlRequest"/>
+/// </summary>
+internal partial class DebuggerSetBreakpointByUrlResponse: IWebkitResponse
+{
+/// <summary>
+/// Id of the created breakpoint for further reference.
+/// </summary>
+public string BreakpointId { get; set; }
+/// <summary>
+/// List of the locations this breakpoint resolved into upon addition.
+/// </summary>
+public Location[] Locations { get; set; }}
+/// <summary>
+/// Sets JavaScript breakpoint at a given location.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setBreakpoint</c>
+/// </remarks>
+internal partial class DebuggerSetBreakpointRequest : IWebkitRequest<DebuggerSetBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setBreakpoint";
+/// <summary>
+/// Location to set breakpoint in.
+/// </summary>
+public Location Location { get; set; }
+/// <summary>
+/// Options to apply to this breakpoint to modify its behavior.
+/// </summary>
+public BreakpointOptions Options { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetBreakpointRequest"/>
+/// </summary>
+internal partial class DebuggerSetBreakpointResponse: IWebkitResponse
+{
+/// <summary>
+/// Id of the created breakpoint for further reference.
+/// </summary>
+public string BreakpointId { get; set; }
+/// <summary>
+/// Location this breakpoint resolved into.
+/// </summary>
+public Location ActualLocation { get; set; }}
+/// <summary>
+/// Removes JavaScript breakpoint.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.removeBreakpoint</c>
+/// </remarks>
+internal partial class DebuggerRemoveBreakpointRequest : IWebkitRequest<DebuggerRemoveBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.removeBreakpoint";
+/// <summary>
+/// 
+/// </summary>
+public string BreakpointId { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerRemoveBreakpointRequest"/>
+/// </summary>
+internal partial class DebuggerRemoveBreakpointResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Continues execution until the current evaluation completes. This will trigger either a Debugger.paused or Debugger.resumed event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.continueUntilNextRunLoop</c>
+/// </remarks>
+internal partial class DebuggerContinueUntilNextRunLoopRequest : IWebkitRequest<DebuggerContinueUntilNextRunLoopResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.continueUntilNextRunLoop";
+}
+/// <summary>
+/// Response from <see cref="DebuggerContinueUntilNextRunLoopRequest"/>
+/// </summary>
+internal partial class DebuggerContinueUntilNextRunLoopResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Continues execution until specific location is reached. This will trigger either a Debugger.paused or Debugger.resumed event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.continueToLocation</c>
+/// </remarks>
+internal partial class DebuggerContinueToLocationRequest : IWebkitRequest<DebuggerContinueToLocationResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.continueToLocation";
+/// <summary>
+/// Location to continue to.
+/// </summary>
+public Location Location { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerContinueToLocationRequest"/>
+/// </summary>
+internal partial class DebuggerContinueToLocationResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Steps over the statement. This will trigger either a Debugger.paused or Debugger.resumed event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.stepOver</c>
+/// </remarks>
+internal partial class DebuggerStepOverRequest : IWebkitRequest<DebuggerStepOverResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.stepOver";
+}
+/// <summary>
+/// Response from <see cref="DebuggerStepOverRequest"/>
+/// </summary>
+internal partial class DebuggerStepOverResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Steps into the function call. This will trigger either a Debugger.paused or Debugger.resumed event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.stepInto</c>
+/// </remarks>
+internal partial class DebuggerStepIntoRequest : IWebkitRequest<DebuggerStepIntoResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.stepInto";
+}
+/// <summary>
+/// Response from <see cref="DebuggerStepIntoRequest"/>
+/// </summary>
+internal partial class DebuggerStepIntoResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Steps out of the function call. This will trigger either a Debugger.paused or Debugger.resumed event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.stepOut</c>
+/// </remarks>
+internal partial class DebuggerStepOutRequest : IWebkitRequest<DebuggerStepOutResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.stepOut";
+}
+/// <summary>
+/// Response from <see cref="DebuggerStepOutRequest"/>
+/// </summary>
+internal partial class DebuggerStepOutResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Stops on the next JavaScript statement.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.pause</c>
+/// </remarks>
+internal partial class DebuggerPauseRequest : IWebkitRequest<DebuggerPauseResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.pause";
+}
+/// <summary>
+/// Response from <see cref="DebuggerPauseRequest"/>
+/// </summary>
+internal partial class DebuggerPauseResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Resumes JavaScript execution. This will trigger a Debugger.resumed event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.resume</c>
+/// </remarks>
+internal partial class DebuggerResumeRequest : IWebkitRequest<DebuggerResumeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.resume";
+}
+/// <summary>
+/// Response from <see cref="DebuggerResumeRequest"/>
+/// </summary>
+internal partial class DebuggerResumeResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Searches for given string in script content.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.searchInContent</c>
+/// </remarks>
+internal partial class DebuggerSearchInContentRequest : IWebkitRequest<DebuggerSearchInContentResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.searchInContent";
+/// <summary>
+/// Id of the script to search in.
+/// </summary>
+public string ScriptId { get; set; }
+/// <summary>
+/// String to search for.
+/// </summary>
+public string Query { get; set; }
+/// <summary>
+/// If true, search is case sensitive.
+/// </summary>
+public bool? CaseSensitive { get; set; }
+/// <summary>
+/// If true, treats string parameter as regex.
+/// </summary>
+public bool? IsRegex { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSearchInContentRequest"/>
+/// </summary>
+internal partial class DebuggerSearchInContentResponse: IWebkitResponse
+{
+/// <summary>
+/// List of search matches.
+/// </summary>
+public GenericTypes.SearchMatch[] Result { get; set; }}
+/// <summary>
+/// Returns source for the script with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.getScriptSource</c>
+/// </remarks>
+internal partial class DebuggerGetScriptSourceRequest : IWebkitRequest<DebuggerGetScriptSourceResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.getScriptSource";
+/// <summary>
+/// Id of the script to get source for.
+/// </summary>
+public string ScriptId { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerGetScriptSourceRequest"/>
+/// </summary>
+internal partial class DebuggerGetScriptSourceResponse: IWebkitResponse
+{
+/// <summary>
+/// Script source.
+/// </summary>
+public string ScriptSource { get; set; }}
+/// <summary>
+/// Returns detailed information on given function.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.getFunctionDetails</c>
+/// </remarks>
+internal partial class DebuggerGetFunctionDetailsRequest : IWebkitRequest<DebuggerGetFunctionDetailsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.getFunctionDetails";
+/// <summary>
+/// Id of the function to get location for.
+/// </summary>
+public string FunctionId { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerGetFunctionDetailsRequest"/>
+/// </summary>
+internal partial class DebuggerGetFunctionDetailsResponse: IWebkitResponse
+{
+/// <summary>
+/// Information about the function.
+/// </summary>
+public FunctionDetails Details { get; set; }}
+/// <summary>
+/// Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or no exceptions. Initial pause on exceptions state is &lt;code&gt;none&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setPauseOnExceptions</c>
+/// </remarks>
+internal partial class DebuggerSetPauseOnExceptionsRequest : IWebkitRequest<DebuggerSetPauseOnExceptionsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setPauseOnExceptions";
+/// <summary>
+/// Pause on exceptions mode.
+/// </summary>
+public string State { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetPauseOnExceptionsRequest"/>
+/// </summary>
+internal partial class DebuggerSetPauseOnExceptionsResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Set pause on assertions state. Assertions are console.assert assertions.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setPauseOnAssertions</c>
+/// </remarks>
+internal partial class DebuggerSetPauseOnAssertionsRequest : IWebkitRequest<DebuggerSetPauseOnAssertionsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setPauseOnAssertions";
+/// <summary>
+/// 
+/// </summary>
+public bool? Enabled { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetPauseOnAssertionsRequest"/>
+/// </summary>
+internal partial class DebuggerSetPauseOnAssertionsResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Pause when running the next JavaScript microtask.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setPauseOnMicrotasks</c>
+/// </remarks>
+internal partial class DebuggerSetPauseOnMicrotasksRequest : IWebkitRequest<DebuggerSetPauseOnMicrotasksResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setPauseOnMicrotasks";
+/// <summary>
+/// 
+/// </summary>
+public bool? Enabled { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetPauseOnMicrotasksRequest"/>
+/// </summary>
+internal partial class DebuggerSetPauseOnMicrotasksResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Change whether to pause in the debugger for internal scripts. The default value is false.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setPauseForInternalScripts</c>
+/// </remarks>
+internal partial class DebuggerSetPauseForInternalScriptsRequest : IWebkitRequest<DebuggerSetPauseForInternalScriptsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setPauseForInternalScripts";
+/// <summary>
+/// 
+/// </summary>
+public bool? ShouldPause { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetPauseForInternalScriptsRequest"/>
+/// </summary>
+internal partial class DebuggerSetPauseForInternalScriptsResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Evaluates expression on a given call frame.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.evaluateOnCallFrame</c>
+/// </remarks>
+internal partial class DebuggerEvaluateOnCallFrameRequest : IWebkitRequest<DebuggerEvaluateOnCallFrameResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.evaluateOnCallFrame";
+/// <summary>
+/// Call frame identifier to evaluate on.
+/// </summary>
+public string CallFrameId { get; set; }
+/// <summary>
+/// Expression to evaluate.
+/// </summary>
+public string Expression { get; set; }
+/// <summary>
+/// String object group name to put result into (allows rapid releasing resulting object handles using &lt;code&gt;releaseObjectGroup&lt;/code&gt;).
+/// </summary>
+public string ObjectGroup { get; set; }
+/// <summary>
+/// Specifies whether command line API should be available to the evaluated expression, defaults to false.
+/// </summary>
+public bool? IncludeCommandLineAPI { get; set; }
+/// <summary>
+/// Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.
+/// </summary>
+public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+/// <summary>
+/// Whether the result is expected to be a JSON object that should be sent by value.
+/// </summary>
+public bool? ReturnByValue { get; set; }
+/// <summary>
+/// Whether preview should be generated for the result.
+/// </summary>
+public bool? GeneratePreview { get; set; }
+/// <summary>
+/// Whether the resulting value should be considered for saving in the $n history.
+/// </summary>
+public bool? SaveResult { get; set; }
+/// <summary>
+/// Whether the expression should be considered to be in a user gesture or not.
+/// </summary>
+public bool? EmulateUserGesture { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
+/// </summary>
+internal partial class DebuggerEvaluateOnCallFrameResponse: IWebkitResponse
+{
+/// <summary>
+/// Object wrapper for the evaluation result.
+/// </summary>
+public Runtime.RemoteObject Result { get; set; }
+/// <summary>
+/// True if the result was thrown during the evaluation.
+/// </summary>
+public bool? WasThrown { get; set; }
+/// <summary>
+/// If the result was saved, this is the $n index that can be used to access the value.
+/// </summary>
+public int? SavedResultIndex { get; set; }}
+/// <summary>
+/// Sets whether the given URL should be in the list of blackboxed scripts, which are ignored when pausing/stepping/debugging.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Debugger.setShouldBlackboxURL</c>
+/// </remarks>
+internal partial class DebuggerSetShouldBlackboxURLRequest : IWebkitRequest<DebuggerSetShouldBlackboxURLResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Debugger.setShouldBlackboxURL";
+/// <summary>
+/// 
+/// </summary>
+public string Url { get; set; }
+/// <summary>
+/// 
+/// </summary>
+public bool? ShouldBlackbox { get; set; }
+/// <summary>
+/// If true, &lt;code&gt;url&lt;/code&gt; is case sensitive.
+/// </summary>
+public bool? CaseSensitive { get; set; }
+/// <summary>
+/// If true, treat &lt;code&gt;url&lt;/code&gt; as regular expression.
+/// </summary>
+public bool? IsRegex { get; set; }}
+/// <summary>
+/// Response from <see cref="DebuggerSetShouldBlackboxURLRequest"/>
+/// </summary>
+internal partial class DebuggerSetShouldBlackboxURLResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Called when global has been cleared and debugger client should reset its state. Happens upon navigation or reload.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.globalObjectCleared</c>
+/// </remarks>
+internal partial class DebuggerGlobalObjectClearedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.globalObjectCleared";
+}
+/// <summary>
+/// Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.scriptParsed</c>
+/// </remarks>
+internal partial class DebuggerScriptParsedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.scriptParsed";
+/// <summary>
+/// Identifier of the script parsed.
+/// </summary>
+public string ScriptId { get; set; }
+/// <summary>
+/// URL of the script parsed (if any).
+/// </summary>
+public string Url { get; set; }
+/// <summary>
+/// Line offset of the script within the resource with given URL (for script tags).
+/// </summary>
+public int? StartLine { get; set; }
+/// <summary>
+/// Column offset of the script within the resource with given URL.
+/// </summary>
+public int? StartColumn { get; set; }
+/// <summary>
+/// Last line of the script.
+/// </summary>
+public int? EndLine { get; set; }
+/// <summary>
+/// Length of the last line of the script.
+/// </summary>
+public int? EndColumn { get; set; }
+/// <summary>
+/// Determines whether this script is a user extension script.
+/// </summary>
+public bool? IsContentScript { get; set; }
+/// <summary>
+/// sourceURL name of the script (if any).
+/// </summary>
+public string SourceURL { get; set; }
+/// <summary>
+/// URL of source map associated with script (if any).
+/// </summary>
+public string SourceMapURL { get; set; }
+/// <summary>
+/// True if this script was parsed as a module.
+/// </summary>
+public bool? Module { get; set; }}
+/// <summary>
+/// Fired when virtual machine fails to parse the script.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.scriptFailedToParse</c>
+/// </remarks>
+internal partial class DebuggerScriptFailedToParseWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.scriptFailedToParse";
+/// <summary>
+/// URL of the script that failed to parse.
+/// </summary>
+public string Url { get; set; }
+/// <summary>
+/// Source text of the script that failed to parse.
+/// </summary>
+public string ScriptSource { get; set; }
+/// <summary>
+/// Line offset of the script within the resource.
+/// </summary>
+public int? StartLine { get; set; }
+/// <summary>
+/// Line with error.
+/// </summary>
+public int? ErrorLine { get; set; }
+/// <summary>
+/// Parse error message.
+/// </summary>
+public string ErrorMessage { get; set; }}
+/// <summary>
+/// Fired when breakpoint is resolved to an actual script and location.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.breakpointResolved</c>
+/// </remarks>
+internal partial class DebuggerBreakpointResolvedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.breakpointResolved";
+/// <summary>
+/// Breakpoint unique identifier.
+/// </summary>
+public string BreakpointId { get; set; }
+/// <summary>
+/// Actual breakpoint location.
+/// </summary>
+public Location Location { get; set; }}
+/// <summary>
+/// Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.paused</c>
+/// </remarks>
+internal partial class DebuggerPausedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.paused";
+/// <summary>
+/// Call stack the virtual machine stopped on.
+/// </summary>
+public CallFrame[] CallFrames { get; set; }
+/// <summary>
+/// Pause reason.
+/// </summary>
+public string Reason { get; set; }
+/// <summary>
+/// Object containing break-specific auxiliary properties.
+/// </summary>
+public object Data { get; set; }
+/// <summary>
+/// Linked list of asynchronous StackTraces.
+/// </summary>
+public Console.StackTrace AsyncStackTrace { get; set; }}
+/// <summary>
+/// Fired when the virtual machine resumed execution.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.resumed</c>
+/// </remarks>
+internal partial class DebuggerResumedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.resumed";
+}
+/// <summary>
+/// Fires when a new probe sample is collected.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.didSampleProbe</c>
+/// </remarks>
+internal partial class DebuggerDidSampleProbeWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.didSampleProbe";
+/// <summary>
+/// A collected probe sample.
+/// </summary>
+public ProbeSample Sample { get; set; }}
+/// <summary>
+/// Fired when a "sound" breakpoint action is triggered on a breakpoint.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Debugger.playBreakpointActionSound</c>
+/// </remarks>
+internal partial class DebuggerPlayBreakpointActionSoundWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Debugger.playBreakpointActionSound";
+/// <summary>
+/// Breakpoint action identifier.
+/// </summary>
+public int? BreakpointActionId { get; set; }}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Dialog
+{
+/// <summary>
+/// Enables dialog domain notifications.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Dialog.enable</c>
+/// </remarks>
+internal partial class DialogEnableRequest : IWebkitRequest<DialogEnableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Dialog.enable";
+}
+/// <summary>
+/// Response from <see cref="DialogEnableRequest"/>
+/// </summary>
+internal partial class DialogEnableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Disables dialog domain notifications.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Dialog.disable</c>
+/// </remarks>
+internal partial class DialogDisableRequest : IWebkitRequest<DialogDisableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Dialog.disable";
+}
+/// <summary>
+/// Response from <see cref="DialogDisableRequest"/>
+/// </summary>
+internal partial class DialogDisableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
+/// </summary>
+/// <remarks>
+/// Will send the command <c>Dialog.handleJavaScriptDialog</c>
+/// </remarks>
+internal partial class DialogHandleJavaScriptDialogRequest : IWebkitRequest<DialogHandleJavaScriptDialogResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "Dialog.handleJavaScriptDialog";
+/// <summary>
+/// Whether to accept or dismiss the dialog.
+/// </summary>
+public bool? Accept { get; set; }
+/// <summary>
+/// The text to enter into the dialog prompt before accepting. Used only if this is a prompt dialog.
+/// </summary>
+public string PromptText { get; set; }}
+/// <summary>
+/// Response from <see cref="DialogHandleJavaScriptDialogRequest"/>
+/// </summary>
+internal partial class DialogHandleJavaScriptDialogResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to open.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>Dialog.javascriptDialogOpening</c>
+/// </remarks>
+internal partial class DialogJavascriptDialogOpeningWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "Dialog.javascriptDialogOpening";
+/// <summary>
+/// Dialog type.
+/// </summary>
+public string Type { get; set; }
+/// <summary>
+/// Message that will be displayed by the dialog.
+/// </summary>
+public string Message { get; set; }
+/// <summary>
+/// Default dialog prompt.
+/// </summary>
+public string DefaultPrompt { get; set; }}
+}
 namespace PlaywrightSharp.Webkit.Protocol.Emulation
 {
 /// <summary>
@@ -7841,7 +7841,7 @@ public bool? IsRegex { get; set; }
 /// If not present this applies to all network stages.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public NetworkStage Stage { get; set; }}
+public NetworkStage? Stage { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkAddInterceptionRequest"/>
 /// </summary>
@@ -7874,7 +7874,7 @@ public bool? IsRegex { get; set; }
 /// If not present this applies to all network stages.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public NetworkStage Stage { get; set; }}
+public NetworkStage? Stage { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkRemoveInterceptionRequest"/>
 /// </summary>
