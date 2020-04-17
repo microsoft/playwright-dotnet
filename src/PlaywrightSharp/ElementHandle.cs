@@ -159,7 +159,7 @@ namespace PlaywrightSharp
         public async Task PressAsync(string key, PressOptions options = null)
         {
             await FocusAsync().ConfigureAwait(false);
-            await _page.Keyboard.PressAsync(key, options).ConfigureAwait(false);
+            await Page.Keyboard.PressAsync(key, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAllAsync"/>
@@ -283,14 +283,14 @@ namespace PlaywrightSharp
                     Data = Convert.ToBase64String(File.ReadAllBytes(item)),
                 });
 
-            await _page.Delegate.SetInputFilesAsync(this, filePayloads).ConfigureAwait(false);
+            await Page.Delegate.SetInputFilesAsync(this, filePayloads).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.TypeAsync"/>
         public async Task TypeAsync(string text, int delay = 0)
         {
             await FocusAsync().ConfigureAwait(false);
-            await _page.Keyboard.TypeAsync(text, delay).ConfigureAwait(false);
+            await Page.Keyboard.TypeAsync(text, delay).ConfigureAwait(false);
         }
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
