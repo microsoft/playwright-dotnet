@@ -270,7 +270,7 @@ namespace PlaywrightSharp
             var elementHandle = await context.QuerySelectorAsync(selector).ConfigureAwait(false);
             if (elementHandle == null)
             {
-                throw new SelectorException("failed to find element matching selector", selector);
+                throw new SelectorException("Failed to find element matching selector", selector);
             }
 
             var result = await elementHandle.EvaluateAsync<T>(script, args).ConfigureAwait(false);

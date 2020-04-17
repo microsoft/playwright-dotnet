@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
             var exception = await Assert.ThrowsAsync<SelectorException>(() => elementHandle.QuerySelectorEvaluateAsync(".a", "node => node.innerText"));
-            Assert.Equal("Error: failed to find element matching selector \".a\"", exception.Message);
+            Assert.Equal("Failed to find element matching selector", exception.Message);
             Assert.Equal(".a", exception.Selector);
         }
     }

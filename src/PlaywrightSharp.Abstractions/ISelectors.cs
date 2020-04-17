@@ -9,6 +9,16 @@ namespace PlaywrightSharp
     public interface ISelectors
     {
         /// <summary>
+        /// Gets the version of the selectors.
+        /// </summary>
+        int Generation { get; }
+
+        /// <summary>
+        /// Gets the selectors sources.
+        /// </summary>
+        IEnumerable<string> Sources { get; }
+
+        /// <summary>
         /// Installs a custom selector engine.
         /// </summary>
         /// <param name="engineFunction">Function that evaluates to a selector engine instance.</param>

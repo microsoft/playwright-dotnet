@@ -544,7 +544,7 @@ namespace PlaywrightSharp
 
         internal static string GetEvaluationString(string fun, params object[] args)
         {
-            return $"({fun})({string.Join(",", args.Select(SerializeArgument))})";
+            return !fun.IsJavascriptFunction() ? fun : $"({fun})({string.Join(",", args.Select(SerializeArgument))})";
 
             string SerializeArgument(object arg)
             {

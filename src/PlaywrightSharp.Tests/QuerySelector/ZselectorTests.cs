@@ -49,14 +49,14 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<div>yo</div>", await Page.QuerySelectorEvaluateAsync<string>("zs=span ~ \"yo\"#1 ^ > div", "e => e.outerHTML"));
             Assert.Equal("<div>yo<span></span></div>", await Page.QuerySelectorEvaluateAsync<string>("zs=span ~ \"yo\"#1 ^ > div#1", "e => e.outerHTML"));
 
-            await Page.SetContentAsync("<div>yo<span id=\"s1\"></span></div><div>yo<span id=\"s2\"></span><span id = \"s3\" ></ span ></ div >");
+            await Page.SetContentAsync("<div>yo<span id=\"s1\"></span></div><div>yo<span id=\"s2\"></span><span id = \"s3\" ></span></div>");
             Assert.Equal("<div>yo<span id=\"s1\"></span></div>", await Page.QuerySelectorEvaluateAsync<string>("zs=\"yo\"", "e => e.outerHTML"));
-            Assert.Equal("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"", "es => es.map(\"e => e.outerHTML\").join('\n')"));
-            Assert.Equal("<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"#1", "es => es.map(\"e => e.outerHTML\").join('\n')"));
-            Assert.Equal("<span id=\"s1\"></span>\n<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span", "es => es.map(\"e => e.outerHTML\").join('\n')"));
-            Assert.Equal("<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"#1 ~ span", "es => es.map(\"e => e.outerHTML\").join('\n')"));
-            Assert.Equal("<span id=\"s1\"></span>\n<span id=\"s2\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span#0", "es => es.map(\"e => e.outerHTML\").join('\n')"));
-            Assert.Equal("<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span#1", "es => es.map(\"e => e.outerHTML\").join('\n')"));
+            Assert.Equal("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"", "es => es.map(e => e.outerHTML).join('\n')"));
+            Assert.Equal("<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"#1", "es => es.map(e => e.outerHTML).join('\n')"));
+            Assert.Equal("<span id=\"s1\"></span>\n<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span", "es => es.map(e => e.outerHTML).join('\n')"));
+            Assert.Equal("<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\"#1 ~ span", "es => es.map(e => e.outerHTML).join('\n')"));
+            Assert.Equal("<span id=\"s1\"></span>\n<span id=\"s2\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span#0", "es => es.map(e => e.outerHTML).join('\n')"));
+            Assert.Equal("<span id=\"s2\"></span>\n<span id=\"s3\"></span>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"yo\" ~span#1", "es => es.map(e => e.outerHTML).join('\n')"));
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -149,8 +149,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
           </div>
         </div>");
             Assert.Equal("\"ya\"~\"hey\"~\"hello\"", await Selectors.CreateSelectorAsync("zs", await Page.QuerySelectorAsync("#target")));
-            Assert.Equal("<div id=\"target\">hello</div>", await Page.QuerySelectorEvaluateAsync<string>("zs=\"ya\"~\"hey\"~\"hello\"", "e => e.outerHTML")); ;
-            Assert.Equal("Error: failed to find element matching selector \"zs=\"ya\"~\"hey\"~\"unique\"\"", (await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.QuerySelectorEvaluateAsync("zs=\"ya\"~\"hey\"~\"unique\"", "e => e.outerHTML"))).Message);
+            Assert.Equal("<div id=\"target\">hello</div>", await Page.QuerySelectorEvaluateAsync<string>("zs=\"ya\"~\"hey\"~\"hello\"", "e => e.outerHTML"));
+            var exception = await Assert.ThrowsAsync<SelectorException>(() => Page.QuerySelectorEvaluateAsync("zs=\"ya\"~\"hey\"~\"unique\"", "e => e.outerHTML"));
+            Assert.Equal("Failed to find element matching selector", exception.Message);
+            Assert.Equal("\"zs=\"ya\"~\"hey\"~\"unique\"\"", exception.Selector);
             Assert.Equal("<div id=\"target\">hello</div>\n<div id=\"target2\">hello</div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"ya\" ~\"hey\" ~\"hello\"", "es => es.map(e => e.outerHTML).join('\n')"));
         }
     }
