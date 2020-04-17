@@ -200,7 +200,15 @@ namespace PlaywrightSharp
         /// <summary>
         /// Navigate to the next page in history.
         /// </summary>
-        /// <returns>Task that resolves to the main resource response. If can not go forward, resolves to <c>false</c>.</returns>
+        /// <returns>A <see cref="Task"/>  that resolves to the main resource response. If can not go forward, resolves to <c>false</c>.</returns>
         Task<bool> GoForwardAsync();
+
+        /// <summary>
+        /// Add <paramref name="files"/> to the <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="handle">Element to add the files to.</param>
+        /// <param name="files">Files payloads to add.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files);
     }
 }

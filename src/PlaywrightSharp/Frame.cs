@@ -388,6 +388,14 @@ namespace PlaywrightSharp
             await handle.DisposeAsync().ConfigureAwait(false);
         }
 
+        /// <inheritdoc cref="IFrame.TypeAsync(string, string, TypeOptions)"/>
+        public async Task TypeAsync(string selector, string text, TypeOptions options = null)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false);
+            await handle.TypeAsync(text, options?.Delay ?? 0).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+        }
+
         /// <inheritdoc cref="IFrame.WaitForSelectorAsync(string, WaitForSelectorOptions)"/>
         public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
         {

@@ -60,7 +60,7 @@ namespace PlaywrightSharp
         /// If no URLs are specified, this method returns cookies for the current page URL.
         /// If URLs are specified, only cookies for those URLs are returned.
         /// </remarks>
-        Task<NetworkCookie[]> GetCookiesAsync(params string[] urls);
+        Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls);
 
         /// <summary>
         /// Clears all of the current cookies and then sets the cookies for the context.

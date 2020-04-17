@@ -374,9 +374,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.TypeAsync(string, string, TypeOptions)"/>
         public Task TypeAsync(string selector, string text, TypeOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.TypeAsync(selector, text, options);
 
         /// <inheritdoc cref="IPage.GetTitleAsync"/>
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();

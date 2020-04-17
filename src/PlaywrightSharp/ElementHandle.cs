@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -16,7 +17,7 @@ namespace PlaywrightSharp
             Context = context;
         }
 
-        internal new FrameExecutionContext Context { get; set; }
+        internal new FrameExecutionContext Context { get; }
 
         internal Page Page { get; }
 
@@ -155,9 +156,10 @@ namespace PlaywrightSharp
         public Task HoverAsync(PointerActionOptions options = null) => PerformPointerActionAsync(point => Page.Mouse.MoveAsync(point.X, point.Y), options);
 
         /// <inheritdoc cref="IElementHandle.PressAsync"/>
-        public Task PressAsync(string key, PressOptions options = null)
+        public async Task PressAsync(string key, PressOptions options = null)
         {
-            throw new NotImplementedException();
+            await FocusAsync().ConfigureAwait(false);
+            await _page.Keyboard.PressAsync(key, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IElementHandle.QuerySelectorAllAsync"/>
@@ -259,15 +261,36 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IElementHandle.SetInputFilesAsync"/>
-        public Task SetInputFilesAsync(params string[] filePath)
+        public async Task SetInputFilesAsync(params string[] files)
         {
-            throw new NotImplementedException();
+            bool multiple = await EvaluateInUtilityAsync<bool>(@"(node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE || node.tagName !== 'INPUT')
+                    throw new Error('Node is not an HTMLInputElement');
+                const input = node;
+                return input.multiple;
+            }").ConfigureAwait(false);
+
+            if (!multiple && files.Length > 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(files), "Non-multiple file input can only accept single file!");
+            }
+
+            var filePayloads = files.Select(item =>
+                new FilePayload
+                {
+                    Name = new FileInfo(item).Name,
+                    Type = "application/octet-stream",
+                    Data = Convert.ToBase64String(File.ReadAllBytes(item)),
+                });
+
+            await _page.Delegate.SetInputFilesAsync(this, filePayloads).ConfigureAwait(false);
         }
 
-        /// <inheritdoc cref="IElementHandle.SetInputFilesAsync"/>
-        public Task TypeAsync(string text, TypeOptions options = null)
+        /// <inheritdoc cref="IElementHandle.TypeAsync"/>
+        public async Task TypeAsync(string text, int delay = 0)
         {
-            throw new NotImplementedException();
+            await FocusAsync().ConfigureAwait(false);
+            await _page.Keyboard.TypeAsync(text, delay).ConfigureAwait(false);
         }
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
@@ -345,11 +368,8 @@ namespace PlaywrightSharp
                 point = new Point { X = point.X + (int)box.X, Y = point.Y + (int)box.Y };
             }
 
-            if (border != null)
-            {
-                // Make point relative to the padding box to align with offsetX/offsetY.
-                point = new Point { X = point.X + border.X, Y = point.Y + border.Y };
-            }
+            // Make point relative to the padding box to align with offsetX/offsetY.
+            point = new Point { X = point.X + border.X, Y = point.Y + border.Y };
 
             var metrics = await Page.Delegate.GetLayoutViewportAsync().ConfigureAwait(false);
             int scrollX = 0;

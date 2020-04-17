@@ -39,9 +39,9 @@ namespace PlaywrightSharp
         /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
         /// </summary>
         /// <param name="text">A text to type into a focused element.</param>
-        /// <param name="options">Type options.</param>
+        /// <param name="delay">Delay between key press.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task TypeAsync(string text, TypeOptions options = null);
+        Task TypeAsync(string text, int delay = 0);
 
         /// <summary>
         /// Shortcut for <see cref="DownAsync(string, DownOptions)"/> and <see cref="UpAsync(string)"/>.

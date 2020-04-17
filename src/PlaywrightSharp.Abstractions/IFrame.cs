@@ -335,5 +335,23 @@ namespace PlaywrightSharp
         /// <param name="options">Wait options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered.</returns>
         Task HoverAsync(string selector, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="options">Type options.</param>
+        /// <remarks>
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, PressOptions)"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// await page.TypeAsync("#mytextarea", "Hello"); // Types instantly
+        /// await page.TypeAsync("#mytextarea", "World", new TypeOptions { Delay = 100 }); // Types slower, like a user
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
+        Task TypeAsync(string selector, string text, TypeOptions options = null);
     }
 }

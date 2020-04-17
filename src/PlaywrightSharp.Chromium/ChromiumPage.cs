@@ -319,6 +319,9 @@ namespace PlaywrightSharp.Chromium
 
         public Task<bool> GoForwardAsync() => GoAsync(1);
 
+        public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files)
+            => handle.EvaluateHandleAsync(Dom.SetFileInputFunction, files);
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
