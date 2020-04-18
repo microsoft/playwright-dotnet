@@ -313,7 +313,6 @@ namespace PlaywrightSharp.Chromium
                 Headers = headers,
             });
 
-        /// <inheritdoc cref="IPageDelegate.SetRequestInterceptionAsync(bool)"/>
         public Task SetRequestInterceptionAsync(bool value) => throw new NotImplementedException();
 
         public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
@@ -324,6 +323,9 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files)
             => handle.EvaluateHandleAsync(Dom.SetFileInputFunction, files);
+
+        /// <inheritdoc cref="IPageDelegate.SetCacheEnabledAsync(bool)"/>
+        public Task SetCacheEnabledAsync(bool enabled) => throw new NotImplementedException();
 
         internal async Task InitializeAsync()
         {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -27,9 +26,11 @@ namespace PlaywrightSharp.Firefox
         internal string Id { get; }
 
         public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _session.SendAsync(new NetworkAbortInterceptedRequestRequest
+            {
+                RequestId = Id,
+                ErrorCode = errorCode.ToString().ToLower(),
+            });
 
         public Task ContinueAsync(Payload payload = null)
             => _session.SendAsync(new NetworkResumeInterceptedRequestRequest

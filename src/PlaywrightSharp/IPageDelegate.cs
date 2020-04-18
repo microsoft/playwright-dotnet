@@ -218,5 +218,12 @@ namespace PlaywrightSharp
         /// <param name="value">Whether to enable request interception..</param>
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetRequestInterceptionAsync(bool value);
+
+        /// <summary>
+        /// Toggles ignoring cache for each request based on the <paramref name="enabled"/> state.
+        /// </summary>
+        /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetCacheEnabledAsync(bool enabled);
     }
 }

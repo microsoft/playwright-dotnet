@@ -311,7 +311,13 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.SetCacheEnabledAsync(bool)"/>
         public Task SetCacheEnabledAsync(bool enabled = true)
         {
-            throw new NotImplementedException();
+            if (PageState.CacheEnabled == enabled)
+            {
+                return Task.CompletedTask;
+            }
+
+            PageState.CacheEnabled = enabled;
+            return Delegate.SetCacheEnabledAsync(enabled);
         }
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, NavigationOptions)"/>
@@ -345,15 +351,15 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetRequestInterceptionAsync(bool)"/>
-        public Task SetRequestInterceptionAsync(bool value)
+        public Task SetRequestInterceptionAsync(bool enabled)
         {
-            if (PageState.InterceptNetwork == value)
+            if (PageState.InterceptNetwork == enabled)
             {
                 return Task.CompletedTask;
             }
 
-            PageState.InterceptNetwork = value;
-            return Delegate.SetRequestInterceptionAsync(value);
+            PageState.InterceptNetwork = enabled;
+            return Delegate.SetRequestInterceptionAsync(enabled);
         }
 
         /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>
@@ -592,6 +598,8 @@ namespace PlaywrightSharp
         internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
 
         internal void OnRequestFinished(IRequest request) => RequestFinished?.Invoke(this, new RequestEventArgs(request));
+
+        internal void OnRequestFailed(IRequest request) => RequestFailed?.Invoke(this, new RequestEventArgs(request));
 
         internal void OnResponse(IResponse response) => Response?.Invoke(this, new ResponseEventArgs(response));
 

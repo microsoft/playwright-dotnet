@@ -73,7 +73,7 @@ namespace PlaywrightSharp
         IResponse IRequest.Response => Response;
 
         /// <inheritdoc cref="IRequest.Failure"/>
-        public string Failure { get; }
+        public string Failure { get; internal set; }
 
         internal bool IsFavicon { get; }
 

@@ -283,7 +283,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
-            var requestTask = Server.WaitForRequest("grid.html", request => request.Headers["referer"]);
+            var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
             await Task.WhenAll(
                 requestTask,
                 Page.GoToAsync(TestConstants.ServerUrl + "/grid.html")
@@ -299,7 +299,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.AbortAsync();
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAsync<NavigationException>(() => Page.GoToAsync(TestConstants.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
             {

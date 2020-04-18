@@ -216,6 +216,10 @@ namespace PlaywrightSharp.Firefox
         public Task SetRequestInterceptionAsync(bool value)
             => _networkManager.SetRequestInterception(value);
 
+        /// <inheritdoc cref="IPageDelegate.SetCacheEnabledAsync(bool)"/>
+        public Task SetCacheEnabledAsync(bool enabled)
+            => _session.SendAsync(new PageSetCacheDisabledRequest { CacheDisabled = !enabled });
+
         public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
 
         public async Task<bool> GoBackAsync()

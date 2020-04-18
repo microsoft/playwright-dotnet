@@ -216,6 +216,34 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void RequestFailed(Request request, bool canceled)
+        {
+            InflightRequestFinished(request);
+            var frame = request.Frame;
+            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null)
+            {
+                bool isCurrentDocument = frame.LastDocumentId == request.DocumentId;
+                if (!isCurrentDocument)
+                {
+                    string errorText = request.Failure;
+                    if (canceled)
+                    {
+                        errorText += "; maybe frame was detached?";
+                    }
+
+                    foreach (var watcher in LifecycleWatchers.ToArray())
+                    {
+                        watcher.OnAbortedNewDocumentNavigation(frame, request.DocumentId, errorText);
+                    }
+                }
+            }
+
+            if (!request.IsFavicon)
+            {
+                _page.OnRequestFailed(request);
+            }
+        }
+
         private void StartNetworkIdleTimer(Frame frame, WaitUntilNavigation lifecycleEvent)
         {
             if (frame.FiredLifecycleEvents.Contains(lifecycleEvent))
