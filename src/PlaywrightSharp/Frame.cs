@@ -270,11 +270,24 @@ namespace PlaywrightSharp
             var elementHandle = await context.QuerySelectorAsync(selector).ConfigureAwait(false);
             if (elementHandle == null)
             {
-                throw new SelectorException("failed to find element matching selector", selector);
+                throw new SelectorException("Failed to find element matching selector", selector);
             }
 
             var result = await elementHandle.EvaluateAsync<T>(script, args).ConfigureAwait(false);
             await elementHandle.DisposeAsync().ConfigureAwait(false);
+            return result;
+        }
+
+        /// <inheritdoc cref="IFrame.QuerySelectorAllEvaluateAsync(string, string, object[])"/>
+        public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args) => QuerySelectorAllEvaluateAsync<object>(selector, script, args);
+
+        /// <inheritdoc cref="IFrame.QuerySelectorAllEvaluateAsync{T}(string, string, object[])"/>
+        public async Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args)
+        {
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            var arrayHandle = await context.QuerySelectorArrayAsync(selector).ConfigureAwait(false);
+            var result = await arrayHandle.EvaluateAsync<T>(script, args).ConfigureAwait(false);
+            await arrayHandle.DisposeAsync().ConfigureAwait(false);
             return result;
         }
 
@@ -452,6 +465,8 @@ namespace PlaywrightSharp
             }
         }
 
+        internal Task<FrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
+
         private async Task<IElementHandle> RaceWithCSPErrorAsync(Func<Task<ElementHandle>> func)
         {
             var errorTcs = new TaskCompletionSource<string>();
@@ -496,8 +511,6 @@ namespace PlaywrightSharp
                 data.ContextTsc = new TaskCompletionSource<FrameExecutionContext>();
             }
         }
-
-        private Task<FrameExecutionContext> GetMainContextAsync() => GetContextAsync(ContextType.Main);
 
         private Task<FrameExecutionContext> GetContextAsync(ContextType contextType)
         {
