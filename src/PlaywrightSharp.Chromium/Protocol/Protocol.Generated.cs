@@ -93,7 +93,7 @@ public bool? Superseded { get; set; }
 /// The native markup source for this value, e.g. a &lt;label&gt; element.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AXValueNativeSourceType NativeSource { get; set; }
+public AXValueNativeSourceType? NativeSource { get; set; }
 /// <summary>
 /// The value, such as a node or node list, of the native source.
 /// </summary>
@@ -1170,7 +1170,7 @@ public int? Height { get; set; }
 /// The window state. Default to normal.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public WindowState WindowState { get; set; }}
+public WindowState? WindowState { get; set; }}
 /// <summary>
 /// 
 /// </summary>
@@ -3258,12 +3258,12 @@ public string Value { get; set; }
 /// Pseudo element type for this node.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PseudoType PseudoType { get; set; }
+public PseudoType? PseudoType { get; set; }
 /// <summary>
 /// Shadow root type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ShadowRootType ShadowRootType { get; set; }
+public ShadowRootType? ShadowRootType { get; set; }
 /// <summary>
 /// Frame ID for frame owner elements.
 /// </summary>
@@ -7360,7 +7360,7 @@ public double? Timestamp { get; set; }
 /// Mouse button (default: "none").
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public MouseButton Button { get; set; }
+public MouseButton? Button { get; set; }
 /// <summary>
 /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
 /// Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
@@ -7529,7 +7529,7 @@ public int? RelativeSpeed { get; set; }
 /// for the preferred input type).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public GestureSourceType GestureSourceType { get; set; }}
+public GestureSourceType? GestureSourceType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizePinchGestureRequest"/>
 /// </summary>
@@ -7585,7 +7585,7 @@ public int? Speed { get; set; }
 /// for the preferred input type).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public GestureSourceType GestureSourceType { get; set; }
+public GestureSourceType? GestureSourceType { get; set; }
 /// <summary>
 /// The number of times to repeat the gesture (default: 0).
 /// </summary>
@@ -7635,7 +7635,7 @@ public int? TapCount { get; set; }
 /// for the preferred input type).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public GestureSourceType GestureSourceType { get; set; }}
+public GestureSourceType? GestureSourceType { get; set; }}
 /// <summary>
 /// Response from <see cref="InputSynthesizeTapGestureRequest"/>
 /// </summary>
@@ -9077,7 +9077,7 @@ public bool? Session { get; set; }
 /// Cookie SameSite type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSite SameSite { get; set; }
+public CookieSameSite? SameSite { get; set; }
 /// <summary>
 /// Cookie Priority
 /// </summary>
@@ -9187,7 +9187,7 @@ public bool? HttpOnly { get; set; }
 /// Cookie SameSite type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSite SameSite { get; set; }
+public CookieSameSite? SameSite { get; set; }
 /// <summary>
 /// Cookie expiration date, session cookie if not set
 /// </summary>
@@ -9196,7 +9196,7 @@ public double? Expires { get; set; }
 /// Cookie Priority.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookiePriority Priority { get; set; }}
+public CookiePriority? Priority { get; set; }}
 /// <summary>
 /// Authorization challenge for HTTP status code 401 or 407.
 /// </summary>
@@ -9262,12 +9262,12 @@ public string UrlPattern { get; set; }
 /// If set, only requests for matching resource types will be intercepted.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType ResourceType { get; set; }
+public ResourceType? ResourceType { get; set; }
 /// <summary>
 /// Stage at wich to begin intercepting requests. Default is Request.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public InterceptionStage InterceptionStage { get; set; }}
+public InterceptionStage? InterceptionStage { get; set; }}
 /// <summary>
 /// Information about a signed exchange signature.
 /// https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1
@@ -9365,7 +9365,7 @@ public int? SignatureIndex { get; set; }
 /// The field which caused the error.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SignedExchangeErrorField ErrorField { get; set; }}
+public SignedExchangeErrorField? ErrorField { get; set; }}
 /// <summary>
 /// Information about a signed exchange response.
 /// </summary>
@@ -9505,7 +9505,7 @@ public string InterceptionId { get; set; }
 /// to an authChallenge.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ErrorReason ErrorReason { get; set; }
+public ErrorReason? ErrorReason { get; set; }
 /// <summary>
 /// If set the requests completes using with the provided base64 encoded raw response, including
 /// HTTP status line and headers etc... Must not be set in response to an authChallenge.
@@ -9620,7 +9620,7 @@ public double? UploadThroughput { get; set; }
 /// Connection type if known.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ConnectionType ConnectionType { get; set; }}
+public ConnectionType? ConnectionType { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkEmulateNetworkConditionsRequest"/>
 /// </summary>
@@ -9986,7 +9986,7 @@ public bool? HttpOnly { get; set; }
 /// Cookie SameSite type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSite SameSite { get; set; }
+public CookieSameSite? SameSite { get; set; }
 /// <summary>
 /// Cookie expiration date, session cookie if not set
 /// </summary>
@@ -9995,7 +9995,7 @@ public double? Expires { get; set; }
 /// Cookie Priority type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookiePriority Priority { get; set; }}
+public CookiePriority? Priority { get; set; }}
 /// <summary>
 /// Response from <see cref="NetworkSetCookieRequest"/>
 /// </summary>
@@ -10207,7 +10207,7 @@ public bool? Canceled { get; set; }
 /// The reason why loading was blocked, if any.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public BlockedReason BlockedReason { get; set; }}
+public BlockedReason? BlockedReason { get; set; }}
 /// <summary>
 /// Fired when HTTP request has finished loading.
 /// </summary>
@@ -10287,7 +10287,7 @@ public AuthChallenge AuthChallenge { get; set; }
 /// request.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ErrorReason ResponseErrorReason { get; set; }
+public ErrorReason? ResponseErrorReason { get; set; }
 /// <summary>
 /// Response code if intercepted at response stage or if redirect occurred while intercepting
 /// request or auth retry occurred.
@@ -10361,7 +10361,7 @@ public Response RedirectResponse { get; set; }
 /// Type of this resource.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType Type { get; set; }
+public ResourceType? Type { get; set; }
 /// <summary>
 /// Frame identifier.
 /// </summary>
@@ -12101,7 +12101,7 @@ public string Referrer { get; set; }
 /// Intended transition type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public TransitionType TransitionType { get; set; }
+public TransitionType? TransitionType { get; set; }
 /// <summary>
 /// Frame id to navigate, if not specified navigates the top frame.
 /// </summary>
@@ -15611,13 +15611,13 @@ public string TransferMode { get; set; }
 /// transfer mode (defaults to `json`).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamFormat StreamFormat { get; set; }
+public StreamFormat? StreamFormat { get; set; }
 /// <summary>
 /// Compression format to use. This only applies when using `ReturnAsStream`
 /// transfer mode (defaults to `none`)
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamCompression StreamCompression { get; set; }
+public StreamCompression? StreamCompression { get; set; }
 /// <summary>
 /// 
 /// </summary>
@@ -15688,12 +15688,12 @@ public string Stream { get; set; }
 /// Trace data format of returned stream.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamFormat TraceFormat { get; set; }
+public StreamFormat? TraceFormat { get; set; }
 /// <summary>
 /// Compression format of returned stream.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamCompression StreamCompression { get; set; }}
+public StreamCompression? StreamCompression { get; set; }}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Fetch
 {
@@ -15725,7 +15725,7 @@ public Network.ResourceType ResourceType { get; set; }
 /// Stage at wich to begin intercepting requests. Default is Request.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public RequestStage RequestStage { get; set; }}
+public RequestStage? RequestStage { get; set; }}
 /// <summary>
 /// Response HTTP header entry
 /// </summary>

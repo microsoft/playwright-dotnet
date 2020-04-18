@@ -70,9 +70,14 @@ namespace PlaywrightSharp
         {
             Frames.TryGetValue(frameId, out var frame);
 
-            foreach (var child in frame.ChildFrames)
+            if (frame == null)
             {
-                RemoveFramesRecursively(child);
+                return;
+            }
+
+            while (frame.ChildFrames.Count > 0)
+            {
+                RemoveFramesRecursively(frame.ChildFrames[0]);
             }
 
             frame.Url = url;

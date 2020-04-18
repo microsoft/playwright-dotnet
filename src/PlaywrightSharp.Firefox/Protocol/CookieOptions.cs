@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Firefox.Protocol.Browser
             Path = cookie.Path,
             Secure = cookie.Secure,
             HttpOnly = cookie.HttpOnly,
-            SameSite = ConvertToCookieOptionsSameSite(cookie.SameSite),
+            SameSite = (CookieOptionsSameSite)cookie.SameSite,
             Expires = cookie.Expires,
         };
 
@@ -24,26 +24,7 @@ namespace PlaywrightSharp.Firefox.Protocol.Browser
             Path = cookie.Path,
             Secure = cookie.Secure,
             HttpOnly = cookie.HttpOnly,
-            SameSite = ConvertFromCookieOptionsSameSite(cookie.SameSite),
             Expires = cookie.Expires,
         };
-
-        internal static CookieOptionsSameSite? ConvertToCookieOptionsSameSite(SameSite? sameSite)
-            => sameSite switch
-            {
-                PlaywrightSharp.SameSite.None => CookieOptionsSameSite.None,
-                PlaywrightSharp.SameSite.Lax => CookieOptionsSameSite.Lax,
-                PlaywrightSharp.SameSite.Strict => CookieOptionsSameSite.Strict,
-                _ => null,
-            };
-
-        internal static SameSite? ConvertFromCookieOptionsSameSite(CookieOptionsSameSite? sameSite)
-            => sameSite switch
-            {
-                CookieOptionsSameSite.None => PlaywrightSharp.SameSite.None,
-                CookieOptionsSameSite.Lax => PlaywrightSharp.SameSite.Lax,
-                CookieOptionsSameSite.Strict => PlaywrightSharp.SameSite.Strict,
-                _ => null,
-            };
     }
 }

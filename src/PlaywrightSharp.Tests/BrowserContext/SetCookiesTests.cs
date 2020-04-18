@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>cookies.spec.js</playwright-file>
     /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
+    [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class SetCookiesTests : PlaywrightSharpPageBaseTest
@@ -229,15 +230,15 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldDefaultToSettingSecureCookieForHttpsWebsites()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            string SecureUrl = "https://example.com";
+            const string secureUrl = "https://example.com";
 
             await Context.SetCookiesAsync(new SetNetworkCookieParam
             {
-                Url = SecureUrl,
+                Url = secureUrl,
                 Name = "foo",
                 Value = "bar"
             });
-            var cookie = Assert.Single(await Context.GetCookiesAsync(SecureUrl));
+            var cookie = Assert.Single(await Context.GetCookiesAsync(secureUrl));
             Assert.True(cookie.Secure);
         }
 
