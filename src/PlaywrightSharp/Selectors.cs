@@ -36,8 +36,9 @@ namespace PlaywrightSharp
             var mainContext = await ((ElementHandle)elementHandle).Page.MainFrame.GetMainContextAsync().ConfigureAwait(false);
             return await mainContext.EvaluateAsync<string>(
                 @"(injected, target, name) => {
-                return injected.engines.get(name).create(document.documentElement, target);
-            }", await mainContext.GetInjectedAsync().ConfigureAwait(false),
+                    return injected.engines.get(name).create(document.documentElement, target);
+                }",
+                await mainContext.GetInjectedAsync().ConfigureAwait(false),
                 elementHandle,
                 name).ConfigureAwait(false);
         }
