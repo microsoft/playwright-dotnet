@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = ";HttpOnly; Path=/";
+                context.Response.Headers["Set-Cookie"] = "name=vaue;HttpOnly; Path=/";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
