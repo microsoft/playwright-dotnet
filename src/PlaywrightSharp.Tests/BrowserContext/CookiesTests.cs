@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = "name=value;;SameSite=Lax";
+                context.Response.Headers["Set-Cookie"] = "name=value;SameSite=Lax";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
