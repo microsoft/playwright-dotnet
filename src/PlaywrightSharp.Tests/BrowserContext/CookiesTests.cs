@@ -68,11 +68,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should properly report "Strict" sameSite cookie</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipLinux: true, skipWindows: true)]
-        public async Task ShouldProperlyReportSStrictSameSiteCookie()
+        public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = ";SameSite=Strict";
+                context.Response.Headers["Set-Cookie"] = "name=value;SameSite=Strict";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = ";SameSite=Lax";
+                context.Response.Headers["Set-Cookie"] = "name=value;;SameSite=Lax";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
