@@ -1,105 +1,97 @@
-(/******/ (function (modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if (installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-            /******/
-        }
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-            /******/
-        };
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);/******//******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-        /******/
-    }
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function (exports, name, getter) {
-/******/ 		if (!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-            /******/
-        }
-        /******/
-    };
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function (exports) {
-/******/ 		if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-            /******/
-        }
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-        /******/
-    };
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function (value, mode) {
-/******/ 		if (mode & 1) value = __webpack_require__(value);
-/******/ 		if (mode & 8) return value;
-/******/ 		if ((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if (mode & 2 && typeof value != 'string') for (var key in value) __webpack_require__.d(ns, key, function (key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-        /******/
-    };
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function (module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-        /******/
-    };
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function (object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/injected/injected.ts");
+(/******/ (function(modules) { // webpackBootstrap
+    /******/ 	// The module cache
+    /******/ 	var installedModules = {};
     /******/
-})
-/************************************************************************/
-/******/({
+    /******/ 	// The require function
+    /******/ 	function __webpack_require__(moduleId) {
+        /******/
+        /******/ 		// Check if module is in cache
+        /******/ 		if(installedModules[moduleId]) {
+            /******/ 			return installedModules[moduleId].exports;
+            /******/ 		}
+        /******/ 		// Create a new module (and put it into the cache)
+        /******/ 		var module = installedModules[moduleId] = {
+            /******/ 			i: moduleId,
+            /******/ 			l: false,
+            /******/ 			exports: {}
+            /******/ 		};
+        /******/
+        /******/ 		// Execute the module function
+        /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+        /******/
+        /******/ 		// Flag the module as loaded
+        /******/ 		module.l = true;
+        /******/
+        /******/ 		// Return the exports of the module
+        /******/ 		return module.exports;
+        /******/ 	}
+    /******/
+    /******/
+    /******/ 	// expose the modules object (__webpack_modules__)
+    /******/ 	__webpack_require__.m = modules;
+    /******/
+    /******/ 	// expose the module cache
+    /******/ 	__webpack_require__.c = installedModules;
+    /******/
+    /******/ 	// define getter function for harmony exports
+    /******/ 	__webpack_require__.d = function(exports, name, getter) {
+        /******/ 		if(!__webpack_require__.o(exports, name)) {
+            /******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+            /******/ 		}
+        /******/ 	};
+    /******/
+    /******/ 	// define __esModule on exports
+    /******/ 	__webpack_require__.r = function(exports) {
+        /******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+            /******/ 		}
+        /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+        /******/ 	};
+    /******/
+    /******/ 	// create a fake namespace object
+    /******/ 	// mode & 1: value is a module id, require it
+    /******/ 	// mode & 2: merge all properties of value into the ns
+    /******/ 	// mode & 4: return value when already ns object
+    /******/ 	// mode & 8|1: behave like require
+    /******/ 	__webpack_require__.t = function(value, mode) {
+        /******/ 		if(mode & 1) value = __webpack_require__(value);
+        /******/ 		if(mode & 8) return value;
+        /******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+        /******/ 		var ns = Object.create(null);
+        /******/ 		__webpack_require__.r(ns);
+        /******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+        /******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+        /******/ 		return ns;
+        /******/ 	};
+    /******/
+    /******/ 	// getDefaultExport function for compatibility with non-harmony modules
+    /******/ 	__webpack_require__.n = function(module) {
+        /******/ 		var getter = module && module.__esModule ?
+            /******/ 			function getDefault() { return module['default']; } :
+            /******/ 			function getModuleExports() { return module; };
+        /******/ 		__webpack_require__.d(getter, 'a', getter);
+        /******/ 		return getter;
+        /******/ 	};
+    /******/
+    /******/ 	// Object.prototype.hasOwnProperty.call
+    /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+    /******/
+    /******/ 	// __webpack_public_path__
+    /******/ 	__webpack_require__.p = "";
+    /******/
+    /******/
+    /******/ 	// Load entry module and return exports
+    /******/ 	return __webpack_require__(__webpack_require__.s = "./src/injected/injected.ts");
+    /******/ })
+    /************************************************************************/
+    /******/ ({
 
-/***/ "./src/injected/cssSelectorEngine.ts":
-/*!*******************************************!*\\
-  !*** ./src/injected/cssSelectorEngine.ts ***!
-  \\*******************************************/
-/*! no static exports found */
-/***/ (function (module, exports, __webpack_require__) {
+        /***/ "./src/injected/cssSelectorEngine.ts":
+        /*!*******************************************!*\
+          !*** ./src/injected/cssSelectorEngine.ts ***!
+          \*******************************************/
+        /*! no static exports found */
+        /***/ (function(module, exports, __webpack_require__) {
 
             "use strict";
 
@@ -136,7 +128,7 @@
                         // Element ID is the strongest signal, use it.
                         let bestTokenForLevel = '';
                         if (element.id) {
-                            const token = /^[a-zA-Z][a-zA-Z0-9\\-\\_]+$/.test(element.id) ? '#' + element.id : `[id="${element.id}"]`;
+                            const token = /^[a-zA-Z][a-zA-Z0-9\-\_]+$/.test(element.id) ? '#' + element.id : `[id="${element.id}"]`;
                             const selector = uniqueCSSSelector(token);
                             if (selector)
                                 return selector;
@@ -184,15 +176,14 @@
             };
 
 
-            /***/
-        }),
+            /***/ }),
 
-/***/ "./src/injected/injected.ts":
-/*!**********************************!*\\
-  !*** ./src/injected/injected.ts ***!
-  \\**********************************/
-/*! no static exports found */
-/***/ (function (module, exports, __webpack_require__) {
+        /***/ "./src/injected/injected.ts":
+        /*!**********************************!*\
+          !*** ./src/injected/injected.ts ***!
+          \**********************************/
+        /*! no static exports found */
+        /***/ (function(module, exports, __webpack_require__) {
 
             "use strict";
 
@@ -301,7 +292,7 @@
                     };
                     while (index < selector.length) {
                         const c = selector[index];
-                        if (c === '\\\\' && index + 1 < selector.length) {
+                        if (c === '\\' && index + 1 < selector.length) {
                             index += 2;
                         }
                         else if (c === quote) {
@@ -405,15 +396,14 @@
             exports.default = Injected;
 
 
-            /***/
-        }),
+            /***/ }),
 
-/***/ "./src/injected/textSelectorEngine.ts":
-/*!********************************************!*\\
-  !*** ./src/injected/textSelectorEngine.ts ***!
-  \\********************************************/
-/*! no static exports found */
-/***/ (function (module, exports, __webpack_require__) {
+        /***/ "./src/injected/textSelectorEngine.ts":
+        /*!********************************************!*\
+          !*** ./src/injected/textSelectorEngine.ts ***!
+          \********************************************/
+        /*! no static exports found */
+        /***/ (function(module, exports, __webpack_require__) {
 
             "use strict";
 
@@ -444,7 +434,7 @@
                             const text = child.nodeValue;
                             if (!text)
                                 continue;
-                            if (text.match(/^\\s*[a-zA-Z0-9]+\\s*$/) && exports.TextEngine.query(root, text.trim()) === targetElement)
+                            if (text.match(/^\s*[a-zA-Z0-9]+\s*$/) && exports.TextEngine.query(root, text.trim()) === targetElement)
                                 return text.trim();
                             if (exports.TextEngine.query(root, JSON.stringify(text)) === targetElement)
                                 return JSON.stringify(text);
@@ -497,15 +487,14 @@
             }
 
 
-            /***/
-        }),
+            /***/ }),
 
-/***/ "./src/injected/utils.ts":
-/*!*******************************!*\\
-  !*** ./src/injected/utils.ts ***!
-  \\*******************************/
-/*! no static exports found */
-/***/ (function (module, exports, __webpack_require__) {
+        /***/ "./src/injected/utils.ts":
+        /*!*******************************!*\
+          !*** ./src/injected/utils.ts ***!
+          \*******************************/
+        /*! no static exports found */
+        /***/ (function(module, exports, __webpack_require__) {
 
             "use strict";
 
@@ -550,15 +539,14 @@
             exports.Utils = Utils;
 
 
-            /***/
-        }),
+            /***/ }),
 
-/***/ "./src/injected/xpathSelectorEngine.ts":
-/*!*********************************************!*\\
-  !*** ./src/injected/xpathSelectorEngine.ts ***!
-  \\*********************************************/
-/*! no static exports found */
-/***/ (function (module, exports, __webpack_require__) {
+        /***/ "./src/injected/xpathSelectorEngine.ts":
+        /*!*********************************************!*\
+          !*** ./src/injected/xpathSelectorEngine.ts ***!
+          \*********************************************/
+        /*! no static exports found */
+        /***/ (function(module, exports, __webpack_require__) {
 
             "use strict";
 
@@ -734,8 +722,6 @@
             }
 
 
-            /***/
-        })
+            /***/ })
 
-    /******/
-})).default
+        /******/ })).default
