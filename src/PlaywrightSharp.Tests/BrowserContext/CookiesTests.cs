@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>cookies.spec.js</playwright-file>
     /// <playwright-describe>BrowserContext.cookies</playwright-describe>
+    [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class CookiesTests : PlaywrightSharpPageBaseTest
@@ -54,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = ";HttpOnly; Path=/";
+                context.Response.Headers["Set-Cookie"] = "name=vaue;HttpOnly; Path=/";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -67,11 +68,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should properly report "Strict" sameSite cookie</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipLinux: true, skipWindows: true)]
-        public async Task ShouldProperlyReportSStrictSameSiteCookie()
+        public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = ";SameSite=Strict";
+                context.Response.Headers["Set-Cookie"] = "name=value;SameSite=Strict";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -88,7 +89,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = ";SameSite=Lax";
+                context.Response.Headers["Set-Cookie"] = "name=value;SameSite=Lax";
                 return Task.CompletedTask;
             });
             await Page.GoToAsync(TestConstants.EmptyPage);

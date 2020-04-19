@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -27,7 +28,6 @@ namespace PlaywrightSharp
         public LifecycleWatcher(Frame frame, NavigationOptions options, CancellationToken token = default)
         {
             _options = options != null ? options as WaitForNavigationOptions ?? new WaitForNavigationOptions(options) : new WaitForNavigationOptions();
-            _frame = frame;
             _expectedLifecycle = _options.WaitUntil ?? _defaultWaitUntil;
             _timeout = _options?.Timeout ?? frame.Page.DefaultNavigationTimeout;
             _frame = frame;
@@ -60,34 +60,6 @@ namespace PlaywrightSharp
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        internal bool UrlMatches(string url)
-        {
-            if (
-                string.IsNullOrEmpty(_options.Url) &&
-                _options.UrlPredicate == null &&
-                _options.UrlRegEx == null)
-            {
-                return true;
-            }
-
-            if (_options.Url == url)
-            {
-                return true;
-            }
-
-            if (_options.UrlRegEx?.IsMatch(url) == true)
-            {
-                return true;
-            }
-
-            if (_options.UrlPredicate?.Invoke(url) == true)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         internal void SetExpectedDocumentId(string documentId, string url)
@@ -180,7 +152,7 @@ namespace PlaywrightSharp
 
         internal void OnLifecycleEvent(Frame frame) => CheckLifecycleComplete();
 
-        protected void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -191,6 +163,34 @@ namespace PlaywrightSharp
 
         private void OnClientDisconnected(object sender, EventArgs e)
             => Terminate(new PlaywrightSharpException("Navigation failed because browser has disconnected!"));
+
+        private bool UrlMatches(string url)
+        {
+            if (
+                string.IsNullOrEmpty(_options.Url) &&
+                _options.UrlPredicate == null &&
+                _options.UrlRegEx == null)
+            {
+                return true;
+            }
+
+            if (_options.Url == url)
+            {
+                return true;
+            }
+
+            if (_options.UrlRegEx?.IsMatch(url) == true)
+            {
+                return true;
+            }
+
+            if (_options.UrlPredicate?.Invoke(url) == true)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         private void CheckLifecycleComplete()
         {
@@ -220,17 +220,15 @@ namespace PlaywrightSharp
 
         private bool CheckLifecycleRecursively(Frame frame, IEnumerable<WaitUntilNavigation> expectedLifecycle)
         {
-            foreach (var item in expectedLifecycle)
+            var expectedLifecycleArray = expectedLifecycle.ToArray();
+            if (expectedLifecycleArray.Any(item => !frame.FiredLifecycleEvents.Contains(item)))
             {
-                if (!frame.FiredLifecycleEvents.Contains(item))
-                {
-                    return false;
-                }
+                return false;
             }
 
             foreach (var child in frame.ChildFrames)
             {
-                if (!CheckLifecycleRecursively(child, expectedLifecycle))
+                if (!CheckLifecycleRecursively(child, expectedLifecycleArray))
                 {
                     return false;
                 }

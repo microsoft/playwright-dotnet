@@ -7,9 +7,13 @@ namespace PlaywrightSharp.Tests.QuerySelector
 {
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$eval</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+
     public class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
-        internal PageQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -152,9 +156,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact]
         public async Task ShouldThrowErrorIfNoElementIsFound()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+            var exception = await Assert.ThrowsAsync<SelectorException>(()
                 => Page.QuerySelectorEvaluateAsync("section", "e => e.id"));
-            Assert.Contains("failed to find element matching selector \"section\"", exception.Message);
+            Assert.Equal("Failed to find element matching selector", exception.Message);
+            Assert.Equal("section", exception.Selector);
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>

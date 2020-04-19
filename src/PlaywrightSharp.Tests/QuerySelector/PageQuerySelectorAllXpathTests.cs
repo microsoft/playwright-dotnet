@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.QuerySelector
 {
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$$ xpath</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageQuerySelectorAllXpathTests : PlaywrightSharpPageBaseTest
     {
-        internal PageQuerySelectorAllXpathTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageQuerySelectorAllXpathTests(ITestOutputHelper output) : base(output)
         {
         }
 

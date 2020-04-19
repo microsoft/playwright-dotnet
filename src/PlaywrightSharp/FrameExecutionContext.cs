@@ -9,12 +9,16 @@ namespace PlaywrightSharp
 {
     internal class FrameExecutionContext : ExecutionContext, IFrameExecutionContext
     {
+        private static string _injectedSource;
+        private readonly ISelectors _selectors;
+
         private int _injectedGeneration = -1;
         private Task<JSHandle> _injectedTask;
 
-        internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame) : base(executionContextDelegate)
+        internal FrameExecutionContext(IExecutionContextDelegate executionContextDelegate, Frame frame, ISelectors selectors = null) : base(executionContextDelegate)
         {
             Frame = frame;
+            _selectors = selectors ?? Selectors.Instance.Value;
         }
 
         public Frame Frame { get; }
@@ -82,8 +86,7 @@ namespace PlaywrightSharp
 
         public async Task<JSHandle> GetInjectedAsync()
         {
-            var selectors = Selectors.Instance.Value;
-            if (_injectedTask != null && selectors.Generation != _injectedGeneration)
+            if (_injectedTask != null && _selectors.Generation != _injectedGeneration)
             {
                 _ = _injectedTask.ContinueWith(handleTask => handleTask.Result.DisposeAsync(), TaskScheduler.Default);
                 _injectedTask = null;
@@ -93,11 +96,11 @@ namespace PlaywrightSharp
             {
                 string source = $@"
                     new ({await GetInjectedSource().ConfigureAwait(false)})([
-                      {string.Join(",\n", await selectors.GetSourcesAsync().ConfigureAwait(false))},
+                      {string.Join(",\n", _selectors.Sources)},
                     ])
                   ";
                 _injectedTask = EvaluateHandleAsync(source);
-                _injectedGeneration = selectors.Generation;
+                _injectedGeneration = _selectors.Generation;
             }
 
             return await _injectedTask.ConfigureAwait(false);
@@ -137,18 +140,23 @@ namespace PlaywrightSharp
             return result.ToArray();
         }
 
-        private async Task<string> GetInjectedSource()
-        {
-            using var stream = typeof(FrameExecutionContext).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.injectedSource.ts");
-            using var reader = new StreamReader(stream, Encoding.UTF8);
-            return await reader.ReadToEndAsync().ConfigureAwait(false);
-        }
-
-        private async Task<JSHandle> QuerySelectorArrayAsync(string selector, ElementHandle scope)
+        internal async Task<JSHandle> QuerySelectorArrayAsync(string selector, ElementHandle scope = null)
             => await EvaluateHandleAsync(
                 "(injected, selector, scope) => injected.querySelectorAll(selector, scope || document)",
                 await GetInjectedAsync().ConfigureAwait(false),
                 Dom.NormalizeSelector(selector),
                 scope).ConfigureAwait(false);
+
+        private static async Task<string> GetInjectedSource()
+        {
+            if (_injectedSource == null)
+            {
+                using var stream = typeof(FrameExecutionContext).Assembly.GetManifestResourceStream("PlaywrightSharp.Resources.injectedSource.ts");
+                using var reader = new StreamReader(stream, Encoding.UTF8);
+                _injectedSource = await reader.ReadToEndAsync().ConfigureAwait(false);
+            }
+
+            return _injectedSource;
+        }
     }
 }

@@ -483,6 +483,7 @@ namespace PlaywrightSharp.Chromium
                 var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
                 _logger.LogError(ex, message);
                 */
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 Client.OnClosed(ex.Message);
             }
         }

@@ -96,7 +96,7 @@ namespace PlaywrightSharp
         public event EventHandler<WebsocketEventArgs> Websocket;
 
         /// <inheritdoc cref="IPage.MainFrame"/>
-        public IFrame MainFrame => FrameManager.MainFrame;
+        IFrame IPage.MainFrame => MainFrame;
 
         /// <inheritdoc cref="IPage.BrowserContext"/>
         public IBrowserContext BrowserContext { get; internal set; }
@@ -141,6 +141,8 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.Coverage"/>
         public ICoverage Coverage => null;
+
+        internal Frame MainFrame => FrameManager.MainFrame;
 
         internal FrameManager FrameManager { get; }
 
@@ -490,15 +492,11 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.QuerySelectorAllEvaluateAsync(string, string, object[])"/>
         public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.QuerySelectorAllEvaluateAsync(selector, script, args);
 
         /// <inheritdoc cref="IPage.QuerySelectorAllEvaluateAsync{T}(string, string, object[])"/>
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+            => MainFrame.QuerySelectorAllEvaluateAsync<T>(selector, script, args);
 
         /// <inheritdoc cref="IPage.FillAsync(string, string, WaitForSelectorOptions)"/>
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
@@ -556,7 +554,7 @@ namespace PlaywrightSharp
 
         internal static string GetEvaluationString(string fun, params object[] args)
         {
-            return $"({fun})({string.Join(",", args.Select(SerializeArgument))})";
+            return !fun.IsJavascriptFunction() ? fun : $"({fun})({string.Join(",", args.Select(SerializeArgument))})";
 
             string SerializeArgument(object arg)
             {

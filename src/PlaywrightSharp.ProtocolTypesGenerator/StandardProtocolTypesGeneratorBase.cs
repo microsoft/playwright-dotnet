@@ -11,6 +11,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
     internal abstract class StandardProtocolTypesGeneratorBase : ProtocolTypesGeneratorBase
     {
         private readonly IDictionary<string, string> _knownTypes = new Dictionary<string, string>();
+        private readonly IList<string> _enums = new List<string>();
 
         protected abstract Task<ProtocolDomainsContainer> RetrieveProtocolAsync(RevisionInfo revision);
 
@@ -87,6 +88,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             {
                 if (type.Enum != null)
                 {
+                    _enums.Add(type.Id);
+
                     builder.AppendLine("/// <summary>");
                     builder.Append("/// ").AppendLine(FormatDocs(type.Description));
                     builder.AppendLine("/// </summary>");
@@ -183,7 +186,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         {
             if (property.Ref != null)
             {
-                return ConvertRefToCsharp(property.Ref);
+                return ConvertRefToCsharp(property.Ref, property.Optional ?? false);
             }
 
             return property.Type switch
@@ -194,10 +197,19 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
         }
 
         private string ConvertItemsProperty(ProtocolDomainItems items, bool isResponse)
-            => (items.Type != null ? ConvertJsToCsharp(items.Type, isResponse) : ConvertRefToCsharp(items.Ref)) + "[]";
+            => (items.Type != null ? ConvertJsToCsharp(items.Type, isResponse) : ConvertRefToCsharp(items.Ref, false)) + "[]";
 
-        private string ConvertRefToCsharp(string refValue)
-            => _knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
+        private string ConvertRefToCsharp(string refValue, bool nullable)
+        {
+            string type = _knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
+
+            if (nullable && _enums.Contains(refValue))
+            {
+                type += "?";
+            }
+
+            return type;
+        }
 
         private string ConvertJsToCsharp(string type, bool isResponse)
             => type switch

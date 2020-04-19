@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.QuerySelector
 {
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.$eval</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandlesQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
-        internal ElementHandlesQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ElementHandlesQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -47,8 +50,9 @@ namespace PlaywrightSharp.Tests.QuerySelector
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => elementHandle.QuerySelectorEvaluateAsync(".a", "node => node.innerText"));
-            Assert.Equal("Error: failed to find element matching selector \".a\"", exception.Message);
+            var exception = await Assert.ThrowsAsync<SelectorException>(() => elementHandle.QuerySelectorEvaluateAsync(".a", "node => node.innerText"));
+            Assert.Equal("Failed to find element matching selector", exception.Message);
+            Assert.Equal(".a", exception.Selector);
         }
     }
 }

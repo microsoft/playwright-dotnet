@@ -56,15 +56,9 @@ namespace PlaywrightSharp
         public bool? Secure { get; set; }
 
         /// <summary>
-        /// Gets or sets if it's session only.
-        /// </summary>
-        /// <value>Whether it's session only or not.</value>
-        public bool? Session { get; set; }
-
-        /// <summary>
         /// Gets or sets the cookies SameSite value.
         /// </summary>
-        public SameSite? SameSite { get; set; }
+        public SameSite SameSite { get; set; } = SameSite.None;
 
         internal SetNetworkCookieParam Clone() => (SetNetworkCookieParam)MemberwiseClone();
     }
