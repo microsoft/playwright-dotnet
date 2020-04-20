@@ -21,8 +21,10 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
+        private readonly object _fileChooserEventLock = new object();
 
         private bool _disconnected;
+        private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -75,7 +77,26 @@ namespace PlaywrightSharp
         public event EventHandler<ResponseEventArgs> Response;
 
         /// <inheritdoc cref="IPage.FileChooser"/>
-        public event EventHandler<FileChooserEventArgs> FileChooser;
+        public event EventHandler<FileChooserEventArgs> FileChooser
+        {
+            add
+            {
+                lock (_fileChooserEventLock)
+                {
+                    _fileChooserEventHandler += value;
+                    _ = Delegate.SetFileChooserInterceptedAsync(true);
+                }
+            }
+
+            remove
+            {
+                lock (_fileChooserEventLock)
+                {
+                    _fileChooserEventHandler -= value;
+                    _ = Delegate.SetFileChooserInterceptedAsync(false);
+                }
+            }
+        }
 
         /// <inheritdoc cref="IPage.Close"/>
         public event EventHandler Close;
@@ -666,6 +687,19 @@ namespace PlaywrightSharp
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
+        }
+
+        internal async Task OnFileChooserOpenedAsync(ElementHandle handle)
+        {
+            bool multiple = await handle.EvaluateAsync<bool>("element => !!element.multiple").ConfigureAwait(false);
+
+            if (_fileChooserEventHandler?.GetInvocationList().Length == 0)
+            {
+                await handle.DisposeAsync().ConfigureAwait(false);
+                return;
+            }
+
+            _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(handle, multiple));
         }
 
         private async Task ExposeFunctionAsync(string name, Delegate playwrightFunction)

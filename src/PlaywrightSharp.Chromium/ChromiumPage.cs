@@ -322,6 +322,9 @@ namespace PlaywrightSharp.Chromium
         public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files)
             => handle.EvaluateHandleAsync(Dom.SetFileInputFunction, files);
 
+        public Task SetFileChooserInterceptedAsync(bool enabled)
+            => Client.SendAsync(new PageSetInterceptFileChooserDialogRequest { Enabled = enabled });
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -467,7 +470,10 @@ namespace PlaywrightSharp.Chromium
                         OnConsoleAPI(runtimeConsoleAPICalled);
                         break;
                     case RuntimeBindingCalledChromiumEvent runtimeBindingCalled:
-                        await OnBindingCalled(runtimeBindingCalled).ConfigureAwait(false);
+                        await OnBindingCalledAsync(runtimeBindingCalled).ConfigureAwait(false);
+                        break;
+                    case PageFileChooserOpenedChromiumEvent pageFileChooserOpened:
+                        await OnFileChooserOpenedAsync(pageFileChooserOpened).ConfigureAwait(false);
                         break;
                 }
             }
@@ -483,12 +489,26 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
+        private async Task OnFileChooserOpenedAsync(PageFileChooserOpenedChromiumEvent e)
+        {
+            Page.FrameManager.Frames.TryGetValue(e.FrameId, out var frame);
+
+            if (frame == null)
+            {
+                return;
+            }
+
+            var utilityContext = await frame.GetUtilityContextAsync().ConfigureAwait(false);
+            var handle = await AdoptBackendNodeIdAsync(e.BackendNodeId.Value, utilityContext).ConfigureAwait(false);
+            await Page.OnFileChooserOpenedAsync(handle).ConfigureAwait(false);
+        }
+
         private void OnFrameNavigatedWithinDocument(string frameId, string url)
             => Page.FrameManager.FrameCommittedSameDocumentNavigation(frameId, url);
 
         private void OnFrameDetached(string frameId) => Page.FrameManager.FrameDetached(frameId);
 
-        private Task OnBindingCalled(RuntimeBindingCalledChromiumEvent e)
+        private Task OnBindingCalledAsync(RuntimeBindingCalledChromiumEvent e)
         {
             var context = ContextIdToContext[e.ExecutionContextId.Value];
             return Page.OnBindingCalledAsync(e.Payload, context);

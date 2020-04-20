@@ -232,6 +232,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files) => throw new NotImplementedException();
 
+        public Task SetFileChooserInterceptedAsync(bool enabled) => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>
