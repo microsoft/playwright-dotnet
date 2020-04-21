@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.Input
 {
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForFileChooserTests : PlaywrightSharpPageBaseTest
     {
-        internal PageWaitForFileChooserTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageWaitForFileChooserTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -61,7 +64,7 @@ namespace PlaywrightSharp.Tests.Input
                 Page.EvaluateAsync(@"() => {
                     var el = document.createElement('input');
                     el.type = 'file';
-                    el.ClickAsync();
+                    el.click();
                 }")
             );
             Assert.NotNull(chooser?.Element);
@@ -106,7 +109,7 @@ namespace PlaywrightSharp.Tests.Input
                 Page.EvaluateAsync(@"() => setTimeout(() => {
                     var el = document.createElement('input');
                     el.type = 'file';
-                    el.ClickAsync();
+                    el.click();
                 }, 50)")
             );
             Assert.NotNull(chooser?.Element);
@@ -151,18 +154,15 @@ namespace PlaywrightSharp.Tests.Input
         {
             await Page.SetContentAsync("<input type=file>");
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
-                .ContinueWith(task =>
-                {
-                    return task.Result.Element.SetInputFilesAsync(TestConstants.FileToUpload);
-                });
+                .ContinueWith(task => task.Result.Element.SetInputFilesAsync(TestConstants.FileToUpload));
             Assert.Equal("contents of the file", await Page.QuerySelectorEvaluateAsync<string>("input", @"async picker => {
-                picker.ClickAsync();
+                picker.click();
                 await new Promise(x => picker.oninput = x);
-                var reader = new FileReader();
-                var promise = new Promise(fulfill => reader.onload = fulfill);
+                const reader = new FileReader();
+                const promise = new Promise(fulfill => reader.onload = fulfill);
                 reader.readAsText(picker.files[0]);
                 return promise.then(() => reader.result);
-            })"));
+            }"));
         }
 
         ///<playwright-file>input.spec.js</playwright-file>
@@ -173,20 +173,14 @@ namespace PlaywrightSharp.Tests.Input
         {
             await Page.SetContentAsync("<input type=file>");
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
-                .ContinueWith(task =>
-                {
-                    return task.Result.Element.SetInputFilesAsync(TestConstants.FileToUpload);
-                });
+                .ContinueWith(task => task.Result.Element.SetInputFilesAsync(TestConstants.FileToUpload));
             Assert.Equal(1, await Page.QuerySelectorEvaluateAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
                 return picker.files.length;
             }"));
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
-                .ContinueWith(task =>
-                {
-                    return task.Result.Element.SetInputFilesAsync();
-                });
+                .ContinueWith(task => task.Result.Element.SetInputFilesAsync());
             Assert.Equal(0, await Page.QuerySelectorEvaluateAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
@@ -205,7 +199,7 @@ namespace PlaywrightSharp.Tests.Input
                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
                Page.ClickAsync("input")
             );
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => fileChooser.Element.SetInputFilesAsync(
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => fileChooser.Element.SetInputFilesAsync(
                 Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload),
                 Path.Combine(Directory.GetCurrentDirectory(), "Assets", "pptr.png"))
             );

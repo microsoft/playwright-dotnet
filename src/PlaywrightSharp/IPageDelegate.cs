@@ -225,5 +225,12 @@ namespace PlaywrightSharp
         /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetCacheEnabledAsync(bool enabled);
+
+        /// <summary>
+        /// Enables file chooser interception.
+        /// </summary>
+        /// <param name="enabled">Whether to enable interception or not.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetFileChooserInterceptedAsync(bool enabled);
     }
 }
