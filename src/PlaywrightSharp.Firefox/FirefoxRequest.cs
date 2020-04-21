@@ -32,14 +32,23 @@ namespace PlaywrightSharp.Firefox
                 ErrorCode = errorCode.ToString().ToLower(),
             });
 
-        public Task ContinueAsync(Payload payload = null)
-            => _session.SendAsync(new NetworkResumeInterceptedRequestRequest
+        public async Task ContinueAsync(Payload payload = null)
+        {
+            try
             {
-                RequestId = Id,
-                Method = payload?.Method?.Method,
-                Headers = payload?.Headers?.ToHeadersArray(),
-                PostData = payload?.PostData,
-            });
+                await _session.SendAsync(new NetworkResumeInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    Method = payload?.Method?.Method,
+                    Headers = payload?.Headers?.ToHeadersArray(),
+                    PostData = payload?.PostData,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+        }
 
         public Task FulfillAsync(ResponseData response)
         {
