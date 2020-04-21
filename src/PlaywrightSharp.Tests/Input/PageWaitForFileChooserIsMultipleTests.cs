@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Input
 {
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForFileChooser isMultiple</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForFileChooserIsMultipleTests : PlaywrightSharpPageBaseTest
     {
-        internal PageWaitForFileChooserIsMultipleTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageWaitForFileChooserIsMultipleTests(ITestOutputHelper output) : base(output)
         {
         }
 

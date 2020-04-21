@@ -210,5 +210,12 @@ namespace PlaywrightSharp
         /// <param name="files">Files payloads to add.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files);
+
+        /// <summary>
+        /// Enables file chooser interception.
+        /// </summary>
+        /// <param name="enabled">Whether to enable interception or not.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetFileChooserInterceptedAsync(bool enabled);
     }
 }
