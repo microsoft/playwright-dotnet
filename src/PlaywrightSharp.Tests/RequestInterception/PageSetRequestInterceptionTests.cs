@@ -604,7 +604,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             });
             var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => failed);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => failed);
             Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
             await request.ContinueAsync();
         }
@@ -630,7 +630,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             });
             var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => failed);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => failed);
             Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
             await request.ContinueAsync();
         }

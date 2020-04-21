@@ -68,9 +68,7 @@ namespace PlaywrightSharp
 
         internal void FrameCommittedNewDocumentNavigation(string frameId, string url, string name, string documentId, bool initial)
         {
-            Frames.TryGetValue(frameId, out var frame);
-
-            if (frame == null)
+            if (!Frames.TryGetValue(frameId, out var frame))
             {
                 return;
             }
@@ -95,11 +93,6 @@ namespace PlaywrightSharp
 
                 _page.OnFrameNavigated(frame);
             }
-        }
-
-        internal Task FrameCommittedNewDocumentNavigation(string id, string url, string v, object loaderId)
-        {
-            throw new NotImplementedException();
         }
 
         internal void FrameCommittedSameDocumentNavigation(string frameId, string url)
@@ -260,7 +253,11 @@ namespace PlaywrightSharp
             CancellationTokenSource NetworkIdleTimer()
             {
                 var cts = new CancellationTokenSource();
-                _ = Task.Delay(500, cts.Token).ContinueWith(_ => FrameLifecycleEvent(frame.Id, lifecycleEvent), TaskScheduler.Default);
+                _ = Task.Delay(500, cts.Token).ContinueWith(
+                    t => FrameLifecycleEvent(frame.Id, lifecycleEvent),
+                    CancellationToken.None,
+                    TaskContinuationOptions.NotOnCanceled,
+                    TaskScheduler.Current);
                 return cts;
             }
         }

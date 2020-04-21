@@ -120,7 +120,7 @@ namespace PlaywrightSharp
 
         internal void OnCommittedNewDocumentNavigation(Frame frame)
         {
-            if (frame == _frame && _expectedDocumentId == null && _navigationRequest != null && frame.LastDocumentId != _expectedDocumentId)
+            if (frame == _frame && _expectedDocumentId != null && _navigationRequest != null && frame.LastDocumentId != _expectedDocumentId)
             {
                 _terminationTaskWrapper.TrySetException(new PlaywrightSharpException($"Navigation to {_targetUrl} was canceled by another one"));
                 return;
