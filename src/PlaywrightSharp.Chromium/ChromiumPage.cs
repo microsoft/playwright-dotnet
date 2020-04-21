@@ -491,9 +491,7 @@ namespace PlaywrightSharp.Chromium
 
         private async Task OnFileChooserOpenedAsync(PageFileChooserOpenedChromiumEvent e)
         {
-            Page.FrameManager.Frames.TryGetValue(e.FrameId, out var frame);
-
-            if (frame == null)
+            if (!Page.FrameManager.Frames.TryGetValue(e.FrameId, out var frame))
             {
                 return;
             }
