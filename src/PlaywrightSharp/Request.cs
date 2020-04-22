@@ -14,7 +14,7 @@ namespace PlaywrightSharp
         private readonly Task<Response> _waitForResponse;
         private bool _interceptionHandled = false;
 
-        internal Request(IRequestDelegate requestDelegate, Frame frame, Request[] redirectChain, string documentId, string url, ResourceType resourceType, HttpMethod method, string postData, IDictionary<string, string> headers)
+        internal Request(IRequestDelegate requestDelegate, Frame frame, List<Request> redirectChain, string documentId, string url, ResourceType resourceType, HttpMethod method, string postData, IDictionary<string, string> headers)
         {
             if (url.StartsWith("data:"))
             {
@@ -67,7 +67,7 @@ namespace PlaywrightSharp
         public ResourceType ResourceType { get; }
 
         /// <inheritdoc cref="IRequest.RedirectChain"/>
-        IRequest[] IRequest.RedirectChain => RedirectChain;
+        IRequest[] IRequest.RedirectChain => RedirectChain.ToArray();
 
         /// <inheritdoc cref="IRequest.Response"/>
         IResponse IRequest.Response => Response;
@@ -77,7 +77,7 @@ namespace PlaywrightSharp
 
         internal bool IsFavicon { get; }
 
-        internal string DocumentId { get; set; }
+        internal string DocumentId { get; }
 
         internal Request FinalRequest { get; private set; }
 
@@ -85,7 +85,7 @@ namespace PlaywrightSharp
 
         internal Frame Frame { get; }
 
-        internal Request[] RedirectChain { get; }
+        internal List<Request> RedirectChain { get; }
 
         internal Task<Response> WaitForFinished => _waitForFinishedTsc.Task;
 
