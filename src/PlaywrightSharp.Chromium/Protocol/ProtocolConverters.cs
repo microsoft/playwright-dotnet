@@ -78,5 +78,27 @@ namespace PlaywrightSharp.Chromium.Protocol
 
             return message;
         }
+
+        internal static ResourceType ToPlaywrightResourceType(this Network.ResourceType resourceType)
+            => resourceType switch
+            {
+                Network.ResourceType.Document => ResourceType.Document,
+                Network.ResourceType.Stylesheet => ResourceType.StyleSheet,
+                Network.ResourceType.Image => ResourceType.Image,
+                Network.ResourceType.Media => ResourceType.Media,
+                Network.ResourceType.Font => ResourceType.Font,
+                Network.ResourceType.Script => ResourceType.Script,
+                Network.ResourceType.TextTrack => ResourceType.TextTrack,
+                Network.ResourceType.XHR => ResourceType.Xhr,
+                Network.ResourceType.Fetch => ResourceType.Fetch,
+                Network.ResourceType.EventSource => ResourceType.EventSource,
+                Network.ResourceType.WebSocket => ResourceType.WebSocket,
+                Network.ResourceType.Manifest => ResourceType.Manifest,
+                Network.ResourceType.SignedExchange => ResourceType.SignedExchange,
+                Network.ResourceType.Ping => ResourceType.Ping,
+                Network.ResourceType.CSPViolationReport => ResourceType.CSPViolationReport,
+                Network.ResourceType.Other => ResourceType.Other,
+                _ => ResourceType.Other
+            };
     }
 }

@@ -36,10 +36,10 @@ namespace PlaywrightSharp.Chromium
             Client = client;
             _browser = browser;
             _browserContext = browserContext;
-            _networkManager = new ChromiumNetworkManager(Client, this);
             RawKeyboard = new ChromiumRawKeyboard(client);
             RawMouse = new ChromiumRawMouse(client);
             Page = new Page(this, browserContext);
+            _networkManager = new ChromiumNetworkManager(Client, Page);
 
             client.MessageReceived += Client_MessageReceived;
         }
@@ -325,6 +325,8 @@ namespace PlaywrightSharp.Chromium
         public Task SetFileChooserInterceptedAsync(bool enabled)
             => Client.SendAsync(new PageSetInterceptFileChooserDialogRequest { Enabled = enabled });
 
+        public Task SetCacheEnabledAsync(bool enabled) => _networkManager.SetCacheEnabledAsync(enabled);
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -586,8 +588,6 @@ namespace PlaywrightSharp.Chromium
             {
                 System.Diagnostics.Debug.WriteLine(ex);
             }
-
-            _networkManager.InstrumentNetworkEvents(session);
         }
 
         private ConsoleMessageLocation ToConsoleMessageLocation(StackTrace stackTrace)

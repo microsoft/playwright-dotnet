@@ -86,5 +86,15 @@ namespace PlaywrightSharp
         /// Other.
         /// </summary>
         Other,
+
+        /// <summary>
+        /// SignedExchange.
+        /// </summary>
+        SignedExchange,
+
+        /// <summary>
+        /// CSPViolationReport.
+        /// </summary>
+        CSPViolationReport,
     }
 }

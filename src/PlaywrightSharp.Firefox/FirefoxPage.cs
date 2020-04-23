@@ -234,6 +234,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetFileChooserInterceptedAsync(bool enabled) => throw new NotImplementedException();
 
+        public Task SetCacheEnabledAsync(bool enabled) => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>

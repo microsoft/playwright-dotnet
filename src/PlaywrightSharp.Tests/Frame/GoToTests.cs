@@ -10,9 +10,12 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.goto</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GoToTests : PlaywrightSharpPageBaseTest
     {
-        internal GoToTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public GoToTests(ITestOutputHelper output) : base(output)
         {
         }
 

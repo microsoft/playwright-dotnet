@@ -334,7 +334,13 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.SetCacheEnabledAsync(bool)"/>
         public Task SetCacheEnabledAsync(bool enabled = true)
         {
-            throw new NotImplementedException();
+            if (PageState.CacheEnabled == enabled)
+            {
+                return Task.CompletedTask;
+            }
+
+            PageState.CacheEnabled = enabled;
+            return Delegate.SetCacheEnabledAsync(enabled);
         }
 
         /// <inheritdoc cref="IPage.SetContentAsync(string, NavigationOptions)"/>

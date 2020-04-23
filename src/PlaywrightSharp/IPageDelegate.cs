@@ -217,5 +217,12 @@ namespace PlaywrightSharp
         /// <param name="enabled">Whether to enable interception or not.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetFileChooserInterceptedAsync(bool enabled);
+
+        /// <summary>
+        /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
+        /// </summary>
+        /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetCacheEnabledAsync(bool enabled);
     }
 }
