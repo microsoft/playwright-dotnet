@@ -588,8 +588,6 @@ namespace PlaywrightSharp.Chromium
             {
                 System.Diagnostics.Debug.WriteLine(ex);
             }
-
-            _networkManager.InstrumentNetworkEvents(session);
         }
 
         private ConsoleMessageLocation ToConsoleMessageLocation(StackTrace stackTrace)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -13,12 +14,12 @@ namespace PlaywrightSharp.Chromium
     {
         private readonly ChromiumSession _client;
         private readonly Page _page;
-        private readonly IDictionary<string, ChromiumInterceptableRequest> _requestIdToRequest =
-            new Dictionary<string, ChromiumInterceptableRequest>();
+        private readonly ConcurrentDictionary<string, ChromiumInterceptableRequest> _requestIdToRequest =
+            new ConcurrentDictionary<string, ChromiumInterceptableRequest>();
 
-        private readonly IDictionary<string, string> _requestIdToInterceptionId = new Dictionary<string, string>();
-        private readonly IDictionary<string, NetworkRequestWillBeSentChromiumEvent> _requestIdToRequestWillBeSentEvent =
-            new Dictionary<string, NetworkRequestWillBeSentChromiumEvent>();
+        private readonly ConcurrentDictionary<string, string> _requestIdToInterceptionId = new ConcurrentDictionary<string, string>();
+        private readonly ConcurrentDictionary<string, NetworkRequestWillBeSentChromiumEvent> _requestIdToRequestWillBeSentEvent =
+            new ConcurrentDictionary<string, NetworkRequestWillBeSentChromiumEvent>();
 
         private readonly IList<string> _attemptedAuthentications = new List<string>();
         private bool _userCacheDisabled;
@@ -36,10 +37,6 @@ namespace PlaywrightSharp.Chromium
 
         internal Task SetUserAgentAsync(string userAgent)
             => _client.SendAsync(new NetworkSetUserAgentOverrideRequest { UserAgent = userAgent });
-
-        internal void InstrumentNetworkEvents(ChromiumSession session)
-        {
-        }
 
         internal Task SetCacheEnabledAsync(bool enabled)
         {
@@ -83,7 +80,7 @@ namespace PlaywrightSharp.Chromium
         {
             // For certain requestIds we never receive requestWillBeSent event.
             // @see https://crbug.com/750469
-            if (!_requestIdToRequest.TryGetValue(e.RequestId, out var request))
+            if (!_requestIdToRequest.TryRemove(e.RequestId, out var request))
             {
                 return;
             }
@@ -91,12 +88,8 @@ namespace PlaywrightSharp.Chromium
             // Under certain conditions we never get the Network.responseReceived
             // event from protocol. @see https://crbug.com/883475
             var response = request.Request.Response;
-            if (response != null)
-            {
-                response.RequestFinished();
-            }
+            response?.RequestFinished();
 
-            _requestIdToRequest.Remove(request.RequestId);
             if (!string.IsNullOrEmpty(request.InterceptionId))
             {
                 _attemptedAuthentications.Remove(request.InterceptionId);
@@ -134,7 +127,7 @@ namespace PlaywrightSharp.Chromium
             bool isNavigationRequest = e.RequestId == e.LoaderId && e.Type == Protocol.Network.ResourceType.Document;
             string documentId = isNavigationRequest ? e.LoaderId : null;
             var request = new ChromiumInterceptableRequest(_client, frame, interceptionId, documentId, _userRequestInterceptionEnabled, e, redirectChain);
-            _requestIdToRequest.Add(e.RequestId, request);
+            _requestIdToRequest.TryAdd(e.RequestId, request);
             _page.FrameManager.RequestStarted(request.Request);
         }
 
@@ -185,10 +178,9 @@ namespace PlaywrightSharp.Chromium
             string requestId = e.NetworkId;
             string interceptionId = e.RequestId;
 
-            if (_requestIdToRequestWillBeSentEvent.TryGetValue(requestId, out var requestWillBeSentEvent))
+            if (_requestIdToRequestWillBeSentEvent.TryRemove(requestId, out var requestWillBeSentEvent))
             {
                 OnRequest(requestWillBeSentEvent, interceptionId);
-                _requestIdToRequestWillBeSentEvent.Remove(requestId);
             }
             else
             {
@@ -202,10 +194,9 @@ namespace PlaywrightSharp.Chromium
             if (_protocolRequestInterceptionEnabled && !e.Request.Url.StartsWith(":data:"))
             {
                 string requestId = e.RequestId;
-                if (_requestIdToInterceptionId.TryGetValue(requestId, out string interceptionId))
+                if (_requestIdToInterceptionId.TryRemove(requestId, out string interceptionId))
                 {
                     OnRequest(e, interceptionId);
-                    _requestIdToInterceptionId.Remove(requestId);
                 }
                 else
                 {
