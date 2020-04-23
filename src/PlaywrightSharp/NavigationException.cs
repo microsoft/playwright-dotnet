@@ -56,19 +56,5 @@ namespace PlaywrightSharp
         /// </summary>
         /// <value>The URL.</value>
         public string Url { get; }
-
-        /// <inheritdoc/>
-        public override string Message
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(Url))
-                {
-                    return base.Message;
-                }
-
-                return $"{base.Message} at {Url}";
-            }
-        }
     }
 }

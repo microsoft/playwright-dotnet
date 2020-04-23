@@ -49,19 +49,19 @@ namespace PlaywrightSharp.Firefox
 
         private void OnRequestWillBeSent(NetworkRequestWillBeSentFirefoxEvent e)
         {
-            _requests.TryGetValue(e.RedirectedFrom ?? string.Empty, out var redirectd);
-            var frame = (redirectd != null ? redirectd.Request.Frame : (e.FrameId != null ? _page.FrameManager.Frames[e.FrameId] : null)) as Frame;
+            _requests.TryGetValue(e.RedirectedFrom ?? string.Empty, out var redirectId);
+            var frame = (redirectId != null ? redirectId.Request.Frame : (e.FrameId != null ? _page.FrameManager.Frames[e.FrameId] : null)) as Frame;
             if (frame == null)
             {
                 return;
             }
 
             var redirectChain = new List<Request>();
-            if (redirectd != null)
+            if (redirectId != null)
             {
-                redirectChain = new List<Request>(redirectd.Request.RedirectChain);
-                redirectChain.Add(redirectd.Request);
-                _requests.TryRemove(redirectd.Id, out var _);
+                redirectChain = new List<Request>(redirectId.Request.RedirectChain);
+                redirectChain.Add(redirectId.Request);
+                _requests.TryRemove(redirectId.Id, out var _);
             }
 
             var request = new FirefoxRequest(_session, frame, redirectChain.ToArray(), e);

@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Fetch;
 using PlaywrightSharp.Chromium.Protocol.Network;
 
 namespace PlaywrightSharp.Chromium
@@ -7,12 +12,24 @@ namespace PlaywrightSharp.Chromium
     internal class ChromiumNetworkManager
     {
         private readonly ChromiumSession _client;
-        private readonly ChromiumPage _chromiumPage;
+        private readonly Page _page;
+        private readonly IDictionary<string, ChromiumInterceptableRequest> _requestIdToRequest =
+            new Dictionary<string, ChromiumInterceptableRequest>();
 
-        public ChromiumNetworkManager(ChromiumSession client, ChromiumPage chromiumPage)
+        private readonly IDictionary<string, string> _requestIdToInterceptionId = new Dictionary<string, string>();
+        private readonly IDictionary<string, NetworkRequestWillBeSentChromiumEvent> _requestIdToRequestWillBeSentEvent =
+            new Dictionary<string, NetworkRequestWillBeSentChromiumEvent>();
+
+        private readonly IList<string> _attemptedAuthentications = new List<string>();
+        private bool _userCacheDisabled;
+        private bool _protocolRequestInterceptionEnabled = false;
+        private bool _userRequestInterceptionEnabled = false;
+
+        public ChromiumNetworkManager(ChromiumSession client, Page page)
         {
             _client = client;
-            _chromiumPage = chromiumPage;
+            _page = page;
+            _client.MessageReceived += Client_MessageReceived;
         }
 
         internal Task InitializeAsync() => _client.SendAsync(new NetworkEnableRequest());
@@ -23,5 +40,188 @@ namespace PlaywrightSharp.Chromium
         internal void InstrumentNetworkEvents(ChromiumSession session)
         {
         }
+
+        internal Task SetCacheEnabledAsync(bool enabled)
+        {
+            _userCacheDisabled = !enabled;
+            return UpdateProtocolCacheDisabledAsync();
+        }
+
+        private async void Client_MessageReceived(object sender, IChromiumEvent e)
+        {
+            try
+            {
+                switch (e)
+                {
+                    case NetworkResponseReceivedChromiumEvent networkResponseReceived:
+                        OnResponseReceived(networkResponseReceived);
+                        break;
+                    case NetworkRequestWillBeSentChromiumEvent networkRequestWillBeSent:
+                        OnRequestWillBeSent(networkRequestWillBeSent);
+                        break;
+                    case FetchRequestPausedChromiumEvent fetchRequestPaused:
+                        await OnRequestPausedAsync(fetchRequestPaused).ConfigureAwait(false);
+                        break;
+                    case NetworkLoadingFinishedChromiumEvent networkLoadingFinished:
+                        OnLoadingFinished(networkLoadingFinished);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                // TODO Add Logger
+                /*
+                var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
+                _logger.LogError(ex, message);
+                */
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                _client.OnClosed(ex.Message);
+            }
+        }
+
+        private void OnLoadingFinished(NetworkLoadingFinishedChromiumEvent e)
+        {
+            // For certain requestIds we never receive requestWillBeSent event.
+            // @see https://crbug.com/750469
+            if (!_requestIdToRequest.TryGetValue(e.RequestId, out var request))
+            {
+                return;
+            }
+
+            // Under certain conditions we never get the Network.responseReceived
+            // event from protocol. @see https://crbug.com/883475
+            var response = request.Request.Response;
+            if (response != null)
+            {
+                response.RequestFinished();
+            }
+
+            _requestIdToRequest.Remove(request.RequestId);
+            if (!string.IsNullOrEmpty(request.InterceptionId))
+            {
+                _attemptedAuthentications.Remove(request.InterceptionId);
+            }
+
+            _page.FrameManager.RequestFinished(request.Request);
+        }
+
+        private void OnRequest(NetworkRequestWillBeSentChromiumEvent e, string interceptionId)
+        {
+            if (e.Request.Url.StartsWith("data:"))
+            {
+                return;
+            }
+
+            var redirectChain = Array.Empty<Request>();
+            /*TODO
+            if (e.RedirectResponse != null)
+            {
+                var request = _requestIdToRequest.get(event.requestId);
+                // If we connect late to the target, we could have missed the requestWillBeSent event.
+                if (request)
+                {
+                    this._handleRequestRedirect(request,  event.redirectResponse);
+                    redirectChain = request.request._redirectChain;
+                }
+            }
+            }*/
+
+            if (!_page.FrameManager.Frames.TryGetValue(e.FrameId, out var frame))
+            {
+                return;
+            }
+
+            bool isNavigationRequest = e.RequestId == e.LoaderId && e.Type == Protocol.Network.ResourceType.Document;
+            string documentId = isNavigationRequest ? e.LoaderId : null;
+            var request = new ChromiumInterceptableRequest(_client, frame, interceptionId, documentId, _userRequestInterceptionEnabled, e, redirectChain);
+            _requestIdToRequest.Add(e.RequestId, request);
+            _page.FrameManager.RequestStarted(request.Request);
+        }
+
+        private void OnResponseReceived(NetworkResponseReceivedChromiumEvent e)
+        {
+            // FileUpload sends a response without a matching request.
+            if (!_requestIdToRequest.TryGetValue(e.RequestId, out var request))
+            {
+                return;
+            }
+
+            var response = CreateResponse(request, e.Response);
+            _page.FrameManager.RequestReceivedResponse(response);
+        }
+
+        private Response CreateResponse(ChromiumInterceptableRequest request, Protocol.Network.Response responsePayload)
+        {
+            var getResponseBody = new Func<Task<byte[]>>(async () =>
+            {
+                var response = await _client.SendAsync(new NetworkGetResponseBodyRequest { RequestId = request.RequestId }).ConfigureAwait(false);
+                return response.Base64Encoded.Value
+                    ? Convert.FromBase64String(response.Body)
+                    : Encoding.UTF8.GetBytes(response.Body);
+            });
+
+            return new Response(request.Request, (HttpStatusCode)responsePayload.Status.Value, responsePayload.StatusText, responsePayload.Headers, getResponseBody);
+        }
+
+        private async Task OnRequestPausedAsync(FetchRequestPausedChromiumEvent e)
+        {
+            if (!_userRequestInterceptionEnabled && _protocolRequestInterceptionEnabled)
+            {
+                try
+                {
+                    await _client.SendAsync(new FetchContinueRequestRequest { RequestId = e.RequestId }).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
+            }
+
+            if (string.IsNullOrEmpty(e.NetworkId) || e.Request.Url.StartsWith("data:"))
+            {
+                return;
+            }
+
+            string requestId = e.NetworkId;
+            string interceptionId = e.RequestId;
+
+            if (_requestIdToRequestWillBeSentEvent.TryGetValue(requestId, out var requestWillBeSentEvent))
+            {
+                OnRequest(requestWillBeSentEvent, interceptionId);
+                _requestIdToRequestWillBeSentEvent.Remove(requestId);
+            }
+            else
+            {
+                _requestIdToInterceptionId[requestId] = interceptionId;
+            }
+        }
+
+        private void OnRequestWillBeSent(NetworkRequestWillBeSentChromiumEvent e)
+        {
+            // Request interception doesn't happen for data URLs with Network Service.
+            if (_protocolRequestInterceptionEnabled && !e.Request.Url.StartsWith(":data:"))
+            {
+                string requestId = e.RequestId;
+                if (_requestIdToInterceptionId.TryGetValue(requestId, out string interceptionId))
+                {
+                    OnRequest(e, interceptionId);
+                    _requestIdToInterceptionId.Remove(requestId);
+                }
+                else
+                {
+                    _requestIdToRequestWillBeSentEvent[e.RequestId] = e;
+                }
+
+                return;
+            }
+
+            OnRequest(e, null);
+        }
+
+        private Task UpdateProtocolCacheDisabledAsync()
+            => _client.SendAsync(new NetworkSetCacheDisabledRequest
+            {
+                CacheDisabled = _userCacheDisabled || _protocolRequestInterceptionEnabled,
+            });
     }
 }
