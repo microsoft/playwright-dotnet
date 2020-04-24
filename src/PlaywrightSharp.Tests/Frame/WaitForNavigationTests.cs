@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests.Frame
     public class WaitForNavigationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public  WaitForNavigationTests(ITestOutputHelper output) : base(output)
+        public WaitForNavigationTests(ITestOutputHelper output) : base(output)
         {
         }
 

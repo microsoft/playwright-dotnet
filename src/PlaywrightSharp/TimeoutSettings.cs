@@ -9,8 +9,8 @@ namespace PlaywrightSharp
 
         public int NavigationTimeout => _defaultNavigationTimeout ?? _defaultTimeout ?? Playwright.DefaultTimeout;
 
-        public void SetDefaultTimeout(int timetout) => _defaultTimeout = timetout;
+        public void SetDefaultTimeout(int timeout) => _defaultTimeout = timeout;
 
-        public void SetDefaultNavigationTimeout(int timetout) => _defaultNavigationTimeout = timetout;
+        public void SetDefaultNavigationTimeout(int timeout) => _defaultNavigationTimeout = timeout;
     }
 }

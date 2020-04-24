@@ -97,11 +97,6 @@ namespace PlaywrightSharp
             }
         }
 
-        internal Task FrameCommittedNewDocumentNavigation(string id, string url, string v, object loaderId)
-        {
-            throw new NotImplementedException();
-        }
-
         internal void FrameCommittedSameDocumentNavigation(string frameId, string url)
         {
             if (!Frames.TryGetValue(frameId, out var frame))
@@ -218,6 +213,34 @@ namespace PlaywrightSharp
             if (!request.IsFavicon)
             {
                 _page.OnRequestFinished(request);
+            }
+        }
+
+        internal void RequestFailed(Request request, bool canceled)
+        {
+            InflightRequestFinished(request);
+            var frame = request.Frame;
+            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null)
+            {
+                bool isCurrentDocument = frame.LastDocumentId == request.DocumentId;
+                if (!isCurrentDocument)
+                {
+                    string errorText = request.Failure;
+                    if (canceled)
+                    {
+                        errorText += "; maybe frame was detached?";
+                    }
+
+                    foreach (var watcher in LifecycleWatchers)
+                    {
+                        watcher.OnAbortedNewDocumentNavigation(frame, request.DocumentId, errorText);
+                    }
+                }
+            }
+
+            if (!request.IsFavicon)
+            {
+                _page.OnRequestFailed(request);
             }
         }
 

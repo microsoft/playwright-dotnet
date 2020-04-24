@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Transport
                     }
                     catch (Exception ex)
                     {
-                        OnClose(ex.Message);
+                        OnClose(ex.ToString());
                         return null;
                     }
 
