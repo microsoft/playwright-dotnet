@@ -88,8 +88,7 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            var response = request.Request.Response;
-            response?.RequestFinished();
+            request.Request.Response?.RequestFinished();
 
             if (!string.IsNullOrEmpty(request.InterceptionId))
             {

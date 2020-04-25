@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -21,7 +20,7 @@ namespace PlaywrightSharp
 
         internal List<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
-        internal Frame MainFrame { get; set; }
+        internal Frame MainFrame { get; private set; }
 
         internal ConcurrentDictionary<string, Frame> Frames { get; } = new ConcurrentDictionary<string, Frame>();
 
@@ -222,8 +221,7 @@ namespace PlaywrightSharp
             var frame = request.Frame;
             if (!string.IsNullOrEmpty(request.DocumentId) && frame != null)
             {
-                bool isCurrentDocument = frame.LastDocumentId == request.DocumentId;
-                if (!isCurrentDocument)
+                if (frame.LastDocumentId != request.DocumentId)
                 {
                     string errorText = request.Failure;
                     if (canceled)
