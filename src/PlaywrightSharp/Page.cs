@@ -451,10 +451,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForLoadStateAsync(NavigationOptions)"/>
-        public Task WaitForLoadStateAsync(NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WaitForLoadStateAsync(NavigationOptions options = null) => MainFrame.WaitForLoadStateAsync(options);
 
         /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default)

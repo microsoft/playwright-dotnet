@@ -421,6 +421,22 @@ namespace PlaywrightSharp
             return ScheduleRerunnableTaskAsync(task, ContextType.Main, options.Timeout, $"Function \"{pageFunction}\"");
         }
 
+        /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>
+        public async Task WaitForLoadStateAsync(NavigationOptions options = null)
+        {
+            using var watcher = new LifecycleWatcher(this, options);
+            var errorTask = watcher.TimeoutOrTerminationTask;
+
+            await Task.WhenAny(
+                errorTask,
+                watcher.LifecycleTask).ConfigureAwait(false);
+
+            if (errorTask.IsCompleted)
+            {
+                await errorTask.ConfigureAwait(false);
+            }
+        }
+
         internal Task<FrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);
 
         internal void OnDetached()
