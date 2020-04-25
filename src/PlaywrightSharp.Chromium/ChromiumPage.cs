@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Chromium
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
             }
 
             return result?.Quads.Select(quad => new[]
@@ -486,7 +486,7 @@ namespace PlaywrightSharp.Chromium
                 var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
                 _logger.LogError(ex, message);
                 */
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
                 Client.OnClosed(ex.Message);
             }
         }

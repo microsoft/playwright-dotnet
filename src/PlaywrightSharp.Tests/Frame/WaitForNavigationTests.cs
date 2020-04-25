@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForNavigation</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForNavigationTests : PlaywrightSharpPageBaseTest
     {
-        internal WaitForNavigationTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public WaitForNavigationTests(ITestOutputHelper output) : base(output)
         {
         }
 

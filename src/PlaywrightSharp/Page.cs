@@ -116,11 +116,13 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.Websocket"/>
         public event EventHandler<WebsocketEventArgs> Websocket;
 
+        internal event EventHandler ClientDisconnected;
+
         /// <inheritdoc cref="IPage.MainFrame"/>
         IFrame IPage.MainFrame => MainFrame;
 
         /// <inheritdoc cref="IPage.BrowserContext"/>
-        public IBrowserContext BrowserContext { get; internal set; }
+        public IBrowserContext BrowserContext { get; }
 
         /// <inheritdoc cref="IPage.Viewport"/>
         public Viewport Viewport => PageState.Viewport;
@@ -614,7 +616,11 @@ namespace PlaywrightSharp
 
         internal void OnResponse(IResponse response) => Response?.Invoke(this, new ResponseEventArgs(response));
 
-        internal void DidDisconnected() => _disconnected = true;
+        internal void DidDisconnected()
+        {
+            _disconnected = true;
+            ClientDisconnected?.Invoke(this, new EventArgs());
+        }
 
         internal void DidClose()
         {
@@ -635,6 +641,8 @@ namespace PlaywrightSharp
         internal void OnFrameDetached(IFrame frame) => FrameDetached?.Invoke(this, new FrameEventArgs(frame));
 
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
+
+        internal void OnRequestFailed(Request request) => RequestFailed?.Invoke(this, new RequestEventArgs(request));
 
         internal void OnLoad() => Load?.Invoke(this, new EventArgs());
 
@@ -689,7 +697,7 @@ namespace PlaywrightSharp
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
 

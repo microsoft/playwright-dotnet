@@ -72,7 +72,7 @@ namespace PlaywrightSharp
         IResponse IRequest.Response => Response;
 
         /// <inheritdoc cref="IRequest.Failure"/>
-        public string Failure { get; }
+        public string Failure { get; private set; }
 
         internal bool IsFavicon { get; }
 
@@ -151,6 +151,12 @@ namespace PlaywrightSharp
             _waitForResponseTsc.TrySetResult(response);
             response.Finished.ContinueWith(
                 _ => _waitForFinishedTsc.TrySetResult(response), TaskScheduler.Default);
+        }
+
+        internal void SetFailureText(string failureText)
+        {
+            Failure = failureText;
+            _waitForFinishedTsc.TrySetResult(null);
         }
 
         private string StripFragmentFromUrl(string url)

@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Transport
             catch (Exception ex)
             {
                 // TODO Add Logger
-                Close($"SlowMoTransport failed to process {e.Message}. {ex.Message}. {ex.StackTrace}");
+                Close($"SlowMoTransport failed to process {e.Message}. {ex}");
             }
         }
     }

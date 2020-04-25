@@ -62,6 +62,9 @@ namespace PlaywrightSharp.Chromium
                     case NetworkLoadingFinishedChromiumEvent networkLoadingFinished:
                         OnLoadingFinished(networkLoadingFinished);
                         break;
+                    case NetworkLoadingFailedChromiumEvent networkLoadingFailed:
+                        OnLoadingFailed(networkLoadingFailed);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -71,9 +74,29 @@ namespace PlaywrightSharp.Chromium
                 var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
                 _logger.LogError(ex, message);
                 */
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                _client.OnClosed(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
+                _client.OnClosed(ex.ToString());
             }
+        }
+
+        private void OnLoadingFailed(NetworkLoadingFailedChromiumEvent e)
+        {
+            // For certain requestIds we never receive requestWillBeSent event.
+            // @see https://crbug.com/750469
+            if (!_requestIdToRequest.TryRemove(e.RequestId, out var request))
+            {
+                return;
+            }
+
+            request.Request.Response?.RequestFinished();
+
+            if (!string.IsNullOrEmpty(request.InterceptionId))
+            {
+                _attemptedAuthentications.Remove(request.InterceptionId);
+            }
+
+            request.Request.SetFailureText(e.ErrorText);
+            _page.FrameManager.RequestFailed(request.Request, e.Canceled.Value);
         }
 
         private void OnLoadingFinished(NetworkLoadingFinishedChromiumEvent e)
@@ -166,7 +189,7 @@ namespace PlaywrightSharp.Chromium
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex);
                 }
             }
 

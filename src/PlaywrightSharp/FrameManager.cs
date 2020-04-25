@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -21,7 +20,7 @@ namespace PlaywrightSharp
 
         internal List<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
-        internal Frame MainFrame { get; set; }
+        internal Frame MainFrame { get; private set; }
 
         internal ConcurrentDictionary<string, Frame> Frames { get; } = new ConcurrentDictionary<string, Frame>();
 
@@ -95,11 +94,6 @@ namespace PlaywrightSharp
 
                 _page.OnFrameNavigated(frame);
             }
-        }
-
-        internal Task FrameCommittedNewDocumentNavigation(string id, string url, string v, object loaderId)
-        {
-            throw new NotImplementedException();
         }
 
         internal void FrameCommittedSameDocumentNavigation(string frameId, string url)
@@ -218,6 +212,33 @@ namespace PlaywrightSharp
             if (!request.IsFavicon)
             {
                 _page.OnRequestFinished(request);
+            }
+        }
+
+        internal void RequestFailed(Request request, bool canceled)
+        {
+            InflightRequestFinished(request);
+            var frame = request.Frame;
+            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null)
+            {
+                if (frame.LastDocumentId != request.DocumentId)
+                {
+                    string errorText = request.Failure;
+                    if (canceled)
+                    {
+                        errorText += "; maybe frame was detached?";
+                    }
+
+                    foreach (var watcher in LifecycleWatchers)
+                    {
+                        watcher.OnAbortedNewDocumentNavigation(frame, request.DocumentId, errorText);
+                    }
+                }
+            }
+
+            if (!request.IsFavicon)
+            {
+                _page.OnRequestFailed(request);
             }
         }
 

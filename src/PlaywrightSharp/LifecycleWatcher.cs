@@ -19,11 +19,11 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<bool> _sameDocumentNavigationTaskWrapper;
         private readonly TaskCompletionSource<bool> _lifecycleTaskWrapper;
         private readonly TaskCompletionSource<bool> _terminationTaskWrapper;
+        private readonly CancellationToken _token;
         private Request _navigationRequest;
         private bool _hasSameDocumentNavigation;
         private string _expectedDocumentId;
         private string _targetUrl;
-        private CancellationToken _token;
 
         public LifecycleWatcher(Frame frame, NavigationOptions options, CancellationToken token = default)
         {
@@ -37,9 +37,8 @@ namespace PlaywrightSharp
             _terminationTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _frame.Page.FrameManager.LifecycleWatchers.Add(this);
-
             _token = token;
-
+            _frame.Page.ClientDisconnected += (sender, args) => _terminationTaskWrapper.TrySetException(new PlaywrightSharpException("Client disconnected"));
             CheckLifecycleComplete();
         }
 
@@ -156,7 +155,16 @@ namespace PlaywrightSharp
         {
             if (disposing)
             {
-                _frame?.Page?.FrameManager?.LifecycleWatchers?.Remove(this);
+                /*TODO Fix Concurrency issues**/
+                try
+                {
+                    _frame?.Page?.FrameManager?.LifecycleWatchers?.Remove(this);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
+
                 _terminationTaskWrapper?.TrySetResult(false);
             }
         }
