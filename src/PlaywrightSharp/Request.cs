@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace PlaywrightSharp
         private readonly Task<Response> _waitForResponse;
         private bool _interceptionHandled = false;
 
-        internal Request(IRequestDelegate requestDelegate, Frame frame, List<Request> redirectChain, string documentId, string url, ResourceType resourceType, HttpMethod method, string postData, IDictionary<string, string> headers)
+        internal Request(IRequestDelegate requestDelegate, Frame frame, IEnumerable<Request> redirectChain, string documentId, string url, ResourceType resourceType, HttpMethod method, string postData, IDictionary<string, string> headers)
         {
             if (url.StartsWith("data:"))
             {
@@ -23,7 +24,7 @@ namespace PlaywrightSharp
 
             _delegate = requestDelegate;
             Frame = frame;
-            RedirectChain = redirectChain;
+            RedirectChain = redirectChain.ToList();
             FinalRequest = this;
             foreach (var request in redirectChain)
             {
@@ -151,10 +152,7 @@ namespace PlaywrightSharp
             Response = response;
             _waitForResponseTsc.TrySetResult(response);
             response.Finished.ContinueWith(
-                _ =>
-            {
-                return _waitForFinishedTsc.TrySetResult(response);
-            }, TaskScheduler.Default);
+                _ => _waitForFinishedTsc.TrySetResult(response), TaskScheduler.Default);
         }
 
         private string StripFragmentFromUrl(string url)

@@ -59,8 +59,8 @@ namespace PlaywrightSharp.Firefox
             var redirectChain = new List<Request>();
             if (redirectId != null)
             {
-                redirectId.Request.RedirectChain.Add(redirectId.Request);
-                redirectChain = redirectId.Request.RedirectChain;
+                redirectChain = new List<Request>(redirectId.Request.RedirectChain);
+                redirectChain.Add(redirectId.Request);
                 _requests.TryRemove(redirectId.Id, out var _);
             }
 

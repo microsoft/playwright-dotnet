@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -68,9 +69,10 @@ namespace PlaywrightSharp
             throw new System.NotImplementedException();
         }
 
-        public Task<string> GetTextAsync()
+        public async Task<string> GetTextAsync()
         {
-            throw new System.NotImplementedException();
+            var buffer = await GetBufferAsync().ConfigureAwait(false);
+            return Encoding.UTF8.GetString(buffer);
         }
 
         internal void RequestFinished(Exception exception = null)
