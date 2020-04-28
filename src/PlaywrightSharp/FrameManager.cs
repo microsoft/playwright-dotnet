@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -253,7 +254,11 @@ namespace PlaywrightSharp
             CancellationTokenSource NetworkIdleTimer()
             {
                 var cts = new CancellationTokenSource();
-                _ = Task.Delay(500, cts.Token).ContinueWith(_ => FrameLifecycleEvent(frame.Id, lifecycleEvent), TaskScheduler.Default);
+                _ = Task.Delay(500, cts.Token).ContinueWith(
+                    _ => FrameLifecycleEvent(frame.Id, lifecycleEvent),
+                    cts.Token,
+                    TaskContinuationOptions.NotOnCanceled,
+                    TaskScheduler.Default);
                 return cts;
             }
         }
@@ -332,12 +337,12 @@ namespace PlaywrightSharp
 
             if (frame.InflightRequests.Count == 0)
             {
-                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
+                StartNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
             }
 
             if (frame.InflightRequests.Count == 2)
             {
-                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
+                StartNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             }
         }
     }

@@ -368,9 +368,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitUntilNavigation)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
-        {
-            throw new System.NotImplementedException();
-        }
+            => WaitForNavigationAsync(new WaitForNavigationOptions { WaitUntil = new[] { waitUntil } });
 
         /// <inheritdoc cref="IFrame.FocusAsync(string, WaitForSelectorOptions)"/>
         public async Task FocusAsync(string selector, WaitForSelectorOptions options)
