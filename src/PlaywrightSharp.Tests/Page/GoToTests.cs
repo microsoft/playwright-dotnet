@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;using System.Net;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -185,14 +186,7 @@ namespace PlaywrightSharp.Tests.Page
             });
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(
                 () => Page.GoToAsync(TestConstants.EmptyPage));
-            if (TestConstants.IsChromium)
-            {
-                Assert.Contains("net::ERR_ABORTED", exception.Message);
-            }
-            else
-            {
-                Assert.Contains("NS_BINDING_ABORTED", exception.Message);
-            }
+            Assert.Contains(TestConstants.IsChromium ? "net::ERR_ABORTED" : "NS_BINDING_ABORTED", exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
