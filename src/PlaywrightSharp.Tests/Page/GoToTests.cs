@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
+using System.IO;using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -577,6 +575,7 @@ namespace PlaywrightSharp.Tests.Page
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldFailWhenCanceledByAnotherNavigation()
         {
+            Server.SetRoute("/one-style.css", context => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.css");
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? WaitUntilNavigation.Networkidle0 : WaitUntilNavigation.Load);
             await request;
