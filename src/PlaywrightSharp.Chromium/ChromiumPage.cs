@@ -447,6 +447,9 @@ namespace PlaywrightSharp.Chromium
                     case PageFrameDetachedChromiumEvent pageFrameDetached:
                         OnFrameDetached(pageFrameDetached);
                         break;
+                    case PageFrameStoppedLoadingChromiumEvent pageFrameStoppedLoading:
+                        OnFrameStoppedLoading(pageFrameStoppedLoading);
+                        break;
                     case PageFrameNavigatedChromiumEvent pageFrameNavigated:
                         OnFrameNavigated(pageFrameNavigated.Frame, false);
                         break;
@@ -490,6 +493,9 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.Message);
             }
         }
+
+        private void OnFrameStoppedLoading(PageFrameStoppedLoadingChromiumEvent e)
+            => Page.FrameManager.FrameStoppedLoading(e.FrameId);
 
         private async Task OnFileChooserOpenedAsync(PageFileChooserOpenedChromiumEvent e)
         {
