@@ -135,7 +135,7 @@ namespace PlaywrightSharp.Chromium
                 // If we connect late to the target, we could have missed the requestWillBeSent event.
                 if (_requestIdToRequest.TryGetValue(e.RequestId, out var requestRedirected))
                 {
-                    HandleRequestRedirect(requestRedirected,  e.RedirectResponse);
+                    HandleRequestRedirect(requestRedirected, e.RedirectResponse);
                     redirectChain = requestRedirected.Request.RedirectChain;
                 }
             }
