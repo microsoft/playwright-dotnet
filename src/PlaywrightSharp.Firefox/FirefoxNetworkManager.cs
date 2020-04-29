@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Firefox
                 _requests.TryRemove(redirectId.Id, out var _);
             }
 
-            var request = new FirefoxRequest(_session, frame, redirectChain.ToArray(), e);
+            var request = new FirefoxRequest(_session, frame, redirectChain, e);
             _requests[request.Id] = request;
             _page.FrameManager.RequestStarted(request.Request);
         }

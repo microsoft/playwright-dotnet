@@ -128,19 +128,17 @@ namespace PlaywrightSharp.Chromium
                 return;
             }
 
-            var redirectChain = Array.Empty<Request>();
-            /*TODO
+            var redirectChain = new List<Request>();
+
             if (e.RedirectResponse != null)
             {
-                var request = _requestIdToRequest.get(event.requestId);
                 // If we connect late to the target, we could have missed the requestWillBeSent event.
-                if (request)
+                if (_requestIdToRequest.TryGetValue(e.RequestId, out var requestRedirected))
                 {
-                    this._handleRequestRedirect(request,  event.redirectResponse);
-                    redirectChain = request.request._redirectChain;
+                    HandleRequestRedirect(requestRedirected,  e.RedirectResponse);
+                    redirectChain = requestRedirected.Request.RedirectChain;
                 }
             }
-            }*/
 
             if (!_page.FrameManager.Frames.TryGetValue(e.FrameId, out var frame))
             {
@@ -149,9 +147,32 @@ namespace PlaywrightSharp.Chromium
 
             bool isNavigationRequest = e.RequestId == e.LoaderId && e.Type == Protocol.Network.ResourceType.Document;
             string documentId = isNavigationRequest ? e.LoaderId : null;
-            var request = new ChromiumInterceptableRequest(_client, frame, interceptionId, documentId, _userRequestInterceptionEnabled, e, redirectChain);
+            var request = new ChromiumInterceptableRequest(
+                _client,
+                frame,
+                interceptionId,
+                documentId,
+                _userRequestInterceptionEnabled,
+                e,
+                redirectChain);
             _requestIdToRequest.TryAdd(e.RequestId, request);
             _page.FrameManager.RequestStarted(request.Request);
+        }
+
+        private void HandleRequestRedirect(ChromiumInterceptableRequest request, Protocol.Network.Response responsePayload)
+        {
+            var response = CreateResponse(request, responsePayload);
+            request.Request.RedirectChain.Add(request.Request);
+            response.RequestFinished(new PlaywrightSharpException("Response body is unavailable for redirect responses"));
+            _requestIdToRequest.TryRemove(request.RequestId, out _);
+
+            if (!string.IsNullOrEmpty(request.InterceptionId))
+            {
+                _attemptedAuthentications.Remove(request.InterceptionId);
+            }
+
+            _page.FrameManager.RequestReceivedResponse(response);
+            _page.FrameManager.RequestFinished(request.Request);
         }
 
         private void OnResponseReceived(NetworkResponseReceivedChromiumEvent e)

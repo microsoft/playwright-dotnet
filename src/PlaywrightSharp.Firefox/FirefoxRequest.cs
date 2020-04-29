@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace PlaywrightSharp.Firefox
     {
         private readonly FirefoxSession _session;
 
-        public FirefoxRequest(FirefoxSession session, Frame frame, Request[] redirectChain, NetworkRequestWillBeSentFirefoxEvent payload)
+        public FirefoxRequest(FirefoxSession session, Frame frame, List<Request> redirectChain, NetworkRequestWillBeSentFirefoxEvent payload)
         {
             Id = payload.RequestId;
             _session = session;

@@ -212,7 +212,7 @@ namespace PlaywrightSharp
         {
             InflightRequestStarted(request);
             var frame = request.Frame;
-            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null && request.RedirectChain.Length == 0)
+            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null && request.RedirectChain.Count == 0)
             {
                 foreach (var watcher in LifecycleWatchers.ToArray())
                 {
