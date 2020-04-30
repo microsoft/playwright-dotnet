@@ -66,6 +66,33 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void FrameStoppedLoading(string frameId)
+        {
+            if (!Frames.TryGetValue(frameId, out var frame))
+            {
+                return;
+            }
+
+            bool hasDOMContentLoaded = frame.FiredLifecycleEvents.Contains(WaitUntilNavigation.DOMContentLoaded);
+            bool hasLoad = frame.FiredLifecycleEvents.Contains(WaitUntilNavigation.Load);
+            frame.FiredLifecycleEvents.Add(WaitUntilNavigation.DOMContentLoaded);
+            frame.FiredLifecycleEvents.Add(WaitUntilNavigation.Load);
+            foreach (var watcher in LifecycleWatchers)
+            {
+                watcher.OnLifecycleEvent(frame);
+            }
+
+            if (frame == MainFrame && !hasDOMContentLoaded)
+            {
+                _page.OnDOMContentLoaded();
+            }
+
+            if (frame == MainFrame && !hasLoad)
+            {
+                _page.OnLoad();
+            }
+        }
+
         internal void FrameCommittedNewDocumentNavigation(string frameId, string url, string name, string documentId, bool initial)
         {
             Frames.TryGetValue(frameId, out var frame);
@@ -185,7 +212,7 @@ namespace PlaywrightSharp
         {
             InflightRequestStarted(request);
             var frame = request.Frame;
-            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null && request.RedirectChain.Length == 0)
+            if (!string.IsNullOrEmpty(request.DocumentId) && frame != null && request.RedirectChain.Count == 0)
             {
                 foreach (var watcher in LifecycleWatchers.ToArray())
                 {

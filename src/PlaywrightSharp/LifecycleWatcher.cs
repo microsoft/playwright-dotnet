@@ -10,6 +10,7 @@ namespace PlaywrightSharp
     internal class LifecycleWatcher : IDisposable
     {
         private static readonly WaitUntilNavigation[] _defaultWaitUntil = { WaitUntilNavigation.Load };
+        private static int _lifecycleCounter;
 
         private readonly Frame _frame;
         private readonly WaitUntilNavigation[] _expectedLifecycle;
@@ -20,6 +21,7 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<bool> _lifecycleTaskWrapper;
         private readonly TaskCompletionSource<bool> _terminationTaskWrapper;
         private readonly CancellationToken _token;
+        private readonly int _lifecycleId = Interlocked.Increment(ref _lifecycleCounter);
         private Request _navigationRequest;
         private bool _hasSameDocumentNavigation;
         private string _expectedDocumentId;
@@ -53,6 +55,8 @@ namespace PlaywrightSharp
         public Task TimeoutOrTerminationTask => _terminationTaskWrapper.Task.WithTimeout(_timeout, cancellationToken: _token);
 
         public Task LifecycleTask => _lifecycleTaskWrapper.Task;
+
+        internal int LifecycleId => _lifecycleId;
 
         /// <inheritdoc cref="IDisposable"/>
         public void Dispose()
@@ -119,7 +123,7 @@ namespace PlaywrightSharp
 
         internal void OnCommittedNewDocumentNavigation(Frame frame)
         {
-            if (frame == _frame && _expectedDocumentId == null && _navigationRequest != null && frame.LastDocumentId != _expectedDocumentId)
+            if (frame == _frame && _expectedDocumentId != null && _navigationRequest != null && frame.LastDocumentId != _expectedDocumentId)
             {
                 _terminationTaskWrapper.TrySetException(new PlaywrightSharpException($"Navigation to {_targetUrl} was canceled by another one"));
                 return;

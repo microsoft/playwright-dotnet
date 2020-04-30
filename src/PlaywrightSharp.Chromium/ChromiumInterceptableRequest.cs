@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Protocol;
@@ -15,7 +16,7 @@ namespace PlaywrightSharp.Chromium
             string documentId,
             bool requestInterceptionEnabled,
             NetworkRequestWillBeSentChromiumEvent e,
-            Request[] redirectChain)
+            List<Request> redirectChain)
         {
             RequestId = e.RequestId;
             InterceptionId = interceptionId;
