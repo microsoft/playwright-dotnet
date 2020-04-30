@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Request.frame</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class RequestFrameTests : PlaywrightSharpPageBaseTest
     {
-        internal RequestFrameTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public RequestFrameTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -53,8 +56,6 @@ namespace PlaywrightSharp.Tests.Page.Network
             await Page.GoToAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
             Page.Request += (sender, e) => requests.Add(e.Request);
-
-            await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("fetch('/digits/1.png')");
             Assert.Single(requests.Where(r => !r.Url.Contains("favicon")));
             Assert.Equal(Page.MainFrame, requests[0].Frame);
