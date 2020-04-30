@@ -69,7 +69,7 @@ namespace PlaywrightSharp
         IFrame IRequest.Frame => Frame;
 
         /// <inheritdoc cref="IRequest.IsNavigationRequest"/>
-        public bool IsNavigationRequest { get; }
+        public bool IsNavigationRequest => !string.IsNullOrEmpty(DocumentId);
 
         /// <inheritdoc cref="IRequest.ResourceType"/>
         public ResourceType ResourceType { get; }
