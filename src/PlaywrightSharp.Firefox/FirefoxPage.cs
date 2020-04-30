@@ -236,6 +236,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetCacheEnabledAsync(bool enabled) => throw new NotImplementedException();
 
+        public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>

@@ -25,6 +25,416 @@ internal enum AnimationState
 [System.Runtime.Serialization.EnumMember(Value = "active")]Active,
 [System.Runtime.Serialization.EnumMember(Value = "canceled")]Canceled,
 [System.Runtime.Serialization.EnumMember(Value = "done")]Done}
+}
+namespace PlaywrightSharp.Webkit.Protocol.ApplicationCache
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Audit
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Browser
+{
+/// <summary>
+/// Same-Site policy of a cookie.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookieSameSitePolicy
+{
+[System.Runtime.Serialization.EnumMember(Value = "None")]None,
+[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
+[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
+}
+namespace PlaywrightSharp.Webkit.Protocol.CPUProfiler
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.CSS
+{
+/// <summary>
+/// Stylesheet type: "user" for user stylesheets, "user-agent" for user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via inspector" rules), "regular" for regular stylesheets.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StyleSheetOrigin
+{
+[System.Runtime.Serialization.EnumMember(Value = "user")]User,
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
+[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
+/// <summary>
+/// Pseudo-style identifier (see &lt;code&gt;enum PseudoId&lt;/code&gt; in &lt;code&gt;RenderStyleConstants.h&lt;/code&gt;).
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PseudoId
+{
+[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
+[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
+[System.Runtime.Serialization.EnumMember(Value = "highlight")]Highlight,
+[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
+[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
+[System.Runtime.Serialization.EnumMember(Value = "after")]After,
+[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
+[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer}
+/// <summary>
+/// The property status: "active" if the property is effective in the style, "inactive" if the property is overridden by a same-named property in this style later on, "disabled" if the property is disabled by the user, "style" (implied if absent) if the property is reported by the browser rather than by the CSS source parser.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CSSPropertyStatus
+{
+[System.Runtime.Serialization.EnumMember(Value = "active")]Active,
+[System.Runtime.Serialization.EnumMember(Value = "inactive")]Inactive,
+[System.Runtime.Serialization.EnumMember(Value = "disabled")]Disabled,
+[System.Runtime.Serialization.EnumMember(Value = "style")]Style}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Canvas
+{
+/// <summary>
+/// The type of rendering context backing the canvas element.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ContextType
+{
+[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
+[System.Runtime.Serialization.EnumMember(Value = "bitmaprenderer")]Bitmaprenderer,
+[System.Runtime.Serialization.EnumMember(Value = "webgl")]Webgl,
+[System.Runtime.Serialization.EnumMember(Value = "webgl2")]Webgl2,
+[System.Runtime.Serialization.EnumMember(Value = "webgpu")]Webgpu}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ProgramType
+{
+[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
+[System.Runtime.Serialization.EnumMember(Value = "render")]Render}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ShaderType
+{
+[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
+[System.Runtime.Serialization.EnumMember(Value = "fragment")]Fragment,
+[System.Runtime.Serialization.EnumMember(Value = "vertex")]Vertex}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Console
+{
+/// <summary>
+/// Channels for different types of log messages.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ChannelSource
+{
+[System.Runtime.Serialization.EnumMember(Value = "xml")]Xml,
+[System.Runtime.Serialization.EnumMember(Value = "javascript")]Javascript,
+[System.Runtime.Serialization.EnumMember(Value = "network")]Network,
+[System.Runtime.Serialization.EnumMember(Value = "console-api")]ConsoleApi,
+[System.Runtime.Serialization.EnumMember(Value = "storage")]Storage,
+[System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
+[System.Runtime.Serialization.EnumMember(Value = "rendering")]Rendering,
+[System.Runtime.Serialization.EnumMember(Value = "css")]Css,
+[System.Runtime.Serialization.EnumMember(Value = "security")]Security,
+[System.Runtime.Serialization.EnumMember(Value = "content-blocker")]ContentBlocker,
+[System.Runtime.Serialization.EnumMember(Value = "media")]Media,
+[System.Runtime.Serialization.EnumMember(Value = "mediasource")]Mediasource,
+[System.Runtime.Serialization.EnumMember(Value = "webrtc")]Webrtc,
+[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
+/// <summary>
+/// Level of logging.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ChannelLevel
+{
+[System.Runtime.Serialization.EnumMember(Value = "off")]Off,
+[System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
+[System.Runtime.Serialization.EnumMember(Value = "verbose")]Verbose}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOM
+{
+/// <summary>
+/// Pseudo element type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PseudoType
+{
+[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
+[System.Runtime.Serialization.EnumMember(Value = "after")]After}
+/// <summary>
+/// Shadow root type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ShadowRootType
+{
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "open")]Open,
+[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
+/// <summary>
+/// Custom element state.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CustomElementState
+{
+[System.Runtime.Serialization.EnumMember(Value = "builtin")]Builtin,
+[System.Runtime.Serialization.EnumMember(Value = "custom")]Custom,
+[System.Runtime.Serialization.EnumMember(Value = "waiting")]Waiting,
+[System.Runtime.Serialization.EnumMember(Value = "failed")]Failed}
+/// <summary>
+/// Token values of @aria-relevant attribute.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum LiveRegionRelevant
+{
+[System.Runtime.Serialization.EnumMember(Value = "additions")]Additions,
+[System.Runtime.Serialization.EnumMember(Value = "removals")]Removals,
+[System.Runtime.Serialization.EnumMember(Value = "text")]Text}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOMDebugger
+{
+/// <summary>
+/// DOM breakpoint type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum DOMBreakpointType
+{
+[System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
+[System.Runtime.Serialization.EnumMember(Value = "attribute-modified")]AttributeModified,
+[System.Runtime.Serialization.EnumMember(Value = "node-removed")]NodeRemoved}
+/// <summary>
+/// Event breakpoint type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum EventBreakpointType
+{
+[System.Runtime.Serialization.EnumMember(Value = "animation-frame")]AnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "interval")]Interval,
+[System.Runtime.Serialization.EnumMember(Value = "listener")]Listener,
+[System.Runtime.Serialization.EnumMember(Value = "timeout")]Timeout}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOMStorage
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Database
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Debugger
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Dialog
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Emulation
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.GenericTypes
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Heap
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.IndexedDB
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Input
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Inspector
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.LayerTree
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Memory
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Network
+{
+/// <summary>
+/// Different stages of a network request.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum NetworkStage
+{
+[System.Runtime.Serialization.EnumMember(Value = "response")]Response}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Page
+{
+/// <summary>
+/// List of settings able to be overridden by WebInspector. Keep this in sync with FOR_EACH_INSPECTOR_OVERRIDE_SETTING.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Setting
+{
+[System.Runtime.Serialization.EnumMember(Value = "AuthorAndUserStylesEnabled")]AuthorAndUserStylesEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "ICECandidateFilteringEnabled")]ICECandidateFilteringEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "ImagesEnabled")]ImagesEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "MediaCaptureRequiresSecureConnection")]MediaCaptureRequiresSecureConnection,
+[System.Runtime.Serialization.EnumMember(Value = "MockCaptureDevicesEnabled")]MockCaptureDevicesEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "NeedsSiteSpecificQuirks")]NeedsSiteSpecificQuirks,
+[System.Runtime.Serialization.EnumMember(Value = "ScriptEnabled")]ScriptEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "ShowDebugBorders")]ShowDebugBorders,
+[System.Runtime.Serialization.EnumMember(Value = "ShowRepaintCounter")]ShowRepaintCounter,
+[System.Runtime.Serialization.EnumMember(Value = "WebRTCEncryptionEnabled")]WebRTCEncryptionEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "WebSecurityEnabled")]WebSecurityEnabled}
+/// <summary>
+/// Resource type as it was perceived by the rendering engine.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ResourceType
+{
+[System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
+[System.Runtime.Serialization.EnumMember(Value = "StyleSheet")]StyleSheet,
+[System.Runtime.Serialization.EnumMember(Value = "Image")]Image,
+[System.Runtime.Serialization.EnumMember(Value = "Font")]Font,
+[System.Runtime.Serialization.EnumMember(Value = "Script")]Script,
+[System.Runtime.Serialization.EnumMember(Value = "XHR")]XHR,
+[System.Runtime.Serialization.EnumMember(Value = "Fetch")]Fetch,
+[System.Runtime.Serialization.EnumMember(Value = "Ping")]Ping,
+[System.Runtime.Serialization.EnumMember(Value = "Beacon")]Beacon,
+[System.Runtime.Serialization.EnumMember(Value = "WebSocket")]WebSocket,
+[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
+/// <summary>
+/// Coordinate system used by supplied coordinates.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CoordinateSystem
+{
+[System.Runtime.Serialization.EnumMember(Value = "Viewport")]Viewport,
+[System.Runtime.Serialization.EnumMember(Value = "Page")]Page}
+/// <summary>
+/// Same-Site policy of a cookie.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookieSameSitePolicy
+{
+[System.Runtime.Serialization.EnumMember(Value = "None")]None,
+[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
+[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
+/// <summary>
+/// Page appearance name.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Appearance
+{
+[System.Runtime.Serialization.EnumMember(Value = "Light")]Light,
+[System.Runtime.Serialization.EnumMember(Value = "Dark")]Dark}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Recording
+{
+/// <summary>
+/// The type of the recording.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Type
+{
+[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
+[System.Runtime.Serialization.EnumMember(Value = "canvas-bitmaprenderer")]CanvasBitmaprenderer,
+[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl")]CanvasWebgl,
+[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl2")]CanvasWebgl2}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Initiator
+{
+[System.Runtime.Serialization.EnumMember(Value = "frontend")]Frontend,
+[System.Runtime.Serialization.EnumMember(Value = "console")]Console,
+[System.Runtime.Serialization.EnumMember(Value = "auto-capture")]AutoCapture}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Runtime
+{
+/// <summary>
+/// Type of the execution context.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ExecutionContextType
+{
+[System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
+[System.Runtime.Serialization.EnumMember(Value = "user")]User,
+[System.Runtime.Serialization.EnumMember(Value = "internal")]Internal}
+/// <summary>
+/// Syntax error type: "none" for no error, "irrecoverable" for unrecoverable errors, "unterminated-literal" for when there is an unterminated literal, "recoverable" for when the expression is unfinished but valid so far.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SyntaxErrorType
+{
+[System.Runtime.Serialization.EnumMember(Value = "none")]None,
+[System.Runtime.Serialization.EnumMember(Value = "irrecoverable")]Irrecoverable,
+[System.Runtime.Serialization.EnumMember(Value = "unterminated-literal")]UnterminatedLiteral,
+[System.Runtime.Serialization.EnumMember(Value = "recoverable")]Recoverable}
+}
+namespace PlaywrightSharp.Webkit.Protocol.ScriptProfiler
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum EventType
+{
+[System.Runtime.Serialization.EnumMember(Value = "API")]API,
+[System.Runtime.Serialization.EnumMember(Value = "Microtask")]Microtask,
+[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Security
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.ServiceWorker
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Target
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Timeline
+{
+/// <summary>
+/// Timeline record type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum EventType
+{
+[System.Runtime.Serialization.EnumMember(Value = "EventDispatch")]EventDispatch,
+[System.Runtime.Serialization.EnumMember(Value = "ScheduleStyleRecalculation")]ScheduleStyleRecalculation,
+[System.Runtime.Serialization.EnumMember(Value = "RecalculateStyles")]RecalculateStyles,
+[System.Runtime.Serialization.EnumMember(Value = "InvalidateLayout")]InvalidateLayout,
+[System.Runtime.Serialization.EnumMember(Value = "Layout")]Layout,
+[System.Runtime.Serialization.EnumMember(Value = "Paint")]Paint,
+[System.Runtime.Serialization.EnumMember(Value = "Composite")]Composite,
+[System.Runtime.Serialization.EnumMember(Value = "RenderingFrame")]RenderingFrame,
+[System.Runtime.Serialization.EnumMember(Value = "TimerInstall")]TimerInstall,
+[System.Runtime.Serialization.EnumMember(Value = "TimerRemove")]TimerRemove,
+[System.Runtime.Serialization.EnumMember(Value = "TimerFire")]TimerFire,
+[System.Runtime.Serialization.EnumMember(Value = "EvaluateScript")]EvaluateScript,
+[System.Runtime.Serialization.EnumMember(Value = "TimeStamp")]TimeStamp,
+[System.Runtime.Serialization.EnumMember(Value = "Time")]Time,
+[System.Runtime.Serialization.EnumMember(Value = "TimeEnd")]TimeEnd,
+[System.Runtime.Serialization.EnumMember(Value = "FunctionCall")]FunctionCall,
+[System.Runtime.Serialization.EnumMember(Value = "ProbeSample")]ProbeSample,
+[System.Runtime.Serialization.EnumMember(Value = "ConsoleProfile")]ConsoleProfile,
+[System.Runtime.Serialization.EnumMember(Value = "RequestAnimationFrame")]RequestAnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "CancelAnimationFrame")]CancelAnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "FireAnimationFrame")]FireAnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "ObserverCallback")]ObserverCallback}
+/// <summary>
+/// Instrument types.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Instrument
+{
+[System.Runtime.Serialization.EnumMember(Value = "ScriptProfiler")]ScriptProfiler,
+[System.Runtime.Serialization.EnumMember(Value = "Timeline")]Timeline,
+[System.Runtime.Serialization.EnumMember(Value = "CPU")]CPU,
+[System.Runtime.Serialization.EnumMember(Value = "Memory")]Memory,
+[System.Runtime.Serialization.EnumMember(Value = "Heap")]Heap,
+[System.Runtime.Serialization.EnumMember(Value = "Animation")]Animation}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Worker
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Animation
+{
 /// <summary>
 /// 
 /// </summary>
@@ -415,15 +825,6 @@ public string BrowserContextId { get; set; }
 /// Unique identifier of the opening page. Only set for pages created by window.open().
 /// </summary>
 public string OpenerId { get; set; }}
-/// <summary>
-/// Same-Site policy of a cookie.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookieSameSitePolicy
-{
-[System.Runtime.Serialization.EnumMember(Value = "None")]None,
-[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
-[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
 /// <summary>
 /// Cookie object
 /// </summary>
@@ -985,16 +1386,6 @@ public string StyleSheetId { get; set; }
 /// </summary>
 public int? Ordinal { get; set; }}
 /// <summary>
-/// Stylesheet type: "user" for user stylesheets, "user-agent" for user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via inspector" rules), "regular" for regular stylesheets.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StyleSheetOrigin
-{
-[System.Runtime.Serialization.EnumMember(Value = "user")]User,
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
-[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
-/// <summary>
 /// This object identifies a CSS rule in a unique way.
 /// </summary>
 internal partial class CSSRuleId
@@ -1007,26 +1398,6 @@ public string StyleSheetId { get; set; }
 /// The rule ordinal within the stylesheet.
 /// </summary>
 public int? Ordinal { get; set; }}
-/// <summary>
-/// Pseudo-style identifier (see &lt;code&gt;enum PseudoId&lt;/code&gt; in &lt;code&gt;RenderStyleConstants.h&lt;/code&gt;).
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PseudoId
-{
-[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
-[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
-[System.Runtime.Serialization.EnumMember(Value = "highlight")]Highlight,
-[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
-[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
-[System.Runtime.Serialization.EnumMember(Value = "after")]After,
-[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
-[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer}
 /// <summary>
 /// CSS rule collection for a single pseudo style.
 /// </summary>
@@ -1312,16 +1683,6 @@ public string Width { get; set; }
 /// The effective "height" property value from this style.
 /// </summary>
 public string Height { get; set; }}
-/// <summary>
-/// The property status: "active" if the property is effective in the style, "inactive" if the property is overridden by a same-named property in this style later on, "disabled" if the property is disabled by the user, "style" (implied if absent) if the property is reported by the browser rather than by the CSS source parser.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CSSPropertyStatus
-{
-[System.Runtime.Serialization.EnumMember(Value = "active")]Active,
-[System.Runtime.Serialization.EnumMember(Value = "inactive")]Inactive,
-[System.Runtime.Serialization.EnumMember(Value = "disabled")]Disabled,
-[System.Runtime.Serialization.EnumMember(Value = "style")]Style}
 /// <summary>
 /// CSS style effective visual dimensions and source offsets.
 /// </summary>
@@ -1811,34 +2172,6 @@ public string StyleSheetId { get; set; }}
 namespace PlaywrightSharp.Webkit.Protocol.Canvas
 {
 /// <summary>
-/// The type of rendering context backing the canvas element.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ContextType
-{
-[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
-[System.Runtime.Serialization.EnumMember(Value = "bitmaprenderer")]Bitmaprenderer,
-[System.Runtime.Serialization.EnumMember(Value = "webgl")]Webgl,
-[System.Runtime.Serialization.EnumMember(Value = "webgl2")]Webgl2,
-[System.Runtime.Serialization.EnumMember(Value = "webgpu")]Webgpu}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ProgramType
-{
-[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
-[System.Runtime.Serialization.EnumMember(Value = "render")]Render}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ShaderType
-{
-[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
-[System.Runtime.Serialization.EnumMember(Value = "fragment")]Fragment,
-[System.Runtime.Serialization.EnumMember(Value = "vertex")]Vertex}
-/// <summary>
 /// Drawing surface attributes.
 /// </summary>
 internal partial class ContextAttributes
@@ -2323,6 +2656,7 @@ public string CanvasId { get; set; }
 /// <summary>
 /// 
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public Recording.Initiator Initiator { get; set; }}
 /// <summary>
 /// 
@@ -2391,35 +2725,6 @@ public string ProgramId { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Console
 {
-/// <summary>
-/// Channels for different types of log messages.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ChannelSource
-{
-[System.Runtime.Serialization.EnumMember(Value = "xml")]Xml,
-[System.Runtime.Serialization.EnumMember(Value = "javascript")]Javascript,
-[System.Runtime.Serialization.EnumMember(Value = "network")]Network,
-[System.Runtime.Serialization.EnumMember(Value = "console-api")]ConsoleApi,
-[System.Runtime.Serialization.EnumMember(Value = "storage")]Storage,
-[System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
-[System.Runtime.Serialization.EnumMember(Value = "rendering")]Rendering,
-[System.Runtime.Serialization.EnumMember(Value = "css")]Css,
-[System.Runtime.Serialization.EnumMember(Value = "security")]Security,
-[System.Runtime.Serialization.EnumMember(Value = "content-blocker")]ContentBlocker,
-[System.Runtime.Serialization.EnumMember(Value = "media")]Media,
-[System.Runtime.Serialization.EnumMember(Value = "mediasource")]Mediasource,
-[System.Runtime.Serialization.EnumMember(Value = "webrtc")]Webrtc,
-[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
-/// <summary>
-/// Level of logging.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ChannelLevel
-{
-[System.Runtime.Serialization.EnumMember(Value = "off")]Off,
-[System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
-[System.Runtime.Serialization.EnumMember(Value = "verbose")]Verbose}
 /// <summary>
 /// Logging channel.
 /// </summary>
@@ -2688,42 +2993,6 @@ public string Title { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.DOM
 {
-/// <summary>
-/// Pseudo element type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PseudoType
-{
-[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
-[System.Runtime.Serialization.EnumMember(Value = "after")]After}
-/// <summary>
-/// Shadow root type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ShadowRootType
-{
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "open")]Open,
-[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
-/// <summary>
-/// Custom element state.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CustomElementState
-{
-[System.Runtime.Serialization.EnumMember(Value = "builtin")]Builtin,
-[System.Runtime.Serialization.EnumMember(Value = "custom")]Custom,
-[System.Runtime.Serialization.EnumMember(Value = "waiting")]Waiting,
-[System.Runtime.Serialization.EnumMember(Value = "failed")]Failed}
-/// <summary>
-/// Token values of @aria-relevant attribute.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum LiveRegionRelevant
-{
-[System.Runtime.Serialization.EnumMember(Value = "additions")]Additions,
-[System.Runtime.Serialization.EnumMember(Value = "removals")]Removals,
-[System.Runtime.Serialization.EnumMember(Value = "text")]Text}
 /// <summary>
 /// DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type.
 /// </summary>
@@ -4554,25 +4823,6 @@ public bool? IsPowerEfficient { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.DOMDebugger
 {
-/// <summary>
-/// DOM breakpoint type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum DOMBreakpointType
-{
-[System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
-[System.Runtime.Serialization.EnumMember(Value = "attribute-modified")]AttributeModified,
-[System.Runtime.Serialization.EnumMember(Value = "node-removed")]NodeRemoved}
-/// <summary>
-/// Event breakpoint type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum EventBreakpointType
-{
-[System.Runtime.Serialization.EnumMember(Value = "animation-frame")]AnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "interval")]Interval,
-[System.Runtime.Serialization.EnumMember(Value = "listener")]Listener,
-[System.Runtime.Serialization.EnumMember(Value = "timeout")]Timeout}
 /// <summary>
 /// Sets breakpoint on particular operation with DOM.
 /// </summary>
@@ -7560,6 +7810,7 @@ public string Url { get; set; }
 /// <summary>
 /// Type of this resource.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public Page.ResourceType Type { get; set; }
 /// <summary>
 /// Cached response data.
@@ -7598,13 +7849,6 @@ public double? LineNumber { get; set; }
 /// Set if the load was triggered by a DOM node, in addition to the other initiator information.
 /// </summary>
 public int? NodeId { get; set; }}
-/// <summary>
-/// Different stages of a network request.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum NetworkStage
-{
-[System.Runtime.Serialization.EnumMember(Value = "response")]Response}
 /// <summary>
 /// Enables network tracking, network events will now be delivered to the client.
 /// </summary>
@@ -8049,7 +8293,8 @@ public Response RedirectResponse { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
-public Page.ResourceType Type { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+public Page.ResourceType? Type { get; set; }
 /// <summary>
 /// Identifier for the context of where the load originated. In general this is the target identifier. For Workers this will be the workerId.
 /// </summary>
@@ -8082,6 +8327,7 @@ public double? Timestamp { get; set; }
 /// <summary>
 /// Resource type.
 /// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 public Page.ResourceType Type { get; set; }
 /// <summary>
 /// Response data.
@@ -8379,65 +8625,6 @@ public WebSocketFrame Response { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Page
 {
-/// <summary>
-/// List of settings able to be overridden by WebInspector. Keep this in sync with FOR_EACH_INSPECTOR_OVERRIDE_SETTING.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Setting
-{
-[System.Runtime.Serialization.EnumMember(Value = "AuthorAndUserStylesEnabled")]AuthorAndUserStylesEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "ICECandidateFilteringEnabled")]ICECandidateFilteringEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "ImagesEnabled")]ImagesEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "MediaCaptureRequiresSecureConnection")]MediaCaptureRequiresSecureConnection,
-[System.Runtime.Serialization.EnumMember(Value = "MockCaptureDevicesEnabled")]MockCaptureDevicesEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "NeedsSiteSpecificQuirks")]NeedsSiteSpecificQuirks,
-[System.Runtime.Serialization.EnumMember(Value = "ScriptEnabled")]ScriptEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "ShowDebugBorders")]ShowDebugBorders,
-[System.Runtime.Serialization.EnumMember(Value = "ShowRepaintCounter")]ShowRepaintCounter,
-[System.Runtime.Serialization.EnumMember(Value = "WebRTCEncryptionEnabled")]WebRTCEncryptionEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "WebSecurityEnabled")]WebSecurityEnabled}
-/// <summary>
-/// Resource type as it was perceived by the rendering engine.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ResourceType
-{
-[System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
-[System.Runtime.Serialization.EnumMember(Value = "StyleSheet")]StyleSheet,
-[System.Runtime.Serialization.EnumMember(Value = "Image")]Image,
-[System.Runtime.Serialization.EnumMember(Value = "Font")]Font,
-[System.Runtime.Serialization.EnumMember(Value = "Script")]Script,
-[System.Runtime.Serialization.EnumMember(Value = "XHR")]XHR,
-[System.Runtime.Serialization.EnumMember(Value = "Fetch")]Fetch,
-[System.Runtime.Serialization.EnumMember(Value = "Ping")]Ping,
-[System.Runtime.Serialization.EnumMember(Value = "Beacon")]Beacon,
-[System.Runtime.Serialization.EnumMember(Value = "WebSocket")]WebSocket,
-[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
-/// <summary>
-/// Coordinate system used by supplied coordinates.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CoordinateSystem
-{
-[System.Runtime.Serialization.EnumMember(Value = "Viewport")]Viewport,
-[System.Runtime.Serialization.EnumMember(Value = "Page")]Page}
-/// <summary>
-/// Same-Site policy of a cookie.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookieSameSitePolicy
-{
-[System.Runtime.Serialization.EnumMember(Value = "None")]None,
-[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
-[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
-/// <summary>
-/// Page appearance name.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Appearance
-{
-[System.Runtime.Serialization.EnumMember(Value = "Light")]Light,
-[System.Runtime.Serialization.EnumMember(Value = "Dark")]Dark}
 /// <summary>
 /// Information about the Frame on the page.
 /// </summary>
@@ -9569,25 +9756,6 @@ public Runtime.RemoteObject Element { get; set; }}
 namespace PlaywrightSharp.Webkit.Protocol.Recording
 {
 /// <summary>
-/// The type of the recording.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Type
-{
-[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
-[System.Runtime.Serialization.EnumMember(Value = "canvas-bitmaprenderer")]CanvasBitmaprenderer,
-[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl")]CanvasWebgl,
-[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl2")]CanvasWebgl2}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Initiator
-{
-[System.Runtime.Serialization.EnumMember(Value = "frontend")]Frontend,
-[System.Runtime.Serialization.EnumMember(Value = "console")]Console,
-[System.Runtime.Serialization.EnumMember(Value = "auto-capture")]AutoCapture}
-/// <summary>
 /// Information about the initial state of the recorded object.
 /// </summary>
 internal partial class InitialState
@@ -9863,15 +10031,6 @@ public object Value { get; set; }
 /// </summary>
 public string ObjectId { get; set; }}
 /// <summary>
-/// Type of the execution context.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ExecutionContextType
-{
-[System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
-[System.Runtime.Serialization.EnumMember(Value = "user")]User,
-[System.Runtime.Serialization.EnumMember(Value = "internal")]Internal}
-/// <summary>
 /// Description of an isolated world.
 /// </summary>
 internal partial class ExecutionContextDescription
@@ -9893,16 +10052,6 @@ public string Name { get; set; }
 /// Id of the owning frame.
 /// </summary>
 public string FrameId { get; set; }}
-/// <summary>
-/// Syntax error type: "none" for no error, "irrecoverable" for unrecoverable errors, "unterminated-literal" for when there is an unterminated literal, "recoverable" for when the expression is unfinished but valid so far.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SyntaxErrorType
-{
-[System.Runtime.Serialization.EnumMember(Value = "none")]None,
-[System.Runtime.Serialization.EnumMember(Value = "irrecoverable")]Irrecoverable,
-[System.Runtime.Serialization.EnumMember(Value = "unterminated-literal")]UnterminatedLiteral,
-[System.Runtime.Serialization.EnumMember(Value = "recoverable")]Recoverable}
 /// <summary>
 /// Range of an error in source code.
 /// </summary>
@@ -10632,15 +10781,6 @@ namespace PlaywrightSharp.Webkit.Protocol.ScriptProfiler
 /// <summary>
 /// 
 /// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum EventType
-{
-[System.Runtime.Serialization.EnumMember(Value = "API")]API,
-[System.Runtime.Serialization.EnumMember(Value = "Microtask")]Microtask,
-[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
-/// <summary>
-/// 
-/// </summary>
 internal partial class Event
 {
 /// <summary>
@@ -11101,46 +11241,6 @@ public string Message { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Timeline
 {
-/// <summary>
-/// Timeline record type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum EventType
-{
-[System.Runtime.Serialization.EnumMember(Value = "EventDispatch")]EventDispatch,
-[System.Runtime.Serialization.EnumMember(Value = "ScheduleStyleRecalculation")]ScheduleStyleRecalculation,
-[System.Runtime.Serialization.EnumMember(Value = "RecalculateStyles")]RecalculateStyles,
-[System.Runtime.Serialization.EnumMember(Value = "InvalidateLayout")]InvalidateLayout,
-[System.Runtime.Serialization.EnumMember(Value = "Layout")]Layout,
-[System.Runtime.Serialization.EnumMember(Value = "Paint")]Paint,
-[System.Runtime.Serialization.EnumMember(Value = "Composite")]Composite,
-[System.Runtime.Serialization.EnumMember(Value = "RenderingFrame")]RenderingFrame,
-[System.Runtime.Serialization.EnumMember(Value = "TimerInstall")]TimerInstall,
-[System.Runtime.Serialization.EnumMember(Value = "TimerRemove")]TimerRemove,
-[System.Runtime.Serialization.EnumMember(Value = "TimerFire")]TimerFire,
-[System.Runtime.Serialization.EnumMember(Value = "EvaluateScript")]EvaluateScript,
-[System.Runtime.Serialization.EnumMember(Value = "TimeStamp")]TimeStamp,
-[System.Runtime.Serialization.EnumMember(Value = "Time")]Time,
-[System.Runtime.Serialization.EnumMember(Value = "TimeEnd")]TimeEnd,
-[System.Runtime.Serialization.EnumMember(Value = "FunctionCall")]FunctionCall,
-[System.Runtime.Serialization.EnumMember(Value = "ProbeSample")]ProbeSample,
-[System.Runtime.Serialization.EnumMember(Value = "ConsoleProfile")]ConsoleProfile,
-[System.Runtime.Serialization.EnumMember(Value = "RequestAnimationFrame")]RequestAnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "CancelAnimationFrame")]CancelAnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "FireAnimationFrame")]FireAnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "ObserverCallback")]ObserverCallback}
-/// <summary>
-/// Instrument types.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Instrument
-{
-[System.Runtime.Serialization.EnumMember(Value = "ScriptProfiler")]ScriptProfiler,
-[System.Runtime.Serialization.EnumMember(Value = "Timeline")]Timeline,
-[System.Runtime.Serialization.EnumMember(Value = "CPU")]CPU,
-[System.Runtime.Serialization.EnumMember(Value = "Memory")]Memory,
-[System.Runtime.Serialization.EnumMember(Value = "Heap")]Heap,
-[System.Runtime.Serialization.EnumMember(Value = "Animation")]Animation}
 /// <summary>
 /// Timeline record contains information about the recorded activity.
 /// </summary>

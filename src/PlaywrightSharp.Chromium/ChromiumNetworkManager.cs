@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Fetch;
 using PlaywrightSharp.Chromium.Protocol.Network;
+using RequestPattern = PlaywrightSharp.Chromium.Protocol.Fetch.RequestPattern;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -25,6 +26,7 @@ namespace PlaywrightSharp.Chromium
         private bool _userCacheDisabled;
         private bool _protocolRequestInterceptionEnabled = false;
         private bool _userRequestInterceptionEnabled = false;
+        private Credential _credentials = null;
 
         public ChromiumNetworkManager(ChromiumSession client, Page page)
         {
@@ -42,6 +44,12 @@ namespace PlaywrightSharp.Chromium
         {
             _userCacheDisabled = !enabled;
             return UpdateProtocolCacheDisabledAsync();
+        }
+
+        internal Task SetRequestInterceptionAsync(bool value)
+        {
+            _userRequestInterceptionEnabled = value;
+            return UpdateProtocolRequestInterceptionAsync();
         }
 
         private async void Client_MessageReceived(object sender, IChromiumEvent e)
@@ -258,5 +266,39 @@ namespace PlaywrightSharp.Chromium
             {
                 CacheDisabled = _userCacheDisabled || _protocolRequestInterceptionEnabled,
             });
+
+        private async Task UpdateProtocolRequestInterceptionAsync()
+        {
+            bool enabled = _userRequestInterceptionEnabled || _credentials != null;
+            if (enabled == _protocolRequestInterceptionEnabled)
+            {
+                return;
+            }
+
+            _protocolRequestInterceptionEnabled = enabled;
+
+            if (enabled)
+            {
+                await Task.WhenAll(
+                    UpdateProtocolCacheDisabledAsync(),
+                    _client.SendAsync(new FetchEnableRequest
+                    {
+                        HandleAuthRequests = true,
+                        Patterns = new[]
+                        {
+                            new RequestPattern
+                            {
+                                UrlPattern = "*",
+                            },
+                        },
+                    })).ConfigureAwait(false);
+            }
+            else
+            {
+                await Task.WhenAll(
+                    UpdateProtocolCacheDisabledAsync(),
+                    _client.SendAsync(new FetchDisableRequest())).ConfigureAwait(false);
+            }
+        }
     }
 }

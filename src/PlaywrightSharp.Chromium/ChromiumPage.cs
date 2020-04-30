@@ -327,6 +327,8 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetCacheEnabledAsync(bool enabled) => _networkManager.SetCacheEnabledAsync(enabled);
 
+        public Task SetRequestInterceptionAsync(bool enabled) => _networkManager.SetRequestInterceptionAsync(enabled);
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());

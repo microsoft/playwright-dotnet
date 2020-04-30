@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -20,6 +19,17 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             var response = await RetrieveProtocolAsync(revision).ConfigureAwait(false);
 
             PrepareArrayTypes(response);
+
+            // We first creat enums.
+            foreach (var domain in response.Domains)
+            {
+                builder.Append("namespace ").Append(NamespacePrefix).Append('.').AppendLine(domain.Domain);
+                builder.AppendLine("{");
+
+                GenerateEnums(builder, domain);
+
+                builder.AppendLine("}");
+            }
 
             foreach (var domain in response.Domains)
             {
@@ -46,7 +56,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     {
                         case "array":
 
-                            string itemType = ConvertJsToCsharp(type?.Items?.Type, false);
+                            string itemType = ConvertJsToCsharp(type.Items?.Type, false);
                             if (itemType != null)
                             {
                                 _knownTypes[type.Id] = itemType + "[]";
@@ -77,6 +87,29 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             _knownTypes["StringIndex"] = "int";
         }
 
+        private void GenerateEnums(StringBuilder builder, ProtocolDomain domain)
+        {
+            if (domain.Types == null)
+            {
+                return;
+            }
+
+            // Generate enums
+            foreach (var type in domain.Types.Where(t => t.Enum != null))
+            {
+                _enums.Add($"{domain.Domain}.{type.Id}");
+
+                builder.AppendLine("/// <summary>");
+                builder.Append("/// ").AppendLine(FormatDocs(type.Description));
+                builder.AppendLine("/// </summary>");
+                builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
+                builder.Append("internal enum ").AppendLine(type.Id);
+                builder.AppendLine("{");
+                builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
+                builder.AppendLine("}");
+            }
+        }
+
         private void GenerateTypes(StringBuilder builder, ProtocolDomain domain)
         {
             if (domain.Types == null)
@@ -84,31 +117,16 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                 return;
             }
 
-            foreach (var type in domain.Types)
+            // Generate objects
+            foreach (var type in domain.Types.Where(t => t.Enum == null && t.Type == "object"))
             {
-                if (type.Enum != null)
-                {
-                    _enums.Add(type.Id);
-
-                    builder.AppendLine("/// <summary>");
-                    builder.Append("/// ").AppendLine(FormatDocs(type.Description));
-                    builder.AppendLine("/// </summary>");
-                    builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
-                    builder.Append("internal enum ").AppendLine(type.Id);
-                    builder.AppendLine("{");
-                    builder.AppendJoin(",\n", NormalizeEnum(type.Enum));
-                    builder.AppendLine("}");
-                }
-                else if (type.Type == "object")
-                {
-                    builder.AppendLine("/// <summary>");
-                    builder.Append("/// ").AppendLine(FormatDocs(type.Description));
-                    builder.AppendLine("/// </summary>");
-                    GenerateTypeDefinition(builder, type.Id);
-                    builder.AppendLine("{");
-                    builder.AppendJoin("\n", NormalizeProperties(domain, type.Properties, false));
-                    builder.AppendLine("}");
-                }
+                builder.AppendLine("/// <summary>");
+                builder.Append("/// ").AppendLine(FormatDocs(type.Description));
+                builder.AppendLine("/// </summary>");
+                GenerateTypeDefinition(builder, type.Id);
+                builder.AppendLine("{");
+                builder.AppendJoin("\n", NormalizeProperties(domain, type.Properties, false));
+                builder.AppendLine("}");
             }
         }
 
@@ -182,34 +200,37 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
             .Replace("<", "&lt;", StringComparison.OrdinalIgnoreCase)
             .Replace(">", "&gt;", StringComparison.OrdinalIgnoreCase);
 
-        private string GetTypeOfProperty(ProtocolDomainProperty property, bool isResponse)
+        private string GetTypeOfProperty(string domain, ProtocolDomainProperty property, bool isResponse)
         {
             if (property.Ref != null)
             {
-                return ConvertRefToCsharp(property.Ref, property.Optional ?? false);
+                return ConvertRefToCsharp(domain, property.Ref, property.Optional ?? false);
             }
 
             return property.Type switch
             {
-                "array" => ConvertItemsProperty(property.Items, isResponse),
+                "array" => ConvertItemsProperty(domain, property.Items, isResponse),
                 _ => ConvertJsToCsharp(property.Type, isResponse)
             };
         }
 
-        private string ConvertItemsProperty(ProtocolDomainItems items, bool isResponse)
-            => (items.Type != null ? ConvertJsToCsharp(items.Type, isResponse) : ConvertRefToCsharp(items.Ref, false)) + "[]";
+        private string ConvertItemsProperty(string domain, ProtocolDomainItems items, bool isResponse)
+            => (items.Type != null ? ConvertJsToCsharp(items.Type, isResponse) : ConvertRefToCsharp(domain, items.Ref, false)) + "[]";
 
-        private string ConvertRefToCsharp(string refValue, bool nullable)
+        private string ConvertRefToCsharp(string domain, string refValue, bool nullable)
         {
             string type = _knownTypes.TryGetValue(refValue, out string refClass) ? refClass : refValue;
 
-            if (nullable && _enums.Contains(refValue))
+            if (nullable && _enums.Contains(GetFullQualifiedEnum(domain, refValue)))
             {
                 type += "?";
             }
 
             return type;
         }
+
+        private string GetFullQualifiedEnum(string domain, string refValue)
+            => $"{(refValue.Contains(".") ? string.Empty : domain + ".")}{refValue}";
 
         private string ConvertJsToCsharp(string type, bool isResponse)
             => type switch
@@ -238,13 +259,13 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     .Append("/// ").AppendLine(FormatDocs(property.Description))
                     .AppendLine("/// </summary>");
 
-                if (domain.Types?.Any(t => t.Enum != null && t.Id == property.Ref) == true)
+                if (!string.IsNullOrEmpty(property.Ref) && _enums.Contains(GetFullQualifiedEnum(domain.Domain, property.Ref)))
                 {
                     builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
                 }
 
                 builder.Append("public ")
-                    .Append(GetTypeOfProperty(property, isResponse))
+                    .Append(GetTypeOfProperty(domain.Domain, property, isResponse))
                     .Append(' ').Append(property.Name.ToPascalCase()).Append(' ')
                     .Append("{ get; set; }");
 
