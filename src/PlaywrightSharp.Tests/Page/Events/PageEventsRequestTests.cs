@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Request</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsRequestTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsRequestTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsRequestTests(ITestOutputHelper output) : base(output)
         {
         }
 
