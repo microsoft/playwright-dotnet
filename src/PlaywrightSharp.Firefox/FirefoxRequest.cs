@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,7 +17,7 @@ namespace PlaywrightSharp.Firefox
             Id = payload.RequestId;
             _session = session;
 
-            var headers = payload.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value);
+            var headers = payload.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value, StringComparer.InvariantCultureIgnoreCase);
 
             Request = new Request(payload.IsIntercepted == true ? this : null, frame, redirectChain, payload.NavigationId, payload.Url, payload.GetResourceType(), new HttpMethod(payload.Method), payload.PostData, headers);
         }
