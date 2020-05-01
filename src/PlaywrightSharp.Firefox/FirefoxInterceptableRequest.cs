@@ -8,11 +8,11 @@ using PlaywrightSharp.Firefox.Protocol.Network;
 
 namespace PlaywrightSharp.Firefox
 {
-    internal class FirefoxRequest : IRequestDelegate
+    internal class FirefoxInterceptableRequest : IRequestDelegate
     {
         private readonly FirefoxSession _session;
 
-        public FirefoxRequest(FirefoxSession session, Frame frame, List<Request> redirectChain, NetworkRequestWillBeSentFirefoxEvent payload)
+        public FirefoxInterceptableRequest(FirefoxSession session, Frame frame, List<Request> redirectChain, NetworkRequestWillBeSentFirefoxEvent payload)
         {
             Id = payload.RequestId;
             _session = session;
