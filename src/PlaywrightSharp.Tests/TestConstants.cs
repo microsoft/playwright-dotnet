@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests
         public static readonly DeviceDescriptor IPhone = GetNewBrowserType().Devices[DeviceDescriptorName.IPhone6];
         public static readonly DeviceDescriptor IPhoneLandscape = GetNewBrowserType().Devices[DeviceDescriptorName.IPhone6Landscape];
         private static ILoggerFactory LoggerFactory { get; set; }
-        public static string FileToUpload => Path.Combine(Directory.GetCurrentDirectory(), "Assets", "file-to-upload.txt");
+        public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
         internal static readonly bool IsWebKit = Product.Equals(WebkitProduct);
         internal static readonly bool IsFirefox = Product.Equals(FirefoxProduct);

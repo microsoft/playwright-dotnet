@@ -51,7 +51,7 @@ namespace PlaywrightSharp
             var pageTasks =
                 _browser.GetAllTargets()
                 .Where(target => target.BrowserContext == BrowserContext && target.Type == TargetType.Page)
-                .Select(t => t.PageAsync());
+                .Select(t => t.GetPageAsync());
 
             var pages = await Task.WhenAll(pageTasks).ConfigureAwait(false);
 
@@ -75,7 +75,7 @@ namespace PlaywrightSharp
                 .ConfigureAwait(false)).TargetId;
             var target = _browser.TargetsMap[targetId];
             await target.InitializedTask.ConfigureAwait(false);
-            return await target.PageAsync().ConfigureAwait(false);
+            return await target.GetPageAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetGeolocationAsync(GeolocationOption)"/>

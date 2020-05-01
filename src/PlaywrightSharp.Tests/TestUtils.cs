@@ -76,5 +76,7 @@ namespace PlaywrightSharp.Tests
 
             return sb.ToString();
         }
+
+        internal static string GetWebServerFile(string path) => Path.Combine(FindParentDirectory("PlaywrightSharp.TestServer"), "wwwroot", path);
     }
 }
