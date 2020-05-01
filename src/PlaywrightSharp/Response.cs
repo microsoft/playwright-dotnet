@@ -4,10 +4,12 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
-    internal class Response : IResponse
+    /// <inheritdoc cref="IResponse"/>
+    public class Response : IResponse
     {
         private readonly TaskCompletionSource<bool> _finishedTsc;
         private readonly Func<Task<byte[]>> _getResponseBodyCallback;
@@ -26,24 +28,33 @@ namespace PlaywrightSharp
             request.SetResponse(this);
         }
 
+        /// <inheritdoc cref="IResponse.Status"/>
         public HttpStatusCode Status { get; }
 
+        /// <inheritdoc cref="IResponse.StatusText"/>
         public string StatusText { get; }
 
+        /// <inheritdoc cref="IResponse.Frame"/>
         public IFrame Frame => Request.Frame;
 
+        /// <inheritdoc cref="IResponse.Url"/>
         public string Url { get; }
 
+        /// <inheritdoc cref="IResponse.Headers"/>
         public IDictionary<string, string> Headers { get; }
 
+        /// <inheritdoc cref="IResponse.Ok"/>
         public bool Ok { get; }
 
+        /// <inheritdoc cref="IResponse.Request"/>
         IRequest IResponse.Request => Request;
 
+        /// <inheritdoc cref="IResponse.Request"/>
         public Request Request { get; }
 
         internal Task Finished => _finishedTsc.Task;
 
+        /// <inheritdoc cref="IResponse.GetBufferAsync()"/>
         public Task<byte[]> GetBufferAsync()
         {
             if (_contentTask == null)
@@ -59,16 +70,21 @@ namespace PlaywrightSharp
             }
         }
 
-        public Task<JsonDocument> GetJsonAsync()
+        /// <inheritdoc cref="IResponse.GetJsonAsync(JsonDocumentOptions)"/>
+        public async Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default)
         {
-            throw new System.NotImplementedException();
+            string content = await GetTextAsync().ConfigureAwait(false);
+            return JsonDocument.Parse(content, options);
         }
 
-        public Task<T> GetJsonAsync<T>()
+        /// <inheritdoc cref="IResponse.GetJsonAsync{T}(JsonSerializerOptions)"/>
+        public async Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null)
         {
-            throw new System.NotImplementedException();
+            string content = await GetTextAsync().ConfigureAwait(false);
+            return JsonSerializer.Deserialize<T>(content, options ?? JsonHelper.DefaultJsonSerializerOptions);
         }
 
+        /// <inheritdoc cref="IResponse.GetTextAsync()"/>
         public async Task<string> GetTextAsync()
         {
             var buffer = await GetBufferAsync().ConfigureAwait(false);

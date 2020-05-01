@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.json</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ResponseJsonTests : PlaywrightSharpPageBaseTest
     {
-        internal ResponseJsonTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ResponseJsonTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -21,7 +24,22 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal(JsonDocument.Parse("{foo: 'bar'}"), await response.GetJsonAsync());
+            Assert.Equal("{\"foo\": \"bar\"}", (await response.GetJsonAsync()).RootElement.GetRawText());
+        }
+
+        ///<playwright-file>network.spec.js</playwright-file>
+        ///<playwright-describe>Response.json</playwright-describe>
+        ///<playwright-it>should work</playwright-it>
+        [Fact]
+        public async Task ShouldWorkWithGenerics()
+        {
+            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
+            Assert.Equal("bar", (await response.GetJsonAsync<TestClass>()).Foo);
+        }
+
+        private class TestClass
+        {
+            public string Foo { get; set; }
         }
     }
 }
