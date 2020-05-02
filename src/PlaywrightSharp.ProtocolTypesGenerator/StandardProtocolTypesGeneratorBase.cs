@@ -264,10 +264,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
                     builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
                 }
 
-                builder.Append("public ")
-                    .Append(GetTypeOfProperty(domain.Domain, property, isResponse))
-                    .Append(' ').Append(property.Name.ToPascalCase()).Append(' ')
-                    .Append("{ get; set; }");
+                GeneratePropertyDefinition(builder, GetTypeOfProperty(domain.Domain, property, isResponse), property.Name);
 
                 return builder.ToString();
             });

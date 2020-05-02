@@ -16,28 +16,28 @@ namespace PlaywrightSharp.Firefox.Protocol.Browser
 {
 internal partial class CookieOptions
 {
-public string Name { get; set; }
-public string Value { get; set; }
-public string Url { get; set; }
-public string Domain { get; set; }
-public string Path { get; set; }
-public bool? Secure { get; set; }
-public bool? HttpOnly { get; set; }
-public Browser.CookieOptionsSameSite? SameSite { get; set; }
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public Browser.CookieOptionsSameSite? SameSite { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
 }
 internal partial class Cookie
 {
-public string Name { get; set; }
-public string Domain { get; set; }
-public string Path { get; set; }
-public string Value { get; set; }
-public double? Expires { get; set; }
-public double? Size { get; set; }
-public bool? HttpOnly { get; set; }
-public bool? Secure { get; set; }
-public bool? Session { get; set; }
-public Browser.CookieOptionsSameSite SameSite { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("session")] public bool? Session { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public Browser.CookieOptionsSameSite SameSite { get; set; }
 }
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum CookieOptionsSameSite
@@ -51,11 +51,11 @@ namespace PlaywrightSharp.Firefox.Protocol.Target
 {
 internal partial class TargetInfo
 {
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Target.TargetInfoType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
 }
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum TargetInfoType
@@ -68,81 +68,81 @@ namespace PlaywrightSharp.Firefox.Protocol.Page
 {
 internal partial class DOMPoint
 {
-public double? X { get; set; }
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
 }
 internal partial class BoundingBox
 {
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? Width { get; set; }
-public double? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public double? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public double? Height { get; set; }
 }
 internal partial class Viewport
 {
-public double? Width { get; set; }
-public double? Height { get; set; }
-public double? DeviceScaleFactor { get; set; }
-public bool? IsMobile { get; set; }
-public bool? HasTouch { get; set; }
-public bool? IsLandscape { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public double? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public double? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceScaleFactor")] public double? DeviceScaleFactor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isMobile")] public bool? IsMobile { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasTouch")] public bool? HasTouch { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isLandscape")] public bool? IsLandscape { get; set; }
 }
 internal partial class DOMQuad
 {
-public Page.DOMPoint P1 { get; set; }
-public Page.DOMPoint P2 { get; set; }
-public Page.DOMPoint P3 { get; set; }
-public Page.DOMPoint P4 { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("p1")] public Page.DOMPoint P1 { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("p2")] public Page.DOMPoint P2 { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("p3")] public Page.DOMPoint P3 { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("p4")] public Page.DOMPoint P4 { get; set; }
 }
 internal partial class TouchPoint
 {
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? RadiusX { get; set; }
-public double? RadiusY { get; set; }
-public double? RotationAngle { get; set; }
-public double? Force { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("radiusX")] public double? RadiusX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("radiusY")] public double? RadiusY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rotationAngle")] public double? RotationAngle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("force")] public double? Force { get; set; }
 }
 internal partial class Clip
 {
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? Width { get; set; }
-public double? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public double? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public double? Height { get; set; }
 }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
 internal partial class RemoteObject
 {
-public Runtime.RemoteObjectType? Type { get; set; }
-public Runtime.RemoteObjectSubtype? Subtype { get; set; }
-public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Runtime.RemoteObjectType? Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public Runtime.RemoteObjectSubtype? Subtype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unserializableValue")] public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
 }
 internal partial class ObjectProperty
 {
-public string Name { get; set; }
-public Runtime.RemoteObject Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public Runtime.RemoteObject Value { get; set; }
 }
 internal partial class ScriptLocation
 {
-public double? ColumnNumber { get; set; }
-public double? LineNumber { get; set; }
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public double? ColumnNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public double? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 }
 internal partial class ExceptionDetails
 {
-public string Text { get; set; }
-public string Stack { get; set; }
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stack")] public string Stack { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
 }
 internal partial class CallFunctionArgument
 {
-public string ObjectId { get; set; }
-public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unserializableValue")] public Runtime.RemoteObjectUnserializableValue? UnserializableValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
 }
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum RemoteObjectType
@@ -186,51 +186,51 @@ namespace PlaywrightSharp.Firefox.Protocol.Network
 {
 internal partial class HTTPHeader
 {
-public string Name { get; set; }
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
 internal partial class SecurityDetails
 {
-public string Protocol { get; set; }
-public string SubjectName { get; set; }
-public string Issuer { get; set; }
-public double? ValidFrom { get; set; }
-public double? ValidTo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public string Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subjectName")] public string SubjectName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("issuer")] public string Issuer { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validFrom")] public double? ValidFrom { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validTo")] public double? ValidTo { get; set; }
 }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Accessibility
 {
 internal partial class AXTree
 {
-public string Role { get; set; }
-public string Name { get; set; }
-public AXTree[] Children { get; set; }
-public bool? Selected { get; set; }
-public bool? Focused { get; set; }
-public bool? Pressed { get; set; }
-public bool? Focusable { get; set; }
-public bool? Haspopup { get; set; }
-public bool? Required { get; set; }
-public bool? Invalid { get; set; }
-public bool? Modal { get; set; }
-public bool? Editable { get; set; }
-public bool? Busy { get; set; }
-public bool? Multiline { get; set; }
-public bool? Readonly { get; set; }
-public Accessibility.AXTreeChecked? Checked { get; set; }
-public bool? Expanded { get; set; }
-public bool? Disabled { get; set; }
-public bool? Multiselectable { get; set; }
-public string Value { get; set; }
-public string Description { get; set; }
-public string Roledescription { get; set; }
-public string Valuetext { get; set; }
-public string Orientation { get; set; }
-public string Autocomplete { get; set; }
-public string Keyshortcuts { get; set; }
-public double? Level { get; set; }
-public string Tag { get; set; }
-public bool? FoundObject { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("role")] public string Role { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("children")] public AXTree[] Children { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("selected")] public bool? Selected { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("focused")] public bool? Focused { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pressed")] public bool? Pressed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("focusable")] public bool? Focusable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("haspopup")] public bool? Haspopup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("required")] public bool? Required { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("invalid")] public bool? Invalid { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modal")] public bool? Modal { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("editable")] public bool? Editable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("busy")] public bool? Busy { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("multiline")] public bool? Multiline { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("readonly")] public bool? Readonly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("checked")] public Accessibility.AXTreeChecked? Checked { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expanded")] public bool? Expanded { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("multiselectable")] public bool? Multiselectable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("roledescription")] public string Roledescription { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valuetext")] public string Valuetext { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("orientation")] public string Orientation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autocomplete")] public string Autocomplete { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyshortcuts")] public string Keyshortcuts { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("level")] public double? Level { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("tag")] public string Tag { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("foundObject")] public bool? FoundObject { get; set; }
 }
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AXTreeChecked
@@ -256,14 +256,14 @@ public string Command { get; } = "Browser.getInfo";
 }
 internal partial class BrowserGetInfoResponse: IFirefoxResponse
 {
-public string UserAgent { get; set; }
-public string Version { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userAgent")] public string UserAgent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("version")] public string Version { get; set; }
 }
 internal partial class BrowserSetIgnoreHTTPSErrorsRequest : IFirefoxRequest<BrowserSetIgnoreHTTPSErrorsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.setIgnoreHTTPSErrors";
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
 internal partial class BrowserSetIgnoreHTTPSErrorsResponse: IFirefoxResponse
 {
@@ -272,9 +272,9 @@ internal partial class BrowserGrantPermissionsRequest : IFirefoxRequest<BrowserG
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.grantPermissions";
-public string Origin { get; set; }
-public string BrowserContextId { get; set; }
-public Browser.PermissionsGrantPermissions[] Permissions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("permissions")] public Browser.PermissionsGrantPermissions[] Permissions { get; set; }
 }
 internal partial class BrowserGrantPermissionsResponse: IFirefoxResponse
 {
@@ -283,7 +283,7 @@ internal partial class BrowserResetPermissionsRequest : IFirefoxRequest<BrowserR
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.resetPermissions";
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 internal partial class BrowserResetPermissionsResponse: IFirefoxResponse
 {
@@ -292,8 +292,8 @@ internal partial class BrowserSetCookiesRequest : IFirefoxRequest<BrowserSetCook
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.setCookies";
-public string BrowserContextId { get; set; }
-public Browser.CookieOptions[] Cookies { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Browser.CookieOptions[] Cookies { get; set; }
 }
 internal partial class BrowserSetCookiesResponse: IFirefoxResponse
 {
@@ -302,7 +302,7 @@ internal partial class BrowserClearCookiesRequest : IFirefoxRequest<BrowserClear
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.clearCookies";
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 internal partial class BrowserClearCookiesResponse: IFirefoxResponse
 {
@@ -311,11 +311,11 @@ internal partial class BrowserGetCookiesRequest : IFirefoxRequest<BrowserGetCook
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.getCookies";
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 internal partial class BrowserGetCookiesResponse: IFirefoxResponse
 {
-public Browser.Cookie[] Cookies { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Browser.Cookie[] Cookies { get; set; }
 }
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PermissionsGrantPermissions
@@ -331,40 +331,40 @@ namespace PlaywrightSharp.Firefox.Protocol.Target
 internal partial class TargetAttachedToTargetFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Target.attachedToTarget";
-public string SessionId { get; set; }
-public Target.TargetInfo TargetInfo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public Target.TargetInfo TargetInfo { get; set; }
 }
 internal partial class TargetDetachedFromTargetFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Target.detachedFromTarget";
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
 }
 internal partial class TargetTargetCreatedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Target.targetCreated";
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Target.TargetInfoType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
 }
 internal partial class TargetTargetDestroyedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Target.targetDestroyed";
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Target.TargetInfoType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
 }
 internal partial class TargetTargetInfoChangedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Target.targetInfoChanged";
-public Target.TargetInfoType Type { get; set; }
-public string TargetId { get; set; }
-public string BrowserContextId { get; set; }
-public string Url { get; set; }
-public string OpenerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Target.TargetInfoType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
 }
 internal partial class TargetEnableRequest : IFirefoxRequest<TargetEnableResponse>
 {
@@ -378,21 +378,21 @@ internal partial class TargetAttachToTargetRequest : IFirefoxRequest<TargetAttac
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.attachToTarget";
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
 internal partial class TargetAttachToTargetResponse: IFirefoxResponse
 {
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
 }
 internal partial class TargetNewPageRequest : IFirefoxRequest<TargetNewPageResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.newPage";
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 internal partial class TargetNewPageResponse: IFirefoxResponse
 {
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
 internal partial class TargetCreateBrowserContextRequest : IFirefoxRequest<TargetCreateBrowserContextResponse>
 {
@@ -401,13 +401,13 @@ public string Command { get; } = "Target.createBrowserContext";
 }
 internal partial class TargetCreateBrowserContextResponse: IFirefoxResponse
 {
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 internal partial class TargetRemoveBrowserContextRequest : IFirefoxRequest<TargetRemoveBrowserContextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.removeBrowserContext";
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 internal partial class TargetRemoveBrowserContextResponse: IFirefoxResponse
 {
@@ -419,7 +419,7 @@ public string Command { get; } = "Target.getBrowserContexts";
 }
 internal partial class TargetGetBrowserContextsResponse: IFirefoxResponse
 {
-public string[] BrowserContextIds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextIds")] public string[] BrowserContextIds { get; set; }
 }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Page
@@ -427,98 +427,98 @@ namespace PlaywrightSharp.Firefox.Protocol.Page
 internal partial class PageEventFiredFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.eventFired";
-public string FrameId { get; set; }
-public Page.EventFiredName Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public Page.EventFiredName Name { get; set; }
 }
 internal partial class PageUncaughtErrorFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.uncaughtError";
-public string FrameId { get; set; }
-public string Message { get; set; }
-public string Stack { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stack")] public string Stack { get; set; }
 }
 internal partial class PageFrameAttachedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.frameAttached";
-public string FrameId { get; set; }
-public string ParentFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentFrameId")] public string ParentFrameId { get; set; }
 }
 internal partial class PageFrameDetachedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.frameDetached";
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
 }
 internal partial class PageNavigationStartedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.navigationStarted";
-public string FrameId { get; set; }
-public string NavigationId { get; set; }
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 }
 internal partial class PageNavigationCommittedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.navigationCommitted";
-public string FrameId { get; set; }
-public string NavigationId { get; set; }
-public string Url { get; set; }
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 }
 internal partial class PageNavigationAbortedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.navigationAborted";
-public string FrameId { get; set; }
-public string NavigationId { get; set; }
-public string ErrorText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorText")] public string ErrorText { get; set; }
 }
 internal partial class PageSameDocumentNavigationFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.sameDocumentNavigation";
-public string FrameId { get; set; }
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 }
 internal partial class PageDialogOpenedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.dialogOpened";
-public string DialogId { get; set; }
-public Page.DialogOpenedType Type { get; set; }
-public string Message { get; set; }
-public string DefaultValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dialogId")] public string DialogId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Page.DialogOpenedType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("defaultValue")] public string DefaultValue { get; set; }
 }
 internal partial class PageDialogClosedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.dialogClosed";
-public string DialogId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dialogId")] public string DialogId { get; set; }
 }
 internal partial class PageBindingCalledFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.bindingCalled";
-public string ExecutionContextId { get; set; }
-public string Name { get; set; }
-public object Payload { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("payload")] public object Payload { get; set; }
 }
 internal partial class PageFileChooserOpenedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.fileChooserOpened";
-public string ExecutionContextId { get; set; }
-public Runtime.RemoteObject Element { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("element")] public Runtime.RemoteObject Element { get; set; }
 }
 internal partial class PageWorkerCreatedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.workerCreated";
-public string WorkerId { get; set; }
-public string FrameId { get; set; }
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 }
 internal partial class PageWorkerDestroyedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.workerDestroyed";
-public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
 }
 internal partial class PageDispatchMessageFromWorkerFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Page.dispatchMessageFromWorker";
-public string WorkerId { get; set; }
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
 }
 internal partial class PageEnableRequest : IFirefoxRequest<PageEnableResponse>
 {
@@ -532,7 +532,7 @@ internal partial class PageCloseRequest : IFirefoxRequest<PageCloseResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.close";
-public bool? RunBeforeUnload { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("runBeforeUnload")] public bool? RunBeforeUnload { get; set; }
 }
 internal partial class PageCloseResponse: IFirefoxResponse
 {
@@ -541,9 +541,9 @@ internal partial class PageSetFileInputFilesRequest : IFirefoxRequest<PageSetFil
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setFileInputFiles";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-public string[] Files { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("files")] public string[] Files { get; set; }
 }
 internal partial class PageSetFileInputFilesResponse: IFirefoxResponse
 {
@@ -552,7 +552,7 @@ internal partial class PageAddBindingRequest : IFirefoxRequest<PageAddBindingRes
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addBinding";
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 }
 internal partial class PageAddBindingResponse: IFirefoxResponse
 {
@@ -561,7 +561,7 @@ internal partial class PageSetViewportRequest : IFirefoxRequest<PageSetViewportR
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setViewport";
-public Page.Viewport Viewport { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("viewport")] public Page.Viewport Viewport { get; set; }
 }
 internal partial class PageSetViewportResponse: IFirefoxResponse
 {
@@ -570,7 +570,7 @@ internal partial class PageSetUserAgentRequest : IFirefoxRequest<PageSetUserAgen
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setUserAgent";
-public string UserAgent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userAgent")] public string UserAgent { get; set; }
 }
 internal partial class PageSetUserAgentResponse: IFirefoxResponse
 {
@@ -579,8 +579,8 @@ internal partial class PageSetEmulatedMediaRequest : IFirefoxRequest<PageSetEmul
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setEmulatedMedia";
-public Page.SetEmulatedMediaType? Type { get; set; }
-public Page.SetEmulatedMediaColorScheme? ColorScheme { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Page.SetEmulatedMediaType? Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("colorScheme")] public Page.SetEmulatedMediaColorScheme? ColorScheme { get; set; }
 }
 internal partial class PageSetEmulatedMediaResponse: IFirefoxResponse
 {
@@ -589,7 +589,7 @@ internal partial class PageSetBypassCSPRequest : IFirefoxRequest<PageSetBypassCS
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setBypassCSP";
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
 internal partial class PageSetBypassCSPResponse: IFirefoxResponse
 {
@@ -598,7 +598,7 @@ internal partial class PageSetCacheDisabledRequest : IFirefoxRequest<PageSetCach
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setCacheDisabled";
-public bool? CacheDisabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cacheDisabled")] public bool? CacheDisabled { get; set; }
 }
 internal partial class PageSetCacheDisabledResponse: IFirefoxResponse
 {
@@ -607,7 +607,7 @@ internal partial class PageSetJavascriptEnabledRequest : IFirefoxRequest<PageSet
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setJavascriptEnabled";
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
 internal partial class PageSetJavascriptEnabledResponse: IFirefoxResponse
 {
@@ -616,30 +616,30 @@ internal partial class PageDescribeNodeRequest : IFirefoxRequest<PageDescribeNod
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.describeNode";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 }
 internal partial class PageDescribeNodeResponse: IFirefoxResponse
 {
-public string ContentFrameId { get; set; }
-public string OwnerFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentFrameId")] public string ContentFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ownerFrameId")] public string OwnerFrameId { get; set; }
 }
 internal partial class PageAddScriptToEvaluateOnNewDocumentRequest : IFirefoxRequest<PageAddScriptToEvaluateOnNewDocumentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
-public string Script { get; set; }
-public string WorldName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("script")] public string Script { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("worldName")] public string WorldName { get; set; }
 }
 internal partial class PageAddScriptToEvaluateOnNewDocumentResponse: IFirefoxResponse
 {
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
 }
 internal partial class PageRemoveScriptToEvaluateOnNewDocumentRequest : IFirefoxRequest<PageRemoveScriptToEvaluateOnNewDocumentResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
 }
 internal partial class PageRemoveScriptToEvaluateOnNewDocumentResponse: IFirefoxResponse
 {
@@ -648,105 +648,105 @@ internal partial class PageNavigateRequest : IFirefoxRequest<PageNavigateRespons
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.navigate";
-public string FrameId { get; set; }
-public string Url { get; set; }
-public string Referer { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("referer")] public string Referer { get; set; }
 }
 internal partial class PageNavigateResponse: IFirefoxResponse
 {
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationURL")] public string NavigationURL { get; set; }
 }
 internal partial class PageGoBackRequest : IFirefoxRequest<PageGoBackResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.goBack";
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
 }
 internal partial class PageGoBackResponse: IFirefoxResponse
 {
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationURL")] public string NavigationURL { get; set; }
 }
 internal partial class PageGoForwardRequest : IFirefoxRequest<PageGoForwardResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.goForward";
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
 }
 internal partial class PageGoForwardResponse: IFirefoxResponse
 {
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationURL")] public string NavigationURL { get; set; }
 }
 internal partial class PageReloadRequest : IFirefoxRequest<PageReloadResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.reload";
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
 }
 internal partial class PageReloadResponse: IFirefoxResponse
 {
-public string NavigationId { get; set; }
-public string NavigationURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationURL")] public string NavigationURL { get; set; }
 }
 internal partial class PageGetBoundingBoxRequest : IFirefoxRequest<PageGetBoundingBoxResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getBoundingBox";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 }
 internal partial class PageGetBoundingBoxResponse: IFirefoxResponse
 {
-public Page.BoundingBox BoundingBox { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("boundingBox")] public Page.BoundingBox BoundingBox { get; set; }
 }
 internal partial class PageAdoptNodeRequest : IFirefoxRequest<PageAdoptNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.adoptNode";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
-public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
 }
 internal partial class PageAdoptNodeResponse: IFirefoxResponse
 {
-public Runtime.RemoteObject RemoteObject { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("remoteObject")] public Runtime.RemoteObject RemoteObject { get; set; }
 }
 internal partial class PageScreenshotRequest : IFirefoxRequest<PageScreenshotResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.screenshot";
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public Page.ScreenshotMimeType MimeType { get; set; }
-public bool? FullPage { get; set; }
-public Page.BoundingBox Clip { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public Page.ScreenshotMimeType MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fullPage")] public bool? FullPage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clip")] public Page.BoundingBox Clip { get; set; }
 }
 internal partial class PageScreenshotResponse: IFirefoxResponse
 {
-public string Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
 }
 internal partial class PageGetContentQuadsRequest : IFirefoxRequest<PageGetContentQuadsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.getContentQuads";
-public string FrameId { get; set; }
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 }
 internal partial class PageGetContentQuadsResponse: IFirefoxResponse
 {
-public Page.DOMQuad[] Quads { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("quads")] public Page.DOMQuad[] Quads { get; set; }
 }
 internal partial class PageDispatchKeyEventRequest : IFirefoxRequest<PageDispatchKeyEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.dispatchKeyEvent";
-public string Type { get; set; }
-public string Key { get; set; }
-public double? KeyCode { get; set; }
-public double? Location { get; set; }
-public string Code { get; set; }
-public bool? Repeat { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyCode")] public double? KeyCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public double? Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("code")] public string Code { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("repeat")] public bool? Repeat { get; set; }
 }
 internal partial class PageDispatchKeyEventResponse: IFirefoxResponse
 {
@@ -756,25 +756,25 @@ internal partial class PageDispatchTouchEventRequest : IFirefoxRequest<PageDispa
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.dispatchTouchEvent";
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public Page.DispatchTouchEventType Type { get; set; }
-public Page.TouchPoint[] TouchPoints { get; set; }
-public double? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Page.DispatchTouchEventType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("touchPoints")] public Page.TouchPoint[] TouchPoints { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public double? Modifiers { get; set; }
 }
 internal partial class PageDispatchTouchEventResponse: IFirefoxResponse
 {
-public bool? DefaultPrevented { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("defaultPrevented")] public bool? DefaultPrevented { get; set; }
 }
 internal partial class PageDispatchMouseEventRequest : IFirefoxRequest<PageDispatchMouseEventResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.dispatchMouseEvent";
-public string Type { get; set; }
-public double? Button { get; set; }
-public double? X { get; set; }
-public double? Y { get; set; }
-public double? Modifiers { get; set; }
-public double? ClickCount { get; set; }
-public double? Buttons { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("button")] public double? Button { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public double? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clickCount")] public double? ClickCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("buttons")] public double? Buttons { get; set; }
 }
 internal partial class PageDispatchMouseEventResponse: IFirefoxResponse
 {
@@ -783,7 +783,7 @@ internal partial class PageInsertTextRequest : IFirefoxRequest<PageInsertTextRes
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.insertText";
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
 }
 internal partial class PageInsertTextResponse: IFirefoxResponse
 {
@@ -792,9 +792,9 @@ internal partial class PageHandleDialogRequest : IFirefoxRequest<PageHandleDialo
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.handleDialog";
-public string DialogId { get; set; }
-public bool? Accept { get; set; }
-public string PromptText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dialogId")] public string DialogId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("accept")] public bool? Accept { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("promptText")] public string PromptText { get; set; }
 }
 internal partial class PageHandleDialogResponse: IFirefoxResponse
 {
@@ -803,7 +803,7 @@ internal partial class PageSetInterceptFileChooserDialogRequest : IFirefoxReques
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setInterceptFileChooserDialog";
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
 internal partial class PageSetInterceptFileChooserDialogResponse: IFirefoxResponse
 {
@@ -812,9 +812,9 @@ internal partial class PageSendMessageToWorkerRequest : IFirefoxRequest<PageSend
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.sendMessageToWorker";
-public string FrameId { get; set; }
-public string WorkerId { get; set; }
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
 }
 internal partial class PageSendMessageToWorkerResponse: IFirefoxResponse
 {
@@ -867,21 +867,21 @@ namespace PlaywrightSharp.Firefox.Protocol.Runtime
 internal partial class RuntimeExecutionContextCreatedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Runtime.executionContextCreated";
-public string ExecutionContextId { get; set; }
-public object AuxData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("auxData")] public object AuxData { get; set; }
 }
 internal partial class RuntimeExecutionContextDestroyedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Runtime.executionContextDestroyed";
-public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
 }
 internal partial class RuntimeConsoleFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Runtime.console";
-public string ExecutionContextId { get; set; }
-public Runtime.RemoteObject[] Args { get; set; }
-public string Type { get; set; }
-public Runtime.ScriptLocation Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("args")] public Runtime.RemoteObject[] Args { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Runtime.ScriptLocation Location { get; set; }
 }
 internal partial class RuntimeEnableRequest : IFirefoxRequest<RuntimeEnableResponse>
 {
@@ -895,35 +895,35 @@ internal partial class RuntimeEvaluateRequest : IFirefoxRequest<RuntimeEvaluateR
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.evaluate";
-public string ExecutionContextId { get; set; }
-public string Expression { get; set; }
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expression")] public string Expression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
 }
 internal partial class RuntimeEvaluateResponse: IFirefoxResponse
 {
-public Runtime.RemoteObject Result { get; set; }
-public Runtime.ExceptionDetails ExceptionDetails { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public Runtime.ExceptionDetails ExceptionDetails { get; set; }
 }
 internal partial class RuntimeCallFunctionRequest : IFirefoxRequest<RuntimeCallFunctionResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.callFunction";
-public string ExecutionContextId { get; set; }
-public string FunctionDeclaration { get; set; }
-public bool? ReturnByValue { get; set; }
-public Runtime.CallFunctionArgument[] Args { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionDeclaration")] public string FunctionDeclaration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("args")] public Runtime.CallFunctionArgument[] Args { get; set; }
 }
 internal partial class RuntimeCallFunctionResponse: IFirefoxResponse
 {
-public Runtime.RemoteObject Result { get; set; }
-public Runtime.ExceptionDetails ExceptionDetails { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public Runtime.ExceptionDetails ExceptionDetails { get; set; }
 }
 internal partial class RuntimeDisposeObjectRequest : IFirefoxRequest<RuntimeDisposeObjectResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.disposeObject";
-public string ExecutionContextId { get; set; }
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 }
 internal partial class RuntimeDisposeObjectResponse: IFirefoxResponse
 {
@@ -932,12 +932,12 @@ internal partial class RuntimeGetObjectPropertiesRequest : IFirefoxRequest<Runti
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.getObjectProperties";
-public string ExecutionContextId { get; set; }
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public string ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 }
 internal partial class RuntimeGetObjectPropertiesResponse: IFirefoxResponse
 {
-public Runtime.ObjectProperty[] Properties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public Runtime.ObjectProperty[] Properties { get; set; }
 }
 }
 namespace PlaywrightSharp.Firefox.Protocol.Network
@@ -945,39 +945,39 @@ namespace PlaywrightSharp.Firefox.Protocol.Network
 internal partial class NetworkRequestWillBeSentFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Network.requestWillBeSent";
-public string FrameId { get; set; }
-public string RequestId { get; set; }
-public string RedirectedFrom { get; set; }
-public string PostData { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-public bool? IsIntercepted { get; set; }
-public string Url { get; set; }
-public string Method { get; set; }
-public string NavigationId { get; set; }
-public string Cause { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("redirectedFrom")] public string RedirectedFrom { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public Network.HTTPHeader[] Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isIntercepted")] public bool? IsIntercepted { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("navigationId")] public string NavigationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cause")] public string Cause { get; set; }
 }
 internal partial class NetworkResponseReceivedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Network.responseReceived";
-public Network.SecurityDetails SecurityDetails { get; set; }
-public string RequestId { get; set; }
-public bool? FromCache { get; set; }
-public string RemoteIPAddress { get; set; }
-public double? RemotePort { get; set; }
-public double? Status { get; set; }
-public string StatusText { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityDetails")] public Network.SecurityDetails SecurityDetails { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fromCache")] public bool? FromCache { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("remoteIPAddress")] public string RemoteIPAddress { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("remotePort")] public double? RemotePort { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public double? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public Network.HTTPHeader[] Headers { get; set; }
 }
 internal partial class NetworkRequestFinishedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Network.requestFinished";
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
 }
 internal partial class NetworkRequestFailedFirefoxEvent : IFirefoxEvent
 {
 public string InternalName { get; } = "Network.requestFailed";
-public string RequestId { get; set; }
-public string ErrorCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorCode")] public string ErrorCode { get; set; }
 }
 internal partial class NetworkEnableRequest : IFirefoxRequest<NetworkEnableResponse>
 {
@@ -991,7 +991,7 @@ internal partial class NetworkSetRequestInterceptionRequest : IFirefoxRequest<Ne
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setRequestInterception";
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
 internal partial class NetworkSetRequestInterceptionResponse: IFirefoxResponse
 {
@@ -1000,7 +1000,7 @@ internal partial class NetworkSetExtraHTTPHeadersRequest : IFirefoxRequest<Netwo
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setExtraHTTPHeaders";
-public Network.HTTPHeader[] Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public Network.HTTPHeader[] Headers { get; set; }
 }
 internal partial class NetworkSetExtraHTTPHeadersResponse: IFirefoxResponse
 {
@@ -1009,8 +1009,8 @@ internal partial class NetworkAbortInterceptedRequestRequest : IFirefoxRequest<N
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.abortInterceptedRequest";
-public string RequestId { get; set; }
-public string ErrorCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorCode")] public string ErrorCode { get; set; }
 }
 internal partial class NetworkAbortInterceptedRequestResponse: IFirefoxResponse
 {
@@ -1019,10 +1019,10 @@ internal partial class NetworkResumeInterceptedRequestRequest : IFirefoxRequest<
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.resumeInterceptedRequest";
-public string RequestId { get; set; }
-public string Method { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-public string PostData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public Network.HTTPHeader[] Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
 }
 internal partial class NetworkResumeInterceptedRequestResponse: IFirefoxResponse
 {
@@ -1031,11 +1031,11 @@ internal partial class NetworkFulfillInterceptedRequestRequest : IFirefoxRequest
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.fulfillInterceptedRequest";
-public string RequestId { get; set; }
-public double? Status { get; set; }
-public string StatusText { get; set; }
-public Network.HTTPHeader[] Headers { get; set; }
-public string Base64Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public double? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public Network.HTTPHeader[] Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("base64body")] public string Base64Body { get; set; }
 }
 internal partial class NetworkFulfillInterceptedRequestResponse: IFirefoxResponse
 {
@@ -1044,19 +1044,19 @@ internal partial class NetworkGetResponseBodyRequest : IFirefoxRequest<NetworkGe
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.getResponseBody";
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
 }
 internal partial class NetworkGetResponseBodyResponse: IFirefoxResponse
 {
-public string Base64Body { get; set; }
-public bool? Evicted { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("base64body")] public string Base64Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("evicted")] public bool? Evicted { get; set; }
 }
 internal partial class NetworkSetAuthCredentialsRequest : IFirefoxRequest<NetworkSetAuthCredentialsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.setAuthCredentials";
-public string Username { get; set; }
-public string Password { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("username")] public string Username { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("password")] public string Password { get; set; }
 }
 internal partial class NetworkSetAuthCredentialsResponse: IFirefoxResponse
 {
@@ -1068,11 +1068,11 @@ internal partial class AccessibilityGetFullAXTreeRequest : IFirefoxRequest<Acces
 {
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Accessibility.getFullAXTree";
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 }
 internal partial class AccessibilityGetFullAXTreeResponse: IFirefoxResponse
 {
-public Accessibility.AXTree Tree { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("tree")] public Accessibility.AXTree Tree { get; set; }
 }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
