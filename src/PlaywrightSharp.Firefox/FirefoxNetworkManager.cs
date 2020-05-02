@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Firefox
     {
         private readonly FirefoxSession _session;
         private readonly Page _page;
-        private readonly ConcurrentDictionary<string, FirefoxRequest> _requests = new ConcurrentDictionary<string, FirefoxRequest>();
+        private readonly ConcurrentDictionary<string, FirefoxInterceptableRequest> _requests = new ConcurrentDictionary<string, FirefoxInterceptableRequest>();
 
         public FirefoxNetworkManager(FirefoxSession session, Page page)
         {
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Firefox
                 _requests.TryRemove(redirectId.Id, out var _);
             }
 
-            var request = new FirefoxRequest(_session, frame, redirectChain, e);
+            var request = new FirefoxInterceptableRequest(_session, frame, redirectChain, e);
             _requests[request.Id] = request;
             _page.FrameManager.RequestStarted(request.Request);
         }

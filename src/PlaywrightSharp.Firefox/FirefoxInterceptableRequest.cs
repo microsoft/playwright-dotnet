@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -7,16 +8,16 @@ using PlaywrightSharp.Firefox.Protocol.Network;
 
 namespace PlaywrightSharp.Firefox
 {
-    internal class FirefoxRequest : IRequestDelegate
+    internal class FirefoxInterceptableRequest : IRequestDelegate
     {
         private readonly FirefoxSession _session;
 
-        public FirefoxRequest(FirefoxSession session, Frame frame, List<Request> redirectChain, NetworkRequestWillBeSentFirefoxEvent payload)
+        public FirefoxInterceptableRequest(FirefoxSession session, Frame frame, List<Request> redirectChain, NetworkRequestWillBeSentFirefoxEvent payload)
         {
             Id = payload.RequestId;
             _session = session;
 
-            var headers = payload.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value);
+            var headers = payload.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value, StringComparer.InvariantCultureIgnoreCase);
 
             Request = new Request(payload.IsIntercepted == true ? this : null, frame, redirectChain, payload.NavigationId, payload.Url, payload.GetResourceType(), new HttpMethod(payload.Method), payload.PostData, headers);
         }

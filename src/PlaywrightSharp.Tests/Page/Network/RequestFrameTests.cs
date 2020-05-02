@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Request.frame</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class RequestFrameTests : PlaywrightSharpPageBaseTest
     {
