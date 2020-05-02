@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Fetch;
 using PlaywrightSharp.Chromium.Protocol.Network;
+using AuthChallengeResponse = PlaywrightSharp.Chromium.Protocol.Fetch.AuthChallengeResponse;
 using RequestPattern = PlaywrightSharp.Chromium.Protocol.Fetch.RequestPattern;
 
 namespace PlaywrightSharp.Chromium
@@ -26,7 +27,7 @@ namespace PlaywrightSharp.Chromium
         private bool _userCacheDisabled;
         private bool _protocolRequestInterceptionEnabled = false;
         private bool _userRequestInterceptionEnabled = false;
-        private Credential _credentials = null;
+        private Credentials _credentials = null;
 
         public ChromiumNetworkManager(ChromiumSession client, Page page)
         {
@@ -52,6 +53,12 @@ namespace PlaywrightSharp.Chromium
             return UpdateProtocolRequestInterceptionAsync();
         }
 
+        internal Task AuthenticateAsync(Credentials credentials)
+        {
+            _credentials = credentials;
+            return UpdateProtocolRequestInterceptionAsync();
+        }
+
         private async void Client_MessageReceived(object sender, IChromiumEvent e)
         {
             try
@@ -73,6 +80,9 @@ namespace PlaywrightSharp.Chromium
                     case NetworkLoadingFailedChromiumEvent networkLoadingFailed:
                         OnLoadingFailed(networkLoadingFailed);
                         break;
+                    case FetchAuthRequiredChromiumEvent fetchAuthRequired:
+                        await OnAuthRequiredAsync(fetchAuthRequired).ConfigureAwait(false);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -84,6 +94,38 @@ namespace PlaywrightSharp.Chromium
                 */
                 System.Diagnostics.Debug.WriteLine(ex);
                 _client.OnClosed(ex.ToString());
+            }
+        }
+
+        private async Task OnAuthRequiredAsync(FetchAuthRequiredChromiumEvent e)
+        {
+            string response = "Default";
+            if (_attemptedAuthentications.Contains(e.RequestId))
+            {
+                response = "CancelAuth";
+            }
+            else if (_credentials != null)
+            {
+                response = "ProvideCredentials";
+                _attemptedAuthentications.Add(e.RequestId);
+            }
+
+            try
+            {
+                await _client.SendAsync(new FetchContinueWithAuthRequest
+                {
+                    RequestId = e.RequestId,
+                    AuthChallengeResponse = new AuthChallengeResponse
+                    {
+                        Response = response,
+                        Username = _credentials?.Username,
+                        Password = _credentials?.Password,
+                    },
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
 
