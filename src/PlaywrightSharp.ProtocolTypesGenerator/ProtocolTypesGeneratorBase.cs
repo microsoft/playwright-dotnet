@@ -43,5 +43,8 @@ namespace PlaywrightSharp.ProtocolTypesGenerator
 
         protected void GenerateResponseDefinition(StringBuilder builder, string typeName)
             => builder.AppendLine($"internal partial class {typeName}Response: I{Project}Response");
+
+        protected void GeneratePropertyDefinition(StringBuilder builder, string type, string name)
+            => builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{name}\")] public {type} {name.ToPascalCase()} {{ get; set; }}");
     }
 }
