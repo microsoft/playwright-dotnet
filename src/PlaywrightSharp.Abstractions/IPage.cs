@@ -861,8 +861,8 @@ namespace PlaywrightSharp
         /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.FulfillAsync(ResponseData)">request.FulfillAsync</see> methods.
         /// </summary>
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="value">Whether to enable request interception..</param>
-        Task SetRequestInterceptionAsync(bool value);
+        /// <param name="enabled">Whether to enable request interception..</param>
+        Task SetRequestInterceptionAsync(bool enabled);
 
         /// <summary>
         /// Set offline mode for the page.
