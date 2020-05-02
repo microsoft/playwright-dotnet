@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Firefox
 
                 return Convert.FromBase64String(response.Base64Body);
             };
-            var headers = e.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value);
+            var headers = e.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value, StringComparer.InvariantCultureIgnoreCase);
             var response = new Response(request.Request, (HttpStatusCode)e.Status, e.StatusText, headers, getResponseBody);
             _page.FrameManager.RequestReceivedResponse(response);
         }
