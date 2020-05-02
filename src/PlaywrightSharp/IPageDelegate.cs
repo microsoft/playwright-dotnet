@@ -232,5 +232,15 @@ namespace PlaywrightSharp
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         /// <param name="enabled">Whether to enable request interception..</param>
         Task SetRequestInterceptionAsync(bool enabled);
+
+        /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task AuthenticateAsync(Credentials credentials);
     }
 }

@@ -183,7 +183,8 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.AuthenticateAsync(Credentials)"/>
         public Task AuthenticateAsync(Credentials credentials)
         {
-            throw new NotImplementedException();
+            PageState.Credentials = credentials;
+            return Delegate.AuthenticateAsync(credentials);
         }
 
         /// <inheritdoc cref="IPage.ClickAsync(string, ClickOptions)"/>
