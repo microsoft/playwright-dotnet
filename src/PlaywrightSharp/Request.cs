@@ -12,7 +12,7 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<Response> _waitForResponseTsc;
         private readonly TaskCompletionSource<Response> _waitForFinishedTsc;
         private readonly Task<Response> _waitForResponse;
-        private bool _interceptionHandled = false;
+        private bool _interceptionHandled;
 
         internal Request(
             IRequestDelegate requestDelegate,
@@ -85,7 +85,7 @@ namespace PlaywrightSharp
 
         internal bool IsFavicon { get; }
 
-        internal string DocumentId { get; set; }
+        internal string DocumentId { get; }
 
         internal Request FinalRequest { get; private set; }
 
@@ -170,7 +170,7 @@ namespace PlaywrightSharp
 
         private string StripFragmentFromUrl(string url)
         {
-            int hashIndex = url.IndexOf("#");
+            int hashIndex = url.IndexOf("#", StringComparison.Ordinal);
             if (hashIndex == -1)
             {
                 return url;

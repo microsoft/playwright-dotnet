@@ -26,7 +26,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Response headers. Header values will be converted to a string.
         /// </summary>
-        public IDictionary<string, object> Headers { get; set; }
+        public IDictionary<string, string> Headers { get; set; }
 
         /// <summary>
         /// If set, equals to setting <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"/> response header.

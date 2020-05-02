@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Fetch;
 using PlaywrightSharp.Chromium.Protocol.Network;
@@ -65,6 +67,36 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        public Task FulfillAsync(ResponseData response) => throw new NotImplementedException();
+        public async Task FulfillAsync(ResponseData response)
+        {
+            var responseHeaders = response.Headers?.ToDictionary(header => header.Key.ToLower(), header => header.Value)
+                ?? new Dictionary<string, string>();
+
+            if (!string.IsNullOrEmpty(response.ContentType))
+            {
+                responseHeaders["content-type"] = response.ContentType;
+            }
+
+            if (response.BodyData != null && !responseHeaders.ContainsKey("content-length"))
+            {
+                responseHeaders["content-length"] = response.BodyData.Length.ToString();
+            }
+
+            try
+            {
+                await _client.SendAsync(new FetchFulfillRequestRequest
+                {
+                    RequestId = InterceptionId!,
+                    ResponseCode = (int)(response.Status ?? HttpStatusCode.OK),
+                    ResponsePhrase = ReasonPhrases.GetReasonPhrase((int)(response.Status ?? HttpStatusCode.OK)),
+                    ResponseHeaders = responseHeaders.Select(kv => new HeaderEntry { Name = kv.Key.ToLower(), Value = kv.Value }).ToArray(),
+                    Body = response.BodyData,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
     }
 }
