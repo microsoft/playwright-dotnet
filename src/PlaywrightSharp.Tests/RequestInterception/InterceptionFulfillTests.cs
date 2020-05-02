@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += (sender, e) =>
             {
-                var imageBuffer = File.ReadAllBytes(Path.Combine("assets", "pptr.png"));
+                var imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 e.Request.FulfillAsync(new ResponseData
                 {
                     ContentType = "image/png",

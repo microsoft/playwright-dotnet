@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
-            byte[] imageBuffer = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "pptr.png"));
+            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.Equal(imageBuffer, await response.GetBufferAsync());
         }
 
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
             Server.EnableGzip("/pptr.png");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
-            byte[] imageBuffer = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "pptr.png"));
+            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.Equal(imageBuffer, await response.GetBufferAsync());
         }
     }

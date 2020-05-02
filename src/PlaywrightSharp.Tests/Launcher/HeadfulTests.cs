@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
-    ///<playwright-file>headul.spec.js</playwright-file>
+    ///<playwright-file>headful.spec.js</playwright-file>
     ///<playwright-describe>Headful</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
@@ -20,18 +20,18 @@ namespace PlaywrightSharp.Tests.Launcher
         {
         }
 
-        ///<playwright-file>headul.spec.js</playwright-file>
+        ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should have default url when launching browser</playwright-it>
         [Fact]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
-            using var browser = await Playwright.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetHeadfulOptions());
             string[] pages = (await browser.DefaultContext.GetPagesAsync()).Select(page => page.Url).ToArray();
             Assert.Equal(new[] { "about:blank" }, pages);
         }
 
-        ///<playwright-file>headul.spec.js</playwright-file>
+        ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>headless should be able to read cookies written by headful</playwright-it>
         [Fact]
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.Launcher
             Assert.Equal("foo=true", cookie);
         }
 
-        ///<playwright-file>headul.spec.js</playwright-file>
+        ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should close browser with beforeunload page</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             var headfulOptions = TestConstants.GetDefaultBrowserOptions();
             headfulOptions.Headless = false;
-            using var browser = await Playwright.LaunchAsync(headfulOptions);
+            await using var browser = await Playwright.LaunchAsync(headfulOptions);
             var page = await browser.DefaultContext.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/beforeunload.html");
