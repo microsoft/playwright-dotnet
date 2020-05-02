@@ -22,7 +22,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets or sets the HTTP headers.
         /// </summary>
-        public IDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the URL.
