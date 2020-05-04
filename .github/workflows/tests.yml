@@ -62,7 +62,7 @@ jobs:
       - name: Create Certificate
         run: |
           New-SelfSignedCertificate -Subject "localhost" -FriendlyName "PlaywrightSharp" -CertStoreLocation "cert:\CurrentUser\My"
-          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath .\src\PlaywrightSharp.TestServer\testCert.cer
+          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath d:\a\playwright-sharp\playwright-sharp\src\PlaywrightSharp.TestServer\testCert.cer
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -118,7 +118,7 @@ jobs:
       - name: Create Certificate
         run: |
           New-SelfSignedCertificate -Subject "localhost" -FriendlyName "PlaywrightSharp" -CertStoreLocation "cert:\CurrentUser\My"
-          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath .\src\PlaywrightSharp.TestServer\testCert.cer
+          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath d:\a\playwright-sharp\playwright-sharp\src\PlaywrightSharp.TestServer\testCert.cer
       - name: Run tests
         env:
           PRODUCT: FIREFOX
