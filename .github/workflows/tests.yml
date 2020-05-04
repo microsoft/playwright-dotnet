@@ -61,7 +61,10 @@ jobs:
           dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
+          Install-Module WindowsCompatibility
+          Import-WinModule PKI
           New-SelfSignedCertificate -Subject "localhost" -FriendlyName "PlaywrightSharp" -CertStoreLocation "cert:\CurrentUser\My"
+          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath d:\a\playwright-sharp\playwright-sharp\src\PlaywrightSharp.TestServer\testCert.cer
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
