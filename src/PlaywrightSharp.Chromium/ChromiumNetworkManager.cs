@@ -28,6 +28,7 @@ namespace PlaywrightSharp.Chromium
         private bool _protocolRequestInterceptionEnabled = false;
         private bool _userRequestInterceptionEnabled = false;
         private Credentials _credentials = null;
+        private bool _offline;
 
         public ChromiumNetworkManager(ChromiumSession client, Page page)
         {
@@ -57,6 +58,18 @@ namespace PlaywrightSharp.Chromium
         {
             _credentials = credentials;
             return UpdateProtocolRequestInterceptionAsync();
+        }
+
+        internal Task SetOfflineModeAsync(bool value)
+        {
+            _offline = value;
+            return _client.SendAsync(new NetworkEmulateNetworkConditionsRequest
+            {
+                Offline = _offline,
+                Latency = 0,
+                DownloadThroughput = -1,
+                UploadThroughput = -1,
+            });
         }
 
         private async void Client_MessageReceived(object sender, IChromiumEvent e)

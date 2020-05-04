@@ -331,6 +331,8 @@ namespace PlaywrightSharp.Chromium
 
         public Task AuthenticateAsync(Credentials credentials) => _networkManager.AuthenticateAsync(credentials);
 
+        public Task SetOfflineModeAsync(bool enabled) => _networkManager.SetOfflineModeAsync(enabled);
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
