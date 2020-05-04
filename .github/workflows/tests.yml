@@ -22,6 +22,11 @@ jobs:
           sudo apt-get install dotnet-sdk-3.1
       - name: Fix Permissions
         run: sudo chmod a+rwx ./src/PlaywrightSharp.Tests/Screenshots
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
+          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -35,6 +40,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
+          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -52,6 +62,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          New-SelfSignedCertificate -Subject "localhost" -FriendlyName "PlaywrightSharp" -CertStoreLocation "cert:\CurrentUser\My"
+          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath .\src\PlaywrightSharp.TestServer\testCert.cer
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -67,6 +81,11 @@ jobs:
           sudo apt-get install libgbm-dev xvfb apt-transport-https
           sudo apt-get update
           sudo apt-get install dotnet-sdk-3.1
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
+          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: FIREFOX
@@ -80,6 +99,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
+          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: FIREFOX
@@ -97,6 +121,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          New-SelfSignedCertificate -Subject "localhost" -FriendlyName "PlaywrightSharp" -CertStoreLocation "cert:\CurrentUser\My"
+          Get-ChildItem -Path cert:\CurrentUSer\my | where { $_.friendlyname -eq "PlaywrightSharp" } | Export-Certificate -FilePath .\src\PlaywrightSharp.TestServer\testCert.cer
       - name: Run tests
         env:
           PRODUCT: FIREFOX
