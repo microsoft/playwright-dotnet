@@ -25,8 +25,6 @@ jobs:
       - name: Create Certificate
         run: |
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
-          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -44,8 +42,6 @@ jobs:
         run: |
           dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
-          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -85,8 +81,6 @@ jobs:
       - name: Create Certificate
         run: |
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
-          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: FIREFOX
@@ -104,8 +98,6 @@ jobs:
         run: |
           dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-          sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
-          sudo update-ca-certificates
       - name: Run tests
         env:
           PRODUCT: FIREFOX
