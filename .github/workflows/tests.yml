@@ -42,6 +42,7 @@ jobs:
           dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
+          dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
           sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
           sudo update-ca-certificates
@@ -101,6 +102,7 @@ jobs:
           dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
+          dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
           sudo openssl x509 -inform der -in src/PlaywrightSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
           sudo update-ca-certificates
