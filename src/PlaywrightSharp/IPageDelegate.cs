@@ -242,5 +242,12 @@ namespace PlaywrightSharp
         /// To disable authentication, pass <c>null</c>.
         /// </remarks>
         Task AuthenticateAsync(Credentials credentials);
+
+        /// <summary>
+        /// Set offline mode for the page.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineModeAsync(bool enabled);
     }
 }

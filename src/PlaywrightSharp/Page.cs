@@ -371,9 +371,15 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetOfflineModeAsync(bool)"/>
-        public Task SetOfflineModeAsync(bool value)
+        public Task SetOfflineModeAsync(bool enabled)
         {
-            throw new NotImplementedException();
+            if (PageState.OfflineMode == enabled)
+            {
+                return Task.CompletedTask;
+            }
+
+            PageState.OfflineMode = enabled;
+            return Delegate.SetOfflineModeAsync(enabled);
         }
 
         /// <inheritdoc cref="IPage.SetRequestInterceptionAsync(bool)"/>

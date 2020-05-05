@@ -240,6 +240,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
 
+        public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>
