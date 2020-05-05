@@ -227,7 +227,7 @@ namespace PlaywrightSharp
             }
             catch (PlaywrightSharpException ex)
             {
-                throw new NavigationException(ex.Message, url);
+                throw new NavigationException(ex.Message, url, ex);
             }
 
             return await watcher.NavigationResponseTask.ConfigureAwait(false);
