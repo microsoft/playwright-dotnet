@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Frame
 
             await Page.QuerySelectorEvaluateAsync("iframe", "frame => frame.remove()");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => waitForNavigationResult);
-            Assert.Equal("Navigating frame was detached", exception.Message);
+            Assert.Contains("Navigating frame was detached", exception.Message);
         }
     }
 }
