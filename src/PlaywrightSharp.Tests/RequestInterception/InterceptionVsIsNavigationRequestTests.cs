@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Interception vs isNavigationRequest</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class InterceptionVsIsNavigationRequestTests : PlaywrightSharpPageBaseTest
     {
-        internal InterceptionVsIsNavigationRequestTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public InterceptionVsIsNavigationRequestTests(ITestOutputHelper output) : base(output)
         {
         }
 
