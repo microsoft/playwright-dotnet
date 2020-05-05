@@ -483,7 +483,6 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             const string url = TestConstants.HttpsPrefix + "/redirect/1.html";
-            await Page.GoToAsync(url);
             var exception = await Assert.ThrowsAnyAsync<NavigationException>(async () => await Page.GoToAsync(url));
             Assert.Contains(url, exception.Message);
             Assert.Contains(url, exception.Url);

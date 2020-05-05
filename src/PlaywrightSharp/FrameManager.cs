@@ -77,7 +77,8 @@ namespace PlaywrightSharp
             bool hasLoad = frame.FiredLifecycleEvents.Contains(WaitUntilNavigation.Load);
             frame.FiredLifecycleEvents.Add(WaitUntilNavigation.DOMContentLoaded);
             frame.FiredLifecycleEvents.Add(WaitUntilNavigation.Load);
-            foreach (var watcher in LifecycleWatchers)
+
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnLifecycleEvent(frame);
             }
@@ -132,7 +133,7 @@ namespace PlaywrightSharp
             }
 
             frame.Url = url;
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnNavigatedWithinDocument(frame);
             }
@@ -257,7 +258,7 @@ namespace PlaywrightSharp
                         errorText += "; maybe frame was detached?";
                     }
 
-                    foreach (var watcher in LifecycleWatchers)
+                    foreach (var watcher in LifecycleWatchers.ToArray())
                     {
                         watcher.OnAbortedNewDocumentNavigation(frame, request.DocumentId, errorText);
                     }
@@ -312,7 +313,7 @@ namespace PlaywrightSharp
 
             frame.OnDetached();
             Frames.TryRemove(frame.Id, out _);
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnFrameDetached(frame);
             }
