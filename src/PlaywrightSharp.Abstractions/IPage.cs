@@ -868,8 +868,8 @@ namespace PlaywrightSharp
         /// Set offline mode for the page.
         /// </summary>
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="value">When <c>true</c> enables offline mode for the page.</param>
-        Task SetOfflineModeAsync(bool value);
+        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineModeAsync(bool enabled);
 
         /// <summary>
         /// Adds a function called <c>name</c> on the page's <c>window</c> object.

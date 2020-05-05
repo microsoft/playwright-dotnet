@@ -10,8 +10,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-describe>BrowserContext</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextTests : PlaywrightSharpBrowserBaseTest
+    [Collection(TestConstants.TestFixtureCollectionName)]
+    public class BrowserContextTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public BrowserContextTests(ITestOutputHelper output) : base(output)
@@ -24,10 +24,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldHaveDefaultContext()
         {
-            Assert.Single(Browser.BrowserContexts);
-            var defaultContext = Browser.BrowserContexts.First();
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            Assert.Single(browser.BrowserContexts);
+            var defaultContext = browser.BrowserContexts.First();
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(defaultContext.CloseAsync);
-            Assert.Same(defaultContext, Browser.DefaultContext);
+            Assert.Same(defaultContext, browser.DefaultContext);
             Assert.Contains("cannot be closed", exception.Message);
         }
 
@@ -37,12 +38,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldCreateNewIncognitoContext()
         {
-            Assert.Single(Browser.BrowserContexts);
-            var context = await Browser.NewContextAsync();
-            Assert.Equal(2, Browser.BrowserContexts.Count());
-            Assert.Contains(context, Browser.BrowserContexts);
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            Assert.Single(browser.BrowserContexts);
+            var context = await browser.NewContextAsync();
+            Assert.Equal(2, browser.BrowserContexts.Count());
+            Assert.Contains(context, browser.BrowserContexts);
             await context.CloseAsync();
-            Assert.Single(Browser.BrowserContexts);
+            Assert.Single(browser.BrowserContexts);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -51,7 +53,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task WindowOpenShouldUseParentTabContext()
         {
-            var context = await Browser.NewContextAsync();
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTargetCompletion = new TaskCompletionSource<IPage>();
@@ -73,8 +76,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
-            var context1 = await Browser.NewContextAsync();
-            var context2 = await Browser.NewContextAsync();
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var context1 = await browser.NewContextAsync();
+            var context2 = await browser.NewContextAsync();
             Assert.Empty(await context1.GetPagesAsync());
             Assert.Empty(await context2.GetPagesAsync());
 
@@ -110,7 +114,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             // Cleanup contexts.
             await Task.WhenAll(context1.CloseAsync(), context2.CloseAsync());
-            Assert.Single(Browser.BrowserContexts);
+            Assert.Single(browser.BrowserContexts);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -119,7 +123,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
-            var page = await NewPageAsync(new BrowserContextOptions
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions
             {
                 Viewport = new Viewport
                 {
@@ -140,7 +145,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
         {
-            var page = await NewPageAsync(new BrowserContextOptions
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions
             {
                 Viewport = null
             });
@@ -164,7 +170,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
         {
-            var page = await NewPageAsync(new BrowserContextOptions
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions
             {
                 Viewport = new Viewport
                 {
@@ -202,7 +209,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 Height = 789
             };
 
-            var context = await NewContextAsync(new BrowserContextOptions
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var context = await browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = viewport
             });
@@ -223,7 +231,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact]
         public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
-            var page = await NewPageAsync(new BrowserContextOptions { Viewport = null });
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions { Viewport = null });
             await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
