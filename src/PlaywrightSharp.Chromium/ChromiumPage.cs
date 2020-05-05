@@ -494,7 +494,7 @@ namespace PlaywrightSharp.Chromium
                 _logger.LogError(ex, message);
                 */
                 System.Diagnostics.Debug.WriteLine(ex);
-                Client.OnClosed(ex.Message);
+                Client.OnClosed(ex.ToString());
             }
         }
 
