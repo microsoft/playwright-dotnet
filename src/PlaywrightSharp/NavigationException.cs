@@ -29,18 +29,8 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="message">Message.</param>
         /// <param name="url">Url.</param>
-        public NavigationException(string message, string url) : base(message)
-        {
-            Url = url;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NavigationException"/> class.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="url">Url.</param>
         /// <param name="innerException">Inner exception.</param>
-        public NavigationException(string message, string url, Exception innerException) : base(message, innerException)
+        public NavigationException(string message, string url, Exception innerException = null) : base(TryAddUrl(message, url), innerException)
         {
             Url = url;
         }
@@ -50,8 +40,10 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="message">Message.</param>
         /// <param name="innerException">Inner exception.</param>
-        public NavigationException(string message, Exception innerException) : base(message, innerException)
-            => Url = (innerException as NavigationException)?.Url;
+        public NavigationException(string message, Exception innerException)
+            : this(message, (innerException as NavigationException)?.Url, innerException)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationException"/> class.
@@ -67,5 +59,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <value>The URL.</value>
         public string Url { get; }
+
+        private static string TryAddUrl(string message, string url) => message.Contains(url) ? message : $"{message} ({url})";
     }
 }
