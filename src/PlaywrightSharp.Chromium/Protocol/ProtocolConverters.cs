@@ -100,5 +100,15 @@ namespace PlaywrightSharp.Chromium.Protocol
                 Network.ResourceType.Other => ResourceType.Other,
                 _ => ResourceType.Other
             };
+
+        internal static DialogType ToDialogType(this PlaywrightSharp.Chromium.Protocol.Page.DialogType dialogType)
+            => dialogType switch
+            {
+                Page.DialogType.Alert => DialogType.Alert,
+                Page.DialogType.Confirm => DialogType.Confirm,
+                Page.DialogType.Prompt => DialogType.Prompt,
+                Page.DialogType.Beforeunload => DialogType.BeforeUnload,
+                _ => DialogType.Alert
+            };
     }
 }
