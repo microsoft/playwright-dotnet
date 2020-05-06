@@ -505,7 +505,7 @@ namespace PlaywrightSharp.Chromium
         }
 
         private void OnDialog(PageJavascriptDialogOpeningChromiumEvent e)
-         => Page?.OnDialog(
+            => Page?.OnDialog(
                 e.Type.ToDialogType(),
                 e.Message,
                 (accept, promptText) => Client.SendAsync(new PageHandleJavaScriptDialogRequest
