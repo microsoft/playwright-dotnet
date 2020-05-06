@@ -505,7 +505,7 @@ namespace PlaywrightSharp.Chromium
         }
 
         private void OnDialog(PageJavascriptDialogOpeningChromiumEvent e)
-            => Page?.OnDialog(
+            => Page?.OnDialog(new Dialog(
                 e.Type.ToDialogType(),
                 e.Message,
                 (accept, promptText) => Client.SendAsync(new PageHandleJavaScriptDialogRequest
@@ -513,7 +513,7 @@ namespace PlaywrightSharp.Chromium
                     Accept = accept,
                     PromptText = promptText,
                 }),
-                e.DefaultPrompt);
+                e.DefaultPrompt));
 
         private void OnFrameStoppedLoading(PageFrameStoppedLoadingChromiumEvent e)
             => Page.FrameManager.FrameStoppedLoading(e.FrameId);

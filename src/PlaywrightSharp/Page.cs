@@ -658,8 +658,7 @@ namespace PlaywrightSharp
 
         internal void OnPageError(PageErrorEventArgs args) => PageError?.Invoke(this, args);
 
-        internal void OnDialog(DialogType dialogType, string message, Func<bool, string, Task> handle, string defaultPrompt)
-            => Dialog?.Invoke(this, new DialogEventArgs(new Dialog(dialogType, message, handle, defaultPrompt)));
+        internal void OnDialog(Dialog dialog) => Dialog?.Invoke(this, new DialogEventArgs(dialog));
 
         internal async Task OnBindingCalledAsync(string payload, IFrameExecutionContext context)
         {
