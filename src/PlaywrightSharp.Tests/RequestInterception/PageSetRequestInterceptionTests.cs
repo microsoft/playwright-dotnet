@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Page.Request += async (sender, e) =>
             {
                 Assert.Contains("empty.html", e.Request.Url);
-                Assert.True(e.Request.Headers.ContainsKey("user-agent"));
+                Assert.True(e.Request.Headers.ContainsKey("User-Agent"));
                 Assert.Equal(HttpMethod.Get, e.Request.Method);
                 Assert.Null(e.Request.PostData);
                 Assert.True(e.Request.IsNavigationRequest);
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             };
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.Contains("/one-style.css", requests[1].Url);
-            Assert.Contains("/one-style.html", requests[1].Headers["referer"]);
+            Assert.Contains("/one-style.html", requests[1].Headers["Referer"]);
         }
 
 
@@ -208,11 +208,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["Referer"] = TestConstants.EmptyPage });
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) =>
             {
-                Assert.Equal(TestConstants.EmptyPage, e.Request.Headers["referer"]);
+                Assert.Equal(TestConstants.EmptyPage, e.Request.Headers["Referer"]);
                 await e.Request.ContinueAsync();
             };
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -283,7 +283,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
-            var requestTask = Server.WaitForRequest("grid.html", request => request.Headers["referer"]);
+            var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
             await Task.WhenAll(
                 requestTask,
                 Page.GoToAsync(TestConstants.ServerUrl + "/grid.html")
@@ -299,7 +299,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.AbortAsync();
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
             {
@@ -398,11 +398,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             {
                 if (spinner)
                 {
-                    await e.Request.AbortAsync();
+                    e.Request.AbortAsync();
                 }
                 else
                 {
-                    await e.Request.ContinueAsync();
+                    e.Request.ContinueAsync();
                 }
                 spinner = !spinner;
             };
@@ -604,7 +604,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             });
             var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => failed);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => failed);
             Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
             await request.ContinueAsync();
         }
@@ -630,7 +630,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             });
             var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => failed);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => failed);
             Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
             await request.ContinueAsync();
         }

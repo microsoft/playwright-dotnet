@@ -271,7 +271,6 @@ namespace PlaywrightSharp.Tests.Page
             }
 
             lastResponseFinished.Stop();
-            System.Diagnostics.Debug.WriteLine($"Enlapsed {lastResponseFinished.ElapsedMilliseconds}");
             Assert.True(lastResponseFinished.ElapsedMilliseconds > 450);
 
             if (!isSetContent)

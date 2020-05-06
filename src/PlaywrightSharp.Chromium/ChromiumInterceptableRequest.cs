@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Chromium
             RequestId = e.RequestId;
             InterceptionId = interceptionId;
             Request = new Request(
-                this,
+                requestInterceptionEnabled ? this : null,
                 frame,
                 redirectChain,
                 documentId,
@@ -45,7 +45,21 @@ namespace PlaywrightSharp.Chromium
 
         public Request Request { get; }
 
-        public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed) => throw new NotImplementedException();
+        public async Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed)
+        {
+            try
+            {
+                await _client.SendAsync(new FetchFailRequestRequest
+                {
+                    RequestId = InterceptionId!,
+                    ErrorReason = errorCode.ToErrorReasonProtocol(),
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
 
         public async Task ContinueAsync(Payload payload = null)
         {
