@@ -234,7 +234,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetFileChooserInterceptedAsync(bool enabled) => throw new NotImplementedException();
 
-        public Task SetCacheEnabledAsync(bool enabled) => throw new NotImplementedException();
+        public Task SetCacheEnabledAsync(bool enabled)
+            => _session.SendAsync(new PageSetCacheDisabledRequest { CacheDisabled = !enabled });
 
         public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
 
