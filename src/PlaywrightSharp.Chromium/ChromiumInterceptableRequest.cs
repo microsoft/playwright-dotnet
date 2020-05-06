@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Chromium
             {
                 await _client.SendAsync(new FetchFailRequestRequest
                 {
-                    RequestId = InterceptionId!,
+                    RequestId = InterceptionId,
                     ErrorReason = errorCode.ToErrorReasonProtocol(),
                 }).ConfigureAwait(false);
             }
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Chromium
             {
                 await _client.SendAsync(new FetchFulfillRequestRequest
                 {
-                    RequestId = InterceptionId!,
+                    RequestId = InterceptionId,
                     ResponseCode = (int)(response.Status ?? HttpStatusCode.OK),
                     ResponsePhrase = ReasonPhrases.GetReasonPhrase((int)(response.Status ?? HttpStatusCode.OK)),
                     ResponseHeaders = responseHeaders.Select(kv => new HeaderEntry { Name = kv.Key.ToLower(), Value = kv.Value }).ToArray(),

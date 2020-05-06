@@ -398,11 +398,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             {
                 if (spinner)
                 {
-                    e.Request.AbortAsync();
+                    _ = e.Request.AbortAsync();
                 }
                 else
                 {
-                    e.Request.ContinueAsync();
+                    _ = e.Request.ContinueAsync();
                 }
                 spinner = !spinner;
             };
