@@ -509,10 +509,10 @@ namespace PlaywrightSharp.Chromium
                 e.Type.ToDialogType(),
                 e.Message,
                 (accept, promptText) => Client.SendAsync(new PageHandleJavaScriptDialogRequest
-                    {
-                        Accept = accept,
-                        PromptText = promptText,
-                    }),
+                {
+                    Accept = accept,
+                    PromptText = promptText,
+                }),
                 e.DefaultPrompt);
 
         private void OnFrameStoppedLoading(PageFrameStoppedLoadingChromiumEvent e)
