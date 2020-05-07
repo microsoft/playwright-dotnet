@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             var context = await NewContextAsync();
             var newPage = await context.NewPageAsync();
-            await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Task.WhenAll(
                 newPage.CloseAsync(),
                 newPage.Mouse.ClickAsync(1, 2)
              ));
