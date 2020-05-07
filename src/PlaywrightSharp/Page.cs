@@ -658,6 +658,8 @@ namespace PlaywrightSharp
 
         internal void OnPageError(PageErrorEventArgs args) => PageError?.Invoke(this, args);
 
+        internal void OnDialog(Dialog dialog) => Dialog?.Invoke(this, new DialogEventArgs(dialog));
+
         internal async Task OnBindingCalledAsync(string payload, IFrameExecutionContext context)
         {
             var bindingPayload = JsonSerializer.Deserialize<BindingPayload>(payload, JsonHelper.DefaultJsonSerializerOptions);

@@ -11,6 +11,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.goto</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GoToTests : PlaywrightSharpPageBaseTest
     {

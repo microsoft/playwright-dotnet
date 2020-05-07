@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Accessibility;
+using PlaywrightSharp.Chromium.Protocol.Debugger;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
@@ -489,6 +490,9 @@ namespace PlaywrightSharp.Chromium
                     case PageFileChooserOpenedChromiumEvent pageFileChooserOpened:
                         await OnFileChooserOpenedAsync(pageFileChooserOpened).ConfigureAwait(false);
                         break;
+                    case PageJavascriptDialogOpeningChromiumEvent pageJavascriptDialogOpening:
+                        OnDialog(pageJavascriptDialogOpening);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -502,6 +506,17 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.ToString());
             }
         }
+
+        private void OnDialog(PageJavascriptDialogOpeningChromiumEvent e)
+            => Page?.OnDialog(new Dialog(
+                e.Type.ToDialogType(),
+                e.Message,
+                (accept, promptText) => Client.SendAsync(new PageHandleJavaScriptDialogRequest
+                {
+                    Accept = accept,
+                    PromptText = promptText,
+                }),
+                e.DefaultPrompt));
 
         private void OnFrameStoppedLoading(PageFrameStoppedLoadingChromiumEvent e)
             => Page.FrameManager.FrameStoppedLoading(e.FrameId);
