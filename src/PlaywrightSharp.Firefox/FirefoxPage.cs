@@ -232,7 +232,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files) => throw new NotImplementedException();
 
-        public Task SetFileChooserInterceptedAsync(bool enabled) => throw new NotImplementedException();
+        public Task SetFileChooserInterceptedAsync(bool enabled)
+            => _session.SendAsync(new PageSetInterceptFileChooserDialogRequest { Enabled = enabled });
 
         public Task SetCacheEnabledAsync(bool enabled)
             => _session.SendAsync(new PageSetCacheDisabledRequest { CacheDisabled = !enabled });
@@ -332,6 +333,7 @@ namespace PlaywrightSharp.Firefox
                     OnBindingCalled(pageBindingCalled);
                     break;
                 case PageFileChooserOpenedFirefoxEvent pageFileChooserOpened:
+                    OnFileChooserOpened(pageFileChooserOpened);
                     break;
                 case PageWorkerCreatedFirefoxEvent pageWorkerCreated:
                     OnWorkerCreated(pageWorkerCreated);
@@ -434,26 +436,33 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private void OnBindingCalled(PageBindingCalledFirefoxEvent pageBindingCalled)
+        private void OnBindingCalled(PageBindingCalledFirefoxEvent e)
         {
-            var context = ContextIdToContext[pageBindingCalled.ExecutionContextId];
-            _ = Page.OnBindingCalledAsync(pageBindingCalled.Payload.ToString(), context);
+            var context = ContextIdToContext[e.ExecutionContextId];
+            _ = Page.OnBindingCalledAsync(e.Payload.ToString(), context);
         }
 
-        private void OnConsole(RuntimeConsoleFirefoxEvent runtimeConsole)
+        private void OnConsole(RuntimeConsoleFirefoxEvent e)
         {
-            var context = ContextIdToContext[runtimeConsole.ExecutionContextId];
+            var context = ContextIdToContext[e.ExecutionContextId];
 
-            var type = runtimeConsole.GetConsoleType();
-            var location = runtimeConsole.ToConsoleMessageLocation();
+            var type = e.GetConsoleType();
+            var location = e.ToConsoleMessageLocation();
 
-            Page.AddConsoleMessage(type, Array.ConvertAll(runtimeConsole.Args, arg => context.CreateHandle(arg)), location);
+            Page.AddConsoleMessage(type, Array.ConvertAll(e.Args, arg => context.CreateHandle(arg)), location);
         }
 
-        private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent pageWorkerCreated)
+        private void OnFileChooserOpened(PageFileChooserOpenedFirefoxEvent e)
         {
-            string workerId = pageWorkerCreated.WorkerId;
-            var worker = new Worker(pageWorkerCreated.Url);
+            var context = ContextIdToContext[e.ExecutionContextId];
+            var handle = context.CreateHandle(e.Element) as ElementHandle;
+            _ = Page.OnFileChooserOpenedAsync(handle);
+        }
+
+        private void OnWorkerCreated(PageWorkerCreatedFirefoxEvent e)
+        {
+            string workerId = e.WorkerId;
+            var worker = new Worker(e.Url);
             FirefoxSession tempWorkerSession = null;
             var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request) =>
             {
@@ -461,7 +470,7 @@ namespace PlaywrightSharp.Firefox
                 {
                     await _session.SendAsync(new PageSendMessageToWorkerRequest
                     {
-                        FrameId = pageWorkerCreated.FrameId,
+                        FrameId = e.FrameId,
                         WorkerId = workerId,
                         Message = new ConnectionRequest
                         {
@@ -486,7 +495,7 @@ namespace PlaywrightSharp.Firefox
             });
             tempWorkerSession = workerSession;
 
-            _workers[workerId] = new WorkerSession(pageWorkerCreated.FrameId, workerSession);
+            _workers[workerId] = new WorkerSession(e.FrameId, workerSession);
             Page.AddWorker(workerId, worker);
             void HandleRuntimeExecutionContextCreated(object sender, IFirefoxEvent e)
             {
@@ -511,12 +520,12 @@ namespace PlaywrightSharp.Firefox
             };
         }
 
-        private void OnWorkerDestroyed(PageWorkerDestroyedFirefoxEvent pageWorkerDestroyed)
+        private void OnWorkerDestroyed(PageWorkerDestroyedFirefoxEvent e)
         {
-            string workerId = pageWorkerDestroyed.WorkerId;
+            string workerId = e.WorkerId;
             if (_workers.TryRemove(workerId, out var worker))
             {
-                worker.Session.OnClosed(pageWorkerDestroyed.InternalName);
+                worker.Session.OnClosed(e.InternalName);
                 Page.RemoveWorker(workerId);
             }
         }
