@@ -230,7 +230,8 @@ namespace PlaywrightSharp.Firefox
             return result.NavigationId != null;
         }
 
-        public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files) => throw new NotImplementedException();
+        public Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files)
+            => handle.EvaluateAsync(Dom.SetFileInputFunction, files);
 
         public Task SetFileChooserInterceptedAsync(bool enabled) => throw new NotImplementedException();
 
