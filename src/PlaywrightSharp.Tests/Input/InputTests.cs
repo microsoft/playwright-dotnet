@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Input
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>input</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class InputTests : PlaywrightSharpPageBaseTest
     {
