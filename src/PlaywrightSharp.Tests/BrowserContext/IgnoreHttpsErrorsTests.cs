@@ -10,6 +10,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class IgnoreHttpsErrorsTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
