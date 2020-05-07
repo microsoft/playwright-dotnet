@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using PlaywrightSharp.Accessibility;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 
@@ -38,6 +37,7 @@ namespace PlaywrightSharp
             PageState = new PageState { Viewport = browserContext.Options.Viewport };
 
             Screenshotter = new Screenshotter(this);
+            Accessibility = new Accessibility(Delegate.GetAccessibilityTreeAsync);
         }
 
         /// <inheritdoc cref="IPage.Console"/>
@@ -128,7 +128,7 @@ namespace PlaywrightSharp
         public Viewport Viewport => PageState.Viewport;
 
         /// <inheritdoc cref="IPage.Accessibility"/>
-        public IAccessibility Accessibility => null;
+        public IAccessibility Accessibility { get; }
 
         /// <inheritdoc cref="IPage.Mouse"/>
         public IMouse Mouse { get; }

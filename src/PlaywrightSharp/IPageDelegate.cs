@@ -29,12 +29,19 @@ namespace PlaywrightSharp
         ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; }
 
         /// <summary>
+        /// Used by <see cref="Accessibility"/>.
+        /// </summary>
+        /// <param name="needle">Root element.</param>
+        /// <returns>A <see cref="Task"/> that completes when the accessibility tree is resolved, yielding the tree.</returns>
+        Task<AccessibilityTree> GetAccessibilityTreeAsync(IElementHandle needle);
+
+        /// <summary>
         /// Navigates a frame to an url.
         /// </summary>
         /// <param name="frame">Frame to navigate.</param>
         /// <param name="url">URL to navigate to.</param>
         /// <param name="referrer">Referer.</param>
-        /// <returns>A <see cref="Task"/> that completes when the navigation is complete, yieldin its <see cref="GotoResult"/>.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the navigation is complete, yielding its <see cref="GotoResult"/>.</returns>
         Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer);
 
         /// <summary>

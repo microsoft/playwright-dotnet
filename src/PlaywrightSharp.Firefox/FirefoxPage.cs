@@ -99,6 +99,8 @@ namespace PlaywrightSharp.Firefox
 
         public bool IsElementHandle(IRemoteObject remoteObject) => ((RemoteObject)remoteObject).Subtype == RemoteObjectSubtype.Node;
 
+        public Task<AccessibilityTree> GetAccessibilityTreeAsync(IElementHandle needle) => throw new NotImplementedException();
+
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
             var response = await _session.SendAsync(new PageNavigateRequest

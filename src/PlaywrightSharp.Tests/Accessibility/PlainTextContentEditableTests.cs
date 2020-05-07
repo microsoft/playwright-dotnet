@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Accessibility;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -9,6 +8,8 @@ namespace PlaywrightSharp.Tests.Accessibility
 {
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>plaintext contenteditable</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PlainTextContentEditableTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -42,7 +43,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             await Page.SetContentAsync(
                 "<div contenteditable='plaintext-only'>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
             var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal("GenericContainer", snapshot.Children[0].Role);
+            Assert.Equal("generic", snapshot.Children[0].Role);
             Assert.Equal(string.Empty, snapshot.Children[0].Name);
         }
 
@@ -52,15 +53,10 @@ namespace PlaywrightSharp.Tests.Accessibility
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithTabindexAndWithoutRoleShouldNotHaveContent()
         {
-            await Page.SetContentAsync("div contenteditable=\"plaintext-only\" tabIndex=0>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
-            Assert.Equal(
-                new SerializedAXNode
-                {
-                    Role = "textbox",
-                    Name = "",
-                    Value = "Edit this image:"
-                },
-                (await Page.Accessibility.SnapshotAsync()).Children[0]);
+            await Page.SetContentAsync("<div contenteditable=\"plaintext-only\" tabIndex=0>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
+            var node = (await Page.Accessibility.SnapshotAsync()).Children[0];
+            Assert.Equal("generic", node.Role);
+            Assert.Empty(node.Name);
         }
 
         ///<playwright-file>accessibility.spec.js</playwright-file>
