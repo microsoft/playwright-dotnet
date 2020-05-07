@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame Management</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FrameManagementTests : PlaywrightSharpPageBaseTest
     {
