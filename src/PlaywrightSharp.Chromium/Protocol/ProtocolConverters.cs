@@ -110,5 +110,25 @@ namespace PlaywrightSharp.Chromium.Protocol
                 Page.DialogType.Beforeunload => DialogType.BeforeUnload,
                 _ => DialogType.Alert
             };
+
+        internal static Network.ErrorReason ToErrorReasonProtocol(this RequestAbortErrorCode code)
+            => code switch
+            {
+                RequestAbortErrorCode.Aborted => Network.ErrorReason.Aborted,
+                RequestAbortErrorCode.AccessDenied => Network.ErrorReason.AccessDenied,
+                RequestAbortErrorCode.AddressUnreachable => Network.ErrorReason.AddressUnreachable,
+                RequestAbortErrorCode.BlockedByClient => Network.ErrorReason.BlockedByClient,
+                RequestAbortErrorCode.BlockedByResponse => Network.ErrorReason.BlockedByResponse,
+                RequestAbortErrorCode.ConnectionAborted => Network.ErrorReason.ConnectionAborted,
+                RequestAbortErrorCode.ConnectionClosed => Network.ErrorReason.ConnectionClosed,
+                RequestAbortErrorCode.ConnectionFailed => Network.ErrorReason.ConnectionFailed,
+                RequestAbortErrorCode.ConnectionRefused => Network.ErrorReason.ConnectionRefused,
+                RequestAbortErrorCode.ConnectionReset => Network.ErrorReason.ConnectionReset,
+                RequestAbortErrorCode.InternetDisconnected => Network.ErrorReason.InternetDisconnected,
+                RequestAbortErrorCode.NameNotResolved => Network.ErrorReason.NameNotResolved,
+                RequestAbortErrorCode.TimedOut => Network.ErrorReason.TimedOut,
+                RequestAbortErrorCode.Failed => Network.ErrorReason.Failed,
+                _ => Network.ErrorReason.Failed,
+            };
     }
 }
