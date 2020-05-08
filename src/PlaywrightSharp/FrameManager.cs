@@ -80,7 +80,7 @@ namespace PlaywrightSharp
 
             foreach (var watcher in LifecycleWatchers.ToArray())
             {
-                watcher.OnLifecycleEvent(frame);
+                watcher?.OnLifecycleEvent(frame);
             }
 
             if (frame == MainFrame && !hasDOMContentLoaded)

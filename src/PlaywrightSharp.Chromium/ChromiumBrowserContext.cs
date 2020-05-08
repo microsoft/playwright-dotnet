@@ -14,9 +14,23 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowserContextDelegate"/>
     public class ChromiumBrowserContext : IBrowserContextDelegate
     {
-        private static readonly IReadOnlyDictionary<ContextPermission, PermissionType> WebPermissionToProtocol = new Dictionary<ContextPermission, PermissionType>
+        private static readonly IReadOnlyDictionary<ContextPermission, PermissionType> _webPermissionToProtocol = new Dictionary<ContextPermission, PermissionType>
         {
-            // TODO
+            [ContextPermission.Geolocation] = PermissionType.Geolocation,
+            [ContextPermission.Midi] = PermissionType.Midi,
+            [ContextPermission.Notifications] = PermissionType.Notifications,
+            [ContextPermission.Camera] = PermissionType.VideoCapture,
+            [ContextPermission.Microphone] = PermissionType.AudioCapture,
+            [ContextPermission.BackgroundSync] = PermissionType.BackgroundSync,
+            [ContextPermission.AmbientLightSensor] = PermissionType.Sensors,
+            [ContextPermission.Accelerometer] = PermissionType.Sensors,
+            [ContextPermission.Gyroscope] = PermissionType.Sensors,
+            [ContextPermission.Magnetometer] = PermissionType.Sensors,
+            [ContextPermission.AccessibilityEvents] = PermissionType.AccessibilityEvents,
+            [ContextPermission.ClipboardRead] = PermissionType.ClipboardReadWrite,
+            [ContextPermission.ClipboardWrite] = PermissionType.ClipboardSanitizedWrite,
+            [ContextPermission.PaymentHandler] = PermissionType.PaymentHandler,
+            [ContextPermission.MidiSysex] = PermissionType.MidiSysex,
         };
 
         private readonly ChromiumSession _client;
@@ -125,7 +139,7 @@ namespace PlaywrightSharp
             {
                 Origin = origin,
                 BrowserContextId = _contextId,
-                Permissions = Array.ConvertAll(permissions, permission => WebPermissionToProtocol[permission]),
+                Permissions = Array.ConvertAll(permissions, permission => _webPermissionToProtocol[permission]),
             });
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetCookiesAsync(SetNetworkCookieParam[])"/>

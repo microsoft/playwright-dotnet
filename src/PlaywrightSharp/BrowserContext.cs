@@ -17,6 +17,11 @@ namespace PlaywrightSharp
             _delegate.BrowserContext = this;
             Options = options?.Clone() ?? new BrowserContextOptions();
 
+            if (Options.Geolocation != null)
+            {
+                VerifyGeolocation(Options.Geolocation);
+            }
+
             Options.Viewport ??= new Viewport
             {
                 Width = 800,
@@ -67,8 +72,16 @@ namespace PlaywrightSharp
             => _delegate.SetCookiesAsync(RewriteCookies(cookies));
 
         /// <inheritdoc cref="IBrowserContext.SetGeolocationAsync(GeolocationOption)"/>
-        public Task SetGeolocationAsync(GeolocationOption geolocation)
-            => _delegate.SetGeolocationAsync(geolocation);
+        public Task SetGeolocationAsync(GeolocationOption geolocation = null)
+        {
+            if (geolocation != null)
+            {
+                VerifyGeolocation(geolocation);
+            }
+
+            Options.Geolocation = geolocation;
+            return _delegate.SetGeolocationAsync(geolocation);
+        }
 
         /// <inheritdoc cref="IBrowserContext.ClearPermissionsAsync"/>
         public Task ClearPermissionsAsync() => throw new System.NotImplementedException();
@@ -177,6 +190,24 @@ namespace PlaywrightSharp
 
                 return false;
             });
+        }
+
+        private void VerifyGeolocation(GeolocationOption geolocation)
+        {
+            if (geolocation.Longitude < -180 || geolocation.Longitude > 180)
+            {
+                throw new ArgumentException($"Invalid longitude '{geolocation.Longitude}': precondition -180 <= LONGITUDE <= 180 failed.");
+            }
+
+            if (geolocation.Latitude < -90 || geolocation.Latitude > 90)
+            {
+                throw new ArgumentException($"Invalid latitude '{geolocation.Latitude}': precondition -90 <= LONGITUDE <= 90 failed.");
+            }
+
+            if (geolocation.Accuracy < 0)
+            {
+                throw new ArgumentException($"Invalid accuracy '{geolocation.Accuracy}': precondition 0 <= LONGITUDE failed.");
+            }
         }
     }
 }

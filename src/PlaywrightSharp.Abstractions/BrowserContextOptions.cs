@@ -55,6 +55,7 @@ namespace PlaywrightSharp
         {
             var copy = (BrowserContextOptions)MemberwiseClone();
             copy.Viewport = Viewport?.Clone();
+            copy.Geolocation = Geolocation?.Clone();
             return copy;
         }
     }
