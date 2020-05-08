@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Accessibility;
 using PlaywrightSharp.Chromium.Protocol.Debugger;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
@@ -56,6 +57,8 @@ namespace PlaywrightSharp.Chromium
         internal Page Page { get; }
 
         internal ChromiumSession Client { get; }
+
+        public Task<AccessibilityTree> GetAccessibilityTreeAsync(IElementHandle needle) => GetAccessibilityTreeAsync(Client, needle);
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
@@ -746,5 +749,16 @@ namespace PlaywrightSharp.Chromium
 
         private PageErrorEventArgs ExceptionToError(ExceptionDetails exceptionDetails)
             => new PageErrorEventArgs(exceptionDetails.ToExceptionMessage());
+
+        private async Task<AccessibilityTree> GetAccessibilityTreeAsync(ChromiumSession client, IElementHandle needle)
+        {
+            var result = await client.SendAsync(new AccessibilityGetFullAXTreeRequest()).ConfigureAwait(false);
+            var tree = ChromiumAXNode.CreateTree(client, result.Nodes);
+            return new AccessibilityTree
+            {
+                Tree = tree,
+                Needle = needle != null ? await tree.FindElementAsync(needle as ElementHandle).ConfigureAwait(false) : null,
+            };
+        }
     }
 }

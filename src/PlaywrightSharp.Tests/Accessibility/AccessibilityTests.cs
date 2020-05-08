@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Accessibility;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -9,6 +8,8 @@ namespace PlaywrightSharp.Tests.Accessibility
 {
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>Accessibility</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class AccessibilityTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -288,7 +289,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = TestConstants.IsFirefox ? "document" : "WebArea",
                     Name = "",
-                    Children = new SerializedAXNode[]
+                    Children = new[]
                     {
                         new SerializedAXNode
                         {

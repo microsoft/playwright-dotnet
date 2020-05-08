@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Accessibility;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -8,6 +7,8 @@ namespace PlaywrightSharp.Tests.Accessibility
 {
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>root option</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class RootOptionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -103,7 +104,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         {
             await Page.SetContentAsync("<button>My Button</button>");
             var button = await Page.QuerySelectorAsync("button");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.remove();");
+            await Page.QuerySelectorEvaluateAsync("button", "button => button.remove()");
 
             Assert.Null(await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { Root = button }));
         }
@@ -134,7 +135,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("textbox", snapshot.Role);
             Assert.Contains("hello", snapshot.Value);
             Assert.Contains("world", snapshot.Value);
-            Assert.Empty(snapshot.Children);
+            Assert.NotEmpty(snapshot.Children);
         }
     }
 }
