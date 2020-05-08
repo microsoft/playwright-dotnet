@@ -10,6 +10,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>geolocation.spec.js</playwright-file>
     ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GeolocationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

@@ -41,5 +41,11 @@ namespace PlaywrightSharp
             => (Latitude.GetHashCode() ^ 2014) +
                 (Longitude.GetHashCode() ^ 2014) +
                 (Accuracy.GetHashCode() ^ 2014);
+
+        /// <summary>
+        /// Clones the <see cref="GeolocationOption"/>.
+        /// </summary>
+        /// <returns>A copy of the current <see cref="GeolocationOption"/>.</returns>
+        public GeolocationOption Clone() => (GeolocationOption)MemberwiseClone();
     }
 }

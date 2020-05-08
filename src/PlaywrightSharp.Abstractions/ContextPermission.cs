@@ -69,5 +69,25 @@ namespace PlaywrightSharp
         /// MIDI sysex.
         /// </summary>
         MidiSysex,
+
+        /// <summary>
+        /// Ambient Light Sensor.
+        /// </summary>
+        AmbientLightSensor,
+
+        /// <summary>
+        /// Accelerometer.
+        /// </summary>
+        Accelerometer,
+
+        /// <summary>
+        /// Gyroscope.
+        /// </summary>
+        Gyroscope,
+
+        /// <summary>
+        /// Magnetometer.
+        /// </summary>
+        Magnetometer,
     }
 }
