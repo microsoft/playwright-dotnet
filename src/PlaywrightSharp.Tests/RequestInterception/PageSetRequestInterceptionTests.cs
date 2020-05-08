@@ -394,7 +394,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
 
             bool spinner = false;
             // Cancel 2nd request.
-            Page.Request += async (sender, e) =>
+            Page.Request += (sender, e) =>
             {
                 if (spinner)
                 {
