@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 await e.Request.FulfillAsync(new ResponseData
                 {
                     Status = HttpStatusCode.Created,
-                    Headers =
+                    Headers = new Dictionary<string, string>
                     {
                         ["foo"] = "bar"
                     },
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 await e.Request.FulfillAsync(new ResponseData
                 {
                     Status = HttpStatusCode.OK,
-                    Headers =
+                    Headers = new Dictionary<string, string>
                     {
                         ["foo"] = "true"
                     },

@@ -212,6 +212,13 @@ namespace PlaywrightSharp
         Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files);
 
         /// <summary>
+        /// Enables file chooser interception.
+        /// </summary>
+        /// <param name="enabled">Whether to enable interception or not.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetFileChooserInterceptedAsync(bool enabled);
+
+        /// <summary>
         /// Toggles ignoring cache for each request based on the <paramref name="enabled"/> state.
         /// </summary>
         /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
@@ -242,12 +249,5 @@ namespace PlaywrightSharp
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
         Task SetOfflineModeAsync(bool enabled);
-
-        /// <summary>
-        /// Enables file chooser interception.
-        /// </summary>
-        /// <param name="enabled">Whether to enable interception or not.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SetFileChooserInterceptedAsync(bool enabled);
     }
 }

@@ -224,12 +224,13 @@ namespace PlaywrightSharp
                 task = await Task.WhenAny(tasks).ConfigureAwait(false);
 
                 await task.ConfigureAwait(false);
-                return await watcher.NavigationResponseTask.ConfigureAwait(false);
             }
             catch (PlaywrightSharpException ex)
             {
                 throw new NavigationException(ex.Message, url, ex);
             }
+
+            return await watcher.NavigationResponseTask.ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.GoToAsync(string, WaitUntilNavigation)"/>

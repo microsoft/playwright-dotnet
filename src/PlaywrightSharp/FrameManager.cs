@@ -248,8 +248,7 @@ namespace PlaywrightSharp
             var frame = request.Frame;
             if (!string.IsNullOrEmpty(request.DocumentId) && frame != null)
             {
-                bool isCurrentDocument = frame.LastDocumentId == request.DocumentId;
-                if (!isCurrentDocument)
+                if (frame.LastDocumentId != request.DocumentId)
                 {
                     string errorText = request.Failure;
                     if (canceled)

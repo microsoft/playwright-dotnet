@@ -383,15 +383,15 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetRequestInterceptionAsync(bool)"/>
-        public Task SetRequestInterceptionAsync(bool enabled)
+        public async Task SetRequestInterceptionAsync(bool enabled)
         {
             if (PageState.InterceptNetwork == enabled)
             {
-                return Task.CompletedTask;
+                return;
             }
 
             PageState.InterceptNetwork = enabled;
-            return Delegate.SetRequestInterceptionAsync(enabled);
+            await Delegate.SetRequestInterceptionAsync(enabled).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IPage.SetViewportAsync(PlaywrightSharp.Viewport)"/>
