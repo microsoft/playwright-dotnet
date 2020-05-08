@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -33,7 +32,7 @@ namespace PlaywrightSharp
 
             _delegate = requestDelegate;
             Frame = frame;
-            RedirectChain = redirectChain.ToList();
+            RedirectChain = redirectChain;
             FinalRequest = this;
             foreach (var request in redirectChain)
             {
