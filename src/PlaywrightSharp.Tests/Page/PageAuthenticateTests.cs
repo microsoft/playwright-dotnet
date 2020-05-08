@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.authenticate</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageAuthenticateTests : PlaywrightSharpPageBaseTest
     {
-        internal PageAuthenticateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageAuthenticateTests(ITestOutputHelper output) : base(output)
         {
         }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -72,12 +71,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                 {
                     if (_knownTypes.TryGetValue(propertyDef.Value.GetRawText(), out string typeName))
                     {
-                        builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyNameAttribute(\"{propertyDef.Name}\")] public {typeName} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                        GeneratePropertyDefinition(builder, typeName, propertyDef.Name);
                         continue;
                     }
 
                     string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, eventName, propertyDef.Name, propertyDef.Value, enumBuilder, false);
-                    builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyNameAttribute(\"{propertyDef.Name}\")] public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                    GeneratePropertyDefinition(builder, csharpType, propertyDef.Name);
                 }
 
                 builder.AppendLine("}");
@@ -99,7 +98,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     {
                         if (_knownTypes.TryGetValue(propertyDef.Value.GetRawText(), out string typeName))
                         {
-                            builder.AppendLine($"public {typeName} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                            GeneratePropertyDefinition(builder, typeName, propertyDef.Name);
                             continue;
                         }
 
@@ -110,7 +109,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                             builder.AppendLine("[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]");
                         }
 
-                        builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyNameAttribute(\"{propertyDef.Name}\")] public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                        GeneratePropertyDefinition(builder, csharpType, propertyDef.Name);
                     }
                 }
 
@@ -124,12 +123,12 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                     {
                         if (_knownTypes.TryGetValue(propertyDef.Value.GetRawText(), out string typeName))
                         {
-                            builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyNameAttribute(\"{propertyDef.Name}\")] public {typeName} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                            GeneratePropertyDefinition(builder, typeName, propertyDef.Name);
                             continue;
                         }
 
                         string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, methodDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder, true);
-                        builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyNameAttribute(\"{propertyDef.Name}\")] public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                        GeneratePropertyDefinition(builder, csharpType, propertyDef.Name);
                     }
                 }
 
@@ -157,7 +156,7 @@ namespace PlaywrightSharp.ProtocolTypesGenerator.Firefox
                 foreach (var propertyDef in typeDef.Value.EnumerateObject())
                 {
                     string csharpType = ConvertJsTypeToCsharp(builder, domain.Name, typeDef.Name, propertyDef.Name, propertyDef.Value, enumBuilder, false);
-                    builder.AppendLine($"[System.Text.Json.Serialization.JsonPropertyNameAttribute(\"{propertyDef.Name}\")] public {csharpType} {propertyDef.Name.ToPascalCase()} {{ get; set; }}");
+                    GeneratePropertyDefinition(builder, csharpType, propertyDef.Name);
                 }
 
                 builder.AppendLine("}");

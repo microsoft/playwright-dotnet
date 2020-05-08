@@ -64,102 +64,6 @@ internal enum AXValueNativeSourceType
 [System.Runtime.Serialization.EnumMember(Value = "title")]Title,
 [System.Runtime.Serialization.EnumMember(Value = "other")]Other}
 /// <summary>
-/// A single source for a computed AX property.
-/// </summary>
-internal partial class AXValueSource
-{
-/// <summary>
-/// What type of source this is.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AXValueSourceType Type { get; set; }
-/// <summary>
-/// The value of this property source.
-/// </summary>
-public AXValue Value { get; set; }
-/// <summary>
-/// The name of the relevant attribute, if any.
-/// </summary>
-public string Attribute { get; set; }
-/// <summary>
-/// The value of the relevant attribute, if any.
-/// </summary>
-public AXValue AttributeValue { get; set; }
-/// <summary>
-/// Whether this source is superseded by a higher priority source.
-/// </summary>
-public bool? Superseded { get; set; }
-/// <summary>
-/// The native markup source for this value, e.g. a &lt;label&gt; element.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AXValueNativeSourceType? NativeSource { get; set; }
-/// <summary>
-/// The value, such as a node or node list, of the native source.
-/// </summary>
-public AXValue NativeSourceValue { get; set; }
-/// <summary>
-/// Whether the value for this property is invalid.
-/// </summary>
-public bool? Invalid { get; set; }
-/// <summary>
-/// Reason for the value being invalid, if it is.
-/// </summary>
-public string InvalidReason { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class AXRelatedNode
-{
-/// <summary>
-/// The BackendNodeId of the related DOM node.
-/// </summary>
-public int? BackendDOMNodeId { get; set; }
-/// <summary>
-/// The IDRef value provided, if any.
-/// </summary>
-public string Idref { get; set; }
-/// <summary>
-/// The text alternative of this node in the current context.
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class AXProperty
-{
-/// <summary>
-/// The name of this property.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AXPropertyName Name { get; set; }
-/// <summary>
-/// The value of this property.
-/// </summary>
-public AXValue Value { get; set; }}
-/// <summary>
-/// A single computed AX property.
-/// </summary>
-internal partial class AXValue
-{
-/// <summary>
-/// The type of this value.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AXValueType Type { get; set; }
-/// <summary>
-/// The computed value of this property.
-/// </summary>
-public object Value { get; set; }
-/// <summary>
-/// One or more related nodes, if applicable.
-/// </summary>
-public AXRelatedNode[] RelatedNodes { get; set; }
-/// <summary>
-/// The sources which contributed to the computation of this property.
-/// </summary>
-public AXValueSource[] Sources { get; set; }}
-/// <summary>
 /// Values of AXProperty name:
 /// - from 'busy' to 'roledescription': states which apply to every AX node
 /// - from 'live' to 'root': attributes which apply to nodes in live regions
@@ -209,6 +113,831 @@ internal enum AXPropertyName
 [System.Runtime.Serialization.EnumMember(Value = "flowto")]Flowto,
 [System.Runtime.Serialization.EnumMember(Value = "labelledby")]Labelledby,
 [System.Runtime.Serialization.EnumMember(Value = "owns")]Owns}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Animation
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Audits
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
+{
+/// <summary>
+/// The Background Service that will be associated with the commands/events.
+/// Every Background Service operates independently, but they share the same
+/// API.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ServiceName
+{
+[System.Runtime.Serialization.EnumMember(Value = "backgroundFetch")]BackgroundFetch,
+[System.Runtime.Serialization.EnumMember(Value = "backgroundSync")]BackgroundSync,
+[System.Runtime.Serialization.EnumMember(Value = "pushMessaging")]PushMessaging,
+[System.Runtime.Serialization.EnumMember(Value = "notifications")]Notifications,
+[System.Runtime.Serialization.EnumMember(Value = "paymentHandler")]PaymentHandler,
+[System.Runtime.Serialization.EnumMember(Value = "periodicBackgroundSync")]PeriodicBackgroundSync}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Browser
+{
+/// <summary>
+/// The state of the browser window.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum WindowState
+{
+[System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
+[System.Runtime.Serialization.EnumMember(Value = "minimized")]Minimized,
+[System.Runtime.Serialization.EnumMember(Value = "maximized")]Maximized,
+[System.Runtime.Serialization.EnumMember(Value = "fullscreen")]Fullscreen}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PermissionType
+{
+[System.Runtime.Serialization.EnumMember(Value = "accessibilityEvents")]AccessibilityEvents,
+[System.Runtime.Serialization.EnumMember(Value = "audioCapture")]AudioCapture,
+[System.Runtime.Serialization.EnumMember(Value = "backgroundSync")]BackgroundSync,
+[System.Runtime.Serialization.EnumMember(Value = "backgroundFetch")]BackgroundFetch,
+[System.Runtime.Serialization.EnumMember(Value = "clipboardReadWrite")]ClipboardReadWrite,
+[System.Runtime.Serialization.EnumMember(Value = "clipboardSanitizedWrite")]ClipboardSanitizedWrite,
+[System.Runtime.Serialization.EnumMember(Value = "durableStorage")]DurableStorage,
+[System.Runtime.Serialization.EnumMember(Value = "flash")]Flash,
+[System.Runtime.Serialization.EnumMember(Value = "geolocation")]Geolocation,
+[System.Runtime.Serialization.EnumMember(Value = "midi")]Midi,
+[System.Runtime.Serialization.EnumMember(Value = "midiSysex")]MidiSysex,
+[System.Runtime.Serialization.EnumMember(Value = "nfc")]Nfc,
+[System.Runtime.Serialization.EnumMember(Value = "notifications")]Notifications,
+[System.Runtime.Serialization.EnumMember(Value = "paymentHandler")]PaymentHandler,
+[System.Runtime.Serialization.EnumMember(Value = "periodicBackgroundSync")]PeriodicBackgroundSync,
+[System.Runtime.Serialization.EnumMember(Value = "protectedMediaIdentifier")]ProtectedMediaIdentifier,
+[System.Runtime.Serialization.EnumMember(Value = "sensors")]Sensors,
+[System.Runtime.Serialization.EnumMember(Value = "videoCapture")]VideoCapture,
+[System.Runtime.Serialization.EnumMember(Value = "idleDetection")]IdleDetection,
+[System.Runtime.Serialization.EnumMember(Value = "wakeLockScreen")]WakeLockScreen,
+[System.Runtime.Serialization.EnumMember(Value = "wakeLockSystem")]WakeLockSystem}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PermissionSetting
+{
+[System.Runtime.Serialization.EnumMember(Value = "granted")]Granted,
+[System.Runtime.Serialization.EnumMember(Value = "denied")]Denied,
+[System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt}
+}
+namespace PlaywrightSharp.Chromium.Protocol.CSS
+{
+/// <summary>
+/// Stylesheet type: "injected" for stylesheets injected via extension, "user-agent" for user-agent
+/// stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via
+/// inspector" rules), "regular" for regular stylesheets.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StyleSheetOrigin
+{
+[System.Runtime.Serialization.EnumMember(Value = "injected")]Injected,
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
+[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
+}
+namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
+{
+/// <summary>
+/// type of HTTP response cached
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CachedResponseType
+{
+[System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
+[System.Runtime.Serialization.EnumMember(Value = "cors")]Cors,
+[System.Runtime.Serialization.EnumMember(Value = "default")]Default,
+[System.Runtime.Serialization.EnumMember(Value = "error")]Error,
+[System.Runtime.Serialization.EnumMember(Value = "opaqueResponse")]OpaqueResponse,
+[System.Runtime.Serialization.EnumMember(Value = "opaqueRedirect")]OpaqueRedirect}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Cast
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.DOM
+{
+/// <summary>
+/// Pseudo element type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PseudoType
+{
+[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
+[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
+[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
+[System.Runtime.Serialization.EnumMember(Value = "after")]After,
+[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
+[System.Runtime.Serialization.EnumMember(Value = "backdrop")]Backdrop,
+[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
+[System.Runtime.Serialization.EnumMember(Value = "first-line-inherited")]FirstLineInherited,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
+[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer,
+[System.Runtime.Serialization.EnumMember(Value = "input-list-button")]InputListButton}
+/// <summary>
+/// Shadow root type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ShadowRootType
+{
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "open")]Open,
+[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
+}
+namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
+{
+/// <summary>
+/// DOM breakpoint type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum DOMBreakpointType
+{
+[System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
+[System.Runtime.Serialization.EnumMember(Value = "attribute-modified")]AttributeModified,
+[System.Runtime.Serialization.EnumMember(Value = "node-removed")]NodeRemoved}
+}
+namespace PlaywrightSharp.Chromium.Protocol.DOMSnapshot
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Database
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Emulation
+{
+/// <summary>
+/// advance: If the scheduler runs out of immediate work, the virtual time base may fast forward to
+/// allow the next delayed task (if any) to run; pause: The virtual time base may not advance;
+/// pauseIfNetworkFetchesPending: The virtual time base may not advance if there are any pending
+/// resource fetches.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum VirtualTimePolicy
+{
+[System.Runtime.Serialization.EnumMember(Value = "advance")]Advance,
+[System.Runtime.Serialization.EnumMember(Value = "pause")]Pause,
+[System.Runtime.Serialization.EnumMember(Value = "pauseIfNetworkFetchesPending")]PauseIfNetworkFetchesPending}
+}
+namespace PlaywrightSharp.Chromium.Protocol.HeadlessExperimental
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.IO
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Input
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum GestureSourceType
+{
+[System.Runtime.Serialization.EnumMember(Value = "default")]Default,
+[System.Runtime.Serialization.EnumMember(Value = "touch")]Touch,
+[System.Runtime.Serialization.EnumMember(Value = "mouse")]Mouse}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum MouseButton
+{
+[System.Runtime.Serialization.EnumMember(Value = "none")]None,
+[System.Runtime.Serialization.EnumMember(Value = "left")]Left,
+[System.Runtime.Serialization.EnumMember(Value = "middle")]Middle,
+[System.Runtime.Serialization.EnumMember(Value = "right")]Right,
+[System.Runtime.Serialization.EnumMember(Value = "back")]Back,
+[System.Runtime.Serialization.EnumMember(Value = "forward")]Forward}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Inspector
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.LayerTree
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Log
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Memory
+{
+/// <summary>
+/// Memory pressure level.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PressureLevel
+{
+[System.Runtime.Serialization.EnumMember(Value = "moderate")]Moderate,
+[System.Runtime.Serialization.EnumMember(Value = "critical")]Critical}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Network
+{
+/// <summary>
+/// Resource type as it was perceived by the rendering engine.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ResourceType
+{
+[System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
+[System.Runtime.Serialization.EnumMember(Value = "Stylesheet")]Stylesheet,
+[System.Runtime.Serialization.EnumMember(Value = "Image")]Image,
+[System.Runtime.Serialization.EnumMember(Value = "Media")]Media,
+[System.Runtime.Serialization.EnumMember(Value = "Font")]Font,
+[System.Runtime.Serialization.EnumMember(Value = "Script")]Script,
+[System.Runtime.Serialization.EnumMember(Value = "TextTrack")]TextTrack,
+[System.Runtime.Serialization.EnumMember(Value = "XHR")]XHR,
+[System.Runtime.Serialization.EnumMember(Value = "Fetch")]Fetch,
+[System.Runtime.Serialization.EnumMember(Value = "EventSource")]EventSource,
+[System.Runtime.Serialization.EnumMember(Value = "WebSocket")]WebSocket,
+[System.Runtime.Serialization.EnumMember(Value = "Manifest")]Manifest,
+[System.Runtime.Serialization.EnumMember(Value = "SignedExchange")]SignedExchange,
+[System.Runtime.Serialization.EnumMember(Value = "Ping")]Ping,
+[System.Runtime.Serialization.EnumMember(Value = "CSPViolationReport")]CSPViolationReport,
+[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
+/// <summary>
+/// Network level fetch failure reason.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ErrorReason
+{
+[System.Runtime.Serialization.EnumMember(Value = "Failed")]Failed,
+[System.Runtime.Serialization.EnumMember(Value = "Aborted")]Aborted,
+[System.Runtime.Serialization.EnumMember(Value = "TimedOut")]TimedOut,
+[System.Runtime.Serialization.EnumMember(Value = "AccessDenied")]AccessDenied,
+[System.Runtime.Serialization.EnumMember(Value = "ConnectionClosed")]ConnectionClosed,
+[System.Runtime.Serialization.EnumMember(Value = "ConnectionReset")]ConnectionReset,
+[System.Runtime.Serialization.EnumMember(Value = "ConnectionRefused")]ConnectionRefused,
+[System.Runtime.Serialization.EnumMember(Value = "ConnectionAborted")]ConnectionAborted,
+[System.Runtime.Serialization.EnumMember(Value = "ConnectionFailed")]ConnectionFailed,
+[System.Runtime.Serialization.EnumMember(Value = "NameNotResolved")]NameNotResolved,
+[System.Runtime.Serialization.EnumMember(Value = "InternetDisconnected")]InternetDisconnected,
+[System.Runtime.Serialization.EnumMember(Value = "AddressUnreachable")]AddressUnreachable,
+[System.Runtime.Serialization.EnumMember(Value = "BlockedByClient")]BlockedByClient,
+[System.Runtime.Serialization.EnumMember(Value = "BlockedByResponse")]BlockedByResponse}
+/// <summary>
+/// The underlying connection technology that the browser is supposedly using.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ConnectionType
+{
+[System.Runtime.Serialization.EnumMember(Value = "none")]None,
+[System.Runtime.Serialization.EnumMember(Value = "cellular2g")]Cellular2G,
+[System.Runtime.Serialization.EnumMember(Value = "cellular3g")]Cellular3G,
+[System.Runtime.Serialization.EnumMember(Value = "cellular4g")]Cellular4G,
+[System.Runtime.Serialization.EnumMember(Value = "bluetooth")]Bluetooth,
+[System.Runtime.Serialization.EnumMember(Value = "ethernet")]Ethernet,
+[System.Runtime.Serialization.EnumMember(Value = "wifi")]Wifi,
+[System.Runtime.Serialization.EnumMember(Value = "wimax")]Wimax,
+[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
+/// <summary>
+/// Represents the cookie's 'SameSite' status:
+/// https://tools.ietf.org/html/draft-west-first-party-cookies
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookieSameSite
+{
+[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict,
+[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
+[System.Runtime.Serialization.EnumMember(Value = "None")]None}
+/// <summary>
+/// Represents the cookie's 'Priority' status:
+/// https://tools.ietf.org/html/draft-west-cookie-priority-00
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookiePriority
+{
+[System.Runtime.Serialization.EnumMember(Value = "Low")]Low,
+[System.Runtime.Serialization.EnumMember(Value = "Medium")]Medium,
+[System.Runtime.Serialization.EnumMember(Value = "High")]High}
+/// <summary>
+/// Loading priority of a resource request.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ResourcePriority
+{
+[System.Runtime.Serialization.EnumMember(Value = "VeryLow")]VeryLow,
+[System.Runtime.Serialization.EnumMember(Value = "Low")]Low,
+[System.Runtime.Serialization.EnumMember(Value = "Medium")]Medium,
+[System.Runtime.Serialization.EnumMember(Value = "High")]High,
+[System.Runtime.Serialization.EnumMember(Value = "VeryHigh")]VeryHigh}
+/// <summary>
+/// Whether the request complied with Certificate Transparency policy.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CertificateTransparencyCompliance
+{
+[System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown,
+[System.Runtime.Serialization.EnumMember(Value = "not-compliant")]NotCompliant,
+[System.Runtime.Serialization.EnumMember(Value = "compliant")]Compliant}
+/// <summary>
+/// The reason why request was blocked.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum BlockedReason
+{
+[System.Runtime.Serialization.EnumMember(Value = "other")]Other,
+[System.Runtime.Serialization.EnumMember(Value = "csp")]Csp,
+[System.Runtime.Serialization.EnumMember(Value = "mixed-content")]MixedContent,
+[System.Runtime.Serialization.EnumMember(Value = "origin")]Origin,
+[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
+[System.Runtime.Serialization.EnumMember(Value = "subresource-filter")]SubresourceFilter,
+[System.Runtime.Serialization.EnumMember(Value = "content-type")]ContentType,
+[System.Runtime.Serialization.EnumMember(Value = "collapsed-by-client")]CollapsedByClient}
+/// <summary>
+/// Types of reasons why a cookie may not be stored from a response.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SetCookieBlockedReason
+{
+[System.Runtime.Serialization.EnumMember(Value = "SecureOnly")]SecureOnly,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteStrict")]SameSiteStrict,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteLax")]SameSiteLax,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteUnspecifiedTreatedAsLax")]SameSiteUnspecifiedTreatedAsLax,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteNoneInsecure")]SameSiteNoneInsecure,
+[System.Runtime.Serialization.EnumMember(Value = "UserPreferences")]UserPreferences,
+[System.Runtime.Serialization.EnumMember(Value = "SyntaxError")]SyntaxError,
+[System.Runtime.Serialization.EnumMember(Value = "SchemeNotSupported")]SchemeNotSupported,
+[System.Runtime.Serialization.EnumMember(Value = "OverwriteSecure")]OverwriteSecure,
+[System.Runtime.Serialization.EnumMember(Value = "InvalidDomain")]InvalidDomain,
+[System.Runtime.Serialization.EnumMember(Value = "InvalidPrefix")]InvalidPrefix,
+[System.Runtime.Serialization.EnumMember(Value = "UnknownError")]UnknownError}
+/// <summary>
+/// Types of reasons why a cookie may not be sent with a request.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookieBlockedReason
+{
+[System.Runtime.Serialization.EnumMember(Value = "SecureOnly")]SecureOnly,
+[System.Runtime.Serialization.EnumMember(Value = "NotOnPath")]NotOnPath,
+[System.Runtime.Serialization.EnumMember(Value = "DomainMismatch")]DomainMismatch,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteStrict")]SameSiteStrict,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteLax")]SameSiteLax,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteUnspecifiedTreatedAsLax")]SameSiteUnspecifiedTreatedAsLax,
+[System.Runtime.Serialization.EnumMember(Value = "SameSiteNoneInsecure")]SameSiteNoneInsecure,
+[System.Runtime.Serialization.EnumMember(Value = "UserPreferences")]UserPreferences,
+[System.Runtime.Serialization.EnumMember(Value = "UnknownError")]UnknownError}
+/// <summary>
+/// Stages of the interception to begin intercepting. Request will intercept before the request is
+/// sent. Response will intercept after the response is received.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum InterceptionStage
+{
+[System.Runtime.Serialization.EnumMember(Value = "Request")]Request,
+[System.Runtime.Serialization.EnumMember(Value = "HeadersReceived")]HeadersReceived}
+/// <summary>
+/// Field type for a signed exchange related error.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SignedExchangeErrorField
+{
+[System.Runtime.Serialization.EnumMember(Value = "signatureSig")]SignatureSig,
+[System.Runtime.Serialization.EnumMember(Value = "signatureIntegrity")]SignatureIntegrity,
+[System.Runtime.Serialization.EnumMember(Value = "signatureCertUrl")]SignatureCertUrl,
+[System.Runtime.Serialization.EnumMember(Value = "signatureCertSha256")]SignatureCertSha256,
+[System.Runtime.Serialization.EnumMember(Value = "signatureValidityUrl")]SignatureValidityUrl,
+[System.Runtime.Serialization.EnumMember(Value = "signatureTimestamps")]SignatureTimestamps}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Overlay
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum InspectMode
+{
+[System.Runtime.Serialization.EnumMember(Value = "searchForNode")]SearchForNode,
+[System.Runtime.Serialization.EnumMember(Value = "searchForUAShadowDOM")]SearchForUAShadowDOM,
+[System.Runtime.Serialization.EnumMember(Value = "captureAreaScreenshot")]CaptureAreaScreenshot,
+[System.Runtime.Serialization.EnumMember(Value = "showDistances")]ShowDistances,
+[System.Runtime.Serialization.EnumMember(Value = "none")]None}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Page
+{
+/// <summary>
+/// Transition type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum TransitionType
+{
+[System.Runtime.Serialization.EnumMember(Value = "link")]Link,
+[System.Runtime.Serialization.EnumMember(Value = "typed")]Typed,
+[System.Runtime.Serialization.EnumMember(Value = "address_bar")]AddressBar,
+[System.Runtime.Serialization.EnumMember(Value = "auto_bookmark")]AutoBookmark,
+[System.Runtime.Serialization.EnumMember(Value = "auto_subframe")]AutoSubframe,
+[System.Runtime.Serialization.EnumMember(Value = "manual_subframe")]ManualSubframe,
+[System.Runtime.Serialization.EnumMember(Value = "generated")]Generated,
+[System.Runtime.Serialization.EnumMember(Value = "auto_toplevel")]AutoToplevel,
+[System.Runtime.Serialization.EnumMember(Value = "form_submit")]FormSubmit,
+[System.Runtime.Serialization.EnumMember(Value = "reload")]Reload,
+[System.Runtime.Serialization.EnumMember(Value = "keyword")]Keyword,
+[System.Runtime.Serialization.EnumMember(Value = "keyword_generated")]KeywordGenerated,
+[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
+/// <summary>
+/// Javascript dialog type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum DialogType
+{
+[System.Runtime.Serialization.EnumMember(Value = "alert")]Alert,
+[System.Runtime.Serialization.EnumMember(Value = "confirm")]Confirm,
+[System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt,
+[System.Runtime.Serialization.EnumMember(Value = "beforeunload")]Beforeunload}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ClientNavigationReason
+{
+[System.Runtime.Serialization.EnumMember(Value = "formSubmissionGet")]FormSubmissionGet,
+[System.Runtime.Serialization.EnumMember(Value = "formSubmissionPost")]FormSubmissionPost,
+[System.Runtime.Serialization.EnumMember(Value = "httpHeaderRefresh")]HttpHeaderRefresh,
+[System.Runtime.Serialization.EnumMember(Value = "scriptInitiated")]ScriptInitiated,
+[System.Runtime.Serialization.EnumMember(Value = "metaTagRefresh")]MetaTagRefresh,
+[System.Runtime.Serialization.EnumMember(Value = "pageBlockInterstitial")]PageBlockInterstitial,
+[System.Runtime.Serialization.EnumMember(Value = "reload")]Reload}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Performance
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Security
+{
+/// <summary>
+/// A description of mixed content (HTTP resources on HTTPS pages), as defined by
+/// https://www.w3.org/TR/mixed-content/#categories
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum MixedContentType
+{
+[System.Runtime.Serialization.EnumMember(Value = "blockable")]Blockable,
+[System.Runtime.Serialization.EnumMember(Value = "optionally-blockable")]OptionallyBlockable,
+[System.Runtime.Serialization.EnumMember(Value = "none")]None}
+/// <summary>
+/// The security level of a page or resource.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SecurityState
+{
+[System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown,
+[System.Runtime.Serialization.EnumMember(Value = "neutral")]Neutral,
+[System.Runtime.Serialization.EnumMember(Value = "insecure")]Insecure,
+[System.Runtime.Serialization.EnumMember(Value = "secure")]Secure,
+[System.Runtime.Serialization.EnumMember(Value = "info")]Info,
+[System.Runtime.Serialization.EnumMember(Value = "insecure-broken")]InsecureBroken}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SafetyTipStatus
+{
+[System.Runtime.Serialization.EnumMember(Value = "badReputation")]BadReputation,
+[System.Runtime.Serialization.EnumMember(Value = "lookalike")]Lookalike}
+/// <summary>
+/// The action to take when a certificate error occurs. continue will continue processing the
+/// request and cancel will cancel the request.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CertificateErrorAction
+{
+[System.Runtime.Serialization.EnumMember(Value = "continue")]Continue,
+[System.Runtime.Serialization.EnumMember(Value = "cancel")]Cancel}
+}
+namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ServiceWorkerVersionRunningStatus
+{
+[System.Runtime.Serialization.EnumMember(Value = "stopped")]Stopped,
+[System.Runtime.Serialization.EnumMember(Value = "starting")]Starting,
+[System.Runtime.Serialization.EnumMember(Value = "running")]Running,
+[System.Runtime.Serialization.EnumMember(Value = "stopping")]Stopping}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ServiceWorkerVersionStatus
+{
+[System.Runtime.Serialization.EnumMember(Value = "new")]New,
+[System.Runtime.Serialization.EnumMember(Value = "installing")]Installing,
+[System.Runtime.Serialization.EnumMember(Value = "installed")]Installed,
+[System.Runtime.Serialization.EnumMember(Value = "activating")]Activating,
+[System.Runtime.Serialization.EnumMember(Value = "activated")]Activated,
+[System.Runtime.Serialization.EnumMember(Value = "redundant")]Redundant}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Storage
+{
+/// <summary>
+/// Enum of possible storage types.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StorageType
+{
+[System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
+[System.Runtime.Serialization.EnumMember(Value = "cookies")]Cookies,
+[System.Runtime.Serialization.EnumMember(Value = "file_systems")]FileSystems,
+[System.Runtime.Serialization.EnumMember(Value = "indexeddb")]Indexeddb,
+[System.Runtime.Serialization.EnumMember(Value = "local_storage")]LocalStorage,
+[System.Runtime.Serialization.EnumMember(Value = "shader_cache")]ShaderCache,
+[System.Runtime.Serialization.EnumMember(Value = "websql")]Websql,
+[System.Runtime.Serialization.EnumMember(Value = "service_workers")]ServiceWorkers,
+[System.Runtime.Serialization.EnumMember(Value = "cache_storage")]CacheStorage,
+[System.Runtime.Serialization.EnumMember(Value = "all")]All,
+[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
+}
+namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
+{
+/// <summary>
+/// YUV subsampling type of the pixels of a given image.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SubsamplingFormat
+{
+[System.Runtime.Serialization.EnumMember(Value = "yuv420")]Yuv420,
+[System.Runtime.Serialization.EnumMember(Value = "yuv422")]Yuv422,
+[System.Runtime.Serialization.EnumMember(Value = "yuv444")]Yuv444}
+/// <summary>
+/// Image format of a given image.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ImageType
+{
+[System.Runtime.Serialization.EnumMember(Value = "jpeg")]Jpeg,
+[System.Runtime.Serialization.EnumMember(Value = "webp")]Webp,
+[System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Target
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Tethering
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Tracing
+{
+/// <summary>
+/// Data format of a trace. Can be either the legacy JSON format or the
+/// protocol buffer format. Note that the JSON format will be deprecated soon.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StreamFormat
+{
+[System.Runtime.Serialization.EnumMember(Value = "json")]Json,
+[System.Runtime.Serialization.EnumMember(Value = "proto")]Proto}
+/// <summary>
+/// Compression type to use for traces returned via streams.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StreamCompression
+{
+[System.Runtime.Serialization.EnumMember(Value = "none")]None,
+[System.Runtime.Serialization.EnumMember(Value = "gzip")]Gzip}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Fetch
+{
+/// <summary>
+/// Stages of the request to handle. Request will intercept before the request is
+/// sent. Response will intercept after the response is received (but before response
+/// body is received.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum RequestStage
+{
+[System.Runtime.Serialization.EnumMember(Value = "Request")]Request,
+[System.Runtime.Serialization.EnumMember(Value = "Response")]Response}
+}
+namespace PlaywrightSharp.Chromium.Protocol.WebAudio
+{
+/// <summary>
+/// Enum of BaseAudioContext types
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ContextType
+{
+[System.Runtime.Serialization.EnumMember(Value = "realtime")]Realtime,
+[System.Runtime.Serialization.EnumMember(Value = "offline")]Offline}
+/// <summary>
+/// Enum of AudioContextState from the spec
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ContextState
+{
+[System.Runtime.Serialization.EnumMember(Value = "suspended")]Suspended,
+[System.Runtime.Serialization.EnumMember(Value = "running")]Running,
+[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
+/// <summary>
+/// Enum of AudioNode::ChannelCountMode from the spec
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ChannelCountMode
+{
+[System.Runtime.Serialization.EnumMember(Value = "clamped-max")]ClampedMax,
+[System.Runtime.Serialization.EnumMember(Value = "explicit")]Explicit,
+[System.Runtime.Serialization.EnumMember(Value = "max")]Max}
+/// <summary>
+/// Enum of AudioNode::ChannelInterpretation from the spec
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ChannelInterpretation
+{
+[System.Runtime.Serialization.EnumMember(Value = "discrete")]Discrete,
+[System.Runtime.Serialization.EnumMember(Value = "speakers")]Speakers}
+/// <summary>
+/// Enum of AudioParam::AutomationRate from the spec
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum AutomationRate
+{
+[System.Runtime.Serialization.EnumMember(Value = "a-rate")]ARate,
+[System.Runtime.Serialization.EnumMember(Value = "k-rate")]KRate}
+}
+namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum AuthenticatorProtocol
+{
+[System.Runtime.Serialization.EnumMember(Value = "u2f")]U2F,
+[System.Runtime.Serialization.EnumMember(Value = "ctap2")]Ctap2}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum AuthenticatorTransport
+{
+[System.Runtime.Serialization.EnumMember(Value = "usb")]Usb,
+[System.Runtime.Serialization.EnumMember(Value = "nfc")]Nfc,
+[System.Runtime.Serialization.EnumMember(Value = "ble")]Ble,
+[System.Runtime.Serialization.EnumMember(Value = "cable")]Cable,
+[System.Runtime.Serialization.EnumMember(Value = "internal")]Internal}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Media
+{
+/// <summary>
+/// Break out events into different types
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PlayerEventType
+{
+[System.Runtime.Serialization.EnumMember(Value = "playbackEvent")]PlaybackEvent,
+[System.Runtime.Serialization.EnumMember(Value = "systemEvent")]SystemEvent,
+[System.Runtime.Serialization.EnumMember(Value = "messageEvent")]MessageEvent}
+}
+namespace PlaywrightSharp.Chromium.Protocol.Console
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Debugger
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Profiler
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Runtime
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Schema
+{
+}
+namespace PlaywrightSharp.Chromium.Protocol.Accessibility
+{
+/// <summary>
+/// A single source for a computed AX property.
+/// </summary>
+internal partial class AXValueSource
+{
+/// <summary>
+/// What type of source this is.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public AXValueSourceType Type { get; set; }
+
+/// <summary>
+/// The value of this property source.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public AXValue Value { get; set; }
+
+/// <summary>
+/// The name of the relevant attribute, if any.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("attribute")] public string Attribute { get; set; }
+
+/// <summary>
+/// The value of the relevant attribute, if any.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("attributeValue")] public AXValue AttributeValue { get; set; }
+
+/// <summary>
+/// Whether this source is superseded by a higher priority source.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("superseded")] public bool? Superseded { get; set; }
+
+/// <summary>
+/// The native markup source for this value, e.g. a &lt;label&gt; element.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("nativeSource")] public AXValueNativeSourceType? NativeSource { get; set; }
+
+/// <summary>
+/// The value, such as a node or node list, of the native source.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nativeSourceValue")] public AXValue NativeSourceValue { get; set; }
+
+/// <summary>
+/// Whether the value for this property is invalid.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("invalid")] public bool? Invalid { get; set; }
+
+/// <summary>
+/// Reason for the value being invalid, if it is.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("invalidReason")] public string InvalidReason { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+internal partial class AXRelatedNode
+{
+/// <summary>
+/// The BackendNodeId of the related DOM node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("backendDOMNodeId")] public int? BackendDOMNodeId { get; set; }
+
+/// <summary>
+/// The IDRef value provided, if any.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("idref")] public string Idref { get; set; }
+
+/// <summary>
+/// The text alternative of this node in the current context.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+internal partial class AXProperty
+{
+/// <summary>
+/// The name of this property.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("name")] public AXPropertyName Name { get; set; }
+
+/// <summary>
+/// The value of this property.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public AXValue Value { get; set; }
+}
+/// <summary>
+/// A single computed AX property.
+/// </summary>
+internal partial class AXValue
+{
+/// <summary>
+/// The type of this value.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public AXValueType Type { get; set; }
+
+/// <summary>
+/// The computed value of this property.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
+
+/// <summary>
+/// One or more related nodes, if applicable.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("relatedNodes")] public AXRelatedNode[] RelatedNodes { get; set; }
+
+/// <summary>
+/// The sources which contributed to the computation of this property.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("sources")] public AXValueSource[] Sources { get; set; }
+}
 /// <summary>
 /// A node in the accessibility tree.
 /// </summary>
@@ -217,43 +946,53 @@ internal partial class AXNode
 /// <summary>
 /// Unique identifier for this node.
 /// </summary>
-public string NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
+
 /// <summary>
 /// Whether this node is ignored for accessibility
 /// </summary>
-public bool? Ignored { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ignored")] public bool? Ignored { get; set; }
+
 /// <summary>
 /// Collection of reasons why this node is hidden.
 /// </summary>
-public AXProperty[] IgnoredReasons { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ignoredReasons")] public AXProperty[] IgnoredReasons { get; set; }
+
 /// <summary>
 /// This `Node`'s role, whether explicit or implicit.
 /// </summary>
-public AXValue Role { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("role")] public AXValue Role { get; set; }
+
 /// <summary>
 /// The accessible name for this `Node`.
 /// </summary>
-public AXValue Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public AXValue Name { get; set; }
+
 /// <summary>
 /// The accessible description for this `Node`.
 /// </summary>
-public AXValue Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public AXValue Description { get; set; }
+
 /// <summary>
 /// The value for this `Node`.
 /// </summary>
-public AXValue Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public AXValue Value { get; set; }
+
 /// <summary>
 /// All other properties
 /// </summary>
-public AXProperty[] Properties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public AXProperty[] Properties { get; set; }
+
 /// <summary>
 /// IDs for each of this node's child nodes.
 /// </summary>
-public string[] ChildIds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("childIds")] public string[] ChildIds { get; set; }
+
 /// <summary>
 /// The backend ID for the associated DOM node, if any.
 /// </summary>
-public int? BackendDOMNodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("backendDOMNodeId")] public int? BackendDOMNodeId { get; set; }
+}
 /// <summary>
 /// Disables the accessibility domain.
 /// </summary>
@@ -302,19 +1041,23 @@ public string Command { get; } = "Accessibility.getPartialAXTree";
 /// <summary>
 /// Identifier of the node to get the partial accessibility tree for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node to get the partial accessibility tree for.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper to get the partial accessibility tree for.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Whether to fetch this nodes ancestors, siblings and children. Defaults to true.
 /// </summary>
-public bool? FetchRelatives { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fetchRelatives")] public bool? FetchRelatives { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AccessibilityGetPartialAXTreeRequest"/>
 /// </summary>
@@ -324,7 +1067,8 @@ internal partial class AccessibilityGetPartialAXTreeResponse: IChromiumResponse
 /// The `Accessibility.AXNode` for this DOM node, if it exists, plus its ancestors, siblings and
 /// children, if requested.
 /// </summary>
-public AXNode[] Nodes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public AXNode[] Nodes { get; set; }
+}
 /// <summary>
 /// Fetches the entire accessibility tree
 /// </summary>
@@ -344,7 +1088,8 @@ internal partial class AccessibilityGetFullAXTreeResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public AXNode[] Nodes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public AXNode[] Nodes { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Animation
 {
@@ -356,44 +1101,54 @@ internal partial class Animation
 /// <summary>
 /// `Animation`'s id.
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// `Animation`'s name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// `Animation`'s internal paused state.
 /// </summary>
-public bool? PausedState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pausedState")] public bool? PausedState { get; set; }
+
 /// <summary>
 /// `Animation`'s play state.
 /// </summary>
-public string PlayState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("playState")] public string PlayState { get; set; }
+
 /// <summary>
 /// `Animation`'s playback rate.
 /// </summary>
-public double? PlaybackRate { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("playbackRate")] public double? PlaybackRate { get; set; }
+
 /// <summary>
 /// `Animation`'s start time.
 /// </summary>
-public double? StartTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startTime")] public double? StartTime { get; set; }
+
 /// <summary>
 /// `Animation`'s current time.
 /// </summary>
-public double? CurrentTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("currentTime")] public double? CurrentTime { get; set; }
+
 /// <summary>
 /// Animation type of `Animation`.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// `Animation`'s source animation node.
 /// </summary>
-public AnimationEffect Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public AnimationEffect Source { get; set; }
+
 /// <summary>
 /// A unique ID for `Animation` representing the sources that triggered this CSS
 /// animation/transition.
 /// </summary>
-public string CssId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cssId")] public string CssId { get; set; }
+}
 /// <summary>
 /// AnimationEffect instance
 /// </summary>
@@ -402,43 +1157,53 @@ internal partial class AnimationEffect
 /// <summary>
 /// `AnimationEffect`'s delay.
 /// </summary>
-public double? Delay { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("delay")] public double? Delay { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s end delay.
 /// </summary>
-public double? EndDelay { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endDelay")] public double? EndDelay { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s iteration start.
 /// </summary>
-public double? IterationStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("iterationStart")] public double? IterationStart { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s iterations.
 /// </summary>
-public double? Iterations { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("iterations")] public double? Iterations { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s iteration duration.
 /// </summary>
-public double? Duration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("duration")] public double? Duration { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s playback direction.
 /// </summary>
-public string Direction { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("direction")] public string Direction { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s fill mode.
 /// </summary>
-public string Fill { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fill")] public string Fill { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s target node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s keyframes.
 /// </summary>
-public KeyframesRule KeyframesRule { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyframesRule")] public KeyframesRule KeyframesRule { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s timing function.
 /// </summary>
-public string Easing { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("easing")] public string Easing { get; set; }
+}
 /// <summary>
 /// Keyframes Rule
 /// </summary>
@@ -447,11 +1212,13 @@ internal partial class KeyframesRule
 /// <summary>
 /// CSS keyframed animation's name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// List of animation keyframes.
 /// </summary>
-public KeyframeStyle[] Keyframes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyframes")] public KeyframeStyle[] Keyframes { get; set; }
+}
 /// <summary>
 /// Keyframe Style
 /// </summary>
@@ -460,11 +1227,13 @@ internal partial class KeyframeStyle
 /// <summary>
 /// Keyframe's time offset.
 /// </summary>
-public string Offset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offset")] public string Offset { get; set; }
+
 /// <summary>
 /// `AnimationEffect`'s timing function.
 /// </summary>
-public string Easing { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("easing")] public string Easing { get; set; }
+}
 /// <summary>
 /// Disables animation domain notifications.
 /// </summary>
@@ -512,7 +1281,8 @@ public string Command { get; } = "Animation.getCurrentTime";
 /// <summary>
 /// Id of animation.
 /// </summary>
-public string Id { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationGetCurrentTimeRequest"/>
 /// </summary>
@@ -521,7 +1291,8 @@ internal partial class AnimationGetCurrentTimeResponse: IChromiumResponse
 /// <summary>
 /// Current time of the page.
 /// </summary>
-public double? CurrentTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("currentTime")] public double? CurrentTime { get; set; }
+}
 /// <summary>
 /// Gets the playback rate of the document timeline.
 /// </summary>
@@ -541,7 +1312,8 @@ internal partial class AnimationGetPlaybackRateResponse: IChromiumResponse
 /// <summary>
 /// Playback rate for animations on page.
 /// </summary>
-public double? PlaybackRate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("playbackRate")] public double? PlaybackRate { get; set; }
+}
 /// <summary>
 /// Releases a set of animations to no longer be manipulated.
 /// </summary>
@@ -555,7 +1327,8 @@ public string Command { get; } = "Animation.releaseAnimations";
 /// <summary>
 /// List of animation ids to seek.
 /// </summary>
-public string[] Animations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("animations")] public string[] Animations { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationReleaseAnimationsRequest"/>
 /// </summary>
@@ -575,7 +1348,8 @@ public string Command { get; } = "Animation.resolveAnimation";
 /// <summary>
 /// Animation id.
 /// </summary>
-public string AnimationId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("animationId")] public string AnimationId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationResolveAnimationRequest"/>
 /// </summary>
@@ -584,7 +1358,8 @@ internal partial class AnimationResolveAnimationResponse: IChromiumResponse
 /// <summary>
 /// Corresponding remote object.
 /// </summary>
-public Runtime.RemoteObject RemoteObject { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("remoteObject")] public Runtime.RemoteObject RemoteObject { get; set; }
+}
 /// <summary>
 /// Seek a set of animations to a particular time within each animation.
 /// </summary>
@@ -598,11 +1373,13 @@ public string Command { get; } = "Animation.seekAnimations";
 /// <summary>
 /// List of animation ids to seek.
 /// </summary>
-public string[] Animations { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animations")] public string[] Animations { get; set; }
+
 /// <summary>
 /// Set the current time of each animation.
 /// </summary>
-public double? CurrentTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("currentTime")] public double? CurrentTime { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationSeekAnimationsRequest"/>
 /// </summary>
@@ -622,11 +1399,13 @@ public string Command { get; } = "Animation.setPaused";
 /// <summary>
 /// Animations to set the pause state of.
 /// </summary>
-public string[] Animations { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animations")] public string[] Animations { get; set; }
+
 /// <summary>
 /// Paused state to set to.
 /// </summary>
-public bool? Paused { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("paused")] public bool? Paused { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationSetPausedRequest"/>
 /// </summary>
@@ -646,7 +1425,8 @@ public string Command { get; } = "Animation.setPlaybackRate";
 /// <summary>
 /// Playback rate for animations on page
 /// </summary>
-public double? PlaybackRate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("playbackRate")] public double? PlaybackRate { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationSetPlaybackRateRequest"/>
 /// </summary>
@@ -666,15 +1446,18 @@ public string Command { get; } = "Animation.setTiming";
 /// <summary>
 /// Animation id.
 /// </summary>
-public string AnimationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animationId")] public string AnimationId { get; set; }
+
 /// <summary>
 /// Duration of the animation.
 /// </summary>
-public double? Duration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("duration")] public double? Duration { get; set; }
+
 /// <summary>
 /// Delay of the animation.
 /// </summary>
-public double? Delay { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("delay")] public double? Delay { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AnimationSetTimingRequest"/>
 /// </summary>
@@ -693,7 +1476,8 @@ public string InternalName { get; } = "Animation.animationCanceled";
 /// <summary>
 /// Id of the animation that was cancelled.
 /// </summary>
-public string Id { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+}
 /// <summary>
 /// Event for each animation that has been created.
 /// </summary>
@@ -706,7 +1490,8 @@ public string InternalName { get; } = "Animation.animationCreated";
 /// <summary>
 /// Id of the animation that was created.
 /// </summary>
-public string Id { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+}
 /// <summary>
 /// Event for animation that has been started.
 /// </summary>
@@ -719,7 +1504,8 @@ public string InternalName { get; } = "Animation.animationStarted";
 /// <summary>
 /// Animation that was started.
 /// </summary>
-public Animation Animation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("animation")] public Animation Animation { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.ApplicationCache
 {
@@ -731,15 +1517,18 @@ internal partial class ApplicationCacheResource
 /// <summary>
 /// Resource url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Resource size.
 /// </summary>
-public int? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+
 /// <summary>
 /// Resource type.
 /// </summary>
-public string Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+}
 /// <summary>
 /// Detailed application cache information.
 /// </summary>
@@ -748,23 +1537,28 @@ internal partial class ApplicationCache
 /// <summary>
 /// Manifest URL.
 /// </summary>
-public string ManifestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+
 /// <summary>
 /// Application cache size.
 /// </summary>
-public double? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+
 /// <summary>
 /// Application cache creation time.
 /// </summary>
-public double? CreationTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("creationTime")] public double? CreationTime { get; set; }
+
 /// <summary>
 /// Application cache update time.
 /// </summary>
-public double? UpdateTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("updateTime")] public double? UpdateTime { get; set; }
+
 /// <summary>
 /// Application cache resources.
 /// </summary>
-public ApplicationCacheResource[] Resources { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("resources")] public ApplicationCacheResource[] Resources { get; set; }
+}
 /// <summary>
 /// Frame identifier - manifest URL pair.
 /// </summary>
@@ -773,15 +1567,18 @@ internal partial class FrameWithManifest
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Manifest URL.
 /// </summary>
-public string ManifestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+
 /// <summary>
 /// Application cache status.
 /// </summary>
-public int? Status { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+}
 /// <summary>
 /// Enables application cache domain notifications.
 /// </summary>
@@ -812,7 +1609,8 @@ public string Command { get; } = "ApplicationCache.getApplicationCacheForFrame";
 /// <summary>
 /// Identifier of the frame containing document whose application cache is retrieved.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetApplicationCacheForFrameRequest"/>
 /// </summary>
@@ -821,7 +1619,8 @@ internal partial class ApplicationCacheGetApplicationCacheForFrameResponse: IChr
 /// <summary>
 /// Relevant application cache data for the document in given frame.
 /// </summary>
-public ApplicationCache ApplicationCache { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("applicationCache")] public ApplicationCache ApplicationCache { get; set; }
+}
 /// <summary>
 /// Returns array of frame identifiers with manifest urls for each frame containing a document
 /// associated with some application cache.
@@ -843,7 +1642,8 @@ internal partial class ApplicationCacheGetFramesWithManifestsResponse: IChromium
 /// Array of frame identifiers with manifest urls for each frame containing a document
 /// associated with some application cache.
 /// </summary>
-public FrameWithManifest[] FrameIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameIds")] public FrameWithManifest[] FrameIds { get; set; }
+}
 /// <summary>
 /// Returns manifest URL for document in the given frame.
 /// </summary>
@@ -857,7 +1657,8 @@ public string Command { get; } = "ApplicationCache.getManifestForFrame";
 /// <summary>
 /// Identifier of the frame containing document whose manifest is retrieved.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetManifestForFrameRequest"/>
 /// </summary>
@@ -866,7 +1667,8 @@ internal partial class ApplicationCacheGetManifestForFrameResponse: IChromiumRes
 /// <summary>
 /// Manifest URL for document in the given frame.
 /// </summary>
-public string ManifestURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -879,15 +1681,18 @@ public string InternalName { get; } = "ApplicationCache.applicationCacheStatusUp
 /// <summary>
 /// Identifier of the frame containing document whose application cache updated status.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Manifest URL.
 /// </summary>
-public string ManifestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+
 /// <summary>
 /// Updated application cache status.
 /// </summary>
-public int? Status { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -900,7 +1705,8 @@ public string InternalName { get; } = "ApplicationCache.networkStateUpdated";
 /// <summary>
 /// 
 /// </summary>
-public bool? IsNowOnline { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isNowOnline")] public bool? IsNowOnline { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Audits
 {
@@ -918,19 +1724,23 @@ public string Command { get; } = "Audits.getEncodedResponse";
 /// <summary>
 /// Identifier of the network request to get content for.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// The encoding to use.
 /// </summary>
-public string Encoding { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("encoding")] public string Encoding { get; set; }
+
 /// <summary>
 /// The quality of the encoding (0-1). (defaults to 1)
 /// </summary>
-public double? Quality { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("quality")] public double? Quality { get; set; }
+
 /// <summary>
 /// Whether to only return the size information (defaults to false).
 /// </summary>
-public bool? SizeOnly { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sizeOnly")] public bool? SizeOnly { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AuditsGetEncodedResponseRequest"/>
 /// </summary>
@@ -939,32 +1749,21 @@ internal partial class AuditsGetEncodedResponseResponse: IChromiumResponse
 /// <summary>
 /// The encoded body as a base64 string. Omitted if sizeOnly is true.
 /// </summary>
-public byte[] Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("body")] public byte[] Body { get; set; }
+
 /// <summary>
 /// Size before re-encoding.
 /// </summary>
-public int? OriginalSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("originalSize")] public int? OriginalSize { get; set; }
+
 /// <summary>
 /// Size after re-encoding.
 /// </summary>
-public int? EncodedSize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("encodedSize")] public int? EncodedSize { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
 {
-/// <summary>
-/// The Background Service that will be associated with the commands/events.
-/// Every Background Service operates independently, but they share the same
-/// API.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ServiceName
-{
-[System.Runtime.Serialization.EnumMember(Value = "backgroundFetch")]BackgroundFetch,
-[System.Runtime.Serialization.EnumMember(Value = "backgroundSync")]BackgroundSync,
-[System.Runtime.Serialization.EnumMember(Value = "pushMessaging")]PushMessaging,
-[System.Runtime.Serialization.EnumMember(Value = "notifications")]Notifications,
-[System.Runtime.Serialization.EnumMember(Value = "paymentHandler")]PaymentHandler,
-[System.Runtime.Serialization.EnumMember(Value = "periodicBackgroundSync")]PeriodicBackgroundSync}
 /// <summary>
 /// A key-value pair for additional event information to pass along.
 /// </summary>
@@ -973,11 +1772,13 @@ internal partial class EventMetadata
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -986,32 +1787,39 @@ internal partial class BackgroundServiceEvent
 /// <summary>
 /// Timestamp of the event (in seconds).
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// The origin this event belongs to.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// The Service Worker ID that initiated the event.
 /// </summary>
-public string ServiceWorkerRegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("serviceWorkerRegistrationId")] public string ServiceWorkerRegistrationId { get; set; }
+
 /// <summary>
 /// The Background Service this event belongs to.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceName Service { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
+
 /// <summary>
 /// A description of the event.
 /// </summary>
-public string EventName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+
 /// <summary>
 /// An identifier that groups related events together.
 /// </summary>
-public string InstanceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("instanceId")] public string InstanceId { get; set; }
+
 /// <summary>
 /// A list of event-specific information.
 /// </summary>
-public EventMetadata[] EventMetadata { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("eventMetadata")] public EventMetadata[] EventMetadata { get; set; }
+}
 /// <summary>
 /// Enables event updates for the service.
 /// </summary>
@@ -1026,7 +1834,8 @@ public string Command { get; } = "BackgroundService.startObserving";
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceName Service { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BackgroundServiceStartObservingRequest"/>
 /// </summary>
@@ -1047,7 +1856,8 @@ public string Command { get; } = "BackgroundService.stopObserving";
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceName Service { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BackgroundServiceStopObservingRequest"/>
 /// </summary>
@@ -1067,12 +1877,14 @@ public string Command { get; } = "BackgroundService.setRecording";
 /// <summary>
 /// 
 /// </summary>
-public bool? ShouldRecord { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shouldRecord")] public bool? ShouldRecord { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceName Service { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BackgroundServiceSetRecordingRequest"/>
 /// </summary>
@@ -1093,7 +1905,8 @@ public string Command { get; } = "BackgroundService.clearEvents";
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceName Service { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BackgroundServiceClearEventsRequest"/>
 /// </summary>
@@ -1112,12 +1925,14 @@ public string InternalName { get; } = "BackgroundService.recordingStateChanged";
 /// <summary>
 /// 
 /// </summary>
-public bool? IsRecording { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isRecording")] public bool? IsRecording { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceName Service { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
+}
 /// <summary>
 /// Called with all existing backgroundServiceEvents when enabled, and all new
 /// events afterwards if enabled and recording.
@@ -1131,20 +1946,11 @@ public string InternalName { get; } = "BackgroundService.backgroundServiceEventR
 /// <summary>
 /// 
 /// </summary>
-public BackgroundServiceEvent BackgroundServiceEvent { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("backgroundServiceEvent")] public BackgroundServiceEvent BackgroundServiceEvent { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Browser
 {
-/// <summary>
-/// The state of the browser window.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum WindowState
-{
-[System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
-[System.Runtime.Serialization.EnumMember(Value = "minimized")]Minimized,
-[System.Runtime.Serialization.EnumMember(Value = "maximized")]Maximized,
-[System.Runtime.Serialization.EnumMember(Value = "fullscreen")]Fullscreen}
 /// <summary>
 /// Browser window bounds information
 /// </summary>
@@ -1153,60 +1959,29 @@ internal partial class Bounds
 /// <summary>
 /// The offset from the left edge of the screen to the window in pixels.
 /// </summary>
-public int? Left { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("left")] public int? Left { get; set; }
+
 /// <summary>
 /// The offset from the top edge of the screen to the window in pixels.
 /// </summary>
-public int? Top { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("top")] public int? Top { get; set; }
+
 /// <summary>
 /// The window width in pixels.
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// The window height in pixels.
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// The window state. Default to normal.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public WindowState? WindowState { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PermissionType
-{
-[System.Runtime.Serialization.EnumMember(Value = "accessibilityEvents")]AccessibilityEvents,
-[System.Runtime.Serialization.EnumMember(Value = "audioCapture")]AudioCapture,
-[System.Runtime.Serialization.EnumMember(Value = "backgroundSync")]BackgroundSync,
-[System.Runtime.Serialization.EnumMember(Value = "backgroundFetch")]BackgroundFetch,
-[System.Runtime.Serialization.EnumMember(Value = "clipboardReadWrite")]ClipboardReadWrite,
-[System.Runtime.Serialization.EnumMember(Value = "clipboardSanitizedWrite")]ClipboardSanitizedWrite,
-[System.Runtime.Serialization.EnumMember(Value = "durableStorage")]DurableStorage,
-[System.Runtime.Serialization.EnumMember(Value = "flash")]Flash,
-[System.Runtime.Serialization.EnumMember(Value = "geolocation")]Geolocation,
-[System.Runtime.Serialization.EnumMember(Value = "midi")]Midi,
-[System.Runtime.Serialization.EnumMember(Value = "midiSysex")]MidiSysex,
-[System.Runtime.Serialization.EnumMember(Value = "nfc")]Nfc,
-[System.Runtime.Serialization.EnumMember(Value = "notifications")]Notifications,
-[System.Runtime.Serialization.EnumMember(Value = "paymentHandler")]PaymentHandler,
-[System.Runtime.Serialization.EnumMember(Value = "periodicBackgroundSync")]PeriodicBackgroundSync,
-[System.Runtime.Serialization.EnumMember(Value = "protectedMediaIdentifier")]ProtectedMediaIdentifier,
-[System.Runtime.Serialization.EnumMember(Value = "sensors")]Sensors,
-[System.Runtime.Serialization.EnumMember(Value = "videoCapture")]VideoCapture,
-[System.Runtime.Serialization.EnumMember(Value = "idleDetection")]IdleDetection,
-[System.Runtime.Serialization.EnumMember(Value = "wakeLockScreen")]WakeLockScreen,
-[System.Runtime.Serialization.EnumMember(Value = "wakeLockSystem")]WakeLockSystem}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PermissionSetting
-{
-[System.Runtime.Serialization.EnumMember(Value = "granted")]Granted,
-[System.Runtime.Serialization.EnumMember(Value = "denied")]Denied,
-[System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt}
+[System.Text.Json.Serialization.JsonPropertyName("windowState")] public WindowState? WindowState { get; set; }
+}
 /// <summary>
 /// Definition of PermissionDescriptor defined in the Permissions API:
 /// https://w3c.github.io/permissions/#dictdef-permissiondescriptor.
@@ -1217,24 +1992,29 @@ internal partial class PermissionDescriptor
 /// Name of permission.
 /// See https://cs.chromium.org/chromium/src/third_party/blink/renderer/modules/permissions/permission_descriptor.idl for valid permission names.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// For "midi" permission, may also specify sysex control.
 /// </summary>
-public bool? Sysex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sysex")] public bool? Sysex { get; set; }
+
 /// <summary>
 /// For "push" permission, may specify userVisibleOnly.
 /// Note that userVisibleOnly = true is the only currently supported type.
 /// </summary>
-public bool? UserVisibleOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userVisibleOnly")] public bool? UserVisibleOnly { get; set; }
+
 /// <summary>
 /// For "wake-lock" permission, must specify type as either "screen" or "system".
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// For "clipboard" permission, may specify allowWithoutSanitization.
 /// </summary>
-public bool? AllowWithoutSanitization { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("allowWithoutSanitization")] public bool? AllowWithoutSanitization { get; set; }
+}
 /// <summary>
 /// Chrome histogram bucket.
 /// </summary>
@@ -1243,15 +2023,18 @@ internal partial class Bucket
 /// <summary>
 /// Minimum value (inclusive).
 /// </summary>
-public int? Low { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("low")] public int? Low { get; set; }
+
 /// <summary>
 /// Maximum value (exclusive).
 /// </summary>
-public int? High { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("high")] public int? High { get; set; }
+
 /// <summary>
 /// Number of samples.
 /// </summary>
-public int? Count { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("count")] public int? Count { get; set; }
+}
 /// <summary>
 /// Chrome histogram.
 /// </summary>
@@ -1260,19 +2043,23 @@ internal partial class Histogram
 /// <summary>
 /// Name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Sum of sample values.
 /// </summary>
-public int? Sum { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sum")] public int? Sum { get; set; }
+
 /// <summary>
 /// Total number of samples.
 /// </summary>
-public int? Count { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("count")] public int? Count { get; set; }
+
 /// <summary>
 /// Buckets.
 /// </summary>
-public Bucket[] Buckets { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("buckets")] public Bucket[] Buckets { get; set; }
+}
 /// <summary>
 /// Set permission settings for given origin.
 /// </summary>
@@ -1286,20 +2073,24 @@ public string Command { get; } = "Browser.setPermission";
 /// <summary>
 /// Origin the permission applies to.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// Descriptor of permission to override.
 /// </summary>
-public PermissionDescriptor Permission { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("permission")] public PermissionDescriptor Permission { get; set; }
+
 /// <summary>
 /// Setting of the permission.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PermissionSetting Setting { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("setting")] public PermissionSetting Setting { get; set; }
+
 /// <summary>
 /// Context to override. When omitted, default browser context is used.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserSetPermissionRequest"/>
 /// </summary>
@@ -1319,15 +2110,18 @@ public string Command { get; } = "Browser.grantPermissions";
 /// <summary>
 /// 
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public PermissionType[] Permissions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("permissions")] public PermissionType[] Permissions { get; set; }
+
 /// <summary>
 /// BrowserContext to override permissions. When omitted, default browser context is used.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGrantPermissionsRequest"/>
 /// </summary>
@@ -1347,7 +2141,8 @@ public string Command { get; } = "Browser.resetPermissions";
 /// <summary>
 /// BrowserContext to reset permissions. When omitted, default browser context is used.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserResetPermissionsRequest"/>
 /// </summary>
@@ -1424,23 +2219,28 @@ internal partial class BrowserGetVersionResponse: IChromiumResponse
 /// <summary>
 /// Protocol version.
 /// </summary>
-public string ProtocolVersion { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocolVersion")] public string ProtocolVersion { get; set; }
+
 /// <summary>
 /// Product name.
 /// </summary>
-public string Product { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("product")] public string Product { get; set; }
+
 /// <summary>
 /// Product revision.
 /// </summary>
-public string Revision { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("revision")] public string Revision { get; set; }
+
 /// <summary>
 /// User-Agent.
 /// </summary>
-public string UserAgent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userAgent")] public string UserAgent { get; set; }
+
 /// <summary>
 /// V8 version.
 /// </summary>
-public string JsVersion { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("jsVersion")] public string JsVersion { get; set; }
+}
 /// <summary>
 /// Returns the command line switches for the browser process if, and only if
 /// --enable-automation is on the commandline.
@@ -1461,7 +2261,8 @@ internal partial class BrowserGetBrowserCommandLineResponse: IChromiumResponse
 /// <summary>
 /// Commandline parameters
 /// </summary>
-public string[] Arguments { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("arguments")] public string[] Arguments { get; set; }
+}
 /// <summary>
 /// Get Chrome histograms.
 /// </summary>
@@ -1477,11 +2278,13 @@ public string Command { get; } = "Browser.getHistograms";
 /// substring in their name are extracted. An empty or absent query returns
 /// all histograms.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// If true, retrieve delta since last call.
 /// </summary>
-public bool? Delta { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("delta")] public bool? Delta { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGetHistogramsRequest"/>
 /// </summary>
@@ -1490,7 +2293,8 @@ internal partial class BrowserGetHistogramsResponse: IChromiumResponse
 /// <summary>
 /// Histograms.
 /// </summary>
-public Histogram[] Histograms { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("histograms")] public Histogram[] Histograms { get; set; }
+}
 /// <summary>
 /// Get a Chrome histogram by name.
 /// </summary>
@@ -1504,11 +2308,13 @@ public string Command { get; } = "Browser.getHistogram";
 /// <summary>
 /// Requested histogram name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// If true, retrieve delta since last call.
 /// </summary>
-public bool? Delta { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("delta")] public bool? Delta { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGetHistogramRequest"/>
 /// </summary>
@@ -1517,7 +2323,8 @@ internal partial class BrowserGetHistogramResponse: IChromiumResponse
 /// <summary>
 /// Histogram.
 /// </summary>
-public Histogram Histogram { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("histogram")] public Histogram Histogram { get; set; }
+}
 /// <summary>
 /// Get position and size of the browser window.
 /// </summary>
@@ -1531,7 +2338,8 @@ public string Command { get; } = "Browser.getWindowBounds";
 /// <summary>
 /// Browser window id.
 /// </summary>
-public int? WindowId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("windowId")] public int? WindowId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGetWindowBoundsRequest"/>
 /// </summary>
@@ -1541,7 +2349,8 @@ internal partial class BrowserGetWindowBoundsResponse: IChromiumResponse
 /// Bounds information of the window. When window state is 'minimized', the restored window
 /// position and size are returned.
 /// </summary>
-public Bounds Bounds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public Bounds Bounds { get; set; }
+}
 /// <summary>
 /// Get the browser window that contains the devtools target.
 /// </summary>
@@ -1555,7 +2364,8 @@ public string Command { get; } = "Browser.getWindowForTarget";
 /// <summary>
 /// Devtools agent host id. If called as a part of the session, associated targetId is used.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGetWindowForTargetRequest"/>
 /// </summary>
@@ -1564,12 +2374,14 @@ internal partial class BrowserGetWindowForTargetResponse: IChromiumResponse
 /// <summary>
 /// Browser window id.
 /// </summary>
-public int? WindowId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("windowId")] public int? WindowId { get; set; }
+
 /// <summary>
 /// Bounds information of the window. When window state is 'minimized', the restored window
 /// position and size are returned.
 /// </summary>
-public Bounds Bounds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public Bounds Bounds { get; set; }
+}
 /// <summary>
 /// Set position and/or size of the browser window.
 /// </summary>
@@ -1583,12 +2395,14 @@ public string Command { get; } = "Browser.setWindowBounds";
 /// <summary>
 /// Browser window id.
 /// </summary>
-public int? WindowId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("windowId")] public int? WindowId { get; set; }
+
 /// <summary>
 /// New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined
 /// with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged.
 /// </summary>
-public Bounds Bounds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public Bounds Bounds { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserSetWindowBoundsRequest"/>
 /// </summary>
@@ -1608,11 +2422,13 @@ public string Command { get; } = "Browser.setDockTile";
 /// <summary>
 /// 
 /// </summary>
-public string BadgeLabel { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("badgeLabel")] public string BadgeLabel { get; set; }
+
 /// <summary>
 /// Png encoded image.
 /// </summary>
-public byte[] Image { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("image")] public byte[] Image { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserSetDockTileRequest"/>
 /// </summary>
@@ -1623,18 +2439,6 @@ internal partial class BrowserSetDockTileResponse: IChromiumResponse
 namespace PlaywrightSharp.Chromium.Protocol.CSS
 {
 /// <summary>
-/// Stylesheet type: "injected" for stylesheets injected via extension, "user-agent" for user-agent
-/// stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via
-/// inspector" rules), "regular" for regular stylesheets.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StyleSheetOrigin
-{
-[System.Runtime.Serialization.EnumMember(Value = "injected")]Injected,
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
-[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
-/// <summary>
 /// CSS rule collection for a single pseudo style.
 /// </summary>
 internal partial class PseudoElementMatches
@@ -1642,11 +2446,14 @@ internal partial class PseudoElementMatches
 /// <summary>
 /// Pseudo element type.
 /// </summary>
-public DOM.PseudoType PseudoType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("pseudoType")] public DOM.PseudoType PseudoType { get; set; }
+
 /// <summary>
 /// Matches of CSS rules applicable to the pseudo style.
 /// </summary>
-public RuleMatch[] Matches { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("matches")] public RuleMatch[] Matches { get; set; }
+}
 /// <summary>
 /// Inherited CSS rule collection from ancestor node.
 /// </summary>
@@ -1655,11 +2462,13 @@ internal partial class InheritedStyleEntry
 /// <summary>
 /// The ancestor node's inline style, if any, in the style inheritance chain.
 /// </summary>
-public CSSStyle InlineStyle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inlineStyle")] public CSSStyle InlineStyle { get; set; }
+
 /// <summary>
 /// Matches of CSS rules matching the ancestor node in the style inheritance chain.
 /// </summary>
-public RuleMatch[] MatchedCSSRules { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("matchedCSSRules")] public RuleMatch[] MatchedCSSRules { get; set; }
+}
 /// <summary>
 /// Match data for a CSS rule.
 /// </summary>
@@ -1668,11 +2477,13 @@ internal partial class RuleMatch
 /// <summary>
 /// CSS rule in the match.
 /// </summary>
-public CSSRule Rule { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rule")] public CSSRule Rule { get; set; }
+
 /// <summary>
 /// Matching selector indices in the rule's selectorList selectors (0-based).
 /// </summary>
-public int?[] MatchingSelectors { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("matchingSelectors")] public int?[] MatchingSelectors { get; set; }
+}
 /// <summary>
 /// Data for a simple selector (these are delimited by commas in a selector list).
 /// </summary>
@@ -1681,11 +2492,13 @@ internal partial class Value
 /// <summary>
 /// Value text.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Value range in the underlying resource (if available).
 /// </summary>
-public SourceRange Range { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+}
 /// <summary>
 /// Selector list data.
 /// </summary>
@@ -1694,11 +2507,13 @@ internal partial class SelectorList
 /// <summary>
 /// Selectors in the list.
 /// </summary>
-public Value[] Selectors { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("selectors")] public Value[] Selectors { get; set; }
+
 /// <summary>
 /// Rule selector text.
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// CSS stylesheet metainformation.
 /// </summary>
@@ -1707,65 +2522,80 @@ internal partial class CSSStyleSheetHeader
 /// <summary>
 /// The stylesheet identifier.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// Owner frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Stylesheet resource URL.
 /// </summary>
-public string SourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
 /// <summary>
 /// URL of source map associated with the stylesheet (if any).
 /// </summary>
-public string SourceMapURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+
 /// <summary>
 /// Stylesheet origin.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public StyleSheetOrigin Origin { get; set; }
+
 /// <summary>
 /// Stylesheet title.
 /// </summary>
-public string Title { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+
 /// <summary>
 /// The backend id for the owner node of the stylesheet.
 /// </summary>
-public int? OwnerNode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ownerNode")] public int? OwnerNode { get; set; }
+
 /// <summary>
 /// Denotes whether the stylesheet is disabled.
 /// </summary>
-public bool? Disabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+
 /// <summary>
 /// Whether the sourceURL field value comes from the sourceURL comment.
 /// </summary>
-public bool? HasSourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasSourceURL")] public bool? HasSourceURL { get; set; }
+
 /// <summary>
 /// Whether this stylesheet is created for STYLE tag by parser. This flag is not set for
 /// document.written STYLE tags.
 /// </summary>
-public bool? IsInline { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isInline")] public bool? IsInline { get; set; }
+
 /// <summary>
 /// Line offset of the stylesheet within the resource (zero based).
 /// </summary>
-public double? StartLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public double? StartLine { get; set; }
+
 /// <summary>
 /// Column offset of the stylesheet within the resource (zero based).
 /// </summary>
-public double? StartColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public double? StartColumn { get; set; }
+
 /// <summary>
 /// Size of the content (in characters).
 /// </summary>
-public double? Length { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("length")] public double? Length { get; set; }
+
 /// <summary>
 /// Line offset of the end of the stylesheet within the resource (zero based).
 /// </summary>
-public double? EndLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endLine")] public double? EndLine { get; set; }
+
 /// <summary>
 /// Column offset of the end of the stylesheet within the resource (zero based).
 /// </summary>
-public double? EndColumn { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("endColumn")] public double? EndColumn { get; set; }
+}
 /// <summary>
 /// CSS rule representation.
 /// </summary>
@@ -1775,25 +2605,30 @@ internal partial class CSSRule
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
 /// stylesheet rules) this rule came from.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// Rule selector data.
 /// </summary>
-public SelectorList SelectorList { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("selectorList")] public SelectorList SelectorList { get; set; }
+
 /// <summary>
 /// Parent stylesheet's origin.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public StyleSheetOrigin Origin { get; set; }
+
 /// <summary>
 /// Associated style declaration.
 /// </summary>
-public CSSStyle Style { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("style")] public CSSStyle Style { get; set; }
+
 /// <summary>
 /// Media list array (for rules involving media queries). The array enumerates media queries
 /// starting with the innermost one, going outwards.
 /// </summary>
-public CSSMedia[] Media { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("media")] public CSSMedia[] Media { get; set; }
+}
 /// <summary>
 /// CSS coverage information.
 /// </summary>
@@ -1803,19 +2638,23 @@ internal partial class RuleUsage
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
 /// stylesheet rules) this rule came from.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// Offset of the start of the rule (including selector) from the beginning of the stylesheet.
 /// </summary>
-public double? StartOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startOffset")] public double? StartOffset { get; set; }
+
 /// <summary>
 /// Offset of the end of the rule body from the beginning of the stylesheet.
 /// </summary>
-public double? EndOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endOffset")] public double? EndOffset { get; set; }
+
 /// <summary>
 /// Indicates whether the rule was actually used by some element in the page.
 /// </summary>
-public bool? Used { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("used")] public bool? Used { get; set; }
+}
 /// <summary>
 /// Text range within a resource. All numbers are zero-based.
 /// </summary>
@@ -1824,19 +2663,23 @@ internal partial class SourceRange
 /// <summary>
 /// Start line of range.
 /// </summary>
-public int? StartLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public int? StartLine { get; set; }
+
 /// <summary>
 /// Start column of range (inclusive).
 /// </summary>
-public int? StartColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public int? StartColumn { get; set; }
+
 /// <summary>
 /// End line of range
 /// </summary>
-public int? EndLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endLine")] public int? EndLine { get; set; }
+
 /// <summary>
 /// End column of range (exclusive).
 /// </summary>
-public int? EndColumn { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("endColumn")] public int? EndColumn { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -1845,15 +2688,18 @@ internal partial class ShorthandEntry
 /// <summary>
 /// Shorthand name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Shorthand value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Whether the property has "!important" annotation (implies `false` if absent).
 /// </summary>
-public bool? Important { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("important")] public bool? Important { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -1862,11 +2708,13 @@ internal partial class CSSComputedStyleProperty
 /// <summary>
 /// Computed style property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Computed style property value.
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// CSS style representation.
 /// </summary>
@@ -1876,23 +2724,28 @@ internal partial class CSSStyle
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
 /// stylesheet rules) this rule came from.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// CSS properties in the style.
 /// </summary>
-public CSSProperty[] CssProperties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cssProperties")] public CSSProperty[] CssProperties { get; set; }
+
 /// <summary>
 /// Computed values for all shorthands found in the style.
 /// </summary>
-public ShorthandEntry[] ShorthandEntries { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shorthandEntries")] public ShorthandEntry[] ShorthandEntries { get; set; }
+
 /// <summary>
 /// Style declaration text (if available).
 /// </summary>
-public string CssText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cssText")] public string CssText { get; set; }
+
 /// <summary>
 /// Style declaration range in the enclosing stylesheet (if available).
 /// </summary>
-public SourceRange Range { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+}
 /// <summary>
 /// CSS property declaration data.
 /// </summary>
@@ -1901,35 +2754,43 @@ internal partial class CSSProperty
 /// <summary>
 /// The property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The property value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Whether the property has "!important" annotation (implies `false` if absent).
 /// </summary>
-public bool? Important { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("important")] public bool? Important { get; set; }
+
 /// <summary>
 /// Whether the property is implicit (implies `false` if absent).
 /// </summary>
-public bool? Implicit { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("implicit")] public bool? Implicit { get; set; }
+
 /// <summary>
 /// The full property text as specified in the style.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Whether the property is understood by the browser (implies `true` if absent).
 /// </summary>
-public bool? ParsedOk { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parsedOk")] public bool? ParsedOk { get; set; }
+
 /// <summary>
 /// Whether the property is disabled by the user (present for source-based properties only).
 /// </summary>
-public bool? Disabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+
 /// <summary>
 /// The entire property range in the enclosing style declaration (if available).
 /// </summary>
-public SourceRange Range { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+}
 /// <summary>
 /// CSS media rule descriptor.
 /// </summary>
@@ -1938,31 +2799,37 @@ internal partial class CSSMedia
 /// <summary>
 /// Media query text.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Source of the media query: "mediaRule" if specified by a @media rule, "importRule" if
 /// specified by an @import rule, "linkedSheet" if specified by a "media" attribute in a linked
 /// stylesheet's LINK tag, "inlineSheet" if specified by a "media" attribute in an inline
 /// stylesheet's STYLE tag.
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// URL of the document containing the media query description.
 /// </summary>
-public string SourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
 /// <summary>
 /// The associated rule (@media or @import) header range in the enclosing stylesheet (if
 /// available).
 /// </summary>
-public SourceRange Range { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+
 /// <summary>
 /// Identifier of the stylesheet containing this object (if exists).
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// Array of media queries.
 /// </summary>
-public MediaQuery[] MediaList { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("mediaList")] public MediaQuery[] MediaList { get; set; }
+}
 /// <summary>
 /// Media query descriptor.
 /// </summary>
@@ -1971,11 +2838,13 @@ internal partial class MediaQuery
 /// <summary>
 /// Array of media query expressions.
 /// </summary>
-public MediaQueryExpression[] Expressions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expressions")] public MediaQueryExpression[] Expressions { get; set; }
+
 /// <summary>
 /// Whether the media query condition is satisfied.
 /// </summary>
-public bool? Active { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("active")] public bool? Active { get; set; }
+}
 /// <summary>
 /// Media query expression descriptor.
 /// </summary>
@@ -1984,23 +2853,28 @@ internal partial class MediaQueryExpression
 /// <summary>
 /// Media query expression value.
 /// </summary>
-public double? Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public double? Value { get; set; }
+
 /// <summary>
 /// Media query expression units.
 /// </summary>
-public string Unit { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unit")] public string Unit { get; set; }
+
 /// <summary>
 /// Media query expression feature.
 /// </summary>
-public string Feature { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("feature")] public string Feature { get; set; }
+
 /// <summary>
 /// The associated range of the value text in the enclosing stylesheet (if available).
 /// </summary>
-public SourceRange ValueRange { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valueRange")] public SourceRange ValueRange { get; set; }
+
 /// <summary>
 /// Computed length of media query expression (if applicable).
 /// </summary>
-public double? ComputedLength { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("computedLength")] public double? ComputedLength { get; set; }
+}
 /// <summary>
 /// Information about amount of glyphs that were rendered with given font.
 /// </summary>
@@ -2009,15 +2883,18 @@ internal partial class PlatformFontUsage
 /// <summary>
 /// Font's family name reported by platform.
 /// </summary>
-public string FamilyName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("familyName")] public string FamilyName { get; set; }
+
 /// <summary>
 /// Indicates if the font was downloaded or resolved locally.
 /// </summary>
-public bool? IsCustomFont { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isCustomFont")] public bool? IsCustomFont { get; set; }
+
 /// <summary>
 /// Amount of glyphs that were rendered with this font.
 /// </summary>
-public double? GlyphCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("glyphCount")] public double? GlyphCount { get; set; }
+}
 /// <summary>
 /// Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions
 /// </summary>
@@ -2026,35 +2903,43 @@ internal partial class FontFace
 /// <summary>
 /// The font-family.
 /// </summary>
-public string FontFamily { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fontFamily")] public string FontFamily { get; set; }
+
 /// <summary>
 /// The font-style.
 /// </summary>
-public string FontStyle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fontStyle")] public string FontStyle { get; set; }
+
 /// <summary>
 /// The font-variant.
 /// </summary>
-public string FontVariant { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fontVariant")] public string FontVariant { get; set; }
+
 /// <summary>
 /// The font-weight.
 /// </summary>
-public string FontWeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fontWeight")] public string FontWeight { get; set; }
+
 /// <summary>
 /// The font-stretch.
 /// </summary>
-public string FontStretch { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fontStretch")] public string FontStretch { get; set; }
+
 /// <summary>
 /// The unicode-range.
 /// </summary>
-public string UnicodeRange { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unicodeRange")] public string UnicodeRange { get; set; }
+
 /// <summary>
 /// The src.
 /// </summary>
-public string Src { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("src")] public string Src { get; set; }
+
 /// <summary>
 /// The resolved platform font family
 /// </summary>
-public string PlatformFontFamily { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("platformFontFamily")] public string PlatformFontFamily { get; set; }
+}
 /// <summary>
 /// CSS keyframes rule representation.
 /// </summary>
@@ -2063,11 +2948,13 @@ internal partial class CSSKeyframesRule
 /// <summary>
 /// Animation name.
 /// </summary>
-public Value AnimationName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animationName")] public Value AnimationName { get; set; }
+
 /// <summary>
 /// List of keyframes.
 /// </summary>
-public CSSKeyframeRule[] Keyframes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyframes")] public CSSKeyframeRule[] Keyframes { get; set; }
+}
 /// <summary>
 /// CSS keyframe rule representation.
 /// </summary>
@@ -2077,20 +2964,24 @@ internal partial class CSSKeyframeRule
 /// The css style sheet identifier (absent for user agent stylesheet and user-specified
 /// stylesheet rules) this rule came from.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// Parent stylesheet's origin.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public StyleSheetOrigin Origin { get; set; }
+
 /// <summary>
 /// Associated key text.
 /// </summary>
-public Value KeyText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyText")] public Value KeyText { get; set; }
+
 /// <summary>
 /// Associated style declaration.
 /// </summary>
-public CSSStyle Style { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("style")] public CSSStyle Style { get; set; }
+}
 /// <summary>
 /// A descriptor of operation to mutate style declaration text.
 /// </summary>
@@ -2099,15 +2990,18 @@ internal partial class StyleDeclarationEdit
 /// <summary>
 /// The css style sheet identifier.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// The range of the style text in the enclosing stylesheet.
 /// </summary>
-public SourceRange Range { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+
 /// <summary>
 /// New style text.
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// Inserts a new rule with the given `ruleText` in a stylesheet with given `styleSheetId`, at the
 /// position specified by `location`.
@@ -2122,15 +3016,18 @@ public string Command { get; } = "CSS.addRule";
 /// <summary>
 /// The css style sheet identifier where a new rule should be inserted.
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// The text of a new rule.
 /// </summary>
-public string RuleText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ruleText")] public string RuleText { get; set; }
+
 /// <summary>
 /// Text position of a new rule in the target style sheet.
 /// </summary>
-public SourceRange Location { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("location")] public SourceRange Location { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSAddRuleRequest"/>
 /// </summary>
@@ -2139,7 +3036,8 @@ internal partial class CSSAddRuleResponse: IChromiumResponse
 /// <summary>
 /// The newly created rule.
 /// </summary>
-public CSSRule Rule { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("rule")] public CSSRule Rule { get; set; }
+}
 /// <summary>
 /// Returns all class names from specified stylesheet.
 /// </summary>
@@ -2153,7 +3051,8 @@ public string Command { get; } = "CSS.collectClassNames";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSCollectClassNamesRequest"/>
 /// </summary>
@@ -2162,7 +3061,8 @@ internal partial class CSSCollectClassNamesResponse: IChromiumResponse
 /// <summary>
 /// Class name list.
 /// </summary>
-public string[] ClassNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("classNames")] public string[] ClassNames { get; set; }
+}
 /// <summary>
 /// Creates a new special "via-inspector" stylesheet in the frame with given `frameId`.
 /// </summary>
@@ -2176,7 +3076,8 @@ public string Command { get; } = "CSS.createStyleSheet";
 /// <summary>
 /// Identifier of the frame where "via-inspector" stylesheet should be created.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSCreateStyleSheetRequest"/>
 /// </summary>
@@ -2185,7 +3086,8 @@ internal partial class CSSCreateStyleSheetResponse: IChromiumResponse
 /// <summary>
 /// Identifier of the created "via-inspector" stylesheet.
 /// </summary>
-public string StyleSheetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 /// <summary>
 /// Disables the CSS agent for the given page.
 /// </summary>
@@ -2235,11 +3137,13 @@ public string Command { get; } = "CSS.forcePseudoState";
 /// <summary>
 /// The element id for which to force the pseudo state.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Element pseudo classes to force when computing the element's style.
 /// </summary>
-public string[] ForcedPseudoClasses { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("forcedPseudoClasses")] public string[] ForcedPseudoClasses { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSForcePseudoStateRequest"/>
 /// </summary>
@@ -2259,7 +3163,8 @@ public string Command { get; } = "CSS.getBackgroundColors";
 /// <summary>
 /// Id of the node to get background colors for.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSGetBackgroundColorsRequest"/>
 /// </summary>
@@ -2272,16 +3177,19 @@ internal partial class CSSGetBackgroundColorsResponse: IChromiumResponse
 /// of the color stops. For anything more complicated, this will be an empty array. Images will
 /// be ignored (as if the image had failed to load).
 /// </summary>
-public string[] BackgroundColors { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backgroundColors")] public string[] BackgroundColors { get; set; }
+
 /// <summary>
 /// The computed font size for this node, as a CSS computed value string (e.g. '12px').
 /// </summary>
-public string ComputedFontSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("computedFontSize")] public string ComputedFontSize { get; set; }
+
 /// <summary>
 /// The computed font weight for this node, as a CSS computed value string (e.g. 'normal' or
 /// '100').
 /// </summary>
-public string ComputedFontWeight { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("computedFontWeight")] public string ComputedFontWeight { get; set; }
+}
 /// <summary>
 /// Returns the computed style for a DOM node identified by `nodeId`.
 /// </summary>
@@ -2295,7 +3203,8 @@ public string Command { get; } = "CSS.getComputedStyleForNode";
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
 /// </summary>
@@ -2304,7 +3213,8 @@ internal partial class CSSGetComputedStyleForNodeResponse: IChromiumResponse
 /// <summary>
 /// Computed style for the specified DOM node.
 /// </summary>
-public CSSComputedStyleProperty[] ComputedStyle { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("computedStyle")] public CSSComputedStyleProperty[] ComputedStyle { get; set; }
+}
 /// <summary>
 /// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM
 /// attributes) for a DOM node identified by `nodeId`.
@@ -2319,7 +3229,8 @@ public string Command { get; } = "CSS.getInlineStylesForNode";
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
 /// </summary>
@@ -2328,11 +3239,13 @@ internal partial class CSSGetInlineStylesForNodeResponse: IChromiumResponse
 /// <summary>
 /// Inline style for the specified DOM node.
 /// </summary>
-public CSSStyle InlineStyle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inlineStyle")] public CSSStyle InlineStyle { get; set; }
+
 /// <summary>
 /// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
 /// </summary>
-public CSSStyle AttributesStyle { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("attributesStyle")] public CSSStyle AttributesStyle { get; set; }
+}
 /// <summary>
 /// Returns requested styles for a DOM node identified by `nodeId`.
 /// </summary>
@@ -2346,7 +3259,8 @@ public string Command { get; } = "CSS.getMatchedStylesForNode";
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
 /// </summary>
@@ -2355,27 +3269,33 @@ internal partial class CSSGetMatchedStylesForNodeResponse: IChromiumResponse
 /// <summary>
 /// Inline style for the specified DOM node.
 /// </summary>
-public CSSStyle InlineStyle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inlineStyle")] public CSSStyle InlineStyle { get; set; }
+
 /// <summary>
 /// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
 /// </summary>
-public CSSStyle AttributesStyle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("attributesStyle")] public CSSStyle AttributesStyle { get; set; }
+
 /// <summary>
 /// CSS rules matching this node, from all applicable stylesheets.
 /// </summary>
-public RuleMatch[] MatchedCSSRules { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("matchedCSSRules")] public RuleMatch[] MatchedCSSRules { get; set; }
+
 /// <summary>
 /// Pseudo style matches for this node.
 /// </summary>
-public PseudoElementMatches[] PseudoElements { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElements")] public PseudoElementMatches[] PseudoElements { get; set; }
+
 /// <summary>
 /// A chain of inherited styles (from the immediate node parent up to the DOM tree root).
 /// </summary>
-public InheritedStyleEntry[] Inherited { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inherited")] public InheritedStyleEntry[] Inherited { get; set; }
+
 /// <summary>
 /// A list of CSS keyframed animations matching this node.
 /// </summary>
-public CSSKeyframesRule[] CssKeyframesRules { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cssKeyframesRules")] public CSSKeyframesRule[] CssKeyframesRules { get; set; }
+}
 /// <summary>
 /// Returns all media queries parsed by the rendering engine.
 /// </summary>
@@ -2395,7 +3315,8 @@ internal partial class CSSGetMediaQueriesResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public CSSMedia[] Medias { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("medias")] public CSSMedia[] Medias { get; set; }
+}
 /// <summary>
 /// Requests information about platform fonts which we used to render child TextNodes in the given
 /// node.
@@ -2410,7 +3331,8 @@ public string Command { get; } = "CSS.getPlatformFontsForNode";
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSGetPlatformFontsForNodeRequest"/>
 /// </summary>
@@ -2419,7 +3341,8 @@ internal partial class CSSGetPlatformFontsForNodeResponse: IChromiumResponse
 /// <summary>
 /// Usage statistics for every employed platform font.
 /// </summary>
-public PlatformFontUsage[] Fonts { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fonts")] public PlatformFontUsage[] Fonts { get; set; }
+}
 /// <summary>
 /// Returns the current textual content for a stylesheet.
 /// </summary>
@@ -2433,7 +3356,8 @@ public string Command { get; } = "CSS.getStyleSheetText";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSGetStyleSheetTextRequest"/>
 /// </summary>
@@ -2442,7 +3366,8 @@ internal partial class CSSGetStyleSheetTextResponse: IChromiumResponse
 /// <summary>
 /// The stylesheet text.
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// Find a rule with the given active property for the given node and set the new value for this
 /// property
@@ -2457,15 +3382,18 @@ public string Command { get; } = "CSS.setEffectivePropertyValueForNode";
 /// <summary>
 /// The element id for which to set property.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string PropertyName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("propertyName")] public string PropertyName { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSSetEffectivePropertyValueForNodeRequest"/>
 /// </summary>
@@ -2485,15 +3413,18 @@ public string Command { get; } = "CSS.setKeyframeKey";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public SourceRange Range { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string KeyText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyText")] public string KeyText { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSSetKeyframeKeyRequest"/>
 /// </summary>
@@ -2502,7 +3433,8 @@ internal partial class CSSSetKeyframeKeyResponse: IChromiumResponse
 /// <summary>
 /// The resulting key text after modification.
 /// </summary>
-public Value KeyText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyText")] public Value KeyText { get; set; }
+}
 /// <summary>
 /// Modifies the rule selector.
 /// </summary>
@@ -2516,15 +3448,18 @@ public string Command { get; } = "CSS.setMediaText";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public SourceRange Range { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSSetMediaTextRequest"/>
 /// </summary>
@@ -2533,7 +3468,8 @@ internal partial class CSSSetMediaTextResponse: IChromiumResponse
 /// <summary>
 /// The resulting CSS media rule after modification.
 /// </summary>
-public CSSMedia Media { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("media")] public CSSMedia Media { get; set; }
+}
 /// <summary>
 /// Modifies the rule selector.
 /// </summary>
@@ -2547,15 +3483,18 @@ public string Command { get; } = "CSS.setRuleSelector";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public SourceRange Range { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Selector { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSSetRuleSelectorRequest"/>
 /// </summary>
@@ -2564,7 +3503,8 @@ internal partial class CSSSetRuleSelectorResponse: IChromiumResponse
 /// <summary>
 /// The resulting selector list after modification.
 /// </summary>
-public SelectorList SelectorList { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("selectorList")] public SelectorList SelectorList { get; set; }
+}
 /// <summary>
 /// Sets the new stylesheet text.
 /// </summary>
@@ -2578,11 +3518,13 @@ public string Command { get; } = "CSS.setStyleSheetText";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSSetStyleSheetTextRequest"/>
 /// </summary>
@@ -2591,7 +3533,8 @@ internal partial class CSSSetStyleSheetTextResponse: IChromiumResponse
 /// <summary>
 /// URL of source map associated with script (if any).
 /// </summary>
-public string SourceMapURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+}
 /// <summary>
 /// Applies specified style edits one after another in the given order.
 /// </summary>
@@ -2605,7 +3548,8 @@ public string Command { get; } = "CSS.setStyleTexts";
 /// <summary>
 /// 
 /// </summary>
-public StyleDeclarationEdit[] Edits { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("edits")] public StyleDeclarationEdit[] Edits { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CSSSetStyleTextsRequest"/>
 /// </summary>
@@ -2614,7 +3558,8 @@ internal partial class CSSSetStyleTextsResponse: IChromiumResponse
 /// <summary>
 /// The resulting styles after modification.
 /// </summary>
-public CSSStyle[] Styles { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styles")] public CSSStyle[] Styles { get; set; }
+}
 /// <summary>
 /// Enables the selector recording.
 /// </summary>
@@ -2652,7 +3597,8 @@ internal partial class CSSStopRuleUsageTrackingResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public RuleUsage[] RuleUsage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ruleUsage")] public RuleUsage[] RuleUsage { get; set; }
+}
 /// <summary>
 /// Obtain list of rules that became used since last call to this method (or since start of coverage
 /// instrumentation)
@@ -2673,11 +3619,13 @@ internal partial class CSSTakeCoverageDeltaResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public RuleUsage[] Coverage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("coverage")] public RuleUsage[] Coverage { get; set; }
+
 /// <summary>
 /// Monotonically increasing time, in seconds.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Fires whenever a web font is updated.  A non-empty font parameter indicates a successfully loaded
 /// web font
@@ -2691,7 +3639,8 @@ public string InternalName { get; } = "CSS.fontsUpdated";
 /// <summary>
 /// The web font that has loaded.
 /// </summary>
-public FontFace Font { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("font")] public FontFace Font { get; set; }
+}
 /// <summary>
 /// Fires whenever a MediaQuery result changes (for example, after a browser window has been
 /// resized.) The current implementation considers only viewport-dependent media features.
@@ -2715,7 +3664,8 @@ public string InternalName { get; } = "CSS.styleSheetAdded";
 /// <summary>
 /// Added stylesheet metainfo.
 /// </summary>
-public CSSStyleSheetHeader Header { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("header")] public CSSStyleSheetHeader Header { get; set; }
+}
 /// <summary>
 /// Fired whenever a stylesheet is changed as a result of the client operation.
 /// </summary>
@@ -2728,7 +3678,8 @@ public string InternalName { get; } = "CSS.styleSheetChanged";
 /// <summary>
 /// 
 /// </summary>
-public string StyleSheetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 /// <summary>
 /// Fired whenever an active document stylesheet is removed.
 /// </summary>
@@ -2741,22 +3692,11 @@ public string InternalName { get; } = "CSS.styleSheetRemoved";
 /// <summary>
 /// Identifier of the removed stylesheet.
 /// </summary>
-public string StyleSheetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.CacheStorage
 {
-/// <summary>
-/// type of HTTP response cached
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CachedResponseType
-{
-[System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
-[System.Runtime.Serialization.EnumMember(Value = "cors")]Cors,
-[System.Runtime.Serialization.EnumMember(Value = "default")]Default,
-[System.Runtime.Serialization.EnumMember(Value = "error")]Error,
-[System.Runtime.Serialization.EnumMember(Value = "opaqueResponse")]OpaqueResponse,
-[System.Runtime.Serialization.EnumMember(Value = "opaqueRedirect")]OpaqueRedirect}
 /// <summary>
 /// Data entry.
 /// </summary>
@@ -2765,36 +3705,44 @@ internal partial class DataEntry
 /// <summary>
 /// Request URL.
 /// </summary>
-public string RequestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestURL")] public string RequestURL { get; set; }
+
 /// <summary>
 /// Request method.
 /// </summary>
-public string RequestMethod { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestMethod")] public string RequestMethod { get; set; }
+
 /// <summary>
 /// Request headers
 /// </summary>
-public Header[] RequestHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaders")] public Header[] RequestHeaders { get; set; }
+
 /// <summary>
 /// Number of seconds since epoch.
 /// </summary>
-public double? ResponseTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseTime")] public double? ResponseTime { get; set; }
+
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int? ResponseStatus { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseStatus")] public int? ResponseStatus { get; set; }
+
 /// <summary>
 /// HTTP response status text.
 /// </summary>
-public string ResponseStatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseStatusText")] public string ResponseStatusText { get; set; }
+
 /// <summary>
 /// HTTP response type
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CachedResponseType ResponseType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseType")] public CachedResponseType ResponseType { get; set; }
+
 /// <summary>
 /// Response headers
 /// </summary>
-public Header[] ResponseHeaders { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("responseHeaders")] public Header[] ResponseHeaders { get; set; }
+}
 /// <summary>
 /// Cache identifier.
 /// </summary>
@@ -2803,15 +3751,18 @@ internal partial class Cache
 /// <summary>
 /// An opaque unique id of the cache.
 /// </summary>
-public string CacheId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cacheId")] public string CacheId { get; set; }
+
 /// <summary>
 /// Security origin of the cache.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// The name of the cache.
 /// </summary>
-public string CacheName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cacheName")] public string CacheName { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2820,11 +3771,13 @@ internal partial class Header
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Cached response
 /// </summary>
@@ -2833,7 +3786,8 @@ internal partial class CachedResponse
 /// <summary>
 /// Entry content, base64-encoded.
 /// </summary>
-public byte[] Body { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("body")] public byte[] Body { get; set; }
+}
 /// <summary>
 /// Deletes a cache.
 /// </summary>
@@ -2847,7 +3801,8 @@ public string Command { get; } = "CacheStorage.deleteCache";
 /// <summary>
 /// Id of cache for deletion.
 /// </summary>
-public string CacheId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cacheId")] public string CacheId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CacheStorageDeleteCacheRequest"/>
 /// </summary>
@@ -2867,11 +3822,13 @@ public string Command { get; } = "CacheStorage.deleteEntry";
 /// <summary>
 /// Id of cache where the entry will be deleted.
 /// </summary>
-public string CacheId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cacheId")] public string CacheId { get; set; }
+
 /// <summary>
 /// URL spec of the request.
 /// </summary>
-public string Request { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("request")] public string Request { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CacheStorageDeleteEntryRequest"/>
 /// </summary>
@@ -2891,7 +3848,8 @@ public string Command { get; } = "CacheStorage.requestCacheNames";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CacheStorageRequestCacheNamesRequest"/>
 /// </summary>
@@ -2900,7 +3858,8 @@ internal partial class CacheStorageRequestCacheNamesResponse: IChromiumResponse
 /// <summary>
 /// Caches for the security origin.
 /// </summary>
-public Cache[] Caches { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("caches")] public Cache[] Caches { get; set; }
+}
 /// <summary>
 /// Fetches cache entry.
 /// </summary>
@@ -2914,15 +3873,18 @@ public string Command { get; } = "CacheStorage.requestCachedResponse";
 /// <summary>
 /// Id of cache that contains the entry.
 /// </summary>
-public string CacheId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cacheId")] public string CacheId { get; set; }
+
 /// <summary>
 /// URL spec of the request.
 /// </summary>
-public string RequestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestURL")] public string RequestURL { get; set; }
+
 /// <summary>
 /// headers of the request.
 /// </summary>
-public Header[] RequestHeaders { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaders")] public Header[] RequestHeaders { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CacheStorageRequestCachedResponseRequest"/>
 /// </summary>
@@ -2931,7 +3893,8 @@ internal partial class CacheStorageRequestCachedResponseResponse: IChromiumRespo
 /// <summary>
 /// Response read from the cache.
 /// </summary>
-public CachedResponse Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public CachedResponse Response { get; set; }
+}
 /// <summary>
 /// Requests data from cache.
 /// </summary>
@@ -2945,19 +3908,23 @@ public string Command { get; } = "CacheStorage.requestEntries";
 /// <summary>
 /// ID of cache to get entries from.
 /// </summary>
-public string CacheId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cacheId")] public string CacheId { get; set; }
+
 /// <summary>
 /// Number of records to skip.
 /// </summary>
-public int? SkipCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("skipCount")] public int? SkipCount { get; set; }
+
 /// <summary>
 /// Number of records to fetch.
 /// </summary>
-public int? PageSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageSize")] public int? PageSize { get; set; }
+
 /// <summary>
 /// If present, only return the entries containing this substring in the path
 /// </summary>
-public string PathFilter { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pathFilter")] public string PathFilter { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CacheStorageRequestEntriesRequest"/>
 /// </summary>
@@ -2966,12 +3933,14 @@ internal partial class CacheStorageRequestEntriesResponse: IChromiumResponse
 /// <summary>
 /// Array of object store data entries.
 /// </summary>
-public DataEntry[] CacheDataEntries { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cacheDataEntries")] public DataEntry[] CacheDataEntries { get; set; }
+
 /// <summary>
 /// Count of returned entries from this storage. If pathFilter is empty, it
 /// is the count of all entries from this storage.
 /// </summary>
-public double? ReturnCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("returnCount")] public double? ReturnCount { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Cast
 {
@@ -2983,16 +3952,19 @@ internal partial class Sink
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Text describing the current session. Present only if there is an active
 /// session on the sink.
 /// </summary>
-public string Session { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("session")] public string Session { get; set; }
+}
 /// <summary>
 /// Starts observing for sinks that can be used for tab mirroring, and if set,
 /// sinks compatible with |presentationUrl| as well. When sinks are found, a
@@ -3010,7 +3982,8 @@ public string Command { get; } = "Cast.enable";
 /// <summary>
 /// 
 /// </summary>
-public string PresentationUrl { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("presentationUrl")] public string PresentationUrl { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CastEnableRequest"/>
 /// </summary>
@@ -3048,7 +4021,8 @@ public string Command { get; } = "Cast.setSinkToUse";
 /// <summary>
 /// 
 /// </summary>
-public string SinkName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sinkName")] public string SinkName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CastSetSinkToUseRequest"/>
 /// </summary>
@@ -3068,7 +4042,8 @@ public string Command { get; } = "Cast.startTabMirroring";
 /// <summary>
 /// 
 /// </summary>
-public string SinkName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sinkName")] public string SinkName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CastStartTabMirroringRequest"/>
 /// </summary>
@@ -3088,7 +4063,8 @@ public string Command { get; } = "Cast.stopCasting";
 /// <summary>
 /// 
 /// </summary>
-public string SinkName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sinkName")] public string SinkName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CastStopCastingRequest"/>
 /// </summary>
@@ -3108,7 +4084,8 @@ public string InternalName { get; } = "Cast.sinksUpdated";
 /// <summary>
 /// 
 /// </summary>
-public Sink[] Sinks { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sinks")] public Sink[] Sinks { get; set; }
+}
 /// <summary>
 /// This is fired whenever the outstanding issue/error message changes.
 /// |issueMessage| is empty if there is no issue.
@@ -3122,7 +4099,8 @@ public string InternalName { get; } = "Cast.issueUpdated";
 /// <summary>
 /// 
 /// </summary>
-public string IssueMessage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("issueMessage")] public string IssueMessage { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.DOM
 {
@@ -3134,46 +4112,18 @@ internal partial class BackendNode
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int? NodeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeType")] public int? NodeType { get; set; }
+
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
-public string NodeName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeName")] public string NodeName { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? BackendNodeId { get; set; }}
-/// <summary>
-/// Pseudo element type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PseudoType
-{
-[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
-[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
-[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
-[System.Runtime.Serialization.EnumMember(Value = "after")]After,
-[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
-[System.Runtime.Serialization.EnumMember(Value = "backdrop")]Backdrop,
-[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
-[System.Runtime.Serialization.EnumMember(Value = "first-line-inherited")]FirstLineInherited,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
-[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer,
-[System.Runtime.Serialization.EnumMember(Value = "input-list-button")]InputListButton}
-/// <summary>
-/// Shadow root type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ShadowRootType
-{
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "open")]Open,
-[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+}
 /// <summary>
 /// DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes.
 /// DOMNode is a base node mirror type.
@@ -3185,117 +4135,145 @@ internal partial class Node
 /// will only push node with given `id` once. It is aware of all requested nodes and will only
 /// fire DOM events for nodes known to the client.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// The id of the parent node if any.
 /// </summary>
-public int? ParentId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
 /// <summary>
 /// The BackendNodeId for this node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int? NodeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeType")] public int? NodeType { get; set; }
+
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
-public string NodeName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeName")] public string NodeName { get; set; }
+
 /// <summary>
 /// `Node`'s localName.
 /// </summary>
-public string LocalName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("localName")] public string LocalName { get; set; }
+
 /// <summary>
 /// `Node`'s nodeValue.
 /// </summary>
-public string NodeValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeValue")] public string NodeValue { get; set; }
+
 /// <summary>
 /// Child count for `Container` nodes.
 /// </summary>
-public int? ChildNodeCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("childNodeCount")] public int? ChildNodeCount { get; set; }
+
 /// <summary>
 /// Child nodes of this node when requested with children.
 /// </summary>
-public Node[] Children { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("children")] public Node[] Children { get; set; }
+
 /// <summary>
 /// Attributes of the `Element` node in the form of flat array `[name1, value1, name2, value2]`.
 /// </summary>
-public string[] Attributes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public string[] Attributes { get; set; }
+
 /// <summary>
 /// Document URL that `Document` or `FrameOwner` node points to.
 /// </summary>
-public string DocumentURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public string DocumentURL { get; set; }
+
 /// <summary>
 /// Base URL that `Document` or `FrameOwner` node uses for URL completion.
 /// </summary>
-public string BaseURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("baseURL")] public string BaseURL { get; set; }
+
 /// <summary>
 /// `DocumentType`'s publicId.
 /// </summary>
-public string PublicId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("publicId")] public string PublicId { get; set; }
+
 /// <summary>
 /// `DocumentType`'s systemId.
 /// </summary>
-public string SystemId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("systemId")] public string SystemId { get; set; }
+
 /// <summary>
 /// `DocumentType`'s internalSubset.
 /// </summary>
-public string InternalSubset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("internalSubset")] public string InternalSubset { get; set; }
+
 /// <summary>
 /// `Document`'s XML version in case of XML documents.
 /// </summary>
-public string XmlVersion { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("xmlVersion")] public string XmlVersion { get; set; }
+
 /// <summary>
 /// `Attr`'s name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// `Attr`'s value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Pseudo element type for this node.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PseudoType? PseudoType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoType")] public PseudoType? PseudoType { get; set; }
+
 /// <summary>
 /// Shadow root type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ShadowRootType? ShadowRootType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shadowRootType")] public ShadowRootType? ShadowRootType { get; set; }
+
 /// <summary>
 /// Frame ID for frame owner elements.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Content document for frame owner elements.
 /// </summary>
-public Node ContentDocument { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentDocument")] public Node ContentDocument { get; set; }
+
 /// <summary>
 /// Shadow root list for given element host.
 /// </summary>
-public Node[] ShadowRoots { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shadowRoots")] public Node[] ShadowRoots { get; set; }
+
 /// <summary>
 /// Content document fragment for template elements.
 /// </summary>
-public Node TemplateContent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("templateContent")] public Node TemplateContent { get; set; }
+
 /// <summary>
 /// Pseudo elements associated with this node.
 /// </summary>
-public Node[] PseudoElements { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElements")] public Node[] PseudoElements { get; set; }
+
 /// <summary>
 /// Import document for the HTMLImport links.
 /// </summary>
-public Node ImportedDocument { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("importedDocument")] public Node ImportedDocument { get; set; }
+
 /// <summary>
 /// Distributed nodes for given insertion point.
 /// </summary>
-public BackendNode[] DistributedNodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("distributedNodes")] public BackendNode[] DistributedNodes { get; set; }
+
 /// <summary>
 /// Whether the node is SVG.
 /// </summary>
-public bool? IsSVG { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isSVG")] public bool? IsSVG { get; set; }
+}
 /// <summary>
 /// A structure holding an RGBA color.
 /// </summary>
@@ -3304,19 +4282,23 @@ internal partial class RGBA
 /// <summary>
 /// The red component, in the [0-255] range.
 /// </summary>
-public int? R { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("r")] public int? R { get; set; }
+
 /// <summary>
 /// The green component, in the [0-255] range.
 /// </summary>
-public int? G { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("g")] public int? G { get; set; }
+
 /// <summary>
 /// The blue component, in the [0-255] range.
 /// </summary>
-public int? B { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("b")] public int? B { get; set; }
+
 /// <summary>
 /// The alpha component, in the [0-1] range (default: 1).
 /// </summary>
-public double? A { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("a")] public double? A { get; set; }
+}
 /// <summary>
 /// Box model.
 /// </summary>
@@ -3325,31 +4307,38 @@ internal partial class BoxModel
 /// <summary>
 /// Content box
 /// </summary>
-public double?[] Content { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("content")] public double?[] Content { get; set; }
+
 /// <summary>
 /// Padding box
 /// </summary>
-public double?[] Padding { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("padding")] public double?[] Padding { get; set; }
+
 /// <summary>
 /// Border box
 /// </summary>
-public double?[] Border { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("border")] public double?[] Border { get; set; }
+
 /// <summary>
 /// Margin box
 /// </summary>
-public double?[] Margin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("margin")] public double?[] Margin { get; set; }
+
 /// <summary>
 /// Node width
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Node height
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// Shape outside coordinates
 /// </summary>
-public ShapeOutsideInfo ShapeOutside { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("shapeOutside")] public ShapeOutsideInfo ShapeOutside { get; set; }
+}
 /// <summary>
 /// CSS Shape Outside details.
 /// </summary>
@@ -3358,15 +4347,18 @@ internal partial class ShapeOutsideInfo
 /// <summary>
 /// Shape bounds
 /// </summary>
-public double?[] Bounds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public double?[] Bounds { get; set; }
+
 /// <summary>
 /// Shape coordinate details
 /// </summary>
-public object[] Shape { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shape")] public object[] Shape { get; set; }
+
 /// <summary>
 /// Margin shape bounds
 /// </summary>
-public object[] MarginShape { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("marginShape")] public object[] MarginShape { get; set; }
+}
 /// <summary>
 /// Rectangle.
 /// </summary>
@@ -3375,19 +4367,23 @@ internal partial class Rect
 /// <summary>
 /// X coordinate
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y coordinate
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// Rectangle width
 /// </summary>
-public double? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public double? Width { get; set; }
+
 /// <summary>
 /// Rectangle height
 /// </summary>
-public double? Height { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("height")] public double? Height { get; set; }
+}
 /// <summary>
 /// Collects class names for the node with given id and all of it's child nodes.
 /// </summary>
@@ -3401,7 +4397,8 @@ public string Command { get; } = "DOM.collectClassNamesFromSubtree";
 /// <summary>
 /// Id of the node to collect class names.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMCollectClassNamesFromSubtreeRequest"/>
 /// </summary>
@@ -3410,7 +4407,8 @@ internal partial class DOMCollectClassNamesFromSubtreeResponse: IChromiumRespons
 /// <summary>
 /// Class name list.
 /// </summary>
-public string[] ClassNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("classNames")] public string[] ClassNames { get; set; }
+}
 /// <summary>
 /// Creates a deep copy of the specified node and places it into the target container before the
 /// given anchor.
@@ -3425,16 +4423,19 @@ public string Command { get; } = "DOM.copyTo";
 /// <summary>
 /// Id of the node to copy.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Id of the element to drop the copy into.
 /// </summary>
-public int? TargetNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetNodeId")] public int? TargetNodeId { get; set; }
+
 /// <summary>
 /// Drop the copy before this node (if absent, the copy becomes the last child of
 /// `targetNodeId`).
 /// </summary>
-public int? InsertBeforeNodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("insertBeforeNodeId")] public int? InsertBeforeNodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMCopyToRequest"/>
 /// </summary>
@@ -3443,7 +4444,8 @@ internal partial class DOMCopyToResponse: IChromiumResponse
 /// <summary>
 /// Id of the node clone.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Describes node given its id, does not require domain to be enabled. Does not start tracking any
 /// objects, can be used for automation.
@@ -3458,25 +4460,30 @@ public string Command { get; } = "DOM.describeNode";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int? Depth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false).
 /// </summary>
-public bool? Pierce { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pierce")] public bool? Pierce { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDescribeNodeRequest"/>
 /// </summary>
@@ -3485,7 +4492,8 @@ internal partial class DOMDescribeNodeResponse: IChromiumResponse
 /// <summary>
 /// Node description.
 /// </summary>
-public Node Node { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("node")] public Node Node { get; set; }
+}
 /// <summary>
 /// Disables DOM agent for the given page.
 /// </summary>
@@ -3517,7 +4525,8 @@ public string Command { get; } = "DOM.discardSearchResults";
 /// <summary>
 /// Unique search session identifier.
 /// </summary>
-public string SearchId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("searchId")] public string SearchId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDiscardSearchResultsRequest"/>
 /// </summary>
@@ -3554,15 +4563,18 @@ public string Command { get; } = "DOM.focus";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMFocusRequest"/>
 /// </summary>
@@ -3582,7 +4594,8 @@ public string Command { get; } = "DOM.getAttributes";
 /// <summary>
 /// Id of the node to retrieve attibutes for.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetAttributesRequest"/>
 /// </summary>
@@ -3591,7 +4604,8 @@ internal partial class DOMGetAttributesResponse: IChromiumResponse
 /// <summary>
 /// An interleaved array of node attribute names and values.
 /// </summary>
-public string[] Attributes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public string[] Attributes { get; set; }
+}
 /// <summary>
 /// Returns boxes for the given node.
 /// </summary>
@@ -3605,15 +4619,18 @@ public string Command { get; } = "DOM.getBoxModel";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetBoxModelRequest"/>
 /// </summary>
@@ -3622,7 +4639,8 @@ internal partial class DOMGetBoxModelResponse: IChromiumResponse
 /// <summary>
 /// Box model for the node.
 /// </summary>
-public BoxModel Model { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("model")] public BoxModel Model { get; set; }
+}
 /// <summary>
 /// Returns quads that describe node position on the page. This method
 /// might return multiple quads for inline nodes.
@@ -3637,15 +4655,18 @@ public string Command { get; } = "DOM.getContentQuads";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetContentQuadsRequest"/>
 /// </summary>
@@ -3654,7 +4675,8 @@ internal partial class DOMGetContentQuadsResponse: IChromiumResponse
 /// <summary>
 /// Quads that describe node layout relative to viewport.
 /// </summary>
-public double?[][] Quads { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("quads")] public double?[][] Quads { get; set; }
+}
 /// <summary>
 /// Returns the root DOM node (and optionally the subtree) to the caller.
 /// </summary>
@@ -3669,12 +4691,14 @@ public string Command { get; } = "DOM.getDocument";
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int? Depth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false).
 /// </summary>
-public bool? Pierce { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pierce")] public bool? Pierce { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetDocumentRequest"/>
 /// </summary>
@@ -3683,7 +4707,8 @@ internal partial class DOMGetDocumentResponse: IChromiumResponse
 /// <summary>
 /// Resulting node.
 /// </summary>
-public Node Root { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("root")] public Node Root { get; set; }
+}
 /// <summary>
 /// Returns the root DOM node (and optionally the subtree) to the caller.
 /// </summary>
@@ -3698,12 +4723,14 @@ public string Command { get; } = "DOM.getFlattenedDocument";
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int? Depth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false).
 /// </summary>
-public bool? Pierce { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pierce")] public bool? Pierce { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetFlattenedDocumentRequest"/>
 /// </summary>
@@ -3712,7 +4739,8 @@ internal partial class DOMGetFlattenedDocumentResponse: IChromiumResponse
 /// <summary>
 /// Resulting node.
 /// </summary>
-public Node[] Nodes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public Node[] Nodes { get; set; }
+}
 /// <summary>
 /// Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is
 /// either returned or not.
@@ -3727,19 +4755,23 @@ public string Command { get; } = "DOM.getNodeForLocation";
 /// <summary>
 /// X coordinate.
 /// </summary>
-public int? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
 /// <summary>
 /// Y coordinate.
 /// </summary>
-public int? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
 /// <summary>
 /// False to skip to the nearest non-UA shadow root ancestor (default: false).
 /// </summary>
-public bool? IncludeUserAgentShadowDOM { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeUserAgentShadowDOM")] public bool? IncludeUserAgentShadowDOM { get; set; }
+
 /// <summary>
 /// Whether to ignore pointer-events: none on elements and hit test them.
 /// </summary>
-public bool? IgnorePointerEventsNone { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ignorePointerEventsNone")] public bool? IgnorePointerEventsNone { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetNodeForLocationRequest"/>
 /// </summary>
@@ -3748,15 +4780,18 @@ internal partial class DOMGetNodeForLocationResponse: IChromiumResponse
 /// <summary>
 /// Resulting node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// Frame this node belongs to.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Id of the node at given coordinates, only when enabled and requested document.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Returns node's HTML markup.
 /// </summary>
@@ -3770,15 +4805,18 @@ public string Command { get; } = "DOM.getOuterHTML";
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetOuterHTMLRequest"/>
 /// </summary>
@@ -3787,7 +4825,8 @@ internal partial class DOMGetOuterHTMLResponse: IChromiumResponse
 /// <summary>
 /// Outer HTML markup.
 /// </summary>
-public string OuterHTML { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("outerHTML")] public string OuterHTML { get; set; }
+}
 /// <summary>
 /// Returns the id of the nearest ancestor that is a relayout boundary.
 /// </summary>
@@ -3801,7 +4840,8 @@ public string Command { get; } = "DOM.getRelayoutBoundary";
 /// <summary>
 /// Id of the node.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetRelayoutBoundaryRequest"/>
 /// </summary>
@@ -3810,7 +4850,8 @@ internal partial class DOMGetRelayoutBoundaryResponse: IChromiumResponse
 /// <summary>
 /// Relayout boundary node id for the given node.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Returns search results from given `fromIndex` to given `toIndex` from the search with the given
 /// identifier.
@@ -3825,15 +4866,18 @@ public string Command { get; } = "DOM.getSearchResults";
 /// <summary>
 /// Unique search session identifier.
 /// </summary>
-public string SearchId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("searchId")] public string SearchId { get; set; }
+
 /// <summary>
 /// Start index of the search result to be returned.
 /// </summary>
-public int? FromIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fromIndex")] public int? FromIndex { get; set; }
+
 /// <summary>
 /// End index of the search result to be returned.
 /// </summary>
-public int? ToIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("toIndex")] public int? ToIndex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetSearchResultsRequest"/>
 /// </summary>
@@ -3842,7 +4886,8 @@ internal partial class DOMGetSearchResultsResponse: IChromiumResponse
 /// <summary>
 /// Ids of the search result nodes.
 /// </summary>
-public int?[] NodeIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
 /// <summary>
 /// Hides any highlight.
 /// </summary>
@@ -3924,16 +4969,19 @@ public string Command { get; } = "DOM.moveTo";
 /// <summary>
 /// Id of the node to move.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Id of the element to drop the moved node into.
 /// </summary>
-public int? TargetNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetNodeId")] public int? TargetNodeId { get; set; }
+
 /// <summary>
 /// Drop node before this one (if absent, the moved node becomes the last child of
 /// `targetNodeId`).
 /// </summary>
-public int? InsertBeforeNodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("insertBeforeNodeId")] public int? InsertBeforeNodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMMoveToRequest"/>
 /// </summary>
@@ -3942,7 +4990,8 @@ internal partial class DOMMoveToResponse: IChromiumResponse
 /// <summary>
 /// New id of the moved node.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Searches for a given string in the DOM tree. Use `getSearchResults` to access search results or
 /// `cancelSearch` to end this search session.
@@ -3957,11 +5006,13 @@ public string Command { get; } = "DOM.performSearch";
 /// <summary>
 /// Plain text or query selector or XPath search query.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// True to search in user agent shadow DOM.
 /// </summary>
-public bool? IncludeUserAgentShadowDOM { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("includeUserAgentShadowDOM")] public bool? IncludeUserAgentShadowDOM { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMPerformSearchRequest"/>
 /// </summary>
@@ -3970,11 +5021,13 @@ internal partial class DOMPerformSearchResponse: IChromiumResponse
 /// <summary>
 /// Unique search session identifier.
 /// </summary>
-public string SearchId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("searchId")] public string SearchId { get; set; }
+
 /// <summary>
 /// Number of search results.
 /// </summary>
-public int? ResultCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("resultCount")] public int? ResultCount { get; set; }
+}
 /// <summary>
 /// Requests that the node is sent to the caller given its path. // FIXME, use XPath
 /// </summary>
@@ -3988,7 +5041,8 @@ public string Command { get; } = "DOM.pushNodeByPathToFrontend";
 /// <summary>
 /// Path to node in the proprietary format.
 /// </summary>
-public string Path { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMPushNodeByPathToFrontendRequest"/>
 /// </summary>
@@ -3997,7 +5051,8 @@ internal partial class DOMPushNodeByPathToFrontendResponse: IChromiumResponse
 /// <summary>
 /// Id of the node for given path.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Requests that a batch of nodes is sent to the caller given their backend node ids.
 /// </summary>
@@ -4011,7 +5066,8 @@ public string Command { get; } = "DOM.pushNodesByBackendIdsToFrontend";
 /// <summary>
 /// The array of backend node ids.
 /// </summary>
-public int?[] BackendNodeIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeIds")] public int?[] BackendNodeIds { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMPushNodesByBackendIdsToFrontendRequest"/>
 /// </summary>
@@ -4021,7 +5077,8 @@ internal partial class DOMPushNodesByBackendIdsToFrontendResponse: IChromiumResp
 /// The array of ids of pushed nodes that correspond to the backend ids specified in
 /// backendNodeIds.
 /// </summary>
-public int?[] NodeIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
 /// <summary>
 /// Executes `querySelector` on a given node.
 /// </summary>
@@ -4035,11 +5092,13 @@ public string Command { get; } = "DOM.querySelector";
 /// <summary>
 /// Id of the node to query upon.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Selector string.
 /// </summary>
-public string Selector { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMQuerySelectorRequest"/>
 /// </summary>
@@ -4048,7 +5107,8 @@ internal partial class DOMQuerySelectorResponse: IChromiumResponse
 /// <summary>
 /// Query selector result.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Executes `querySelectorAll` on a given node.
 /// </summary>
@@ -4062,11 +5122,13 @@ public string Command { get; } = "DOM.querySelectorAll";
 /// <summary>
 /// Id of the node to query upon.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Selector string.
 /// </summary>
-public string Selector { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMQuerySelectorAllRequest"/>
 /// </summary>
@@ -4075,7 +5137,8 @@ internal partial class DOMQuerySelectorAllResponse: IChromiumResponse
 /// <summary>
 /// Query selector result.
 /// </summary>
-public int?[] NodeIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
 /// <summary>
 /// Re-does the last undone action.
 /// </summary>
@@ -4106,11 +5169,13 @@ public string Command { get; } = "DOM.removeAttribute";
 /// <summary>
 /// Id of the element to remove attribute from.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Name of the attribute to remove.
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMRemoveAttributeRequest"/>
 /// </summary>
@@ -4130,7 +5195,8 @@ public string Command { get; } = "DOM.removeNode";
 /// <summary>
 /// Id of the node to remove.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMRemoveNodeRequest"/>
 /// </summary>
@@ -4152,17 +5218,20 @@ public string Command { get; } = "DOM.requestChildNodes";
 /// <summary>
 /// Id of the node to get children for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int? Depth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the sub-tree
 /// (default is false).
 /// </summary>
-public bool? Pierce { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pierce")] public bool? Pierce { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMRequestChildNodesRequest"/>
 /// </summary>
@@ -4184,7 +5253,8 @@ public string Command { get; } = "DOM.requestNode";
 /// <summary>
 /// JavaScript object id to convert into node.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMRequestNodeRequest"/>
 /// </summary>
@@ -4193,7 +5263,8 @@ internal partial class DOMRequestNodeResponse: IChromiumResponse
 /// <summary>
 /// Node id for given object.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Resolves the JavaScript node object for a given NodeId or BackendNodeId.
 /// </summary>
@@ -4207,19 +5278,23 @@ public string Command { get; } = "DOM.resolveNode";
 /// <summary>
 /// Id of the node to resolve.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Backend identifier of the node to resolve.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// Execution context in which to resolve the node.
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMResolveNodeRequest"/>
 /// </summary>
@@ -4228,7 +5303,8 @@ internal partial class DOMResolveNodeResponse: IChromiumResponse
 /// <summary>
 /// JavaScript object wrapper for given node.
 /// </summary>
-public Runtime.RemoteObject Object { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+}
 /// <summary>
 /// Sets attribute for an element with given id.
 /// </summary>
@@ -4242,15 +5318,18 @@ public string Command { get; } = "DOM.setAttributeValue";
 /// <summary>
 /// Id of the element to set attribute for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Attribute name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Attribute value.
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetAttributeValueRequest"/>
 /// </summary>
@@ -4271,16 +5350,19 @@ public string Command { get; } = "DOM.setAttributesAsText";
 /// <summary>
 /// Id of the element to set attributes for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Text with a number of attributes. Will parse this text using HTML parser.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Attribute name to replace with new attributes derived from text in case text parsed
 /// successfully.
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetAttributesAsTextRequest"/>
 /// </summary>
@@ -4300,19 +5382,23 @@ public string Command { get; } = "DOM.setFileInputFiles";
 /// <summary>
 /// Array of file paths to set.
 /// </summary>
-public string[] Files { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("files")] public string[] Files { get; set; }
+
 /// <summary>
 /// Identifier of the node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetFileInputFilesRequest"/>
 /// </summary>
@@ -4332,7 +5418,8 @@ public string Command { get; } = "DOM.setNodeStackTracesEnabled";
 /// <summary>
 /// Enable or disable.
 /// </summary>
-public bool? Enable { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enable")] public bool? Enable { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetNodeStackTracesEnabledRequest"/>
 /// </summary>
@@ -4352,7 +5439,8 @@ public string Command { get; } = "DOM.getNodeStackTraces";
 /// <summary>
 /// Id of the node to get stack traces for.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetNodeStackTracesRequest"/>
 /// </summary>
@@ -4361,7 +5449,8 @@ internal partial class DOMGetNodeStackTracesResponse: IChromiumResponse
 /// <summary>
 /// Creation stack trace, if available.
 /// </summary>
-public Runtime.StackTrace Creation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("creation")] public Runtime.StackTrace Creation { get; set; }
+}
 /// <summary>
 /// Returns file information for the given
 /// File wrapper.
@@ -4376,7 +5465,8 @@ public string Command { get; } = "DOM.getFileInfo";
 /// <summary>
 /// JavaScript object id of the node wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetFileInfoRequest"/>
 /// </summary>
@@ -4385,7 +5475,8 @@ internal partial class DOMGetFileInfoResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string Path { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+}
 /// <summary>
 /// Enables console to refer to the node with given id via $x (see Command Line API for more details
 /// $x functions).
@@ -4400,7 +5491,8 @@ public string Command { get; } = "DOM.setInspectedNode";
 /// <summary>
 /// DOM node id to be accessible by means of $x command line API.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetInspectedNodeRequest"/>
 /// </summary>
@@ -4420,11 +5512,13 @@ public string Command { get; } = "DOM.setNodeName";
 /// <summary>
 /// Id of the node to set name for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// New node's name.
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetNodeNameRequest"/>
 /// </summary>
@@ -4433,7 +5527,8 @@ internal partial class DOMSetNodeNameResponse: IChromiumResponse
 /// <summary>
 /// New node's id.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Sets node value for a node with given id.
 /// </summary>
@@ -4447,11 +5542,13 @@ public string Command { get; } = "DOM.setNodeValue";
 /// <summary>
 /// Id of the node to set value for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// New node's value.
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetNodeValueRequest"/>
 /// </summary>
@@ -4471,11 +5568,13 @@ public string Command { get; } = "DOM.setOuterHTML";
 /// <summary>
 /// Id of the node to set markup for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Outer HTML markup to set.
 /// </summary>
-public string OuterHTML { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("outerHTML")] public string OuterHTML { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSetOuterHTMLRequest"/>
 /// </summary>
@@ -4512,7 +5611,8 @@ public string Command { get; } = "DOM.getFrameOwner";
 /// <summary>
 /// 
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMGetFrameOwnerRequest"/>
 /// </summary>
@@ -4521,11 +5621,13 @@ internal partial class DOMGetFrameOwnerResponse: IChromiumResponse
 /// <summary>
 /// Resulting node.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// Id of the node at given coordinates, only when enabled and requested document.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Fired when `Element`'s attribute is modified.
 /// </summary>
@@ -4538,15 +5640,18 @@ public string InternalName { get; } = "DOM.attributeModified";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Attribute name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Attribute value.
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Fired when `Element`'s attribute is removed.
 /// </summary>
@@ -4559,11 +5664,13 @@ public string InternalName { get; } = "DOM.attributeRemoved";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// A ttribute name.
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Mirrors `DOMCharacterDataModified` event.
 /// </summary>
@@ -4576,11 +5683,13 @@ public string InternalName { get; } = "DOM.characterDataModified";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// New text value.
 /// </summary>
-public string CharacterData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("characterData")] public string CharacterData { get; set; }
+}
 /// <summary>
 /// Fired when `Container`'s child node count has changed.
 /// </summary>
@@ -4593,11 +5702,13 @@ public string InternalName { get; } = "DOM.childNodeCountUpdated";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// New node count.
 /// </summary>
-public int? ChildNodeCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("childNodeCount")] public int? ChildNodeCount { get; set; }
+}
 /// <summary>
 /// Mirrors `DOMNodeInserted` event.
 /// </summary>
@@ -4610,15 +5721,18 @@ public string InternalName { get; } = "DOM.childNodeInserted";
 /// <summary>
 /// Id of the node that has changed.
 /// </summary>
-public int? ParentNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentNodeId")] public int? ParentNodeId { get; set; }
+
 /// <summary>
 /// If of the previous siblint.
 /// </summary>
-public int? PreviousNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("previousNodeId")] public int? PreviousNodeId { get; set; }
+
 /// <summary>
 /// Inserted node data.
 /// </summary>
-public Node Node { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("node")] public Node Node { get; set; }
+}
 /// <summary>
 /// Mirrors `DOMNodeRemoved` event.
 /// </summary>
@@ -4631,11 +5745,13 @@ public string InternalName { get; } = "DOM.childNodeRemoved";
 /// <summary>
 /// Parent id.
 /// </summary>
-public int? ParentNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentNodeId")] public int? ParentNodeId { get; set; }
+
 /// <summary>
 /// Id of the node that has been removed.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Called when distrubution is changed.
 /// </summary>
@@ -4648,11 +5764,13 @@ public string InternalName { get; } = "DOM.distributedNodesUpdated";
 /// <summary>
 /// Insertion point where distrubuted nodes were updated.
 /// </summary>
-public int? InsertionPointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("insertionPointId")] public int? InsertionPointId { get; set; }
+
 /// <summary>
 /// Distributed nodes for given insertion point.
 /// </summary>
-public BackendNode[] DistributedNodes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("distributedNodes")] public BackendNode[] DistributedNodes { get; set; }
+}
 /// <summary>
 /// Fired when `Document` has been totally updated. Node ids are no longer valid.
 /// </summary>
@@ -4675,7 +5793,8 @@ public string InternalName { get; } = "DOM.inlineStyleInvalidated";
 /// <summary>
 /// Ids of the nodes for which the inline styles have been invalidated.
 /// </summary>
-public int?[] NodeIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
 /// <summary>
 /// Called when a pseudo element is added to an element.
 /// </summary>
@@ -4688,11 +5807,13 @@ public string InternalName { get; } = "DOM.pseudoElementAdded";
 /// <summary>
 /// Pseudo element's parent element id.
 /// </summary>
-public int? ParentId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
 /// <summary>
 /// The added pseudo element.
 /// </summary>
-public Node PseudoElement { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElement")] public Node PseudoElement { get; set; }
+}
 /// <summary>
 /// Called when a pseudo element is removed from an element.
 /// </summary>
@@ -4705,11 +5826,13 @@ public string InternalName { get; } = "DOM.pseudoElementRemoved";
 /// <summary>
 /// Pseudo element's parent element id.
 /// </summary>
-public int? ParentId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
 /// <summary>
 /// The removed pseudo element id.
 /// </summary>
-public int? PseudoElementId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElementId")] public int? PseudoElementId { get; set; }
+}
 /// <summary>
 /// Fired when backend wants to provide client with the missing DOM structure. This happens upon
 /// most of the calls requesting node ids.
@@ -4723,11 +5846,13 @@ public string InternalName { get; } = "DOM.setChildNodes";
 /// <summary>
 /// Parent node id to populate with children.
 /// </summary>
-public int? ParentId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
 /// <summary>
 /// Child nodes array.
 /// </summary>
-public Node[] Nodes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public Node[] Nodes { get; set; }
+}
 /// <summary>
 /// Called when shadow root is popped from the element.
 /// </summary>
@@ -4740,11 +5865,13 @@ public string InternalName { get; } = "DOM.shadowRootPopped";
 /// <summary>
 /// Host element id.
 /// </summary>
-public int? HostId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hostId")] public int? HostId { get; set; }
+
 /// <summary>
 /// Shadow root id.
 /// </summary>
-public int? RootId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("rootId")] public int? RootId { get; set; }
+}
 /// <summary>
 /// Called when shadow root is pushed into the element.
 /// </summary>
@@ -4757,23 +5884,16 @@ public string InternalName { get; } = "DOM.shadowRootPushed";
 /// <summary>
 /// Host element id.
 /// </summary>
-public int? HostId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hostId")] public int? HostId { get; set; }
+
 /// <summary>
 /// Shadow root.
 /// </summary>
-public Node Root { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("root")] public Node Root { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.DOMDebugger
 {
-/// <summary>
-/// DOM breakpoint type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum DOMBreakpointType
-{
-[System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
-[System.Runtime.Serialization.EnumMember(Value = "attribute-modified")]AttributeModified,
-[System.Runtime.Serialization.EnumMember(Value = "node-removed")]NodeRemoved}
 /// <summary>
 /// Object event listener.
 /// </summary>
@@ -4782,43 +5902,53 @@ internal partial class EventListener
 /// <summary>
 /// `EventListener`'s type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// `EventListener`'s useCapture.
 /// </summary>
-public bool? UseCapture { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("useCapture")] public bool? UseCapture { get; set; }
+
 /// <summary>
 /// `EventListener`'s passive flag.
 /// </summary>
-public bool? Passive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("passive")] public bool? Passive { get; set; }
+
 /// <summary>
 /// `EventListener`'s once flag.
 /// </summary>
-public bool? Once { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("once")] public bool? Once { get; set; }
+
 /// <summary>
 /// Script id of the handler code.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int? ColumnNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+
 /// <summary>
 /// Event handler function value.
 /// </summary>
-public Runtime.RemoteObject Handler { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("handler")] public Runtime.RemoteObject Handler { get; set; }
+
 /// <summary>
 /// Event original handler function value.
 /// </summary>
-public Runtime.RemoteObject OriginalHandler { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("originalHandler")] public Runtime.RemoteObject OriginalHandler { get; set; }
+
 /// <summary>
 /// Node the listener is added to (if any).
 /// </summary>
-public int? BackendNodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+}
 /// <summary>
 /// Returns event listeners of the given object.
 /// </summary>
@@ -4832,17 +5962,20 @@ public string Command { get; } = "DOMDebugger.getEventListeners";
 /// <summary>
 /// Identifier of the object to return listeners for.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// The maximum depth at which Node children should be retrieved, defaults to 1. Use -1 for the
 /// entire subtree or provide an integer larger than 0.
 /// </summary>
-public int? Depth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+
 /// <summary>
 /// Whether or not iframes and shadow roots should be traversed when returning the subtree
 /// (default is false). Reports listeners for all contexts if pierce is enabled.
 /// </summary>
-public bool? Pierce { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pierce")] public bool? Pierce { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerGetEventListenersRequest"/>
 /// </summary>
@@ -4851,7 +5984,8 @@ internal partial class DOMDebuggerGetEventListenersResponse: IChromiumResponse
 /// <summary>
 /// Array of relevant listeners.
 /// </summary>
-public EventListener[] Listeners { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("listeners")] public EventListener[] Listeners { get; set; }
+}
 /// <summary>
 /// Removes DOM breakpoint that was set using `setDOMBreakpoint`.
 /// </summary>
@@ -4865,12 +5999,14 @@ public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
 /// <summary>
 /// Identifier of the node to remove breakpoint from.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Type of the breakpoint to remove.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public DOMBreakpointType Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public DOMBreakpointType Type { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveDOMBreakpointRequest"/>
 /// </summary>
@@ -4890,11 +6026,13 @@ public string Command { get; } = "DOMDebugger.removeEventListenerBreakpoint";
 /// <summary>
 /// Event name.
 /// </summary>
-public string EventName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+
 /// <summary>
 /// EventTarget interface name.
 /// </summary>
-public string TargetName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetName")] public string TargetName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveEventListenerBreakpointRequest"/>
 /// </summary>
@@ -4914,7 +6052,8 @@ public string Command { get; } = "DOMDebugger.removeInstrumentationBreakpoint";
 /// <summary>
 /// Instrumentation name to stop on.
 /// </summary>
-public string EventName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveInstrumentationBreakpointRequest"/>
 /// </summary>
@@ -4934,7 +6073,8 @@ public string Command { get; } = "DOMDebugger.removeXHRBreakpoint";
 /// <summary>
 /// Resource URL substring.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerRemoveXHRBreakpointRequest"/>
 /// </summary>
@@ -4954,12 +6094,14 @@ public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
 /// <summary>
 /// Identifier of the node to set breakpoint on.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Type of the operation to stop upon.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public DOMBreakpointType Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public DOMBreakpointType Type { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetDOMBreakpointRequest"/>
 /// </summary>
@@ -4979,12 +6121,14 @@ public string Command { get; } = "DOMDebugger.setEventListenerBreakpoint";
 /// <summary>
 /// DOM Event name to stop on (any DOM event will do).
 /// </summary>
-public string EventName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+
 /// <summary>
 /// EventTarget interface name to stop on. If equal to `"*"` or not provided, will stop on any
 /// EventTarget.
 /// </summary>
-public string TargetName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetName")] public string TargetName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetEventListenerBreakpointRequest"/>
 /// </summary>
@@ -5004,7 +6148,8 @@ public string Command { get; } = "DOMDebugger.setInstrumentationBreakpoint";
 /// <summary>
 /// Instrumentation name to stop on.
 /// </summary>
-public string EventName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetInstrumentationBreakpointRequest"/>
 /// </summary>
@@ -5024,7 +6169,8 @@ public string Command { get; } = "DOMDebugger.setXHRBreakpoint";
 /// <summary>
 /// Resource URL substring. All XHRs having this substring in the URL will get stopped upon.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMDebuggerSetXHRBreakpointRequest"/>
 /// </summary>
@@ -5042,121 +6188,151 @@ internal partial class DOMNode
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int? NodeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeType")] public int? NodeType { get; set; }
+
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
-public string NodeName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeName")] public string NodeName { get; set; }
+
 /// <summary>
 /// `Node`'s nodeValue.
 /// </summary>
-public string NodeValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeValue")] public string NodeValue { get; set; }
+
 /// <summary>
 /// Only set for textarea elements, contains the text value.
 /// </summary>
-public string TextValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("textValue")] public string TextValue { get; set; }
+
 /// <summary>
 /// Only set for input elements, contains the input's associated text value.
 /// </summary>
-public string InputValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inputValue")] public string InputValue { get; set; }
+
 /// <summary>
 /// Only set for radio and checkbox input elements, indicates if the element has been checked
 /// </summary>
-public bool? InputChecked { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inputChecked")] public bool? InputChecked { get; set; }
+
 /// <summary>
 /// Only set for option elements, indicates if the element has been selected
 /// </summary>
-public bool? OptionSelected { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("optionSelected")] public bool? OptionSelected { get; set; }
+
 /// <summary>
 /// `Node`'s id, corresponds to DOM.Node.backendNodeId.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// The indexes of the node's child nodes in the `domNodes` array returned by `getSnapshot`, if
 /// any.
 /// </summary>
-public int?[] ChildNodeIndexes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("childNodeIndexes")] public int?[] ChildNodeIndexes { get; set; }
+
 /// <summary>
 /// Attributes of an `Element` node.
 /// </summary>
-public NameValue[] Attributes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public NameValue[] Attributes { get; set; }
+
 /// <summary>
 /// Indexes of pseudo elements associated with this node in the `domNodes` array returned by
 /// `getSnapshot`, if any.
 /// </summary>
-public int?[] PseudoElementIndexes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElementIndexes")] public int?[] PseudoElementIndexes { get; set; }
+
 /// <summary>
 /// The index of the node's related layout tree node in the `layoutTreeNodes` array returned by
 /// `getSnapshot`, if any.
 /// </summary>
-public int? LayoutNodeIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layoutNodeIndex")] public int? LayoutNodeIndex { get; set; }
+
 /// <summary>
 /// Document URL that `Document` or `FrameOwner` node points to.
 /// </summary>
-public string DocumentURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public string DocumentURL { get; set; }
+
 /// <summary>
 /// Base URL that `Document` or `FrameOwner` node uses for URL completion.
 /// </summary>
-public string BaseURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("baseURL")] public string BaseURL { get; set; }
+
 /// <summary>
 /// Only set for documents, contains the document's content language.
 /// </summary>
-public string ContentLanguage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentLanguage")] public string ContentLanguage { get; set; }
+
 /// <summary>
 /// Only set for documents, contains the document's character set encoding.
 /// </summary>
-public string DocumentEncoding { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentEncoding")] public string DocumentEncoding { get; set; }
+
 /// <summary>
 /// `DocumentType` node's publicId.
 /// </summary>
-public string PublicId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("publicId")] public string PublicId { get; set; }
+
 /// <summary>
 /// `DocumentType` node's systemId.
 /// </summary>
-public string SystemId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("systemId")] public string SystemId { get; set; }
+
 /// <summary>
 /// Frame ID for frame owner elements and also for the document node.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// The index of a frame owner element's content document in the `domNodes` array returned by
 /// `getSnapshot`, if any.
 /// </summary>
-public int? ContentDocumentIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentDocumentIndex")] public int? ContentDocumentIndex { get; set; }
+
 /// <summary>
 /// Type of a pseudo element node.
 /// </summary>
-public DOM.PseudoType PseudoType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("pseudoType")] public DOM.PseudoType? PseudoType { get; set; }
+
 /// <summary>
 /// Shadow root type.
 /// </summary>
-public DOM.ShadowRootType ShadowRootType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("shadowRootType")] public DOM.ShadowRootType? ShadowRootType { get; set; }
+
 /// <summary>
 /// Whether this DOM node responds to mouse clicks. This includes nodes that have had click
 /// event listeners attached via JavaScript as well as anchor tags that naturally navigate when
 /// clicked.
 /// </summary>
-public bool? IsClickable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isClickable")] public bool? IsClickable { get; set; }
+
 /// <summary>
 /// Details of the node's event listeners, if any.
 /// </summary>
-public DOMDebugger.EventListener[] EventListeners { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventListeners")] public DOMDebugger.EventListener[] EventListeners { get; set; }
+
 /// <summary>
 /// The selected url for nodes with a srcset attribute.
 /// </summary>
-public string CurrentSourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("currentSourceURL")] public string CurrentSourceURL { get; set; }
+
 /// <summary>
 /// The url of the script (if any) that generates this node.
 /// </summary>
-public string OriginURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("originURL")] public string OriginURL { get; set; }
+
 /// <summary>
 /// Scroll offsets, set when this node is a Document.
 /// </summary>
-public double? ScrollOffsetX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollOffsetX")] public double? ScrollOffsetX { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? ScrollOffsetY { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scrollOffsetY")] public double? ScrollOffsetY { get; set; }
+}
 /// <summary>
 /// Details of post layout rendered text positions. The exact layout should not be regarded as
 /// stable and may change between versions.
@@ -5166,17 +6342,20 @@ internal partial class InlineTextBox
 /// <summary>
 /// The bounding box in document coordinates. Note that scroll offset of the document is ignored.
 /// </summary>
-public DOM.Rect BoundingBox { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("boundingBox")] public DOM.Rect BoundingBox { get; set; }
+
 /// <summary>
 /// The starting index in characters, for this post layout textbox substring. Characters that
 /// would be represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int? StartCharacterIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startCharacterIndex")] public int? StartCharacterIndex { get; set; }
+
 /// <summary>
 /// The number of characters in this post layout textbox substring. Characters that would be
 /// represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int? NumCharacters { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("numCharacters")] public int? NumCharacters { get; set; }
+}
 /// <summary>
 /// Details of an element in the DOM tree with a LayoutObject.
 /// </summary>
@@ -5185,33 +6364,40 @@ internal partial class LayoutTreeNode
 /// <summary>
 /// The index of the related DOM node in the `domNodes` array returned by `getSnapshot`.
 /// </summary>
-public int? DomNodeIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domNodeIndex")] public int? DomNodeIndex { get; set; }
+
 /// <summary>
 /// The bounding box in document coordinates. Note that scroll offset of the document is ignored.
 /// </summary>
-public DOM.Rect BoundingBox { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("boundingBox")] public DOM.Rect BoundingBox { get; set; }
+
 /// <summary>
 /// Contents of the LayoutText, if any.
 /// </summary>
-public string LayoutText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layoutText")] public string LayoutText { get; set; }
+
 /// <summary>
 /// The post-layout inline text nodes, if any.
 /// </summary>
-public InlineTextBox[] InlineTextNodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inlineTextNodes")] public InlineTextBox[] InlineTextNodes { get; set; }
+
 /// <summary>
 /// Index into the `computedStyles` array returned by `getSnapshot`.
 /// </summary>
-public int? StyleIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleIndex")] public int? StyleIndex { get; set; }
+
 /// <summary>
 /// Global paint order index, which is determined by the stacking order of the nodes. Nodes
 /// that are painted together will have the same index. Only provided if includePaintOrder in
 /// getSnapshot was true.
 /// </summary>
-public int? PaintOrder { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paintOrder")] public int? PaintOrder { get; set; }
+
 /// <summary>
 /// Set to true to indicate the element begins a new stacking context.
 /// </summary>
-public bool? IsStackingContext { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isStackingContext")] public bool? IsStackingContext { get; set; }
+}
 /// <summary>
 /// A subset of the full ComputedStyle as defined by the request whitelist.
 /// </summary>
@@ -5220,7 +6406,8 @@ internal partial class ComputedStyle
 /// <summary>
 /// Name/value pairs of computed style properties.
 /// </summary>
-public NameValue[] Properties { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public NameValue[] Properties { get; set; }
+}
 /// <summary>
 /// A name/value pair.
 /// </summary>
@@ -5229,11 +6416,13 @@ internal partial class NameValue
 /// <summary>
 /// Attribute/property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Attribute/property value.
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Data that is only present on rare nodes.
 /// </summary>
@@ -5242,11 +6431,13 @@ internal partial class RareStringData
 /// <summary>
 /// 
 /// </summary>
-public int?[] Index { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("index")] public int?[] Index { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int[] Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public int[] Value { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5255,7 +6446,8 @@ internal partial class RareBooleanData
 /// <summary>
 /// 
 /// </summary>
-public int?[] Index { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("index")] public int?[] Index { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5264,11 +6456,13 @@ internal partial class RareIntegerData
 /// <summary>
 /// 
 /// </summary>
-public int?[] Index { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("index")] public int?[] Index { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int?[] Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public int?[] Value { get; set; }
+}
 /// <summary>
 /// Document snapshot.
 /// </summary>
@@ -5277,63 +6471,78 @@ internal partial class DocumentSnapshot
 /// <summary>
 /// Document URL that `Document` or `FrameOwner` node points to.
 /// </summary>
-public int DocumentURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public int DocumentURL { get; set; }
+
 /// <summary>
 /// Document title.
 /// </summary>
-public int Title { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("title")] public int Title { get; set; }
+
 /// <summary>
 /// Base URL that `Document` or `FrameOwner` node uses for URL completion.
 /// </summary>
-public int BaseURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("baseURL")] public int BaseURL { get; set; }
+
 /// <summary>
 /// Contains the document's content language.
 /// </summary>
-public int ContentLanguage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentLanguage")] public int ContentLanguage { get; set; }
+
 /// <summary>
 /// Contains the document's character set encoding.
 /// </summary>
-public int EncodingName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("encodingName")] public int EncodingName { get; set; }
+
 /// <summary>
 /// `DocumentType` node's publicId.
 /// </summary>
-public int PublicId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("publicId")] public int PublicId { get; set; }
+
 /// <summary>
 /// `DocumentType` node's systemId.
 /// </summary>
-public int SystemId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("systemId")] public int SystemId { get; set; }
+
 /// <summary>
 /// Frame ID for frame owner elements and also for the document node.
 /// </summary>
-public int FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public int FrameId { get; set; }
+
 /// <summary>
 /// A table with dom nodes.
 /// </summary>
-public NodeTreeSnapshot Nodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public NodeTreeSnapshot Nodes { get; set; }
+
 /// <summary>
 /// The nodes in the layout tree.
 /// </summary>
-public LayoutTreeSnapshot Layout { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layout")] public LayoutTreeSnapshot Layout { get; set; }
+
 /// <summary>
 /// The post-layout inline text nodes.
 /// </summary>
-public TextBoxSnapshot TextBoxes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("textBoxes")] public TextBoxSnapshot TextBoxes { get; set; }
+
 /// <summary>
 /// Horizontal scroll offset.
 /// </summary>
-public double? ScrollOffsetX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollOffsetX")] public double? ScrollOffsetX { get; set; }
+
 /// <summary>
 /// Vertical scroll offset.
 /// </summary>
-public double? ScrollOffsetY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollOffsetY")] public double? ScrollOffsetY { get; set; }
+
 /// <summary>
 /// Document content width.
 /// </summary>
-public double? ContentWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentWidth")] public double? ContentWidth { get; set; }
+
 /// <summary>
 /// Document content height.
 /// </summary>
-public double? ContentHeight { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contentHeight")] public double? ContentHeight { get; set; }
+}
 /// <summary>
 /// Table containing nodes.
 /// </summary>
@@ -5342,65 +6551,80 @@ internal partial class NodeTreeSnapshot
 /// <summary>
 /// Parent node index.
 /// </summary>
-public int?[] ParentIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentIndex")] public int?[] ParentIndex { get; set; }
+
 /// <summary>
 /// `Node`'s nodeType.
 /// </summary>
-public int?[] NodeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeType")] public int?[] NodeType { get; set; }
+
 /// <summary>
 /// `Node`'s nodeName.
 /// </summary>
-public int[] NodeName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeName")] public int[] NodeName { get; set; }
+
 /// <summary>
 /// `Node`'s nodeValue.
 /// </summary>
-public int[] NodeValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeValue")] public int[] NodeValue { get; set; }
+
 /// <summary>
 /// `Node`'s id, corresponds to DOM.Node.backendNodeId.
 /// </summary>
-public int?[] BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int?[] BackendNodeId { get; set; }
+
 /// <summary>
 /// Attributes of an `Element` node. Flatten name, value pairs.
 /// </summary>
-public int[][] Attributes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public int[][] Attributes { get; set; }
+
 /// <summary>
 /// Only set for textarea elements, contains the text value.
 /// </summary>
-public RareStringData TextValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("textValue")] public RareStringData TextValue { get; set; }
+
 /// <summary>
 /// Only set for input elements, contains the input's associated text value.
 /// </summary>
-public RareStringData InputValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inputValue")] public RareStringData InputValue { get; set; }
+
 /// <summary>
 /// Only set for radio and checkbox input elements, indicates if the element has been checked
 /// </summary>
-public RareBooleanData InputChecked { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("inputChecked")] public RareBooleanData InputChecked { get; set; }
+
 /// <summary>
 /// Only set for option elements, indicates if the element has been selected
 /// </summary>
-public RareBooleanData OptionSelected { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("optionSelected")] public RareBooleanData OptionSelected { get; set; }
+
 /// <summary>
 /// The index of the document in the list of the snapshot documents.
 /// </summary>
-public RareIntegerData ContentDocumentIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentDocumentIndex")] public RareIntegerData ContentDocumentIndex { get; set; }
+
 /// <summary>
 /// Type of a pseudo element node.
 /// </summary>
-public RareStringData PseudoType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoType")] public RareStringData PseudoType { get; set; }
+
 /// <summary>
 /// Whether this DOM node responds to mouse clicks. This includes nodes that have had click
 /// event listeners attached via JavaScript as well as anchor tags that naturally navigate when
 /// clicked.
 /// </summary>
-public RareBooleanData IsClickable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isClickable")] public RareBooleanData IsClickable { get; set; }
+
 /// <summary>
 /// The selected url for nodes with a srcset attribute.
 /// </summary>
-public RareStringData CurrentSourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("currentSourceURL")] public RareStringData CurrentSourceURL { get; set; }
+
 /// <summary>
 /// The url of the script (if any) that generates this node.
 /// </summary>
-public RareStringData OriginURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("originURL")] public RareStringData OriginURL { get; set; }
+}
 /// <summary>
 /// Table of details of an element in the DOM tree with a LayoutObject.
 /// </summary>
@@ -5409,41 +6633,50 @@ internal partial class LayoutTreeSnapshot
 /// <summary>
 /// Index of the corresponding node in the `NodeTreeSnapshot` array returned by `captureSnapshot`.
 /// </summary>
-public int?[] NodeIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeIndex")] public int?[] NodeIndex { get; set; }
+
 /// <summary>
 /// Array of indexes specifying computed style strings, filtered according to the `computedStyles` parameter passed to `captureSnapshot`.
 /// </summary>
-public int[][] Styles { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styles")] public int[][] Styles { get; set; }
+
 /// <summary>
 /// The absolute position bounding box.
 /// </summary>
-public double?[][] Bounds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public double?[][] Bounds { get; set; }
+
 /// <summary>
 /// Contents of the LayoutText, if any.
 /// </summary>
-public int[] Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public int[] Text { get; set; }
+
 /// <summary>
 /// Stacking context information.
 /// </summary>
-public RareBooleanData StackingContexts { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackingContexts")] public RareBooleanData StackingContexts { get; set; }
+
 /// <summary>
 /// Global paint order index, which is determined by the stacking order of the nodes. Nodes
 /// that are painted together will have the same index. Only provided if includePaintOrder in
 /// captureSnapshot was true.
 /// </summary>
-public int?[] PaintOrders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paintOrders")] public int?[] PaintOrders { get; set; }
+
 /// <summary>
 /// The offset rect of nodes. Only available when includeDOMRects is set to true
 /// </summary>
-public double?[][] OffsetRects { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offsetRects")] public double?[][] OffsetRects { get; set; }
+
 /// <summary>
 /// The scroll rect of nodes. Only available when includeDOMRects is set to true
 /// </summary>
-public double?[][] ScrollRects { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollRects")] public double?[][] ScrollRects { get; set; }
+
 /// <summary>
 /// The client rect of nodes. Only available when includeDOMRects is set to true
 /// </summary>
-public double?[][] ClientRects { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("clientRects")] public double?[][] ClientRects { get; set; }
+}
 /// <summary>
 /// Table of details of the post layout rendered text positions. The exact layout should not be regarded as
 /// stable and may change between versions.
@@ -5453,21 +6686,25 @@ internal partial class TextBoxSnapshot
 /// <summary>
 /// Index of the layout tree node that owns this box collection.
 /// </summary>
-public int?[] LayoutIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layoutIndex")] public int?[] LayoutIndex { get; set; }
+
 /// <summary>
 /// The absolute position bounding box.
 /// </summary>
-public double?[][] Bounds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public double?[][] Bounds { get; set; }
+
 /// <summary>
 /// The starting index in characters, for this post layout textbox substring. Characters that
 /// would be represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int?[] Start { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("start")] public int?[] Start { get; set; }
+
 /// <summary>
 /// The number of characters in this post layout textbox substring. Characters that would be
 /// represented as a surrogate pair in UTF-16 have length 2.
 /// </summary>
-public int?[] Length { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("length")] public int?[] Length { get; set; }
+}
 /// <summary>
 /// Disables DOM snapshot agent for the given page.
 /// </summary>
@@ -5518,19 +6755,23 @@ public string Command { get; } = "DOMSnapshot.getSnapshot";
 /// <summary>
 /// Whitelist of computed styles to return.
 /// </summary>
-public string[] ComputedStyleWhitelist { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("computedStyleWhitelist")] public string[] ComputedStyleWhitelist { get; set; }
+
 /// <summary>
 /// Whether or not to retrieve details of DOM listeners (default false).
 /// </summary>
-public bool? IncludeEventListeners { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeEventListeners")] public bool? IncludeEventListeners { get; set; }
+
 /// <summary>
 /// Whether to determine and include the paint order index of LayoutTreeNodes (default false).
 /// </summary>
-public bool? IncludePaintOrder { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includePaintOrder")] public bool? IncludePaintOrder { get; set; }
+
 /// <summary>
 /// Whether to include UA shadow tree in the snapshot (default false).
 /// </summary>
-public bool? IncludeUserAgentShadowTree { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("includeUserAgentShadowTree")] public bool? IncludeUserAgentShadowTree { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSnapshotGetSnapshotRequest"/>
 /// </summary>
@@ -5539,15 +6780,18 @@ internal partial class DOMSnapshotGetSnapshotResponse: IChromiumResponse
 /// <summary>
 /// The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.
 /// </summary>
-public DOMNode[] DomNodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domNodes")] public DOMNode[] DomNodes { get; set; }
+
 /// <summary>
 /// The nodes in the layout tree.
 /// </summary>
-public LayoutTreeNode[] LayoutTreeNodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layoutTreeNodes")] public LayoutTreeNode[] LayoutTreeNodes { get; set; }
+
 /// <summary>
 /// Whitelisted ComputedStyle properties for each node in the layout tree.
 /// </summary>
-public ComputedStyle[] ComputedStyles { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("computedStyles")] public ComputedStyle[] ComputedStyles { get; set; }
+}
 /// <summary>
 /// Returns a document snapshot, including the full DOM tree of the root node (including iframes,
 /// template contents, and imported documents) in a flattened array, as well as layout and
@@ -5564,15 +6808,18 @@ public string Command { get; } = "DOMSnapshot.captureSnapshot";
 /// <summary>
 /// Whitelist of computed styles to return.
 /// </summary>
-public string[] ComputedStyles { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("computedStyles")] public string[] ComputedStyles { get; set; }
+
 /// <summary>
 /// Whether to include layout object paint orders into the snapshot.
 /// </summary>
-public bool? IncludePaintOrder { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includePaintOrder")] public bool? IncludePaintOrder { get; set; }
+
 /// <summary>
 /// Whether to include DOM rectangles (offsetRects, clientRects, scrollRects) into the snapshot
 /// </summary>
-public bool? IncludeDOMRects { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("includeDOMRects")] public bool? IncludeDOMRects { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMSnapshotCaptureSnapshotRequest"/>
 /// </summary>
@@ -5581,11 +6828,13 @@ internal partial class DOMSnapshotCaptureSnapshotResponse: IChromiumResponse
 /// <summary>
 /// The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.
 /// </summary>
-public DocumentSnapshot[] Documents { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documents")] public DocumentSnapshot[] Documents { get; set; }
+
 /// <summary>
 /// Shared string table that all string properties refer to with indexes.
 /// </summary>
-public string[] Strings { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("strings")] public string[] Strings { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.DOMStorage
 {
@@ -5597,11 +6846,13 @@ internal partial class StorageId
 /// <summary>
 /// Security origin for the storage.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Whether the storage is local storage (not session storage).
 /// </summary>
-public bool? IsLocalStorage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isLocalStorage")] public bool? IsLocalStorage { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5615,7 +6866,8 @@ public string Command { get; } = "DOMStorage.clear";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMStorageClearRequest"/>
 /// </summary>
@@ -5669,7 +6921,8 @@ public string Command { get; } = "DOMStorage.getDOMStorageItems";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMStorageGetDOMStorageItemsRequest"/>
 /// </summary>
@@ -5678,7 +6931,8 @@ internal partial class DOMStorageGetDOMStorageItemsResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string[][] Entries { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public string[][] Entries { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5692,11 +6946,13 @@ public string Command { get; } = "DOMStorage.removeDOMStorageItem";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMStorageRemoveDOMStorageItemRequest"/>
 /// </summary>
@@ -5716,15 +6972,18 @@ public string Command { get; } = "DOMStorage.setDOMStorageItem";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DOMStorageSetDOMStorageItemRequest"/>
 /// </summary>
@@ -5743,15 +7002,18 @@ public string InternalName { get; } = "DOMStorage.domStorageItemAdded";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string NewValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("newValue")] public string NewValue { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5764,11 +7026,13 @@ public string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5781,19 +7045,23 @@ public string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string OldValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("oldValue")] public string OldValue { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string NewValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("newValue")] public string NewValue { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5806,7 +7074,8 @@ public string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Database
 {
@@ -5818,19 +7087,23 @@ internal partial class Database
 /// <summary>
 /// Database ID.
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Database domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Database version.
 /// </summary>
-public string Version { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("version")] public string Version { get; set; }
+}
 /// <summary>
 /// Database error.
 /// </summary>
@@ -5839,11 +7112,13 @@ internal partial class Error
 /// <summary>
 /// Error message.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Error code.
 /// </summary>
-public int? Code { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("code")] public int? Code { get; set; }
+}
 /// <summary>
 /// Disables database tracking, prevents database events from being sent to the client.
 /// </summary>
@@ -5891,11 +7166,13 @@ public string Command { get; } = "Database.executeSQL";
 /// <summary>
 /// 
 /// </summary>
-public string DatabaseId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseId")] public string DatabaseId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Query { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DatabaseExecuteSQLRequest"/>
 /// </summary>
@@ -5904,15 +7181,18 @@ internal partial class DatabaseExecuteSQLResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] ColumnNames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNames")] public string[] ColumnNames { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public JsonElement?[] Values { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("values")] public JsonElement?[] Values { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Error SqlError { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sqlError")] public Error SqlError { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5926,7 +7206,8 @@ public string Command { get; } = "Database.getDatabaseTableNames";
 /// <summary>
 /// 
 /// </summary>
-public string DatabaseId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseId")] public string DatabaseId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DatabaseGetDatabaseTableNamesRequest"/>
 /// </summary>
@@ -5935,7 +7216,8 @@ internal partial class DatabaseGetDatabaseTableNamesResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] TableNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("tableNames")] public string[] TableNames { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5948,7 +7230,8 @@ public string InternalName { get; } = "Database.addDatabase";
 /// <summary>
 /// 
 /// </summary>
-public Database Database { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("database")] public Database Database { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.DeviceOrientation
 {
@@ -5982,15 +7265,18 @@ public string Command { get; } = "DeviceOrientation.setDeviceOrientationOverride
 /// <summary>
 /// Mock alpha
 /// </summary>
-public double? Alpha { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("alpha")] public double? Alpha { get; set; }
+
 /// <summary>
 /// Mock beta
 /// </summary>
-public double? Beta { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("beta")] public double? Beta { get; set; }
+
 /// <summary>
 /// Mock gamma
 /// </summary>
-public double? Gamma { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("gamma")] public double? Gamma { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DeviceOrientationSetDeviceOrientationOverrideRequest"/>
 /// </summary>
@@ -6008,11 +7294,13 @@ internal partial class ScreenOrientation
 /// <summary>
 /// Orientation type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Orientation angle.
 /// </summary>
-public int? Angle { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("angle")] public int? Angle { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -6021,23 +7309,13 @@ internal partial class MediaFeature
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// advance: If the scheduler runs out of immediate work, the virtual time base may fast forward to
-/// allow the next delayed task (if any) to run; pause: The virtual time base may not advance;
-/// pauseIfNetworkFetchesPending: The virtual time base may not advance if there are any pending
-/// resource fetches.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum VirtualTimePolicy
-{
-[System.Runtime.Serialization.EnumMember(Value = "advance")]Advance,
-[System.Runtime.Serialization.EnumMember(Value = "pause")]Pause,
-[System.Runtime.Serialization.EnumMember(Value = "pauseIfNetworkFetchesPending")]PauseIfNetworkFetchesPending}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Tells whether emulation is supported.
 /// </summary>
@@ -6057,7 +7335,8 @@ internal partial class EmulationCanEmulateResponse: IChromiumResponse
 /// <summary>
 /// True if emulation is supported.
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Clears the overriden device metrics.
 /// </summary>
@@ -6122,7 +7401,8 @@ public string Command { get; } = "Emulation.setFocusEmulationEnabled";
 /// <summary>
 /// Whether to enable to disable focus emulation.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetFocusEmulationEnabledRequest"/>
 /// </summary>
@@ -6142,7 +7422,8 @@ public string Command { get; } = "Emulation.setCPUThrottlingRate";
 /// <summary>
 /// Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc).
 /// </summary>
-public double? Rate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("rate")] public double? Rate { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetCPUThrottlingRateRequest"/>
 /// </summary>
@@ -6164,7 +7445,8 @@ public string Command { get; } = "Emulation.setDefaultBackgroundColorOverride";
 /// RGBA of the default background color. If not specified, any existing override will be
 /// cleared.
 /// </summary>
-public DOM.RGBA Color { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("color")] public DOM.RGBA Color { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetDefaultBackgroundColorOverrideRequest"/>
 /// </summary>
@@ -6186,53 +7468,65 @@ public string Command { get; } = "Emulation.setDeviceMetricsOverride";
 /// <summary>
 /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// Overriding device scale factor value. 0 disables the override.
 /// </summary>
-public double? DeviceScaleFactor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceScaleFactor")] public double? DeviceScaleFactor { get; set; }
+
 /// <summary>
 /// Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
 /// autosizing and more.
 /// </summary>
-public bool? Mobile { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mobile")] public bool? Mobile { get; set; }
+
 /// <summary>
 /// Scale to apply to resulting view image.
 /// </summary>
-public double? Scale { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scale")] public double? Scale { get; set; }
+
 /// <summary>
 /// Overriding screen width value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? ScreenWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("screenWidth")] public int? ScreenWidth { get; set; }
+
 /// <summary>
 /// Overriding screen height value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? ScreenHeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("screenHeight")] public int? ScreenHeight { get; set; }
+
 /// <summary>
 /// Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? PositionX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("positionX")] public int? PositionX { get; set; }
+
 /// <summary>
 /// Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? PositionY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("positionY")] public int? PositionY { get; set; }
+
 /// <summary>
 /// Do not set visible view size, rely upon explicit setVisibleSize call.
 /// </summary>
-public bool? DontSetVisibleSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dontSetVisibleSize")] public bool? DontSetVisibleSize { get; set; }
+
 /// <summary>
 /// Screen orientation override.
 /// </summary>
-public ScreenOrientation ScreenOrientation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("screenOrientation")] public ScreenOrientation ScreenOrientation { get; set; }
+
 /// <summary>
 /// If set, the visible area of the page will be overridden to this viewport. This viewport
 /// change is not observed by the page, e.g. viewport-relative elements do not change positions.
 /// </summary>
-public Page.Viewport Viewport { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("viewport")] public Page.Viewport Viewport { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetDeviceMetricsOverrideRequest"/>
 /// </summary>
@@ -6252,7 +7546,8 @@ public string Command { get; } = "Emulation.setScrollbarsHidden";
 /// <summary>
 /// Whether scrollbars should be always hidden.
 /// </summary>
-public bool? Hidden { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("hidden")] public bool? Hidden { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetScrollbarsHiddenRequest"/>
 /// </summary>
@@ -6272,7 +7567,8 @@ public string Command { get; } = "Emulation.setDocumentCookieDisabled";
 /// <summary>
 /// Whether document.coookie API should be disabled.
 /// </summary>
-public bool? Disabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetDocumentCookieDisabledRequest"/>
 /// </summary>
@@ -6292,11 +7588,13 @@ public string Command { get; } = "Emulation.setEmitTouchEventsForMouse";
 /// <summary>
 /// Whether touch emulation based on mouse input should be enabled.
 /// </summary>
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+
 /// <summary>
 /// Touch/gesture events configuration. Default: current platform.
 /// </summary>
-public string Configuration { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("configuration")] public string Configuration { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetEmitTouchEventsForMouseRequest"/>
 /// </summary>
@@ -6316,11 +7614,13 @@ public string Command { get; } = "Emulation.setEmulatedMedia";
 /// <summary>
 /// Media type to emulate. Empty string disables the override.
 /// </summary>
-public string Media { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("media")] public string Media { get; set; }
+
 /// <summary>
 /// Media features to emulate.
 /// </summary>
-public MediaFeature[] Features { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("features")] public MediaFeature[] Features { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetEmulatedMediaRequest"/>
 /// </summary>
@@ -6341,15 +7641,18 @@ public string Command { get; } = "Emulation.setGeolocationOverride";
 /// <summary>
 /// Mock latitude
 /// </summary>
-public double? Latitude { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("latitude")] public double? Latitude { get; set; }
+
 /// <summary>
 /// Mock longitude
 /// </summary>
-public double? Longitude { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("longitude")] public double? Longitude { get; set; }
+
 /// <summary>
 /// Mock accuracy
 /// </summary>
-public double? Accuracy { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("accuracy")] public double? Accuracy { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetGeolocationOverrideRequest"/>
 /// </summary>
@@ -6369,7 +7672,8 @@ public string Command { get; } = "Emulation.setNavigatorOverrides";
 /// <summary>
 /// The platform navigator.platform should return.
 /// </summary>
-public string Platform { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("platform")] public string Platform { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetNavigatorOverridesRequest"/>
 /// </summary>
@@ -6389,7 +7693,8 @@ public string Command { get; } = "Emulation.setPageScaleFactor";
 /// <summary>
 /// Page scale factor.
 /// </summary>
-public double? PageScaleFactor { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pageScaleFactor")] public double? PageScaleFactor { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetPageScaleFactorRequest"/>
 /// </summary>
@@ -6409,7 +7714,8 @@ public string Command { get; } = "Emulation.setScriptExecutionDisabled";
 /// <summary>
 /// Whether script execution should be disabled in the page.
 /// </summary>
-public bool? Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public bool? Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetScriptExecutionDisabledRequest"/>
 /// </summary>
@@ -6429,11 +7735,13 @@ public string Command { get; } = "Emulation.setTouchEmulationEnabled";
 /// <summary>
 /// Whether the touch event emulation should be enabled.
 /// </summary>
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+
 /// <summary>
 /// Maximum touch points supported. Defaults to one.
 /// </summary>
-public int? MaxTouchPoints { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxTouchPoints")] public int? MaxTouchPoints { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetTouchEmulationEnabledRequest"/>
 /// </summary>
@@ -6455,26 +7763,31 @@ public string Command { get; } = "Emulation.setVirtualTimePolicy";
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public VirtualTimePolicy Policy { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("policy")] public VirtualTimePolicy Policy { get; set; }
+
 /// <summary>
 /// If set, after this many virtual milliseconds have elapsed virtual time will be paused and a
 /// virtualTimeBudgetExpired event is sent.
 /// </summary>
-public double? Budget { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("budget")] public double? Budget { get; set; }
+
 /// <summary>
 /// If set this specifies the maximum number of tasks that can be run before virtual is forced
 /// forwards to prevent deadlock.
 /// </summary>
-public int? MaxVirtualTimeTaskStarvationCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxVirtualTimeTaskStarvationCount")] public int? MaxVirtualTimeTaskStarvationCount { get; set; }
+
 /// <summary>
 /// If set the virtual time policy change should be deferred until any frame starts navigating.
 /// Note any previous deferred policy change is superseded.
 /// </summary>
-public bool? WaitForNavigation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("waitForNavigation")] public bool? WaitForNavigation { get; set; }
+
 /// <summary>
 /// If set, base::Time::Now will be overriden to initially return this value.
 /// </summary>
-public double? InitialVirtualTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("initialVirtualTime")] public double? InitialVirtualTime { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetVirtualTimePolicyRequest"/>
 /// </summary>
@@ -6483,7 +7796,8 @@ internal partial class EmulationSetVirtualTimePolicyResponse: IChromiumResponse
 /// <summary>
 /// Absolute timestamp at which virtual time was first enabled (up time in milliseconds).
 /// </summary>
-public double? VirtualTimeTicksBase { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("virtualTimeTicksBase")] public double? VirtualTimeTicksBase { get; set; }
+}
 /// <summary>
 /// Overrides default host system timezone with the specified one.
 /// </summary>
@@ -6498,7 +7812,8 @@ public string Command { get; } = "Emulation.setTimezoneOverride";
 /// The timezone identifier. If empty, disables the override and
 /// restores default host system timezone.
 /// </summary>
-public string TimezoneId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timezoneId")] public string TimezoneId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetTimezoneOverrideRequest"/>
 /// </summary>
@@ -6520,11 +7835,13 @@ public string Command { get; } = "Emulation.setVisibleSize";
 /// <summary>
 /// Frame width (DIP).
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Frame height (DIP).
 /// </summary>
-public int? Height { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetVisibleSizeRequest"/>
 /// </summary>
@@ -6544,15 +7861,18 @@ public string Command { get; } = "Emulation.setUserAgentOverride";
 /// <summary>
 /// User agent to use.
 /// </summary>
-public string UserAgent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userAgent")] public string UserAgent { get; set; }
+
 /// <summary>
 /// Browser langugage to emulate.
 /// </summary>
-public string AcceptLanguage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("acceptLanguage")] public string AcceptLanguage { get; set; }
+
 /// <summary>
 /// The platform navigator.platform should return.
 /// </summary>
-public string Platform { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("platform")] public string Platform { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetUserAgentOverrideRequest"/>
 /// </summary>
@@ -6580,11 +7900,13 @@ internal partial class ScreenshotParams
 /// <summary>
 /// Image compression format (defaults to png).
 /// </summary>
-public string Format { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("format")] public string Format { get; set; }
+
 /// <summary>
 /// Compression quality from range [0..100] (jpeg only).
 /// </summary>
-public int? Quality { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("quality")] public int? Quality { get; set; }
+}
 /// <summary>
 /// Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures a
 /// screenshot from the resulting frame. Requires that the target was created with enabled
@@ -6602,24 +7924,28 @@ public string Command { get; } = "HeadlessExperimental.beginFrame";
 /// Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,
 /// the current time will be used.
 /// </summary>
-public double? FrameTimeTicks { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameTimeTicks")] public double? FrameTimeTicks { get; set; }
+
 /// <summary>
 /// The interval between BeginFrames that is reported to the compositor, in milliseconds.
 /// Defaults to a 60 frames/second interval, i.e. about 16.666 milliseconds.
 /// </summary>
-public double? Interval { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("interval")] public double? Interval { get; set; }
+
 /// <summary>
 /// Whether updates should not be committed and drawn onto the display. False by default. If
 /// true, only side effects of the BeginFrame will be run, such as layout and animations, but
 /// any visual updates may not be visible on the display or in screenshots.
 /// </summary>
-public bool? NoDisplayUpdates { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("noDisplayUpdates")] public bool? NoDisplayUpdates { get; set; }
+
 /// <summary>
 /// If set, a screenshot of the frame will be captured and returned in the response. Otherwise,
 /// no screenshot will be captured. Note that capturing a screenshot can fail, for example,
 /// during renderer initialization. In such a case, no screenshot data will be returned.
 /// </summary>
-public ScreenshotParams Screenshot { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("screenshot")] public ScreenshotParams Screenshot { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeadlessExperimentalBeginFrameRequest"/>
 /// </summary>
@@ -6629,11 +7955,13 @@ internal partial class HeadlessExperimentalBeginFrameResponse: IChromiumResponse
 /// Whether the BeginFrame resulted in damage and, thus, a new frame was committed to the
 /// display. Reported for diagnostic uses, may be removed in the future.
 /// </summary>
-public bool? HasDamage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasDamage")] public bool? HasDamage { get; set; }
+
 /// <summary>
 /// Base64-encoded image data of the screenshot, if one was requested and successfully taken.
 /// </summary>
-public byte[] ScreenshotData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("screenshotData")] public byte[] ScreenshotData { get; set; }
+}
 /// <summary>
 /// Disables headless events for the target.
 /// </summary>
@@ -6682,7 +8010,8 @@ public string InternalName { get; } = "HeadlessExperimental.needsBeginFramesChan
 /// <summary>
 /// True if BeginFrames are needed, false otherwise.
 /// </summary>
-public bool? NeedsBeginFrames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("needsBeginFrames")] public bool? NeedsBeginFrames { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.IO
 {
@@ -6699,7 +8028,8 @@ public string Command { get; } = "IO.close";
 /// <summary>
 /// Handle of the stream to close.
 /// </summary>
-public string Handle { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("handle")] public string Handle { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IOCloseRequest"/>
 /// </summary>
@@ -6719,16 +8049,19 @@ public string Command { get; } = "IO.read";
 /// <summary>
 /// Handle of the stream to read.
 /// </summary>
-public string Handle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("handle")] public string Handle { get; set; }
+
 /// <summary>
 /// Seek to the specified offset before reading (if not specificed, proceed with offset
 /// following the last read). Some types of streams may only support sequential reads.
 /// </summary>
-public int? Offset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offset")] public int? Offset { get; set; }
+
 /// <summary>
 /// Maximum number of bytes to read (left upon the agent discretion if not specified).
 /// </summary>
-public int? Size { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IOReadRequest"/>
 /// </summary>
@@ -6737,15 +8070,18 @@ internal partial class IOReadResponse: IChromiumResponse
 /// <summary>
 /// Set if the data is base64-encoded
 /// </summary>
-public bool? Base64Encoded { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+
 /// <summary>
 /// Data that were read.
 /// </summary>
-public string Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+
 /// <summary>
 /// Set if the end-of-file condition occured while reading.
 /// </summary>
-public bool? Eof { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("eof")] public bool? Eof { get; set; }
+}
 /// <summary>
 /// Return UUID of Blob object specified by a remote object id.
 /// </summary>
@@ -6759,7 +8095,8 @@ public string Command { get; } = "IO.resolveBlob";
 /// <summary>
 /// Object id of a Blob object wrapper.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IOResolveBlobRequest"/>
 /// </summary>
@@ -6768,7 +8105,8 @@ internal partial class IOResolveBlobResponse: IChromiumResponse
 /// <summary>
 /// UUID of the specified Blob.
 /// </summary>
-public string Uuid { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("uuid")] public string Uuid { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
 {
@@ -6780,16 +8118,19 @@ internal partial class DatabaseWithObjectStores
 /// <summary>
 /// Database name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Database version (type is not 'integer', as the standard
 /// requires the version number to be 'unsigned long long')
 /// </summary>
-public double? Version { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("version")] public double? Version { get; set; }
+
 /// <summary>
 /// Object stores in this database.
 /// </summary>
-public ObjectStore[] ObjectStores { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectStores")] public ObjectStore[] ObjectStores { get; set; }
+}
 /// <summary>
 /// Object store.
 /// </summary>
@@ -6798,19 +8139,23 @@ internal partial class ObjectStore
 /// <summary>
 /// Object store name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Object store key path.
 /// </summary>
-public KeyPath KeyPath { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyPath")] public KeyPath KeyPath { get; set; }
+
 /// <summary>
 /// If true, object store has auto increment flag set.
 /// </summary>
-public bool? AutoIncrement { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autoIncrement")] public bool? AutoIncrement { get; set; }
+
 /// <summary>
 /// Indexes in this object store.
 /// </summary>
-public ObjectStoreIndex[] Indexes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("indexes")] public ObjectStoreIndex[] Indexes { get; set; }
+}
 /// <summary>
 /// Object store index.
 /// </summary>
@@ -6819,19 +8164,23 @@ internal partial class ObjectStoreIndex
 /// <summary>
 /// Index name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Index key path.
 /// </summary>
-public KeyPath KeyPath { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyPath")] public KeyPath KeyPath { get; set; }
+
 /// <summary>
 /// If true, index is unique.
 /// </summary>
-public bool? Unique { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unique")] public bool? Unique { get; set; }
+
 /// <summary>
 /// If true, index allows multiple entries for a key.
 /// </summary>
-public bool? MultiEntry { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("multiEntry")] public bool? MultiEntry { get; set; }
+}
 /// <summary>
 /// Key.
 /// </summary>
@@ -6840,23 +8189,28 @@ internal partial class Key
 /// <summary>
 /// Key type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Number value.
 /// </summary>
-public double? Number { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("number")] public double? Number { get; set; }
+
 /// <summary>
 /// String value.
 /// </summary>
-public string String { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("string")] public string String { get; set; }
+
 /// <summary>
 /// Date value.
 /// </summary>
-public double? Date { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("date")] public double? Date { get; set; }
+
 /// <summary>
 /// Array value.
 /// </summary>
-public Key[] Array { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("array")] public Key[] Array { get; set; }
+}
 /// <summary>
 /// Key range.
 /// </summary>
@@ -6865,19 +8219,23 @@ internal partial class KeyRange
 /// <summary>
 /// Lower bound.
 /// </summary>
-public Key Lower { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lower")] public Key Lower { get; set; }
+
 /// <summary>
 /// Upper bound.
 /// </summary>
-public Key Upper { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("upper")] public Key Upper { get; set; }
+
 /// <summary>
 /// If true lower bound is open.
 /// </summary>
-public bool? LowerOpen { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lowerOpen")] public bool? LowerOpen { get; set; }
+
 /// <summary>
 /// If true upper bound is open.
 /// </summary>
-public bool? UpperOpen { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("upperOpen")] public bool? UpperOpen { get; set; }
+}
 /// <summary>
 /// Data entry.
 /// </summary>
@@ -6886,15 +8244,18 @@ internal partial class DataEntry
 /// <summary>
 /// Key object.
 /// </summary>
-public Runtime.RemoteObject Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public Runtime.RemoteObject Key { get; set; }
+
 /// <summary>
 /// Primary key object.
 /// </summary>
-public Runtime.RemoteObject PrimaryKey { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("primaryKey")] public Runtime.RemoteObject PrimaryKey { get; set; }
+
 /// <summary>
 /// Value object.
 /// </summary>
-public Runtime.RemoteObject Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public Runtime.RemoteObject Value { get; set; }
+}
 /// <summary>
 /// Key path.
 /// </summary>
@@ -6903,15 +8264,18 @@ internal partial class KeyPath
 /// <summary>
 /// Key path type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// String value.
 /// </summary>
-public string String { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("string")] public string String { get; set; }
+
 /// <summary>
 /// Array value.
 /// </summary>
-public string[] Array { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("array")] public string[] Array { get; set; }
+}
 /// <summary>
 /// Clears all entries from an object store.
 /// </summary>
@@ -6925,15 +8289,18 @@ public string Command { get; } = "IndexedDB.clearObjectStore";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// Object store name.
 /// </summary>
-public string ObjectStoreName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBClearObjectStoreRequest"/>
 /// </summary>
@@ -6953,11 +8320,13 @@ public string Command { get; } = "IndexedDB.deleteDatabase";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBDeleteDatabaseRequest"/>
 /// </summary>
@@ -6977,19 +8346,23 @@ public string Command { get; } = "IndexedDB.deleteObjectStoreEntries";
 /// <summary>
 /// 
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ObjectStoreName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+
 /// <summary>
 /// Range of entry keys to delete
 /// </summary>
-public KeyRange KeyRange { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyRange")] public KeyRange KeyRange { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBDeleteObjectStoreEntriesRequest"/>
 /// </summary>
@@ -7043,31 +8416,38 @@ public string Command { get; } = "IndexedDB.requestData";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// Object store name.
 /// </summary>
-public string ObjectStoreName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+
 /// <summary>
 /// Index name, empty string for object store data requests.
 /// </summary>
-public string IndexName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("indexName")] public string IndexName { get; set; }
+
 /// <summary>
 /// Number of records to skip.
 /// </summary>
-public int? SkipCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("skipCount")] public int? SkipCount { get; set; }
+
 /// <summary>
 /// Number of records to fetch.
 /// </summary>
-public int? PageSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageSize")] public int? PageSize { get; set; }
+
 /// <summary>
 /// Key range.
 /// </summary>
-public KeyRange KeyRange { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyRange")] public KeyRange KeyRange { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDataRequest"/>
 /// </summary>
@@ -7076,11 +8456,13 @@ internal partial class IndexedDBRequestDataResponse: IChromiumResponse
 /// <summary>
 /// Array of object store data entries.
 /// </summary>
-public DataEntry[] ObjectStoreDataEntries { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreDataEntries")] public DataEntry[] ObjectStoreDataEntries { get; set; }
+
 /// <summary>
 /// If true, there are more entries to fetch in the given range.
 /// </summary>
-public bool? HasMore { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("hasMore")] public bool? HasMore { get; set; }
+}
 /// <summary>
 /// Gets metadata of an object store
 /// </summary>
@@ -7094,15 +8476,18 @@ public string Command { get; } = "IndexedDB.getMetadata";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// Object store name.
 /// </summary>
-public string ObjectStoreName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBGetMetadataRequest"/>
 /// </summary>
@@ -7111,13 +8496,15 @@ internal partial class IndexedDBGetMetadataResponse: IChromiumResponse
 /// <summary>
 /// the entries count
 /// </summary>
-public double? EntriesCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("entriesCount")] public double? EntriesCount { get; set; }
+
 /// <summary>
 /// the current value of key generator, to become the next inserted
 /// key into the object store. Valid if objectStore.autoIncrement
 /// is true.
 /// </summary>
-public double? KeyGeneratorValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyGeneratorValue")] public double? KeyGeneratorValue { get; set; }
+}
 /// <summary>
 /// Requests database with given name in given frame.
 /// </summary>
@@ -7131,11 +8518,13 @@ public string Command { get; } = "IndexedDB.requestDatabase";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDatabaseRequest"/>
 /// </summary>
@@ -7144,7 +8533,8 @@ internal partial class IndexedDBRequestDatabaseResponse: IChromiumResponse
 /// <summary>
 /// Database with an array of object stores.
 /// </summary>
-public DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseWithObjectStores")] public DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }
+}
 /// <summary>
 /// Requests database names for given security origin.
 /// </summary>
@@ -7158,7 +8548,8 @@ public string Command { get; } = "IndexedDB.requestDatabaseNames";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDatabaseNamesRequest"/>
 /// </summary>
@@ -7167,7 +8558,8 @@ internal partial class IndexedDBRequestDatabaseNamesResponse: IChromiumResponse
 /// <summary>
 /// Database names for origin.
 /// </summary>
-public string[] DatabaseNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseNames")] public string[] DatabaseNames { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Input
 {
@@ -7179,53 +8571,39 @@ internal partial class TouchPoint
 /// <summary>
 /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
 /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// X radius of the touch area (default: 1.0).
 /// </summary>
-public double? RadiusX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("radiusX")] public double? RadiusX { get; set; }
+
 /// <summary>
 /// Y radius of the touch area (default: 1.0).
 /// </summary>
-public double? RadiusY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("radiusY")] public double? RadiusY { get; set; }
+
 /// <summary>
 /// Rotation angle (default: 0.0).
 /// </summary>
-public double? RotationAngle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rotationAngle")] public double? RotationAngle { get; set; }
+
 /// <summary>
 /// Force (default: 1.0).
 /// </summary>
-public double? Force { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("force")] public double? Force { get; set; }
+
 /// <summary>
 /// Identifier used to track touch sources between events, must be unique within an event.
 /// </summary>
-public double? Id { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum GestureSourceType
-{
-[System.Runtime.Serialization.EnumMember(Value = "default")]Default,
-[System.Runtime.Serialization.EnumMember(Value = "touch")]Touch,
-[System.Runtime.Serialization.EnumMember(Value = "mouse")]Mouse}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum MouseButton
-{
-[System.Runtime.Serialization.EnumMember(Value = "none")]None,
-[System.Runtime.Serialization.EnumMember(Value = "left")]Left,
-[System.Runtime.Serialization.EnumMember(Value = "middle")]Middle,
-[System.Runtime.Serialization.EnumMember(Value = "right")]Right,
-[System.Runtime.Serialization.EnumMember(Value = "back")]Back,
-[System.Runtime.Serialization.EnumMember(Value = "forward")]Forward}
+[System.Text.Json.Serialization.JsonPropertyName("id")] public double? Id { get; set; }
+}
 /// <summary>
 /// Dispatches a key event to the page.
 /// </summary>
@@ -7239,64 +8617,78 @@ public string Command { get; } = "Input.dispatchKeyEvent";
 /// <summary>
 /// Type of the key event.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public int? Modifiers { get; set; }
+
 /// <summary>
 /// Time at which the event occurred.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Text as generated by processing a virtual key code with a keyboard layout. Not needed for
 /// for `keyUp` and `rawKeyDown` events (default: "")
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Text that would have been generated by the keyboard if no modifiers were pressed (except for
 /// shift). Useful for shortcut (accelerator) key handling (default: "").
 /// </summary>
-public string UnmodifiedText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unmodifiedText")] public string UnmodifiedText { get; set; }
+
 /// <summary>
 /// Unique key identifier (e.g., 'U+0041') (default: "").
 /// </summary>
-public string KeyIdentifier { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyIdentifier")] public string KeyIdentifier { get; set; }
+
 /// <summary>
 /// Unique DOM defined string value for each physical key (e.g., 'KeyA') (default: "").
 /// </summary>
-public string Code { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("code")] public string Code { get; set; }
+
 /// <summary>
 /// Unique DOM defined string value describing the meaning of the key in the context of active
 /// modifiers, keyboard layout, etc (e.g., 'AltGr') (default: "").
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
 /// <summary>
 /// Windows virtual key code (default: 0).
 /// </summary>
-public int? WindowsVirtualKeyCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("windowsVirtualKeyCode")] public int? WindowsVirtualKeyCode { get; set; }
+
 /// <summary>
 /// Native virtual key code (default: 0).
 /// </summary>
-public int? NativeVirtualKeyCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nativeVirtualKeyCode")] public int? NativeVirtualKeyCode { get; set; }
+
 /// <summary>
 /// Whether the event was generated from auto repeat (default: false).
 /// </summary>
-public bool? AutoRepeat { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autoRepeat")] public bool? AutoRepeat { get; set; }
+
 /// <summary>
 /// Whether the event was generated from the keypad (default: false).
 /// </summary>
-public bool? IsKeypad { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isKeypad")] public bool? IsKeypad { get; set; }
+
 /// <summary>
 /// Whether the event was a system key event (default: false).
 /// </summary>
-public bool? IsSystemKey { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isSystemKey")] public bool? IsSystemKey { get; set; }
+
 /// <summary>
 /// Whether the event was from the left or right side of the keyboard. 1=Left, 2=Right (default:
 /// 0).
 /// </summary>
-public int? Location { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("location")] public int? Location { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputDispatchKeyEventRequest"/>
 /// </summary>
@@ -7317,7 +8709,8 @@ public string Command { get; } = "Input.insertText";
 /// <summary>
 /// The text to insert.
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputInsertTextRequest"/>
 /// </summary>
@@ -7337,51 +8730,62 @@ public string Command { get; } = "Input.dispatchMouseEvent";
 /// <summary>
 /// Type of the mouse event.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
 /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public int? Modifiers { get; set; }
+
 /// <summary>
 /// Time at which the event occurred.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Mouse button (default: "none").
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public MouseButton? Button { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("button")] public MouseButton? Button { get; set; }
+
 /// <summary>
 /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
 /// Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
 /// </summary>
-public int? Buttons { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("buttons")] public int? Buttons { get; set; }
+
 /// <summary>
 /// Number of times the mouse button was clicked (default: 0).
 /// </summary>
-public int? ClickCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clickCount")] public int? ClickCount { get; set; }
+
 /// <summary>
 /// X delta in CSS pixels for mouse wheel event (default: 0).
 /// </summary>
-public double? DeltaX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deltaX")] public double? DeltaX { get; set; }
+
 /// <summary>
 /// Y delta in CSS pixels for mouse wheel event (default: 0).
 /// </summary>
-public double? DeltaY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deltaY")] public double? DeltaY { get; set; }
+
 /// <summary>
 /// Pointer type (default: "mouse").
 /// </summary>
-public string PointerType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pointerType")] public string PointerType { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputDispatchMouseEventRequest"/>
 /// </summary>
@@ -7402,22 +8806,26 @@ public string Command { get; } = "Input.dispatchTouchEvent";
 /// Type of the touch event. TouchEnd and TouchCancel must not contain any touch points, while
 /// TouchStart and TouchMove must contains at least one.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Active touch points on the touch device. One event per any changed point (compared to
 /// previous touch event in a sequence) is generated, emulating pressing/moving/releasing points
 /// one by one.
 /// </summary>
-public TouchPoint[] TouchPoints { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("touchPoints")] public TouchPoint[] TouchPoints { get; set; }
+
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public int? Modifiers { get; set; }
+
 /// <summary>
 /// Time at which the event occurred.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputDispatchTouchEventRequest"/>
 /// </summary>
@@ -7437,41 +8845,50 @@ public string Command { get; } = "Input.emulateTouchFromMouseEvent";
 /// <summary>
 /// Type of the mouse event.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// X coordinate of the mouse pointer in DIP.
 /// </summary>
-public int? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the mouse pointer in DIP.
 /// </summary>
-public int? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
 /// <summary>
 /// Mouse button. Only "none", "left", "right" are supported.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public MouseButton Button { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("button")] public MouseButton Button { get; set; }
+
 /// <summary>
 /// Time at which the event occurred (default: current time).
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// X delta in DIP for mouse wheel event (default: 0).
 /// </summary>
-public double? DeltaX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deltaX")] public double? DeltaX { get; set; }
+
 /// <summary>
 /// Y delta in DIP for mouse wheel event (default: 0).
 /// </summary>
-public double? DeltaY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deltaY")] public double? DeltaY { get; set; }
+
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public int? Modifiers { get; set; }
+
 /// <summary>
 /// Number of times the mouse button was clicked (default: 0).
 /// </summary>
-public int? ClickCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("clickCount")] public int? ClickCount { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputEmulateTouchFromMouseEventRequest"/>
 /// </summary>
@@ -7491,7 +8908,8 @@ public string Command { get; } = "Input.setIgnoreInputEvents";
 /// <summary>
 /// Ignores input events processing when set to true.
 /// </summary>
-public bool? Ignore { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ignore")] public bool? Ignore { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputSetIgnoreInputEventsRequest"/>
 /// </summary>
@@ -7511,25 +8929,30 @@ public string Command { get; } = "Input.synthesizePinchGesture";
 /// <summary>
 /// X coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// Relative scale factor after zooming (&gt;1.0 zooms in, &lt;1.0 zooms out).
 /// </summary>
-public double? ScaleFactor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scaleFactor")] public double? ScaleFactor { get; set; }
+
 /// <summary>
 /// Relative pointer speed in pixels per second (default: 800).
 /// </summary>
-public int? RelativeSpeed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("relativeSpeed")] public int? RelativeSpeed { get; set; }
+
 /// <summary>
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public GestureSourceType? GestureSourceType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("gestureSourceType")] public GestureSourceType? GestureSourceType { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputSynthesizePinchGestureRequest"/>
 /// </summary>
@@ -7549,55 +8972,67 @@ public string Command { get; } = "Input.synthesizeScrollGesture";
 /// <summary>
 /// X coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// The distance to scroll along the X axis (positive to scroll left).
 /// </summary>
-public double? XDistance { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("xDistance")] public double? XDistance { get; set; }
+
 /// <summary>
 /// The distance to scroll along the Y axis (positive to scroll up).
 /// </summary>
-public double? YDistance { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("yDistance")] public double? YDistance { get; set; }
+
 /// <summary>
 /// The number of additional pixels to scroll back along the X axis, in addition to the given
 /// distance.
 /// </summary>
-public double? XOverscroll { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("xOverscroll")] public double? XOverscroll { get; set; }
+
 /// <summary>
 /// The number of additional pixels to scroll back along the Y axis, in addition to the given
 /// distance.
 /// </summary>
-public double? YOverscroll { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("yOverscroll")] public double? YOverscroll { get; set; }
+
 /// <summary>
 /// Prevent fling (default: true).
 /// </summary>
-public bool? PreventFling { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("preventFling")] public bool? PreventFling { get; set; }
+
 /// <summary>
 /// Swipe speed in pixels per second (default: 800).
 /// </summary>
-public int? Speed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("speed")] public int? Speed { get; set; }
+
 /// <summary>
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public GestureSourceType? GestureSourceType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("gestureSourceType")] public GestureSourceType? GestureSourceType { get; set; }
+
 /// <summary>
 /// The number of times to repeat the gesture (default: 0).
 /// </summary>
-public int? RepeatCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("repeatCount")] public int? RepeatCount { get; set; }
+
 /// <summary>
 /// The number of milliseconds delay between each repeat. (default: 250).
 /// </summary>
-public int? RepeatDelayMs { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("repeatDelayMs")] public int? RepeatDelayMs { get; set; }
+
 /// <summary>
 /// The name of the interaction markers to generate, if not empty (default: "").
 /// </summary>
-public string InteractionMarkerName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("interactionMarkerName")] public string InteractionMarkerName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputSynthesizeScrollGestureRequest"/>
 /// </summary>
@@ -7617,25 +9052,30 @@ public string Command { get; } = "Input.synthesizeTapGesture";
 /// <summary>
 /// X coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the start of the gesture in CSS pixels.
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// Duration between touchdown and touchup events in ms (default: 50).
 /// </summary>
-public int? Duration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("duration")] public int? Duration { get; set; }
+
 /// <summary>
 /// Number of times to perform the tap (e.g. 2 for double tap, default: 1).
 /// </summary>
-public int? TapCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("tapCount")] public int? TapCount { get; set; }
+
 /// <summary>
 /// Which type of input events to be generated (default: 'default', which queries the platform
 /// for the preferred input type).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public GestureSourceType? GestureSourceType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("gestureSourceType")] public GestureSourceType? GestureSourceType { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputSynthesizeTapGestureRequest"/>
 /// </summary>
@@ -7691,7 +9131,8 @@ public string InternalName { get; } = "Inspector.detached";
 /// <summary>
 /// The reason why connection has been terminated.
 /// </summary>
-public string Reason { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public string Reason { get; set; }
+}
 /// <summary>
 /// Fired when debugging target has crashed
 /// </summary>
@@ -7723,11 +9164,13 @@ internal partial class ScrollRect
 /// <summary>
 /// Rectangle itself.
 /// </summary>
-public DOM.Rect Rect { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rect")] public DOM.Rect Rect { get; set; }
+
 /// <summary>
 /// Reason for rectangle to force scrolling on the main thread
 /// </summary>
-public string Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+}
 /// <summary>
 /// Sticky position constraints.
 /// </summary>
@@ -7736,19 +9179,23 @@ internal partial class StickyPositionConstraint
 /// <summary>
 /// Layout rectangle of the sticky element before being shifted
 /// </summary>
-public DOM.Rect StickyBoxRect { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stickyBoxRect")] public DOM.Rect StickyBoxRect { get; set; }
+
 /// <summary>
 /// Layout rectangle of the containing block of the sticky element
 /// </summary>
-public DOM.Rect ContainingBlockRect { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("containingBlockRect")] public DOM.Rect ContainingBlockRect { get; set; }
+
 /// <summary>
 /// The nearest sticky layer that shifts the sticky box
 /// </summary>
-public string NearestLayerShiftingStickyBox { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nearestLayerShiftingStickyBox")] public string NearestLayerShiftingStickyBox { get; set; }
+
 /// <summary>
 /// The nearest sticky layer that shifts the containing block
 /// </summary>
-public string NearestLayerShiftingContainingBlock { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nearestLayerShiftingContainingBlock")] public string NearestLayerShiftingContainingBlock { get; set; }
+}
 /// <summary>
 /// Serialized fragment of layer picture along with its offset within the layer.
 /// </summary>
@@ -7757,15 +9204,18 @@ internal partial class PictureTile
 /// <summary>
 /// Offset from owning layer left boundary
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Offset from owning layer top boundary
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// Base64-encoded snapshot data.
 /// </summary>
-public byte[] Picture { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("picture")] public byte[] Picture { get; set; }
+}
 /// <summary>
 /// Information about a compositing layer.
 /// </summary>
@@ -7774,68 +9224,84 @@ internal partial class Layer
 /// <summary>
 /// The unique id for this layer.
 /// </summary>
-public string LayerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layerId")] public string LayerId { get; set; }
+
 /// <summary>
 /// The id of parent (not present for root).
 /// </summary>
-public string ParentLayerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentLayerId")] public string ParentLayerId { get; set; }
+
 /// <summary>
 /// The backend id for the node associated with this layer.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// Offset from parent layer, X coordinate.
 /// </summary>
-public double? OffsetX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offsetX")] public double? OffsetX { get; set; }
+
 /// <summary>
 /// Offset from parent layer, Y coordinate.
 /// </summary>
-public double? OffsetY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offsetY")] public double? OffsetY { get; set; }
+
 /// <summary>
 /// Layer width.
 /// </summary>
-public double? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public double? Width { get; set; }
+
 /// <summary>
 /// Layer height.
 /// </summary>
-public double? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public double? Height { get; set; }
+
 /// <summary>
 /// Transformation matrix for layer, default is identity matrix
 /// </summary>
-public double?[] Transform { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("transform")] public double?[] Transform { get; set; }
+
 /// <summary>
 /// Transform anchor point X, absent if no transform specified
 /// </summary>
-public double? AnchorX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("anchorX")] public double? AnchorX { get; set; }
+
 /// <summary>
 /// Transform anchor point Y, absent if no transform specified
 /// </summary>
-public double? AnchorY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("anchorY")] public double? AnchorY { get; set; }
+
 /// <summary>
 /// Transform anchor point Z, absent if no transform specified
 /// </summary>
-public double? AnchorZ { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("anchorZ")] public double? AnchorZ { get; set; }
+
 /// <summary>
 /// Indicates how many time this layer has painted.
 /// </summary>
-public int? PaintCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paintCount")] public int? PaintCount { get; set; }
+
 /// <summary>
 /// Indicates whether this layer hosts any content, rather than being used for
 /// transform/scrolling purposes only.
 /// </summary>
-public bool? DrawsContent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("drawsContent")] public bool? DrawsContent { get; set; }
+
 /// <summary>
 /// Set if layer is not visible.
 /// </summary>
-public bool? Invisible { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("invisible")] public bool? Invisible { get; set; }
+
 /// <summary>
 /// Rectangles scrolling on main thread only.
 /// </summary>
-public ScrollRect[] ScrollRects { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollRects")] public ScrollRect[] ScrollRects { get; set; }
+
 /// <summary>
 /// Sticky position constraint information
 /// </summary>
-public StickyPositionConstraint StickyPositionConstraint { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stickyPositionConstraint")] public StickyPositionConstraint StickyPositionConstraint { get; set; }
+}
 /// <summary>
 /// Provides the reasons why the given layer was composited.
 /// </summary>
@@ -7849,7 +9315,8 @@ public string Command { get; } = "LayerTree.compositingReasons";
 /// <summary>
 /// The id of the layer for which we want to get the reasons it was composited.
 /// </summary>
-public string LayerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("layerId")] public string LayerId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeCompositingReasonsRequest"/>
 /// </summary>
@@ -7858,7 +9325,8 @@ internal partial class LayerTreeCompositingReasonsResponse: IChromiumResponse
 /// <summary>
 /// A list of strings specifying reasons for the given layer to become composited.
 /// </summary>
-public string[] CompositingReasons { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("compositingReasons")] public string[] CompositingReasons { get; set; }
+}
 /// <summary>
 /// Disables compositing tree inspection.
 /// </summary>
@@ -7906,7 +9374,8 @@ public string Command { get; } = "LayerTree.loadSnapshot";
 /// <summary>
 /// An array of tiles composing the snapshot.
 /// </summary>
-public PictureTile[] Tiles { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("tiles")] public PictureTile[] Tiles { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeLoadSnapshotRequest"/>
 /// </summary>
@@ -7915,7 +9384,8 @@ internal partial class LayerTreeLoadSnapshotResponse: IChromiumResponse
 /// <summary>
 /// The id of the snapshot.
 /// </summary>
-public string SnapshotId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
+}
 /// <summary>
 /// Returns the layer snapshot identifier.
 /// </summary>
@@ -7929,7 +9399,8 @@ public string Command { get; } = "LayerTree.makeSnapshot";
 /// <summary>
 /// The id of the layer.
 /// </summary>
-public string LayerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("layerId")] public string LayerId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeMakeSnapshotRequest"/>
 /// </summary>
@@ -7938,7 +9409,8 @@ internal partial class LayerTreeMakeSnapshotResponse: IChromiumResponse
 /// <summary>
 /// The id of the layer snapshot.
 /// </summary>
-public string SnapshotId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -7952,19 +9424,23 @@ public string Command { get; } = "LayerTree.profileSnapshot";
 /// <summary>
 /// The id of the layer snapshot.
 /// </summary>
-public string SnapshotId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
+
 /// <summary>
 /// The maximum number of times to replay the snapshot (1, if not specified).
 /// </summary>
-public int? MinRepeatCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("minRepeatCount")] public int? MinRepeatCount { get; set; }
+
 /// <summary>
 /// The minimum duration (in seconds) to replay the snapshot.
 /// </summary>
-public double? MinDuration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("minDuration")] public double? MinDuration { get; set; }
+
 /// <summary>
 /// The clip rectangle to apply when replaying the snapshot.
 /// </summary>
-public DOM.Rect ClipRect { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("clipRect")] public DOM.Rect ClipRect { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeProfileSnapshotRequest"/>
 /// </summary>
@@ -7973,7 +9449,8 @@ internal partial class LayerTreeProfileSnapshotResponse: IChromiumResponse
 /// <summary>
 /// The array of paint profiles, one per run.
 /// </summary>
-public double?[][] Timings { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timings")] public double?[][] Timings { get; set; }
+}
 /// <summary>
 /// Releases layer snapshot captured by the back-end.
 /// </summary>
@@ -7987,7 +9464,8 @@ public string Command { get; } = "LayerTree.releaseSnapshot";
 /// <summary>
 /// The id of the layer snapshot.
 /// </summary>
-public string SnapshotId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeReleaseSnapshotRequest"/>
 /// </summary>
@@ -8007,19 +9485,23 @@ public string Command { get; } = "LayerTree.replaySnapshot";
 /// <summary>
 /// The id of the layer snapshot.
 /// </summary>
-public string SnapshotId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
+
 /// <summary>
 /// The first step to replay from (replay from the very start if not specified).
 /// </summary>
-public int? FromStep { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fromStep")] public int? FromStep { get; set; }
+
 /// <summary>
 /// The last step to replay to (replay till the end if not specified).
 /// </summary>
-public int? ToStep { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("toStep")] public int? ToStep { get; set; }
+
 /// <summary>
 /// The scale to apply while replaying (defaults to 1).
 /// </summary>
-public double? Scale { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scale")] public double? Scale { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeReplaySnapshotRequest"/>
 /// </summary>
@@ -8028,7 +9510,8 @@ internal partial class LayerTreeReplaySnapshotResponse: IChromiumResponse
 /// <summary>
 /// A data: URL for resulting image.
 /// </summary>
-public string DataURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("dataURL")] public string DataURL { get; set; }
+}
 /// <summary>
 /// Replays the layer snapshot and returns canvas log.
 /// </summary>
@@ -8042,7 +9525,8 @@ public string Command { get; } = "LayerTree.snapshotCommandLog";
 /// <summary>
 /// The id of the layer snapshot.
 /// </summary>
-public string SnapshotId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeSnapshotCommandLogRequest"/>
 /// </summary>
@@ -8051,7 +9535,8 @@ internal partial class LayerTreeSnapshotCommandLogResponse: IChromiumResponse
 /// <summary>
 /// The array of canvas function calls.
 /// </summary>
-public JsonElement?[] CommandLog { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("commandLog")] public JsonElement?[] CommandLog { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -8064,11 +9549,13 @@ public string InternalName { get; } = "LayerTree.layerPainted";
 /// <summary>
 /// The id of the painted layer.
 /// </summary>
-public string LayerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layerId")] public string LayerId { get; set; }
+
 /// <summary>
 /// Clip rectangle.
 /// </summary>
-public DOM.Rect Clip { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("clip")] public DOM.Rect Clip { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -8081,7 +9568,8 @@ public string InternalName { get; } = "LayerTree.layerTreeDidChange";
 /// <summary>
 /// Layer tree, absent if not in the comspositing mode.
 /// </summary>
-public Layer[] Layers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("layers")] public Layer[] Layers { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Log
 {
@@ -8093,43 +9581,53 @@ internal partial class LogEntry
 /// <summary>
 /// Log entry source.
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// Log entry severity.
 /// </summary>
-public string Level { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("level")] public string Level { get; set; }
+
 /// <summary>
 /// Logged text.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Timestamp when this entry was added.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// URL of the resource if known.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Line number in the resource.
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// JavaScript stack trace.
 /// </summary>
-public Runtime.StackTrace StackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public Runtime.StackTrace StackTrace { get; set; }
+
 /// <summary>
 /// Identifier of the network request associated with this entry.
 /// </summary>
-public string NetworkRequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("networkRequestId")] public string NetworkRequestId { get; set; }
+
 /// <summary>
 /// Identifier of the worker associated with this entry.
 /// </summary>
-public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+
 /// <summary>
 /// Call arguments.
 /// </summary>
-public Runtime.RemoteObject[] Args { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("args")] public Runtime.RemoteObject[] Args { get; set; }
+}
 /// <summary>
 /// Violation configuration setting.
 /// </summary>
@@ -8138,11 +9636,13 @@ internal partial class ViolationSetting
 /// <summary>
 /// Violation type.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Time threshold to trigger upon.
 /// </summary>
-public double? Threshold { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("threshold")] public double? Threshold { get; set; }
+}
 /// <summary>
 /// Clears the log.
 /// </summary>
@@ -8208,7 +9708,8 @@ public string Command { get; } = "Log.startViolationsReport";
 /// <summary>
 /// Configuration for violations.
 /// </summary>
-public ViolationSetting[] Config { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("config")] public ViolationSetting[] Config { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LogStartViolationsReportRequest"/>
 /// </summary>
@@ -8244,18 +9745,11 @@ public string InternalName { get; } = "Log.entryAdded";
 /// <summary>
 /// The entry.
 /// </summary>
-public LogEntry Entry { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entry")] public LogEntry Entry { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Memory
 {
-/// <summary>
-/// Memory pressure level.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PressureLevel
-{
-[System.Runtime.Serialization.EnumMember(Value = "moderate")]Moderate,
-[System.Runtime.Serialization.EnumMember(Value = "critical")]Critical}
 /// <summary>
 /// Heap profile sample.
 /// </summary>
@@ -8264,15 +9758,18 @@ internal partial class SamplingProfileNode
 /// <summary>
 /// Size of the sampled allocation.
 /// </summary>
-public double? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+
 /// <summary>
 /// Total bytes attributed to this sample.
 /// </summary>
-public double? Total { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("total")] public double? Total { get; set; }
+
 /// <summary>
 /// Execution stack at the point of allocation.
 /// </summary>
-public string[] Stack { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stack")] public string[] Stack { get; set; }
+}
 /// <summary>
 /// Array of heap profile samples.
 /// </summary>
@@ -8281,11 +9778,13 @@ internal partial class SamplingProfile
 /// <summary>
 /// 
 /// </summary>
-public SamplingProfileNode[] Samples { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("samples")] public SamplingProfileNode[] Samples { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Module[] Modules { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("modules")] public Module[] Modules { get; set; }
+}
 /// <summary>
 /// Executable module information
 /// </summary>
@@ -8294,20 +9793,24 @@ internal partial class Module
 /// <summary>
 /// Name of the module.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// UUID of the module.
 /// </summary>
-public string Uuid { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("uuid")] public string Uuid { get; set; }
+
 /// <summary>
 /// Base address where the module is loaded into memory. Encoded as a decimal
 /// or hexadecimal (0x prefixed) string.
 /// </summary>
-public string BaseAddress { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("baseAddress")] public string BaseAddress { get; set; }
+
 /// <summary>
 /// Size of the module in bytes.
 /// </summary>
-public double? Size { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -8327,15 +9830,18 @@ internal partial class MemoryGetDOMCountersResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public int? Documents { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documents")] public int? Documents { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? Nodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public int? Nodes { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? JsEventListeners { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("jsEventListeners")] public int? JsEventListeners { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -8383,7 +9889,8 @@ public string Command { get; } = "Memory.setPressureNotificationsSuppressed";
 /// <summary>
 /// If true, memory pressure notifications will be suppressed.
 /// </summary>
-public bool? Suppressed { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("suppressed")] public bool? Suppressed { get; set; }
+}
 /// <summary>
 /// Response from <see cref="MemorySetPressureNotificationsSuppressedRequest"/>
 /// </summary>
@@ -8404,7 +9911,8 @@ public string Command { get; } = "Memory.simulatePressureNotification";
 /// Memory pressure level of the notification.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PressureLevel Level { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("level")] public PressureLevel Level { get; set; }
+}
 /// <summary>
 /// Response from <see cref="MemorySimulatePressureNotificationRequest"/>
 /// </summary>
@@ -8424,11 +9932,13 @@ public string Command { get; } = "Memory.startSampling";
 /// <summary>
 /// Average number of bytes between samples.
 /// </summary>
-public int? SamplingInterval { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("samplingInterval")] public int? SamplingInterval { get; set; }
+
 /// <summary>
 /// Do not randomize intervals between samples.
 /// </summary>
-public bool? SuppressRandomness { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("suppressRandomness")] public bool? SuppressRandomness { get; set; }
+}
 /// <summary>
 /// Response from <see cref="MemoryStartSamplingRequest"/>
 /// </summary>
@@ -8472,7 +9982,8 @@ internal partial class MemoryGetAllTimeSamplingProfileResponse: IChromiumRespons
 /// <summary>
 /// 
 /// </summary>
-public SamplingProfile Profile { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingProfile Profile { get; set; }
+}
 /// <summary>
 /// Retrieve native memory allocations profile
 /// collected since browser process startup.
@@ -8493,7 +10004,8 @@ internal partial class MemoryGetBrowserSamplingProfileResponse: IChromiumRespons
 /// <summary>
 /// 
 /// </summary>
-public SamplingProfile Profile { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingProfile Profile { get; set; }
+}
 /// <summary>
 /// Retrieve native memory allocations profile collected since last
 /// `startSampling` call.
@@ -8514,93 +10026,17 @@ internal partial class MemoryGetSamplingProfileResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public SamplingProfile Profile { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingProfile Profile { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Network
 {
-/// <summary>
-/// Resource type as it was perceived by the rendering engine.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ResourceType
-{
-[System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
-[System.Runtime.Serialization.EnumMember(Value = "Stylesheet")]Stylesheet,
-[System.Runtime.Serialization.EnumMember(Value = "Image")]Image,
-[System.Runtime.Serialization.EnumMember(Value = "Media")]Media,
-[System.Runtime.Serialization.EnumMember(Value = "Font")]Font,
-[System.Runtime.Serialization.EnumMember(Value = "Script")]Script,
-[System.Runtime.Serialization.EnumMember(Value = "TextTrack")]TextTrack,
-[System.Runtime.Serialization.EnumMember(Value = "XHR")]XHR,
-[System.Runtime.Serialization.EnumMember(Value = "Fetch")]Fetch,
-[System.Runtime.Serialization.EnumMember(Value = "EventSource")]EventSource,
-[System.Runtime.Serialization.EnumMember(Value = "WebSocket")]WebSocket,
-[System.Runtime.Serialization.EnumMember(Value = "Manifest")]Manifest,
-[System.Runtime.Serialization.EnumMember(Value = "SignedExchange")]SignedExchange,
-[System.Runtime.Serialization.EnumMember(Value = "Ping")]Ping,
-[System.Runtime.Serialization.EnumMember(Value = "CSPViolationReport")]CSPViolationReport,
-[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
-/// <summary>
-/// Network level fetch failure reason.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ErrorReason
-{
-[System.Runtime.Serialization.EnumMember(Value = "Failed")]Failed,
-[System.Runtime.Serialization.EnumMember(Value = "Aborted")]Aborted,
-[System.Runtime.Serialization.EnumMember(Value = "TimedOut")]TimedOut,
-[System.Runtime.Serialization.EnumMember(Value = "AccessDenied")]AccessDenied,
-[System.Runtime.Serialization.EnumMember(Value = "ConnectionClosed")]ConnectionClosed,
-[System.Runtime.Serialization.EnumMember(Value = "ConnectionReset")]ConnectionReset,
-[System.Runtime.Serialization.EnumMember(Value = "ConnectionRefused")]ConnectionRefused,
-[System.Runtime.Serialization.EnumMember(Value = "ConnectionAborted")]ConnectionAborted,
-[System.Runtime.Serialization.EnumMember(Value = "ConnectionFailed")]ConnectionFailed,
-[System.Runtime.Serialization.EnumMember(Value = "NameNotResolved")]NameNotResolved,
-[System.Runtime.Serialization.EnumMember(Value = "InternetDisconnected")]InternetDisconnected,
-[System.Runtime.Serialization.EnumMember(Value = "AddressUnreachable")]AddressUnreachable,
-[System.Runtime.Serialization.EnumMember(Value = "BlockedByClient")]BlockedByClient,
-[System.Runtime.Serialization.EnumMember(Value = "BlockedByResponse")]BlockedByResponse}
 /// <summary>
 /// Request / response headers as keys / values of JSON object.
 /// </summary>
 internal partial class Headers
 {
 }
-/// <summary>
-/// The underlying connection technology that the browser is supposedly using.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ConnectionType
-{
-[System.Runtime.Serialization.EnumMember(Value = "none")]None,
-[System.Runtime.Serialization.EnumMember(Value = "cellular2g")]Cellular2G,
-[System.Runtime.Serialization.EnumMember(Value = "cellular3g")]Cellular3G,
-[System.Runtime.Serialization.EnumMember(Value = "cellular4g")]Cellular4G,
-[System.Runtime.Serialization.EnumMember(Value = "bluetooth")]Bluetooth,
-[System.Runtime.Serialization.EnumMember(Value = "ethernet")]Ethernet,
-[System.Runtime.Serialization.EnumMember(Value = "wifi")]Wifi,
-[System.Runtime.Serialization.EnumMember(Value = "wimax")]Wimax,
-[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
-/// <summary>
-/// Represents the cookie's 'SameSite' status:
-/// https://tools.ietf.org/html/draft-west-first-party-cookies
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookieSameSite
-{
-[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict,
-[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
-[System.Runtime.Serialization.EnumMember(Value = "None")]None}
-/// <summary>
-/// Represents the cookie's 'Priority' status:
-/// https://tools.ietf.org/html/draft-west-cookie-priority-00
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookiePriority
-{
-[System.Runtime.Serialization.EnumMember(Value = "Low")]Low,
-[System.Runtime.Serialization.EnumMember(Value = "Medium")]Medium,
-[System.Runtime.Serialization.EnumMember(Value = "High")]High}
 /// <summary>
 /// Timing information for the request.
 /// </summary>
@@ -8610,78 +10046,83 @@ internal partial class ResourceTiming
 /// Timing's requestTime is a baseline in seconds, while the other numbers are ticks in
 /// milliseconds relatively to this requestTime.
 /// </summary>
-public double? RequestTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestTime")] public double? RequestTime { get; set; }
+
 /// <summary>
 /// Started resolving proxy.
 /// </summary>
-public double? ProxyStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("proxyStart")] public double? ProxyStart { get; set; }
+
 /// <summary>
 /// Finished resolving proxy.
 /// </summary>
-public double? ProxyEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("proxyEnd")] public double? ProxyEnd { get; set; }
+
 /// <summary>
 /// Started DNS address resolve.
 /// </summary>
-public double? DnsStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dnsStart")] public double? DnsStart { get; set; }
+
 /// <summary>
 /// Finished DNS address resolve.
 /// </summary>
-public double? DnsEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dnsEnd")] public double? DnsEnd { get; set; }
+
 /// <summary>
 /// Started connecting to the remote host.
 /// </summary>
-public double? ConnectStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectStart")] public double? ConnectStart { get; set; }
+
 /// <summary>
 /// Connected to the remote host.
 /// </summary>
-public double? ConnectEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectEnd")] public double? ConnectEnd { get; set; }
+
 /// <summary>
 /// Started SSL handshake.
 /// </summary>
-public double? SslStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sslStart")] public double? SslStart { get; set; }
+
 /// <summary>
 /// Finished SSL handshake.
 /// </summary>
-public double? SslEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sslEnd")] public double? SslEnd { get; set; }
+
 /// <summary>
 /// Started running ServiceWorker.
 /// </summary>
-public double? WorkerStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerStart")] public double? WorkerStart { get; set; }
+
 /// <summary>
 /// Finished Starting ServiceWorker.
 /// </summary>
-public double? WorkerReady { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerReady")] public double? WorkerReady { get; set; }
+
 /// <summary>
 /// Started sending request.
 /// </summary>
-public double? SendStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sendStart")] public double? SendStart { get; set; }
+
 /// <summary>
 /// Finished sending request.
 /// </summary>
-public double? SendEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sendEnd")] public double? SendEnd { get; set; }
+
 /// <summary>
 /// Time the server started pushing request.
 /// </summary>
-public double? PushStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pushStart")] public double? PushStart { get; set; }
+
 /// <summary>
 /// Time the server finished pushing request.
 /// </summary>
-public double? PushEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pushEnd")] public double? PushEnd { get; set; }
+
 /// <summary>
 /// Finished receiving response headers.
 /// </summary>
-public double? ReceiveHeadersEnd { get; set; }}
-/// <summary>
-/// Loading priority of a resource request.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ResourcePriority
-{
-[System.Runtime.Serialization.EnumMember(Value = "VeryLow")]VeryLow,
-[System.Runtime.Serialization.EnumMember(Value = "Low")]Low,
-[System.Runtime.Serialization.EnumMember(Value = "Medium")]Medium,
-[System.Runtime.Serialization.EnumMember(Value = "High")]High,
-[System.Runtime.Serialization.EnumMember(Value = "VeryHigh")]VeryHigh}
+[System.Text.Json.Serialization.JsonPropertyName("receiveHeadersEnd")] public double? ReceiveHeadersEnd { get; set; }
+}
 /// <summary>
 /// HTTP request data.
 /// </summary>
@@ -8690,44 +10131,55 @@ internal partial class Request
 /// <summary>
 /// Request URL (without fragment).
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Fragment of the requested URL starting with hash, if present.
 /// </summary>
-public string UrlFragment { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("urlFragment")] public string UrlFragment { get; set; }
+
 /// <summary>
 /// HTTP request method.
 /// </summary>
-public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+
 /// <summary>
 /// HTTP request headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// HTTP POST request data.
 /// </summary>
-public string PostData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+
 /// <summary>
 /// True when the request has POST data. Note that postData might still be omitted when this flag is true when the data is too long.
 /// </summary>
-public bool? HasPostData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasPostData")] public bool? HasPostData { get; set; }
+
 /// <summary>
 /// The mixed content type of the request.
 /// </summary>
-public Security.MixedContentType MixedContentType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("mixedContentType")] public Security.MixedContentType? MixedContentType { get; set; }
+
 /// <summary>
 /// Priority of the resource request at the time request is sent.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourcePriority InitialPriority { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("initialPriority")] public ResourcePriority InitialPriority { get; set; }
+
 /// <summary>
 /// The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/
 /// </summary>
-public string ReferrerPolicy { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("referrerPolicy")] public string ReferrerPolicy { get; set; }
+
 /// <summary>
 /// Whether is loaded via link preload.
 /// </summary>
-public bool? IsLinkPreload { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isLinkPreload")] public bool? IsLinkPreload { get; set; }
+}
 /// <summary>
 /// Details of a signed certificate timestamp (SCT).
 /// </summary>
@@ -8736,35 +10188,43 @@ internal partial class SignedCertificateTimestamp
 /// <summary>
 /// Validation status.
 /// </summary>
-public string Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public string Status { get; set; }
+
 /// <summary>
 /// Origin.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// Log name / description.
 /// </summary>
-public string LogDescription { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("logDescription")] public string LogDescription { get; set; }
+
 /// <summary>
 /// Log ID.
 /// </summary>
-public string LogId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("logId")] public string LogId { get; set; }
+
 /// <summary>
 /// Issuance date.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Hash algorithm.
 /// </summary>
-public string HashAlgorithm { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hashAlgorithm")] public string HashAlgorithm { get; set; }
+
 /// <summary>
 /// Signature algorithm.
 /// </summary>
-public string SignatureAlgorithm { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("signatureAlgorithm")] public string SignatureAlgorithm { get; set; }
+
 /// <summary>
 /// Signature data.
 /// </summary>
-public string SignatureData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("signatureData")] public string SignatureData { get; set; }
+}
 /// <summary>
 /// Security details about a request.
 /// </summary>
@@ -8773,79 +10233,69 @@ internal partial class SecurityDetails
 /// <summary>
 /// Protocol name (e.g. "TLS 1.2" or "QUIC").
 /// </summary>
-public string Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public string Protocol { get; set; }
+
 /// <summary>
 /// Key Exchange used by the connection, or the empty string if not applicable.
 /// </summary>
-public string KeyExchange { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyExchange")] public string KeyExchange { get; set; }
+
 /// <summary>
 /// (EC)DH group used by the connection, if applicable.
 /// </summary>
-public string KeyExchangeGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyExchangeGroup")] public string KeyExchangeGroup { get; set; }
+
 /// <summary>
 /// Cipher name.
 /// </summary>
-public string Cipher { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cipher")] public string Cipher { get; set; }
+
 /// <summary>
 /// TLS MAC. Note that AEAD ciphers do not have separate MACs.
 /// </summary>
-public string Mac { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mac")] public string Mac { get; set; }
+
 /// <summary>
 /// Certificate ID value.
 /// </summary>
-public int? CertificateId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificateId")] public int? CertificateId { get; set; }
+
 /// <summary>
 /// Certificate subject name.
 /// </summary>
-public string SubjectName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subjectName")] public string SubjectName { get; set; }
+
 /// <summary>
 /// Subject Alternative Name (SAN) DNS names and IP addresses.
 /// </summary>
-public string[] SanList { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sanList")] public string[] SanList { get; set; }
+
 /// <summary>
 /// Name of the issuing CA.
 /// </summary>
-public string Issuer { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("issuer")] public string Issuer { get; set; }
+
 /// <summary>
 /// Certificate valid from date.
 /// </summary>
-public double? ValidFrom { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validFrom")] public double? ValidFrom { get; set; }
+
 /// <summary>
 /// Certificate valid to (expiration) date
 /// </summary>
-public double? ValidTo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validTo")] public double? ValidTo { get; set; }
+
 /// <summary>
 /// List of signed certificate timestamps (SCTs).
 /// </summary>
-public SignedCertificateTimestamp[] SignedCertificateTimestampList { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("signedCertificateTimestampList")] public SignedCertificateTimestamp[] SignedCertificateTimestampList { get; set; }
+
 /// <summary>
 /// Whether the request complied with Certificate Transparency policy
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CertificateTransparencyCompliance CertificateTransparencyCompliance { get; set; }}
-/// <summary>
-/// Whether the request complied with Certificate Transparency policy.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CertificateTransparencyCompliance
-{
-[System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown,
-[System.Runtime.Serialization.EnumMember(Value = "not-compliant")]NotCompliant,
-[System.Runtime.Serialization.EnumMember(Value = "compliant")]Compliant}
-/// <summary>
-/// The reason why request was blocked.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum BlockedReason
-{
-[System.Runtime.Serialization.EnumMember(Value = "other")]Other,
-[System.Runtime.Serialization.EnumMember(Value = "csp")]Csp,
-[System.Runtime.Serialization.EnumMember(Value = "mixed-content")]MixedContent,
-[System.Runtime.Serialization.EnumMember(Value = "origin")]Origin,
-[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
-[System.Runtime.Serialization.EnumMember(Value = "subresource-filter")]SubresourceFilter,
-[System.Runtime.Serialization.EnumMember(Value = "content-type")]ContentType,
-[System.Runtime.Serialization.EnumMember(Value = "collapsed-by-client")]CollapsedByClient}
+[System.Text.Json.Serialization.JsonPropertyName("certificateTransparencyCompliance")] public CertificateTransparencyCompliance CertificateTransparencyCompliance { get; set; }
+}
 /// <summary>
 /// HTTP response data.
 /// </summary>
@@ -8854,83 +10304,104 @@ internal partial class Response
 /// <summary>
 /// Response URL. This URL can be different from CachedResource.url in case of redirect.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+
 /// <summary>
 /// HTTP response status text.
 /// </summary>
-public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+
 /// <summary>
 /// HTTP response headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// HTTP response headers text.
 /// </summary>
-public string HeadersText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headersText")] public string HeadersText { get; set; }
+
 /// <summary>
 /// Resource mimeType as determined by the browser.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// Refined HTTP request headers that were actually transmitted over the network.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaders")] public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+
 /// <summary>
 /// HTTP request headers text.
 /// </summary>
-public string RequestHeadersText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeadersText")] public string RequestHeadersText { get; set; }
+
 /// <summary>
 /// Specifies whether physical connection was actually reused for this request.
 /// </summary>
-public bool? ConnectionReused { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectionReused")] public bool? ConnectionReused { get; set; }
+
 /// <summary>
 /// Physical connection id that was actually used for this request.
 /// </summary>
-public double? ConnectionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectionId")] public double? ConnectionId { get; set; }
+
 /// <summary>
 /// Remote IP address.
 /// </summary>
-public string RemoteIPAddress { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("remoteIPAddress")] public string RemoteIPAddress { get; set; }
+
 /// <summary>
 /// Remote port.
 /// </summary>
-public int? RemotePort { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("remotePort")] public int? RemotePort { get; set; }
+
 /// <summary>
 /// Specifies that the request was served from the disk cache.
 /// </summary>
-public bool? FromDiskCache { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fromDiskCache")] public bool? FromDiskCache { get; set; }
+
 /// <summary>
 /// Specifies that the request was served from the ServiceWorker.
 /// </summary>
-public bool? FromServiceWorker { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fromServiceWorker")] public bool? FromServiceWorker { get; set; }
+
 /// <summary>
 /// Specifies that the request was served from the prefetch cache.
 /// </summary>
-public bool? FromPrefetchCache { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fromPrefetchCache")] public bool? FromPrefetchCache { get; set; }
+
 /// <summary>
 /// Total number of bytes received for this request so far.
 /// </summary>
-public double? EncodedDataLength { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("encodedDataLength")] public double? EncodedDataLength { get; set; }
+
 /// <summary>
 /// Timing information for the given request.
 /// </summary>
-public ResourceTiming Timing { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timing")] public ResourceTiming Timing { get; set; }
+
 /// <summary>
 /// Protocol used to fetch this request.
 /// </summary>
-public string Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public string Protocol { get; set; }
+
 /// <summary>
 /// Security state of the request resource.
 /// </summary>
-public Security.SecurityState SecurityState { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("securityState")] public Security.SecurityState SecurityState { get; set; }
+
 /// <summary>
 /// Security details for the request.
 /// </summary>
-public SecurityDetails SecurityDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("securityDetails")] public SecurityDetails SecurityDetails { get; set; }
+}
 /// <summary>
 /// WebSocket request data.
 /// </summary>
@@ -8939,7 +10410,8 @@ internal partial class WebSocketRequest
 /// <summary>
 /// HTTP request headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// WebSocket response data.
 /// </summary>
@@ -8948,27 +10420,33 @@ internal partial class WebSocketResponse
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+
 /// <summary>
 /// HTTP response status text.
 /// </summary>
-public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+
 /// <summary>
 /// HTTP response headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// HTTP response headers text.
 /// </summary>
-public string HeadersText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headersText")] public string HeadersText { get; set; }
+
 /// <summary>
 /// HTTP request headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaders")] public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+
 /// <summary>
 /// HTTP request headers text.
 /// </summary>
-public string RequestHeadersText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestHeadersText")] public string RequestHeadersText { get; set; }
+}
 /// <summary>
 /// WebSocket message data. This represents an entire WebSocket message, not just a fragmented frame as the name suggests.
 /// </summary>
@@ -8977,17 +10455,20 @@ internal partial class WebSocketFrame
 /// <summary>
 /// WebSocket message opcode.
 /// </summary>
-public double? Opcode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("opcode")] public double? Opcode { get; set; }
+
 /// <summary>
 /// WebSocket message mask.
 /// </summary>
-public bool? Mask { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mask")] public bool? Mask { get; set; }
+
 /// <summary>
 /// WebSocket message payload data.
 /// If the opcode is 1, this is a text message and payloadData is a UTF-8 string.
 /// If the opcode isn't 1, then payloadData is a base64 encoded string representing binary data.
 /// </summary>
-public string PayloadData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("payloadData")] public string PayloadData { get; set; }
+}
 /// <summary>
 /// Information about the cached resource.
 /// </summary>
@@ -8996,20 +10477,24 @@ internal partial class CachedResource
 /// <summary>
 /// Resource URL. This is the url of the original network request.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Type of this resource.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public ResourceType Type { get; set; }
+
 /// <summary>
 /// Cached response data.
 /// </summary>
-public Response Response { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("response")] public Response Response { get; set; }
+
 /// <summary>
 /// Cached response body size.
 /// </summary>
-public double? BodySize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bodySize")] public double? BodySize { get; set; }
+}
 /// <summary>
 /// Information about the request initiator.
 /// </summary>
@@ -9018,20 +10503,24 @@ internal partial class Initiator
 /// <summary>
 /// Type of this initiator.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Initiator JavaScript stack trace, set for Script only.
 /// </summary>
-public Runtime.StackTrace Stack { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stack")] public Runtime.StackTrace Stack { get; set; }
+
 /// <summary>
 /// Initiator URL, set for Parser type or for Script type (when script is importing module) or for SignedExchange type.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Initiator line number, set for Parser type or for Script type (when script is importing
 /// module) (0-based).
 /// </summary>
-public double? LineNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public double? LineNumber { get; set; }
+}
 /// <summary>
 /// Cookie object
 /// </summary>
@@ -9040,82 +10529,60 @@ internal partial class Cookie
 /// <summary>
 /// Cookie name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Cookie value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Cookie domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Cookie path.
 /// </summary>
-public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+
 /// <summary>
 /// Cookie expiration date as the number of seconds since the UNIX epoch.
 /// </summary>
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+
 /// <summary>
 /// Cookie size.
 /// </summary>
-public int? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+
 /// <summary>
 /// True in case of session cookie.
 /// </summary>
-public bool? Session { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("session")] public bool? Session { get; set; }
+
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSite? SameSite { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public CookieSameSite? SameSite { get; set; }
+
 /// <summary>
 /// Cookie Priority
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookiePriority Priority { get; set; }}
-/// <summary>
-/// Types of reasons why a cookie may not be stored from a response.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SetCookieBlockedReason
-{
-[System.Runtime.Serialization.EnumMember(Value = "SecureOnly")]SecureOnly,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteStrict")]SameSiteStrict,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteLax")]SameSiteLax,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteUnspecifiedTreatedAsLax")]SameSiteUnspecifiedTreatedAsLax,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteNoneInsecure")]SameSiteNoneInsecure,
-[System.Runtime.Serialization.EnumMember(Value = "UserPreferences")]UserPreferences,
-[System.Runtime.Serialization.EnumMember(Value = "SyntaxError")]SyntaxError,
-[System.Runtime.Serialization.EnumMember(Value = "SchemeNotSupported")]SchemeNotSupported,
-[System.Runtime.Serialization.EnumMember(Value = "OverwriteSecure")]OverwriteSecure,
-[System.Runtime.Serialization.EnumMember(Value = "InvalidDomain")]InvalidDomain,
-[System.Runtime.Serialization.EnumMember(Value = "InvalidPrefix")]InvalidPrefix,
-[System.Runtime.Serialization.EnumMember(Value = "UnknownError")]UnknownError}
-/// <summary>
-/// Types of reasons why a cookie may not be sent with a request.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookieBlockedReason
-{
-[System.Runtime.Serialization.EnumMember(Value = "SecureOnly")]SecureOnly,
-[System.Runtime.Serialization.EnumMember(Value = "NotOnPath")]NotOnPath,
-[System.Runtime.Serialization.EnumMember(Value = "DomainMismatch")]DomainMismatch,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteStrict")]SameSiteStrict,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteLax")]SameSiteLax,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteUnspecifiedTreatedAsLax")]SameSiteUnspecifiedTreatedAsLax,
-[System.Runtime.Serialization.EnumMember(Value = "SameSiteNoneInsecure")]SameSiteNoneInsecure,
-[System.Runtime.Serialization.EnumMember(Value = "UserPreferences")]UserPreferences,
-[System.Runtime.Serialization.EnumMember(Value = "UnknownError")]UnknownError}
+[System.Text.Json.Serialization.JsonPropertyName("priority")] public CookiePriority Priority { get; set; }
+}
 /// <summary>
 /// A cookie which was not stored from a response with the corresponding reason.
 /// </summary>
@@ -9124,18 +10591,21 @@ internal partial class BlockedSetCookieWithReason
 /// <summary>
 /// The reason(s) this cookie was blocked.
 /// </summary>
-public SetCookieBlockedReason[] BlockedReasons { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("blockedReasons")] public SetCookieBlockedReason[] BlockedReasons { get; set; }
+
 /// <summary>
 /// The string representing this individual cookie as it would appear in the header.
 /// This is not the entire "cookie" or "set-cookie" header which could have multiple cookies.
 /// </summary>
-public string CookieLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cookieLine")] public string CookieLine { get; set; }
+
 /// <summary>
 /// The cookie object which represents the cookie which was not stored. It is optional because
 /// sometimes complete cookie information is not available, such as in the case of parsing
 /// errors.
 /// </summary>
-public Cookie Cookie { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookie")] public Cookie Cookie { get; set; }
+}
 /// <summary>
 /// A cookie with was not sent with a request with the corresponding reason.
 /// </summary>
@@ -9144,11 +10614,13 @@ internal partial class BlockedCookieWithReason
 /// <summary>
 /// The reason(s) the cookie was blocked.
 /// </summary>
-public CookieBlockedReason[] BlockedReasons { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("blockedReasons")] public CookieBlockedReason[] BlockedReasons { get; set; }
+
 /// <summary>
 /// The cookie object representing the cookie which was not sent.
 /// </summary>
-public Cookie Cookie { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookie")] public Cookie Cookie { get; set; }
+}
 /// <summary>
 /// Cookie parameter object
 /// </summary>
@@ -9157,46 +10629,56 @@ internal partial class CookieParam
 /// <summary>
 /// Cookie name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Cookie value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// The request-URI to associate with the setting of the cookie. This value can affect the
 /// default domain and path values of the created cookie.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Cookie domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Cookie path.
 /// </summary>
-public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSite? SameSite { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public CookieSameSite? SameSite { get; set; }
+
 /// <summary>
 /// Cookie expiration date, session cookie if not set
 /// </summary>
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+
 /// <summary>
 /// Cookie Priority.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookiePriority? Priority { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("priority")] public CookiePriority? Priority { get; set; }
+}
 /// <summary>
 /// Authorization challenge for HTTP status code 401 or 407.
 /// </summary>
@@ -9205,19 +10687,23 @@ internal partial class AuthChallenge
 /// <summary>
 /// Source of the authentication challenge.
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// Origin of the challenger.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// The authentication scheme used, such as basic or digest
 /// </summary>
-public string Scheme { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scheme")] public string Scheme { get; set; }
+
 /// <summary>
 /// The realm of the challenge. May be empty.
 /// </summary>
-public string Realm { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("realm")] public string Realm { get; set; }
+}
 /// <summary>
 /// Response to an AuthChallenge.
 /// </summary>
@@ -9228,26 +10714,20 @@ internal partial class AuthChallengeResponse
 /// deferring to the default behavior of the net stack, which will likely either the Cancel
 /// authentication or display a popup dialog box.
 /// </summary>
-public string Response { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("response")] public string Response { get; set; }
+
 /// <summary>
 /// The username to provide, possibly empty. Should only be set if response is
 /// ProvideCredentials.
 /// </summary>
-public string Username { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("username")] public string Username { get; set; }
+
 /// <summary>
 /// The password to provide, possibly empty. Should only be set if response is
 /// ProvideCredentials.
 /// </summary>
-public string Password { get; set; }}
-/// <summary>
-/// Stages of the interception to begin intercepting. Request will intercept before the request is
-/// sent. Response will intercept after the response is received.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum InterceptionStage
-{
-[System.Runtime.Serialization.EnumMember(Value = "Request")]Request,
-[System.Runtime.Serialization.EnumMember(Value = "HeadersReceived")]HeadersReceived}
+[System.Text.Json.Serialization.JsonPropertyName("password")] public string Password { get; set; }
+}
 /// <summary>
 /// Request pattern for interception.
 /// </summary>
@@ -9257,17 +10737,20 @@ internal partial class RequestPattern
 /// Wildcards ('*' -&gt; zero or more, '?' -&gt; exactly one) are allowed. Escape character is
 /// backslash. Omitting is equivalent to "*".
 /// </summary>
-public string UrlPattern { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("urlPattern")] public string UrlPattern { get; set; }
+
 /// <summary>
 /// If set, only requests for matching resource types will be intercepted.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType? ResourceType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("resourceType")] public ResourceType? ResourceType { get; set; }
+
 /// <summary>
 /// Stage at wich to begin intercepting requests. Default is Request.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public InterceptionStage? InterceptionStage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("interceptionStage")] public InterceptionStage? InterceptionStage { get; set; }
+}
 /// <summary>
 /// Information about a signed exchange signature.
 /// https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1
@@ -9277,39 +10760,48 @@ internal partial class SignedExchangeSignature
 /// <summary>
 /// Signed exchange signature label.
 /// </summary>
-public string Label { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("label")] public string Label { get; set; }
+
 /// <summary>
 /// The hex string of signed exchange signature.
 /// </summary>
-public string Signature { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("signature")] public string Signature { get; set; }
+
 /// <summary>
 /// Signed exchange signature integrity.
 /// </summary>
-public string Integrity { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("integrity")] public string Integrity { get; set; }
+
 /// <summary>
 /// Signed exchange signature cert Url.
 /// </summary>
-public string CertUrl { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certUrl")] public string CertUrl { get; set; }
+
 /// <summary>
 /// The hex string of signed exchange signature cert sha256.
 /// </summary>
-public string CertSha256 { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certSha256")] public string CertSha256 { get; set; }
+
 /// <summary>
 /// Signed exchange signature validity Url.
 /// </summary>
-public string ValidityUrl { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validityUrl")] public string ValidityUrl { get; set; }
+
 /// <summary>
 /// Signed exchange signature date.
 /// </summary>
-public int? Date { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("date")] public int? Date { get; set; }
+
 /// <summary>
 /// Signed exchange signature expires.
 /// </summary>
-public int? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public int? Expires { get; set; }
+
 /// <summary>
 /// The encoded certificates.
 /// </summary>
-public string[] Certificates { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("certificates")] public string[] Certificates { get; set; }
+}
 /// <summary>
 /// Information about a signed exchange header.
 /// https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation
@@ -9319,35 +10811,28 @@ internal partial class SignedExchangeHeader
 /// <summary>
 /// Signed exchange request URL.
 /// </summary>
-public string RequestUrl { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestUrl")] public string RequestUrl { get; set; }
+
 /// <summary>
 /// Signed exchange response code.
 /// </summary>
-public int? ResponseCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseCode")] public int? ResponseCode { get; set; }
+
 /// <summary>
 /// Signed exchange response headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseHeaders")] public System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
+
 /// <summary>
 /// Signed exchange response signature.
 /// </summary>
-public SignedExchangeSignature[] Signatures { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("signatures")] public SignedExchangeSignature[] Signatures { get; set; }
+
 /// <summary>
 /// Signed exchange header integrity hash in the form of "sha256-&lt;base64-hash-value&gt;".
 /// </summary>
-public string HeaderIntegrity { get; set; }}
-/// <summary>
-/// Field type for a signed exchange related error.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SignedExchangeErrorField
-{
-[System.Runtime.Serialization.EnumMember(Value = "signatureSig")]SignatureSig,
-[System.Runtime.Serialization.EnumMember(Value = "signatureIntegrity")]SignatureIntegrity,
-[System.Runtime.Serialization.EnumMember(Value = "signatureCertUrl")]SignatureCertUrl,
-[System.Runtime.Serialization.EnumMember(Value = "signatureCertSha256")]SignatureCertSha256,
-[System.Runtime.Serialization.EnumMember(Value = "signatureValidityUrl")]SignatureValidityUrl,
-[System.Runtime.Serialization.EnumMember(Value = "signatureTimestamps")]SignatureTimestamps}
+[System.Text.Json.Serialization.JsonPropertyName("headerIntegrity")] public string HeaderIntegrity { get; set; }
+}
 /// <summary>
 /// Information about a signed exchange response.
 /// </summary>
@@ -9356,16 +10841,19 @@ internal partial class SignedExchangeError
 /// <summary>
 /// Error message.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// The index of the signature which caused the error.
 /// </summary>
-public int? SignatureIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("signatureIndex")] public int? SignatureIndex { get; set; }
+
 /// <summary>
 /// The field which caused the error.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SignedExchangeErrorField? ErrorField { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorField")] public SignedExchangeErrorField? ErrorField { get; set; }
+}
 /// <summary>
 /// Information about a signed exchange response.
 /// </summary>
@@ -9374,19 +10862,23 @@ internal partial class SignedExchangeInfo
 /// <summary>
 /// The outer response of signed HTTP exchange which was received from network.
 /// </summary>
-public Response OuterResponse { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("outerResponse")] public Response OuterResponse { get; set; }
+
 /// <summary>
 /// Information about the signed exchange header.
 /// </summary>
-public SignedExchangeHeader Header { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("header")] public SignedExchangeHeader Header { get; set; }
+
 /// <summary>
 /// Security details for the signed exchange header.
 /// </summary>
-public SecurityDetails SecurityDetails { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityDetails")] public SecurityDetails SecurityDetails { get; set; }
+
 /// <summary>
 /// Errors occurred while handling the signed exchagne.
 /// </summary>
-public SignedExchangeError[] Errors { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errors")] public SignedExchangeError[] Errors { get; set; }
+}
 /// <summary>
 /// Tells whether clearing browser cache is supported.
 /// </summary>
@@ -9406,7 +10898,8 @@ internal partial class NetworkCanClearBrowserCacheResponse: IChromiumResponse
 /// <summary>
 /// True if browser cache can be cleared.
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Tells whether clearing browser cookies is supported.
 /// </summary>
@@ -9426,7 +10919,8 @@ internal partial class NetworkCanClearBrowserCookiesResponse: IChromiumResponse
 /// <summary>
 /// True if browser cookies can be cleared.
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Tells whether emulation of network conditions is supported.
 /// </summary>
@@ -9446,7 +10940,8 @@ internal partial class NetworkCanEmulateNetworkConditionsResponse: IChromiumResp
 /// <summary>
 /// True if emulation of network conditions is supported.
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Clears browser cache.
 /// </summary>
@@ -9498,42 +10993,50 @@ public string Command { get; } = "Network.continueInterceptedRequest";
 /// <summary>
 /// 
 /// </summary>
-public string InterceptionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
+
 /// <summary>
 /// If set this causes the request to fail with the given reason. Passing `Aborted` for requests
 /// marked with `isNavigationRequest` also cancels the navigation. Must not be set in response
 /// to an authChallenge.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ErrorReason? ErrorReason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorReason")] public ErrorReason? ErrorReason { get; set; }
+
 /// <summary>
 /// If set the requests completes using with the provided base64 encoded raw response, including
 /// HTTP status line and headers etc... Must not be set in response to an authChallenge.
 /// </summary>
-public byte[] RawResponse { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rawResponse")] public byte[] RawResponse { get; set; }
+
 /// <summary>
 /// If set the request url will be modified in a way that's not observable by page. Must not be
 /// set in response to an authChallenge.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// If set this allows the request method to be overridden. Must not be set in response to an
 /// authChallenge.
 /// </summary>
-public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+
 /// <summary>
 /// If set this allows postData to be set. Must not be set in response to an authChallenge.
 /// </summary>
-public string PostData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+
 /// <summary>
 /// If set this allows the request headers to be changed. Must not be set in response to an
 /// authChallenge.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// Response to a requestIntercepted with an authChallenge. Must not be set otherwise.
 /// </summary>
-public AuthChallengeResponse AuthChallengeResponse { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authChallengeResponse")] public AuthChallengeResponse AuthChallengeResponse { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkContinueInterceptedRequestRequest"/>
 /// </summary>
@@ -9553,20 +11056,24 @@ public string Command { get; } = "Network.deleteCookies";
 /// <summary>
 /// Name of the cookies to remove.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// If specified, deletes all the cookies with the given name where domain and path match
 /// provided URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// If specified, deletes only cookies with the exact domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// If specified, deletes only cookies with the exact path.
 /// </summary>
-public string Path { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkDeleteCookiesRequest"/>
 /// </summary>
@@ -9603,24 +11110,29 @@ public string Command { get; } = "Network.emulateNetworkConditions";
 /// <summary>
 /// True to emulate internet disconnection.
 /// </summary>
-public bool? Offline { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offline")] public bool? Offline { get; set; }
+
 /// <summary>
 /// Minimum latency from request sent to response headers received (ms).
 /// </summary>
-public double? Latency { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("latency")] public double? Latency { get; set; }
+
 /// <summary>
 /// Maximal aggregated download throughput (bytes/sec). -1 disables download throttling.
 /// </summary>
-public double? DownloadThroughput { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("downloadThroughput")] public double? DownloadThroughput { get; set; }
+
 /// <summary>
 /// Maximal aggregated upload throughput (bytes/sec).  -1 disables upload throttling.
 /// </summary>
-public double? UploadThroughput { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("uploadThroughput")] public double? UploadThroughput { get; set; }
+
 /// <summary>
 /// Connection type if known.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ConnectionType? ConnectionType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("connectionType")] public ConnectionType? ConnectionType { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkEmulateNetworkConditionsRequest"/>
 /// </summary>
@@ -9640,15 +11152,18 @@ public string Command { get; } = "Network.enable";
 /// <summary>
 /// Buffer size in bytes to use when preserving network payloads (XHRs, etc).
 /// </summary>
-public int? MaxTotalBufferSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxTotalBufferSize")] public int? MaxTotalBufferSize { get; set; }
+
 /// <summary>
 /// Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc).
 /// </summary>
-public int? MaxResourceBufferSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxResourceBufferSize")] public int? MaxResourceBufferSize { get; set; }
+
 /// <summary>
 /// Longest post body size (in bytes) that would be included in requestWillBeSent notification
 /// </summary>
-public int? MaxPostDataSize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxPostDataSize")] public int? MaxPostDataSize { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkEnableRequest"/>
 /// </summary>
@@ -9675,7 +11190,8 @@ internal partial class NetworkGetAllCookiesResponse: IChromiumResponse
 /// <summary>
 /// Array of cookie objects.
 /// </summary>
-public Cookie[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Cookie[] Cookies { get; set; }
+}
 /// <summary>
 /// Returns the DER-encoded certificate.
 /// </summary>
@@ -9689,7 +11205,8 @@ public string Command { get; } = "Network.getCertificate";
 /// <summary>
 /// Origin to get certificate for.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetCertificateRequest"/>
 /// </summary>
@@ -9698,7 +11215,8 @@ internal partial class NetworkGetCertificateResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] TableNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("tableNames")] public string[] TableNames { get; set; }
+}
 /// <summary>
 /// Returns all browser cookies for the current URL. Depending on the backend support, will return
 /// detailed cookie information in the `cookies` field.
@@ -9713,7 +11231,8 @@ public string Command { get; } = "Network.getCookies";
 /// <summary>
 /// The list of URLs for which applicable cookies will be fetched
 /// </summary>
-public string[] Urls { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("urls")] public string[] Urls { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetCookiesRequest"/>
 /// </summary>
@@ -9722,7 +11241,8 @@ internal partial class NetworkGetCookiesResponse: IChromiumResponse
 /// <summary>
 /// Array of cookie objects.
 /// </summary>
-public Cookie[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Cookie[] Cookies { get; set; }
+}
 /// <summary>
 /// Returns content served for the given request.
 /// </summary>
@@ -9736,7 +11256,8 @@ public string Command { get; } = "Network.getResponseBody";
 /// <summary>
 /// Identifier of the network request to get content for.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetResponseBodyRequest"/>
 /// </summary>
@@ -9745,11 +11266,13 @@ internal partial class NetworkGetResponseBodyResponse: IChromiumResponse
 /// <summary>
 /// Response body.
 /// </summary>
-public string Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("body")] public string Body { get; set; }
+
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+}
 /// <summary>
 /// Returns post data sent with the request. Returns an error when no data was sent with the request.
 /// </summary>
@@ -9763,7 +11286,8 @@ public string Command { get; } = "Network.getRequestPostData";
 /// <summary>
 /// Identifier of the network request to get content for.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetRequestPostDataRequest"/>
 /// </summary>
@@ -9772,7 +11296,8 @@ internal partial class NetworkGetRequestPostDataResponse: IChromiumResponse
 /// <summary>
 /// Request body string, omitting files from multipart requests
 /// </summary>
-public string PostData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+}
 /// <summary>
 /// Returns content served for the given currently intercepted request.
 /// </summary>
@@ -9786,7 +11311,8 @@ public string Command { get; } = "Network.getResponseBodyForInterception";
 /// <summary>
 /// Identifier for the intercepted request to get body for.
 /// </summary>
-public string InterceptionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetResponseBodyForInterceptionRequest"/>
 /// </summary>
@@ -9795,11 +11321,13 @@ internal partial class NetworkGetResponseBodyForInterceptionResponse: IChromiumR
 /// <summary>
 /// Response body.
 /// </summary>
-public string Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("body")] public string Body { get; set; }
+
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+}
 /// <summary>
 /// Returns a handle to the stream representing the response body. Note that after this command,
 /// the intercepted request can't be continued as is -- you either need to cancel it or to provide
@@ -9816,7 +11344,8 @@ public string Command { get; } = "Network.takeResponseBodyForInterceptionAsStrea
 /// <summary>
 /// 
 /// </summary>
-public string InterceptionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkTakeResponseBodyForInterceptionAsStreamRequest"/>
 /// </summary>
@@ -9825,7 +11354,8 @@ internal partial class NetworkTakeResponseBodyForInterceptionAsStreamResponse: I
 /// <summary>
 /// 
 /// </summary>
-public string Stream { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stream")] public string Stream { get; set; }
+}
 /// <summary>
 /// This method sends a new XMLHttpRequest which is identical to the original one. The following
 /// parameters should be identical: method, url, async, request body, extra headers, withCredentials
@@ -9841,7 +11371,8 @@ public string Command { get; } = "Network.replayXHR";
 /// <summary>
 /// Identifier of XHR to replay.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkReplayXHRRequest"/>
 /// </summary>
@@ -9861,19 +11392,23 @@ public string Command { get; } = "Network.searchInResponseBody";
 /// <summary>
 /// Identifier of the network response to search.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// String to search for.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool? IsRegex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSearchInResponseBodyRequest"/>
 /// </summary>
@@ -9882,7 +11417,8 @@ internal partial class NetworkSearchInResponseBodyResponse: IChromiumResponse
 /// <summary>
 /// List of search matches.
 /// </summary>
-public Debugger.SearchMatch[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Debugger.SearchMatch[] Result { get; set; }
+}
 /// <summary>
 /// Blocks URLs from loading.
 /// </summary>
@@ -9896,7 +11432,8 @@ public string Command { get; } = "Network.setBlockedURLs";
 /// <summary>
 /// URL patterns to block. Wildcards ('*') are allowed.
 /// </summary>
-public string[] Urls { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("urls")] public string[] Urls { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetBlockedURLsRequest"/>
 /// </summary>
@@ -9916,7 +11453,8 @@ public string Command { get; } = "Network.setBypassServiceWorker";
 /// <summary>
 /// Bypass service worker and load from network.
 /// </summary>
-public bool? Bypass { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bypass")] public bool? Bypass { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetBypassServiceWorkerRequest"/>
 /// </summary>
@@ -9936,7 +11474,8 @@ public string Command { get; } = "Network.setCacheDisabled";
 /// <summary>
 /// Cache disabled state.
 /// </summary>
-public bool? CacheDisabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cacheDisabled")] public bool? CacheDisabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetCacheDisabledRequest"/>
 /// </summary>
@@ -9956,46 +11495,56 @@ public string Command { get; } = "Network.setCookie";
 /// <summary>
 /// Cookie name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Cookie value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// The request-URI to associate with the setting of the cookie. This value can affect the
 /// default domain and path values of the created cookie.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Cookie domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Cookie path.
 /// </summary>
-public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+
 /// <summary>
 /// Cookie SameSite type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSite? SameSite { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public CookieSameSite? SameSite { get; set; }
+
 /// <summary>
 /// Cookie expiration date, session cookie if not set
 /// </summary>
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+
 /// <summary>
 /// Cookie Priority type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookiePriority? Priority { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("priority")] public CookiePriority? Priority { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetCookieRequest"/>
 /// </summary>
@@ -10004,7 +11553,8 @@ internal partial class NetworkSetCookieResponse: IChromiumResponse
 /// <summary>
 /// True if successfully set cookie.
 /// </summary>
-public bool? Success { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("success")] public bool? Success { get; set; }
+}
 /// <summary>
 /// Sets given cookies.
 /// </summary>
@@ -10018,7 +11568,8 @@ public string Command { get; } = "Network.setCookies";
 /// <summary>
 /// Cookies to be set.
 /// </summary>
-public CookieParam[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public CookieParam[] Cookies { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetCookiesRequest"/>
 /// </summary>
@@ -10038,11 +11589,13 @@ public string Command { get; } = "Network.setDataSizeLimitsForTest";
 /// <summary>
 /// Maximum total buffer size.
 /// </summary>
-public int? MaxTotalSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxTotalSize")] public int? MaxTotalSize { get; set; }
+
 /// <summary>
 /// Maximum per-resource size.
 /// </summary>
-public int? MaxResourceSize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxResourceSize")] public int? MaxResourceSize { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetDataSizeLimitsForTestRequest"/>
 /// </summary>
@@ -10062,7 +11615,8 @@ public string Command { get; } = "Network.setExtraHTTPHeaders";
 /// <summary>
 /// Map with extra HTTP headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetExtraHTTPHeadersRequest"/>
 /// </summary>
@@ -10084,7 +11638,8 @@ public string Command { get; } = "Network.setRequestInterception";
 /// Requests matching any of these patterns will be forwarded and wait for the corresponding
 /// continueInterceptedRequest call.
 /// </summary>
-public RequestPattern[] Patterns { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("patterns")] public RequestPattern[] Patterns { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetRequestInterceptionRequest"/>
 /// </summary>
@@ -10104,15 +11659,18 @@ public string Command { get; } = "Network.setUserAgentOverride";
 /// <summary>
 /// User agent to use.
 /// </summary>
-public string UserAgent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userAgent")] public string UserAgent { get; set; }
+
 /// <summary>
 /// Browser langugage to emulate.
 /// </summary>
-public string AcceptLanguage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("acceptLanguage")] public string AcceptLanguage { get; set; }
+
 /// <summary>
 /// The platform navigator.platform should return.
 /// </summary>
-public string Platform { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("platform")] public string Platform { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetUserAgentOverrideRequest"/>
 /// </summary>
@@ -10131,19 +11689,23 @@ public string InternalName { get; } = "Network.dataReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Data chunk length.
 /// </summary>
-public int? DataLength { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dataLength")] public int? DataLength { get; set; }
+
 /// <summary>
 /// Actual bytes received (might be less than dataLength for compressed encodings).
 /// </summary>
-public int? EncodedDataLength { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("encodedDataLength")] public int? EncodedDataLength { get; set; }
+}
 /// <summary>
 /// Fired when EventSource message is received.
 /// </summary>
@@ -10156,23 +11718,28 @@ public string InternalName { get; } = "Network.eventSourceMessageReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Message type.
 /// </summary>
-public string EventName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+
 /// <summary>
 /// Message identifier.
 /// </summary>
-public string EventId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventId")] public string EventId { get; set; }
+
 /// <summary>
 /// Message content.
 /// </summary>
-public string Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+}
 /// <summary>
 /// Fired when HTTP request has failed to load.
 /// </summary>
@@ -10185,29 +11752,35 @@ public string InternalName { get; } = "Network.loadingFailed";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Resource type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public ResourceType Type { get; set; }
+
 /// <summary>
 /// User friendly error message.
 /// </summary>
-public string ErrorText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorText")] public string ErrorText { get; set; }
+
 /// <summary>
 /// True if loading was canceled.
 /// </summary>
-public bool? Canceled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canceled")] public bool? Canceled { get; set; }
+
 /// <summary>
 /// The reason why loading was blocked, if any.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public BlockedReason? BlockedReason { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("blockedReason")] public BlockedReason? BlockedReason { get; set; }
+}
 /// <summary>
 /// Fired when HTTP request has finished loading.
 /// </summary>
@@ -10220,20 +11793,24 @@ public string InternalName { get; } = "Network.loadingFinished";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Total number of bytes received for this request.
 /// </summary>
-public double? EncodedDataLength { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("encodedDataLength")] public double? EncodedDataLength { get; set; }
+
 /// <summary>
 /// Set when 1) response was blocked by Cross-Origin Read Blocking and also
 /// 2) this needs to be reported to the DevTools console.
 /// </summary>
-public bool? ShouldReportCorbBlocking { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("shouldReportCorbBlocking")] public bool? ShouldReportCorbBlocking { get; set; }
+}
 /// <summary>
 /// Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
 /// mocked.
@@ -10250,59 +11827,71 @@ public string InternalName { get; } = "Network.requestIntercepted";
 /// while processing that fetch, they will be reported with the same id as the original fetch.
 /// Likewise if HTTP authentication is needed then the same fetch id will be used.
 /// </summary>
-public string InterceptionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Request Request { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("request")] public Request Request { get; set; }
+
 /// <summary>
 /// The id of the frame that initiated the request.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// How the requested resource will be used.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType ResourceType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("resourceType")] public ResourceType ResourceType { get; set; }
+
 /// <summary>
 /// Whether this is a navigation request, which can abort the navigation completely.
 /// </summary>
-public bool? IsNavigationRequest { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isNavigationRequest")] public bool? IsNavigationRequest { get; set; }
+
 /// <summary>
 /// Set if the request is a navigation that will result in a download.
 /// Only present after response is received from the server (i.e. HeadersReceived stage).
 /// </summary>
-public bool? IsDownload { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isDownload")] public bool? IsDownload { get; set; }
+
 /// <summary>
 /// Redirect location, only sent if a redirect was intercepted.
 /// </summary>
-public string RedirectUrl { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("redirectUrl")] public string RedirectUrl { get; set; }
+
 /// <summary>
 /// Details of the Authorization Challenge encountered. If this is set then
 /// continueInterceptedRequest must contain an authChallengeResponse.
 /// </summary>
-public AuthChallenge AuthChallenge { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("authChallenge")] public AuthChallenge AuthChallenge { get; set; }
+
 /// <summary>
 /// Response error if intercepted at response stage or if redirect occurred while intercepting
 /// request.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ErrorReason? ResponseErrorReason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseErrorReason")] public ErrorReason? ResponseErrorReason { get; set; }
+
 /// <summary>
 /// Response code if intercepted at response stage or if redirect occurred while intercepting
 /// request or auth retry occurred.
 /// </summary>
-public int? ResponseStatusCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseStatusCode")] public int? ResponseStatusCode { get; set; }
+
 /// <summary>
 /// Response headers if intercepted at the response stage or if redirect occurred while
 /// intercepting request or auth retry occurred.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseHeaders")] public System.Collections.Generic.IDictionary<string, string> ResponseHeaders { get; set; }
+
 /// <summary>
 /// If the intercepted request had a corresponding requestWillBeSent event fired for it, then
 /// this requestId will be the same as the requestId present in the requestWillBeSent event.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Fired if request ended up loading from cache.
 /// </summary>
@@ -10315,7 +11904,8 @@ public string InternalName { get; } = "Network.requestServedFromCache";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Fired when page is about to send HTTP request.
 /// </summary>
@@ -10328,48 +11918,59 @@ public string InternalName { get; } = "Network.requestWillBeSent";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Loader identifier. Empty string if the request is fetched from worker.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// URL of the document this request is loaded for.
 /// </summary>
-public string DocumentURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public string DocumentURL { get; set; }
+
 /// <summary>
 /// Request data.
 /// </summary>
-public Request Request { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("request")] public Request Request { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? WallTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wallTime")] public double? WallTime { get; set; }
+
 /// <summary>
 /// Request initiator.
 /// </summary>
-public Initiator Initiator { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("initiator")] public Initiator Initiator { get; set; }
+
 /// <summary>
 /// Redirect response data.
 /// </summary>
-public Response RedirectResponse { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("redirectResponse")] public Response RedirectResponse { get; set; }
+
 /// <summary>
 /// Type of this resource.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType? Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public ResourceType? Type { get; set; }
+
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Whether the request is initiated by a user gesture. Defaults to false.
 /// </summary>
-public bool? HasUserGesture { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("hasUserGesture")] public bool? HasUserGesture { get; set; }
+}
 /// <summary>
 /// Fired when resource loading priority is changed
 /// </summary>
@@ -10382,16 +11983,19 @@ public string InternalName { get; } = "Network.resourceChangedPriority";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// New priority
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourcePriority NewPriority { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("newPriority")] public ResourcePriority NewPriority { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Fired when a signed exchange was received over the network
 /// </summary>
@@ -10404,11 +12008,13 @@ public string InternalName { get; } = "Network.signedExchangeReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Information about the signed exchange response.
 /// </summary>
-public SignedExchangeInfo Info { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("info")] public SignedExchangeInfo Info { get; set; }
+}
 /// <summary>
 /// Fired when HTTP response is available.
 /// </summary>
@@ -10421,28 +12027,34 @@ public string InternalName { get; } = "Network.responseReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Loader identifier. Empty string if the request is fetched from worker.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Resource type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public ResourceType Type { get; set; }
+
 /// <summary>
 /// Response data.
 /// </summary>
-public Response Response { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("response")] public Response Response { get; set; }
+
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket is closed.
 /// </summary>
@@ -10455,11 +12067,13 @@ public string InternalName { get; } = "Network.webSocketClosed";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Fired upon WebSocket creation.
 /// </summary>
@@ -10472,15 +12086,18 @@ public string InternalName { get; } = "Network.webSocketCreated";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// WebSocket request URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Request initiator.
 /// </summary>
-public Initiator Initiator { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("initiator")] public Initiator Initiator { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket message error occurs.
 /// </summary>
@@ -10493,15 +12110,18 @@ public string InternalName { get; } = "Network.webSocketFrameError";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket error message.
 /// </summary>
-public string ErrorMessage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public string ErrorMessage { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket message is received.
 /// </summary>
@@ -10514,15 +12134,18 @@ public string InternalName { get; } = "Network.webSocketFrameReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-public WebSocketFrame Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public WebSocketFrame Response { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket message is sent.
 /// </summary>
@@ -10535,15 +12158,18 @@ public string InternalName { get; } = "Network.webSocketFrameSent";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-public WebSocketFrame Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public WebSocketFrame Response { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket handshake response becomes available.
 /// </summary>
@@ -10556,15 +12182,18 @@ public string InternalName { get; } = "Network.webSocketHandshakeResponseReceive
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-public WebSocketResponse Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public WebSocketResponse Response { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket is about to initiate handshake.
 /// </summary>
@@ -10577,19 +12206,23 @@ public string InternalName { get; } = "Network.webSocketWillSendHandshakeRequest
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// UTC Timestamp.
 /// </summary>
-public double? WallTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wallTime")] public double? WallTime { get; set; }
+
 /// <summary>
 /// WebSocket request data.
 /// </summary>
-public WebSocketRequest Request { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("request")] public WebSocketRequest Request { get; set; }
+}
 /// <summary>
 /// Fired when additional information about a requestWillBeSent event is available from the
 /// network stack. Not every requestWillBeSent event will have an additional
@@ -10605,16 +12238,19 @@ public string InternalName { get; } = "Network.requestWillBeSentExtraInfo";
 /// <summary>
 /// Request identifier. Used to match this information to an existing requestWillBeSent event.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// A list of cookies which will not be sent with this request along with corresponding reasons
 /// for blocking.
 /// </summary>
-public BlockedCookieWithReason[] BlockedCookies { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("blockedCookies")] public BlockedCookieWithReason[] BlockedCookies { get; set; }
+
 /// <summary>
 /// Raw request headers as they will be sent over the wire.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// Fired when additional information about a responseReceived event is available from the network
 /// stack. Not every responseReceived event will have an additional responseReceivedExtraInfo for
@@ -10629,22 +12265,26 @@ public string InternalName { get; } = "Network.responseReceivedExtraInfo";
 /// <summary>
 /// Request identifier. Used to match this information to another responseReceived event.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// A list of cookies which were not stored from the response along with the corresponding
 /// reasons for blocking. The cookies here may not be valid due to syntax errors, which
 /// are represented by the invalid cookie line string instead of a proper cookie.
 /// </summary>
-public BlockedSetCookieWithReason[] BlockedCookies { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("blockedCookies")] public BlockedSetCookieWithReason[] BlockedCookies { get; set; }
+
 /// <summary>
 /// Raw response headers as they were received over the wire.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// Raw response header text as it was received over the wire. The raw text may not always be
 /// available, such as in the case of HTTP/2 or QUIC.
 /// </summary>
-public string HeadersText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headersText")] public string HeadersText { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Overlay
 {
@@ -10656,62 +12296,63 @@ internal partial class HighlightConfig
 /// <summary>
 /// Whether the node info tooltip should be shown (default: false).
 /// </summary>
-public bool? ShowInfo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("showInfo")] public bool? ShowInfo { get; set; }
+
 /// <summary>
 /// Whether the node styles in the tooltip (default: false).
 /// </summary>
-public bool? ShowStyles { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("showStyles")] public bool? ShowStyles { get; set; }
+
 /// <summary>
 /// Whether the rulers should be shown (default: false).
 /// </summary>
-public bool? ShowRulers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("showRulers")] public bool? ShowRulers { get; set; }
+
 /// <summary>
 /// Whether the extension lines from node to the rulers should be shown (default: false).
 /// </summary>
-public bool? ShowExtensionLines { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("showExtensionLines")] public bool? ShowExtensionLines { get; set; }
+
 /// <summary>
 /// The content box highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA ContentColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentColor")] public DOM.RGBA ContentColor { get; set; }
+
 /// <summary>
 /// The padding highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA PaddingColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paddingColor")] public DOM.RGBA PaddingColor { get; set; }
+
 /// <summary>
 /// The border highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA BorderColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("borderColor")] public DOM.RGBA BorderColor { get; set; }
+
 /// <summary>
 /// The margin highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA MarginColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("marginColor")] public DOM.RGBA MarginColor { get; set; }
+
 /// <summary>
 /// The event target element highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA EventTargetColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventTargetColor")] public DOM.RGBA EventTargetColor { get; set; }
+
 /// <summary>
 /// The shape outside fill color (default: transparent).
 /// </summary>
-public DOM.RGBA ShapeColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shapeColor")] public DOM.RGBA ShapeColor { get; set; }
+
 /// <summary>
 /// The shape margin fill color (default: transparent).
 /// </summary>
-public DOM.RGBA ShapeMarginColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shapeMarginColor")] public DOM.RGBA ShapeMarginColor { get; set; }
+
 /// <summary>
 /// The grid layout color (default: transparent).
 /// </summary>
-public DOM.RGBA CssGridColor { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum InspectMode
-{
-[System.Runtime.Serialization.EnumMember(Value = "searchForNode")]SearchForNode,
-[System.Runtime.Serialization.EnumMember(Value = "searchForUAShadowDOM")]SearchForUAShadowDOM,
-[System.Runtime.Serialization.EnumMember(Value = "captureAreaScreenshot")]CaptureAreaScreenshot,
-[System.Runtime.Serialization.EnumMember(Value = "showDistances")]ShowDistances,
-[System.Runtime.Serialization.EnumMember(Value = "none")]None}
+[System.Text.Json.Serialization.JsonPropertyName("cssGridColor")] public DOM.RGBA CssGridColor { get; set; }
+}
 /// <summary>
 /// Disables domain notifications.
 /// </summary>
@@ -10759,15 +12400,18 @@ public string Command { get; } = "Overlay.getHighlightObjectForTest";
 /// <summary>
 /// Id of the node to get highlight object for.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Whether to include distance info.
 /// </summary>
-public bool? IncludeDistance { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeDistance")] public bool? IncludeDistance { get; set; }
+
 /// <summary>
 /// Whether to include style info.
 /// </summary>
-public bool? IncludeStyle { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("includeStyle")] public bool? IncludeStyle { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlayGetHighlightObjectForTestRequest"/>
 /// </summary>
@@ -10776,7 +12420,8 @@ internal partial class OverlayGetHighlightObjectForTestResponse: IChromiumRespon
 /// <summary>
 /// Highlight data for the node.
 /// </summary>
-public JsonElement? Highlight { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("highlight")] public JsonElement? Highlight { get; set; }
+}
 /// <summary>
 /// Hides any highlight.
 /// </summary>
@@ -10807,15 +12452,18 @@ public string Command { get; } = "Overlay.highlightFrame";
 /// <summary>
 /// Identifier of the frame to highlight.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// The content box highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA ContentColor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentColor")] public DOM.RGBA ContentColor { get; set; }
+
 /// <summary>
 /// The content box highlight outline color (default: transparent).
 /// </summary>
-public DOM.RGBA ContentOutlineColor { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contentOutlineColor")] public DOM.RGBA ContentOutlineColor { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlayHighlightFrameRequest"/>
 /// </summary>
@@ -10836,23 +12484,28 @@ public string Command { get; } = "Overlay.highlightNode";
 /// <summary>
 /// A descriptor for the highlight appearance.
 /// </summary>
-public HighlightConfig HighlightConfig { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("highlightConfig")] public HighlightConfig HighlightConfig { get; set; }
+
 /// <summary>
 /// Identifier of the node to highlight.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Identifier of the backend node to highlight.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// JavaScript object id of the node to be highlighted.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Selectors to highlight relevant nodes.
 /// </summary>
-public string Selector { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlayHighlightNodeRequest"/>
 /// </summary>
@@ -10872,15 +12525,18 @@ public string Command { get; } = "Overlay.highlightQuad";
 /// <summary>
 /// Quad to highlight
 /// </summary>
-public double?[] Quad { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("quad")] public double?[] Quad { get; set; }
+
 /// <summary>
 /// The highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA Color { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("color")] public DOM.RGBA Color { get; set; }
+
 /// <summary>
 /// The highlight outline color (default: transparent).
 /// </summary>
-public DOM.RGBA OutlineColor { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("outlineColor")] public DOM.RGBA OutlineColor { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlayHighlightQuadRequest"/>
 /// </summary>
@@ -10900,27 +12556,33 @@ public string Command { get; } = "Overlay.highlightRect";
 /// <summary>
 /// X coordinate
 /// </summary>
-public int? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
 /// <summary>
 /// Y coordinate
 /// </summary>
-public int? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
 /// <summary>
 /// Rectangle width
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Rectangle height
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// The highlight fill color (default: transparent).
 /// </summary>
-public DOM.RGBA Color { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("color")] public DOM.RGBA Color { get; set; }
+
 /// <summary>
 /// The highlight outline color (default: transparent).
 /// </summary>
-public DOM.RGBA OutlineColor { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("outlineColor")] public DOM.RGBA OutlineColor { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlayHighlightRectRequest"/>
 /// </summary>
@@ -10942,12 +12604,14 @@ public string Command { get; } = "Overlay.setInspectMode";
 /// Set an inspection mode.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public InspectMode Mode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mode")] public InspectMode Mode { get; set; }
+
 /// <summary>
 /// A descriptor for the highlight appearance of hovered-over nodes. May be omitted if `enabled
 /// == false`.
 /// </summary>
-public HighlightConfig HighlightConfig { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("highlightConfig")] public HighlightConfig HighlightConfig { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetInspectModeRequest"/>
 /// </summary>
@@ -10967,7 +12631,8 @@ public string Command { get; } = "Overlay.setShowAdHighlights";
 /// <summary>
 /// True for showing ad highlights
 /// </summary>
-public bool? Show { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("show")] public bool? Show { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowAdHighlightsRequest"/>
 /// </summary>
@@ -10987,7 +12652,8 @@ public string Command { get; } = "Overlay.setPausedInDebuggerMessage";
 /// <summary>
 /// The message to display, also triggers resume and step over controls.
 /// </summary>
-public string Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetPausedInDebuggerMessageRequest"/>
 /// </summary>
@@ -11007,7 +12673,8 @@ public string Command { get; } = "Overlay.setShowDebugBorders";
 /// <summary>
 /// True for showing debug borders
 /// </summary>
-public bool? Show { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("show")] public bool? Show { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowDebugBordersRequest"/>
 /// </summary>
@@ -11027,7 +12694,8 @@ public string Command { get; } = "Overlay.setShowFPSCounter";
 /// <summary>
 /// True for showing the FPS counter
 /// </summary>
-public bool? Show { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("show")] public bool? Show { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowFPSCounterRequest"/>
 /// </summary>
@@ -11047,7 +12715,8 @@ public string Command { get; } = "Overlay.setShowPaintRects";
 /// <summary>
 /// True for showing paint rectangles
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowPaintRectsRequest"/>
 /// </summary>
@@ -11067,7 +12736,8 @@ public string Command { get; } = "Overlay.setShowLayoutShiftRegions";
 /// <summary>
 /// True for showing layout shift regions
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowLayoutShiftRegionsRequest"/>
 /// </summary>
@@ -11087,7 +12757,8 @@ public string Command { get; } = "Overlay.setShowScrollBottleneckRects";
 /// <summary>
 /// True for showing scroll bottleneck rects
 /// </summary>
-public bool? Show { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("show")] public bool? Show { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowScrollBottleneckRectsRequest"/>
 /// </summary>
@@ -11107,7 +12778,8 @@ public string Command { get; } = "Overlay.setShowHitTestBorders";
 /// <summary>
 /// True for showing hit-test borders
 /// </summary>
-public bool? Show { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("show")] public bool? Show { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowHitTestBordersRequest"/>
 /// </summary>
@@ -11127,7 +12799,8 @@ public string Command { get; } = "Overlay.setShowViewportSizeOnResize";
 /// <summary>
 /// Whether to paint size or not.
 /// </summary>
-public bool? Show { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("show")] public bool? Show { get; set; }
+}
 /// <summary>
 /// Response from <see cref="OverlaySetShowViewportSizeOnResizeRequest"/>
 /// </summary>
@@ -11147,7 +12820,8 @@ public string InternalName { get; } = "Overlay.inspectNodeRequested";
 /// <summary>
 /// Id of the node to inspect.
 /// </summary>
-public int? BackendNodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+}
 /// <summary>
 /// Fired when the node should be highlighted. This happens after call to `setInspectMode`.
 /// </summary>
@@ -11160,7 +12834,8 @@ public string InternalName { get; } = "Overlay.nodeHighlightRequested";
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Fired when user asks to capture screenshot of some area on the page.
 /// </summary>
@@ -11173,7 +12848,8 @@ public string InternalName { get; } = "Overlay.screenshotRequested";
 /// <summary>
 /// Viewport to capture, in device independent pixels (dip).
 /// </summary>
-public Page.Viewport Viewport { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("viewport")] public Page.Viewport Viewport { get; set; }
+}
 /// <summary>
 /// Fired when user cancels the inspect mode.
 /// </summary>
@@ -11195,39 +12871,48 @@ internal partial class Frame
 /// <summary>
 /// Frame unique identifier.
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Parent frame identifier.
 /// </summary>
-public string ParentId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public string ParentId { get; set; }
+
 /// <summary>
 /// Identifier of the loader associated with this frame.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// Frame's name as specified in the tag.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Frame document's URL without fragment.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Frame document's URL fragment including the '#'.
 /// </summary>
-public string UrlFragment { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("urlFragment")] public string UrlFragment { get; set; }
+
 /// <summary>
 /// Frame document's security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Frame document's mimeType as determined by the browser.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// If the frame failed to load, this contains the URL that could not be loaded. Note that unlike url above, this URL may contain a fragment.
 /// </summary>
-public string UnreachableUrl { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("unreachableUrl")] public string UnreachableUrl { get; set; }
+}
 /// <summary>
 /// Information about the Resource on the page.
 /// </summary>
@@ -11236,31 +12921,39 @@ internal partial class FrameResource
 /// <summary>
 /// Resource URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Type of this resource.
 /// </summary>
-public Network.ResourceType Type { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Network.ResourceType Type { get; set; }
+
 /// <summary>
 /// Resource mimeType as determined by the browser.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// last-modified timestamp as reported by server.
 /// </summary>
-public double? LastModified { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lastModified")] public double? LastModified { get; set; }
+
 /// <summary>
 /// Resource content size.
 /// </summary>
-public double? ContentSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contentSize")] public double? ContentSize { get; set; }
+
 /// <summary>
 /// True if the resource failed to load.
 /// </summary>
-public bool? Failed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("failed")] public bool? Failed { get; set; }
+
 /// <summary>
 /// True if the resource was canceled during loading.
 /// </summary>
-public bool? Canceled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canceled")] public bool? Canceled { get; set; }
+}
 /// <summary>
 /// Information about the Frame hierarchy along with their cached resources.
 /// </summary>
@@ -11269,15 +12962,18 @@ internal partial class FrameResourceTree
 /// <summary>
 /// Frame information for this tree item.
 /// </summary>
-public Frame Frame { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frame")] public Frame Frame { get; set; }
+
 /// <summary>
 /// Child frames.
 /// </summary>
-public FrameResourceTree[] ChildFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("childFrames")] public FrameResourceTree[] ChildFrames { get; set; }
+
 /// <summary>
 /// Information about frame resources.
 /// </summary>
-public FrameResource[] Resources { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("resources")] public FrameResource[] Resources { get; set; }
+}
 /// <summary>
 /// Information about the Frame hierarchy.
 /// </summary>
@@ -11286,30 +12982,13 @@ internal partial class FrameTree
 /// <summary>
 /// Frame information for this tree item.
 /// </summary>
-public Frame Frame { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frame")] public Frame Frame { get; set; }
+
 /// <summary>
 /// Child frames.
 /// </summary>
-public FrameTree[] ChildFrames { get; set; }}
-/// <summary>
-/// Transition type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum TransitionType
-{
-[System.Runtime.Serialization.EnumMember(Value = "link")]Link,
-[System.Runtime.Serialization.EnumMember(Value = "typed")]Typed,
-[System.Runtime.Serialization.EnumMember(Value = "address_bar")]AddressBar,
-[System.Runtime.Serialization.EnumMember(Value = "auto_bookmark")]AutoBookmark,
-[System.Runtime.Serialization.EnumMember(Value = "auto_subframe")]AutoSubframe,
-[System.Runtime.Serialization.EnumMember(Value = "manual_subframe")]ManualSubframe,
-[System.Runtime.Serialization.EnumMember(Value = "generated")]Generated,
-[System.Runtime.Serialization.EnumMember(Value = "auto_toplevel")]AutoToplevel,
-[System.Runtime.Serialization.EnumMember(Value = "form_submit")]FormSubmit,
-[System.Runtime.Serialization.EnumMember(Value = "reload")]Reload,
-[System.Runtime.Serialization.EnumMember(Value = "keyword")]Keyword,
-[System.Runtime.Serialization.EnumMember(Value = "keyword_generated")]KeywordGenerated,
-[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
+[System.Text.Json.Serialization.JsonPropertyName("childFrames")] public FrameTree[] ChildFrames { get; set; }
+}
 /// <summary>
 /// Navigation history entry.
 /// </summary>
@@ -11318,24 +12997,29 @@ internal partial class NavigationEntry
 /// <summary>
 /// Unique id of the navigation history entry.
 /// </summary>
-public int? Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+
 /// <summary>
 /// URL of the navigation history entry.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// URL that the user typed in the url bar.
 /// </summary>
-public string UserTypedURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userTypedURL")] public string UserTypedURL { get; set; }
+
 /// <summary>
 /// Title of the navigation history entry.
 /// </summary>
-public string Title { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+
 /// <summary>
 /// Transition type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public TransitionType TransitionType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("transitionType")] public TransitionType TransitionType { get; set; }
+}
 /// <summary>
 /// Screencast frame metadata.
 /// </summary>
@@ -11344,41 +13028,38 @@ internal partial class ScreencastFrameMetadata
 /// <summary>
 /// Top offset in DIP.
 /// </summary>
-public double? OffsetTop { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offsetTop")] public double? OffsetTop { get; set; }
+
 /// <summary>
 /// Page scale factor.
 /// </summary>
-public double? PageScaleFactor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageScaleFactor")] public double? PageScaleFactor { get; set; }
+
 /// <summary>
 /// Device screen width in DIP.
 /// </summary>
-public double? DeviceWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceWidth")] public double? DeviceWidth { get; set; }
+
 /// <summary>
 /// Device screen height in DIP.
 /// </summary>
-public double? DeviceHeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceHeight")] public double? DeviceHeight { get; set; }
+
 /// <summary>
 /// Position of horizontal scroll in CSS pixels.
 /// </summary>
-public double? ScrollOffsetX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollOffsetX")] public double? ScrollOffsetX { get; set; }
+
 /// <summary>
 /// Position of vertical scroll in CSS pixels.
 /// </summary>
-public double? ScrollOffsetY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scrollOffsetY")] public double? ScrollOffsetY { get; set; }
+
 /// <summary>
 /// Frame swap timestamp.
 /// </summary>
-public double? Timestamp { get; set; }}
-/// <summary>
-/// Javascript dialog type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum DialogType
-{
-[System.Runtime.Serialization.EnumMember(Value = "alert")]Alert,
-[System.Runtime.Serialization.EnumMember(Value = "confirm")]Confirm,
-[System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt,
-[System.Runtime.Serialization.EnumMember(Value = "beforeunload")]Beforeunload}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Error while paring app manifest.
 /// </summary>
@@ -11387,19 +13068,23 @@ internal partial class AppManifestError
 /// <summary>
 /// Error message.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// If criticial, this is a non-recoverable parse error.
 /// </summary>
-public int? Critical { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("critical")] public int? Critical { get; set; }
+
 /// <summary>
 /// Error line.
 /// </summary>
-public int? Line { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("line")] public int? Line { get; set; }
+
 /// <summary>
 /// Error column.
 /// </summary>
-public int? Column { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("column")] public int? Column { get; set; }
+}
 /// <summary>
 /// Parsed app manifest properties.
 /// </summary>
@@ -11408,7 +13093,8 @@ internal partial class AppManifestParsedProperties
 /// <summary>
 /// Computed scope value
 /// </summary>
-public string Scope { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scope")] public string Scope { get; set; }
+}
 /// <summary>
 /// Layout viewport position and dimensions.
 /// </summary>
@@ -11417,19 +13103,23 @@ internal partial class LayoutViewport
 /// <summary>
 /// Horizontal offset relative to the document (CSS pixels).
 /// </summary>
-public int? PageX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageX")] public int? PageX { get; set; }
+
 /// <summary>
 /// Vertical offset relative to the document (CSS pixels).
 /// </summary>
-public int? PageY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageY")] public int? PageY { get; set; }
+
 /// <summary>
 /// Width (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public int? ClientWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clientWidth")] public int? ClientWidth { get; set; }
+
 /// <summary>
 /// Height (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public int? ClientHeight { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("clientHeight")] public int? ClientHeight { get; set; }
+}
 /// <summary>
 /// Visual viewport position, dimensions, and scale.
 /// </summary>
@@ -11438,35 +13128,43 @@ internal partial class VisualViewport
 /// <summary>
 /// Horizontal offset relative to the layout viewport (CSS pixels).
 /// </summary>
-public double? OffsetX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offsetX")] public double? OffsetX { get; set; }
+
 /// <summary>
 /// Vertical offset relative to the layout viewport (CSS pixels).
 /// </summary>
-public double? OffsetY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offsetY")] public double? OffsetY { get; set; }
+
 /// <summary>
 /// Horizontal offset relative to the document (CSS pixels).
 /// </summary>
-public double? PageX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageX")] public double? PageX { get; set; }
+
 /// <summary>
 /// Vertical offset relative to the document (CSS pixels).
 /// </summary>
-public double? PageY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageY")] public double? PageY { get; set; }
+
 /// <summary>
 /// Width (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public double? ClientWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clientWidth")] public double? ClientWidth { get; set; }
+
 /// <summary>
 /// Height (CSS pixels), excludes scrollbar if present.
 /// </summary>
-public double? ClientHeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clientHeight")] public double? ClientHeight { get; set; }
+
 /// <summary>
 /// Scale relative to the ideal viewport (size at width=device-width).
 /// </summary>
-public double? Scale { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scale")] public double? Scale { get; set; }
+
 /// <summary>
 /// Page zoom factor (CSS to device independent pixels ratio).
 /// </summary>
-public double? Zoom { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("zoom")] public double? Zoom { get; set; }
+}
 /// <summary>
 /// Viewport for capturing screenshot.
 /// </summary>
@@ -11475,23 +13173,28 @@ internal partial class Viewport
 /// <summary>
 /// X offset in device independent pixels (dip).
 /// </summary>
-public double? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public double? X { get; set; }
+
 /// <summary>
 /// Y offset in device independent pixels (dip).
 /// </summary>
-public double? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public double? Y { get; set; }
+
 /// <summary>
 /// Rectangle width in device independent pixels (dip).
 /// </summary>
-public double? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public double? Width { get; set; }
+
 /// <summary>
 /// Rectangle height in device independent pixels (dip).
 /// </summary>
-public double? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public double? Height { get; set; }
+
 /// <summary>
 /// Page scale factor.
 /// </summary>
-public double? Scale { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scale")] public double? Scale { get; set; }
+}
 /// <summary>
 /// Generic font families collection.
 /// </summary>
@@ -11500,31 +13203,38 @@ internal partial class FontFamilies
 /// <summary>
 /// The standard font-family.
 /// </summary>
-public string Standard { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("standard")] public string Standard { get; set; }
+
 /// <summary>
 /// The fixed font-family.
 /// </summary>
-public string Fixed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fixed")] public string Fixed { get; set; }
+
 /// <summary>
 /// The serif font-family.
 /// </summary>
-public string Serif { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("serif")] public string Serif { get; set; }
+
 /// <summary>
 /// The sansSerif font-family.
 /// </summary>
-public string SansSerif { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sansSerif")] public string SansSerif { get; set; }
+
 /// <summary>
 /// The cursive font-family.
 /// </summary>
-public string Cursive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cursive")] public string Cursive { get; set; }
+
 /// <summary>
 /// The fantasy font-family.
 /// </summary>
-public string Fantasy { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fantasy")] public string Fantasy { get; set; }
+
 /// <summary>
 /// The pictograph font-family.
 /// </summary>
-public string Pictograph { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pictograph")] public string Pictograph { get; set; }
+}
 /// <summary>
 /// Default font sizes.
 /// </summary>
@@ -11533,24 +13243,13 @@ internal partial class FontSizes
 /// <summary>
 /// Default standard font size.
 /// </summary>
-public int? Standard { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("standard")] public int? Standard { get; set; }
+
 /// <summary>
 /// Default fixed font size.
 /// </summary>
-public int? Fixed { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ClientNavigationReason
-{
-[System.Runtime.Serialization.EnumMember(Value = "formSubmissionGet")]FormSubmissionGet,
-[System.Runtime.Serialization.EnumMember(Value = "formSubmissionPost")]FormSubmissionPost,
-[System.Runtime.Serialization.EnumMember(Value = "httpHeaderRefresh")]HttpHeaderRefresh,
-[System.Runtime.Serialization.EnumMember(Value = "scriptInitiated")]ScriptInitiated,
-[System.Runtime.Serialization.EnumMember(Value = "metaTagRefresh")]MetaTagRefresh,
-[System.Runtime.Serialization.EnumMember(Value = "pageBlockInterstitial")]PageBlockInterstitial,
-[System.Runtime.Serialization.EnumMember(Value = "reload")]Reload}
+[System.Text.Json.Serialization.JsonPropertyName("fixed")] public int? Fixed { get; set; }
+}
 /// <summary>
 /// Deprecated, please use addScriptToEvaluateOnNewDocument instead.
 /// </summary>
@@ -11565,7 +13264,8 @@ public string Command { get; } = "Page.addScriptToEvaluateOnLoad";
 /// <summary>
 /// 
 /// </summary>
-public string ScriptSource { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scriptSource")] public string ScriptSource { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageAddScriptToEvaluateOnLoadRequest"/>
 /// </summary>
@@ -11574,7 +13274,8 @@ internal partial class PageAddScriptToEvaluateOnLoadResponse: IChromiumResponse
 /// <summary>
 /// Identifier of the added script.
 /// </summary>
-public string Identifier { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("identifier")] public string Identifier { get; set; }
+}
 /// <summary>
 /// Evaluates given script in every frame upon creation (before loading frame's scripts).
 /// </summary>
@@ -11588,13 +13289,15 @@ public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
 /// <summary>
 /// 
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// If specified, creates an isolated world with the given name and evaluates given script in it.
 /// This world name will be used as the ExecutionContextDescription::name when the corresponding
 /// event is emitted.
 /// </summary>
-public string WorldName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("worldName")] public string WorldName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageAddScriptToEvaluateOnNewDocumentRequest"/>
 /// </summary>
@@ -11603,7 +13306,8 @@ internal partial class PageAddScriptToEvaluateOnNewDocumentResponse: IChromiumRe
 /// <summary>
 /// Identifier of the added script.
 /// </summary>
-public string Identifier { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("identifier")] public string Identifier { get; set; }
+}
 /// <summary>
 /// Brings page to front (activates tab).
 /// </summary>
@@ -11634,19 +13338,23 @@ public string Command { get; } = "Page.captureScreenshot";
 /// <summary>
 /// Image compression format (defaults to png).
 /// </summary>
-public string Format { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("format")] public string Format { get; set; }
+
 /// <summary>
 /// Compression quality from range [0..100] (jpeg only).
 /// </summary>
-public int? Quality { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("quality")] public int? Quality { get; set; }
+
 /// <summary>
 /// Capture the screenshot of a given region only.
 /// </summary>
-public Viewport Clip { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clip")] public Viewport Clip { get; set; }
+
 /// <summary>
 /// Capture the screenshot from the surface, rather than the view. Defaults to true.
 /// </summary>
-public bool? FromSurface { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fromSurface")] public bool? FromSurface { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageCaptureScreenshotRequest"/>
 /// </summary>
@@ -11655,7 +13363,8 @@ internal partial class PageCaptureScreenshotResponse: IChromiumResponse
 /// <summary>
 /// Base64-encoded image data.
 /// </summary>
-public byte[] Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public byte[] Data { get; set; }
+}
 /// <summary>
 /// Returns a snapshot of the page as a string. For MHTML format, the serialization includes
 /// iframes, shadow DOM, external resources, and element-inline styles.
@@ -11670,7 +13379,8 @@ public string Command { get; } = "Page.captureSnapshot";
 /// <summary>
 /// Format (defaults to mhtml).
 /// </summary>
-public string Format { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("format")] public string Format { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageCaptureSnapshotRequest"/>
 /// </summary>
@@ -11679,7 +13389,8 @@ internal partial class PageCaptureSnapshotResponse: IChromiumResponse
 /// <summary>
 /// Serialized page data.
 /// </summary>
-public string Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+}
 /// <summary>
 /// Clears the overriden device metrics.
 /// </summary>
@@ -11744,16 +13455,19 @@ public string Command { get; } = "Page.createIsolatedWorld";
 /// <summary>
 /// Id of the frame in which the isolated world should be created.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// An optional name which is reported in the Execution Context.
 /// </summary>
-public string WorldName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("worldName")] public string WorldName { get; set; }
+
 /// <summary>
 /// Whether or not universal access should be granted to the isolated world. This is a powerful
 /// option, use with caution.
 /// </summary>
-public bool? GrantUniveralAccess { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("grantUniveralAccess")] public bool? GrantUniveralAccess { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageCreateIsolatedWorldRequest"/>
 /// </summary>
@@ -11762,7 +13476,8 @@ internal partial class PageCreateIsolatedWorldResponse: IChromiumResponse
 /// <summary>
 /// Execution context of the isolated world.
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Deletes browser cookie with given name, domain and path.
 /// </summary>
@@ -11776,11 +13491,13 @@ public string Command { get; } = "Page.deleteCookie";
 /// <summary>
 /// Name of the cookie to remove.
 /// </summary>
-public string CookieName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cookieName")] public string CookieName { get; set; }
+
 /// <summary>
 /// URL to match cooke domain and path.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageDeleteCookieRequest"/>
 /// </summary>
@@ -11840,19 +13557,23 @@ internal partial class PageGetAppManifestResponse: IChromiumResponse
 /// <summary>
 /// Manifest location.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public AppManifestError[] Errors { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errors")] public AppManifestError[] Errors { get; set; }
+
 /// <summary>
 /// Manifest content.
 /// </summary>
-public string Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+
 /// <summary>
 /// Parsed manifest properties
 /// </summary>
-public AppManifestParsedProperties Parsed { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("parsed")] public AppManifestParsedProperties Parsed { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -11872,7 +13593,8 @@ internal partial class PageGetInstallabilityErrorsResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] Errors { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errors")] public string[] Errors { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -11892,7 +13614,8 @@ internal partial class PageGetManifestIconsResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public byte[] PrimaryIcon { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("primaryIcon")] public byte[] PrimaryIcon { get; set; }
+}
 /// <summary>
 /// Returns all browser cookies. Depending on the backend support, will return detailed cookie
 /// information in the `cookies` field.
@@ -11913,7 +13636,8 @@ internal partial class PageGetCookiesResponse: IChromiumResponse
 /// <summary>
 /// Array of cookie objects.
 /// </summary>
-public Network.Cookie[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Network.Cookie[] Cookies { get; set; }
+}
 /// <summary>
 /// Returns present frame tree structure.
 /// </summary>
@@ -11933,7 +13657,8 @@ internal partial class PageGetFrameTreeResponse: IChromiumResponse
 /// <summary>
 /// Present frame tree structure.
 /// </summary>
-public FrameTree FrameTree { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameTree")] public FrameTree FrameTree { get; set; }
+}
 /// <summary>
 /// Returns metrics relating to the layouting of the page, such as viewport bounds/scale.
 /// </summary>
@@ -11953,15 +13678,18 @@ internal partial class PageGetLayoutMetricsResponse: IChromiumResponse
 /// <summary>
 /// Metrics relating to the layout viewport.
 /// </summary>
-public LayoutViewport LayoutViewport { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layoutViewport")] public LayoutViewport LayoutViewport { get; set; }
+
 /// <summary>
 /// Metrics relating to the visual viewport.
 /// </summary>
-public VisualViewport VisualViewport { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("visualViewport")] public VisualViewport VisualViewport { get; set; }
+
 /// <summary>
 /// Size of scrollable area.
 /// </summary>
-public DOM.Rect ContentSize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contentSize")] public DOM.Rect ContentSize { get; set; }
+}
 /// <summary>
 /// Returns navigation history for the current page.
 /// </summary>
@@ -11981,11 +13709,13 @@ internal partial class PageGetNavigationHistoryResponse: IChromiumResponse
 /// <summary>
 /// Index of the current navigation history entry.
 /// </summary>
-public int? CurrentIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("currentIndex")] public int? CurrentIndex { get; set; }
+
 /// <summary>
 /// Array of navigation history entries.
 /// </summary>
-public NavigationEntry[] Entries { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public NavigationEntry[] Entries { get; set; }
+}
 /// <summary>
 /// Resets navigation history for the current page.
 /// </summary>
@@ -12016,11 +13746,13 @@ public string Command { get; } = "Page.getResourceContent";
 /// <summary>
 /// Frame id to get resource for.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// URL of the resource to get content for.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageGetResourceContentRequest"/>
 /// </summary>
@@ -12029,11 +13761,13 @@ internal partial class PageGetResourceContentResponse: IChromiumResponse
 /// <summary>
 /// Resource content.
 /// </summary>
-public string Content { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+
 /// <summary>
 /// True, if content was served as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+}
 /// <summary>
 /// Returns present frame / resource tree structure.
 /// </summary>
@@ -12053,7 +13787,8 @@ internal partial class PageGetResourceTreeResponse: IChromiumResponse
 /// <summary>
 /// Present frame / resource tree structure.
 /// </summary>
-public FrameResourceTree FrameTree { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameTree")] public FrameResourceTree FrameTree { get; set; }
+}
 /// <summary>
 /// Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
 /// </summary>
@@ -12067,12 +13802,14 @@ public string Command { get; } = "Page.handleJavaScriptDialog";
 /// <summary>
 /// Whether to accept or dismiss the dialog.
 /// </summary>
-public bool? Accept { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("accept")] public bool? Accept { get; set; }
+
 /// <summary>
 /// The text to enter into the dialog prompt before accepting. Used only if this is a prompt
 /// dialog.
 /// </summary>
-public string PromptText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("promptText")] public string PromptText { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageHandleJavaScriptDialogRequest"/>
 /// </summary>
@@ -12092,20 +13829,24 @@ public string Command { get; } = "Page.navigate";
 /// <summary>
 /// URL to navigate the page to.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Referrer URL.
 /// </summary>
-public string Referrer { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("referrer")] public string Referrer { get; set; }
+
 /// <summary>
 /// Intended transition type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public TransitionType? TransitionType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("transitionType")] public TransitionType? TransitionType { get; set; }
+
 /// <summary>
 /// Frame id to navigate, if not specified navigates the top frame.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageNavigateRequest"/>
 /// </summary>
@@ -12114,15 +13855,18 @@ internal partial class PageNavigateResponse: IChromiumResponse
 /// <summary>
 /// Frame id that has navigated (or failed to navigate)
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Loader identifier.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// User friendly error message, present if and only if navigation has failed.
 /// </summary>
-public string ErrorText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorText")] public string ErrorText { get; set; }
+}
 /// <summary>
 /// Navigates current page to the given history entry.
 /// </summary>
@@ -12136,7 +13880,8 @@ public string Command { get; } = "Page.navigateToHistoryEntry";
 /// <summary>
 /// Unique id of the entry to navigate to.
 /// </summary>
-public int? EntryId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entryId")] public int? EntryId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageNavigateToHistoryEntryRequest"/>
 /// </summary>
@@ -12156,53 +13901,65 @@ public string Command { get; } = "Page.printToPDF";
 /// <summary>
 /// Paper orientation. Defaults to false.
 /// </summary>
-public bool? Landscape { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("landscape")] public bool? Landscape { get; set; }
+
 /// <summary>
 /// Display header and footer. Defaults to false.
 /// </summary>
-public bool? DisplayHeaderFooter { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("displayHeaderFooter")] public bool? DisplayHeaderFooter { get; set; }
+
 /// <summary>
 /// Print background graphics. Defaults to false.
 /// </summary>
-public bool? PrintBackground { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("printBackground")] public bool? PrintBackground { get; set; }
+
 /// <summary>
 /// Scale of the webpage rendering. Defaults to 1.
 /// </summary>
-public double? Scale { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scale")] public double? Scale { get; set; }
+
 /// <summary>
 /// Paper width in inches. Defaults to 8.5 inches.
 /// </summary>
-public double? PaperWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paperWidth")] public double? PaperWidth { get; set; }
+
 /// <summary>
 /// Paper height in inches. Defaults to 11 inches.
 /// </summary>
-public double? PaperHeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paperHeight")] public double? PaperHeight { get; set; }
+
 /// <summary>
 /// Top margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double? MarginTop { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("marginTop")] public double? MarginTop { get; set; }
+
 /// <summary>
 /// Bottom margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double? MarginBottom { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("marginBottom")] public double? MarginBottom { get; set; }
+
 /// <summary>
 /// Left margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double? MarginLeft { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("marginLeft")] public double? MarginLeft { get; set; }
+
 /// <summary>
 /// Right margin in inches. Defaults to 1cm (~0.4 inches).
 /// </summary>
-public double? MarginRight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("marginRight")] public double? MarginRight { get; set; }
+
 /// <summary>
 /// Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means
 /// print all pages.
 /// </summary>
-public string PageRanges { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageRanges")] public string PageRanges { get; set; }
+
 /// <summary>
 /// Whether to silently ignore invalid but successfully parsed page ranges, such as '3-2'.
 /// Defaults to false.
 /// </summary>
-public bool? IgnoreInvalidPageRanges { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ignoreInvalidPageRanges")] public bool? IgnoreInvalidPageRanges { get; set; }
+
 /// <summary>
 /// HTML template for the print header. Should be valid HTML markup with following
 /// classes used to inject printing values into them:
@@ -12214,20 +13971,24 @@ public bool? IgnoreInvalidPageRanges { get; set; }
 /// 
 /// For example, `&lt;span class=title&gt;&lt;/span&gt;` would generate span containing the title.
 /// </summary>
-public string HeaderTemplate { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headerTemplate")] public string HeaderTemplate { get; set; }
+
 /// <summary>
 /// HTML template for the print footer. Should use the same format as the `headerTemplate`.
 /// </summary>
-public string FooterTemplate { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("footerTemplate")] public string FooterTemplate { get; set; }
+
 /// <summary>
 /// Whether or not to prefer page size as defined by css. Defaults to false,
 /// in which case the content will be scaled to fit the paper size.
 /// </summary>
-public bool? PreferCSSPageSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("preferCSSPageSize")] public bool? PreferCSSPageSize { get; set; }
+
 /// <summary>
 /// return as stream
 /// </summary>
-public string TransferMode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("transferMode")] public string TransferMode { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PagePrintToPDFRequest"/>
 /// </summary>
@@ -12236,11 +13997,13 @@ internal partial class PagePrintToPDFResponse: IChromiumResponse
 /// <summary>
 /// Base64-encoded pdf data. Empty if |returnAsStream| is specified.
 /// </summary>
-public byte[] Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public byte[] Data { get; set; }
+
 /// <summary>
 /// A handle of the stream that holds resulting PDF data.
 /// </summary>
-public string Stream { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stream")] public string Stream { get; set; }
+}
 /// <summary>
 /// Reloads given page optionally ignoring the cache.
 /// </summary>
@@ -12254,12 +14017,14 @@ public string Command { get; } = "Page.reload";
 /// <summary>
 /// If true, browser cache is ignored (as if the user pressed Shift+refresh).
 /// </summary>
-public bool? IgnoreCache { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ignoreCache")] public bool? IgnoreCache { get; set; }
+
 /// <summary>
 /// If set, the script will be injected into all frames of the inspected page after reload.
 /// Argument will be ignored if reloading dataURL origin.
 /// </summary>
-public string ScriptToEvaluateOnLoad { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scriptToEvaluateOnLoad")] public string ScriptToEvaluateOnLoad { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageReloadRequest"/>
 /// </summary>
@@ -12280,7 +14045,8 @@ public string Command { get; } = "Page.removeScriptToEvaluateOnLoad";
 /// <summary>
 /// 
 /// </summary>
-public string Identifier { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("identifier")] public string Identifier { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageRemoveScriptToEvaluateOnLoadRequest"/>
 /// </summary>
@@ -12300,7 +14066,8 @@ public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
 /// <summary>
 /// 
 /// </summary>
-public string Identifier { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("identifier")] public string Identifier { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageRemoveScriptToEvaluateOnNewDocumentRequest"/>
 /// </summary>
@@ -12320,7 +14087,8 @@ public string Command { get; } = "Page.screencastFrameAck";
 /// <summary>
 /// Frame number.
 /// </summary>
-public int? SessionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public int? SessionId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageScreencastFrameAckRequest"/>
 /// </summary>
@@ -12340,23 +14108,28 @@ public string Command { get; } = "Page.searchInResource";
 /// <summary>
 /// Frame id for resource to search in.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// URL of the resource to search in.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// String to search for.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool? IsRegex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSearchInResourceRequest"/>
 /// </summary>
@@ -12365,7 +14138,8 @@ internal partial class PageSearchInResourceResponse: IChromiumResponse
 /// <summary>
 /// List of search matches.
 /// </summary>
-public Debugger.SearchMatch[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Debugger.SearchMatch[] Result { get; set; }
+}
 /// <summary>
 /// Enable Chrome's experimental ad filter on all sites.
 /// </summary>
@@ -12379,7 +14153,8 @@ public string Command { get; } = "Page.setAdBlockingEnabled";
 /// <summary>
 /// Whether to block ads.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetAdBlockingEnabledRequest"/>
 /// </summary>
@@ -12399,7 +14174,8 @@ public string Command { get; } = "Page.setBypassCSP";
 /// <summary>
 /// Whether to bypass page CSP.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetBypassCSPRequest"/>
 /// </summary>
@@ -12421,52 +14197,64 @@ public string Command { get; } = "Page.setDeviceMetricsOverride";
 /// <summary>
 /// Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// Overriding device scale factor value. 0 disables the override.
 /// </summary>
-public double? DeviceScaleFactor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceScaleFactor")] public double? DeviceScaleFactor { get; set; }
+
 /// <summary>
 /// Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
 /// autosizing and more.
 /// </summary>
-public bool? Mobile { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mobile")] public bool? Mobile { get; set; }
+
 /// <summary>
 /// Scale to apply to resulting view image.
 /// </summary>
-public double? Scale { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scale")] public double? Scale { get; set; }
+
 /// <summary>
 /// Overriding screen width value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? ScreenWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("screenWidth")] public int? ScreenWidth { get; set; }
+
 /// <summary>
 /// Overriding screen height value in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? ScreenHeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("screenHeight")] public int? ScreenHeight { get; set; }
+
 /// <summary>
 /// Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? PositionX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("positionX")] public int? PositionX { get; set; }
+
 /// <summary>
 /// Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
 /// </summary>
-public int? PositionY { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("positionY")] public int? PositionY { get; set; }
+
 /// <summary>
 /// Do not set visible view size, rely upon explicit setVisibleSize call.
 /// </summary>
-public bool? DontSetVisibleSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dontSetVisibleSize")] public bool? DontSetVisibleSize { get; set; }
+
 /// <summary>
 /// Screen orientation override.
 /// </summary>
-public Emulation.ScreenOrientation ScreenOrientation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("screenOrientation")] public Emulation.ScreenOrientation ScreenOrientation { get; set; }
+
 /// <summary>
 /// The viewport dimensions and scale. If not set, the override is cleared.
 /// </summary>
-public Viewport Viewport { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("viewport")] public Viewport Viewport { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetDeviceMetricsOverrideRequest"/>
 /// </summary>
@@ -12486,15 +14274,18 @@ public string Command { get; } = "Page.setDeviceOrientationOverride";
 /// <summary>
 /// Mock alpha
 /// </summary>
-public double? Alpha { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("alpha")] public double? Alpha { get; set; }
+
 /// <summary>
 /// Mock beta
 /// </summary>
-public double? Beta { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("beta")] public double? Beta { get; set; }
+
 /// <summary>
 /// Mock gamma
 /// </summary>
-public double? Gamma { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("gamma")] public double? Gamma { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetDeviceOrientationOverrideRequest"/>
 /// </summary>
@@ -12514,7 +14305,8 @@ public string Command { get; } = "Page.setFontFamilies";
 /// <summary>
 /// Specifies font families to set. If a font family is not specified, it won't be changed.
 /// </summary>
-public FontFamilies FontFamilies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fontFamilies")] public FontFamilies FontFamilies { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetFontFamiliesRequest"/>
 /// </summary>
@@ -12534,7 +14326,8 @@ public string Command { get; } = "Page.setFontSizes";
 /// <summary>
 /// Specifies font sizes to set. If a font size is not specified, it won't be changed.
 /// </summary>
-public FontSizes FontSizes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fontSizes")] public FontSizes FontSizes { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetFontSizesRequest"/>
 /// </summary>
@@ -12554,11 +14347,13 @@ public string Command { get; } = "Page.setDocumentContent";
 /// <summary>
 /// Frame id to set HTML for.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// HTML content to set.
 /// </summary>
-public string Html { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("html")] public string Html { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetDocumentContentRequest"/>
 /// </summary>
@@ -12579,11 +14374,13 @@ public string Command { get; } = "Page.setDownloadBehavior";
 /// Whether to allow all or deny all download requests, or use default Chrome behavior if
 /// available (otherwise deny).
 /// </summary>
-public string Behavior { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("behavior")] public string Behavior { get; set; }
+
 /// <summary>
 /// The default path to save downloaded files to. This is requred if behavior is set to 'allow'
 /// </summary>
-public string DownloadPath { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("downloadPath")] public string DownloadPath { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetDownloadBehaviorRequest"/>
 /// </summary>
@@ -12604,15 +14401,18 @@ public string Command { get; } = "Page.setGeolocationOverride";
 /// <summary>
 /// Mock latitude
 /// </summary>
-public double? Latitude { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("latitude")] public double? Latitude { get; set; }
+
 /// <summary>
 /// Mock longitude
 /// </summary>
-public double? Longitude { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("longitude")] public double? Longitude { get; set; }
+
 /// <summary>
 /// Mock accuracy
 /// </summary>
-public double? Accuracy { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("accuracy")] public double? Accuracy { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetGeolocationOverrideRequest"/>
 /// </summary>
@@ -12632,7 +14432,8 @@ public string Command { get; } = "Page.setLifecycleEventsEnabled";
 /// <summary>
 /// If true, starts emitting lifecycle events.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetLifecycleEventsEnabledRequest"/>
 /// </summary>
@@ -12652,11 +14453,13 @@ public string Command { get; } = "Page.setTouchEmulationEnabled";
 /// <summary>
 /// Whether the touch event emulation should be enabled.
 /// </summary>
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+
 /// <summary>
 /// Touch/gesture events configuration. Default: current platform.
 /// </summary>
-public string Configuration { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("configuration")] public string Configuration { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetTouchEmulationEnabledRequest"/>
 /// </summary>
@@ -12676,23 +14479,28 @@ public string Command { get; } = "Page.startScreencast";
 /// <summary>
 /// Image compression format.
 /// </summary>
-public string Format { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("format")] public string Format { get; set; }
+
 /// <summary>
 /// Compression quality from range [0..100].
 /// </summary>
-public int? Quality { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("quality")] public int? Quality { get; set; }
+
 /// <summary>
 /// Maximum screenshot width.
 /// </summary>
-public int? MaxWidth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxWidth")] public int? MaxWidth { get; set; }
+
 /// <summary>
 /// Maximum screenshot height.
 /// </summary>
-public int? MaxHeight { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxHeight")] public int? MaxHeight { get; set; }
+
 /// <summary>
 /// Send every n-th frame.
 /// </summary>
-public int? EveryNthFrame { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("everyNthFrame")] public int? EveryNthFrame { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageStartScreencastRequest"/>
 /// </summary>
@@ -12765,7 +14573,8 @@ public string Command { get; } = "Page.setWebLifecycleState";
 /// <summary>
 /// Target lifecycle state
 /// </summary>
-public string State { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("state")] public string State { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetWebLifecycleStateRequest"/>
 /// </summary>
@@ -12802,7 +14611,8 @@ public string Command { get; } = "Page.setProduceCompilationCache";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetProduceCompilationCacheRequest"/>
 /// </summary>
@@ -12823,11 +14633,13 @@ public string Command { get; } = "Page.addCompilationCache";
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Base64-encoded data
 /// </summary>
-public byte[] Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public byte[] Data { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageAddCompilationCacheRequest"/>
 /// </summary>
@@ -12864,11 +14676,13 @@ public string Command { get; } = "Page.generateTestReport";
 /// <summary>
 /// Message to be displayed in the report.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Specifies the endpoint group to deliver the report to.
 /// </summary>
-public string Group { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("group")] public string Group { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageGenerateTestReportRequest"/>
 /// </summary>
@@ -12907,7 +14721,8 @@ public string Command { get; } = "Page.setInterceptFileChooserDialog";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetInterceptFileChooserDialogRequest"/>
 /// </summary>
@@ -12926,7 +14741,8 @@ public string InternalName { get; } = "Page.domContentEventFired";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Emitted only when `page.interceptFileChooser` is enabled.
 /// </summary>
@@ -12939,15 +14755,18 @@ public string InternalName { get; } = "Page.fileChooserOpened";
 /// <summary>
 /// Id of the frame containing input node.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Input node id.
 /// </summary>
-public int? BackendNodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
+
 /// <summary>
 /// Input mode.
 /// </summary>
-public string Mode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("mode")] public string Mode { get; set; }
+}
 /// <summary>
 /// Fired when frame has been attached to its parent.
 /// </summary>
@@ -12960,15 +14779,18 @@ public string InternalName { get; } = "Page.frameAttached";
 /// <summary>
 /// Id of the frame that has been attached.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Parent frame identifier.
 /// </summary>
-public string ParentFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentFrameId")] public string ParentFrameId { get; set; }
+
 /// <summary>
 /// JavaScript stack trace of when frame was attached, only set if frame initiated from script.
 /// </summary>
-public Runtime.StackTrace Stack { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stack")] public Runtime.StackTrace Stack { get; set; }
+}
 /// <summary>
 /// Fired when frame no longer has a scheduled navigation.
 /// </summary>
@@ -12981,7 +14803,8 @@ public string InternalName { get; } = "Page.frameClearedScheduledNavigation";
 /// <summary>
 /// Id of the frame that has cleared its scheduled navigation.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when frame has been detached from its parent.
 /// </summary>
@@ -12994,7 +14817,8 @@ public string InternalName { get; } = "Page.frameDetached";
 /// <summary>
 /// Id of the frame that has been detached.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired once navigation of the frame has completed. Frame is now associated with the new loader.
 /// </summary>
@@ -13007,7 +14831,8 @@ public string InternalName { get; } = "Page.frameNavigated";
 /// <summary>
 /// Frame object.
 /// </summary>
-public Frame Frame { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frame")] public Frame Frame { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -13031,16 +14856,19 @@ public string InternalName { get; } = "Page.frameRequestedNavigation";
 /// <summary>
 /// Id of the frame that is being navigated.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// The reason for the navigation.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ClientNavigationReason Reason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public ClientNavigationReason Reason { get; set; }
+
 /// <summary>
 /// The destination URL for the requested navigation.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Fired when frame schedules a potential navigation.
 /// </summary>
@@ -13053,20 +14881,24 @@ public string InternalName { get; } = "Page.frameScheduledNavigation";
 /// <summary>
 /// Id of the frame that has scheduled a navigation.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Delay (in seconds) until the navigation is scheduled to begin. The navigation is not
 /// guaranteed to start.
 /// </summary>
-public double? Delay { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("delay")] public double? Delay { get; set; }
+
 /// <summary>
 /// The reason for the navigation.
 /// </summary>
-public string Reason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public string Reason { get; set; }
+
 /// <summary>
 /// The destination URL for the scheduled navigation.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Fired when frame has started loading.
 /// </summary>
@@ -13079,7 +14911,8 @@ public string InternalName { get; } = "Page.frameStartedLoading";
 /// <summary>
 /// Id of the frame that has started loading.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when frame has stopped loading.
 /// </summary>
@@ -13092,7 +14925,8 @@ public string InternalName { get; } = "Page.frameStoppedLoading";
 /// <summary>
 /// Id of the frame that has stopped loading.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when page is about to start a download.
 /// </summary>
@@ -13105,11 +14939,13 @@ public string InternalName { get; } = "Page.downloadWillBegin";
 /// <summary>
 /// Id of the frame that caused download to begin.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// URL of the resource being downloaded.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Fired when interstitial page was hidden
 /// </summary>
@@ -13143,11 +14979,13 @@ public string InternalName { get; } = "Page.javascriptDialogClosed";
 /// <summary>
 /// Whether dialog was confirmed.
 /// </summary>
-public bool? Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+
 /// <summary>
 /// User input in case of prompt.
 /// </summary>
-public string UserInput { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("userInput")] public string UserInput { get; set; }
+}
 /// <summary>
 /// Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to
 /// open.
@@ -13161,26 +14999,31 @@ public string InternalName { get; } = "Page.javascriptDialogOpening";
 /// <summary>
 /// Frame url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Message that will be displayed by the dialog.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Dialog type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public DialogType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public DialogType Type { get; set; }
+
 /// <summary>
 /// True iff browser is capable showing or acting on the given dialog. When browser has no
 /// dialog handler for given target, calling alert while Page domain is engaged will stall
 /// the page execution. Execution can be resumed via calling Page.handleJavaScriptDialog.
 /// </summary>
-public bool? HasBrowserHandler { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasBrowserHandler")] public bool? HasBrowserHandler { get; set; }
+
 /// <summary>
 /// Default dialog prompt.
 /// </summary>
-public string DefaultPrompt { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("defaultPrompt")] public string DefaultPrompt { get; set; }
+}
 /// <summary>
 /// Fired for top level page lifecycle events such as navigation, load, paint, etc.
 /// </summary>
@@ -13193,19 +15036,23 @@ public string InternalName { get; } = "Page.lifecycleEvent";
 /// <summary>
 /// Id of the frame.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Loader identifier. Empty string if the request is fetched from worker.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -13218,7 +15065,8 @@ public string InternalName { get; } = "Page.loadEventFired";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.
 /// </summary>
@@ -13231,11 +15079,13 @@ public string InternalName { get; } = "Page.navigatedWithinDocument";
 /// <summary>
 /// Id of the frame.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Frame's new url.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Compressed image data requested by the `startScreencast`.
 /// </summary>
@@ -13248,15 +15098,18 @@ public string InternalName { get; } = "Page.screencastFrame";
 /// <summary>
 /// Base64-encoded compressed image.
 /// </summary>
-public byte[] Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public byte[] Data { get; set; }
+
 /// <summary>
 /// Screencast frame metadata.
 /// </summary>
-public ScreencastFrameMetadata Metadata { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("metadata")] public ScreencastFrameMetadata Metadata { get; set; }
+
 /// <summary>
 /// Frame number.
 /// </summary>
-public int? SessionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public int? SessionId { get; set; }
+}
 /// <summary>
 /// Fired when the page with currently enabled screencast was shown or hidden `.
 /// </summary>
@@ -13269,7 +15122,8 @@ public string InternalName { get; } = "Page.screencastVisibilityChanged";
 /// <summary>
 /// True if the page is visible.
 /// </summary>
-public bool? Visible { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("visible")] public bool? Visible { get; set; }
+}
 /// <summary>
 /// Fired when a new window is going to be opened, via window.open(), link click, form submission,
 /// etc.
@@ -13283,19 +15137,23 @@ public string InternalName { get; } = "Page.windowOpen";
 /// <summary>
 /// The URL for the new window.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Window name.
 /// </summary>
-public string WindowName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("windowName")] public string WindowName { get; set; }
+
 /// <summary>
 /// An array of enabled window features.
 /// </summary>
-public string[] WindowFeatures { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("windowFeatures")] public string[] WindowFeatures { get; set; }
+
 /// <summary>
 /// Whether or not it was triggered by user gesture.
 /// </summary>
-public bool? UserGesture { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("userGesture")] public bool? UserGesture { get; set; }
+}
 /// <summary>
 /// Issued for every compilation cache generated. Is only available
 /// if Page.setGenerateCompilationCache is enabled.
@@ -13309,11 +15167,13 @@ public string InternalName { get; } = "Page.compilationCacheProduced";
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Base64-encoded data
 /// </summary>
-public byte[] Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public byte[] Data { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Performance
 {
@@ -13325,11 +15185,13 @@ internal partial class Metric
 /// <summary>
 /// Metric name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Metric value.
 /// </summary>
-public double? Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public double? Value { get; set; }
+}
 /// <summary>
 /// Disable collecting and reporting metrics.
 /// </summary>
@@ -13379,7 +15241,8 @@ public string Command { get; } = "Performance.setTimeDomain";
 /// <summary>
 /// Time domain
 /// </summary>
-public string TimeDomain { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timeDomain")] public string TimeDomain { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PerformanceSetTimeDomainRequest"/>
 /// </summary>
@@ -13405,7 +15268,8 @@ internal partial class PerformanceGetMetricsResponse: IChromiumResponse
 /// <summary>
 /// Current values for run-time metrics.
 /// </summary>
-public Metric[] Metrics { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("metrics")] public Metric[] Metrics { get; set; }
+}
 /// <summary>
 /// Current values of the metrics.
 /// </summary>
@@ -13418,36 +15282,16 @@ public string InternalName { get; } = "Performance.metrics";
 /// <summary>
 /// Current values of the metrics.
 /// </summary>
-public Metric[] Metrics { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("metrics")] public Metric[] Metrics { get; set; }
+
 /// <summary>
 /// Timestamp title.
 /// </summary>
-public string Title { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Security
 {
-/// <summary>
-/// A description of mixed content (HTTP resources on HTTPS pages), as defined by
-/// https://www.w3.org/TR/mixed-content/#categories
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum MixedContentType
-{
-[System.Runtime.Serialization.EnumMember(Value = "blockable")]Blockable,
-[System.Runtime.Serialization.EnumMember(Value = "optionally-blockable")]OptionallyBlockable,
-[System.Runtime.Serialization.EnumMember(Value = "none")]None}
-/// <summary>
-/// The security level of a page or resource.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SecurityState
-{
-[System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown,
-[System.Runtime.Serialization.EnumMember(Value = "neutral")]Neutral,
-[System.Runtime.Serialization.EnumMember(Value = "insecure")]Insecure,
-[System.Runtime.Serialization.EnumMember(Value = "secure")]Secure,
-[System.Runtime.Serialization.EnumMember(Value = "info")]Info,
-[System.Runtime.Serialization.EnumMember(Value = "insecure-broken")]InsecureBroken}
 /// <summary>
 /// Details about the security state of the page certificate.
 /// </summary>
@@ -13456,83 +15300,93 @@ internal partial class CertificateSecurityState
 /// <summary>
 /// Protocol name (e.g. "TLS 1.2" or "QUIC").
 /// </summary>
-public string Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public string Protocol { get; set; }
+
 /// <summary>
 /// Key Exchange used by the connection, or the empty string if not applicable.
 /// </summary>
-public string KeyExchange { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyExchange")] public string KeyExchange { get; set; }
+
 /// <summary>
 /// (EC)DH group used by the connection, if applicable.
 /// </summary>
-public string KeyExchangeGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyExchangeGroup")] public string KeyExchangeGroup { get; set; }
+
 /// <summary>
 /// Cipher name.
 /// </summary>
-public string Cipher { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cipher")] public string Cipher { get; set; }
+
 /// <summary>
 /// TLS MAC. Note that AEAD ciphers do not have separate MACs.
 /// </summary>
-public string Mac { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mac")] public string Mac { get; set; }
+
 /// <summary>
 /// Page certificate.
 /// </summary>
-public string[] Certificate { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificate")] public string[] Certificate { get; set; }
+
 /// <summary>
 /// Certificate subject name.
 /// </summary>
-public string SubjectName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subjectName")] public string SubjectName { get; set; }
+
 /// <summary>
 /// Name of the issuing CA.
 /// </summary>
-public string Issuer { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("issuer")] public string Issuer { get; set; }
+
 /// <summary>
 /// Certificate valid from date.
 /// </summary>
-public double? ValidFrom { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validFrom")] public double? ValidFrom { get; set; }
+
 /// <summary>
 /// Certificate valid to (expiration) date
 /// </summary>
-public double? ValidTo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validTo")] public double? ValidTo { get; set; }
+
 /// <summary>
 /// The highest priority network error code, if the certificate has an error.
 /// </summary>
-public string CertificateNetworkError { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificateNetworkError")] public string CertificateNetworkError { get; set; }
+
 /// <summary>
 /// True if the certificate uses a weak signature aglorithm.
 /// </summary>
-public bool? CertificateHasWeakSignature { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificateHasWeakSignature")] public bool? CertificateHasWeakSignature { get; set; }
+
 /// <summary>
 /// True if the certificate has a SHA1 signature in the chain.
 /// </summary>
-public bool? CertificateHasSha1Signature { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificateHasSha1Signature")] public bool? CertificateHasSha1Signature { get; set; }
+
 /// <summary>
 /// True if modern SSL
 /// </summary>
-public bool? ModernSSL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modernSSL")] public bool? ModernSSL { get; set; }
+
 /// <summary>
 /// True if the connection is using an obsolete SSL protocol.
 /// </summary>
-public bool? ObsoleteSslProtocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("obsoleteSslProtocol")] public bool? ObsoleteSslProtocol { get; set; }
+
 /// <summary>
 /// True if the connection is using an obsolete SSL key exchange.
 /// </summary>
-public bool? ObsoleteSslKeyExchange { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("obsoleteSslKeyExchange")] public bool? ObsoleteSslKeyExchange { get; set; }
+
 /// <summary>
 /// True if the connection is using an obsolete SSL cipher.
 /// </summary>
-public bool? ObsoleteSslCipher { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("obsoleteSslCipher")] public bool? ObsoleteSslCipher { get; set; }
+
 /// <summary>
 /// True if the connection is using an obsolete SSL signature.
 /// </summary>
-public bool? ObsoleteSslSignature { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SafetyTipStatus
-{
-[System.Runtime.Serialization.EnumMember(Value = "badReputation")]BadReputation,
-[System.Runtime.Serialization.EnumMember(Value = "lookalike")]Lookalike}
+[System.Text.Json.Serialization.JsonPropertyName("obsoleteSslSignature")] public bool? ObsoleteSslSignature { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -13542,11 +15396,13 @@ internal partial class SafetyTipInfo
 /// Describes whether the page triggers any safety tips or reputation warnings. Default is unknown.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SafetyTipStatus SafetyTipStatus { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("safetyTipStatus")] public SafetyTipStatus SafetyTipStatus { get; set; }
+
 /// <summary>
 /// The URL the safety tip suggested ("Did you mean?"). Only filled in for lookalike matches.
 /// </summary>
-public string SafeUrl { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("safeUrl")] public string SafeUrl { get; set; }
+}
 /// <summary>
 /// Security state information about the page.
 /// </summary>
@@ -13556,19 +15412,23 @@ internal partial class VisibleSecurityState
 /// The security level of the page.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SecurityState SecurityState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityState")] public SecurityState SecurityState { get; set; }
+
 /// <summary>
 /// Security state details about the page certificate.
 /// </summary>
-public CertificateSecurityState CertificateSecurityState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificateSecurityState")] public CertificateSecurityState CertificateSecurityState { get; set; }
+
 /// <summary>
 /// The type of Safety Tip triggered on the page. Note that this field will be set even if the Safety Tip UI was not actually shown.
 /// </summary>
-public SafetyTipInfo SafetyTipInfo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("safetyTipInfo")] public SafetyTipInfo SafetyTipInfo { get; set; }
+
 /// <summary>
 /// Array of security state issues ids.
 /// </summary>
-public string[] SecurityStateIssueIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("securityStateIssueIds")] public string[] SecurityStateIssueIds { get; set; }
+}
 /// <summary>
 /// An explanation of an factor contributing to the security state.
 /// </summary>
@@ -13578,32 +15438,39 @@ internal partial class SecurityStateExplanation
 /// Security state representing the severity of the factor being explained.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SecurityState SecurityState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityState")] public SecurityState SecurityState { get; set; }
+
 /// <summary>
 /// Title describing the type of factor.
 /// </summary>
-public string Title { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+
 /// <summary>
 /// Short phrase describing the type of factor.
 /// </summary>
-public string Summary { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("summary")] public string Summary { get; set; }
+
 /// <summary>
 /// Full text explanation of the factor.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// The type of mixed content described by the explanation.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public MixedContentType MixedContentType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mixedContentType")] public MixedContentType MixedContentType { get; set; }
+
 /// <summary>
 /// Page certificate.
 /// </summary>
-public string[] Certificate { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("certificate")] public string[] Certificate { get; set; }
+
 /// <summary>
 /// Recommendations to fix any issues.
 /// </summary>
-public string[] Recommendations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("recommendations")] public string[] Recommendations { get; set; }
+}
 /// <summary>
 /// Information about insecure content on the page.
 /// </summary>
@@ -13612,42 +15479,40 @@ internal partial class InsecureContentStatus
 /// <summary>
 /// Always false.
 /// </summary>
-public bool? RanMixedContent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ranMixedContent")] public bool? RanMixedContent { get; set; }
+
 /// <summary>
 /// Always false.
 /// </summary>
-public bool? DisplayedMixedContent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("displayedMixedContent")] public bool? DisplayedMixedContent { get; set; }
+
 /// <summary>
 /// Always false.
 /// </summary>
-public bool? ContainedMixedForm { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("containedMixedForm")] public bool? ContainedMixedForm { get; set; }
+
 /// <summary>
 /// Always false.
 /// </summary>
-public bool? RanContentWithCertErrors { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ranContentWithCertErrors")] public bool? RanContentWithCertErrors { get; set; }
+
 /// <summary>
 /// Always false.
 /// </summary>
-public bool? DisplayedContentWithCertErrors { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("displayedContentWithCertErrors")] public bool? DisplayedContentWithCertErrors { get; set; }
+
 /// <summary>
 /// Always set to unknown.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SecurityState RanInsecureContentStyle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ranInsecureContentStyle")] public SecurityState RanInsecureContentStyle { get; set; }
+
 /// <summary>
 /// Always set to unknown.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SecurityState DisplayedInsecureContentStyle { get; set; }}
-/// <summary>
-/// The action to take when a certificate error occurs. continue will continue processing the
-/// request and cancel will cancel the request.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CertificateErrorAction
-{
-[System.Runtime.Serialization.EnumMember(Value = "continue")]Continue,
-[System.Runtime.Serialization.EnumMember(Value = "cancel")]Cancel}
+[System.Text.Json.Serialization.JsonPropertyName("displayedInsecureContentStyle")] public SecurityState DisplayedInsecureContentStyle { get; set; }
+}
 /// <summary>
 /// Disables tracking security state changes.
 /// </summary>
@@ -13695,7 +15560,8 @@ public string Command { get; } = "Security.setIgnoreCertificateErrors";
 /// <summary>
 /// If true, all certificate errors will be ignored.
 /// </summary>
-public bool? Ignore { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ignore")] public bool? Ignore { get; set; }
+}
 /// <summary>
 /// Response from <see cref="SecuritySetIgnoreCertificateErrorsRequest"/>
 /// </summary>
@@ -13715,12 +15581,14 @@ public string Command { get; } = "Security.handleCertificateError";
 /// <summary>
 /// The ID of the event.
 /// </summary>
-public int? EventId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventId")] public int? EventId { get; set; }
+
 /// <summary>
 /// The action to take on the certificate error.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CertificateErrorAction Action { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("action")] public CertificateErrorAction Action { get; set; }
+}
 /// <summary>
 /// Response from <see cref="SecurityHandleCertificateErrorRequest"/>
 /// </summary>
@@ -13741,7 +15609,8 @@ public string Command { get; } = "Security.setOverrideCertificateErrors";
 /// <summary>
 /// If true, certificate errors will be overridden.
 /// </summary>
-public bool? Override { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("override")] public bool? Override { get; set; }
+}
 /// <summary>
 /// Response from <see cref="SecuritySetOverrideCertificateErrorsRequest"/>
 /// </summary>
@@ -13763,15 +15632,18 @@ public string InternalName { get; } = "Security.certificateError";
 /// <summary>
 /// The ID of the event.
 /// </summary>
-public int? EventId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventId")] public int? EventId { get; set; }
+
 /// <summary>
 /// The type of the error.
 /// </summary>
-public string ErrorType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorType")] public string ErrorType { get; set; }
+
 /// <summary>
 /// The url that was requested.
 /// </summary>
-public string RequestURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestURL")] public string RequestURL { get; set; }
+}
 /// <summary>
 /// The security state of the page changed.
 /// </summary>
@@ -13784,7 +15656,8 @@ public string InternalName { get; } = "Security.visibleSecurityStateChanged";
 /// <summary>
 /// Security state information about the page.
 /// </summary>
-public VisibleSecurityState VisibleSecurityState { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("visibleSecurityState")] public VisibleSecurityState VisibleSecurityState { get; set; }
+}
 /// <summary>
 /// The security state of the page changed.
 /// </summary>
@@ -13798,24 +15671,29 @@ public string InternalName { get; } = "Security.securityStateChanged";
 /// Security state.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SecurityState SecurityState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityState")] public SecurityState SecurityState { get; set; }
+
 /// <summary>
 /// True if the page was loaded over cryptographic transport such as HTTPS.
 /// </summary>
-public bool? SchemeIsCryptographic { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("schemeIsCryptographic")] public bool? SchemeIsCryptographic { get; set; }
+
 /// <summary>
 /// List of explanations for the security state. If the overall security state is `insecure` or
 /// `warning`, at least one corresponding explanation should be included.
 /// </summary>
-public SecurityStateExplanation[] Explanations { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("explanations")] public SecurityStateExplanation[] Explanations { get; set; }
+
 /// <summary>
 /// Information about insecure content on the page.
 /// </summary>
-public InsecureContentStatus InsecureContentStatus { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("insecureContentStatus")] public InsecureContentStatus InsecureContentStatus { get; set; }
+
 /// <summary>
 /// Overrides user-visible description of the state.
 /// </summary>
-public string Summary { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("summary")] public string Summary { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
 {
@@ -13827,37 +15705,18 @@ internal partial class ServiceWorkerRegistration
 /// <summary>
 /// 
 /// </summary>
-public string RegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ScopeURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? IsDeleted { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ServiceWorkerVersionRunningStatus
-{
-[System.Runtime.Serialization.EnumMember(Value = "stopped")]Stopped,
-[System.Runtime.Serialization.EnumMember(Value = "starting")]Starting,
-[System.Runtime.Serialization.EnumMember(Value = "running")]Running,
-[System.Runtime.Serialization.EnumMember(Value = "stopping")]Stopping}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ServiceWorkerVersionStatus
-{
-[System.Runtime.Serialization.EnumMember(Value = "new")]New,
-[System.Runtime.Serialization.EnumMember(Value = "installing")]Installing,
-[System.Runtime.Serialization.EnumMember(Value = "installed")]Installed,
-[System.Runtime.Serialization.EnumMember(Value = "activating")]Activating,
-[System.Runtime.Serialization.EnumMember(Value = "activated")]Activated,
-[System.Runtime.Serialization.EnumMember(Value = "redundant")]Redundant}
+[System.Text.Json.Serialization.JsonPropertyName("isDeleted")] public bool? IsDeleted { get; set; }
+}
 /// <summary>
 /// ServiceWorker version.
 /// </summary>
@@ -13866,42 +15725,51 @@ internal partial class ServiceWorkerVersion
 /// <summary>
 /// 
 /// </summary>
-public string VersionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string RegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ScriptURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptURL")] public string ScriptURL { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceWorkerVersionRunningStatus RunningStatus { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("runningStatus")] public ServiceWorkerVersionRunningStatus RunningStatus { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ServiceWorkerVersionStatus Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public ServiceWorkerVersionStatus Status { get; set; }
+
 /// <summary>
 /// The Last-Modified header value of the main script.
 /// </summary>
-public double? ScriptLastModified { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptLastModified")] public double? ScriptLastModified { get; set; }
+
 /// <summary>
 /// The time at which the response headers of the main script were received from the server.
 /// For cached script it is the last time the cache entry was validated.
 /// </summary>
-public double? ScriptResponseTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptResponseTime")] public double? ScriptResponseTime { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string[] ControlledClients { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("controlledClients")] public string[] ControlledClients { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// ServiceWorker error message.
 /// </summary>
@@ -13910,27 +15778,33 @@ internal partial class ServiceWorkerErrorMessage
 /// <summary>
 /// 
 /// </summary>
-public string ErrorMessage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public string ErrorMessage { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string RegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string VersionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? ColumnNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -13944,15 +15818,18 @@ public string Command { get; } = "ServiceWorker.deliverPushMessage";
 /// <summary>
 /// 
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string RegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDeliverPushMessageRequest"/>
 /// </summary>
@@ -13989,19 +15866,23 @@ public string Command { get; } = "ServiceWorker.dispatchSyncEvent";
 /// <summary>
 /// 
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string RegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Tag { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("tag")] public string Tag { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? LastChance { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("lastChance")] public bool? LastChance { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDispatchSyncEventRequest"/>
 /// </summary>
@@ -14021,15 +15902,18 @@ public string Command { get; } = "ServiceWorker.dispatchPeriodicSyncEvent";
 /// <summary>
 /// 
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string RegistrationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Tag { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("tag")] public string Tag { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerDispatchPeriodicSyncEventRequest"/>
 /// </summary>
@@ -14066,7 +15950,8 @@ public string Command { get; } = "ServiceWorker.inspectWorker";
 /// <summary>
 /// 
 /// </summary>
-public string VersionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerInspectWorkerRequest"/>
 /// </summary>
@@ -14086,7 +15971,8 @@ public string Command { get; } = "ServiceWorker.setForceUpdateOnPageLoad";
 /// <summary>
 /// 
 /// </summary>
-public bool? ForceUpdateOnPageLoad { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("forceUpdateOnPageLoad")] public bool? ForceUpdateOnPageLoad { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerSetForceUpdateOnPageLoadRequest"/>
 /// </summary>
@@ -14106,7 +15992,8 @@ public string Command { get; } = "ServiceWorker.skipWaiting";
 /// <summary>
 /// 
 /// </summary>
-public string ScopeURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerSkipWaitingRequest"/>
 /// </summary>
@@ -14126,7 +16013,8 @@ public string Command { get; } = "ServiceWorker.startWorker";
 /// <summary>
 /// 
 /// </summary>
-public string ScopeURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerStartWorkerRequest"/>
 /// </summary>
@@ -14163,7 +16051,8 @@ public string Command { get; } = "ServiceWorker.stopWorker";
 /// <summary>
 /// 
 /// </summary>
-public string VersionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerStopWorkerRequest"/>
 /// </summary>
@@ -14183,7 +16072,8 @@ public string Command { get; } = "ServiceWorker.unregister";
 /// <summary>
 /// 
 /// </summary>
-public string ScopeURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerUnregisterRequest"/>
 /// </summary>
@@ -14203,7 +16093,8 @@ public string Command { get; } = "ServiceWorker.updateRegistration";
 /// <summary>
 /// 
 /// </summary>
-public string ScopeURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ServiceWorkerUpdateRegistrationRequest"/>
 /// </summary>
@@ -14222,7 +16113,8 @@ public string InternalName { get; } = "ServiceWorker.workerErrorReported";
 /// <summary>
 /// 
 /// </summary>
-public ServiceWorkerErrorMessage ErrorMessage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public ServiceWorkerErrorMessage ErrorMessage { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -14235,7 +16127,8 @@ public string InternalName { get; } = "ServiceWorker.workerRegistrationUpdated";
 /// <summary>
 /// 
 /// </summary>
-public ServiceWorkerRegistration[] Registrations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("registrations")] public ServiceWorkerRegistration[] Registrations { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -14248,27 +16141,11 @@ public string InternalName { get; } = "ServiceWorker.workerVersionUpdated";
 /// <summary>
 /// 
 /// </summary>
-public ServiceWorkerVersion[] Versions { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("versions")] public ServiceWorkerVersion[] Versions { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Storage
 {
-/// <summary>
-/// Enum of possible storage types.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StorageType
-{
-[System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
-[System.Runtime.Serialization.EnumMember(Value = "cookies")]Cookies,
-[System.Runtime.Serialization.EnumMember(Value = "file_systems")]FileSystems,
-[System.Runtime.Serialization.EnumMember(Value = "indexeddb")]Indexeddb,
-[System.Runtime.Serialization.EnumMember(Value = "local_storage")]LocalStorage,
-[System.Runtime.Serialization.EnumMember(Value = "shader_cache")]ShaderCache,
-[System.Runtime.Serialization.EnumMember(Value = "websql")]Websql,
-[System.Runtime.Serialization.EnumMember(Value = "service_workers")]ServiceWorkers,
-[System.Runtime.Serialization.EnumMember(Value = "cache_storage")]CacheStorage,
-[System.Runtime.Serialization.EnumMember(Value = "all")]All,
-[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
 /// <summary>
 /// Usage for a storage type.
 /// </summary>
@@ -14278,11 +16155,13 @@ internal partial class UsageForType
 /// Name of storage type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StorageType StorageType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("storageType")] public StorageType StorageType { get; set; }
+
 /// <summary>
 /// Storage usage (bytes).
 /// </summary>
-public double? Usage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("usage")] public double? Usage { get; set; }
+}
 /// <summary>
 /// Clears storage for origin.
 /// </summary>
@@ -14296,11 +16175,13 @@ public string Command { get; } = "Storage.clearDataForOrigin";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// Comma separated list of StorageType to clear.
 /// </summary>
-public string StorageTypes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("storageTypes")] public string StorageTypes { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageClearDataForOriginRequest"/>
 /// </summary>
@@ -14320,7 +16201,8 @@ public string Command { get; } = "Storage.getCookies";
 /// <summary>
 /// Browser context to use when called on the browser endpoint.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageGetCookiesRequest"/>
 /// </summary>
@@ -14329,7 +16211,8 @@ internal partial class StorageGetCookiesResponse: IChromiumResponse
 /// <summary>
 /// Array of cookie objects.
 /// </summary>
-public Network.Cookie[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Network.Cookie[] Cookies { get; set; }
+}
 /// <summary>
 /// Sets given cookies.
 /// </summary>
@@ -14343,11 +16226,13 @@ public string Command { get; } = "Storage.setCookies";
 /// <summary>
 /// Cookies to be set.
 /// </summary>
-public Network.CookieParam[] Cookies { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Network.CookieParam[] Cookies { get; set; }
+
 /// <summary>
 /// Browser context to use when called on the browser endpoint.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageSetCookiesRequest"/>
 /// </summary>
@@ -14367,7 +16252,8 @@ public string Command { get; } = "Storage.clearCookies";
 /// <summary>
 /// Browser context to use when called on the browser endpoint.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageClearCookiesRequest"/>
 /// </summary>
@@ -14387,7 +16273,8 @@ public string Command { get; } = "Storage.getUsageAndQuota";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageGetUsageAndQuotaRequest"/>
 /// </summary>
@@ -14396,15 +16283,18 @@ internal partial class StorageGetUsageAndQuotaResponse: IChromiumResponse
 /// <summary>
 /// Storage usage (bytes).
 /// </summary>
-public double? Usage { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("usage")] public double? Usage { get; set; }
+
 /// <summary>
 /// Storage quota (bytes).
 /// </summary>
-public double? Quota { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("quota")] public double? Quota { get; set; }
+
 /// <summary>
 /// Storage usage per type (bytes).
 /// </summary>
-public UsageForType[] UsageBreakdown { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("usageBreakdown")] public UsageForType[] UsageBreakdown { get; set; }
+}
 /// <summary>
 /// Registers origin to be notified when an update occurs to its cache storage list.
 /// </summary>
@@ -14418,7 +16308,8 @@ public string Command { get; } = "Storage.trackCacheStorageForOrigin";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageTrackCacheStorageForOriginRequest"/>
 /// </summary>
@@ -14438,7 +16329,8 @@ public string Command { get; } = "Storage.trackIndexedDBForOrigin";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageTrackIndexedDBForOriginRequest"/>
 /// </summary>
@@ -14458,7 +16350,8 @@ public string Command { get; } = "Storage.untrackCacheStorageForOrigin";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageUntrackCacheStorageForOriginRequest"/>
 /// </summary>
@@ -14478,7 +16371,8 @@ public string Command { get; } = "Storage.untrackIndexedDBForOrigin";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="StorageUntrackIndexedDBForOriginRequest"/>
 /// </summary>
@@ -14497,11 +16391,13 @@ public string InternalName { get; } = "Storage.cacheStorageContentUpdated";
 /// <summary>
 /// Origin to update.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// Name of cache in origin.
 /// </summary>
-public string CacheName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cacheName")] public string CacheName { get; set; }
+}
 /// <summary>
 /// A cache has been added/deleted.
 /// </summary>
@@ -14514,7 +16410,8 @@ public string InternalName { get; } = "Storage.cacheStorageListUpdated";
 /// <summary>
 /// Origin to update.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 /// <summary>
 /// The origin's IndexedDB object store has been modified.
 /// </summary>
@@ -14527,15 +16424,18 @@ public string InternalName { get; } = "Storage.indexedDBContentUpdated";
 /// <summary>
 /// Origin to update.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// Database to update.
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// ObjectStore to update.
 /// </summary>
-public string ObjectStoreName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+}
 /// <summary>
 /// The origin's IndexedDB database list has been modified.
 /// </summary>
@@ -14548,7 +16448,8 @@ public string InternalName { get; } = "Storage.indexedDBListUpdated";
 /// <summary>
 /// Origin to update.
 /// </summary>
-public string Origin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.SystemInfo
 {
@@ -14560,35 +16461,43 @@ internal partial class GPUDevice
 /// <summary>
 /// PCI ID of the GPU vendor, if available; 0 otherwise.
 /// </summary>
-public double? VendorId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("vendorId")] public double? VendorId { get; set; }
+
 /// <summary>
 /// PCI ID of the GPU device, if available; 0 otherwise.
 /// </summary>
-public double? DeviceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceId")] public double? DeviceId { get; set; }
+
 /// <summary>
 /// Sub sys ID of the GPU, only available on Windows.
 /// </summary>
-public double? SubSysId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subSysId")] public double? SubSysId { get; set; }
+
 /// <summary>
 /// Revision of the GPU, only available on Windows.
 /// </summary>
-public double? Revision { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("revision")] public double? Revision { get; set; }
+
 /// <summary>
 /// String description of the GPU vendor, if the PCI ID is not available.
 /// </summary>
-public string VendorString { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("vendorString")] public string VendorString { get; set; }
+
 /// <summary>
 /// String description of the GPU device, if the PCI ID is not available.
 /// </summary>
-public string DeviceString { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceString")] public string DeviceString { get; set; }
+
 /// <summary>
 /// String description of the GPU driver vendor.
 /// </summary>
-public string DriverVendor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("driverVendor")] public string DriverVendor { get; set; }
+
 /// <summary>
 /// String description of the GPU driver version.
 /// </summary>
-public string DriverVersion { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("driverVersion")] public string DriverVersion { get; set; }
+}
 /// <summary>
 /// Describes the width and height dimensions of an entity.
 /// </summary>
@@ -14597,11 +16506,13 @@ internal partial class Size
 /// <summary>
 /// Width in pixels.
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Height in pixels.
 /// </summary>
-public int? Height { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+}
 /// <summary>
 /// Describes a supported video decoding profile with its associated minimum and
 /// maximum resolutions.
@@ -14611,15 +16522,18 @@ internal partial class VideoDecodeAcceleratorCapability
 /// <summary>
 /// Video codec profile that is supported, e.g. VP9 Profile 2.
 /// </summary>
-public string Profile { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public string Profile { get; set; }
+
 /// <summary>
 /// Maximum video dimensions in pixels supported for this |profile|.
 /// </summary>
-public Size MaxResolution { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxResolution")] public Size MaxResolution { get; set; }
+
 /// <summary>
 /// Minimum video dimensions in pixels supported for this |profile|.
 /// </summary>
-public Size MinResolution { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("minResolution")] public Size MinResolution { get; set; }
+}
 /// <summary>
 /// Describes a supported video encoding profile with its associated maximum
 /// resolution and maximum framerate.
@@ -14629,39 +16543,25 @@ internal partial class VideoEncodeAcceleratorCapability
 /// <summary>
 /// Video codec profile that is supported, e.g H264 Main.
 /// </summary>
-public string Profile { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public string Profile { get; set; }
+
 /// <summary>
 /// Maximum video dimensions in pixels supported for this |profile|.
 /// </summary>
-public Size MaxResolution { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxResolution")] public Size MaxResolution { get; set; }
+
 /// <summary>
 /// Maximum encoding framerate in frames per second supported for this
 /// |profile|, as fraction's numerator and denominator, e.g. 24/1 fps,
 /// 24000/1001 fps, etc.
 /// </summary>
-public int? MaxFramerateNumerator { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxFramerateNumerator")] public int? MaxFramerateNumerator { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? MaxFramerateDenominator { get; set; }}
-/// <summary>
-/// YUV subsampling type of the pixels of a given image.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SubsamplingFormat
-{
-[System.Runtime.Serialization.EnumMember(Value = "yuv420")]Yuv420,
-[System.Runtime.Serialization.EnumMember(Value = "yuv422")]Yuv422,
-[System.Runtime.Serialization.EnumMember(Value = "yuv444")]Yuv444}
-/// <summary>
-/// Image format of a given image.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ImageType
-{
-[System.Runtime.Serialization.EnumMember(Value = "jpeg")]Jpeg,
-[System.Runtime.Serialization.EnumMember(Value = "webp")]Webp,
-[System.Runtime.Serialization.EnumMember(Value = "unknown")]Unknown}
+[System.Text.Json.Serialization.JsonPropertyName("maxFramerateDenominator")] public int? MaxFramerateDenominator { get; set; }
+}
 /// <summary>
 /// Describes a supported image decoding profile with its associated minimum and
 /// maximum resolutions and subsampling.
@@ -14672,19 +16572,23 @@ internal partial class ImageDecodeAcceleratorCapability
 /// Image coded, e.g. Jpeg.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ImageType ImageType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("imageType")] public ImageType ImageType { get; set; }
+
 /// <summary>
 /// Maximum supported dimensions of the image in pixels.
 /// </summary>
-public Size MaxDimensions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxDimensions")] public Size MaxDimensions { get; set; }
+
 /// <summary>
 /// Minimum supported dimensions of the image in pixels.
 /// </summary>
-public Size MinDimensions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("minDimensions")] public Size MinDimensions { get; set; }
+
 /// <summary>
 /// Optional array of supported subsampling formats, e.g. 4:2:0, if known.
 /// </summary>
-public SubsamplingFormat[] Subsamplings { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("subsamplings")] public SubsamplingFormat[] Subsamplings { get; set; }
+}
 /// <summary>
 /// Provides information about the GPU(s) on the system.
 /// </summary>
@@ -14693,31 +16597,38 @@ internal partial class GPUInfo
 /// <summary>
 /// The graphics devices on the system. Element 0 is the primary GPU.
 /// </summary>
-public GPUDevice[] Devices { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("devices")] public GPUDevice[] Devices { get; set; }
+
 /// <summary>
 /// An optional dictionary of additional GPU related attributes.
 /// </summary>
-public object AuxAttributes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("auxAttributes")] public object AuxAttributes { get; set; }
+
 /// <summary>
 /// An optional dictionary of graphics features and their status.
 /// </summary>
-public object FeatureStatus { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("featureStatus")] public object FeatureStatus { get; set; }
+
 /// <summary>
 /// An optional array of GPU driver bug workarounds.
 /// </summary>
-public string[] DriverBugWorkarounds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("driverBugWorkarounds")] public string[] DriverBugWorkarounds { get; set; }
+
 /// <summary>
 /// Supported accelerated video decoding capabilities.
 /// </summary>
-public VideoDecodeAcceleratorCapability[] VideoDecoding { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("videoDecoding")] public VideoDecodeAcceleratorCapability[] VideoDecoding { get; set; }
+
 /// <summary>
 /// Supported accelerated video encoding capabilities.
 /// </summary>
-public VideoEncodeAcceleratorCapability[] VideoEncoding { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("videoEncoding")] public VideoEncodeAcceleratorCapability[] VideoEncoding { get; set; }
+
 /// <summary>
 /// Supported accelerated image decoding capabilities.
 /// </summary>
-public ImageDecodeAcceleratorCapability[] ImageDecoding { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("imageDecoding")] public ImageDecodeAcceleratorCapability[] ImageDecoding { get; set; }
+}
 /// <summary>
 /// Represents process info.
 /// </summary>
@@ -14726,16 +16637,19 @@ internal partial class ProcessInfo
 /// <summary>
 /// Specifies process type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Specifies process id.
 /// </summary>
-public int? Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+
 /// <summary>
 /// Specifies cumulative CPU usage in seconds across all threads of the
 /// process since the process start.
 /// </summary>
-public double? CpuTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cpuTime")] public double? CpuTime { get; set; }
+}
 /// <summary>
 /// Returns information about the system.
 /// </summary>
@@ -14755,22 +16669,26 @@ internal partial class SystemInfoGetInfoResponse: IChromiumResponse
 /// <summary>
 /// Information about the GPUs on the system.
 /// </summary>
-public GPUInfo Gpu { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("gpu")] public GPUInfo Gpu { get; set; }
+
 /// <summary>
 /// A platform-dependent description of the model of the machine. On Mac OS, this is, for
 /// example, 'MacBookPro'. Will be the empty string if not supported.
 /// </summary>
-public string ModelName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modelName")] public string ModelName { get; set; }
+
 /// <summary>
 /// A platform-dependent description of the version of the machine. On Mac OS, this is, for
 /// example, '10.1'. Will be the empty string if not supported.
 /// </summary>
-public string ModelVersion { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modelVersion")] public string ModelVersion { get; set; }
+
 /// <summary>
 /// The command line string used to launch the browser. Will be the empty string if not
 /// supported.
 /// </summary>
-public string CommandLine { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("commandLine")] public string CommandLine { get; set; }
+}
 /// <summary>
 /// Returns information about all running processes.
 /// </summary>
@@ -14790,7 +16708,8 @@ internal partial class SystemInfoGetProcessInfoResponse: IChromiumResponse
 /// <summary>
 /// An array of process info blocks.
 /// </summary>
-public ProcessInfo[] ProcessInfo { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("processInfo")] public ProcessInfo[] ProcessInfo { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Target
 {
@@ -14802,31 +16721,38 @@ internal partial class TargetInfo
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Title { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Whether the target has an attached client.
 /// </summary>
-public bool? Attached { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("attached")] public bool? Attached { get; set; }
+
 /// <summary>
 /// Opener target Id
 /// </summary>
-public string OpenerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -14835,11 +16761,13 @@ internal partial class RemoteLocation
 /// <summary>
 /// 
 /// </summary>
-public string Host { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("host")] public string Host { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? Port { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("port")] public int? Port { get; set; }
+}
 /// <summary>
 /// Activates (focuses) the target.
 /// </summary>
@@ -14853,7 +16781,8 @@ public string Command { get; } = "Target.activateTarget";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetActivateTargetRequest"/>
 /// </summary>
@@ -14873,13 +16802,15 @@ public string Command { get; } = "Target.attachToTarget";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// Enables "flat" access to the session via specifying sessionId attribute in the commands.
 /// We plan to make this the default, deprecate non-flattened mode,
 /// and eventually retire it. See crbug.com/991325.
 /// </summary>
-public bool? Flatten { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("flatten")] public bool? Flatten { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetAttachToTargetRequest"/>
 /// </summary>
@@ -14888,7 +16819,8 @@ internal partial class TargetAttachToTargetResponse: IChromiumResponse
 /// <summary>
 /// Id assigned to the session.
 /// </summary>
-public string SessionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+}
 /// <summary>
 /// Attaches to the browser target, only uses flat sessionId mode.
 /// </summary>
@@ -14908,7 +16840,8 @@ internal partial class TargetAttachToBrowserTargetResponse: IChromiumResponse
 /// <summary>
 /// Id assigned to the session.
 /// </summary>
-public string SessionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+}
 /// <summary>
 /// Closes the target. If the target is a page that gets closed too.
 /// </summary>
@@ -14922,7 +16855,8 @@ public string Command { get; } = "Target.closeTarget";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetCloseTargetRequest"/>
 /// </summary>
@@ -14931,7 +16865,8 @@ internal partial class TargetCloseTargetResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public bool? Success { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("success")] public bool? Success { get; set; }
+}
 /// <summary>
 /// Inject object to the target's main frame that provides a communication
 /// channel with browser target.
@@ -14952,11 +16887,13 @@ public string Command { get; } = "Target.exposeDevToolsProtocol";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// Binding name, 'cdp' if not specified.
 /// </summary>
-public string BindingName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bindingName")] public string BindingName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetExposeDevToolsProtocolRequest"/>
 /// </summary>
@@ -14983,7 +16920,8 @@ internal partial class TargetCreateBrowserContextResponse: IChromiumResponse
 /// <summary>
 /// The id of the context created.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Returns all browser contexts created with `Target.createBrowserContext` method.
 /// </summary>
@@ -15003,7 +16941,8 @@ internal partial class TargetGetBrowserContextsResponse: IChromiumResponse
 /// <summary>
 /// An array of browser context ids.
 /// </summary>
-public string[] BrowserContextIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextIds")] public string[] BrowserContextIds { get; set; }
+}
 /// <summary>
 /// Creates a new page.
 /// </summary>
@@ -15017,33 +16956,40 @@ public string Command { get; } = "Target.createTarget";
 /// <summary>
 /// The initial URL the page will be navigated to.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Frame width in DIP (headless chrome only).
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Frame height in DIP (headless chrome only).
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// The browser context to create the page in.
 /// </summary>
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+
 /// <summary>
 /// Whether BeginFrames for this target will be controlled via DevTools (headless chrome only,
 /// not supported on MacOS yet, false by default).
 /// </summary>
-public bool? EnableBeginFrameControl { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enableBeginFrameControl")] public bool? EnableBeginFrameControl { get; set; }
+
 /// <summary>
 /// Whether to create a new Window or Tab (chrome-only, false by default).
 /// </summary>
-public bool? NewWindow { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("newWindow")] public bool? NewWindow { get; set; }
+
 /// <summary>
 /// Whether to create the target in background or foreground (chrome-only,
 /// false by default).
 /// </summary>
-public bool? Background { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("background")] public bool? Background { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetCreateTargetRequest"/>
 /// </summary>
@@ -15052,7 +16998,8 @@ internal partial class TargetCreateTargetResponse: IChromiumResponse
 /// <summary>
 /// The id of the page opened.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Detaches session with given id.
 /// </summary>
@@ -15066,11 +17013,13 @@ public string Command { get; } = "Target.detachFromTarget";
 /// <summary>
 /// Session to detach.
 /// </summary>
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+
 /// <summary>
 /// Deprecated.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetDetachFromTargetRequest"/>
 /// </summary>
@@ -15091,7 +17040,8 @@ public string Command { get; } = "Target.disposeBrowserContext";
 /// <summary>
 /// 
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetDisposeBrowserContextRequest"/>
 /// </summary>
@@ -15111,7 +17061,8 @@ public string Command { get; } = "Target.getTargetInfo";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetGetTargetInfoRequest"/>
 /// </summary>
@@ -15120,7 +17071,8 @@ internal partial class TargetGetTargetInfoResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public TargetInfo TargetInfo { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
+}
 /// <summary>
 /// Retrieves a list of available targets.
 /// </summary>
@@ -15140,7 +17092,8 @@ internal partial class TargetGetTargetsResponse: IChromiumResponse
 /// <summary>
 /// The list of targets.
 /// </summary>
-public TargetInfo[] TargetInfos { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetInfos")] public TargetInfo[] TargetInfos { get; set; }
+}
 /// <summary>
 /// Sends protocol message over session with given id.
 /// Consider using flat mode instead; see commands attachToTarget, setAutoAttach,
@@ -15156,15 +17109,18 @@ public string Command { get; } = "Target.sendMessageToTarget";
 /// <summary>
 /// 
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Identifier of the session.
 /// </summary>
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+
 /// <summary>
 /// Deprecated.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetSendMessageToTargetRequest"/>
 /// </summary>
@@ -15186,22 +17142,26 @@ public string Command { get; } = "Target.setAutoAttach";
 /// <summary>
 /// Whether to auto-attach to related targets.
 /// </summary>
-public bool? AutoAttach { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autoAttach")] public bool? AutoAttach { get; set; }
+
 /// <summary>
 /// Whether to pause new targets when attaching to them. Use `Runtime.runIfWaitingForDebugger`
 /// to run paused targets.
 /// </summary>
-public bool? WaitForDebuggerOnStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("waitForDebuggerOnStart")] public bool? WaitForDebuggerOnStart { get; set; }
+
 /// <summary>
 /// Enables "flat" access to the session via specifying sessionId attribute in the commands.
 /// We plan to make this the default, deprecate non-flattened mode,
 /// and eventually retire it. See crbug.com/991325.
 /// </summary>
-public bool? Flatten { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("flatten")] public bool? Flatten { get; set; }
+
 /// <summary>
 /// Auto-attach to the targets created via window.open from current target.
 /// </summary>
-public bool? WindowOpen { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("windowOpen")] public bool? WindowOpen { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetSetAutoAttachRequest"/>
 /// </summary>
@@ -15222,7 +17182,8 @@ public string Command { get; } = "Target.setDiscoverTargets";
 /// <summary>
 /// Whether to discover available targets.
 /// </summary>
-public bool? Discover { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("discover")] public bool? Discover { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetSetDiscoverTargetsRequest"/>
 /// </summary>
@@ -15243,7 +17204,8 @@ public string Command { get; } = "Target.setRemoteLocations";
 /// <summary>
 /// List of remote locations.
 /// </summary>
-public RemoteLocation[] Locations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("locations")] public RemoteLocation[] Locations { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetSetRemoteLocationsRequest"/>
 /// </summary>
@@ -15262,15 +17224,18 @@ public string InternalName { get; } = "Target.attachedToTarget";
 /// <summary>
 /// Identifier assigned to the session used to send/receive messages.
 /// </summary>
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public TargetInfo TargetInfo { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? WaitingForDebugger { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("waitingForDebugger")] public bool? WaitingForDebugger { get; set; }
+}
 /// <summary>
 /// Issued when detached from target for any reason (including `detachFromTarget` command). Can be
 /// issued multiple times per target if multiple sessions have been attached to it.
@@ -15284,11 +17249,13 @@ public string InternalName { get; } = "Target.detachedFromTarget";
 /// <summary>
 /// Detached session identifier.
 /// </summary>
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+
 /// <summary>
 /// Deprecated.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Notifies about a new protocol message received from the session (as reported in
 /// `attachedToTarget` event).
@@ -15302,15 +17269,18 @@ public string InternalName { get; } = "Target.receivedMessageFromTarget";
 /// <summary>
 /// Identifier of a session which sends a message.
 /// </summary>
-public string SessionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Deprecated.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Issued when a possible inspection target is created.
 /// </summary>
@@ -15323,7 +17293,8 @@ public string InternalName { get; } = "Target.targetCreated";
 /// <summary>
 /// 
 /// </summary>
-public TargetInfo TargetInfo { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
+}
 /// <summary>
 /// Issued when a target is destroyed.
 /// </summary>
@@ -15336,7 +17307,8 @@ public string InternalName { get; } = "Target.targetDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Issued when a target has crashed.
 /// </summary>
@@ -15349,15 +17321,18 @@ public string InternalName { get; } = "Target.targetCrashed";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// Termination status type.
 /// </summary>
-public string Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public string Status { get; set; }
+
 /// <summary>
 /// Termination error code.
 /// </summary>
-public int? ErrorCode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorCode")] public int? ErrorCode { get; set; }
+}
 /// <summary>
 /// Issued when some information about a target has changed. This only happens between
 /// `targetCreated` and `targetDestroyed`.
@@ -15371,7 +17346,8 @@ public string InternalName { get; } = "Target.targetInfoChanged";
 /// <summary>
 /// 
 /// </summary>
-public TargetInfo TargetInfo { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Tethering
 {
@@ -15388,7 +17364,8 @@ public string Command { get; } = "Tethering.bind";
 /// <summary>
 /// Port number to bind.
 /// </summary>
-public int? Port { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("port")] public int? Port { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TetheringBindRequest"/>
 /// </summary>
@@ -15408,7 +17385,8 @@ public string Command { get; } = "Tethering.unbind";
 /// <summary>
 /// Port number to unbind.
 /// </summary>
-public int? Port { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("port")] public int? Port { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TetheringUnbindRequest"/>
 /// </summary>
@@ -15427,11 +17405,13 @@ public string InternalName { get; } = "Tethering.accepted";
 /// <summary>
 /// Port number that was successfully bound.
 /// </summary>
-public int? Port { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("port")] public int? Port { get; set; }
+
 /// <summary>
 /// Connection id to be used.
 /// </summary>
-public string ConnectionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("connectionId")] public string ConnectionId { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Tracing
 {
@@ -15449,52 +17429,43 @@ internal partial class TraceConfig
 /// <summary>
 /// Controls how the trace buffer stores data.
 /// </summary>
-public string RecordMode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("recordMode")] public string RecordMode { get; set; }
+
 /// <summary>
 /// Turns on JavaScript stack sampling.
 /// </summary>
-public bool? EnableSampling { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enableSampling")] public bool? EnableSampling { get; set; }
+
 /// <summary>
 /// Turns on system tracing.
 /// </summary>
-public bool? EnableSystrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enableSystrace")] public bool? EnableSystrace { get; set; }
+
 /// <summary>
 /// Turns on argument filter.
 /// </summary>
-public bool? EnableArgumentFilter { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enableArgumentFilter")] public bool? EnableArgumentFilter { get; set; }
+
 /// <summary>
 /// Included category filters.
 /// </summary>
-public string[] IncludedCategories { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includedCategories")] public string[] IncludedCategories { get; set; }
+
 /// <summary>
 /// Excluded category filters.
 /// </summary>
-public string[] ExcludedCategories { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("excludedCategories")] public string[] ExcludedCategories { get; set; }
+
 /// <summary>
 /// Configuration to synthesize the delays in tracing.
 /// </summary>
-public string[] SyntheticDelays { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("syntheticDelays")] public string[] SyntheticDelays { get; set; }
+
 /// <summary>
 /// Configuration for memory dump triggers. Used only when "memory-infra" category is enabled.
 /// </summary>
-public MemoryDumpConfig MemoryDumpConfig { get; set; }}
-/// <summary>
-/// Data format of a trace. Can be either the legacy JSON format or the
-/// protocol buffer format. Note that the JSON format will be deprecated soon.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StreamFormat
-{
-[System.Runtime.Serialization.EnumMember(Value = "json")]Json,
-[System.Runtime.Serialization.EnumMember(Value = "proto")]Proto}
-/// <summary>
-/// Compression type to use for traces returned via streams.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StreamCompression
-{
-[System.Runtime.Serialization.EnumMember(Value = "none")]None,
-[System.Runtime.Serialization.EnumMember(Value = "gzip")]Gzip}
+[System.Text.Json.Serialization.JsonPropertyName("memoryDumpConfig")] public MemoryDumpConfig MemoryDumpConfig { get; set; }
+}
 /// <summary>
 /// Stop trace events collection.
 /// </summary>
@@ -15531,7 +17502,8 @@ internal partial class TracingGetCategoriesResponse: IChromiumResponse
 /// <summary>
 /// A list of supported tracing categories.
 /// </summary>
-public string[] Categories { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("categories")] public string[] Categories { get; set; }
+}
 /// <summary>
 /// Record a clock sync marker in the trace.
 /// </summary>
@@ -15545,7 +17517,8 @@ public string Command { get; } = "Tracing.recordClockSyncMarker";
 /// <summary>
 /// The ID of this clock sync marker
 /// </summary>
-public string SyncId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("syncId")] public string SyncId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TracingRecordClockSyncMarkerRequest"/>
 /// </summary>
@@ -15565,7 +17538,8 @@ public string Command { get; } = "Tracing.requestMemoryDump";
 /// <summary>
 /// Enables more deterministic results by forcing garbage collection
 /// </summary>
-public bool? Deterministic { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("deterministic")] public bool? Deterministic { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TracingRequestMemoryDumpRequest"/>
 /// </summary>
@@ -15574,11 +17548,13 @@ internal partial class TracingRequestMemoryDumpResponse: IChromiumResponse
 /// <summary>
 /// GUID of the resulting global memory dump.
 /// </summary>
-public string DumpGuid { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dumpGuid")] public string DumpGuid { get; set; }
+
 /// <summary>
 /// True iff the global memory dump succeeded.
 /// </summary>
-public bool? Success { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("success")] public bool? Success { get; set; }
+}
 /// <summary>
 /// Start trace events collection.
 /// </summary>
@@ -15592,36 +17568,43 @@ public string Command { get; } = "Tracing.start";
 /// <summary>
 /// Category/tag filter
 /// </summary>
-public string Categories { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("categories")] public string Categories { get; set; }
+
 /// <summary>
 /// Tracing options
 /// </summary>
-public string Options { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("options")] public string Options { get; set; }
+
 /// <summary>
 /// If set, the agent will issue bufferUsage events at this interval, specified in milliseconds
 /// </summary>
-public double? BufferUsageReportingInterval { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("bufferUsageReportingInterval")] public double? BufferUsageReportingInterval { get; set; }
+
 /// <summary>
 /// Whether to report trace events as series of dataCollected events or to save trace to a
 /// stream (defaults to `ReportEvents`).
 /// </summary>
-public string TransferMode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("transferMode")] public string TransferMode { get; set; }
+
 /// <summary>
 /// Trace data format to use. This only applies when using `ReturnAsStream`
 /// transfer mode (defaults to `json`).
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamFormat? StreamFormat { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("streamFormat")] public StreamFormat? StreamFormat { get; set; }
+
 /// <summary>
 /// Compression format to use. This only applies when using `ReturnAsStream`
 /// transfer mode (defaults to `none`)
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamCompression? StreamCompression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("streamCompression")] public StreamCompression? StreamCompression { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public TraceConfig TraceConfig { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("traceConfig")] public TraceConfig TraceConfig { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TracingStartRequest"/>
 /// </summary>
@@ -15641,16 +17624,19 @@ public string InternalName { get; } = "Tracing.bufferUsage";
 /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
 /// total size.
 /// </summary>
-public double? PercentFull { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("percentFull")] public double? PercentFull { get; set; }
+
 /// <summary>
 /// An approximate number of events in the trace log.
 /// </summary>
-public double? EventCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("eventCount")] public double? EventCount { get; set; }
+
 /// <summary>
 /// A number in range [0..1] that indicates the used size of event buffer as a fraction of its
 /// total size.
 /// </summary>
-public double? Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public double? Value { get; set; }
+}
 /// <summary>
 /// Contains an bucket of collected trace events. When tracing is stopped collected events will be
 /// send as a sequence of dataCollected events followed by tracingComplete event.
@@ -15664,7 +17650,8 @@ public string InternalName { get; } = "Tracing.dataCollected";
 /// <summary>
 /// 
 /// </summary>
-public object[] Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object[] Value { get; set; }
+}
 /// <summary>
 /// Signals that tracing is stopped and there is no trace buffers pending flush, all data were
 /// delivered via dataCollected events.
@@ -15679,34 +17666,28 @@ public string InternalName { get; } = "Tracing.tracingComplete";
 /// Indicates whether some trace data is known to have been lost, e.g. because the trace ring
 /// buffer wrapped around.
 /// </summary>
-public bool? DataLossOccurred { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dataLossOccurred")] public bool? DataLossOccurred { get; set; }
+
 /// <summary>
 /// A handle of the stream that holds resulting trace data.
 /// </summary>
-public string Stream { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stream")] public string Stream { get; set; }
+
 /// <summary>
 /// Trace data format of returned stream.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamFormat? TraceFormat { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("traceFormat")] public StreamFormat? TraceFormat { get; set; }
+
 /// <summary>
 /// Compression format of returned stream.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StreamCompression? StreamCompression { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("streamCompression")] public StreamCompression? StreamCompression { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Fetch
 {
-/// <summary>
-/// Stages of the request to handle. Request will intercept before the request is
-/// sent. Response will intercept after the response is received (but before response
-/// body is received.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum RequestStage
-{
-[System.Runtime.Serialization.EnumMember(Value = "Request")]Request,
-[System.Runtime.Serialization.EnumMember(Value = "Response")]Response}
 /// <summary>
 /// 
 /// </summary>
@@ -15716,16 +17697,20 @@ internal partial class RequestPattern
 /// Wildcards ('*' -&gt; zero or more, '?' -&gt; exactly one) are allowed. Escape character is
 /// backslash. Omitting is equivalent to "*".
 /// </summary>
-public string UrlPattern { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("urlPattern")] public string UrlPattern { get; set; }
+
 /// <summary>
 /// If set, only requests for matching resource types will be intercepted.
 /// </summary>
-public Network.ResourceType ResourceType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("resourceType")] public Network.ResourceType? ResourceType { get; set; }
+
 /// <summary>
 /// Stage at wich to begin intercepting requests. Default is Request.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public RequestStage? RequestStage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestStage")] public RequestStage? RequestStage { get; set; }
+}
 /// <summary>
 /// Response HTTP header entry
 /// </summary>
@@ -15734,11 +17719,13 @@ internal partial class HeaderEntry
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Authorization challenge for HTTP status code 401 or 407.
 /// </summary>
@@ -15747,19 +17734,23 @@ internal partial class AuthChallenge
 /// <summary>
 /// Source of the authentication challenge.
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// Origin of the challenger.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// The authentication scheme used, such as basic or digest
 /// </summary>
-public string Scheme { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scheme")] public string Scheme { get; set; }
+
 /// <summary>
 /// The realm of the challenge. May be empty.
 /// </summary>
-public string Realm { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("realm")] public string Realm { get; set; }
+}
 /// <summary>
 /// Response to an AuthChallenge.
 /// </summary>
@@ -15770,17 +17761,20 @@ internal partial class AuthChallengeResponse
 /// deferring to the default behavior of the net stack, which will likely either the Cancel
 /// authentication or display a popup dialog box.
 /// </summary>
-public string Response { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("response")] public string Response { get; set; }
+
 /// <summary>
 /// The username to provide, possibly empty. Should only be set if response is
 /// ProvideCredentials.
 /// </summary>
-public string Username { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("username")] public string Username { get; set; }
+
 /// <summary>
 /// The password to provide, possibly empty. Should only be set if response is
 /// ProvideCredentials.
 /// </summary>
-public string Password { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("password")] public string Password { get; set; }
+}
 /// <summary>
 /// Disables the fetch domain.
 /// </summary>
@@ -15814,12 +17808,14 @@ public string Command { get; } = "Fetch.enable";
 /// fetchRequested event and will be paused until clients response. If not set,
 /// all requests will be affected.
 /// </summary>
-public RequestPattern[] Patterns { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("patterns")] public RequestPattern[] Patterns { get; set; }
+
 /// <summary>
 /// If true, authRequired events will be issued and requests will be paused
 /// expecting a call to continueWithAuth.
 /// </summary>
-public bool? HandleAuthRequests { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("handleAuthRequests")] public bool? HandleAuthRequests { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchEnableRequest"/>
 /// </summary>
@@ -15839,11 +17835,14 @@ public string Command { get; } = "Fetch.failRequest";
 /// <summary>
 /// An id the client received in requestPaused event.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Causes the request to fail with the given reason.
 /// </summary>
-public Network.ErrorReason ErrorReason { get; set; }}
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("errorReason")] public Network.ErrorReason ErrorReason { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchFailRequestRequest"/>
 /// </summary>
@@ -15863,31 +17862,37 @@ public string Command { get; } = "Fetch.fulfillRequest";
 /// <summary>
 /// An id the client received in requestPaused event.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// An HTTP response code.
 /// </summary>
-public int? ResponseCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseCode")] public int? ResponseCode { get; set; }
+
 /// <summary>
 /// Response headers.
 /// </summary>
-public HeaderEntry[] ResponseHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseHeaders")] public HeaderEntry[] ResponseHeaders { get; set; }
+
 /// <summary>
 /// Alternative way of specifying response headers as a \0-separated
 /// series of name: value pairs. Prefer the above method unless you
 /// need to represent some non-UTF8 values that can't be transmitted
 /// over the protocol as text.
 /// </summary>
-public byte[] BinaryResponseHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("binaryResponseHeaders")] public byte[] BinaryResponseHeaders { get; set; }
+
 /// <summary>
 /// A response body.
 /// </summary>
-public byte[] Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("body")] public byte[] Body { get; set; }
+
 /// <summary>
 /// A textual representation of responseCode.
 /// If absent, a standard phrase matching responseCode is used.
 /// </summary>
-public string ResponsePhrase { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("responsePhrase")] public string ResponsePhrase { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchFulfillRequestRequest"/>
 /// </summary>
@@ -15907,23 +17912,28 @@ public string Command { get; } = "Fetch.continueRequest";
 /// <summary>
 /// An id the client received in requestPaused event.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// If set, the request url will be modified in a way that's not observable by page.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// If set, the request method is overridden.
 /// </summary>
-public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+
 /// <summary>
 /// If set, overrides the post data in the request.
 /// </summary>
-public string PostData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+
 /// <summary>
 /// If set, overrides the request headrts.
 /// </summary>
-public HeaderEntry[] Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public HeaderEntry[] Headers { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchContinueRequestRequest"/>
 /// </summary>
@@ -15943,11 +17953,13 @@ public string Command { get; } = "Fetch.continueWithAuth";
 /// <summary>
 /// An id the client received in authRequired event.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Response to  with an authChallenge.
 /// </summary>
-public AuthChallengeResponse AuthChallengeResponse { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authChallengeResponse")] public AuthChallengeResponse AuthChallengeResponse { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchContinueWithAuthRequest"/>
 /// </summary>
@@ -15972,7 +17984,8 @@ public string Command { get; } = "Fetch.getResponseBody";
 /// <summary>
 /// Identifier for the intercepted request to get body for.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchGetResponseBodyRequest"/>
 /// </summary>
@@ -15981,11 +17994,13 @@ internal partial class FetchGetResponseBodyResponse: IChromiumResponse
 /// <summary>
 /// Response body.
 /// </summary>
-public string Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("body")] public string Body { get; set; }
+
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+}
 /// <summary>
 /// Returns a handle to the stream representing the response body.
 /// The request must be paused in the HeadersReceived stage.
@@ -16008,7 +18023,8 @@ public string Command { get; } = "Fetch.takeResponseBodyAsStream";
 /// <summary>
 /// 
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="FetchTakeResponseBodyAsStreamRequest"/>
 /// </summary>
@@ -16017,7 +18033,8 @@ internal partial class FetchTakeResponseBodyAsStreamResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string Stream { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stream")] public string Stream { get; set; }
+}
 /// <summary>
 /// Issued when the domain is enabled and the request URL matches the
 /// specified filter. The request is paused until the client responds
@@ -16035,36 +18052,46 @@ public string InternalName { get; } = "Fetch.requestPaused";
 /// <summary>
 /// Each request the page makes will have a unique id.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// The details of the request.
 /// </summary>
-public Network.Request Request { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("request")] public Network.Request Request { get; set; }
+
 /// <summary>
 /// The id of the frame that initiated the request.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// How the requested resource will be used.
 /// </summary>
-public Network.ResourceType ResourceType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("resourceType")] public Network.ResourceType ResourceType { get; set; }
+
 /// <summary>
 /// Response error if intercepted at response stage.
 /// </summary>
-public Network.ErrorReason ResponseErrorReason { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("responseErrorReason")] public Network.ErrorReason? ResponseErrorReason { get; set; }
+
 /// <summary>
 /// Response code if intercepted at response stage.
 /// </summary>
-public int? ResponseStatusCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseStatusCode")] public int? ResponseStatusCode { get; set; }
+
 /// <summary>
 /// Response headers if intercepted at the response stage.
 /// </summary>
-public HeaderEntry[] ResponseHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseHeaders")] public HeaderEntry[] ResponseHeaders { get; set; }
+
 /// <summary>
 /// If the intercepted request had a corresponding Network.requestWillBeSent event fired for it,
 /// then this networkId will be the same as the requestId present in the requestWillBeSent event.
 /// </summary>
-public string NetworkId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("networkId")] public string NetworkId { get; set; }
+}
 /// <summary>
 /// Issued when the domain is enabled with handleAuthRequests set to true.
 /// The request is paused until client responds with continueWithAuth.
@@ -16078,70 +18105,34 @@ public string InternalName { get; } = "Fetch.authRequired";
 /// <summary>
 /// Each request the page makes will have a unique id.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// The details of the request.
 /// </summary>
-public Network.Request Request { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("request")] public Network.Request Request { get; set; }
+
 /// <summary>
 /// The id of the frame that initiated the request.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// How the requested resource will be used.
 /// </summary>
-public Network.ResourceType ResourceType { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("resourceType")] public Network.ResourceType ResourceType { get; set; }
+
 /// <summary>
 /// Details of the Authorization Challenge encountered.
 /// If this is set, client should respond with continueRequest that
 /// contains AuthChallengeResponse.
 /// </summary>
-public AuthChallenge AuthChallenge { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authChallenge")] public AuthChallenge AuthChallenge { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.WebAudio
 {
-/// <summary>
-/// Enum of BaseAudioContext types
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ContextType
-{
-[System.Runtime.Serialization.EnumMember(Value = "realtime")]Realtime,
-[System.Runtime.Serialization.EnumMember(Value = "offline")]Offline}
-/// <summary>
-/// Enum of AudioContextState from the spec
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ContextState
-{
-[System.Runtime.Serialization.EnumMember(Value = "suspended")]Suspended,
-[System.Runtime.Serialization.EnumMember(Value = "running")]Running,
-[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
-/// <summary>
-/// Enum of AudioNode::ChannelCountMode from the spec
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ChannelCountMode
-{
-[System.Runtime.Serialization.EnumMember(Value = "clamped-max")]ClampedMax,
-[System.Runtime.Serialization.EnumMember(Value = "explicit")]Explicit,
-[System.Runtime.Serialization.EnumMember(Value = "max")]Max}
-/// <summary>
-/// Enum of AudioNode::ChannelInterpretation from the spec
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ChannelInterpretation
-{
-[System.Runtime.Serialization.EnumMember(Value = "discrete")]Discrete,
-[System.Runtime.Serialization.EnumMember(Value = "speakers")]Speakers}
-/// <summary>
-/// Enum of AudioParam::AutomationRate from the spec
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum AutomationRate
-{
-[System.Runtime.Serialization.EnumMember(Value = "a-rate")]ARate,
-[System.Runtime.Serialization.EnumMember(Value = "k-rate")]KRate}
 /// <summary>
 /// Fields in AudioContext that change in real-time.
 /// </summary>
@@ -16150,21 +18141,25 @@ internal partial class ContextRealtimeData
 /// <summary>
 /// The current context time in second in BaseAudioContext.
 /// </summary>
-public double? CurrentTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("currentTime")] public double? CurrentTime { get; set; }
+
 /// <summary>
 /// The time spent on rendering graph divided by render qunatum duration,
 /// and multiplied by 100. 100 means the audio renderer reached the full
 /// capacity and glitch may occur.
 /// </summary>
-public double? RenderCapacity { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("renderCapacity")] public double? RenderCapacity { get; set; }
+
 /// <summary>
 /// A running mean of callback interval.
 /// </summary>
-public double? CallbackIntervalMean { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callbackIntervalMean")] public double? CallbackIntervalMean { get; set; }
+
 /// <summary>
 /// A running variance of callback interval.
 /// </summary>
-public double? CallbackIntervalVariance { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("callbackIntervalVariance")] public double? CallbackIntervalVariance { get; set; }
+}
 /// <summary>
 /// Protocol object for BaseAudioContext
 /// </summary>
@@ -16173,33 +18168,40 @@ internal partial class BaseAudioContext
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ContextType ContextType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextType")] public ContextType ContextType { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ContextState ContextState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextState")] public ContextState ContextState { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public ContextRealtimeData RealtimeData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("realtimeData")] public ContextRealtimeData RealtimeData { get; set; }
+
 /// <summary>
 /// Platform-dependent callback buffer size.
 /// </summary>
-public double? CallbackBufferSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callbackBufferSize")] public double? CallbackBufferSize { get; set; }
+
 /// <summary>
 /// Number of output channels supported by audio hardware in use.
 /// </summary>
-public double? MaxOutputChannelCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maxOutputChannelCount")] public double? MaxOutputChannelCount { get; set; }
+
 /// <summary>
 /// Context sample rate.
 /// </summary>
-public double? SampleRate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sampleRate")] public double? SampleRate { get; set; }
+}
 /// <summary>
 /// Protocol object for AudioListner
 /// </summary>
@@ -16208,11 +18210,13 @@ internal partial class AudioListener
 /// <summary>
 /// 
 /// </summary>
-public string ListenerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("listenerId")] public string ListenerId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+}
 /// <summary>
 /// Protocol object for AudioNode
 /// </summary>
@@ -16221,37 +18225,45 @@ internal partial class AudioNode
 /// <summary>
 /// 
 /// </summary>
-public string NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string NodeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeType")] public string NodeType { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? NumberOfInputs { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("numberOfInputs")] public double? NumberOfInputs { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? NumberOfOutputs { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("numberOfOutputs")] public double? NumberOfOutputs { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? ChannelCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("channelCount")] public double? ChannelCount { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelCountMode ChannelCountMode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("channelCountMode")] public ChannelCountMode ChannelCountMode { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelInterpretation ChannelInterpretation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("channelInterpretation")] public ChannelInterpretation ChannelInterpretation { get; set; }
+}
 /// <summary>
 /// Protocol object for AudioParam
 /// </summary>
@@ -16260,36 +18272,44 @@ internal partial class AudioParam
 /// <summary>
 /// 
 /// </summary>
-public string ParamId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paramId")] public string ParamId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ParamType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paramType")] public string ParamType { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AutomationRate Rate { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rate")] public AutomationRate Rate { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? DefaultValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("defaultValue")] public double? DefaultValue { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? MinValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("minValue")] public double? MinValue { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? MaxValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxValue")] public double? MaxValue { get; set; }
+}
 /// <summary>
 /// Enables the WebAudio domain and starts sending context lifetime events.
 /// </summary>
@@ -16337,7 +18357,8 @@ public string Command { get; } = "WebAudio.getRealtimeData";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAudioGetRealtimeDataRequest"/>
 /// </summary>
@@ -16346,7 +18367,8 @@ internal partial class WebAudioGetRealtimeDataResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public ContextRealtimeData RealtimeData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("realtimeData")] public ContextRealtimeData RealtimeData { get; set; }
+}
 /// <summary>
 /// Notifies that a new BaseAudioContext has been created.
 /// </summary>
@@ -16359,7 +18381,8 @@ public string InternalName { get; } = "WebAudio.contextCreated";
 /// <summary>
 /// 
 /// </summary>
-public BaseAudioContext Context { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("context")] public BaseAudioContext Context { get; set; }
+}
 /// <summary>
 /// Notifies that an existing BaseAudioContext will be destroyed.
 /// </summary>
@@ -16372,7 +18395,8 @@ public string InternalName { get; } = "WebAudio.contextWillBeDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+}
 /// <summary>
 /// Notifies that existing BaseAudioContext has changed some properties (id stays the same)..
 /// </summary>
@@ -16385,7 +18409,8 @@ public string InternalName { get; } = "WebAudio.contextChanged";
 /// <summary>
 /// 
 /// </summary>
-public BaseAudioContext Context { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("context")] public BaseAudioContext Context { get; set; }
+}
 /// <summary>
 /// Notifies that the construction of an AudioListener has finished.
 /// </summary>
@@ -16398,7 +18423,8 @@ public string InternalName { get; } = "WebAudio.audioListenerCreated";
 /// <summary>
 /// 
 /// </summary>
-public AudioListener Listener { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("listener")] public AudioListener Listener { get; set; }
+}
 /// <summary>
 /// Notifies that a new AudioListener has been created.
 /// </summary>
@@ -16411,11 +18437,13 @@ public string InternalName { get; } = "WebAudio.audioListenerWillBeDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ListenerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("listenerId")] public string ListenerId { get; set; }
+}
 /// <summary>
 /// Notifies that a new AudioNode has been created.
 /// </summary>
@@ -16428,7 +18456,8 @@ public string InternalName { get; } = "WebAudio.audioNodeCreated";
 /// <summary>
 /// 
 /// </summary>
-public AudioNode Node { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("node")] public AudioNode Node { get; set; }
+}
 /// <summary>
 /// Notifies that an existing AudioNode has been destroyed.
 /// </summary>
@@ -16441,11 +18470,13 @@ public string InternalName { get; } = "WebAudio.audioNodeWillBeDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
+}
 /// <summary>
 /// Notifies that a new AudioParam has been created.
 /// </summary>
@@ -16458,7 +18489,8 @@ public string InternalName { get; } = "WebAudio.audioParamCreated";
 /// <summary>
 /// 
 /// </summary>
-public AudioParam Param { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("param")] public AudioParam Param { get; set; }
+}
 /// <summary>
 /// Notifies that an existing AudioParam has been destroyed.
 /// </summary>
@@ -16471,15 +18503,18 @@ public string InternalName { get; } = "WebAudio.audioParamWillBeDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string ParamId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("paramId")] public string ParamId { get; set; }
+}
 /// <summary>
 /// Notifies that two AudioNodes are connected.
 /// </summary>
@@ -16492,23 +18527,28 @@ public string InternalName { get; } = "WebAudio.nodesConnected";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SourceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string DestinationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? SourceOutputIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? DestinationInputIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("destinationInputIndex")] public double? DestinationInputIndex { get; set; }
+}
 /// <summary>
 /// Notifies that AudioNodes are disconnected. The destination can be null, and it means all the outgoing connections from the source are disconnected.
 /// </summary>
@@ -16521,23 +18561,28 @@ public string InternalName { get; } = "WebAudio.nodesDisconnected";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SourceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string DestinationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? SourceOutputIndex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? DestinationInputIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("destinationInputIndex")] public double? DestinationInputIndex { get; set; }
+}
 /// <summary>
 /// Notifies that an AudioNode is connected to an AudioParam.
 /// </summary>
@@ -16550,19 +18595,23 @@ public string InternalName { get; } = "WebAudio.nodeParamConnected";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SourceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string DestinationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? SourceOutputIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
+}
 /// <summary>
 /// Notifies that an AudioNode is disconnected to an AudioParam.
 /// </summary>
@@ -16575,41 +18624,26 @@ public string InternalName { get; } = "WebAudio.nodeParamDisconnected";
 /// <summary>
 /// 
 /// </summary>
-public string ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SourceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string DestinationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? SourceOutputIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
 {
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum AuthenticatorProtocol
-{
-[System.Runtime.Serialization.EnumMember(Value = "u2f")]U2F,
-[System.Runtime.Serialization.EnumMember(Value = "ctap2")]Ctap2}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum AuthenticatorTransport
-{
-[System.Runtime.Serialization.EnumMember(Value = "usb")]Usb,
-[System.Runtime.Serialization.EnumMember(Value = "nfc")]Nfc,
-[System.Runtime.Serialization.EnumMember(Value = "ble")]Ble,
-[System.Runtime.Serialization.EnumMember(Value = "cable")]Cable,
-[System.Runtime.Serialization.EnumMember(Value = "internal")]Internal}
 /// <summary>
 /// 
 /// </summary>
@@ -16619,30 +18653,36 @@ internal partial class VirtualAuthenticatorOptions
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AuthenticatorProtocol Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public AuthenticatorProtocol Protocol { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AuthenticatorTransport Transport { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("transport")] public AuthenticatorTransport Transport { get; set; }
+
 /// <summary>
 /// Defaults to false.
 /// </summary>
-public bool? HasResidentKey { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasResidentKey")] public bool? HasResidentKey { get; set; }
+
 /// <summary>
 /// Defaults to false.
 /// </summary>
-public bool? HasUserVerification { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasUserVerification")] public bool? HasUserVerification { get; set; }
+
 /// <summary>
 /// If set to true, tests of user presence will succeed immediately.
 /// Otherwise, they will not be resolved. Defaults to true.
 /// </summary>
-public bool? AutomaticPresenceSimulation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("automaticPresenceSimulation")] public bool? AutomaticPresenceSimulation { get; set; }
+
 /// <summary>
 /// Sets whether User Verification succeeds or fails for an authenticator.
 /// Defaults to false.
 /// </summary>
-public bool? IsUserVerified { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isUserVerified")] public bool? IsUserVerified { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -16651,31 +18691,37 @@ internal partial class Credential
 /// <summary>
 /// 
 /// </summary>
-public byte[] CredentialId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("credentialId")] public byte[] CredentialId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? IsResidentCredential { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isResidentCredential")] public bool? IsResidentCredential { get; set; }
+
 /// <summary>
 /// Relying Party ID the credential is scoped to. Must be set when adding a
 /// credential.
 /// </summary>
-public string RpId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("rpId")] public string RpId { get; set; }
+
 /// <summary>
 /// The ECDSA P-256 private key in PKCS#8 format.
 /// </summary>
-public byte[] PrivateKey { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("privateKey")] public byte[] PrivateKey { get; set; }
+
 /// <summary>
 /// An opaque byte sequence with a maximum size of 64 bytes mapping the
 /// credential to a specific user.
 /// </summary>
-public byte[] UserHandle { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userHandle")] public byte[] UserHandle { get; set; }
+
 /// <summary>
 /// Signature counter. This is incremented by one for each successful
 /// assertion.
 /// See https://w3c.github.io/webauthn/#signature-counter
 /// </summary>
-public int? SignCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("signCount")] public int? SignCount { get; set; }
+}
 /// <summary>
 /// Enable the WebAuthn domain and start intercepting credential storage and
 /// retrieval with a virtual authenticator.
@@ -16724,7 +18770,8 @@ public string Command { get; } = "WebAuthn.addVirtualAuthenticator";
 /// <summary>
 /// 
 /// </summary>
-public VirtualAuthenticatorOptions Options { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("options")] public VirtualAuthenticatorOptions Options { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnAddVirtualAuthenticatorRequest"/>
 /// </summary>
@@ -16733,7 +18780,8 @@ internal partial class WebAuthnAddVirtualAuthenticatorResponse: IChromiumRespons
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+}
 /// <summary>
 /// Removes the given authenticator.
 /// </summary>
@@ -16747,7 +18795,8 @@ public string Command { get; } = "WebAuthn.removeVirtualAuthenticator";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnRemoveVirtualAuthenticatorRequest"/>
 /// </summary>
@@ -16767,11 +18816,13 @@ public string Command { get; } = "WebAuthn.addCredential";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Credential Credential { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("credential")] public Credential Credential { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnAddCredentialRequest"/>
 /// </summary>
@@ -16792,11 +18843,13 @@ public string Command { get; } = "WebAuthn.getCredential";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public byte[] CredentialId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("credentialId")] public byte[] CredentialId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnGetCredentialRequest"/>
 /// </summary>
@@ -16805,7 +18858,8 @@ internal partial class WebAuthnGetCredentialResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public Credential Credential { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("credential")] public Credential Credential { get; set; }
+}
 /// <summary>
 /// Returns all the credentials stored in the given virtual authenticator.
 /// </summary>
@@ -16819,7 +18873,8 @@ public string Command { get; } = "WebAuthn.getCredentials";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnGetCredentialsRequest"/>
 /// </summary>
@@ -16828,7 +18883,8 @@ internal partial class WebAuthnGetCredentialsResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public Credential[] Credentials { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("credentials")] public Credential[] Credentials { get; set; }
+}
 /// <summary>
 /// Removes a credential from the authenticator.
 /// </summary>
@@ -16842,11 +18898,13 @@ public string Command { get; } = "WebAuthn.removeCredential";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public byte[] CredentialId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("credentialId")] public byte[] CredentialId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnRemoveCredentialRequest"/>
 /// </summary>
@@ -16866,7 +18924,8 @@ public string Command { get; } = "WebAuthn.clearCredentials";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnClearCredentialsRequest"/>
 /// </summary>
@@ -16887,11 +18946,13 @@ public string Command { get; } = "WebAuthn.setUserVerified";
 /// <summary>
 /// 
 /// </summary>
-public string AuthenticatorId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? IsUserVerified { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isUserVerified")] public bool? IsUserVerified { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WebAuthnSetUserVerifiedRequest"/>
 /// </summary>
@@ -16909,20 +18970,13 @@ internal partial class PlayerProperty
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// Break out events into different types
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PlayerEventType
-{
-[System.Runtime.Serialization.EnumMember(Value = "playbackEvent")]PlaybackEvent,
-[System.Runtime.Serialization.EnumMember(Value = "systemEvent")]SystemEvent,
-[System.Runtime.Serialization.EnumMember(Value = "messageEvent")]MessageEvent}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -16932,20 +18986,24 @@ internal partial class PlayerEvent
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PlayerEventType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public PlayerEventType Type { get; set; }
+
 /// <summary>
 /// Events are timestamped relative to the start of the player creation
 /// not relative to the start of playback.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Enables the Media domain
 /// </summary>
@@ -16993,11 +19051,13 @@ public string InternalName { get; } = "Media.playerPropertiesChanged";
 /// <summary>
 /// 
 /// </summary>
-public string PlayerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("playerId")] public string PlayerId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public PlayerProperty[] Properties { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public PlayerProperty[] Properties { get; set; }
+}
 /// <summary>
 /// Send events as a list, allowing them to be batched on the browser for less
 /// congestion. If batched, events must ALWAYS be in chronological order.
@@ -17011,11 +19071,13 @@ public string InternalName { get; } = "Media.playerEventsAdded";
 /// <summary>
 /// 
 /// </summary>
-public string PlayerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("playerId")] public string PlayerId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public PlayerEvent[] Events { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("events")] public PlayerEvent[] Events { get; set; }
+}
 /// <summary>
 /// Called whenever a player is created, or when a new agent joins and recieves
 /// a list of active players. If an agent is restored, it will recieve the full
@@ -17030,7 +19092,8 @@ public string InternalName { get; } = "Media.playersCreated";
 /// <summary>
 /// 
 /// </summary>
-public string[] Players { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("players")] public string[] Players { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Console
 {
@@ -17042,27 +19105,33 @@ internal partial class ConsoleMessage
 /// <summary>
 /// Message source.
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// Message severity.
 /// </summary>
-public string Level { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("level")] public string Level { get; set; }
+
 /// <summary>
 /// Message text.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// URL of the message origin.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Line number in the resource that generated this message (1-based).
 /// </summary>
-public int? Line { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("line")] public int? Line { get; set; }
+
 /// <summary>
 /// Column number in the resource that generated this message (1-based).
 /// </summary>
-public int? Column { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("column")] public int? Column { get; set; }
+}
 /// <summary>
 /// Does nothing.
 /// </summary>
@@ -17127,7 +19196,8 @@ public string InternalName { get; } = "Console.messageAdded";
 /// <summary>
 /// Console message that has been added.
 /// </summary>
-public ConsoleMessage Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public ConsoleMessage Message { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Debugger
 {
@@ -17139,15 +19209,18 @@ internal partial class Location
 /// <summary>
 /// Script identifier as reported in the `Debugger.scriptParsed`.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int? ColumnNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+}
 /// <summary>
 /// Location in the source code.
 /// </summary>
@@ -17156,11 +19229,13 @@ internal partial class ScriptPosition
 /// <summary>
 /// 
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? ColumnNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+}
 /// <summary>
 /// JavaScript call frame. Array of call frames form the call stack.
 /// </summary>
@@ -17169,35 +19244,43 @@ internal partial class CallFrame
 /// <summary>
 /// Call frame identifier. This identifier is only valid while the virtual machine is paused.
 /// </summary>
-public string CallFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrameId")] public string CallFrameId { get; set; }
+
 /// <summary>
 /// Name of the JavaScript function called on this call frame.
 /// </summary>
-public string FunctionName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionName")] public string FunctionName { get; set; }
+
 /// <summary>
 /// Location in the source code.
 /// </summary>
-public Location FunctionLocation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionLocation")] public Location FunctionLocation { get; set; }
+
 /// <summary>
 /// Location in the source code.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// JavaScript script name or url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Scope chain for this call frame.
 /// </summary>
-public Scope[] ScopeChain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scopeChain")] public Scope[] ScopeChain { get; set; }
+
 /// <summary>
 /// `this` object for this call frame.
 /// </summary>
-public Runtime.RemoteObject This { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("this")] public Runtime.RemoteObject This { get; set; }
+
 /// <summary>
 /// The value being returned, if the function is at return point.
 /// </summary>
-public Runtime.RemoteObject ReturnValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("returnValue")] public Runtime.RemoteObject ReturnValue { get; set; }
+}
 /// <summary>
 /// Scope description.
 /// </summary>
@@ -17206,25 +19289,30 @@ internal partial class Scope
 /// <summary>
 /// Scope type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Object representing the scope. For `global` and `with` scopes it represents the actual
 /// object; for the rest of the scopes, it is artificial transient object enumerating scope
 /// variables as its properties.
 /// </summary>
-public Runtime.RemoteObject Object { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Location in the source code where scope starts
 /// </summary>
-public Location StartLocation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLocation")] public Location StartLocation { get; set; }
+
 /// <summary>
 /// Location in the source code where scope ends
 /// </summary>
-public Location EndLocation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("endLocation")] public Location EndLocation { get; set; }
+}
 /// <summary>
 /// Search match for resource.
 /// </summary>
@@ -17233,11 +19321,13 @@ internal partial class SearchMatch
 /// <summary>
 /// Line number in resource content.
 /// </summary>
-public double? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public double? LineNumber { get; set; }
+
 /// <summary>
 /// Line with match content.
 /// </summary>
-public string LineContent { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("lineContent")] public string LineContent { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -17246,19 +19336,23 @@ internal partial class BreakLocation
 /// <summary>
 /// Script identifier as reported in the `Debugger.scriptParsed`.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int? ColumnNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+}
 /// <summary>
 /// Continues execution until specific location is reached.
 /// </summary>
@@ -17272,11 +19366,13 @@ public string Command { get; } = "Debugger.continueToLocation";
 /// <summary>
 /// Location to continue to.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string TargetCallFrames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetCallFrames")] public string TargetCallFrames { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerContinueToLocationRequest"/>
 /// </summary>
@@ -17315,7 +19411,8 @@ public string Command { get; } = "Debugger.enable";
 /// The maximum size in bytes of collected scripts (not referenced by other heap objects)
 /// the debugger can hold. Puts no limit if paramter is omitted.
 /// </summary>
-public double? MaxScriptsCacheSize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxScriptsCacheSize")] public double? MaxScriptsCacheSize { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerEnableRequest"/>
 /// </summary>
@@ -17324,7 +19421,8 @@ internal partial class DebuggerEnableResponse: IChromiumResponse
 /// <summary>
 /// Unique identifier of the debugger.
 /// </summary>
-public string DebuggerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("debuggerId")] public string DebuggerId { get; set; }
+}
 /// <summary>
 /// Evaluates expression on a given call frame.
 /// </summary>
@@ -17338,42 +19436,51 @@ public string Command { get; } = "Debugger.evaluateOnCallFrame";
 /// <summary>
 /// Call frame identifier to evaluate on.
 /// </summary>
-public string CallFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrameId")] public string CallFrameId { get; set; }
+
 /// <summary>
 /// Expression to evaluate.
 /// </summary>
-public string Expression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expression")] public string Expression { get; set; }
+
 /// <summary>
 /// String object group name to put result into (allows rapid releasing resulting object handles
 /// using `releaseObjectGroup`).
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// Specifies whether command line API should be available to the evaluated expression, defaults
 /// to false.
 /// </summary>
-public bool? IncludeCommandLineAPI { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeCommandLineAPI")] public bool? IncludeCommandLineAPI { get; set; }
+
 /// <summary>
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool? Silent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("silent")] public bool? Silent { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether to throw an exception if side effect cannot be ruled out during evaluation.
 /// </summary>
-public bool? ThrowOnSideEffect { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("throwOnSideEffect")] public bool? ThrowOnSideEffect { get; set; }
+
 /// <summary>
 /// Terminate execution after timing out (number of milliseconds).
 /// </summary>
-public double? Timeout { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timeout")] public double? Timeout { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
 /// </summary>
@@ -17382,11 +19489,13 @@ internal partial class DebuggerEvaluateOnCallFrameResponse: IChromiumResponse
 /// <summary>
 /// Object wrapper for the evaluation result.
 /// </summary>
-public Runtime.RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+
 /// <summary>
 /// Exception details.
 /// </summary>
-public Runtime.ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public Runtime.ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Returns possible locations for breakpoint. scriptId in start and end range locations should be
 /// the same.
@@ -17401,16 +19510,19 @@ public string Command { get; } = "Debugger.getPossibleBreakpoints";
 /// <summary>
 /// Start of range to search possible breakpoint locations in.
 /// </summary>
-public Location Start { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("start")] public Location Start { get; set; }
+
 /// <summary>
 /// End of range to search possible breakpoint locations in (excluding). When not specified, end
 /// of scripts is used as end of range.
 /// </summary>
-public Location End { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("end")] public Location End { get; set; }
+
 /// <summary>
 /// Only consider locations which are in the same (non-nested) function as start.
 /// </summary>
-public bool? RestrictToFunction { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("restrictToFunction")] public bool? RestrictToFunction { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerGetPossibleBreakpointsRequest"/>
 /// </summary>
@@ -17419,7 +19531,8 @@ internal partial class DebuggerGetPossibleBreakpointsResponse: IChromiumResponse
 /// <summary>
 /// List of the possible breakpoint locations.
 /// </summary>
-public BreakLocation[] Locations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("locations")] public BreakLocation[] Locations { get; set; }
+}
 /// <summary>
 /// Returns source for the script with given id.
 /// </summary>
@@ -17433,7 +19546,8 @@ public string Command { get; } = "Debugger.getScriptSource";
 /// <summary>
 /// Id of the script to get source for.
 /// </summary>
-public string ScriptId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerGetScriptSourceRequest"/>
 /// </summary>
@@ -17442,11 +19556,13 @@ internal partial class DebuggerGetScriptSourceResponse: IChromiumResponse
 /// <summary>
 /// Script source (empty in case of Wasm bytecode).
 /// </summary>
-public string ScriptSource { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptSource")] public string ScriptSource { get; set; }
+
 /// <summary>
 /// Wasm bytecode.
 /// </summary>
-public byte[] Bytecode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bytecode")] public byte[] Bytecode { get; set; }
+}
 /// <summary>
 /// This command is deprecated. Use getScriptSource instead.
 /// </summary>
@@ -17460,7 +19576,8 @@ public string Command { get; } = "Debugger.getWasmBytecode";
 /// <summary>
 /// Id of the Wasm script to get source for.
 /// </summary>
-public string ScriptId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerGetWasmBytecodeRequest"/>
 /// </summary>
@@ -17469,7 +19586,8 @@ internal partial class DebuggerGetWasmBytecodeResponse: IChromiumResponse
 /// <summary>
 /// Script source.
 /// </summary>
-public byte[] Bytecode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bytecode")] public byte[] Bytecode { get; set; }
+}
 /// <summary>
 /// Returns stack trace with given `stackTraceId`.
 /// </summary>
@@ -17483,7 +19601,8 @@ public string Command { get; } = "Debugger.getStackTrace";
 /// <summary>
 /// 
 /// </summary>
-public Runtime.StackTraceId StackTraceId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stackTraceId")] public Runtime.StackTraceId StackTraceId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerGetStackTraceRequest"/>
 /// </summary>
@@ -17492,7 +19611,8 @@ internal partial class DebuggerGetStackTraceResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public Runtime.StackTrace StackTrace { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public Runtime.StackTrace StackTrace { get; set; }
+}
 /// <summary>
 /// Stops on the next JavaScript statement.
 /// </summary>
@@ -17523,7 +19643,8 @@ public string Command { get; } = "Debugger.pauseOnAsyncCall";
 /// <summary>
 /// Debugger will pause when async call with given stack trace is started.
 /// </summary>
-public Runtime.StackTraceId ParentStackTraceId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("parentStackTraceId")] public Runtime.StackTraceId ParentStackTraceId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerPauseOnAsyncCallRequest"/>
 /// </summary>
@@ -17543,7 +19664,8 @@ public string Command { get; } = "Debugger.removeBreakpoint";
 /// <summary>
 /// 
 /// </summary>
-public string BreakpointId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerRemoveBreakpointRequest"/>
 /// </summary>
@@ -17563,7 +19685,8 @@ public string Command { get; } = "Debugger.restartFrame";
 /// <summary>
 /// Call frame identifier to evaluate on.
 /// </summary>
-public string CallFrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("callFrameId")] public string CallFrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerRestartFrameRequest"/>
 /// </summary>
@@ -17572,15 +19695,18 @@ internal partial class DebuggerRestartFrameResponse: IChromiumResponse
 /// <summary>
 /// New stack trace.
 /// </summary>
-public CallFrame[] CallFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrames")] public CallFrame[] CallFrames { get; set; }
+
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
-public Runtime.StackTrace AsyncStackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTrace")] public Runtime.StackTrace AsyncStackTrace { get; set; }
+
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
-public Runtime.StackTraceId AsyncStackTraceId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTraceId")] public Runtime.StackTraceId AsyncStackTraceId { get; set; }
+}
 /// <summary>
 /// Resumes JavaScript execution.
 /// </summary>
@@ -17611,19 +19737,23 @@ public string Command { get; } = "Debugger.searchInContent";
 /// <summary>
 /// Id of the script to search in.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// String to search for.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool? IsRegex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSearchInContentRequest"/>
 /// </summary>
@@ -17632,7 +19762,8 @@ internal partial class DebuggerSearchInContentResponse: IChromiumResponse
 /// <summary>
 /// List of search matches.
 /// </summary>
-public SearchMatch[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public SearchMatch[] Result { get; set; }
+}
 /// <summary>
 /// Enables or disables async call stacks tracking.
 /// </summary>
@@ -17647,7 +19778,8 @@ public string Command { get; } = "Debugger.setAsyncCallStackDepth";
 /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
 /// call stacks (default).
 /// </summary>
-public int? MaxDepth { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxDepth")] public int? MaxDepth { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetAsyncCallStackDepthRequest"/>
 /// </summary>
@@ -17669,7 +19801,8 @@ public string Command { get; } = "Debugger.setBlackboxPatterns";
 /// <summary>
 /// Array of regexps that will be used to check script url for blackbox state.
 /// </summary>
-public string[] Patterns { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("patterns")] public string[] Patterns { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBlackboxPatternsRequest"/>
 /// </summary>
@@ -17692,11 +19825,13 @@ public string Command { get; } = "Debugger.setBlackboxedRanges";
 /// <summary>
 /// Id of the script.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public ScriptPosition[] Positions { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("positions")] public ScriptPosition[] Positions { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBlackboxedRangesRequest"/>
 /// </summary>
@@ -17716,12 +19851,14 @@ public string Command { get; } = "Debugger.setBreakpoint";
 /// <summary>
 /// Location to set breakpoint in.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// Expression to use as a breakpoint condition. When specified, debugger will only stop on the
 /// breakpoint if this expression evaluates to true.
 /// </summary>
-public string Condition { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("condition")] public string Condition { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointRequest"/>
 /// </summary>
@@ -17730,11 +19867,13 @@ internal partial class DebuggerSetBreakpointResponse: IChromiumResponse
 /// <summary>
 /// Id of the created breakpoint for further reference.
 /// </summary>
-public string BreakpointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+
 /// <summary>
 /// Location this breakpoint resolved into.
 /// </summary>
-public Location ActualLocation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("actualLocation")] public Location ActualLocation { get; set; }
+}
 /// <summary>
 /// Sets instrumentation breakpoint.
 /// </summary>
@@ -17748,7 +19887,8 @@ public string Command { get; } = "Debugger.setInstrumentationBreakpoint";
 /// <summary>
 /// Instrumentation name.
 /// </summary>
-public string Instrumentation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("instrumentation")] public string Instrumentation { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetInstrumentationBreakpointRequest"/>
 /// </summary>
@@ -17757,7 +19897,8 @@ internal partial class DebuggerSetInstrumentationBreakpointResponse: IChromiumRe
 /// <summary>
 /// Id of the created breakpoint for further reference.
 /// </summary>
-public string BreakpointId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+}
 /// <summary>
 /// Sets JavaScript breakpoint at given location specified either by URL or URL regex. Once this
 /// command is issued, all existing parsed scripts will have breakpoints resolved and returned in
@@ -17774,29 +19915,35 @@ public string Command { get; } = "Debugger.setBreakpointByUrl";
 /// <summary>
 /// Line number to set breakpoint at.
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// URL of the resources to set breakpoint on.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Regex pattern for the URLs of the resources to set breakpoints on. Either `url` or
 /// `urlRegex` must be specified.
 /// </summary>
-public string UrlRegex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("urlRegex")] public string UrlRegex { get; set; }
+
 /// <summary>
 /// Script hash of the resources to set breakpoint on.
 /// </summary>
-public string ScriptHash { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptHash")] public string ScriptHash { get; set; }
+
 /// <summary>
 /// Offset in the line to set breakpoint at.
 /// </summary>
-public int? ColumnNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+
 /// <summary>
 /// Expression to use as a breakpoint condition. When specified, debugger will only stop on the
 /// breakpoint if this expression evaluates to true.
 /// </summary>
-public string Condition { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("condition")] public string Condition { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointByUrlRequest"/>
 /// </summary>
@@ -17805,11 +19952,13 @@ internal partial class DebuggerSetBreakpointByUrlResponse: IChromiumResponse
 /// <summary>
 /// Id of the created breakpoint for further reference.
 /// </summary>
-public string BreakpointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+
 /// <summary>
 /// List of the locations this breakpoint resolved into upon addition.
 /// </summary>
-public Location[] Locations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("locations")] public Location[] Locations { get; set; }
+}
 /// <summary>
 /// Sets JavaScript breakpoint before each call to the given function.
 /// If another function was created from the same source as a given one,
@@ -17825,12 +19974,14 @@ public string Command { get; } = "Debugger.setBreakpointOnFunctionCall";
 /// <summary>
 /// Function object id.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Expression to use as a breakpoint condition. When specified, debugger will
 /// stop on the breakpoint if this expression evaluates to true.
 /// </summary>
-public string Condition { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("condition")] public string Condition { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointOnFunctionCallRequest"/>
 /// </summary>
@@ -17839,7 +19990,8 @@ internal partial class DebuggerSetBreakpointOnFunctionCallResponse: IChromiumRes
 /// <summary>
 /// Id of the created breakpoint for further reference.
 /// </summary>
-public string BreakpointId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+}
 /// <summary>
 /// Activates / deactivates all breakpoints on the page.
 /// </summary>
@@ -17853,7 +20005,8 @@ public string Command { get; } = "Debugger.setBreakpointsActive";
 /// <summary>
 /// New value for breakpoints active state.
 /// </summary>
-public bool? Active { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("active")] public bool? Active { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
 /// </summary>
@@ -17874,7 +20027,8 @@ public string Command { get; } = "Debugger.setPauseOnExceptions";
 /// <summary>
 /// Pause on exceptions mode.
 /// </summary>
-public string State { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("state")] public string State { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetPauseOnExceptionsRequest"/>
 /// </summary>
@@ -17894,7 +20048,8 @@ public string Command { get; } = "Debugger.setReturnValue";
 /// <summary>
 /// New return value.
 /// </summary>
-public Runtime.CallArgument NewValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("newValue")] public Runtime.CallArgument NewValue { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetReturnValueRequest"/>
 /// </summary>
@@ -17914,16 +20069,19 @@ public string Command { get; } = "Debugger.setScriptSource";
 /// <summary>
 /// Id of the script to edit.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// New content of the script.
 /// </summary>
-public string ScriptSource { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptSource")] public string ScriptSource { get; set; }
+
 /// <summary>
 /// If true the change will not actually be applied. Dry run may be used to get result
 /// description without actually modifying the code.
 /// </summary>
-public bool? DryRun { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("dryRun")] public bool? DryRun { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetScriptSourceRequest"/>
 /// </summary>
@@ -17932,23 +20090,28 @@ internal partial class DebuggerSetScriptSourceResponse: IChromiumResponse
 /// <summary>
 /// New stack trace in case editing has happened while VM was stopped.
 /// </summary>
-public CallFrame[] CallFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrames")] public CallFrame[] CallFrames { get; set; }
+
 /// <summary>
 /// Whether current call stack  was modified after applying the changes.
 /// </summary>
-public bool? StackChanged { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackChanged")] public bool? StackChanged { get; set; }
+
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
-public Runtime.StackTrace AsyncStackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTrace")] public Runtime.StackTrace AsyncStackTrace { get; set; }
+
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
-public Runtime.StackTraceId AsyncStackTraceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTraceId")] public Runtime.StackTraceId AsyncStackTraceId { get; set; }
+
 /// <summary>
 /// Exception details if any.
 /// </summary>
-public Runtime.ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public Runtime.ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
 /// </summary>
@@ -17962,7 +20125,8 @@ public string Command { get; } = "Debugger.setSkipAllPauses";
 /// <summary>
 /// New value for skip pauses state.
 /// </summary>
-public bool? Skip { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("skip")] public bool? Skip { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetSkipAllPausesRequest"/>
 /// </summary>
@@ -17984,19 +20148,23 @@ public string Command { get; } = "Debugger.setVariableValue";
 /// 0-based number of scope as was listed in scope chain. Only 'local', 'closure' and 'catch'
 /// scope types are allowed. Other scopes could be manipulated manually.
 /// </summary>
-public int? ScopeNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scopeNumber")] public int? ScopeNumber { get; set; }
+
 /// <summary>
 /// Variable name.
 /// </summary>
-public string VariableName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("variableName")] public string VariableName { get; set; }
+
 /// <summary>
 /// New variable value.
 /// </summary>
-public Runtime.CallArgument NewValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("newValue")] public Runtime.CallArgument NewValue { get; set; }
+
 /// <summary>
 /// Id of callframe that holds variable.
 /// </summary>
-public string CallFrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("callFrameId")] public string CallFrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetVariableValueRequest"/>
 /// </summary>
@@ -18017,7 +20185,8 @@ public string Command { get; } = "Debugger.stepInto";
 /// Debugger will pause on the execution of the first async task which was scheduled
 /// before next pause.
 /// </summary>
-public bool? BreakOnAsyncCall { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakOnAsyncCall")] public bool? BreakOnAsyncCall { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerStepIntoRequest"/>
 /// </summary>
@@ -18070,11 +20239,13 @@ public string InternalName { get; } = "Debugger.breakpointResolved";
 /// <summary>
 /// Breakpoint unique identifier.
 /// </summary>
-public string BreakpointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+
 /// <summary>
 /// Actual breakpoint location.
 /// </summary>
-public Location Location { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+}
 /// <summary>
 /// Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
 /// </summary>
@@ -18087,31 +20258,38 @@ public string InternalName { get; } = "Debugger.paused";
 /// <summary>
 /// Call stack the virtual machine stopped on.
 /// </summary>
-public CallFrame[] CallFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrames")] public CallFrame[] CallFrames { get; set; }
+
 /// <summary>
 /// Pause reason.
 /// </summary>
-public string Reason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public string Reason { get; set; }
+
 /// <summary>
 /// Object containing break-specific auxiliary properties.
 /// </summary>
-public object Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public object Data { get; set; }
+
 /// <summary>
 /// Hit breakpoints IDs
 /// </summary>
-public string[] HitBreakpoints { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hitBreakpoints")] public string[] HitBreakpoints { get; set; }
+
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
-public Runtime.StackTrace AsyncStackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTrace")] public Runtime.StackTrace AsyncStackTrace { get; set; }
+
 /// <summary>
 /// Async stack trace, if any.
 /// </summary>
-public Runtime.StackTraceId AsyncStackTraceId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTraceId")] public Runtime.StackTraceId AsyncStackTraceId { get; set; }
+
 /// <summary>
 /// Never present, will be removed.
 /// </summary>
-public Runtime.StackTraceId AsyncCallStackTraceId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("asyncCallStackTraceId")] public Runtime.StackTraceId AsyncCallStackTraceId { get; set; }
+}
 /// <summary>
 /// Fired when the virtual machine resumed execution.
 /// </summary>
@@ -18134,59 +20312,73 @@ public string InternalName { get; } = "Debugger.scriptFailedToParse";
 /// <summary>
 /// Identifier of the script parsed.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// URL or name of the script parsed (if any).
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Line offset of the script within the resource with given URL (for script tags).
 /// </summary>
-public int? StartLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public int? StartLine { get; set; }
+
 /// <summary>
 /// Column offset of the script within the resource with given URL.
 /// </summary>
-public int? StartColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public int? StartColumn { get; set; }
+
 /// <summary>
 /// Last line of the script.
 /// </summary>
-public int? EndLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endLine")] public int? EndLine { get; set; }
+
 /// <summary>
 /// Length of the last line of the script.
 /// </summary>
-public int? EndColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endColumn")] public int? EndColumn { get; set; }
+
 /// <summary>
 /// Specifies script creation context.
 /// </summary>
-public int? ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+
 /// <summary>
 /// Content hash of the script.
 /// </summary>
-public string Hash { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hash")] public string Hash { get; set; }
+
 /// <summary>
 /// Embedder-specific auxiliary data.
 /// </summary>
-public object ExecutionContextAuxData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextAuxData")] public object ExecutionContextAuxData { get; set; }
+
 /// <summary>
 /// URL of source map associated with script (if any).
 /// </summary>
-public string SourceMapURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+
 /// <summary>
 /// True, if this script has sourceURL.
 /// </summary>
-public bool? HasSourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasSourceURL")] public bool? HasSourceURL { get; set; }
+
 /// <summary>
 /// True, if this script is ES6 module.
 /// </summary>
-public bool? IsModule { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isModule")] public bool? IsModule { get; set; }
+
 /// <summary>
 /// This script length.
 /// </summary>
-public int? Length { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("length")] public int? Length { get; set; }
+
 /// <summary>
 /// JavaScript top stack frame of where the script parsed event was triggered if available.
 /// </summary>
-public Runtime.StackTrace StackTrace { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public Runtime.StackTrace StackTrace { get; set; }
+}
 /// <summary>
 /// Fired when virtual machine parses script. This event is also fired for all known and uncollected
 /// scripts upon enabling debugger.
@@ -18200,63 +20392,78 @@ public string InternalName { get; } = "Debugger.scriptParsed";
 /// <summary>
 /// Identifier of the script parsed.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// URL or name of the script parsed (if any).
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Line offset of the script within the resource with given URL (for script tags).
 /// </summary>
-public int? StartLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public int? StartLine { get; set; }
+
 /// <summary>
 /// Column offset of the script within the resource with given URL.
 /// </summary>
-public int? StartColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public int? StartColumn { get; set; }
+
 /// <summary>
 /// Last line of the script.
 /// </summary>
-public int? EndLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endLine")] public int? EndLine { get; set; }
+
 /// <summary>
 /// Length of the last line of the script.
 /// </summary>
-public int? EndColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endColumn")] public int? EndColumn { get; set; }
+
 /// <summary>
 /// Specifies script creation context.
 /// </summary>
-public int? ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+
 /// <summary>
 /// Content hash of the script.
 /// </summary>
-public string Hash { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hash")] public string Hash { get; set; }
+
 /// <summary>
 /// Embedder-specific auxiliary data.
 /// </summary>
-public object ExecutionContextAuxData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextAuxData")] public object ExecutionContextAuxData { get; set; }
+
 /// <summary>
 /// True, if this script is generated as a result of the live edit operation.
 /// </summary>
-public bool? IsLiveEdit { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isLiveEdit")] public bool? IsLiveEdit { get; set; }
+
 /// <summary>
 /// URL of source map associated with script (if any).
 /// </summary>
-public string SourceMapURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+
 /// <summary>
 /// True, if this script has sourceURL.
 /// </summary>
-public bool? HasSourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasSourceURL")] public bool? HasSourceURL { get; set; }
+
 /// <summary>
 /// True, if this script is ES6 module.
 /// </summary>
-public bool? IsModule { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isModule")] public bool? IsModule { get; set; }
+
 /// <summary>
 /// This script length.
 /// </summary>
-public int? Length { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("length")] public int? Length { get; set; }
+
 /// <summary>
 /// JavaScript top stack frame of where the script parsed event was triggered if available.
 /// </summary>
-public Runtime.StackTrace StackTrace { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public Runtime.StackTrace StackTrace { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.HeapProfiler
 {
@@ -18268,19 +20475,23 @@ internal partial class SamplingHeapProfileNode
 /// <summary>
 /// Function location.
 /// </summary>
-public Runtime.CallFrame CallFrame { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrame")] public Runtime.CallFrame CallFrame { get; set; }
+
 /// <summary>
 /// Allocations size in bytes for the node excluding children.
 /// </summary>
-public double? SelfSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("selfSize")] public double? SelfSize { get; set; }
+
 /// <summary>
 /// Node id. Ids are unique across all profiles collected between startSampling and stopSampling.
 /// </summary>
-public int? Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+
 /// <summary>
 /// Child nodes.
 /// </summary>
-public SamplingHeapProfileNode[] Children { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("children")] public SamplingHeapProfileNode[] Children { get; set; }
+}
 /// <summary>
 /// A single sample from a sampling profile.
 /// </summary>
@@ -18289,16 +20500,19 @@ internal partial class SamplingHeapProfileSample
 /// <summary>
 /// Allocation size in bytes attributed to the sample.
 /// </summary>
-public double? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+
 /// <summary>
 /// Id of the corresponding profile tree node.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Time-ordered sample ordinal number. It is unique across all profiles retrieved
 /// between startSampling and stopSampling.
 /// </summary>
-public double? Ordinal { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ordinal")] public double? Ordinal { get; set; }
+}
 /// <summary>
 /// Sampling profile.
 /// </summary>
@@ -18307,11 +20521,13 @@ internal partial class SamplingHeapProfile
 /// <summary>
 /// 
 /// </summary>
-public SamplingHeapProfileNode Head { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("head")] public SamplingHeapProfileNode Head { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public SamplingHeapProfileSample[] Samples { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("samples")] public SamplingHeapProfileSample[] Samples { get; set; }
+}
 /// <summary>
 /// Enables console to refer to the node with given id via $x (see Command Line API for more details
 /// $x functions).
@@ -18326,7 +20542,8 @@ public string Command { get; } = "HeapProfiler.addInspectedHeapObject";
 /// <summary>
 /// Heap snapshot object id to be accessible by means of $x command line API.
 /// </summary>
-public string HeapObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("heapObjectId")] public string HeapObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerAddInspectedHeapObjectRequest"/>
 /// </summary>
@@ -18397,7 +20614,8 @@ public string Command { get; } = "HeapProfiler.getHeapObjectId";
 /// <summary>
 /// Identifier of the object to get heap object id for.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerGetHeapObjectIdRequest"/>
 /// </summary>
@@ -18406,7 +20624,8 @@ internal partial class HeapProfilerGetHeapObjectIdResponse: IChromiumResponse
 /// <summary>
 /// Id of the heap snapshot object corresponding to the passed remote object id.
 /// </summary>
-public string HeapSnapshotObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("heapSnapshotObjectId")] public string HeapSnapshotObjectId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18420,11 +20639,13 @@ public string Command { get; } = "HeapProfiler.getObjectByHeapObjectId";
 /// <summary>
 /// 
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerGetObjectByHeapObjectIdRequest"/>
 /// </summary>
@@ -18433,7 +20654,8 @@ internal partial class HeapProfilerGetObjectByHeapObjectIdResponse: IChromiumRes
 /// <summary>
 /// Evaluation result.
 /// </summary>
-public Runtime.RemoteObject Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18453,7 +20675,8 @@ internal partial class HeapProfilerGetSamplingProfileResponse: IChromiumResponse
 /// <summary>
 /// Return the sampling profile being collected.
 /// </summary>
-public SamplingHeapProfile Profile { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingHeapProfile Profile { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18468,7 +20691,8 @@ public string Command { get; } = "HeapProfiler.startSampling";
 /// Average sample interval in bytes. Poisson distribution is used for the intervals. The
 /// default value is 32768 bytes.
 /// </summary>
-public double? SamplingInterval { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("samplingInterval")] public double? SamplingInterval { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerStartSamplingRequest"/>
 /// </summary>
@@ -18488,7 +20712,8 @@ public string Command { get; } = "HeapProfiler.startTrackingHeapObjects";
 /// <summary>
 /// 
 /// </summary>
-public bool? TrackAllocations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("trackAllocations")] public bool? TrackAllocations { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerStartTrackingHeapObjectsRequest"/>
 /// </summary>
@@ -18514,7 +20739,8 @@ internal partial class HeapProfilerStopSamplingResponse: IChromiumResponse
 /// <summary>
 /// Recorded sampling heap profile.
 /// </summary>
-public SamplingHeapProfile Profile { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingHeapProfile Profile { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18529,11 +20755,13 @@ public string Command { get; } = "HeapProfiler.stopTrackingHeapObjects";
 /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken
 /// when the tracking is stopped.
 /// </summary>
-public bool? ReportProgress { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reportProgress")] public bool? ReportProgress { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? TreatGlobalObjectsAsRoots { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("treatGlobalObjectsAsRoots")] public bool? TreatGlobalObjectsAsRoots { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerStopTrackingHeapObjectsRequest"/>
 /// </summary>
@@ -18553,11 +20781,13 @@ public string Command { get; } = "HeapProfiler.takeHeapSnapshot";
 /// <summary>
 /// If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken.
 /// </summary>
-public bool? ReportProgress { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reportProgress")] public bool? ReportProgress { get; set; }
+
 /// <summary>
 /// If true, a raw snapshot without artifical roots will be generated
 /// </summary>
-public bool? TreatGlobalObjectsAsRoots { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("treatGlobalObjectsAsRoots")] public bool? TreatGlobalObjectsAsRoots { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapProfilerTakeHeapSnapshotRequest"/>
 /// </summary>
@@ -18576,7 +20806,8 @@ public string InternalName { get; } = "HeapProfiler.addHeapSnapshotChunk";
 /// <summary>
 /// 
 /// </summary>
-public string Chunk { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("chunk")] public string Chunk { get; set; }
+}
 /// <summary>
 /// If heap objects tracking has been started then backend may send update for one or more fragments
 /// </summary>
@@ -18591,7 +20822,8 @@ public string InternalName { get; } = "HeapProfiler.heapStatsUpdate";
 /// index, the second integer is a total count of objects for the fragment, the third integer is
 /// a total size of the objects for the fragment.
 /// </summary>
-public int?[] StatsUpdate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("statsUpdate")] public int?[] StatsUpdate { get; set; }
+}
 /// <summary>
 /// If heap objects tracking has been started then backend regularly sends a current value for last
 /// seen object id and corresponding timestamp. If the were changes in the heap since last event
@@ -18606,11 +20838,13 @@ public string InternalName { get; } = "HeapProfiler.lastSeenObjectId";
 /// <summary>
 /// 
 /// </summary>
-public int? LastSeenObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lastSeenObjectId")] public int? LastSeenObjectId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18623,15 +20857,18 @@ public string InternalName { get; } = "HeapProfiler.reportHeapSnapshotProgress";
 /// <summary>
 /// 
 /// </summary>
-public int? Done { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("done")] public int? Done { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? Total { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("total")] public int? Total { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? Finished { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("finished")] public bool? Finished { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18653,28 +20890,34 @@ internal partial class ProfileNode
 /// <summary>
 /// Unique id of the node.
 /// </summary>
-public int? Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+
 /// <summary>
 /// Function location.
 /// </summary>
-public Runtime.CallFrame CallFrame { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrame")] public Runtime.CallFrame CallFrame { get; set; }
+
 /// <summary>
 /// Number of samples where this node was on top of the call stack.
 /// </summary>
-public int? HitCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hitCount")] public int? HitCount { get; set; }
+
 /// <summary>
 /// Child node ids.
 /// </summary>
-public int?[] Children { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("children")] public int?[] Children { get; set; }
+
 /// <summary>
 /// The reason of being not optimized. The function may be deoptimized or marked as don't
 /// optimize.
 /// </summary>
-public string DeoptReason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deoptReason")] public string DeoptReason { get; set; }
+
 /// <summary>
 /// An array of source position ticks.
 /// </summary>
-public PositionTickInfo[] PositionTicks { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("positionTicks")] public PositionTickInfo[] PositionTicks { get; set; }
+}
 /// <summary>
 /// Profile.
 /// </summary>
@@ -18683,24 +20926,29 @@ internal partial class Profile
 /// <summary>
 /// The list of profile nodes. First item is the root node.
 /// </summary>
-public ProfileNode[] Nodes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public ProfileNode[] Nodes { get; set; }
+
 /// <summary>
 /// Profiling start timestamp in microseconds.
 /// </summary>
-public double? StartTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startTime")] public double? StartTime { get; set; }
+
 /// <summary>
 /// Profiling end timestamp in microseconds.
 /// </summary>
-public double? EndTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endTime")] public double? EndTime { get; set; }
+
 /// <summary>
 /// Ids of samples top nodes.
 /// </summary>
-public int?[] Samples { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("samples")] public int?[] Samples { get; set; }
+
 /// <summary>
 /// Time intervals between adjacent samples in microseconds. The first delta is relative to the
 /// profile startTime.
 /// </summary>
-public int?[] TimeDeltas { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timeDeltas")] public int?[] TimeDeltas { get; set; }
+}
 /// <summary>
 /// Specifies a number of samples attributed to a certain source position.
 /// </summary>
@@ -18709,11 +20957,13 @@ internal partial class PositionTickInfo
 /// <summary>
 /// Source line number (1-based).
 /// </summary>
-public int? Line { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("line")] public int? Line { get; set; }
+
 /// <summary>
 /// Number of samples attributed to the source line.
 /// </summary>
-public int? Ticks { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ticks")] public int? Ticks { get; set; }
+}
 /// <summary>
 /// Coverage data for a source range.
 /// </summary>
@@ -18722,15 +20972,18 @@ internal partial class CoverageRange
 /// <summary>
 /// JavaScript script source offset for the range start.
 /// </summary>
-public int? StartOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startOffset")] public int? StartOffset { get; set; }
+
 /// <summary>
 /// JavaScript script source offset for the range end.
 /// </summary>
-public int? EndOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endOffset")] public int? EndOffset { get; set; }
+
 /// <summary>
 /// Collected execution count of the source range.
 /// </summary>
-public int? Count { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("count")] public int? Count { get; set; }
+}
 /// <summary>
 /// Coverage data for a JavaScript function.
 /// </summary>
@@ -18739,15 +20992,18 @@ internal partial class FunctionCoverage
 /// <summary>
 /// JavaScript function name.
 /// </summary>
-public string FunctionName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionName")] public string FunctionName { get; set; }
+
 /// <summary>
 /// Source ranges inside the function with coverage data.
 /// </summary>
-public CoverageRange[] Ranges { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ranges")] public CoverageRange[] Ranges { get; set; }
+
 /// <summary>
 /// Whether coverage data for this function has block granularity.
 /// </summary>
-public bool? IsBlockCoverage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isBlockCoverage")] public bool? IsBlockCoverage { get; set; }
+}
 /// <summary>
 /// Coverage data for a JavaScript script.
 /// </summary>
@@ -18756,15 +21012,18 @@ internal partial class ScriptCoverage
 /// <summary>
 /// JavaScript script id.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// JavaScript script name or url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Functions contained in the script that has coverage data.
 /// </summary>
-public FunctionCoverage[] Functions { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("functions")] public FunctionCoverage[] Functions { get; set; }
+}
 /// <summary>
 /// Describes a type collected during runtime.
 /// </summary>
@@ -18773,7 +21032,8 @@ internal partial class TypeObject
 /// <summary>
 /// Name of a type collected with type profiling.
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Source offset and types for a parameter or return value.
 /// </summary>
@@ -18782,11 +21042,13 @@ internal partial class TypeProfileEntry
 /// <summary>
 /// Source offset of the parameter or end of function for return values.
 /// </summary>
-public int? Offset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("offset")] public int? Offset { get; set; }
+
 /// <summary>
 /// The types for this parameter or return value.
 /// </summary>
-public TypeObject[] Types { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("types")] public TypeObject[] Types { get; set; }
+}
 /// <summary>
 /// Type profile data collected during runtime for a JavaScript script.
 /// </summary>
@@ -18795,15 +21057,18 @@ internal partial class ScriptTypeProfile
 /// <summary>
 /// JavaScript script id.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// JavaScript script name or url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Type profile entries for parameters and return values of the functions in the script.
 /// </summary>
-public TypeProfileEntry[] Entries { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public TypeProfileEntry[] Entries { get; set; }
+}
 /// <summary>
 /// Collected counter information.
 /// </summary>
@@ -18812,11 +21077,13 @@ internal partial class CounterInfo
 /// <summary>
 /// Counter name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Counter value.
 /// </summary>
-public int? Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public int? Value { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -18871,7 +21138,8 @@ internal partial class ProfilerGetBestEffortCoverageResponse: IChromiumResponse
 /// <summary>
 /// Coverage data for the current isolate.
 /// </summary>
-public ScriptCoverage[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public ScriptCoverage[] Result { get; set; }
+}
 /// <summary>
 /// Changes CPU profiler sampling interval. Must be called before CPU profiles recording started.
 /// </summary>
@@ -18885,7 +21153,8 @@ public string Command { get; } = "Profiler.setSamplingInterval";
 /// <summary>
 /// New sampling interval in microseconds.
 /// </summary>
-public int? Interval { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("interval")] public int? Interval { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ProfilerSetSamplingIntervalRequest"/>
 /// </summary>
@@ -18924,11 +21193,13 @@ public string Command { get; } = "Profiler.startPreciseCoverage";
 /// <summary>
 /// Collect accurate call counts beyond simple 'covered' or 'not covered'.
 /// </summary>
-public bool? CallCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callCount")] public bool? CallCount { get; set; }
+
 /// <summary>
 /// Collect block-based coverage.
 /// </summary>
-public bool? Detailed { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("detailed")] public bool? Detailed { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ProfilerStartPreciseCoverageRequest"/>
 /// </summary>
@@ -18937,7 +21208,8 @@ internal partial class ProfilerStartPreciseCoverageResponse: IChromiumResponse
 /// <summary>
 /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Enable type profile.
 /// </summary>
@@ -18974,7 +21246,8 @@ internal partial class ProfilerStopResponse: IChromiumResponse
 /// <summary>
 /// Recorded profile.
 /// </summary>
-public Profile Profile { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public Profile Profile { get; set; }
+}
 /// <summary>
 /// Disable precise code coverage. Disabling releases unnecessary execution count records and allows
 /// executing optimized code.
@@ -19030,11 +21303,13 @@ internal partial class ProfilerTakePreciseCoverageResponse: IChromiumResponse
 /// <summary>
 /// Coverage data for the current isolate.
 /// </summary>
-public ScriptCoverage[] Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public ScriptCoverage[] Result { get; set; }
+
 /// <summary>
 /// Monotonically increasing time (in seconds) when the coverage update was taken in the backend.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Collect type profile.
 /// </summary>
@@ -19054,7 +21329,8 @@ internal partial class ProfilerTakeTypeProfileResponse: IChromiumResponse
 /// <summary>
 /// Type profile for all scripts since startTypeProfile() was turned on.
 /// </summary>
-public ScriptTypeProfile[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public ScriptTypeProfile[] Result { get; set; }
+}
 /// <summary>
 /// Enable run time call stats collection.
 /// </summary>
@@ -19108,7 +21384,8 @@ internal partial class ProfilerGetRuntimeCallStatsResponse: IChromiumResponse
 /// <summary>
 /// Collected counter information.
 /// </summary>
-public CounterInfo[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public CounterInfo[] Result { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -19121,19 +21398,23 @@ public string InternalName { get; } = "Profiler.consoleProfileFinished";
 /// <summary>
 /// 
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Location of console.profileEnd().
 /// </summary>
-public Debugger.Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Debugger.Location Location { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Profile Profile { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("profile")] public Profile Profile { get; set; }
+
 /// <summary>
 /// Profile title passed as an argument to console.profile().
 /// </summary>
-public string Title { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+}
 /// <summary>
 /// Sent when new profile recording is started using console.profile() call.
 /// </summary>
@@ -19146,15 +21427,18 @@ public string InternalName { get; } = "Profiler.consoleProfileStarted";
 /// <summary>
 /// 
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Location of console.profile().
 /// </summary>
-public Debugger.Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Debugger.Location Location { get; set; }
+
 /// <summary>
 /// Profile title passed as an argument to console.profile().
 /// </summary>
-public string Title { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Runtime
 {
@@ -19166,40 +21450,49 @@ internal partial class RemoteObject
 /// <summary>
 /// Object type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Object subtype hint. Specified for `object` type values only.
 /// </summary>
-public string Subtype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
+
 /// <summary>
 /// Object class (constructor) name. Specified for `object` type values only.
 /// </summary>
-public string ClassName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("className")] public string ClassName { get; set; }
+
 /// <summary>
 /// Remote object value in case of primitive values or JSON values (if it was requested).
 /// </summary>
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
+
 /// <summary>
 /// Primitive value which can not be JSON-stringified does not have `value`, but gets this
 /// property.
 /// </summary>
-public string UnserializableValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unserializableValue")] public string UnserializableValue { get; set; }
+
 /// <summary>
 /// String representation of the object.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// Unique object identifier (for non-primitive values).
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Preview containing abbreviated property values. Specified for `object` type values only.
 /// </summary>
-public ObjectPreview Preview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("preview")] public ObjectPreview Preview { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public CustomPreview CustomPreview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("customPreview")] public CustomPreview CustomPreview { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -19209,13 +21502,15 @@ internal partial class CustomPreview
 /// The JSON-stringified result of formatter.header(object, config) call.
 /// It contains json ML array that represents RemoteObject.
 /// </summary>
-public string Header { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("header")] public string Header { get; set; }
+
 /// <summary>
 /// If formatter returns true as a result of formatter.hasBody call then bodyGetterId will
 /// contain RemoteObjectId for the function that returns result of formatter.body(object, config) call.
 /// The result value is json ML array.
 /// </summary>
-public string BodyGetterId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bodyGetterId")] public string BodyGetterId { get; set; }
+}
 /// <summary>
 /// Object containing abbreviated remote object value.
 /// </summary>
@@ -19224,27 +21519,33 @@ internal partial class ObjectPreview
 /// <summary>
 /// Object type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Object subtype hint. Specified for `object` type values only.
 /// </summary>
-public string Subtype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
+
 /// <summary>
 /// String representation of the object.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// True iff some of the properties or entries of the original object did not fit.
 /// </summary>
-public bool? Overflow { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("overflow")] public bool? Overflow { get; set; }
+
 /// <summary>
 /// List of the properties.
 /// </summary>
-public PropertyPreview[] Properties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public PropertyPreview[] Properties { get; set; }
+
 /// <summary>
 /// List of the entries. Specified for `map` and `set` subtype values only.
 /// </summary>
-public EntryPreview[] Entries { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public EntryPreview[] Entries { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -19253,23 +21554,28 @@ internal partial class PropertyPreview
 /// <summary>
 /// Property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Object type. Accessor means that the property itself is an accessor property.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// User-friendly property value string.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Nested value preview.
 /// </summary>
-public ObjectPreview ValuePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valuePreview")] public ObjectPreview ValuePreview { get; set; }
+
 /// <summary>
 /// Object subtype hint. Specified for `object` type values only.
 /// </summary>
-public string Subtype { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -19278,11 +21584,13 @@ internal partial class EntryPreview
 /// <summary>
 /// Preview of the key. Specified for map-like collection entries.
 /// </summary>
-public ObjectPreview Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public ObjectPreview Key { get; set; }
+
 /// <summary>
 /// Preview of the value.
 /// </summary>
-public ObjectPreview Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public ObjectPreview Value { get; set; }
+}
 /// <summary>
 /// Object property descriptor.
 /// </summary>
@@ -19291,47 +21599,57 @@ internal partial class PropertyDescriptor
 /// <summary>
 /// Property name or symbol description.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The value associated with the property.
 /// </summary>
-public RemoteObject Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public RemoteObject Value { get; set; }
+
 /// <summary>
 /// True if the value associated with the property may be changed (data descriptors only).
 /// </summary>
-public bool? Writable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("writable")] public bool? Writable { get; set; }
+
 /// <summary>
 /// A function which serves as a getter for the property, or `undefined` if there is no getter
 /// (accessor descriptors only).
 /// </summary>
-public RemoteObject Get { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("get")] public RemoteObject Get { get; set; }
+
 /// <summary>
 /// A function which serves as a setter for the property, or `undefined` if there is no setter
 /// (accessor descriptors only).
 /// </summary>
-public RemoteObject Set { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("set")] public RemoteObject Set { get; set; }
+
 /// <summary>
 /// True if the type of this property descriptor may be changed and if the property may be
 /// deleted from the corresponding object.
 /// </summary>
-public bool? Configurable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("configurable")] public bool? Configurable { get; set; }
+
 /// <summary>
 /// True if this property shows up during enumeration of the properties on the corresponding
 /// object.
 /// </summary>
-public bool? Enumerable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enumerable")] public bool? Enumerable { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+
 /// <summary>
 /// True if the property is owned for the object.
 /// </summary>
-public bool? IsOwn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isOwn")] public bool? IsOwn { get; set; }
+
 /// <summary>
 /// Property symbol object, if the property is of the `symbol` type.
 /// </summary>
-public RemoteObject Symbol { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("symbol")] public RemoteObject Symbol { get; set; }
+}
 /// <summary>
 /// Object internal property descriptor. This property isn't normally visible in JavaScript code.
 /// </summary>
@@ -19340,11 +21658,13 @@ internal partial class InternalPropertyDescriptor
 /// <summary>
 /// Conventional property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The value associated with the property.
 /// </summary>
-public RemoteObject Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public RemoteObject Value { get; set; }
+}
 /// <summary>
 /// Object private field descriptor.
 /// </summary>
@@ -19353,21 +21673,25 @@ internal partial class PrivatePropertyDescriptor
 /// <summary>
 /// Private property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The value associated with the private property.
 /// </summary>
-public RemoteObject Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public RemoteObject Value { get; set; }
+
 /// <summary>
 /// A function which serves as a getter for the private property,
 /// or `undefined` if there is no getter (accessor descriptors only).
 /// </summary>
-public RemoteObject Get { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("get")] public RemoteObject Get { get; set; }
+
 /// <summary>
 /// A function which serves as a setter for the private property,
 /// or `undefined` if there is no setter (accessor descriptors only).
 /// </summary>
-public RemoteObject Set { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("set")] public RemoteObject Set { get; set; }
+}
 /// <summary>
 /// Represents function call argument. Either remote object id `objectId`, primitive `value`,
 /// unserializable primitive value or neither of (for undefined) them should be specified.
@@ -19377,15 +21701,18 @@ internal partial class CallArgument
 /// <summary>
 /// Primitive value or serializable javascript object.
 /// </summary>
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
+
 /// <summary>
 /// Primitive value which can not be JSON-stringified.
 /// </summary>
-public string UnserializableValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unserializableValue")] public string UnserializableValue { get; set; }
+
 /// <summary>
 /// Remote object handle.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Description of an isolated world.
 /// </summary>
@@ -19395,19 +21722,23 @@ internal partial class ExecutionContextDescription
 /// Unique id of the execution context. It can be used to specify in which execution context
 /// script evaluation should be performed.
 /// </summary>
-public int? Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+
 /// <summary>
 /// Execution context origin.
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// Human readable name describing given context.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Embedder-specific auxiliary data.
 /// </summary>
-public object AuxData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("auxData")] public object AuxData { get; set; }
+}
 /// <summary>
 /// Detailed information about exception (or error) that was thrown during script compilation or
 /// execution.
@@ -19417,39 +21748,48 @@ internal partial class ExceptionDetails
 /// <summary>
 /// Exception id.
 /// </summary>
-public int? ExceptionId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("exceptionId")] public int? ExceptionId { get; set; }
+
 /// <summary>
 /// Exception text, which should be used together with exception object when available.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Line number of the exception location (0-based).
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// Column number of the exception location (0-based).
 /// </summary>
-public int? ColumnNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+
 /// <summary>
 /// Script ID of the exception location.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// URL of the exception location, to be used when the script was not reported.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// JavaScript stack trace if available.
 /// </summary>
-public StackTrace StackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public StackTrace StackTrace { get; set; }
+
 /// <summary>
 /// Exception object if available.
 /// </summary>
-public RemoteObject Exception { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("exception")] public RemoteObject Exception { get; set; }
+
 /// <summary>
 /// Identifier of the context where exception happened.
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Stack entry for runtime errors and assertions.
 /// </summary>
@@ -19458,23 +21798,28 @@ internal partial class CallFrame
 /// <summary>
 /// JavaScript function name.
 /// </summary>
-public string FunctionName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionName")] public string FunctionName { get; set; }
+
 /// <summary>
 /// JavaScript script id.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// JavaScript script name or url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// JavaScript script line number (0-based).
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// JavaScript script column number (0-based).
 /// </summary>
-public int? ColumnNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+}
 /// <summary>
 /// Call frames for assertions or error messages.
 /// </summary>
@@ -19484,19 +21829,23 @@ internal partial class StackTrace
 /// String label of this stack trace. For async traces this may be a name of the function that
 /// initiated the async call.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// JavaScript function name.
 /// </summary>
-public CallFrame[] CallFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrames")] public CallFrame[] CallFrames { get; set; }
+
 /// <summary>
 /// Asynchronous JavaScript stack trace that preceded this stack, if available.
 /// </summary>
-public StackTrace Parent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parent")] public StackTrace Parent { get; set; }
+
 /// <summary>
 /// Asynchronous JavaScript stack trace that preceded this stack, if available.
 /// </summary>
-public StackTraceId ParentId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public StackTraceId ParentId { get; set; }
+}
 /// <summary>
 /// If `debuggerId` is set stack trace comes from another debugger and can be resolved there. This
 /// allows to track cross-debugger calls. See `Runtime.StackTrace` and `Debugger.paused` for usages.
@@ -19506,11 +21855,13 @@ internal partial class StackTraceId
 /// <summary>
 /// 
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string DebuggerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("debuggerId")] public string DebuggerId { get; set; }
+}
 /// <summary>
 /// Add handler to promise with given promise object id.
 /// </summary>
@@ -19524,15 +21875,18 @@ public string Command { get; } = "Runtime.awaitPromise";
 /// <summary>
 /// Identifier of the promise.
 /// </summary>
-public string PromiseObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("promiseObjectId")] public string PromiseObjectId { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeAwaitPromiseRequest"/>
 /// </summary>
@@ -19541,11 +21895,13 @@ internal partial class RuntimeAwaitPromiseResponse: IChromiumResponse
 /// <summary>
 /// Promise result. Will contain rejected value if promise was rejected.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// Exception details if stack strace is available.
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Calls function with given declaration on the given object. Object group of the result is
 /// inherited from the target object.
@@ -19560,49 +21916,59 @@ public string Command { get; } = "Runtime.callFunctionOn";
 /// <summary>
 /// Declaration of the function to call.
 /// </summary>
-public string FunctionDeclaration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionDeclaration")] public string FunctionDeclaration { get; set; }
+
 /// <summary>
 /// Identifier of the object to call function on. Either objectId or executionContextId should
 /// be specified.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Call arguments. All call arguments must belong to the same JavaScript world as the target
 /// object.
 /// </summary>
-public CallArgument[] Arguments { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("arguments")] public CallArgument[] Arguments { get; set; }
+
 /// <summary>
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool? Silent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("silent")] public bool? Silent { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object which should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether execution should be treated as initiated by user in the UI.
 /// </summary>
-public bool? UserGesture { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userGesture")] public bool? UserGesture { get; set; }
+
 /// <summary>
 /// Whether execution should `await` for resulting value and return once awaited promise is
 /// resolved.
 /// </summary>
-public bool? AwaitPromise { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("awaitPromise")] public bool? AwaitPromise { get; set; }
+
 /// <summary>
 /// Specifies execution context which global object will be used to call function on. Either
 /// executionContextId or objectId should be specified.
 /// </summary>
-public int? ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects. If objectGroup is not
 /// specified and objectId is, objectGroup will be inherited from object.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeCallFunctionOnRequest"/>
 /// </summary>
@@ -19611,11 +21977,13 @@ internal partial class RuntimeCallFunctionOnResponse: IChromiumResponse
 /// <summary>
 /// Call result.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// Exception details.
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Compiles expression.
 /// </summary>
@@ -19629,20 +21997,24 @@ public string Command { get; } = "Runtime.compileScript";
 /// <summary>
 /// Expression to compile.
 /// </summary>
-public string Expression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expression")] public string Expression { get; set; }
+
 /// <summary>
 /// Source url to be set for the script.
 /// </summary>
-public string SourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
 /// <summary>
 /// Specifies whether the compiled script should be persisted.
 /// </summary>
-public bool? PersistScript { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("persistScript")] public bool? PersistScript { get; set; }
+
 /// <summary>
 /// Specifies in which execution context to perform script run. If the parameter is omitted the
 /// evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeCompileScriptRequest"/>
 /// </summary>
@@ -19651,11 +22023,13 @@ internal partial class RuntimeCompileScriptResponse: IChromiumResponse
 /// <summary>
 /// Id of the script.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// Exception details.
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Disables reporting of execution contexts creation.
 /// </summary>
@@ -19722,59 +22096,72 @@ public string Command { get; } = "Runtime.evaluate";
 /// <summary>
 /// Expression to evaluate.
 /// </summary>
-public string Expression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expression")] public string Expression { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// Determines whether Command Line API should be available during the evaluation.
 /// </summary>
-public bool? IncludeCommandLineAPI { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeCommandLineAPI")] public bool? IncludeCommandLineAPI { get; set; }
+
 /// <summary>
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool? Silent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("silent")] public bool? Silent { get; set; }
+
 /// <summary>
 /// Specifies in which execution context to perform evaluation. If the parameter is omitted the
 /// evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int? ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public int? ContextId { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether execution should be treated as initiated by user in the UI.
 /// </summary>
-public bool? UserGesture { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("userGesture")] public bool? UserGesture { get; set; }
+
 /// <summary>
 /// Whether execution should `await` for resulting value and return once awaited promise is
 /// resolved.
 /// </summary>
-public bool? AwaitPromise { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("awaitPromise")] public bool? AwaitPromise { get; set; }
+
 /// <summary>
 /// Whether to throw an exception if side effect cannot be ruled out during evaluation.
 /// This implies `disableBreaks` below.
 /// </summary>
-public bool? ThrowOnSideEffect { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("throwOnSideEffect")] public bool? ThrowOnSideEffect { get; set; }
+
 /// <summary>
 /// Terminate execution after timing out (number of milliseconds).
 /// </summary>
-public double? Timeout { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timeout")] public double? Timeout { get; set; }
+
 /// <summary>
 /// Disable breakpoints during execution.
 /// </summary>
-public bool? DisableBreaks { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("disableBreaks")] public bool? DisableBreaks { get; set; }
+
 /// <summary>
 /// Reserved flag for future REPL mode support. Setting this flag has currently no effect.
 /// </summary>
-public bool? ReplMode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("replMode")] public bool? ReplMode { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeEvaluateRequest"/>
 /// </summary>
@@ -19783,11 +22170,13 @@ internal partial class RuntimeEvaluateResponse: IChromiumResponse
 /// <summary>
 /// Evaluation result.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// Exception details.
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Returns the isolate id.
 /// </summary>
@@ -19807,7 +22196,8 @@ internal partial class RuntimeGetIsolateIdResponse: IChromiumResponse
 /// <summary>
 /// The isolate id.
 /// </summary>
-public string Id { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+}
 /// <summary>
 /// Returns the JavaScript heap usage.
 /// It is the total usage of the corresponding isolate not scoped to a particular Runtime.
@@ -19828,11 +22218,13 @@ internal partial class RuntimeGetHeapUsageResponse: IChromiumResponse
 /// <summary>
 /// Used heap size in bytes.
 /// </summary>
-public double? UsedSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("usedSize")] public double? UsedSize { get; set; }
+
 /// <summary>
 /// Allocated heap size in bytes.
 /// </summary>
-public double? TotalSize { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("totalSize")] public double? TotalSize { get; set; }
+}
 /// <summary>
 /// Returns properties of a given object. Object group of the result is inherited from the target
 /// object.
@@ -19847,21 +22239,25 @@ public string Command { get; } = "Runtime.getProperties";
 /// <summary>
 /// Identifier of the object to return properties for.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// If true, returns properties belonging only to the element itself, not to its prototype
 /// chain.
 /// </summary>
-public bool? OwnProperties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ownProperties")] public bool? OwnProperties { get; set; }
+
 /// <summary>
 /// If true, returns accessor properties (with getter/setter) only; internal properties are not
 /// returned either.
 /// </summary>
-public bool? AccessorPropertiesOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("accessorPropertiesOnly")] public bool? AccessorPropertiesOnly { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the results.
 /// </summary>
-public bool? GeneratePreview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetPropertiesRequest"/>
 /// </summary>
@@ -19870,19 +22266,23 @@ internal partial class RuntimeGetPropertiesResponse: IChromiumResponse
 /// <summary>
 /// Object properties.
 /// </summary>
-public PropertyDescriptor[] Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public PropertyDescriptor[] Result { get; set; }
+
 /// <summary>
 /// Internal object properties (only of the element itself).
 /// </summary>
-public InternalPropertyDescriptor[] InternalProperties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("internalProperties")] public InternalPropertyDescriptor[] InternalProperties { get; set; }
+
 /// <summary>
 /// Object private properties.
 /// </summary>
-public PrivatePropertyDescriptor[] PrivateProperties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("privateProperties")] public PrivatePropertyDescriptor[] PrivateProperties { get; set; }
+
 /// <summary>
 /// Exception details.
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Returns all let, const and class variables from global scope.
 /// </summary>
@@ -19896,7 +22296,8 @@ public string Command { get; } = "Runtime.globalLexicalScopeNames";
 /// <summary>
 /// Specifies in which execution context to lookup global scope variables.
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGlobalLexicalScopeNamesRequest"/>
 /// </summary>
@@ -19905,7 +22306,8 @@ internal partial class RuntimeGlobalLexicalScopeNamesResponse: IChromiumResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] Names { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("names")] public string[] Names { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -19919,11 +22321,13 @@ public string Command { get; } = "Runtime.queryObjects";
 /// <summary>
 /// Identifier of the prototype to return objects for.
 /// </summary>
-public string PrototypeObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("prototypeObjectId")] public string PrototypeObjectId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release the results.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeQueryObjectsRequest"/>
 /// </summary>
@@ -19932,7 +22336,8 @@ internal partial class RuntimeQueryObjectsResponse: IChromiumResponse
 /// <summary>
 /// Array with objects.
 /// </summary>
-public RemoteObject Objects { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objects")] public RemoteObject Objects { get; set; }
+}
 /// <summary>
 /// Releases remote object with given id.
 /// </summary>
@@ -19946,7 +22351,8 @@ public string Command { get; } = "Runtime.releaseObject";
 /// <summary>
 /// Identifier of the object to release.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeReleaseObjectRequest"/>
 /// </summary>
@@ -19966,7 +22372,8 @@ public string Command { get; } = "Runtime.releaseObjectGroup";
 /// <summary>
 /// Symbolic object group name.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeReleaseObjectGroupRequest"/>
 /// </summary>
@@ -20003,38 +22410,46 @@ public string Command { get; } = "Runtime.runScript";
 /// <summary>
 /// Id of the script to run.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// Specifies in which execution context to perform script run. If the parameter is omitted the
 /// evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int? ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// In silent mode exceptions thrown during evaluation are not reported and do not pause
 /// execution. Overrides `setPauseOnException` state.
 /// </summary>
-public bool? Silent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("silent")] public bool? Silent { get; set; }
+
 /// <summary>
 /// Determines whether Command Line API should be available during the evaluation.
 /// </summary>
-public bool? IncludeCommandLineAPI { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeCommandLineAPI")] public bool? IncludeCommandLineAPI { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object which should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether execution should `await` for resulting value and return once awaited promise is
 /// resolved.
 /// </summary>
-public bool? AwaitPromise { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("awaitPromise")] public bool? AwaitPromise { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeRunScriptRequest"/>
 /// </summary>
@@ -20043,11 +22458,13 @@ internal partial class RuntimeRunScriptResponse: IChromiumResponse
 /// <summary>
 /// Run result.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// Exception details.
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Enables or disables async call stacks tracking.
 /// </summary>
@@ -20062,7 +22479,8 @@ public string Command { get; } = "Runtime.setAsyncCallStackDepth";
 /// Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async
 /// call stacks (default).
 /// </summary>
-public int? MaxDepth { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxDepth")] public int? MaxDepth { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeSetAsyncCallStackDepthRequest"/>
 /// </summary>
@@ -20082,7 +22500,8 @@ public string Command { get; } = "Runtime.setCustomObjectFormatterEnabled";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeSetCustomObjectFormatterEnabledRequest"/>
 /// </summary>
@@ -20102,7 +22521,8 @@ public string Command { get; } = "Runtime.setMaxCallStackSizeToCapture";
 /// <summary>
 /// 
 /// </summary>
-public int? Size { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeSetMaxCallStackSizeToCaptureRequest"/>
 /// </summary>
@@ -20147,11 +22567,13 @@ public string Command { get; } = "Runtime.addBinding";
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeAddBindingRequest"/>
 /// </summary>
@@ -20172,7 +22594,8 @@ public string Command { get; } = "Runtime.removeBinding";
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeRemoveBindingRequest"/>
 /// </summary>
@@ -20191,15 +22614,18 @@ public string InternalName { get; } = "Runtime.bindingCalled";
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Payload { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("payload")] public string Payload { get; set; }
+
 /// <summary>
 /// Identifier of the context where the call was made.
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Issued when console API was called.
 /// </summary>
@@ -20212,31 +22638,37 @@ public string InternalName { get; } = "Runtime.consoleAPICalled";
 /// <summary>
 /// Type of the call.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Call arguments.
 /// </summary>
-public RemoteObject[] Args { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("args")] public RemoteObject[] Args { get; set; }
+
 /// <summary>
 /// Identifier of the context where the call was made.
 /// </summary>
-public int? ExecutionContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+
 /// <summary>
 /// Call timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Stack trace captured when the call was made. The async stack chain is automatically reported for
 /// the following call types: `assert`, `error`, `trace`, `warning`. For other types the async call
 /// chain can be retrieved using `Debugger.getStackTrace` and `stackTrace.parentId` field.
 /// </summary>
-public StackTrace StackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public StackTrace StackTrace { get; set; }
+
 /// <summary>
 /// Console context descriptor for calls on non-default console context (not console.*):
 /// 'anonymous#unique-logger-id' for call on unnamed context, 'name#unique-logger-id' for call
 /// on named context.
 /// </summary>
-public string Context { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("context")] public string Context { get; set; }
+}
 /// <summary>
 /// Issued when unhandled exception was revoked.
 /// </summary>
@@ -20249,11 +22681,13 @@ public string InternalName { get; } = "Runtime.exceptionRevoked";
 /// <summary>
 /// Reason describing why exception was revoked.
 /// </summary>
-public string Reason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public string Reason { get; set; }
+
 /// <summary>
 /// The id of revoked exception, as reported in `exceptionThrown`.
 /// </summary>
-public int? ExceptionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionId")] public int? ExceptionId { get; set; }
+}
 /// <summary>
 /// Issued when exception was thrown and unhandled.
 /// </summary>
@@ -20266,11 +22700,13 @@ public string InternalName { get; } = "Runtime.exceptionThrown";
 /// <summary>
 /// Timestamp of the exception.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public ExceptionDetails ExceptionDetails { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
+}
 /// <summary>
 /// Issued when new execution context is created.
 /// </summary>
@@ -20283,7 +22719,8 @@ public string InternalName { get; } = "Runtime.executionContextCreated";
 /// <summary>
 /// A newly created execution context.
 /// </summary>
-public ExecutionContextDescription Context { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("context")] public ExecutionContextDescription Context { get; set; }
+}
 /// <summary>
 /// Issued when execution context is destroyed.
 /// </summary>
@@ -20296,7 +22733,8 @@ public string InternalName { get; } = "Runtime.executionContextDestroyed";
 /// <summary>
 /// Id of the destroyed context
 /// </summary>
-public int? ExecutionContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+}
 /// <summary>
 /// Issued when all executionContexts were cleared in browser
 /// </summary>
@@ -20320,11 +22758,13 @@ public string InternalName { get; } = "Runtime.inspectRequested";
 /// <summary>
 /// 
 /// </summary>
-public RemoteObject Object { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("object")] public RemoteObject Object { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public object Hints { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("hints")] public object Hints { get; set; }
+}
 }
 namespace PlaywrightSharp.Chromium.Protocol.Schema
 {
@@ -20336,11 +22776,13 @@ internal partial class Domain
 /// <summary>
 /// Domain name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Domain version.
 /// </summary>
-public string Version { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("version")] public string Version { get; set; }
+}
 /// <summary>
 /// Returns supported domains.
 /// </summary>
@@ -20360,6 +22802,7 @@ internal partial class SchemaGetDomainsResponse: IChromiumResponse
 /// <summary>
 /// List of supported domains.
 /// </summary>
-public Domain[] Domains { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("domains")] public Domain[] Domains { get; set; }
+}
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

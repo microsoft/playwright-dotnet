@@ -25,6 +25,416 @@ internal enum AnimationState
 [System.Runtime.Serialization.EnumMember(Value = "active")]Active,
 [System.Runtime.Serialization.EnumMember(Value = "canceled")]Canceled,
 [System.Runtime.Serialization.EnumMember(Value = "done")]Done}
+}
+namespace PlaywrightSharp.Webkit.Protocol.ApplicationCache
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Audit
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Browser
+{
+/// <summary>
+/// Same-Site policy of a cookie.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookieSameSitePolicy
+{
+[System.Runtime.Serialization.EnumMember(Value = "None")]None,
+[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
+[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Canvas
+{
+/// <summary>
+/// The type of rendering context backing the canvas element.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ContextType
+{
+[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
+[System.Runtime.Serialization.EnumMember(Value = "bitmaprenderer")]Bitmaprenderer,
+[System.Runtime.Serialization.EnumMember(Value = "webgl")]Webgl,
+[System.Runtime.Serialization.EnumMember(Value = "webgl2")]Webgl2,
+[System.Runtime.Serialization.EnumMember(Value = "webgpu")]Webgpu}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ProgramType
+{
+[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
+[System.Runtime.Serialization.EnumMember(Value = "render")]Render}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ShaderType
+{
+[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
+[System.Runtime.Serialization.EnumMember(Value = "fragment")]Fragment,
+[System.Runtime.Serialization.EnumMember(Value = "vertex")]Vertex}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Console
+{
+/// <summary>
+/// Channels for different types of log messages.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ChannelSource
+{
+[System.Runtime.Serialization.EnumMember(Value = "xml")]Xml,
+[System.Runtime.Serialization.EnumMember(Value = "javascript")]Javascript,
+[System.Runtime.Serialization.EnumMember(Value = "network")]Network,
+[System.Runtime.Serialization.EnumMember(Value = "console-api")]ConsoleApi,
+[System.Runtime.Serialization.EnumMember(Value = "storage")]Storage,
+[System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
+[System.Runtime.Serialization.EnumMember(Value = "rendering")]Rendering,
+[System.Runtime.Serialization.EnumMember(Value = "css")]Css,
+[System.Runtime.Serialization.EnumMember(Value = "security")]Security,
+[System.Runtime.Serialization.EnumMember(Value = "content-blocker")]ContentBlocker,
+[System.Runtime.Serialization.EnumMember(Value = "media")]Media,
+[System.Runtime.Serialization.EnumMember(Value = "mediasource")]Mediasource,
+[System.Runtime.Serialization.EnumMember(Value = "webrtc")]Webrtc,
+[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
+/// <summary>
+/// Level of logging.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ChannelLevel
+{
+[System.Runtime.Serialization.EnumMember(Value = "off")]Off,
+[System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
+[System.Runtime.Serialization.EnumMember(Value = "verbose")]Verbose}
+}
+namespace PlaywrightSharp.Webkit.Protocol.CPUProfiler
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.CSS
+{
+/// <summary>
+/// Stylesheet type: "user" for user stylesheets, "user-agent" for user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via inspector" rules), "regular" for regular stylesheets.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum StyleSheetOrigin
+{
+[System.Runtime.Serialization.EnumMember(Value = "user")]User,
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
+[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
+/// <summary>
+/// Pseudo-style identifier (see &lt;code&gt;enum PseudoId&lt;/code&gt; in &lt;code&gt;RenderStyleConstants.h&lt;/code&gt;).
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PseudoId
+{
+[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
+[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
+[System.Runtime.Serialization.EnumMember(Value = "highlight")]Highlight,
+[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
+[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
+[System.Runtime.Serialization.EnumMember(Value = "after")]After,
+[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
+[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
+[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer}
+/// <summary>
+/// The property status: "active" if the property is effective in the style, "inactive" if the property is overridden by a same-named property in this style later on, "disabled" if the property is disabled by the user, "style" (implied if absent) if the property is reported by the browser rather than by the CSS source parser.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CSSPropertyStatus
+{
+[System.Runtime.Serialization.EnumMember(Value = "active")]Active,
+[System.Runtime.Serialization.EnumMember(Value = "inactive")]Inactive,
+[System.Runtime.Serialization.EnumMember(Value = "disabled")]Disabled,
+[System.Runtime.Serialization.EnumMember(Value = "style")]Style}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Database
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Debugger
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Dialog
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOM
+{
+/// <summary>
+/// Pseudo element type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum PseudoType
+{
+[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
+[System.Runtime.Serialization.EnumMember(Value = "after")]After}
+/// <summary>
+/// Shadow root type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ShadowRootType
+{
+[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
+[System.Runtime.Serialization.EnumMember(Value = "open")]Open,
+[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
+/// <summary>
+/// Custom element state.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CustomElementState
+{
+[System.Runtime.Serialization.EnumMember(Value = "builtin")]Builtin,
+[System.Runtime.Serialization.EnumMember(Value = "custom")]Custom,
+[System.Runtime.Serialization.EnumMember(Value = "waiting")]Waiting,
+[System.Runtime.Serialization.EnumMember(Value = "failed")]Failed}
+/// <summary>
+/// Token values of @aria-relevant attribute.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum LiveRegionRelevant
+{
+[System.Runtime.Serialization.EnumMember(Value = "additions")]Additions,
+[System.Runtime.Serialization.EnumMember(Value = "removals")]Removals,
+[System.Runtime.Serialization.EnumMember(Value = "text")]Text}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOMDebugger
+{
+/// <summary>
+/// DOM breakpoint type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum DOMBreakpointType
+{
+[System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
+[System.Runtime.Serialization.EnumMember(Value = "attribute-modified")]AttributeModified,
+[System.Runtime.Serialization.EnumMember(Value = "node-removed")]NodeRemoved}
+/// <summary>
+/// Event breakpoint type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum EventBreakpointType
+{
+[System.Runtime.Serialization.EnumMember(Value = "animation-frame")]AnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "interval")]Interval,
+[System.Runtime.Serialization.EnumMember(Value = "listener")]Listener,
+[System.Runtime.Serialization.EnumMember(Value = "timeout")]Timeout}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOMStorage
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Emulation
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.GenericTypes
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Heap
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.IndexedDB
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Input
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Inspector
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.LayerTree
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Memory
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Network
+{
+/// <summary>
+/// Different stages of a network request.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum NetworkStage
+{
+[System.Runtime.Serialization.EnumMember(Value = "response")]Response}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Page
+{
+/// <summary>
+/// List of settings able to be overridden by WebInspector. Keep this in sync with FOR_EACH_INSPECTOR_OVERRIDE_SETTING.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Setting
+{
+[System.Runtime.Serialization.EnumMember(Value = "AuthorAndUserStylesEnabled")]AuthorAndUserStylesEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "ICECandidateFilteringEnabled")]ICECandidateFilteringEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "ImagesEnabled")]ImagesEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "MediaCaptureRequiresSecureConnection")]MediaCaptureRequiresSecureConnection,
+[System.Runtime.Serialization.EnumMember(Value = "MockCaptureDevicesEnabled")]MockCaptureDevicesEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "NeedsSiteSpecificQuirks")]NeedsSiteSpecificQuirks,
+[System.Runtime.Serialization.EnumMember(Value = "ScriptEnabled")]ScriptEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "ShowDebugBorders")]ShowDebugBorders,
+[System.Runtime.Serialization.EnumMember(Value = "ShowRepaintCounter")]ShowRepaintCounter,
+[System.Runtime.Serialization.EnumMember(Value = "WebRTCEncryptionEnabled")]WebRTCEncryptionEnabled,
+[System.Runtime.Serialization.EnumMember(Value = "WebSecurityEnabled")]WebSecurityEnabled}
+/// <summary>
+/// Resource type as it was perceived by the rendering engine.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ResourceType
+{
+[System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
+[System.Runtime.Serialization.EnumMember(Value = "StyleSheet")]StyleSheet,
+[System.Runtime.Serialization.EnumMember(Value = "Image")]Image,
+[System.Runtime.Serialization.EnumMember(Value = "Font")]Font,
+[System.Runtime.Serialization.EnumMember(Value = "Script")]Script,
+[System.Runtime.Serialization.EnumMember(Value = "XHR")]XHR,
+[System.Runtime.Serialization.EnumMember(Value = "Fetch")]Fetch,
+[System.Runtime.Serialization.EnumMember(Value = "Ping")]Ping,
+[System.Runtime.Serialization.EnumMember(Value = "Beacon")]Beacon,
+[System.Runtime.Serialization.EnumMember(Value = "WebSocket")]WebSocket,
+[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
+/// <summary>
+/// Coordinate system used by supplied coordinates.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CoordinateSystem
+{
+[System.Runtime.Serialization.EnumMember(Value = "Viewport")]Viewport,
+[System.Runtime.Serialization.EnumMember(Value = "Page")]Page}
+/// <summary>
+/// Same-Site policy of a cookie.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum CookieSameSitePolicy
+{
+[System.Runtime.Serialization.EnumMember(Value = "None")]None,
+[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
+[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
+/// <summary>
+/// Page appearance name.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Appearance
+{
+[System.Runtime.Serialization.EnumMember(Value = "Light")]Light,
+[System.Runtime.Serialization.EnumMember(Value = "Dark")]Dark}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Recording
+{
+/// <summary>
+/// The type of the recording.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Type
+{
+[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
+[System.Runtime.Serialization.EnumMember(Value = "canvas-bitmaprenderer")]CanvasBitmaprenderer,
+[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl")]CanvasWebgl,
+[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl2")]CanvasWebgl2}
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Initiator
+{
+[System.Runtime.Serialization.EnumMember(Value = "frontend")]Frontend,
+[System.Runtime.Serialization.EnumMember(Value = "console")]Console,
+[System.Runtime.Serialization.EnumMember(Value = "auto-capture")]AutoCapture}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Runtime
+{
+/// <summary>
+/// Type of the execution context.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum ExecutionContextType
+{
+[System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
+[System.Runtime.Serialization.EnumMember(Value = "user")]User,
+[System.Runtime.Serialization.EnumMember(Value = "internal")]Internal}
+/// <summary>
+/// Syntax error type: "none" for no error, "irrecoverable" for unrecoverable errors, "unterminated-literal" for when there is an unterminated literal, "recoverable" for when the expression is unfinished but valid so far.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum SyntaxErrorType
+{
+[System.Runtime.Serialization.EnumMember(Value = "none")]None,
+[System.Runtime.Serialization.EnumMember(Value = "irrecoverable")]Irrecoverable,
+[System.Runtime.Serialization.EnumMember(Value = "unterminated-literal")]UnterminatedLiteral,
+[System.Runtime.Serialization.EnumMember(Value = "recoverable")]Recoverable}
+}
+namespace PlaywrightSharp.Webkit.Protocol.ScriptProfiler
+{
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum EventType
+{
+[System.Runtime.Serialization.EnumMember(Value = "API")]API,
+[System.Runtime.Serialization.EnumMember(Value = "Microtask")]Microtask,
+[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Security
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.ServiceWorker
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Target
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Timeline
+{
+/// <summary>
+/// Timeline record type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum EventType
+{
+[System.Runtime.Serialization.EnumMember(Value = "EventDispatch")]EventDispatch,
+[System.Runtime.Serialization.EnumMember(Value = "ScheduleStyleRecalculation")]ScheduleStyleRecalculation,
+[System.Runtime.Serialization.EnumMember(Value = "RecalculateStyles")]RecalculateStyles,
+[System.Runtime.Serialization.EnumMember(Value = "InvalidateLayout")]InvalidateLayout,
+[System.Runtime.Serialization.EnumMember(Value = "Layout")]Layout,
+[System.Runtime.Serialization.EnumMember(Value = "Paint")]Paint,
+[System.Runtime.Serialization.EnumMember(Value = "Composite")]Composite,
+[System.Runtime.Serialization.EnumMember(Value = "RenderingFrame")]RenderingFrame,
+[System.Runtime.Serialization.EnumMember(Value = "TimerInstall")]TimerInstall,
+[System.Runtime.Serialization.EnumMember(Value = "TimerRemove")]TimerRemove,
+[System.Runtime.Serialization.EnumMember(Value = "TimerFire")]TimerFire,
+[System.Runtime.Serialization.EnumMember(Value = "EvaluateScript")]EvaluateScript,
+[System.Runtime.Serialization.EnumMember(Value = "TimeStamp")]TimeStamp,
+[System.Runtime.Serialization.EnumMember(Value = "Time")]Time,
+[System.Runtime.Serialization.EnumMember(Value = "TimeEnd")]TimeEnd,
+[System.Runtime.Serialization.EnumMember(Value = "FunctionCall")]FunctionCall,
+[System.Runtime.Serialization.EnumMember(Value = "ProbeSample")]ProbeSample,
+[System.Runtime.Serialization.EnumMember(Value = "ConsoleProfile")]ConsoleProfile,
+[System.Runtime.Serialization.EnumMember(Value = "RequestAnimationFrame")]RequestAnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "CancelAnimationFrame")]CancelAnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "FireAnimationFrame")]FireAnimationFrame,
+[System.Runtime.Serialization.EnumMember(Value = "ObserverCallback")]ObserverCallback}
+/// <summary>
+/// Instrument types.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+internal enum Instrument
+{
+[System.Runtime.Serialization.EnumMember(Value = "ScriptProfiler")]ScriptProfiler,
+[System.Runtime.Serialization.EnumMember(Value = "Timeline")]Timeline,
+[System.Runtime.Serialization.EnumMember(Value = "CPU")]CPU,
+[System.Runtime.Serialization.EnumMember(Value = "Memory")]Memory,
+[System.Runtime.Serialization.EnumMember(Value = "Heap")]Heap,
+[System.Runtime.Serialization.EnumMember(Value = "Animation")]Animation}
+}
+namespace PlaywrightSharp.Webkit.Protocol.Worker
+{
+}
+namespace PlaywrightSharp.Webkit.Protocol.Animation
+{
 /// <summary>
 /// 
 /// </summary>
@@ -33,24 +443,29 @@ internal partial class TrackingUpdate
 /// <summary>
 /// 
 /// </summary>
-public string TrackingAnimationId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("trackingAnimationId")] public string TrackingAnimationId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public AnimationState AnimationState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animationState")] public AnimationState AnimationState { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Equal to the corresponding `animation-name` CSS property. Should not be provided if `transitionProperty` is also provided.
 /// </summary>
-public string AnimationName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animationName")] public string AnimationName { get; set; }
+
 /// <summary>
 /// Equal to the corresponding `transition-property` CSS property. Should not be provided if `animationName` is also provided.
 /// </summary>
-public string TransitionProperty { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("transitionProperty")] public string TransitionProperty { get; set; }
+}
 /// <summary>
 /// Start tracking animations. This will produce a `trackingStart` event.
 /// </summary>
@@ -97,7 +512,8 @@ public string InternalName { get; } = "Animation.trackingStart";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Fired for each phase of Web Animation.
 /// </summary>
@@ -110,11 +526,13 @@ public string InternalName { get; } = "Animation.trackingUpdate";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public TrackingUpdate Event { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("event")] public TrackingUpdate Event { get; set; }
+}
 /// <summary>
 /// Dispatched after `stopTracking` command.
 /// </summary>
@@ -127,7 +545,8 @@ public string InternalName { get; } = "Animation.trackingComplete";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.ApplicationCache
 {
@@ -139,15 +558,18 @@ internal partial class ApplicationCacheResource
 /// <summary>
 /// Resource url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Resource size.
 /// </summary>
-public int? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+
 /// <summary>
 /// Resource type.
 /// </summary>
-public string Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+}
 /// <summary>
 /// Detailed application cache information.
 /// </summary>
@@ -156,23 +578,28 @@ internal partial class ApplicationCache
 /// <summary>
 /// Manifest URL.
 /// </summary>
-public string ManifestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+
 /// <summary>
 /// Application cache size.
 /// </summary>
-public double? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+
 /// <summary>
 /// Application cache creation time.
 /// </summary>
-public double? CreationTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("creationTime")] public double? CreationTime { get; set; }
+
 /// <summary>
 /// Application cache update time.
 /// </summary>
-public double? UpdateTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("updateTime")] public double? UpdateTime { get; set; }
+
 /// <summary>
 /// Application cache resources.
 /// </summary>
-public ApplicationCacheResource[] Resources { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("resources")] public ApplicationCacheResource[] Resources { get; set; }
+}
 /// <summary>
 /// Frame identifier - manifest URL pair.
 /// </summary>
@@ -181,15 +608,18 @@ internal partial class FrameWithManifest
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Manifest URL.
 /// </summary>
-public string ManifestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+
 /// <summary>
 /// Application cache status.
 /// </summary>
-public int? Status { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+}
 /// <summary>
 /// Returns array of frame identifiers with manifest urls for each frame containing a document associated with some application cache.
 /// </summary>
@@ -209,7 +639,8 @@ internal partial class ApplicationCacheGetFramesWithManifestsResponse: IWebkitRe
 /// <summary>
 /// Array of frame identifiers with manifest urls for each frame containing a document associated with some application cache.
 /// </summary>
-public FrameWithManifest[] FrameIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameIds")] public FrameWithManifest[] FrameIds { get; set; }
+}
 /// <summary>
 /// Enables application cache domain notifications.
 /// </summary>
@@ -257,7 +688,8 @@ public string Command { get; } = "ApplicationCache.getManifestForFrame";
 /// <summary>
 /// Identifier of the frame containing document whose manifest is retrieved.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetManifestForFrameRequest"/>
 /// </summary>
@@ -266,7 +698,8 @@ internal partial class ApplicationCacheGetManifestForFrameResponse: IWebkitRespo
 /// <summary>
 /// Manifest URL for document in the given frame.
 /// </summary>
-public string ManifestURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+}
 /// <summary>
 /// Returns relevant application cache data for the document in given frame.
 /// </summary>
@@ -280,7 +713,8 @@ public string Command { get; } = "ApplicationCache.getApplicationCacheForFrame";
 /// <summary>
 /// Identifier of the frame containing document whose application cache is retrieved.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ApplicationCacheGetApplicationCacheForFrameRequest"/>
 /// </summary>
@@ -289,7 +723,8 @@ internal partial class ApplicationCacheGetApplicationCacheForFrameResponse: IWeb
 /// <summary>
 /// Relevant application cache data for the document in given frame.
 /// </summary>
-public ApplicationCache ApplicationCache { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("applicationCache")] public ApplicationCache ApplicationCache { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -302,15 +737,18 @@ public string InternalName { get; } = "ApplicationCache.applicationCacheStatusUp
 /// <summary>
 /// Identifier of the frame containing document whose application cache updated status.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Manifest URL.
 /// </summary>
-public string ManifestURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
+
 /// <summary>
 /// Updated application cache status.
 /// </summary>
-public int? Status { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -323,7 +761,8 @@ public string InternalName { get; } = "ApplicationCache.networkStateUpdated";
 /// <summary>
 /// 
 /// </summary>
-public bool? IsNowOnline { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isNowOnline")] public bool? IsNowOnline { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Audit
 {
@@ -340,7 +779,8 @@ public string Command { get; } = "Audit.setup";
 /// <summary>
 /// Specifies in which isolated context to run the test. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int? ContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public int? ContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AuditSetupRequest"/>
 /// </summary>
@@ -360,11 +800,13 @@ public string Command { get; } = "Audit.run";
 /// <summary>
 /// Test string to parse and evaluate.
 /// </summary>
-public string Test { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("test")] public string Test { get; set; }
+
 /// <summary>
 /// Specifies in which isolated context to run the test. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int? ContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public int? ContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="AuditRunRequest"/>
 /// </summary>
@@ -373,11 +815,13 @@ internal partial class AuditRunResponse: IWebkitResponse
 /// <summary>
 /// Evaluation result.
 /// </summary>
-public Runtime.RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+}
 /// <summary>
 /// Destroys the `WebInspectorAudit` object that is passed to run. Must call setup before calling teardown.
 /// </summary>
@@ -406,24 +850,18 @@ internal partial class PageProxyInfo
 /// <summary>
 /// 
 /// </summary>
-public string PageProxyId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageProxyId")] public string PageProxyId { get; set; }
+
 /// <summary>
 /// Unique identifier of the context.
 /// </summary>
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+
 /// <summary>
 /// Unique identifier of the opening page. Only set for pages created by window.open().
 /// </summary>
-public string OpenerId { get; set; }}
-/// <summary>
-/// Same-Site policy of a cookie.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookieSameSitePolicy
-{
-[System.Runtime.Serialization.EnumMember(Value = "None")]None,
-[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
-[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
+[System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
+}
 /// <summary>
 /// Cookie object
 /// </summary>
@@ -432,40 +870,49 @@ internal partial class Cookie
 /// <summary>
 /// Cookie name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Cookie value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Cookie domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Cookie path.
 /// </summary>
-public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+
 /// <summary>
 /// Cookie expires.
 /// </summary>
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+
 /// <summary>
 /// True if cookie is session cookie.
 /// </summary>
-public bool? Session { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("session")] public bool? Session { get; set; }
+
 /// <summary>
 /// Cookie Same-Site policy.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSitePolicy SameSite { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public CookieSameSitePolicy SameSite { get; set; }
+}
 /// <summary>
 /// Cookie object
 /// </summary>
@@ -474,40 +921,49 @@ internal partial class SetCookieParam
 /// <summary>
 /// Cookie name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Cookie value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Cookie domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Cookie path.
 /// </summary>
-public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+
 /// <summary>
 /// Cookie expires.
 /// </summary>
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+
 /// <summary>
 /// True if cookie is session cookie.
 /// </summary>
-public bool? Session { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("session")] public bool? Session { get; set; }
+
 /// <summary>
 /// Cookie Same-Site policy.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSitePolicy? SameSite { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public CookieSameSitePolicy? SameSite { get; set; }
+}
 /// <summary>
 /// Geolocation
 /// </summary>
@@ -516,19 +972,23 @@ internal partial class Geolocation
 /// <summary>
 /// Mock latitude
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Mock latitude
 /// </summary>
-public double? Latitude { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("latitude")] public double? Latitude { get; set; }
+
 /// <summary>
 /// Mock longitude
 /// </summary>
-public double? Longitude { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("longitude")] public double? Longitude { get; set; }
+
 /// <summary>
 /// Mock accuracy
 /// </summary>
-public double? Accuracy { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("accuracy")] public double? Accuracy { get; set; }
+}
 /// <summary>
 /// Close browser.
 /// </summary>
@@ -565,7 +1025,8 @@ internal partial class BrowserCreateContextResponse: IWebkitResponse
 /// <summary>
 /// Unique identifier of the context.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Deletes browser context previously created with createContect. The command will automatically close all pages that use the context.
 /// </summary>
@@ -579,7 +1040,8 @@ public string Command { get; } = "Browser.deleteContext";
 /// <summary>
 /// Identifier of the context to delete.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserDeleteContextRequest"/>
 /// </summary>
@@ -599,7 +1061,8 @@ public string Command { get; } = "Browser.createPage";
 /// <summary>
 /// JSON Inspector Protocol message (command) to be dispatched on the backend.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserCreatePageRequest"/>
 /// </summary>
@@ -608,7 +1071,8 @@ internal partial class BrowserCreatePageResponse: IWebkitResponse
 /// <summary>
 /// Unique identifier of the page proxy.
 /// </summary>
-public string PageProxyId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pageProxyId")] public string PageProxyId { get; set; }
+}
 /// <summary>
 /// Navigates current page to the given URL.
 /// </summary>
@@ -622,19 +1086,23 @@ public string Command { get; } = "Browser.navigate";
 /// <summary>
 /// URL to navigate the page to.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Unique identifier of the page proxy.
 /// </summary>
-public string PageProxyId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageProxyId")] public string PageProxyId { get; set; }
+
 /// <summary>
 /// Id of the frame to navigate.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Referrer URL.
 /// </summary>
-public string Referrer { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("referrer")] public string Referrer { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserNavigateRequest"/>
 /// </summary>
@@ -643,7 +1111,8 @@ internal partial class BrowserNavigateResponse: IWebkitResponse
 /// <summary>
 /// Identifier of the loader associated with the navigation.
 /// </summary>
-public string LoaderId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+}
 /// <summary>
 /// Change whether all certificate errors should be ignored.
 /// </summary>
@@ -657,11 +1126,13 @@ public string Command { get; } = "Browser.setIgnoreCertificateErrors";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? Ignore { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ignore")] public bool? Ignore { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserSetIgnoreCertificateErrorsRequest"/>
 /// </summary>
@@ -681,7 +1152,8 @@ public string Command { get; } = "Browser.getAllCookies";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGetAllCookiesRequest"/>
 /// </summary>
@@ -690,7 +1162,8 @@ internal partial class BrowserGetAllCookiesResponse: IWebkitResponse
 /// <summary>
 /// Cookies.
 /// </summary>
-public Cookie[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Cookie[] Cookies { get; set; }
+}
 /// <summary>
 /// Sets cookies in the given browser context.
 /// </summary>
@@ -704,11 +1177,13 @@ public string Command { get; } = "Browser.setCookies";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+
 /// <summary>
 /// Cookies.
 /// </summary>
-public SetCookieParam[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public SetCookieParam[] Cookies { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserSetCookiesRequest"/>
 /// </summary>
@@ -728,7 +1203,8 @@ public string Command { get; } = "Browser.deleteAllCookies";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserDeleteAllCookiesRequest"/>
 /// </summary>
@@ -748,11 +1224,13 @@ public string Command { get; } = "Browser.setGeolocationOverride";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+
 /// <summary>
 /// Geolocation to set, if missing emulates position unavailable.
 /// </summary>
-public Geolocation Geolocation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("geolocation")] public Geolocation Geolocation { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserSetGeolocationOverrideRequest"/>
 /// </summary>
@@ -772,15 +1250,18 @@ public string Command { get; } = "Browser.grantPermissions";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Origin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string[] Permissions { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("permissions")] public string[] Permissions { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserGrantPermissionsRequest"/>
 /// </summary>
@@ -800,7 +1281,8 @@ public string Command { get; } = "Browser.resetPermissions";
 /// <summary>
 /// Browser context id.
 /// </summary>
-public string BrowserContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="BrowserResetPermissionsRequest"/>
 /// </summary>
@@ -819,7 +1301,8 @@ public string InternalName { get; } = "Browser.pageProxyCreated";
 /// <summary>
 /// 
 /// </summary>
-public PageProxyInfo PageProxyInfo { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pageProxyInfo")] public PageProxyInfo PageProxyInfo { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -832,7 +1315,8 @@ public string InternalName { get; } = "Browser.pageProxyDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string PageProxyId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pageProxyId")] public string PageProxyId { get; set; }
+}
 /// <summary>
 /// Fired when provisional load fails.
 /// </summary>
@@ -845,999 +1329,21 @@ public string InternalName { get; } = "Browser.provisionalLoadFailed";
 /// <summary>
 /// Unique identifier of the page proxy.
 /// </summary>
-public string PageProxyId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageProxyId")] public string PageProxyId { get; set; }
+
 /// <summary>
 /// Identifier of the loader associated with the navigation.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// Localized error string.
 /// </summary>
-public string Error { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("error")] public string Error { get; set; }
 }
-namespace PlaywrightSharp.Webkit.Protocol.CPUProfiler
-{
-/// <summary>
-/// CPU usage for an individual thread.
-/// </summary>
-internal partial class ThreadInfo
-{
-/// <summary>
-/// Some thread identification information.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// CPU usage for this thread. This should not exceed 100% for an individual thread.
-/// </summary>
-public double? Usage { get; set; }
-/// <summary>
-/// Type of thread. There should be a single main thread.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// A thread may be associated with a target, such as a Worker, in the process.
-/// </summary>
-public string TargetId { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class Event
-{
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }
-/// <summary>
-/// Percent of total cpu usage. If there are multiple cores the usage may be greater than 100%.
-/// </summary>
-public double? Usage { get; set; }
-/// <summary>
-/// Per-thread CPU usage information. Does not include the main thread.
-/// </summary>
-public ThreadInfo[] Threads { get; set; }}
-/// <summary>
-/// Start tracking cpu usage.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CPUProfiler.startTracking</c>
-/// </remarks>
-internal partial class CPUProfilerStartTrackingRequest : IWebkitRequest<CPUProfilerStartTrackingResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CPUProfiler.startTracking";
-}
-/// <summary>
-/// Response from <see cref="CPUProfilerStartTrackingRequest"/>
-/// </summary>
-internal partial class CPUProfilerStartTrackingResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Stop tracking cpu usage. This will produce a `trackingComplete` event.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CPUProfiler.stopTracking</c>
-/// </remarks>
-internal partial class CPUProfilerStopTrackingRequest : IWebkitRequest<CPUProfilerStopTrackingResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CPUProfiler.stopTracking";
-}
-/// <summary>
-/// Response from <see cref="CPUProfilerStopTrackingRequest"/>
-/// </summary>
-internal partial class CPUProfilerStopTrackingResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Tracking started.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CPUProfiler.trackingStart</c>
-/// </remarks>
-internal partial class CPUProfilerTrackingStartWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CPUProfiler.trackingStart";
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }}
-/// <summary>
-/// Periodic tracking updates with event data.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CPUProfiler.trackingUpdate</c>
-/// </remarks>
-internal partial class CPUProfilerTrackingUpdateWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CPUProfiler.trackingUpdate";
-/// <summary>
-/// 
-/// </summary>
-public Event Event { get; set; }}
-/// <summary>
-/// Tracking stopped.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CPUProfiler.trackingComplete</c>
-/// </remarks>
-internal partial class CPUProfilerTrackingCompleteWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CPUProfiler.trackingComplete";
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }}
-}
-namespace PlaywrightSharp.Webkit.Protocol.CSS
-{
-/// <summary>
-/// This object identifies a CSS style in a unique way.
-/// </summary>
-internal partial class CSSStyleId
-{
-/// <summary>
-/// Enclosing stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// The style ordinal within the stylesheet.
-/// </summary>
-public int? Ordinal { get; set; }}
-/// <summary>
-/// Stylesheet type: "user" for user stylesheets, "user-agent" for user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those holding the "via inspector" rules), "regular" for regular stylesheets.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum StyleSheetOrigin
-{
-[System.Runtime.Serialization.EnumMember(Value = "user")]User,
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "inspector")]Inspector,
-[System.Runtime.Serialization.EnumMember(Value = "regular")]Regular}
-/// <summary>
-/// This object identifies a CSS rule in a unique way.
-/// </summary>
-internal partial class CSSRuleId
-{
-/// <summary>
-/// Enclosing stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// The rule ordinal within the stylesheet.
-/// </summary>
-public int? Ordinal { get; set; }}
-/// <summary>
-/// Pseudo-style identifier (see &lt;code&gt;enum PseudoId&lt;/code&gt; in &lt;code&gt;RenderStyleConstants.h&lt;/code&gt;).
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PseudoId
-{
-[System.Runtime.Serialization.EnumMember(Value = "first-line")]FirstLine,
-[System.Runtime.Serialization.EnumMember(Value = "first-letter")]FirstLetter,
-[System.Runtime.Serialization.EnumMember(Value = "highlight")]Highlight,
-[System.Runtime.Serialization.EnumMember(Value = "marker")]Marker,
-[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
-[System.Runtime.Serialization.EnumMember(Value = "after")]After,
-[System.Runtime.Serialization.EnumMember(Value = "selection")]Selection,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar")]Scrollbar,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-thumb")]ScrollbarThumb,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-button")]ScrollbarButton,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track")]ScrollbarTrack,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-track-piece")]ScrollbarTrackPiece,
-[System.Runtime.Serialization.EnumMember(Value = "scrollbar-corner")]ScrollbarCorner,
-[System.Runtime.Serialization.EnumMember(Value = "resizer")]Resizer}
-/// <summary>
-/// CSS rule collection for a single pseudo style.
-/// </summary>
-internal partial class PseudoIdMatches
-{
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PseudoId PseudoId { get; set; }
-/// <summary>
-/// Matches of CSS rules applicable to the pseudo style.
-/// </summary>
-public RuleMatch[] Matches { get; set; }}
-/// <summary>
-/// CSS rule collection for a single pseudo style.
-/// </summary>
-internal partial class InheritedStyleEntry
-{
-/// <summary>
-/// The ancestor node's inline style, if any, in the style inheritance chain.
-/// </summary>
-public CSSStyle InlineStyle { get; set; }
-/// <summary>
-/// Matches of CSS rules matching the ancestor node in the style inheritance chain.
-/// </summary>
-public RuleMatch[] MatchedCSSRules { get; set; }}
-/// <summary>
-/// Match data for a CSS rule.
-/// </summary>
-internal partial class RuleMatch
-{
-/// <summary>
-/// CSS rule in the match.
-/// </summary>
-public CSSRule Rule { get; set; }
-/// <summary>
-/// Matching selector indices in the rule's selectorList selectors (0-based).
-/// </summary>
-public int?[] MatchingSelectors { get; set; }}
-/// <summary>
-/// CSS selector.
-/// </summary>
-internal partial class CSSSelector
-{
-/// <summary>
-/// Canonicalized selector text.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Specificity (a, b, c) tuple. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
-/// </summary>
-public int?[] Specificity { get; set; }
-/// <summary>
-/// Whether or not the specificity can be dynamic. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
-/// </summary>
-public bool? Dynamic { get; set; }}
-/// <summary>
-/// Selector list data.
-/// </summary>
-internal partial class SelectorList
-{
-/// <summary>
-/// Selectors in the list.
-/// </summary>
-public CSSSelector[] Selectors { get; set; }
-/// <summary>
-/// Rule selector text.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Rule selector range in the underlying resource (if available).
-/// </summary>
-public SourceRange Range { get; set; }}
-/// <summary>
-/// CSS style information for a DOM style attribute.
-/// </summary>
-internal partial class CSSStyleAttribute
-{
-/// <summary>
-/// DOM attribute name (e.g. "width").
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// CSS style generated by the respective DOM attribute.
-/// </summary>
-public CSSStyle Style { get; set; }}
-/// <summary>
-/// CSS stylesheet meta-information.
-/// </summary>
-internal partial class CSSStyleSheetHeader
-{
-/// <summary>
-/// The stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// Owner frame identifier.
-/// </summary>
-public string FrameId { get; set; }
-/// <summary>
-/// Stylesheet resource URL.
-/// </summary>
-public string SourceURL { get; set; }
-/// <summary>
-/// Stylesheet origin.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
-/// <summary>
-/// Stylesheet title.
-/// </summary>
-public string Title { get; set; }
-/// <summary>
-/// Denotes whether the stylesheet is disabled.
-/// </summary>
-public bool? Disabled { get; set; }
-/// <summary>
-/// Whether this stylesheet is a &lt;style&gt; tag created by the parser. This is not set for document.written &lt;style&gt; tags.
-/// </summary>
-public bool? IsInline { get; set; }
-/// <summary>
-/// Line offset of the stylesheet within the resource (zero based).
-/// </summary>
-public double? StartLine { get; set; }
-/// <summary>
-/// Column offset of the stylesheet within the resource (zero based).
-/// </summary>
-public double? StartColumn { get; set; }}
-/// <summary>
-/// CSS stylesheet contents.
-/// </summary>
-internal partial class CSSStyleSheetBody
-{
-/// <summary>
-/// The stylesheet identifier.
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// Stylesheet resource URL.
-/// </summary>
-public CSSRule[] Rules { get; set; }
-/// <summary>
-/// Stylesheet resource contents (if available).
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// CSS rule representation.
-/// </summary>
-internal partial class CSSRule
-{
-/// <summary>
-/// The CSS rule identifier (absent for user agent stylesheet and user-specified stylesheet rules).
-/// </summary>
-public CSSRuleId RuleId { get; set; }
-/// <summary>
-/// Rule selector data.
-/// </summary>
-public SelectorList SelectorList { get; set; }
-/// <summary>
-/// Parent stylesheet resource URL (for regular rules).
-/// </summary>
-public string SourceURL { get; set; }
-/// <summary>
-/// Line ordinal of the rule selector start character in the resource.
-/// </summary>
-public int? SourceLine { get; set; }
-/// <summary>
-/// Parent stylesheet's origin.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public StyleSheetOrigin Origin { get; set; }
-/// <summary>
-/// Associated style declaration.
-/// </summary>
-public CSSStyle Style { get; set; }
-/// <summary>
-/// Grouping list array (for rules involving @media/@supports). The array enumerates CSS groupings starting with the innermost one, going outwards.
-/// </summary>
-public Grouping[] Groupings { get; set; }}
-/// <summary>
-/// Text range within a resource.
-/// </summary>
-internal partial class SourceRange
-{
-/// <summary>
-/// Start line of range.
-/// </summary>
-public int? StartLine { get; set; }
-/// <summary>
-/// Start column of range (inclusive).
-/// </summary>
-public int? StartColumn { get; set; }
-/// <summary>
-/// End line of range
-/// </summary>
-public int? EndLine { get; set; }
-/// <summary>
-/// End column of range (exclusive).
-/// </summary>
-public int? EndColumn { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class ShorthandEntry
-{
-/// <summary>
-/// Shorthand name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Shorthand value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class CSSPropertyInfo
-{
-/// <summary>
-/// Property name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Other names for this property.
-/// </summary>
-public string[] Aliases { get; set; }
-/// <summary>
-/// Longhand property names.
-/// </summary>
-public string[] Longhands { get; set; }
-/// <summary>
-/// Supported values for this property.
-/// </summary>
-public string[] Values { get; set; }
-/// <summary>
-/// Whether the property is able to be inherited.
-/// </summary>
-public bool? Inherited { get; set; }}
-/// <summary>
-/// 
-/// </summary>
-internal partial class CSSComputedStyleProperty
-{
-/// <summary>
-/// Computed style property name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Computed style property value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// CSS style representation.
-/// </summary>
-internal partial class CSSStyle
-{
-/// <summary>
-/// The CSS style identifier (absent for attribute styles).
-/// </summary>
-public CSSStyleId StyleId { get; set; }
-/// <summary>
-/// CSS properties in the style.
-/// </summary>
-public CSSProperty[] CssProperties { get; set; }
-/// <summary>
-/// Computed values for all shorthands found in the style.
-/// </summary>
-public ShorthandEntry[] ShorthandEntries { get; set; }
-/// <summary>
-/// Style declaration text (if available).
-/// </summary>
-public string CssText { get; set; }
-/// <summary>
-/// Style declaration range in the enclosing stylesheet (if available).
-/// </summary>
-public SourceRange Range { get; set; }
-/// <summary>
-/// The effective "width" property value from this style.
-/// </summary>
-public string Width { get; set; }
-/// <summary>
-/// The effective "height" property value from this style.
-/// </summary>
-public string Height { get; set; }}
-/// <summary>
-/// The property status: "active" if the property is effective in the style, "inactive" if the property is overridden by a same-named property in this style later on, "disabled" if the property is disabled by the user, "style" (implied if absent) if the property is reported by the browser rather than by the CSS source parser.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CSSPropertyStatus
-{
-[System.Runtime.Serialization.EnumMember(Value = "active")]Active,
-[System.Runtime.Serialization.EnumMember(Value = "inactive")]Inactive,
-[System.Runtime.Serialization.EnumMember(Value = "disabled")]Disabled,
-[System.Runtime.Serialization.EnumMember(Value = "style")]Style}
-/// <summary>
-/// CSS style effective visual dimensions and source offsets.
-/// </summary>
-internal partial class CSSProperty
-{
-/// <summary>
-/// The property name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// The property value.
-/// </summary>
-public string Value { get; set; }
-/// <summary>
-/// The property priority (implies "" if absent).
-/// </summary>
-public string Priority { get; set; }
-/// <summary>
-/// Whether the property is implicit (implies &lt;code&gt;false&lt;/code&gt; if absent).
-/// </summary>
-public bool? Implicit { get; set; }
-/// <summary>
-/// The full property text as specified in the style.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Whether the property is understood by the browser (implies &lt;code&gt;true&lt;/code&gt; if absent).
-/// </summary>
-public bool? ParsedOk { get; set; }
-/// <summary>
-/// Whether the property is active or disabled.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CSSPropertyStatus? Status { get; set; }
-/// <summary>
-/// The entire property range in the enclosing style declaration (if available).
-/// </summary>
-public SourceRange Range { get; set; }}
-/// <summary>
-/// CSS @media (as well as other users of media queries, like @import, &lt;style&gt;, &lt;link&gt;, etc.) and @supports descriptor.
-/// </summary>
-internal partial class Grouping
-{
-/// <summary>
-/// Media query text.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Source of the media query: "media-rule" if specified by a @media rule, "media-import-rule" if specified by an @import rule, "media-link-node" if specified by a "media" attribute in a linked style sheet's LINK tag, "media-style-node" if specified by a "media" attribute in an inline style sheet's STYLE tag, "supports-rule" if specified by an @supports rule, .
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// URL of the document containing the CSS grouping.
-/// </summary>
-public string SourceURL { get; set; }}
-/// <summary>
-/// Enables the CSS agent for the given page. Clients should not assume that the CSS agent has been enabled until the result of this command is received.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.enable</c>
-/// </remarks>
-internal partial class CSSEnableRequest : IWebkitRequest<CSSEnableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.enable";
-}
-/// <summary>
-/// Response from <see cref="CSSEnableRequest"/>
-/// </summary>
-internal partial class CSSEnableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Disables the CSS agent for the given page.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.disable</c>
-/// </remarks>
-internal partial class CSSDisableRequest : IWebkitRequest<CSSDisableResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.disable";
-}
-/// <summary>
-/// Response from <see cref="CSSDisableRequest"/>
-/// </summary>
-internal partial class CSSDisableResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Returns requested styles for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getMatchedStylesForNode</c>
-/// </remarks>
-internal partial class CSSGetMatchedStylesForNodeRequest : IWebkitRequest<CSSGetMatchedStylesForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getMatchedStylesForNode";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Whether to include pseudo styles (default: true).
-/// </summary>
-public bool? IncludePseudo { get; set; }
-/// <summary>
-/// Whether to include inherited styles (default: true).
-/// </summary>
-public bool? IncludeInherited { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
-/// </summary>
-internal partial class CSSGetMatchedStylesForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// CSS rules matching this node, from all applicable stylesheets.
-/// </summary>
-public RuleMatch[] MatchedCSSRules { get; set; }
-/// <summary>
-/// Pseudo style matches for this node.
-/// </summary>
-public PseudoIdMatches[] PseudoElements { get; set; }
-/// <summary>
-/// A chain of inherited styles (from the immediate node parent up to the DOM tree root).
-/// </summary>
-public InheritedStyleEntry[] Inherited { get; set; }}
-/// <summary>
-/// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM attributes) for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getInlineStylesForNode</c>
-/// </remarks>
-internal partial class CSSGetInlineStylesForNodeRequest : IWebkitRequest<CSSGetInlineStylesForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getInlineStylesForNode";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
-/// </summary>
-internal partial class CSSGetInlineStylesForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Inline style for the specified DOM node.
-/// </summary>
-public CSSStyle InlineStyle { get; set; }
-/// <summary>
-/// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
-/// </summary>
-public CSSStyle AttributesStyle { get; set; }}
-/// <summary>
-/// Returns the computed style for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getComputedStyleForNode</c>
-/// </remarks>
-internal partial class CSSGetComputedStyleForNodeRequest : IWebkitRequest<CSSGetComputedStyleForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getComputedStyleForNode";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
-/// </summary>
-internal partial class CSSGetComputedStyleForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Computed style for the specified DOM node.
-/// </summary>
-public CSSComputedStyleProperty[] ComputedStyle { get; set; }}
-/// <summary>
-/// Returns metainfo entries for all known stylesheets.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getAllStyleSheets</c>
-/// </remarks>
-internal partial class CSSGetAllStyleSheetsRequest : IWebkitRequest<CSSGetAllStyleSheetsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getAllStyleSheets";
-}
-/// <summary>
-/// Response from <see cref="CSSGetAllStyleSheetsRequest"/>
-/// </summary>
-internal partial class CSSGetAllStyleSheetsResponse: IWebkitResponse
-{
-/// <summary>
-/// Descriptor entries for all available stylesheets.
-/// </summary>
-public CSSStyleSheetHeader[] Headers { get; set; }}
-/// <summary>
-/// Returns stylesheet data for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getStyleSheet</c>
-/// </remarks>
-internal partial class CSSGetStyleSheetRequest : IWebkitRequest<CSSGetStyleSheetResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getStyleSheet";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetStyleSheetRequest"/>
-/// </summary>
-internal partial class CSSGetStyleSheetResponse: IWebkitResponse
-{
-/// <summary>
-/// Stylesheet contents for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
-/// </summary>
-public CSSStyleSheetBody StyleSheet { get; set; }}
-/// <summary>
-/// Returns the current textual content and the URL for a stylesheet.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getStyleSheetText</c>
-/// </remarks>
-internal partial class CSSGetStyleSheetTextRequest : IWebkitRequest<CSSGetStyleSheetTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getStyleSheetText";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSGetStyleSheetTextRequest"/>
-/// </summary>
-internal partial class CSSGetStyleSheetTextResponse: IWebkitResponse
-{
-/// <summary>
-/// The stylesheet text.
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// Sets the new stylesheet text, thereby invalidating all existing &lt;code&gt;CSSStyleId&lt;/code&gt;'s and &lt;code&gt;CSSRuleId&lt;/code&gt;'s contained by this stylesheet.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.setStyleSheetText</c>
-/// </remarks>
-internal partial class CSSSetStyleSheetTextRequest : IWebkitRequest<CSSSetStyleSheetTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.setStyleSheetText";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSSetStyleSheetTextRequest"/>
-/// </summary>
-internal partial class CSSSetStyleSheetTextResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Sets the new &lt;code&gt;text&lt;/code&gt; for the respective style.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.setStyleText</c>
-/// </remarks>
-internal partial class CSSSetStyleTextRequest : IWebkitRequest<CSSSetStyleTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.setStyleText";
-/// <summary>
-/// 
-/// </summary>
-public CSSStyleId StyleId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Text { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSSetStyleTextRequest"/>
-/// </summary>
-internal partial class CSSSetStyleTextResponse: IWebkitResponse
-{
-/// <summary>
-/// The resulting style after the text modification.
-/// </summary>
-public CSSStyle Style { get; set; }}
-/// <summary>
-/// Modifies the rule selector.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.setRuleSelector</c>
-/// </remarks>
-internal partial class CSSSetRuleSelectorRequest : IWebkitRequest<CSSSetRuleSelectorResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.setRuleSelector";
-/// <summary>
-/// 
-/// </summary>
-public CSSRuleId RuleId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Selector { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSSetRuleSelectorRequest"/>
-/// </summary>
-internal partial class CSSSetRuleSelectorResponse: IWebkitResponse
-{
-/// <summary>
-/// The resulting rule after the selector modification.
-/// </summary>
-public CSSRule Rule { get; set; }}
-/// <summary>
-/// Creates a new special "inspector" stylesheet in the frame with given &lt;code&gt;frameId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.createStyleSheet</c>
-/// </remarks>
-internal partial class CSSCreateStyleSheetRequest : IWebkitRequest<CSSCreateStyleSheetResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.createStyleSheet";
-/// <summary>
-/// Identifier of the frame where the new "inspector" stylesheet should be created.
-/// </summary>
-public string FrameId { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSCreateStyleSheetRequest"/>
-/// </summary>
-internal partial class CSSCreateStyleSheetResponse: IWebkitResponse
-{
-/// <summary>
-/// Identifier of the created "inspector" stylesheet.
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Creates a new empty rule with the given &lt;code&gt;selector&lt;/code&gt; in a stylesheet with given &lt;code&gt;styleSheetId&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.addRule</c>
-/// </remarks>
-internal partial class CSSAddRuleRequest : IWebkitRequest<CSSAddRuleResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.addRule";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Selector { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSAddRuleRequest"/>
-/// </summary>
-internal partial class CSSAddRuleResponse: IWebkitResponse
-{
-/// <summary>
-/// The newly created rule.
-/// </summary>
-public CSSRule Rule { get; set; }}
-/// <summary>
-/// Returns all supported CSS property names.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getSupportedCSSProperties</c>
-/// </remarks>
-internal partial class CSSGetSupportedCSSPropertiesRequest : IWebkitRequest<CSSGetSupportedCSSPropertiesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getSupportedCSSProperties";
-}
-/// <summary>
-/// Response from <see cref="CSSGetSupportedCSSPropertiesRequest"/>
-/// </summary>
-internal partial class CSSGetSupportedCSSPropertiesResponse: IWebkitResponse
-{
-/// <summary>
-/// Supported property metainfo.
-/// </summary>
-public CSSPropertyInfo[] CssProperties { get; set; }}
-/// <summary>
-/// Returns all supported system font family names.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.getSupportedSystemFontFamilyNames</c>
-/// </remarks>
-internal partial class CSSGetSupportedSystemFontFamilyNamesRequest : IWebkitRequest<CSSGetSupportedSystemFontFamilyNamesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.getSupportedSystemFontFamilyNames";
-}
-/// <summary>
-/// Response from <see cref="CSSGetSupportedSystemFontFamilyNamesRequest"/>
-/// </summary>
-internal partial class CSSGetSupportedSystemFontFamilyNamesResponse: IWebkitResponse
-{
-/// <summary>
-/// Supported system font families.
-/// </summary>
-public string[] FontFamilyNames { get; set; }}
-/// <summary>
-/// Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>CSS.forcePseudoState</c>
-/// </remarks>
-internal partial class CSSForcePseudoStateRequest : IWebkitRequest<CSSForcePseudoStateResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "CSS.forcePseudoState";
-/// <summary>
-/// The element id for which to force the pseudo state.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Element pseudo classes to force when computing the element's style.
-/// </summary>
-public string[] ForcedPseudoClasses { get; set; }}
-/// <summary>
-/// Response from <see cref="CSSForcePseudoStateRequest"/>
-/// </summary>
-internal partial class CSSForcePseudoStateResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Fires whenever a MediaQuery result changes (for example, after a browser window has been resized.) The current implementation considers only viewport-dependent media features.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.mediaQueryResultChanged</c>
-/// </remarks>
-internal partial class CSSMediaQueryResultChangedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.mediaQueryResultChanged";
-}
-/// <summary>
-/// Fired whenever a stylesheet is changed as a result of the client operation.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.styleSheetChanged</c>
-/// </remarks>
-internal partial class CSSStyleSheetChangedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.styleSheetChanged";
-/// <summary>
-/// 
-/// </summary>
-public string StyleSheetId { get; set; }}
-/// <summary>
-/// Fired whenever an active document stylesheet is added.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.styleSheetAdded</c>
-/// </remarks>
-internal partial class CSSStyleSheetAddedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.styleSheetAdded";
-/// <summary>
-/// Added stylesheet metainfo.
-/// </summary>
-public CSSStyleSheetHeader Header { get; set; }}
-/// <summary>
-/// Fired whenever an active document stylesheet is removed.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>CSS.styleSheetRemoved</c>
-/// </remarks>
-internal partial class CSSStyleSheetRemovedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "CSS.styleSheetRemoved";
-/// <summary>
-/// Identifier of the removed stylesheet.
-/// </summary>
-public string StyleSheetId { get; set; }}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Canvas
 {
-/// <summary>
-/// The type of rendering context backing the canvas element.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ContextType
-{
-[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
-[System.Runtime.Serialization.EnumMember(Value = "bitmaprenderer")]Bitmaprenderer,
-[System.Runtime.Serialization.EnumMember(Value = "webgl")]Webgl,
-[System.Runtime.Serialization.EnumMember(Value = "webgl2")]Webgl2,
-[System.Runtime.Serialization.EnumMember(Value = "webgpu")]Webgpu}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ProgramType
-{
-[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
-[System.Runtime.Serialization.EnumMember(Value = "render")]Render}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ShaderType
-{
-[System.Runtime.Serialization.EnumMember(Value = "compute")]Compute,
-[System.Runtime.Serialization.EnumMember(Value = "fragment")]Fragment,
-[System.Runtime.Serialization.EnumMember(Value = "vertex")]Vertex}
 /// <summary>
 /// Drawing surface attributes.
 /// </summary>
@@ -1846,35 +1352,43 @@ internal partial class ContextAttributes
 /// <summary>
 /// WebGL, WebGL2, ImageBitmapRenderingContext
 /// </summary>
-public bool? Alpha { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("alpha")] public bool? Alpha { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2
 /// </summary>
-public bool? Depth { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public bool? Depth { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2
 /// </summary>
-public bool? Stencil { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stencil")] public bool? Stencil { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2
 /// </summary>
-public bool? Antialias { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("antialias")] public bool? Antialias { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2
 /// </summary>
-public bool? PremultipliedAlpha { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("premultipliedAlpha")] public bool? PremultipliedAlpha { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2
 /// </summary>
-public bool? PreserveDrawingBuffer { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("preserveDrawingBuffer")] public bool? PreserveDrawingBuffer { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2
 /// </summary>
-public bool? FailIfMajorPerformanceCaveat { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("failIfMajorPerformanceCaveat")] public bool? FailIfMajorPerformanceCaveat { get; set; }
+
 /// <summary>
 /// WebGL, WebGL2, WebGPU
 /// </summary>
-public string PowerPreference { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("powerPreference")] public string PowerPreference { get; set; }
+}
 /// <summary>
 /// Information about a canvas for which a rendering context has been created.
 /// </summary>
@@ -1883,32 +1397,39 @@ internal partial class Canvas
 /// <summary>
 /// Canvas identifier.
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// The type of rendering context backing the canvas.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ContextType ContextType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextType")] public ContextType ContextType { get; set; }
+
 /// <summary>
 /// The corresponding DOM node id.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// The CSS canvas identifier, for canvases created with &lt;code&gt;document.getCSSCanvasContext&lt;/code&gt;.
 /// </summary>
-public string CssCanvasName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cssCanvasName")] public string CssCanvasName { get; set; }
+
 /// <summary>
 /// Context attributes for rendering contexts.
 /// </summary>
-public ContextAttributes ContextAttributes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextAttributes")] public ContextAttributes ContextAttributes { get; set; }
+
 /// <summary>
 /// Memory usage of the canvas in bytes.
 /// </summary>
-public double? MemoryCost { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("memoryCost")] public double? MemoryCost { get; set; }
+
 /// <summary>
 /// Backtrace that was captured when this canvas context was created.
 /// </summary>
-public Console.CallFrame[] Backtrace { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("backtrace")] public Console.CallFrame[] Backtrace { get; set; }
+}
 /// <summary>
 /// Information about a WebGL/WebGL2 shader program or WebGPU shader pipeline.
 /// </summary>
@@ -1917,20 +1438,24 @@ internal partial class ShaderProgram
 /// <summary>
 /// 
 /// </summary>
-public string ProgramId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("programId")] public string ProgramId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ProgramType ProgramType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("programType")] public ProgramType ProgramType { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// Indicates whether the vertex and fragment shader modules are the same object for a render shader pipleine for a WebGPU device.
 /// </summary>
-public bool? SharesVertexFragmentShader { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sharesVertexFragmentShader")] public bool? SharesVertexFragmentShader { get; set; }
+}
 /// <summary>
 /// Enables Canvas domain events.
 /// </summary>
@@ -1978,7 +1503,8 @@ public string Command { get; } = "Canvas.requestNode";
 /// <summary>
 /// Canvas identifier.
 /// </summary>
-public string CanvasId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasRequestNodeRequest"/>
 /// </summary>
@@ -1987,7 +1513,8 @@ internal partial class CanvasRequestNodeResponse: IWebkitResponse
 /// <summary>
 /// Node identifier for given canvas.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Gets the data for the canvas node with the given CanvasId.
 /// </summary>
@@ -2001,7 +1528,8 @@ public string Command { get; } = "Canvas.requestContent";
 /// <summary>
 /// Canvas identifier.
 /// </summary>
-public string CanvasId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasRequestContentRequest"/>
 /// </summary>
@@ -2010,7 +1538,8 @@ internal partial class CanvasRequestContentResponse: IWebkitResponse
 /// <summary>
 /// Base64-encoded data of the canvas' contents.
 /// </summary>
-public string Content { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+}
 /// <summary>
 /// Gets all &lt;code&gt;-webkit-canvas&lt;/code&gt; nodes or active &lt;code&gt;HTMLCanvasElement&lt;/code&gt; for a &lt;code&gt;WebGPUDevice&lt;/code&gt;.
 /// </summary>
@@ -2024,7 +1553,8 @@ public string Command { get; } = "Canvas.requestClientNodes";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasRequestClientNodesRequest"/>
 /// </summary>
@@ -2033,7 +1563,8 @@ internal partial class CanvasRequestClientNodesResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public int?[] ClientNodeIds { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("clientNodeIds")] public int?[] ClientNodeIds { get; set; }
+}
 /// <summary>
 /// Resolves JavaScript canvas/device context object for given canvasId.
 /// </summary>
@@ -2047,11 +1578,13 @@ public string Command { get; } = "Canvas.resolveContext";
 /// <summary>
 /// Canvas identifier.
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasResolveContextRequest"/>
 /// </summary>
@@ -2060,7 +1593,8 @@ internal partial class CanvasResolveContextResponse: IWebkitResponse
 /// <summary>
 /// JavaScript object wrapper for given canvas context.
 /// </summary>
-public Runtime.RemoteObject Object { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+}
 /// <summary>
 /// Tells the backend to record `count` frames whenever a new context is created.
 /// </summary>
@@ -2074,7 +1608,8 @@ public string Command { get; } = "Canvas.setRecordingAutoCaptureFrameCount";
 /// <summary>
 /// Number of frames to record (0 means don't record anything).
 /// </summary>
-public int? Count { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("count")] public int? Count { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasSetRecordingAutoCaptureFrameCountRequest"/>
 /// </summary>
@@ -2094,15 +1629,18 @@ public string Command { get; } = "Canvas.startRecording";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// Number of frames to record (unlimited when not specified).
 /// </summary>
-public int? FrameCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameCount")] public int? FrameCount { get; set; }
+
 /// <summary>
 /// Memory limit of recorded data (100MB when not specified).
 /// </summary>
-public int? MemoryLimit { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("memoryLimit")] public int? MemoryLimit { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasStartRecordingRequest"/>
 /// </summary>
@@ -2122,7 +1660,8 @@ public string Command { get; } = "Canvas.stopRecording";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasStopRecordingRequest"/>
 /// </summary>
@@ -2142,12 +1681,14 @@ public string Command { get; } = "Canvas.requestShaderSource";
 /// <summary>
 /// 
 /// </summary>
-public string ProgramId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("programId")] public string ProgramId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ShaderType ShaderType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("shaderType")] public ShaderType ShaderType { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasRequestShaderSourceRequest"/>
 /// </summary>
@@ -2156,7 +1697,8 @@ internal partial class CanvasRequestShaderSourceResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public string Source { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+}
 /// <summary>
 /// Compiles and links the shader with identifier and type with the given source code.
 /// </summary>
@@ -2170,16 +1712,19 @@ public string Command { get; } = "Canvas.updateShader";
 /// <summary>
 /// 
 /// </summary>
-public string ProgramId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("programId")] public string ProgramId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ShaderType ShaderType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shaderType")] public ShaderType ShaderType { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Source { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasUpdateShaderRequest"/>
 /// </summary>
@@ -2199,11 +1744,13 @@ public string Command { get; } = "Canvas.setShaderProgramDisabled";
 /// <summary>
 /// 
 /// </summary>
-public string ProgramId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("programId")] public string ProgramId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? Disabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasSetShaderProgramDisabledRequest"/>
 /// </summary>
@@ -2223,11 +1770,13 @@ public string Command { get; } = "Canvas.setShaderProgramHighlighted";
 /// <summary>
 /// 
 /// </summary>
-public string ProgramId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("programId")] public string ProgramId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? Highlighted { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("highlighted")] public bool? Highlighted { get; set; }
+}
 /// <summary>
 /// Response from <see cref="CanvasSetShaderProgramHighlightedRequest"/>
 /// </summary>
@@ -2246,7 +1795,8 @@ public string InternalName { get; } = "Canvas.canvasAdded";
 /// <summary>
 /// Canvas object.
 /// </summary>
-public Canvas Canvas { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvas")] public Canvas Canvas { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2259,7 +1809,8 @@ public string InternalName { get; } = "Canvas.canvasRemoved";
 /// <summary>
 /// Removed canvas identifier.
 /// </summary>
-public string CanvasId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2272,11 +1823,13 @@ public string InternalName { get; } = "Canvas.canvasMemoryChanged";
 /// <summary>
 /// Identifier of canvas that changed.
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// New memory cost value for the canvas in bytes.
 /// </summary>
-public double? MemoryCost { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("memoryCost")] public double? MemoryCost { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2289,11 +1842,13 @@ public string InternalName { get; } = "Canvas.extensionEnabled";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// Name of the extension that was enabled.
 /// </summary>
-public string Extension { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("extension")] public string Extension { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2306,7 +1861,8 @@ public string InternalName { get; } = "Canvas.clientNodesChanged";
 /// <summary>
 /// Identifier of canvas that changed.
 /// </summary>
-public string CanvasId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2319,11 +1875,14 @@ public string InternalName { get; } = "Canvas.recordingStarted";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Recording.Initiator Initiator { get; set; }}
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("initiator")] public Recording.Initiator Initiator { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2336,15 +1895,18 @@ public string InternalName { get; } = "Canvas.recordingProgress";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Recording.Frame[] Frames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frames")] public Recording.Frame[] Frames { get; set; }
+
 /// <summary>
 /// Total memory size in bytes of all data recorded since the recording began.
 /// </summary>
-public int? BufferUsed { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("bufferUsed")] public int? BufferUsed { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2357,11 +1919,13 @@ public string InternalName { get; } = "Canvas.recordingFinished";
 /// <summary>
 /// 
 /// </summary>
-public string CanvasId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvasId")] public string CanvasId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Recording.Recording Recording { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("recording")] public Recording.Recording Recording { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2374,7 +1938,8 @@ public string InternalName { get; } = "Canvas.programCreated";
 /// <summary>
 /// 
 /// </summary>
-public ShaderProgram ShaderProgram { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("shaderProgram")] public ShaderProgram ShaderProgram { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -2387,39 +1952,11 @@ public string InternalName { get; } = "Canvas.programDeleted";
 /// <summary>
 /// 
 /// </summary>
-public string ProgramId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("programId")] public string ProgramId { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Console
 {
-/// <summary>
-/// Channels for different types of log messages.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ChannelSource
-{
-[System.Runtime.Serialization.EnumMember(Value = "xml")]Xml,
-[System.Runtime.Serialization.EnumMember(Value = "javascript")]Javascript,
-[System.Runtime.Serialization.EnumMember(Value = "network")]Network,
-[System.Runtime.Serialization.EnumMember(Value = "console-api")]ConsoleApi,
-[System.Runtime.Serialization.EnumMember(Value = "storage")]Storage,
-[System.Runtime.Serialization.EnumMember(Value = "appcache")]Appcache,
-[System.Runtime.Serialization.EnumMember(Value = "rendering")]Rendering,
-[System.Runtime.Serialization.EnumMember(Value = "css")]Css,
-[System.Runtime.Serialization.EnumMember(Value = "security")]Security,
-[System.Runtime.Serialization.EnumMember(Value = "content-blocker")]ContentBlocker,
-[System.Runtime.Serialization.EnumMember(Value = "media")]Media,
-[System.Runtime.Serialization.EnumMember(Value = "mediasource")]Mediasource,
-[System.Runtime.Serialization.EnumMember(Value = "webrtc")]Webrtc,
-[System.Runtime.Serialization.EnumMember(Value = "other")]Other}
-/// <summary>
-/// Level of logging.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ChannelLevel
-{
-[System.Runtime.Serialization.EnumMember(Value = "off")]Off,
-[System.Runtime.Serialization.EnumMember(Value = "basic")]Basic,
-[System.Runtime.Serialization.EnumMember(Value = "verbose")]Verbose}
 /// <summary>
 /// Logging channel.
 /// </summary>
@@ -2429,12 +1966,14 @@ internal partial class Channel
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelSource Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public ChannelSource Source { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelLevel Level { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("level")] public ChannelLevel Level { get; set; }
+}
 /// <summary>
 /// Console message.
 /// </summary>
@@ -2444,47 +1983,58 @@ internal partial class ConsoleMessage
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelSource Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public ChannelSource Source { get; set; }
+
 /// <summary>
 /// Message severity.
 /// </summary>
-public string Level { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("level")] public string Level { get; set; }
+
 /// <summary>
 /// Message text.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Console message type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// URL of the message origin.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Line number in the resource that generated this message.
 /// </summary>
-public int? Line { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("line")] public int? Line { get; set; }
+
 /// <summary>
 /// Column number on the line in the resource that generated this message.
 /// </summary>
-public int? Column { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("column")] public int? Column { get; set; }
+
 /// <summary>
 /// Repeat count for repeated messages.
 /// </summary>
-public int? RepeatCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("repeatCount")] public int? RepeatCount { get; set; }
+
 /// <summary>
 /// Message parameters in case of the formatted message.
 /// </summary>
-public Runtime.RemoteObject[] Parameters { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parameters")] public Runtime.RemoteObject[] Parameters { get; set; }
+
 /// <summary>
 /// JavaScript stack trace for assertions and error messages.
 /// </summary>
-public CallFrame[] StackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public CallFrame[] StackTrace { get; set; }
+
 /// <summary>
 /// Identifier of the network request associated with this message.
 /// </summary>
-public string NetworkRequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("networkRequestId")] public string NetworkRequestId { get; set; }
+}
 /// <summary>
 /// Stack entry for console errors and assertions.
 /// </summary>
@@ -2493,23 +2043,28 @@ internal partial class CallFrame
 /// <summary>
 /// JavaScript function name.
 /// </summary>
-public string FunctionName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionName")] public string FunctionName { get; set; }
+
 /// <summary>
 /// JavaScript script name or url.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Script identifier.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// JavaScript script line number.
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// JavaScript script column number.
 /// </summary>
-public int? ColumnNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+}
 /// <summary>
 /// Call frames for async function calls, console assertions, and error messages.
 /// </summary>
@@ -2518,19 +2073,23 @@ internal partial class StackTrace
 /// <summary>
 /// 
 /// </summary>
-public CallFrame[] CallFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrames")] public CallFrame[] CallFrames { get; set; }
+
 /// <summary>
 /// Whether the first item in &lt;code&gt;callFrames&lt;/code&gt; is the native function that scheduled the asynchronous operation (e.g. setTimeout).
 /// </summary>
-public bool? TopCallFrameIsBoundary { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("topCallFrameIsBoundary")] public bool? TopCallFrameIsBoundary { get; set; }
+
 /// <summary>
 /// Whether one or more frames have been truncated from the bottom of the stack.
 /// </summary>
-public bool? Truncated { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("truncated")] public bool? Truncated { get; set; }
+
 /// <summary>
 /// Parent StackTrace.
 /// </summary>
-public StackTrace ParentStackTrace { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("parentStackTrace")] public StackTrace ParentStackTrace { get; set; }
+}
 /// <summary>
 /// Enables console domain, sends the messages collected so far to the client by means of the &lt;code&gt;messageAdded&lt;/code&gt; notification.
 /// </summary>
@@ -2601,7 +2160,8 @@ internal partial class ConsoleGetLoggingChannelsResponse: IWebkitResponse
 /// <summary>
 /// Logging channels.
 /// </summary>
-public Channel[] Channels { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("channels")] public Channel[] Channels { get; set; }
+}
 /// <summary>
 /// Modify the level of a channel.
 /// </summary>
@@ -2616,12 +2176,14 @@ public string Command { get; } = "Console.setLoggingChannelLevel";
 /// Logging channel to modify.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelSource Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public ChannelSource Source { get; set; }
+
 /// <summary>
 /// New level.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ChannelLevel Level { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("level")] public ChannelLevel Level { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ConsoleSetLoggingChannelLevelRequest"/>
 /// </summary>
@@ -2640,7 +2202,8 @@ public string InternalName { get; } = "Console.messageAdded";
 /// <summary>
 /// Console message that has been added.
 /// </summary>
-public ConsoleMessage Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public ConsoleMessage Message { get; set; }
+}
 /// <summary>
 /// Issued when subsequent message(s) are equal to the previous one(s).
 /// </summary>
@@ -2653,7 +2216,8 @@ public string InternalName { get; } = "Console.messageRepeatCountUpdated";
 /// <summary>
 /// New repeat count value.
 /// </summary>
-public int? Count { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("count")] public int? Count { get; set; }
+}
 /// <summary>
 /// Issued when console is cleared. This happens either upon &lt;code&gt;clearMessages&lt;/code&gt; command or after page navigation.
 /// </summary>
@@ -2676,2248 +2240,1045 @@ public string InternalName { get; } = "Console.heapSnapshot";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Snapshot at the end of tracking.
 /// </summary>
-public string SnapshotData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("snapshotData")] public string SnapshotData { get; set; }
+
 /// <summary>
 /// Optional title provided to console.takeHeapSnapshot.
 /// </summary>
-public string Title { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
 }
-namespace PlaywrightSharp.Webkit.Protocol.DOM
-{
-/// <summary>
-/// Pseudo element type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum PseudoType
-{
-[System.Runtime.Serialization.EnumMember(Value = "before")]Before,
-[System.Runtime.Serialization.EnumMember(Value = "after")]After}
-/// <summary>
-/// Shadow root type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ShadowRootType
-{
-[System.Runtime.Serialization.EnumMember(Value = "user-agent")]UserAgent,
-[System.Runtime.Serialization.EnumMember(Value = "open")]Open,
-[System.Runtime.Serialization.EnumMember(Value = "closed")]Closed}
-/// <summary>
-/// Custom element state.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CustomElementState
-{
-[System.Runtime.Serialization.EnumMember(Value = "builtin")]Builtin,
-[System.Runtime.Serialization.EnumMember(Value = "custom")]Custom,
-[System.Runtime.Serialization.EnumMember(Value = "waiting")]Waiting,
-[System.Runtime.Serialization.EnumMember(Value = "failed")]Failed}
-/// <summary>
-/// Token values of @aria-relevant attribute.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum LiveRegionRelevant
-{
-[System.Runtime.Serialization.EnumMember(Value = "additions")]Additions,
-[System.Runtime.Serialization.EnumMember(Value = "removals")]Removals,
-[System.Runtime.Serialization.EnumMember(Value = "text")]Text}
-/// <summary>
-/// DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type.
-/// </summary>
-internal partial class Node
-{
-/// <summary>
-/// Node identifier that is passed into the rest of the DOM messages as the &lt;code&gt;nodeId&lt;/code&gt;. Backend will only push node with given &lt;code&gt;id&lt;/code&gt; once. It is aware of all requested nodes and will only fire DOM events for nodes known to the client.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// &lt;code&gt;Node&lt;/code&gt;'s nodeType.
-/// </summary>
-public int? NodeType { get; set; }
-/// <summary>
-/// &lt;code&gt;Node&lt;/code&gt;'s nodeName.
-/// </summary>
-public string NodeName { get; set; }
-/// <summary>
-/// &lt;code&gt;Node&lt;/code&gt;'s localName.
-/// </summary>
-public string LocalName { get; set; }
-/// <summary>
-/// &lt;code&gt;Node&lt;/code&gt;'s nodeValue.
-/// </summary>
-public string NodeValue { get; set; }
-/// <summary>
-/// Identifier of the containing frame.
-/// </summary>
-public string FrameId { get; set; }
-/// <summary>
-/// Child count for &lt;code&gt;Container&lt;/code&gt; nodes.
-/// </summary>
-public int? ChildNodeCount { get; set; }
-/// <summary>
-/// Child nodes of this node when requested with children.
-/// </summary>
-public Node[] Children { get; set; }
-/// <summary>
-/// Attributes of the &lt;code&gt;Element&lt;/code&gt; node in the form of flat array &lt;code&gt;[name1, value1, name2, value2]&lt;/code&gt;.
-/// </summary>
-public string[] Attributes { get; set; }
-/// <summary>
-/// Document URL that &lt;code&gt;Document&lt;/code&gt; or &lt;code&gt;FrameOwner&lt;/code&gt; node points to.
-/// </summary>
-public string DocumentURL { get; set; }
-/// <summary>
-/// Base URL that &lt;code&gt;Document&lt;/code&gt; or &lt;code&gt;FrameOwner&lt;/code&gt; node uses for URL completion.
-/// </summary>
-public string BaseURL { get; set; }
-/// <summary>
-/// &lt;code&gt;DocumentType&lt;/code&gt;'s publicId.
-/// </summary>
-public string PublicId { get; set; }
-/// <summary>
-/// &lt;code&gt;DocumentType&lt;/code&gt;'s systemId.
-/// </summary>
-public string SystemId { get; set; }
-/// <summary>
-/// &lt;code&gt;Document&lt;/code&gt;'s XML version in case of XML documents.
-/// </summary>
-public string XmlVersion { get; set; }
-/// <summary>
-/// &lt;code&gt;Attr&lt;/code&gt;'s name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// &lt;code&gt;Attr&lt;/code&gt;'s value.
-/// </summary>
-public string Value { get; set; }
-/// <summary>
-/// Pseudo element type for this node.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public PseudoType? PseudoType { get; set; }
-/// <summary>
-/// Shadow root type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ShadowRootType? ShadowRootType { get; set; }
-/// <summary>
-/// Custom element state.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CustomElementState? CustomElementState { get; set; }
-/// <summary>
-/// Content document for frame owner elements.
-/// </summary>
-public Node ContentDocument { get; set; }
-/// <summary>
-/// Shadow root list for given element host.
-/// </summary>
-public Node[] ShadowRoots { get; set; }
-/// <summary>
-/// Content document fragment for template elements
-/// </summary>
-public Node TemplateContent { get; set; }
-/// <summary>
-/// Pseudo elements associated with this node.
-/// </summary>
-public Node[] PseudoElements { get; set; }
-/// <summary>
-/// Computed SHA-256 Content Security Policy hash source for given element.
-/// </summary>
-public string ContentSecurityPolicyHash { get; set; }}
-/// <summary>
-/// Relationship between data that is associated with a node and the node itself.
-/// </summary>
-internal partial class DataBinding
-{
-/// <summary>
-/// The binding key that is specified.
-/// </summary>
-public string Binding { get; set; }
-/// <summary>
-/// A more descriptive name for the type of binding that represents this paritcular data relationship
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// The value that is resolved to with this data binding relationship.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// A structure holding event listener properties.
-/// </summary>
-internal partial class EventListener
-{
-/// <summary>
-/// 
-/// </summary>
-public int? EventListenerId { get; set; }
-/// <summary>
-/// &lt;code&gt;EventListener&lt;/code&gt;'s type.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// &lt;code&gt;EventListener&lt;/code&gt;'s useCapture.
-/// </summary>
-public bool? UseCapture { get; set; }
-/// <summary>
-/// &lt;code&gt;EventListener&lt;/code&gt;'s isAttribute.
-/// </summary>
-public bool? IsAttribute { get; set; }
-/// <summary>
-/// The target &lt;code&gt;DOMNode&lt;/code&gt; id if the event listener is for a node.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// True if the event listener was added to the window.
-/// </summary>
-public bool? OnWindow { get; set; }
-/// <summary>
-/// Handler code location.
-/// </summary>
-public Debugger.Location Location { get; set; }
-/// <summary>
-/// Event handler function name.
-/// </summary>
-public string HandlerName { get; set; }
-/// <summary>
-/// &lt;code&gt;EventListener&lt;/code&gt;'s passive.
-/// </summary>
-public bool? Passive { get; set; }
-/// <summary>
-/// &lt;code&gt;EventListener&lt;/code&gt;'s once.
-/// </summary>
-public bool? Once { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public bool? Disabled { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public bool? HasBreakpoint { get; set; }}
-/// <summary>
-/// A structure holding accessibility properties.
-/// </summary>
-internal partial class AccessibilityProperties
-{
-/// <summary>
-/// &lt;code&gt;DOMNode&lt;/code&gt; id of the accessibility object referenced by aria-activedescendant.
-/// </summary>
-public int? ActiveDescendantNodeId { get; set; }
-/// <summary>
-/// Value of @aria-busy on current or ancestor node.
-/// </summary>
-public bool? Busy { get; set; }
-/// <summary>
-/// Checked state of certain form controls.
-/// </summary>
-public string Checked { get; set; }
-/// <summary>
-/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of the accessibility tree children if available.
-/// </summary>
-public int?[] ChildNodeIds { get; set; }
-/// <summary>
-/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any nodes referenced via @aria-controls.
-/// </summary>
-public int?[] ControlledNodeIds { get; set; }
-/// <summary>
-/// Current item within a container or set of related elements.
-/// </summary>
-public string Current { get; set; }
-/// <summary>
-/// Disabled state of form controls.
-/// </summary>
-public bool? Disabled { get; set; }
-/// <summary>
-/// Heading level of a heading element.
-/// </summary>
-public double? HeadingLevel { get; set; }
-/// <summary>
-/// The hierarchical level of an element.
-/// </summary>
-public double? HierarchyLevel { get; set; }
-/// <summary>
-/// Whether an element is a popup button.
-/// </summary>
-public bool? IsPopUpButton { get; set; }
-/// <summary>
-/// Indicates whether there is an existing AX object for the DOM node. If this is false, all the other properties will be default values.
-/// </summary>
-public bool? Exists { get; set; }
-/// <summary>
-/// Expanded state.
-/// </summary>
-public bool? Expanded { get; set; }
-/// <summary>
-/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any nodes referenced via @aria-flowto.
-/// </summary>
-public int?[] FlowedNodeIds { get; set; }
-/// <summary>
-/// Focused state. Only defined on focusable elements.
-/// </summary>
-public bool? Focused { get; set; }
-/// <summary>
-/// Indicates whether the accessibility of the associated AX object node is ignored, whether heuristically or explicitly.
-/// </summary>
-public bool? Ignored { get; set; }
-/// <summary>
-/// State indicating whether the accessibility of the associated AX object node is ignored by default for node type.
-/// </summary>
-public bool? IgnoredByDefault { get; set; }
-/// <summary>
-/// Invalid status of form controls.
-/// </summary>
-public string Invalid { get; set; }
-/// <summary>
-/// Hidden state. True if node or an ancestor is hidden via CSS or explicit @aria-hidden, to clarify why the element is ignored.
-/// </summary>
-public bool? Hidden { get; set; }
-/// <summary>
-/// Computed label value for the node, sometimes calculated by referencing other nodes.
-/// </summary>
-public string Label { get; set; }
-/// <summary>
-/// Value of @aria-atomic.
-/// </summary>
-public bool? LiveRegionAtomic { get; set; }
-/// <summary>
-/// Token value(s) of element's @aria-relevant attribute. Array of string values matching $ref LiveRegionRelevant. FIXME: Enum values blocked by http://webkit.org/b/133711
-/// </summary>
-public string[] LiveRegionRelevant { get; set; }
-/// <summary>
-/// Value of element's @aria-live attribute.
-/// </summary>
-public string LiveRegionStatus { get; set; }
-/// <summary>
-/// &lt;code&gt;DOMNode&lt;/code&gt; id of node or closest ancestor node that has a mousedown, mouseup, or click event handler.
-/// </summary>
-public int? MouseEventNodeId { get; set; }
-/// <summary>
-/// Target &lt;code&gt;DOMNode&lt;/code&gt; id.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any nodes referenced via @aria-owns.
-/// </summary>
-public int?[] OwnedNodeIds { get; set; }
-/// <summary>
-/// &lt;code&gt;DOMNode&lt;/code&gt; id of the accessibility tree parent object if available.
-/// </summary>
-public int? ParentNodeId { get; set; }
-/// <summary>
-/// Pressed state for toggle buttons.
-/// </summary>
-public bool? Pressed { get; set; }
-/// <summary>
-/// Readonly state of text controls.
-/// </summary>
-public bool? Readonly { get; set; }
-/// <summary>
-/// Required state of form controls.
-/// </summary>
-public bool? Required { get; set; }
-/// <summary>
-/// Computed value for first recognized role token, default role per element, or overridden role.
-/// </summary>
-public string Role { get; set; }
-/// <summary>
-/// Selected state of certain form controls.
-/// </summary>
-public bool? Selected { get; set; }
-/// <summary>
-/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any children marked as selected.
-/// </summary>
-public int?[] SelectedChildNodeIds { get; set; }}
-/// <summary>
-/// A structure holding an RGBA color.
-/// </summary>
-internal partial class RGBAColor
-{
-/// <summary>
-/// The red component, in the [0-255] range.
-/// </summary>
-public int? R { get; set; }
-/// <summary>
-/// The green component, in the [0-255] range.
-/// </summary>
-public int? G { get; set; }
-/// <summary>
-/// The blue component, in the [0-255] range.
-/// </summary>
-public int? B { get; set; }
-/// <summary>
-/// The alpha component, in the [0-1] range (default: 1).
-/// </summary>
-public double? A { get; set; }}
-/// <summary>
-/// Configuration data for the highlighting of page elements.
-/// </summary>
-internal partial class HighlightConfig
-{
-/// <summary>
-/// Whether the node info tooltip should be shown (default: false).
-/// </summary>
-public bool? ShowInfo { get; set; }
-/// <summary>
-/// The content box highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor ContentColor { get; set; }
-/// <summary>
-/// The padding highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor PaddingColor { get; set; }
-/// <summary>
-/// The border highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor BorderColor { get; set; }
-/// <summary>
-/// The margin highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor MarginColor { get; set; }}
-/// <summary>
-/// Data to construct File object.
-/// </summary>
-internal partial class FilePayload
-{
-/// <summary>
-/// File name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// File type.
-/// </summary>
-public string Type { get; set; }
-/// <summary>
-/// Base64-encoded file data.
-/// </summary>
-public string Data { get; set; }}
-/// <summary>
-/// Returns the root DOM node to the caller.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getDocument</c>
-/// </remarks>
-internal partial class DOMGetDocumentRequest : IWebkitRequest<DOMGetDocumentResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getDocument";
 }
-/// <summary>
-/// Response from <see cref="DOMGetDocumentRequest"/>
-/// </summary>
-internal partial class DOMGetDocumentResponse: IWebkitResponse
+namespace PlaywrightSharp.Webkit.Protocol.CPUProfiler
 {
 /// <summary>
-/// Resulting node.
+/// CPU usage for an individual thread.
 /// </summary>
-public Node Root { get; set; }}
-/// <summary>
-/// Requests that children of the node with given id are returned to the caller in form of &lt;code&gt;setChildNodes&lt;/code&gt; events where not only immediate children are retrieved, but all children down to the specified depth.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.requestChildNodes</c>
-/// </remarks>
-internal partial class DOMRequestChildNodesRequest : IWebkitRequest<DOMRequestChildNodesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.requestChildNodes";
-/// <summary>
-/// Id of the node to get children for.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.
-/// </summary>
-public int? Depth { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMRequestChildNodesRequest"/>
-/// </summary>
-internal partial class DOMRequestChildNodesResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Executes &lt;code&gt;querySelector&lt;/code&gt; on a given node.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.querySelector</c>
-/// </remarks>
-internal partial class DOMQuerySelectorRequest : IWebkitRequest<DOMQuerySelectorResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.querySelector";
-/// <summary>
-/// Id of the node to query upon.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Selector string.
-/// </summary>
-public string Selector { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMQuerySelectorRequest"/>
-/// </summary>
-internal partial class DOMQuerySelectorResponse: IWebkitResponse
+internal partial class ThreadInfo
 {
 /// <summary>
-/// Query selector result.
+/// Some thread identification information.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
-/// Executes &lt;code&gt;querySelectorAll&lt;/code&gt; on a given node.
+/// CPU usage for this thread. This should not exceed 100% for an individual thread.
 /// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.querySelectorAll</c>
-/// </remarks>
-internal partial class DOMQuerySelectorAllRequest : IWebkitRequest<DOMQuerySelectorAllResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.querySelectorAll";
+[System.Text.Json.Serialization.JsonPropertyName("usage")] public double? Usage { get; set; }
+
 /// <summary>
-/// Id of the node to query upon.
+/// Type of thread. There should be a single main thread.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
-/// Selector string.
+/// A thread may be associated with a target, such as a Worker, in the process.
 /// </summary>
-public string Selector { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMQuerySelectorAllRequest"/>
-/// </summary>
-internal partial class DOMQuerySelectorAllResponse: IWebkitResponse
-{
-/// <summary>
-/// Query selector result.
-/// </summary>
-public int?[] NodeIds { get; set; }}
-/// <summary>
-/// Sets node name for a node with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setNodeName</c>
-/// </remarks>
-internal partial class DOMSetNodeNameRequest : IWebkitRequest<DOMSetNodeNameResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setNodeName";
-/// <summary>
-/// Id of the node to set name for.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// New node's name.
-/// </summary>
-public string Name { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetNodeNameRequest"/>
-/// </summary>
-internal partial class DOMSetNodeNameResponse: IWebkitResponse
-{
-/// <summary>
-/// New node's id.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Sets node value for a node with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setNodeValue</c>
-/// </remarks>
-internal partial class DOMSetNodeValueRequest : IWebkitRequest<DOMSetNodeValueResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setNodeValue";
-/// <summary>
-/// Id of the node to set value for.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// New node's value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetNodeValueRequest"/>
-/// </summary>
-internal partial class DOMSetNodeValueResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Removes node with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.removeNode</c>
-/// </remarks>
-internal partial class DOMRemoveNodeRequest : IWebkitRequest<DOMRemoveNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.removeNode";
-/// <summary>
-/// Id of the node to remove.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMRemoveNodeRequest"/>
-/// </summary>
-internal partial class DOMRemoveNodeResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Sets attribute for an element with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setAttributeValue</c>
-/// </remarks>
-internal partial class DOMSetAttributeValueRequest : IWebkitRequest<DOMSetAttributeValueResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setAttributeValue";
-/// <summary>
-/// Id of the element to set attribute for.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Attribute name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Attribute value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetAttributeValueRequest"/>
-/// </summary>
-internal partial class DOMSetAttributeValueResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Sets attributes on element with given id. This method is useful when user edits some existing attribute value and types in several attribute name/value pairs.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setAttributesAsText</c>
-/// </remarks>
-internal partial class DOMSetAttributesAsTextRequest : IWebkitRequest<DOMSetAttributesAsTextResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setAttributesAsText";
-/// <summary>
-/// Id of the element to set attributes for.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Text with a number of attributes. Will parse this text using HTML parser.
-/// </summary>
-public string Text { get; set; }
-/// <summary>
-/// Attribute name to replace with new attributes derived from text in case text parsed successfully.
-/// </summary>
-public string Name { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetAttributesAsTextRequest"/>
-/// </summary>
-internal partial class DOMSetAttributesAsTextResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Removes attribute with given name from an element with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.removeAttribute</c>
-/// </remarks>
-internal partial class DOMRemoveAttributeRequest : IWebkitRequest<DOMRemoveAttributeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.removeAttribute";
-/// <summary>
-/// Id of the element to remove attribute from.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Name of the attribute to remove.
-/// </summary>
-public string Name { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMRemoveAttributeRequest"/>
-/// </summary>
-internal partial class DOMRemoveAttributeResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Gets the list of builtin DOM event names.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getSupportedEventNames</c>
-/// </remarks>
-internal partial class DOMGetSupportedEventNamesRequest : IWebkitRequest<DOMGetSupportedEventNamesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getSupportedEventNames";
-}
-/// <summary>
-/// Response from <see cref="DOMGetSupportedEventNamesRequest"/>
-/// </summary>
-internal partial class DOMGetSupportedEventNamesResponse: IWebkitResponse
-{
-/// <summary>
-/// 
-/// </summary>
-public string[] EventNames { get; set; }}
-/// <summary>
-/// Returns all data binding relationships between data that is associated with the node and the node itself.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getDataBindingsForNode</c>
-/// </remarks>
-internal partial class DOMGetDataBindingsForNodeRequest : IWebkitRequest<DOMGetDataBindingsForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getDataBindingsForNode";
-/// <summary>
-/// Id of the node to get data bindings for.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetDataBindingsForNodeRequest"/>
-/// </summary>
-internal partial class DOMGetDataBindingsForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Array of binding relationships between data and node
-/// </summary>
-public DataBinding[] DataBindings { get; set; }}
-/// <summary>
-/// Returns all data that has been associated with the node and is available for data binding.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getAssociatedDataForNode</c>
-/// </remarks>
-internal partial class DOMGetAssociatedDataForNodeRequest : IWebkitRequest<DOMGetAssociatedDataForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getAssociatedDataForNode";
-/// <summary>
-/// Id of the node to get associated data for.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetAssociatedDataForNodeRequest"/>
-/// </summary>
-internal partial class DOMGetAssociatedDataForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Associated data bound to this node. Sent as a JSON string.
-/// </summary>
-public string AssociatedData { get; set; }}
-/// <summary>
-/// Returns event listeners relevant to the node.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getEventListenersForNode</c>
-/// </remarks>
-internal partial class DOMGetEventListenersForNodeRequest : IWebkitRequest<DOMGetEventListenersForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getEventListenersForNode";
-/// <summary>
-/// Id of the node to get listeners for.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetEventListenersForNodeRequest"/>
-/// </summary>
-internal partial class DOMGetEventListenersForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Array of relevant listeners.
-/// </summary>
-public EventListener[] Listeners { get; set; }}
-/// <summary>
-/// Enable/disable the given event listener. A disabled event listener will not fire.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setEventListenerDisabled</c>
-/// </remarks>
-internal partial class DOMSetEventListenerDisabledRequest : IWebkitRequest<DOMSetEventListenerDisabledResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setEventListenerDisabled";
-/// <summary>
-/// 
-/// </summary>
-public int? EventListenerId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public bool? Disabled { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetEventListenerDisabledRequest"/>
-/// </summary>
-internal partial class DOMSetEventListenerDisabledResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Set a breakpoint on the given event listener.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setBreakpointForEventListener</c>
-/// </remarks>
-internal partial class DOMSetBreakpointForEventListenerRequest : IWebkitRequest<DOMSetBreakpointForEventListenerResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setBreakpointForEventListener";
-/// <summary>
-/// 
-/// </summary>
-public int? EventListenerId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetBreakpointForEventListenerRequest"/>
-/// </summary>
-internal partial class DOMSetBreakpointForEventListenerResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Remove any breakpoints on the given event listener.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.removeBreakpointForEventListener</c>
-/// </remarks>
-internal partial class DOMRemoveBreakpointForEventListenerRequest : IWebkitRequest<DOMRemoveBreakpointForEventListenerResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.removeBreakpointForEventListener";
-/// <summary>
-/// 
-/// </summary>
-public int? EventListenerId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMRemoveBreakpointForEventListenerRequest"/>
-/// </summary>
-internal partial class DOMRemoveBreakpointForEventListenerResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Returns a dictionary of accessibility properties for the node.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getAccessibilityPropertiesForNode</c>
-/// </remarks>
-internal partial class DOMGetAccessibilityPropertiesForNodeRequest : IWebkitRequest<DOMGetAccessibilityPropertiesForNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getAccessibilityPropertiesForNode";
-/// <summary>
-/// Id of the node for which to get accessibility properties.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetAccessibilityPropertiesForNodeRequest"/>
-/// </summary>
-internal partial class DOMGetAccessibilityPropertiesForNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Dictionary of relevant accessibility properties.
-/// </summary>
-public AccessibilityProperties Properties { get; set; }}
-/// <summary>
-/// Returns node's HTML markup.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getOuterHTML</c>
-/// </remarks>
-internal partial class DOMGetOuterHTMLRequest : IWebkitRequest<DOMGetOuterHTMLResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getOuterHTML";
-/// <summary>
-/// Id of the node to get markup for.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetOuterHTMLRequest"/>
-/// </summary>
-internal partial class DOMGetOuterHTMLResponse: IWebkitResponse
-{
-/// <summary>
-/// Outer HTML markup.
-/// </summary>
-public string OuterHTML { get; set; }}
-/// <summary>
-/// Sets node HTML markup, returns new node id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setOuterHTML</c>
-/// </remarks>
-internal partial class DOMSetOuterHTMLRequest : IWebkitRequest<DOMSetOuterHTMLResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setOuterHTML";
-/// <summary>
-/// Id of the node to set markup for.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Outer HTML markup to set.
-/// </summary>
-public string OuterHTML { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetOuterHTMLRequest"/>
-/// </summary>
-internal partial class DOMSetOuterHTMLResponse: IWebkitResponse
-{
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
 /// <summary>
 /// 
 /// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.insertAdjacentHTML</c>
-/// </remarks>
-internal partial class DOMInsertAdjacentHTMLRequest : IWebkitRequest<DOMInsertAdjacentHTMLResponse>
+internal partial class Event
 {
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.insertAdjacentHTML";
 /// <summary>
 /// 
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
+/// <summary>
+/// Percent of total cpu usage. If there are multiple cores the usage may be greater than 100%.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("usage")] public double? Usage { get; set; }
+
+/// <summary>
+/// Per-thread CPU usage information. Does not include the main thread.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("threads")] public ThreadInfo[] Threads { get; set; }
+}
+/// <summary>
+/// Start tracking cpu usage.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CPUProfiler.startTracking</c>
+/// </remarks>
+internal partial class CPUProfilerStartTrackingRequest : IWebkitRequest<CPUProfilerStartTrackingResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CPUProfiler.startTracking";
+}
+/// <summary>
+/// Response from <see cref="CPUProfilerStartTrackingRequest"/>
+/// </summary>
+internal partial class CPUProfilerStartTrackingResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Stop tracking cpu usage. This will produce a `trackingComplete` event.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CPUProfiler.stopTracking</c>
+/// </remarks>
+internal partial class CPUProfilerStopTrackingRequest : IWebkitRequest<CPUProfilerStopTrackingResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CPUProfiler.stopTracking";
+}
+/// <summary>
+/// Response from <see cref="CPUProfilerStopTrackingRequest"/>
+/// </summary>
+internal partial class CPUProfilerStopTrackingResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Tracking started.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CPUProfiler.trackingStart</c>
+/// </remarks>
+internal partial class CPUProfilerTrackingStartWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CPUProfiler.trackingStart";
 /// <summary>
 /// 
 /// </summary>
-public string Position { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
+/// <summary>
+/// Periodic tracking updates with event data.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>CPUProfiler.trackingUpdate</c>
+/// </remarks>
+internal partial class CPUProfilerTrackingUpdateWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "CPUProfiler.trackingUpdate";
 /// <summary>
 /// 
 /// </summary>
-public string Html { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMInsertAdjacentHTMLRequest"/>
-/// </summary>
-internal partial class DOMInsertAdjacentHTMLResponse: IWebkitResponse
-{
+[System.Text.Json.Serialization.JsonPropertyName("event")] public Event Event { get; set; }
 }
 /// <summary>
-/// Searches for a given string in the DOM tree. Use &lt;code&gt;getSearchResults&lt;/code&gt; to access search results or &lt;code&gt;cancelSearch&lt;/code&gt; to end this search session.
+/// Tracking stopped.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOM.performSearch</c>
+/// Matches on the event <c>CPUProfiler.trackingComplete</c>
 /// </remarks>
-internal partial class DOMPerformSearchRequest : IWebkitRequest<DOMPerformSearchResponse>
+internal partial class CPUProfilerTrackingCompleteWebkitEvent : IWebkitEvent
 {
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.performSearch";
-/// <summary>
-/// Plain text or query selector or XPath search query.
-/// </summary>
-public string Query { get; set; }
-/// <summary>
-/// Ids of nodes to use as starting points for the search.
-/// </summary>
-public int?[] NodeIds { get; set; }
-/// <summary>
-/// If true, search is case sensitive.
-/// </summary>
-public bool? CaseSensitive { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMPerformSearchRequest"/>
-/// </summary>
-internal partial class DOMPerformSearchResponse: IWebkitResponse
-{
-/// <summary>
-/// Unique search session identifier.
-/// </summary>
-public string SearchId { get; set; }
-/// <summary>
-/// Number of search results.
-/// </summary>
-public int? ResultCount { get; set; }}
-/// <summary>
-/// Returns search results from given &lt;code&gt;fromIndex&lt;/code&gt; to given &lt;code&gt;toIndex&lt;/code&gt; from the sarch with the given identifier.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getSearchResults</c>
-/// </remarks>
-internal partial class DOMGetSearchResultsRequest : IWebkitRequest<DOMGetSearchResultsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getSearchResults";
-/// <summary>
-/// Unique search session identifier.
-/// </summary>
-public string SearchId { get; set; }
-/// <summary>
-/// Start index of the search result to be returned.
-/// </summary>
-public int? FromIndex { get; set; }
-/// <summary>
-/// End index of the search result to be returned.
-/// </summary>
-public int? ToIndex { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetSearchResultsRequest"/>
-/// </summary>
-internal partial class DOMGetSearchResultsResponse: IWebkitResponse
-{
-/// <summary>
-/// Ids of the search result nodes.
-/// </summary>
-public int?[] NodeIds { get; set; }}
-/// <summary>
-/// Discards search results from the session with the given id. &lt;code&gt;getSearchResults&lt;/code&gt; should no longer be called for that search.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.discardSearchResults</c>
-/// </remarks>
-internal partial class DOMDiscardSearchResultsRequest : IWebkitRequest<DOMDiscardSearchResultsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.discardSearchResults";
-/// <summary>
-/// Unique search session identifier.
-/// </summary>
-public string SearchId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDiscardSearchResultsRequest"/>
-/// </summary>
-internal partial class DOMDiscardSearchResultsResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Requests that the node is sent to the caller given the JavaScript node object reference. All nodes that form the path from the node to the root are also sent to the client as a series of &lt;code&gt;setChildNodes&lt;/code&gt; notifications.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.requestNode</c>
-/// </remarks>
-internal partial class DOMRequestNodeRequest : IWebkitRequest<DOMRequestNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.requestNode";
-/// <summary>
-/// JavaScript object id to convert into node.
-/// </summary>
-public string ObjectId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMRequestNodeRequest"/>
-/// </summary>
-internal partial class DOMRequestNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Node id for given object.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspect' command upon element selection.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setInspectModeEnabled</c>
-/// </remarks>
-internal partial class DOMSetInspectModeEnabledRequest : IWebkitRequest<DOMSetInspectModeEnabledResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setInspectModeEnabled";
-/// <summary>
-/// True to enable inspection mode, false to disable it.
-/// </summary>
-public bool? Enabled { get; set; }
-/// <summary>
-/// A descriptor for the highlight appearance of hovered-over nodes. May be omitted if &lt;code&gt;enabled == false&lt;/code&gt;.
-/// </summary>
-public HighlightConfig HighlightConfig { get; set; }
-/// <summary>
-/// Whether the rulers should be shown during element selection. This overrides Page.setShowRulers.
-/// </summary>
-public bool? ShowRulers { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetInspectModeEnabledRequest"/>
-/// </summary>
-internal partial class DOMSetInspectModeEnabledResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.highlightRect</c>
-/// </remarks>
-internal partial class DOMHighlightRectRequest : IWebkitRequest<DOMHighlightRectResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.highlightRect";
-/// <summary>
-/// X coordinate
-/// </summary>
-public int? X { get; set; }
-/// <summary>
-/// Y coordinate
-/// </summary>
-public int? Y { get; set; }
-/// <summary>
-/// Rectangle width
-/// </summary>
-public int? Width { get; set; }
-/// <summary>
-/// Rectangle height
-/// </summary>
-public int? Height { get; set; }
-/// <summary>
-/// The highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor Color { get; set; }
-/// <summary>
-/// The highlight outline color (default: transparent).
-/// </summary>
-public RGBAColor OutlineColor { get; set; }
-/// <summary>
-/// Indicates whether the provided parameters are in page coordinates or in viewport coordinates (the default).
-/// </summary>
-public bool? UsePageCoordinates { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMHighlightRectRequest"/>
-/// </summary>
-internal partial class DOMHighlightRectResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.highlightQuad</c>
-/// </remarks>
-internal partial class DOMHighlightQuadRequest : IWebkitRequest<DOMHighlightQuadResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.highlightQuad";
-/// <summary>
-/// Quad to highlight
-/// </summary>
-public double?[] Quad { get; set; }
-/// <summary>
-/// The highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor Color { get; set; }
-/// <summary>
-/// The highlight outline color (default: transparent).
-/// </summary>
-public RGBAColor OutlineColor { get; set; }
-/// <summary>
-/// Indicates whether the provided parameters are in page coordinates or in viewport coordinates (the default).
-/// </summary>
-public bool? UsePageCoordinates { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMHighlightQuadRequest"/>
-/// </summary>
-internal partial class DOMHighlightQuadResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Highlights all DOM nodes that match a given selector. A string containing a CSS selector must be specified.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.highlightSelector</c>
-/// </remarks>
-internal partial class DOMHighlightSelectorRequest : IWebkitRequest<DOMHighlightSelectorResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.highlightSelector";
-/// <summary>
-/// A descriptor for the highlight appearance.
-/// </summary>
-public HighlightConfig HighlightConfig { get; set; }
-/// <summary>
-/// A CSS selector for finding matching nodes to highlight.
-/// </summary>
-public string SelectorString { get; set; }
-/// <summary>
-/// Identifier of the frame which will be searched using the selector.  If not provided, the main frame will be used.
-/// </summary>
-public string FrameId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMHighlightSelectorRequest"/>
-/// </summary>
-internal partial class DOMHighlightSelectorResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.highlightNode</c>
-/// </remarks>
-internal partial class DOMHighlightNodeRequest : IWebkitRequest<DOMHighlightNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.highlightNode";
-/// <summary>
-/// A descriptor for the highlight appearance.
-/// </summary>
-public HighlightConfig HighlightConfig { get; set; }
-/// <summary>
-/// Identifier of the node to highlight.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// JavaScript object id of the node to be highlighted.
-/// </summary>
-public string ObjectId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMHighlightNodeRequest"/>
-/// </summary>
-internal partial class DOMHighlightNodeResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Highlights each DOM node in the given list.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.highlightNodeList</c>
-/// </remarks>
-internal partial class DOMHighlightNodeListRequest : IWebkitRequest<DOMHighlightNodeListResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.highlightNodeList";
+public string InternalName { get; } = "CPUProfiler.trackingComplete";
 /// <summary>
 /// 
 /// </summary>
-public int?[] NodeIds { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public HighlightConfig HighlightConfig { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMHighlightNodeListRequest"/>
-/// </summary>
-internal partial class DOMHighlightNodeListResponse: IWebkitResponse
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
+}
+namespace PlaywrightSharp.Webkit.Protocol.CSS
 {
+/// <summary>
+/// This object identifies a CSS style in a unique way.
+/// </summary>
+internal partial class CSSStyleId
+{
+/// <summary>
+/// Enclosing stylesheet identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
+/// <summary>
+/// The style ordinal within the stylesheet.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ordinal")] public int? Ordinal { get; set; }
 }
 /// <summary>
-/// Hides DOM node highlight.
+/// This object identifies a CSS rule in a unique way.
 /// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.hideHighlight</c>
-/// </remarks>
-internal partial class DOMHideHighlightRequest : IWebkitRequest<DOMHideHighlightResponse>
+internal partial class CSSRuleId
 {
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.hideHighlight";
+/// <summary>
+/// Enclosing stylesheet identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
+/// <summary>
+/// The rule ordinal within the stylesheet.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ordinal")] public int? Ordinal { get; set; }
 }
 /// <summary>
-/// Response from <see cref="DOMHideHighlightRequest"/>
+/// CSS rule collection for a single pseudo style.
 /// </summary>
-internal partial class DOMHideHighlightResponse: IWebkitResponse
+internal partial class PseudoIdMatches
 {
-}
-/// <summary>
-/// Highlights owner element of the frame with given id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.highlightFrame</c>
-/// </remarks>
-internal partial class DOMHighlightFrameRequest : IWebkitRequest<DOMHighlightFrameResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.highlightFrame";
-/// <summary>
-/// Identifier of the frame to highlight.
-/// </summary>
-public string FrameId { get; set; }
-/// <summary>
-/// The content box highlight fill color (default: transparent).
-/// </summary>
-public RGBAColor ContentColor { get; set; }
-/// <summary>
-/// The content box highlight outline color (default: transparent).
-/// </summary>
-public RGBAColor ContentOutlineColor { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMHighlightFrameRequest"/>
-/// </summary>
-internal partial class DOMHighlightFrameResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Requests that the node is sent to the caller given its path.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.pushNodeByPathToFrontend</c>
-/// </remarks>
-internal partial class DOMPushNodeByPathToFrontendRequest : IWebkitRequest<DOMPushNodeByPathToFrontendResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.pushNodeByPathToFrontend";
-/// <summary>
-/// Path to node in the proprietary format.
-/// </summary>
-public string Path { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMPushNodeByPathToFrontendRequest"/>
-/// </summary>
-internal partial class DOMPushNodeByPathToFrontendResponse: IWebkitResponse
-{
-/// <summary>
-/// Id of the node for given path.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Resolves JavaScript node object for given node id.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.resolveNode</c>
-/// </remarks>
-internal partial class DOMResolveNodeRequest : IWebkitRequest<DOMResolveNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.resolveNode";
-/// <summary>
-/// Id of the node to resolve.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Source element handle.
-/// </summary>
-public string ObjectId { get; set; }
-/// <summary>
-/// Specifies in which execution context to adopt to.
-/// </summary>
-public int? ExecutionContextId { get; set; }
-/// <summary>
-/// Symbolic group name that can be used to release multiple objects.
-/// </summary>
-public string ObjectGroup { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMResolveNodeRequest"/>
-/// </summary>
-internal partial class DOMResolveNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// JavaScript object wrapper for given node.
-/// </summary>
-public Runtime.RemoteObject Object { get; set; }}
-/// <summary>
-/// Returns attributes for the specified node.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getAttributes</c>
-/// </remarks>
-internal partial class DOMGetAttributesRequest : IWebkitRequest<DOMGetAttributesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getAttributes";
-/// <summary>
-/// Id of the node to retrieve attributes for.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetAttributesRequest"/>
-/// </summary>
-internal partial class DOMGetAttributesResponse: IWebkitResponse
-{
-/// <summary>
-/// An interleaved array of node attribute names and values.
-/// </summary>
-public string[] Attributes { get; set; }}
-/// <summary>
-/// Moves node into the new container, places it before the given anchor.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.moveTo</c>
-/// </remarks>
-internal partial class DOMMoveToRequest : IWebkitRequest<DOMMoveToResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.moveTo";
-/// <summary>
-/// Id of the node to drop.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Id of the element to drop into.
-/// </summary>
-public int? TargetNodeId { get; set; }
-/// <summary>
-/// Drop node before given one.
-/// </summary>
-public int? InsertBeforeNodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMMoveToRequest"/>
-/// </summary>
-internal partial class DOMMoveToResponse: IWebkitResponse
-{
-/// <summary>
-/// New id of the moved node.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Undoes the last performed action.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.undo</c>
-/// </remarks>
-internal partial class DOMUndoRequest : IWebkitRequest<DOMUndoResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.undo";
-}
-/// <summary>
-/// Response from <see cref="DOMUndoRequest"/>
-/// </summary>
-internal partial class DOMUndoResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Re-does the last undone action.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.redo</c>
-/// </remarks>
-internal partial class DOMRedoRequest : IWebkitRequest<DOMRedoResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.redo";
-}
-/// <summary>
-/// Response from <see cref="DOMRedoRequest"/>
-/// </summary>
-internal partial class DOMRedoResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Marks last undoable state.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.markUndoableState</c>
-/// </remarks>
-internal partial class DOMMarkUndoableStateRequest : IWebkitRequest<DOMMarkUndoableStateResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.markUndoableState";
-}
-/// <summary>
-/// Response from <see cref="DOMMarkUndoableStateRequest"/>
-/// </summary>
-internal partial class DOMMarkUndoableStateResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Focuses the given element.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.focus</c>
-/// </remarks>
-internal partial class DOMFocusRequest : IWebkitRequest<DOMFocusResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.focus";
-/// <summary>
-/// Id of the node to focus.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMFocusRequest"/>
-/// </summary>
-internal partial class DOMFocusResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Enables console to refer to the node with given id via $0 (see Command Line API for more details).
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setInspectedNode</c>
-/// </remarks>
-internal partial class DOMSetInspectedNodeRequest : IWebkitRequest<DOMSetInspectedNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setInspectedNode";
-/// <summary>
-/// DOM node id to be accessible by means of $0 command line API.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetInspectedNodeRequest"/>
-/// </summary>
-internal partial class DOMSetInspectedNodeResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Controls whether any DOM commands work for nodes inside a UserAgent shadow tree.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setAllowEditingUserAgentShadowTrees</c>
-/// </remarks>
-internal partial class DOMSetAllowEditingUserAgentShadowTreesRequest : IWebkitRequest<DOMSetAllowEditingUserAgentShadowTreesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setAllowEditingUserAgentShadowTrees";
-/// <summary>
-/// 
-/// </summary>
-public bool? Allow { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetAllowEditingUserAgentShadowTreesRequest"/>
-/// </summary>
-internal partial class DOMSetAllowEditingUserAgentShadowTreesResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Returns node description.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.describeNode</c>
-/// </remarks>
-internal partial class DOMDescribeNodeRequest : IWebkitRequest<DOMDescribeNodeResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.describeNode";
-/// <summary>
-/// JavaScript object id of the node wrapper.
-/// </summary>
-public string ObjectId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDescribeNodeRequest"/>
-/// </summary>
-internal partial class DOMDescribeNodeResponse: IWebkitResponse
-{
-/// <summary>
-/// Frame ID for frame owner elements.
-/// </summary>
-public string ContentFrameId { get; set; }
-/// <summary>
-/// ID of the owning frame element.
-/// </summary>
-public string OwnerFrameId { get; set; }}
-/// <summary>
-/// Returns quads that describe node position on the page. This method
-/// might return multiple quads for inline nodes.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.getContentQuads</c>
-/// </remarks>
-internal partial class DOMGetContentQuadsRequest : IWebkitRequest<DOMGetContentQuadsResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.getContentQuads";
-/// <summary>
-/// JavaScript object id of the node wrapper.
-/// </summary>
-public string ObjectId { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMGetContentQuadsRequest"/>
-/// </summary>
-internal partial class DOMGetContentQuadsResponse: IWebkitResponse
-{
-/// <summary>
-/// Quads that describe node layout relative to viewport.
-/// </summary>
-public double?[][] Quads { get; set; }}
-/// <summary>
-/// Sets input files for given &lt;input type=file&gt;
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOM.setInputFiles</c>
-/// </remarks>
-internal partial class DOMSetInputFilesRequest : IWebkitRequest<DOMSetInputFilesResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOM.setInputFiles";
-/// <summary>
-/// Input element handle.
-/// </summary>
-public string ObjectId { get; set; }
-/// <summary>
-/// Files to set
-/// </summary>
-public FilePayload[] Files { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMSetInputFilesRequest"/>
-/// </summary>
-internal partial class DOMSetInputFilesResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Fired when &lt;code&gt;Document&lt;/code&gt; has been totally updated. Node ids are no longer valid.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.documentUpdated</c>
-/// </remarks>
-internal partial class DOMDocumentUpdatedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.documentUpdated";
-}
-/// <summary>
-/// Inspect a particular node.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.inspect</c>
-/// </remarks>
-internal partial class DOMInspectWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.inspect";
-/// <summary>
-/// Equivalent of Inspector.inspect but with a nodeId instead of a RemoteObject. Useful for augmented contexts.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Fired when backend wants to provide client with the missing DOM structure. This happens upon most of the calls requesting node ids.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.setChildNodes</c>
-/// </remarks>
-internal partial class DOMSetChildNodesWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.setChildNodes";
-/// <summary>
-/// Parent node id to populate with children.
-/// </summary>
-public int? ParentId { get; set; }
-/// <summary>
-/// Child nodes array.
-/// </summary>
-public Node[] Nodes { get; set; }}
-/// <summary>
-/// Fired when &lt;code&gt;Element&lt;/code&gt;'s attribute is modified.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.attributeModified</c>
-/// </remarks>
-internal partial class DOMAttributeModifiedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.attributeModified";
-/// <summary>
-/// Id of the node that has changed.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Attribute name.
-/// </summary>
-public string Name { get; set; }
-/// <summary>
-/// Attribute value.
-/// </summary>
-public string Value { get; set; }}
-/// <summary>
-/// Fired when &lt;code&gt;Element&lt;/code&gt;'s attribute is removed.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.attributeRemoved</c>
-/// </remarks>
-internal partial class DOMAttributeRemovedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.attributeRemoved";
-/// <summary>
-/// Id of the node that has changed.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Attribute name.
-/// </summary>
-public string Name { get; set; }}
-/// <summary>
-/// Fired when &lt;code&gt;Element&lt;/code&gt;'s inline style is modified via a CSS property modification.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.inlineStyleInvalidated</c>
-/// </remarks>
-internal partial class DOMInlineStyleInvalidatedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.inlineStyleInvalidated";
-/// <summary>
-/// Ids of the nodes for which the inline styles have been invalidated.
-/// </summary>
-public int?[] NodeIds { get; set; }}
-/// <summary>
-/// Mirrors &lt;code&gt;DOMCharacterDataModified&lt;/code&gt; event.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.characterDataModified</c>
-/// </remarks>
-internal partial class DOMCharacterDataModifiedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.characterDataModified";
-/// <summary>
-/// Id of the node that has changed.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// New text value.
-/// </summary>
-public string CharacterData { get; set; }}
-/// <summary>
-/// Fired when &lt;code&gt;Container&lt;/code&gt;'s child node count has changed.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.childNodeCountUpdated</c>
-/// </remarks>
-internal partial class DOMChildNodeCountUpdatedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.childNodeCountUpdated";
-/// <summary>
-/// Id of the node that has changed.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// New node count.
-/// </summary>
-public int? ChildNodeCount { get; set; }}
-/// <summary>
-/// Mirrors &lt;code&gt;DOMNodeInserted&lt;/code&gt; event.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.childNodeInserted</c>
-/// </remarks>
-internal partial class DOMChildNodeInsertedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.childNodeInserted";
-/// <summary>
-/// Id of the node that has changed.
-/// </summary>
-public int? ParentNodeId { get; set; }
-/// <summary>
-/// Id of the previous sibling.
-/// </summary>
-public int? PreviousNodeId { get; set; }
-/// <summary>
-/// Inserted node data.
-/// </summary>
-public Node Node { get; set; }}
-/// <summary>
-/// Mirrors &lt;code&gt;DOMNodeRemoved&lt;/code&gt; event.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.childNodeRemoved</c>
-/// </remarks>
-internal partial class DOMChildNodeRemovedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.childNodeRemoved";
-/// <summary>
-/// Parent id.
-/// </summary>
-public int? ParentNodeId { get; set; }
-/// <summary>
-/// Id of the node that has been removed.
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Called when shadow root is pushed into the element.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.shadowRootPushed</c>
-/// </remarks>
-internal partial class DOMShadowRootPushedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.shadowRootPushed";
-/// <summary>
-/// Host element id.
-/// </summary>
-public int? HostId { get; set; }
-/// <summary>
-/// Shadow root.
-/// </summary>
-public Node Root { get; set; }}
-/// <summary>
-/// Called when shadow root is popped from the element.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.shadowRootPopped</c>
-/// </remarks>
-internal partial class DOMShadowRootPoppedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.shadowRootPopped";
-/// <summary>
-/// Host element id.
-/// </summary>
-public int? HostId { get; set; }
-/// <summary>
-/// Shadow root id.
-/// </summary>
-public int? RootId { get; set; }}
-/// <summary>
-/// Called when the custom element state is changed.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.customElementStateChanged</c>
-/// </remarks>
-internal partial class DOMCustomElementStateChangedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.customElementStateChanged";
-/// <summary>
-/// Element id.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Custom element state.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CustomElementState CustomElementState { get; set; }}
-/// <summary>
-/// Called when a pseudo element is added to an element.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.pseudoElementAdded</c>
-/// </remarks>
-internal partial class DOMPseudoElementAddedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.pseudoElementAdded";
-/// <summary>
-/// Pseudo element's parent element id.
-/// </summary>
-public int? ParentId { get; set; }
-/// <summary>
-/// The added pseudo element.
-/// </summary>
-public Node PseudoElement { get; set; }}
-/// <summary>
-/// Called when a pseudo element is removed from an element.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.pseudoElementRemoved</c>
-/// </remarks>
-internal partial class DOMPseudoElementRemovedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.pseudoElementRemoved";
-/// <summary>
-/// Pseudo element's parent element id.
-/// </summary>
-public int? ParentId { get; set; }
-/// <summary>
-/// The removed pseudo element id.
-/// </summary>
-public int? PseudoElementId { get; set; }}
-/// <summary>
-/// Called when an event listener is added to a node.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.didAddEventListener</c>
-/// </remarks>
-internal partial class DOMDidAddEventListenerWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.didAddEventListener";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Called after a request has been made to remove an event listener from a node.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.willRemoveEventListener</c>
-/// </remarks>
-internal partial class DOMWillRemoveEventListenerWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.willRemoveEventListener";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Called when an event is fired on a node.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.didFireEvent</c>
-/// </remarks>
-internal partial class DOMDidFireEventWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.didFireEvent";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string EventName { get; set; }
-/// <summary>
-/// Time when the event was fired
-/// </summary>
-public double? Timestamp { get; set; }
-/// <summary>
-/// Holds ancillary information about the event or its target.
-/// </summary>
-public object Data { get; set; }}
-/// <summary>
-/// Called when an element enters/exits a power efficient playback state.
-/// </summary>
-/// <remarks>
-/// Matches on the event <c>DOM.powerEfficientPlaybackStateChanged</c>
-/// </remarks>
-internal partial class DOMPowerEfficientPlaybackStateChangedWebkitEvent : IWebkitEvent
-{
-public string InternalName { get; } = "DOM.powerEfficientPlaybackStateChanged";
-/// <summary>
-/// 
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public double? Timestamp { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public bool? IsPowerEfficient { get; set; }}
-}
-namespace PlaywrightSharp.Webkit.Protocol.DOMDebugger
-{
-/// <summary>
-/// DOM breakpoint type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum DOMBreakpointType
-{
-[System.Runtime.Serialization.EnumMember(Value = "subtree-modified")]SubtreeModified,
-[System.Runtime.Serialization.EnumMember(Value = "attribute-modified")]AttributeModified,
-[System.Runtime.Serialization.EnumMember(Value = "node-removed")]NodeRemoved}
-/// <summary>
-/// Event breakpoint type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum EventBreakpointType
-{
-[System.Runtime.Serialization.EnumMember(Value = "animation-frame")]AnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "interval")]Interval,
-[System.Runtime.Serialization.EnumMember(Value = "listener")]Listener,
-[System.Runtime.Serialization.EnumMember(Value = "timeout")]Timeout}
-/// <summary>
-/// Sets breakpoint on particular operation with DOM.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOMDebugger.setDOMBreakpoint</c>
-/// </remarks>
-internal partial class DOMDebuggerSetDOMBreakpointRequest : IWebkitRequest<DOMDebuggerSetDOMBreakpointResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
-/// <summary>
-/// Identifier of the node to set breakpoint on.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Type of the operation to stop upon.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public DOMBreakpointType Type { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDebuggerSetDOMBreakpointRequest"/>
-/// </summary>
-internal partial class DOMDebuggerSetDOMBreakpointResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Removes DOM breakpoint that was set using &lt;code&gt;setDOMBreakpoint&lt;/code&gt;.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOMDebugger.removeDOMBreakpoint</c>
-/// </remarks>
-internal partial class DOMDebuggerRemoveDOMBreakpointRequest : IWebkitRequest<DOMDebuggerRemoveDOMBreakpointResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
-/// <summary>
-/// Identifier of the node to remove breakpoint from.
-/// </summary>
-public int? NodeId { get; set; }
-/// <summary>
-/// Type of the breakpoint to remove.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public DOMBreakpointType Type { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDebuggerRemoveDOMBreakpointRequest"/>
-/// </summary>
-internal partial class DOMDebuggerRemoveDOMBreakpointResponse: IWebkitResponse
-{
-}
-/// <summary>
-/// Sets breakpoint on particular event of given type.
-/// </summary>
-/// <remarks>
-/// Will send the command <c>DOMDebugger.setEventBreakpoint</c>
-/// </remarks>
-internal partial class DOMDebuggerSetEventBreakpointRequest : IWebkitRequest<DOMDebuggerSetEventBreakpointResponse>
-{
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMDebugger.setEventBreakpoint";
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public EventBreakpointType BreakpointType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoId")] public PseudoId PseudoId { get; set; }
+
 /// <summary>
-/// The name of the specific event to stop on.
+/// Matches of CSS rules applicable to the pseudo style.
 /// </summary>
-public string EventName { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDebuggerSetEventBreakpointRequest"/>
-/// </summary>
-internal partial class DOMDebuggerSetEventBreakpointResponse: IWebkitResponse
-{
+[System.Text.Json.Serialization.JsonPropertyName("matches")] public RuleMatch[] Matches { get; set; }
 }
 /// <summary>
-/// Removes breakpoint on particular event of given type.
+/// CSS rule collection for a single pseudo style.
 /// </summary>
-/// <remarks>
-/// Will send the command <c>DOMDebugger.removeEventBreakpoint</c>
-/// </remarks>
-internal partial class DOMDebuggerRemoveEventBreakpointRequest : IWebkitRequest<DOMDebuggerRemoveEventBreakpointResponse>
+internal partial class InheritedStyleEntry
 {
-[System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMDebugger.removeEventBreakpoint";
 /// <summary>
-/// 
+/// The ancestor node's inline style, if any, in the style inheritance chain.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("inlineStyle")] public CSSStyle InlineStyle { get; set; }
+
+/// <summary>
+/// Matches of CSS rules matching the ancestor node in the style inheritance chain.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("matchedCSSRules")] public RuleMatch[] MatchedCSSRules { get; set; }
+}
+/// <summary>
+/// Match data for a CSS rule.
+/// </summary>
+internal partial class RuleMatch
+{
+/// <summary>
+/// CSS rule in the match.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("rule")] public CSSRule Rule { get; set; }
+
+/// <summary>
+/// Matching selector indices in the rule's selectorList selectors (0-based).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("matchingSelectors")] public int?[] MatchingSelectors { get; set; }
+}
+/// <summary>
+/// CSS selector.
+/// </summary>
+internal partial class CSSSelector
+{
+/// <summary>
+/// Canonicalized selector text.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
+/// <summary>
+/// Specificity (a, b, c) tuple. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("specificity")] public int?[] Specificity { get; set; }
+
+/// <summary>
+/// Whether or not the specificity can be dynamic. Included if the selector is sent in response to CSS.getMatchedStylesForNode which provides a context element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("dynamic")] public bool? Dynamic { get; set; }
+}
+/// <summary>
+/// Selector list data.
+/// </summary>
+internal partial class SelectorList
+{
+/// <summary>
+/// Selectors in the list.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selectors")] public CSSSelector[] Selectors { get; set; }
+
+/// <summary>
+/// Rule selector text.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
+/// <summary>
+/// Rule selector range in the underlying resource (if available).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+}
+/// <summary>
+/// CSS style information for a DOM style attribute.
+/// </summary>
+internal partial class CSSStyleAttribute
+{
+/// <summary>
+/// DOM attribute name (e.g. "width").
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// CSS style generated by the respective DOM attribute.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("style")] public CSSStyle Style { get; set; }
+}
+/// <summary>
+/// CSS stylesheet meta-information.
+/// </summary>
+internal partial class CSSStyleSheetHeader
+{
+/// <summary>
+/// The stylesheet identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
+/// <summary>
+/// Owner frame identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
+/// <summary>
+/// Stylesheet resource URL.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
+/// <summary>
+/// Stylesheet origin.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public EventBreakpointType BreakpointType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public StyleSheetOrigin Origin { get; set; }
+
 /// <summary>
-/// The name of the specific event to stop on.
+/// Stylesheet title.
 /// </summary>
-public string EventName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
+
 /// <summary>
-/// Response from <see cref="DOMDebuggerRemoveEventBreakpointRequest"/>
+/// Denotes whether the stylesheet is disabled.
 /// </summary>
-internal partial class DOMDebuggerRemoveEventBreakpointResponse: IWebkitResponse
-{
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+
+/// <summary>
+/// Whether this stylesheet is a &lt;style&gt; tag created by the parser. This is not set for document.written &lt;style&gt; tags.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("isInline")] public bool? IsInline { get; set; }
+
+/// <summary>
+/// Line offset of the stylesheet within the resource (zero based).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public double? StartLine { get; set; }
+
+/// <summary>
+/// Column offset of the stylesheet within the resource (zero based).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public double? StartColumn { get; set; }
 }
 /// <summary>
-/// Sets breakpoint on network activity for the given URL.
+/// CSS stylesheet contents.
+/// </summary>
+internal partial class CSSStyleSheetBody
+{
+/// <summary>
+/// The stylesheet identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
+/// <summary>
+/// Stylesheet resource URL.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("rules")] public CSSRule[] Rules { get; set; }
+
+/// <summary>
+/// Stylesheet resource contents (if available).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
+/// <summary>
+/// CSS rule representation.
+/// </summary>
+internal partial class CSSRule
+{
+/// <summary>
+/// The CSS rule identifier (absent for user agent stylesheet and user-specified stylesheet rules).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ruleId")] public CSSRuleId RuleId { get; set; }
+
+/// <summary>
+/// Rule selector data.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selectorList")] public SelectorList SelectorList { get; set; }
+
+/// <summary>
+/// Parent stylesheet resource URL (for regular rules).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
+/// <summary>
+/// Line ordinal of the rule selector start character in the resource.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("sourceLine")] public int? SourceLine { get; set; }
+
+/// <summary>
+/// Parent stylesheet's origin.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("origin")] public StyleSheetOrigin Origin { get; set; }
+
+/// <summary>
+/// Associated style declaration.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("style")] public CSSStyle Style { get; set; }
+
+/// <summary>
+/// Grouping list array (for rules involving @media/@supports). The array enumerates CSS groupings starting with the innermost one, going outwards.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("groupings")] public Grouping[] Groupings { get; set; }
+}
+/// <summary>
+/// Text range within a resource.
+/// </summary>
+internal partial class SourceRange
+{
+/// <summary>
+/// Start line of range.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public int? StartLine { get; set; }
+
+/// <summary>
+/// Start column of range (inclusive).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public int? StartColumn { get; set; }
+
+/// <summary>
+/// End line of range
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("endLine")] public int? EndLine { get; set; }
+
+/// <summary>
+/// End column of range (exclusive).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("endColumn")] public int? EndColumn { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+internal partial class ShorthandEntry
+{
+/// <summary>
+/// Shorthand name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// Shorthand value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+internal partial class CSSPropertyInfo
+{
+/// <summary>
+/// Property name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// Other names for this property.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("aliases")] public string[] Aliases { get; set; }
+
+/// <summary>
+/// Longhand property names.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("longhands")] public string[] Longhands { get; set; }
+
+/// <summary>
+/// Supported values for this property.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("values")] public string[] Values { get; set; }
+
+/// <summary>
+/// Whether the property is able to be inherited.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("inherited")] public bool? Inherited { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+internal partial class CSSComputedStyleProperty
+{
+/// <summary>
+/// Computed style property name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// Computed style property value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// CSS style representation.
+/// </summary>
+internal partial class CSSStyle
+{
+/// <summary>
+/// The CSS style identifier (absent for attribute styles).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleId")] public CSSStyleId StyleId { get; set; }
+
+/// <summary>
+/// CSS properties in the style.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("cssProperties")] public CSSProperty[] CssProperties { get; set; }
+
+/// <summary>
+/// Computed values for all shorthands found in the style.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("shorthandEntries")] public ShorthandEntry[] ShorthandEntries { get; set; }
+
+/// <summary>
+/// Style declaration text (if available).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("cssText")] public string CssText { get; set; }
+
+/// <summary>
+/// Style declaration range in the enclosing stylesheet (if available).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+
+/// <summary>
+/// The effective "width" property value from this style.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("width")] public string Width { get; set; }
+
+/// <summary>
+/// The effective "height" property value from this style.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("height")] public string Height { get; set; }
+}
+/// <summary>
+/// CSS style effective visual dimensions and source offsets.
+/// </summary>
+internal partial class CSSProperty
+{
+/// <summary>
+/// The property name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// The property value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
+/// <summary>
+/// The property priority (implies "" if absent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("priority")] public string Priority { get; set; }
+
+/// <summary>
+/// Whether the property is implicit (implies &lt;code&gt;false&lt;/code&gt; if absent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("implicit")] public bool? Implicit { get; set; }
+
+/// <summary>
+/// The full property text as specified in the style.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
+/// <summary>
+/// Whether the property is understood by the browser (implies &lt;code&gt;true&lt;/code&gt; if absent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parsedOk")] public bool? ParsedOk { get; set; }
+
+/// <summary>
+/// Whether the property is active or disabled.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("status")] public CSSPropertyStatus? Status { get; set; }
+
+/// <summary>
+/// The entire property range in the enclosing style declaration (if available).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
+}
+/// <summary>
+/// CSS @media (as well as other users of media queries, like @import, &lt;style&gt;, &lt;link&gt;, etc.) and @supports descriptor.
+/// </summary>
+internal partial class Grouping
+{
+/// <summary>
+/// Media query text.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
+/// <summary>
+/// Source of the media query: "media-rule" if specified by a @media rule, "media-import-rule" if specified by an @import rule, "media-link-node" if specified by a "media" attribute in a linked style sheet's LINK tag, "media-style-node" if specified by a "media" attribute in an inline style sheet's STYLE tag, "supports-rule" if specified by an @supports rule, .
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
+/// <summary>
+/// URL of the document containing the CSS grouping.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+}
+/// <summary>
+/// Enables the CSS agent for the given page. Clients should not assume that the CSS agent has been enabled until the result of this command is received.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOMDebugger.setURLBreakpoint</c>
+/// Will send the command <c>CSS.enable</c>
 /// </remarks>
-internal partial class DOMDebuggerSetURLBreakpointRequest : IWebkitRequest<DOMDebuggerSetURLBreakpointResponse>
+internal partial class CSSEnableRequest : IWebkitRequest<CSSEnableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMDebugger.setURLBreakpoint";
+public string Command { get; } = "CSS.enable";
+}
 /// <summary>
-/// Resource URL substring or regular expression. All requests having this substring in the URL will get stopped upon. An empty string will pause on all requests.
+/// Response from <see cref="CSSEnableRequest"/>
 /// </summary>
-public string Url { get; set; }
-/// <summary>
-/// Whether the URL string is a regular expression.
-/// </summary>
-public bool? IsRegex { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDebuggerSetURLBreakpointRequest"/>
-/// </summary>
-internal partial class DOMDebuggerSetURLBreakpointResponse: IWebkitResponse
+internal partial class CSSEnableResponse: IWebkitResponse
 {
 }
 /// <summary>
-/// Removes breakpoint from network activity for the given URL.
+/// Disables the CSS agent for the given page.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOMDebugger.removeURLBreakpoint</c>
+/// Will send the command <c>CSS.disable</c>
 /// </remarks>
-internal partial class DOMDebuggerRemoveURLBreakpointRequest : IWebkitRequest<DOMDebuggerRemoveURLBreakpointResponse>
+internal partial class CSSDisableRequest : IWebkitRequest<CSSDisableResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMDebugger.removeURLBreakpoint";
+public string Command { get; } = "CSS.disable";
+}
 /// <summary>
-/// Resource URL substring. An empty string will stop pausing on all requests.
+/// Response from <see cref="CSSDisableRequest"/>
 /// </summary>
-public string Url { get; set; }}
-/// <summary>
-/// Response from <see cref="DOMDebuggerRemoveURLBreakpointRequest"/>
-/// </summary>
-internal partial class DOMDebuggerRemoveURLBreakpointResponse: IWebkitResponse
+internal partial class CSSDisableResponse: IWebkitResponse
 {
 }
-}
-namespace PlaywrightSharp.Webkit.Protocol.DOMStorage
-{
 /// <summary>
-/// DOM Storage identifier.
-/// </summary>
-internal partial class StorageId
-{
-/// <summary>
-/// Security origin for the storage.
-/// </summary>
-public string SecurityOrigin { get; set; }
-/// <summary>
-/// Whether the storage is local storage (not session storage).
-/// </summary>
-public bool? IsLocalStorage { get; set; }}
-/// <summary>
-/// Enables storage tracking, storage events will now be delivered to the client.
+/// Returns requested styles for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOMStorage.enable</c>
+/// Will send the command <c>CSS.getMatchedStylesForNode</c>
 /// </remarks>
-internal partial class DOMStorageEnableRequest : IWebkitRequest<DOMStorageEnableResponse>
+internal partial class CSSGetMatchedStylesForNodeRequest : IWebkitRequest<CSSGetMatchedStylesForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMStorage.enable";
-}
+public string Command { get; } = "CSS.getMatchedStylesForNode";
 /// <summary>
-/// Response from <see cref="DOMStorageEnableRequest"/>
+/// 
 /// </summary>
-internal partial class DOMStorageEnableResponse: IWebkitResponse
-{
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Whether to include pseudo styles (default: true).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("includePseudo")] public bool? IncludePseudo { get; set; }
+
+/// <summary>
+/// Whether to include inherited styles (default: true).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("includeInherited")] public bool? IncludeInherited { get; set; }
 }
 /// <summary>
-/// Disables storage tracking, prevents storage events from being sent to the client.
+/// Response from <see cref="CSSGetMatchedStylesForNodeRequest"/>
+/// </summary>
+internal partial class CSSGetMatchedStylesForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// CSS rules matching this node, from all applicable stylesheets.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("matchedCSSRules")] public RuleMatch[] MatchedCSSRules { get; set; }
+
+/// <summary>
+/// Pseudo style matches for this node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElements")] public PseudoIdMatches[] PseudoElements { get; set; }
+
+/// <summary>
+/// A chain of inherited styles (from the immediate node parent up to the DOM tree root).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("inherited")] public InheritedStyleEntry[] Inherited { get; set; }
+}
+/// <summary>
+/// Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM attributes) for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOMStorage.disable</c>
+/// Will send the command <c>CSS.getInlineStylesForNode</c>
 /// </remarks>
-internal partial class DOMStorageDisableRequest : IWebkitRequest<DOMStorageDisableResponse>
+internal partial class CSSGetInlineStylesForNodeRequest : IWebkitRequest<CSSGetInlineStylesForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMStorage.disable";
-}
-/// <summary>
-/// Response from <see cref="DOMStorageDisableRequest"/>
-/// </summary>
-internal partial class DOMStorageDisableResponse: IWebkitResponse
-{
-}
+public string Command { get; } = "CSS.getInlineStylesForNode";
 /// <summary>
 /// 
 /// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSGetInlineStylesForNodeRequest"/>
+/// </summary>
+internal partial class CSSGetInlineStylesForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Inline style for the specified DOM node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("inlineStyle")] public CSSStyle InlineStyle { get; set; }
+
+/// <summary>
+/// Attribute-defined element style (e.g. resulting from "width=20 height=100%").
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("attributesStyle")] public CSSStyle AttributesStyle { get; set; }
+}
+/// <summary>
+/// Returns the computed style for a DOM node identified by &lt;code&gt;nodeId&lt;/code&gt;.
+/// </summary>
 /// <remarks>
-/// Will send the command <c>DOMStorage.getDOMStorageItems</c>
+/// Will send the command <c>CSS.getComputedStyleForNode</c>
 /// </remarks>
-internal partial class DOMStorageGetDOMStorageItemsRequest : IWebkitRequest<DOMStorageGetDOMStorageItemsResponse>
+internal partial class CSSGetComputedStyleForNodeRequest : IWebkitRequest<CSSGetComputedStyleForNodeResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMStorage.getDOMStorageItems";
+public string Command { get; } = "CSS.getComputedStyleForNode";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
-/// Response from <see cref="DOMStorageGetDOMStorageItemsRequest"/>
+/// Response from <see cref="CSSGetComputedStyleForNodeRequest"/>
 /// </summary>
-internal partial class DOMStorageGetDOMStorageItemsResponse: IWebkitResponse
+internal partial class CSSGetComputedStyleForNodeResponse: IWebkitResponse
 {
 /// <summary>
-/// 
+/// Computed style for the specified DOM node.
 /// </summary>
-public string[][] Entries { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("computedStyle")] public CSSComputedStyleProperty[] ComputedStyle { get; set; }
+}
 /// <summary>
-/// 
+/// Returns metainfo entries for all known stylesheets.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOMStorage.setDOMStorageItem</c>
+/// Will send the command <c>CSS.getAllStyleSheets</c>
 /// </remarks>
-internal partial class DOMStorageSetDOMStorageItemRequest : IWebkitRequest<DOMStorageSetDOMStorageItemResponse>
+internal partial class CSSGetAllStyleSheetsRequest : IWebkitRequest<CSSGetAllStyleSheetsResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMStorage.setDOMStorageItem";
+public string Command { get; } = "CSS.getAllStyleSheets";
+}
+/// <summary>
+/// Response from <see cref="CSSGetAllStyleSheetsRequest"/>
+/// </summary>
+internal partial class CSSGetAllStyleSheetsResponse: IWebkitResponse
+{
+/// <summary>
+/// Descriptor entries for all available stylesheets.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public CSSStyleSheetHeader[] Headers { get; set; }
+}
+/// <summary>
+/// Returns stylesheet data for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getStyleSheet</c>
+/// </remarks>
+internal partial class CSSGetStyleSheetRequest : IWebkitRequest<CSSGetStyleSheetResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getStyleSheet";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSGetStyleSheetRequest"/>
+/// </summary>
+internal partial class CSSGetStyleSheetResponse: IWebkitResponse
+{
+/// <summary>
+/// Stylesheet contents for the specified &lt;code&gt;styleSheetId&lt;/code&gt;.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheet")] public CSSStyleSheetBody StyleSheet { get; set; }
+}
+/// <summary>
+/// Returns the current textual content and the URL for a stylesheet.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getStyleSheetText</c>
+/// </remarks>
+internal partial class CSSGetStyleSheetTextRequest : IWebkitRequest<CSSGetStyleSheetTextResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getStyleSheetText";
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSGetStyleSheetTextRequest"/>
+/// </summary>
+internal partial class CSSGetStyleSheetTextResponse: IWebkitResponse
+{
+/// <summary>
+/// The stylesheet text.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
+/// <summary>
+/// Sets the new stylesheet text, thereby invalidating all existing &lt;code&gt;CSSStyleId&lt;/code&gt;'s and &lt;code&gt;CSSRuleId&lt;/code&gt;'s contained by this stylesheet.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.setStyleSheetText</c>
+/// </remarks>
+internal partial class CSSSetStyleSheetTextRequest : IWebkitRequest<CSSSetStyleSheetTextResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.setStyleSheetText";
 /// <summary>
 /// 
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
 /// <summary>
-/// Response from <see cref="DOMStorageSetDOMStorageItemRequest"/>
+/// 
 /// </summary>
-internal partial class DOMStorageSetDOMStorageItemResponse: IWebkitResponse
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSSetStyleSheetTextRequest"/>
+/// </summary>
+internal partial class CSSSetStyleSheetTextResponse: IWebkitResponse
 {
 }
 /// <summary>
-/// 
+/// Sets the new &lt;code&gt;text&lt;/code&gt; for the respective style.
 /// </summary>
 /// <remarks>
-/// Will send the command <c>DOMStorage.removeDOMStorageItem</c>
+/// Will send the command <c>CSS.setStyleText</c>
 /// </remarks>
-internal partial class DOMStorageRemoveDOMStorageItemRequest : IWebkitRequest<DOMStorageRemoveDOMStorageItemResponse>
+internal partial class CSSSetStyleTextRequest : IWebkitRequest<CSSSetStyleTextResponse>
 {
 [System.Text.Json.Serialization.JsonIgnore]
-public string Command { get; } = "DOMStorage.removeDOMStorageItem";
+public string Command { get; } = "CSS.setStyleText";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleId")] public CSSStyleId StyleId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Key { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
-/// Response from <see cref="DOMStorageRemoveDOMStorageItemRequest"/>
+/// Response from <see cref="CSSSetStyleTextRequest"/>
 /// </summary>
-internal partial class DOMStorageRemoveDOMStorageItemResponse: IWebkitResponse
+internal partial class CSSSetStyleTextResponse: IWebkitResponse
+{
+/// <summary>
+/// The resulting style after the text modification.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("style")] public CSSStyle Style { get; set; }
+}
+/// <summary>
+/// Modifies the rule selector.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.setRuleSelector</c>
+/// </remarks>
+internal partial class CSSSetRuleSelectorRequest : IWebkitRequest<CSSSetRuleSelectorResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.setRuleSelector";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ruleId")] public CSSRuleId RuleId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSSetRuleSelectorRequest"/>
+/// </summary>
+internal partial class CSSSetRuleSelectorResponse: IWebkitResponse
+{
+/// <summary>
+/// The resulting rule after the selector modification.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("rule")] public CSSRule Rule { get; set; }
+}
+/// <summary>
+/// Creates a new special "inspector" stylesheet in the frame with given &lt;code&gt;frameId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.createStyleSheet</c>
+/// </remarks>
+internal partial class CSSCreateStyleSheetRequest : IWebkitRequest<CSSCreateStyleSheetResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.createStyleSheet";
+/// <summary>
+/// Identifier of the frame where the new "inspector" stylesheet should be created.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSCreateStyleSheetRequest"/>
+/// </summary>
+internal partial class CSSCreateStyleSheetResponse: IWebkitResponse
+{
+/// <summary>
+/// Identifier of the created "inspector" stylesheet.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
+/// <summary>
+/// Creates a new empty rule with the given &lt;code&gt;selector&lt;/code&gt; in a stylesheet with given &lt;code&gt;styleSheetId&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.addRule</c>
+/// </remarks>
+internal partial class CSSAddRuleRequest : IWebkitRequest<CSSAddRuleResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.addRule";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSAddRuleRequest"/>
+/// </summary>
+internal partial class CSSAddRuleResponse: IWebkitResponse
+{
+/// <summary>
+/// The newly created rule.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("rule")] public CSSRule Rule { get; set; }
+}
+/// <summary>
+/// Returns all supported CSS property names.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getSupportedCSSProperties</c>
+/// </remarks>
+internal partial class CSSGetSupportedCSSPropertiesRequest : IWebkitRequest<CSSGetSupportedCSSPropertiesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getSupportedCSSProperties";
+}
+/// <summary>
+/// Response from <see cref="CSSGetSupportedCSSPropertiesRequest"/>
+/// </summary>
+internal partial class CSSGetSupportedCSSPropertiesResponse: IWebkitResponse
+{
+/// <summary>
+/// Supported property metainfo.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("cssProperties")] public CSSPropertyInfo[] CssProperties { get; set; }
+}
+/// <summary>
+/// Returns all supported system font family names.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.getSupportedSystemFontFamilyNames</c>
+/// </remarks>
+internal partial class CSSGetSupportedSystemFontFamilyNamesRequest : IWebkitRequest<CSSGetSupportedSystemFontFamilyNamesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.getSupportedSystemFontFamilyNames";
+}
+/// <summary>
+/// Response from <see cref="CSSGetSupportedSystemFontFamilyNamesRequest"/>
+/// </summary>
+internal partial class CSSGetSupportedSystemFontFamilyNamesResponse: IWebkitResponse
+{
+/// <summary>
+/// Supported system font families.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("fontFamilyNames")] public string[] FontFamilyNames { get; set; }
+}
+/// <summary>
+/// Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>CSS.forcePseudoState</c>
+/// </remarks>
+internal partial class CSSForcePseudoStateRequest : IWebkitRequest<CSSForcePseudoStateResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "CSS.forcePseudoState";
+/// <summary>
+/// The element id for which to force the pseudo state.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Element pseudo classes to force when computing the element's style.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("forcedPseudoClasses")] public string[] ForcedPseudoClasses { get; set; }
+}
+/// <summary>
+/// Response from <see cref="CSSForcePseudoStateRequest"/>
+/// </summary>
+internal partial class CSSForcePseudoStateResponse: IWebkitResponse
 {
 }
 /// <summary>
-/// 
+/// Fires whenever a MediaQuery result changes (for example, after a browser window has been resized.) The current implementation considers only viewport-dependent media features.
 /// </summary>
 /// <remarks>
-/// Matches on the event <c>DOMStorage.domStorageItemsCleared</c>
+/// Matches on the event <c>CSS.mediaQueryResultChanged</c>
 /// </remarks>
-internal partial class DOMStorageDomStorageItemsClearedWebkitEvent : IWebkitEvent
+internal partial class CSSMediaQueryResultChangedWebkitEvent : IWebkitEvent
 {
-public string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
+public string InternalName { get; } = "CSS.mediaQueryResultChanged";
+}
 /// <summary>
-/// 
-/// </summary>
-public StorageId StorageId { get; set; }}
-/// <summary>
-/// 
+/// Fired whenever a stylesheet is changed as a result of the client operation.
 /// </summary>
 /// <remarks>
-/// Matches on the event <c>DOMStorage.domStorageItemRemoved</c>
+/// Matches on the event <c>CSS.styleSheetChanged</c>
 /// </remarks>
-internal partial class DOMStorageDomStorageItemRemovedWebkitEvent : IWebkitEvent
+internal partial class CSSStyleSheetChangedWebkitEvent : IWebkitEvent
 {
-public string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
+public string InternalName { get; } = "CSS.styleSheetChanged";
 /// <summary>
 /// 
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 /// <summary>
-/// 
-/// </summary>
-public string Key { get; set; }}
-/// <summary>
-/// 
+/// Fired whenever an active document stylesheet is added.
 /// </summary>
 /// <remarks>
-/// Matches on the event <c>DOMStorage.domStorageItemAdded</c>
+/// Matches on the event <c>CSS.styleSheetAdded</c>
 /// </remarks>
-internal partial class DOMStorageDomStorageItemAddedWebkitEvent : IWebkitEvent
+internal partial class CSSStyleSheetAddedWebkitEvent : IWebkitEvent
 {
-public string InternalName { get; } = "DOMStorage.domStorageItemAdded";
+public string InternalName { get; } = "CSS.styleSheetAdded";
 /// <summary>
-/// 
+/// Added stylesheet metainfo.
 /// </summary>
-public StorageId StorageId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("header")] public CSSStyleSheetHeader Header { get; set; }
+}
 /// <summary>
-/// 
-/// </summary>
-public string Key { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string NewValue { get; set; }}
-/// <summary>
-/// 
+/// Fired whenever an active document stylesheet is removed.
 /// </summary>
 /// <remarks>
-/// Matches on the event <c>DOMStorage.domStorageItemUpdated</c>
+/// Matches on the event <c>CSS.styleSheetRemoved</c>
 /// </remarks>
-internal partial class DOMStorageDomStorageItemUpdatedWebkitEvent : IWebkitEvent
+internal partial class CSSStyleSheetRemovedWebkitEvent : IWebkitEvent
 {
-public string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
+public string InternalName { get; } = "CSS.styleSheetRemoved";
 /// <summary>
-/// 
+/// Identifier of the removed stylesheet.
 /// </summary>
-public StorageId StorageId { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string Key { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string OldValue { get; set; }
-/// <summary>
-/// 
-/// </summary>
-public string NewValue { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Database
 {
@@ -4929,19 +3290,23 @@ internal partial class Database
 /// <summary>
 /// Database ID.
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Database domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Database version.
 /// </summary>
-public string Version { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("version")] public string Version { get; set; }
+}
 /// <summary>
 /// Database error.
 /// </summary>
@@ -4950,11 +3315,13 @@ internal partial class Error
 /// <summary>
 /// Error message.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Error code.
 /// </summary>
-public int? Code { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("code")] public int? Code { get; set; }
+}
 /// <summary>
 /// Enables database tracking, database events will now be delivered to the client.
 /// </summary>
@@ -5002,7 +3369,8 @@ public string Command { get; } = "Database.getDatabaseTableNames";
 /// <summary>
 /// 
 /// </summary>
-public string DatabaseId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseId")] public string DatabaseId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DatabaseGetDatabaseTableNamesRequest"/>
 /// </summary>
@@ -5011,7 +3379,8 @@ internal partial class DatabaseGetDatabaseTableNamesResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] TableNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("tableNames")] public string[] TableNames { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5025,11 +3394,13 @@ public string Command { get; } = "Database.executeSQL";
 /// <summary>
 /// 
 /// </summary>
-public string DatabaseId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseId")] public string DatabaseId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Query { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DatabaseExecuteSQLRequest"/>
 /// </summary>
@@ -5038,15 +3409,18 @@ internal partial class DatabaseExecuteSQLResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public string[] ColumnNames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNames")] public string[] ColumnNames { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public JsonElement?[] Values { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("values")] public JsonElement?[] Values { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Error SqlError { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sqlError")] public Error SqlError { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -5059,7 +3433,8 @@ public string InternalName { get; } = "Database.addDatabase";
 /// <summary>
 /// 
 /// </summary>
-public Database Database { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("database")] public Database Database { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Debugger
 {
@@ -5071,15 +3446,18 @@ internal partial class Location
 /// <summary>
 /// Script identifier as reported in the &lt;code&gt;Debugger.scriptParsed&lt;/code&gt;.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// Line number in the script (0-based).
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// Column number in the script (0-based).
 /// </summary>
-public int? ColumnNumber { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+}
 /// <summary>
 /// Action to perform when a breakpoint is triggered.
 /// </summary>
@@ -5088,15 +3466,18 @@ internal partial class BreakpointAction
 /// <summary>
 /// Different kinds of breakpoint actions.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Data associated with this breakpoint type (e.g. for type "eval" this is the JavaScript string to evaluate).
 /// </summary>
-public string Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+
 /// <summary>
 /// A frontend-assigned identifier for this breakpoint action.
 /// </summary>
-public int? Id { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+}
 /// <summary>
 /// Extra options that modify breakpoint behavior.
 /// </summary>
@@ -5105,19 +3486,23 @@ internal partial class BreakpointOptions
 /// <summary>
 /// Expression to use as a breakpoint condition. When specified, debugger will only stop on the breakpoint if this expression evaluates to true.
 /// </summary>
-public string Condition { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("condition")] public string Condition { get; set; }
+
 /// <summary>
 /// Actions to perform automatically when the breakpoint is triggered.
 /// </summary>
-public BreakpointAction[] Actions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("actions")] public BreakpointAction[] Actions { get; set; }
+
 /// <summary>
 /// Automatically continue after hitting this breakpoint and running actions.
 /// </summary>
-public bool? AutoContinue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autoContinue")] public bool? AutoContinue { get; set; }
+
 /// <summary>
 /// Number of times to ignore this breakpoint, before stopping on the breakpoint and running actions.
 /// </summary>
-public int? IgnoreCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ignoreCount")] public int? IgnoreCount { get; set; }
+}
 /// <summary>
 /// Information about the function.
 /// </summary>
@@ -5126,19 +3511,23 @@ internal partial class FunctionDetails
 /// <summary>
 /// Location of the function.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// Name of the function. Not present for anonymous functions.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Display name of the function(specified in 'displayName' property on the function object).
 /// </summary>
-public string DisplayName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("displayName")] public string DisplayName { get; set; }
+
 /// <summary>
 /// Scope chain for this closure.
 /// </summary>
-public Scope[] ScopeChain { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scopeChain")] public Scope[] ScopeChain { get; set; }
+}
 /// <summary>
 /// JavaScript call frame. Array of call frames form the call stack.
 /// </summary>
@@ -5147,27 +3536,33 @@ internal partial class CallFrame
 /// <summary>
 /// Call frame identifier. This identifier is only valid while the virtual machine is paused.
 /// </summary>
-public string CallFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrameId")] public string CallFrameId { get; set; }
+
 /// <summary>
 /// Name of the JavaScript function called on this call frame.
 /// </summary>
-public string FunctionName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionName")] public string FunctionName { get; set; }
+
 /// <summary>
 /// Location in the source code.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// Scope chain for this call frame.
 /// </summary>
-public Scope[] ScopeChain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scopeChain")] public Scope[] ScopeChain { get; set; }
+
 /// <summary>
 /// &lt;code&gt;this&lt;/code&gt; object for this call frame.
 /// </summary>
-public Runtime.RemoteObject This { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("this")] public Runtime.RemoteObject This { get; set; }
+
 /// <summary>
 /// Is the current frame tail deleted from a tail call.
 /// </summary>
-public bool? IsTailDeleted { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isTailDeleted")] public bool? IsTailDeleted { get; set; }
+}
 /// <summary>
 /// Scope description.
 /// </summary>
@@ -5176,23 +3571,28 @@ internal partial class Scope
 /// <summary>
 /// Object representing the scope. For &lt;code&gt;global&lt;/code&gt; and &lt;code&gt;with&lt;/code&gt; scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties.
 /// </summary>
-public Runtime.RemoteObject Object { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+
 /// <summary>
 /// Scope type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Name associated with the scope.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Location if available of the scope definition.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// Whether the scope has any variables.
 /// </summary>
-public bool? Empty { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("empty")] public bool? Empty { get; set; }
+}
 /// <summary>
 /// A sample collected by evaluating a probe breakpoint action.
 /// </summary>
@@ -5201,23 +3601,28 @@ internal partial class ProbeSample
 /// <summary>
 /// Identifier of the probe breakpoint action that created the sample.
 /// </summary>
-public int? ProbeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("probeId")] public int? ProbeId { get; set; }
+
 /// <summary>
 /// Unique identifier for this sample.
 /// </summary>
-public int? SampleId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sampleId")] public int? SampleId { get; set; }
+
 /// <summary>
 /// A batch identifier which is the same for all samples taken at the same breakpoint hit.
 /// </summary>
-public int? BatchId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("batchId")] public int? BatchId { get; set; }
+
 /// <summary>
 /// Timestamp of when the sample was taken.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Contents of the sample.
 /// </summary>
-public Runtime.RemoteObject Payload { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("payload")] public Runtime.RemoteObject Payload { get; set; }
+}
 /// <summary>
 /// The pause reason auxiliary data when paused because of an assertion.
 /// </summary>
@@ -5226,7 +3631,8 @@ internal partial class AssertPauseReason
 /// <summary>
 /// The console.assert message string if provided.
 /// </summary>
-public string Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+}
 /// <summary>
 /// The pause reason auxiliary data when paused because of hitting a breakpoint.
 /// </summary>
@@ -5235,7 +3641,8 @@ internal partial class BreakpointPauseReason
 /// <summary>
 /// The identifier of the breakpoint causing the pause.
 /// </summary>
-public string BreakpointId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+}
 /// <summary>
 /// The pause reason auxiliary data when paused because of a Content Security Policy directive.
 /// </summary>
@@ -5244,7 +3651,8 @@ internal partial class CSPViolationPauseReason
 /// <summary>
 /// The CSP directive that blocked script execution.
 /// </summary>
-public string Directive { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("directive")] public string Directive { get; set; }
+}
 /// <summary>
 /// Enables debugger for the given page. Clients should not assume that the debugging has been enabled until the result for this command is received.
 /// </summary>
@@ -5292,7 +3700,8 @@ public string Command { get; } = "Debugger.setAsyncStackTraceDepth";
 /// <summary>
 /// Async stack trace depth.
 /// </summary>
-public int? Depth { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetAsyncStackTraceDepthRequest"/>
 /// </summary>
@@ -5312,7 +3721,8 @@ public string Command { get; } = "Debugger.setBreakpointsActive";
 /// <summary>
 /// New value for breakpoints active state.
 /// </summary>
-public bool? Active { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("active")] public bool? Active { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointsActiveRequest"/>
 /// </summary>
@@ -5332,23 +3742,28 @@ public string Command { get; } = "Debugger.setBreakpointByUrl";
 /// <summary>
 /// Line number to set breakpoint at.
 /// </summary>
-public int? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
+
 /// <summary>
 /// URL of the resources to set breakpoint on.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Regex pattern for the URLs of the resources to set breakpoints on. Either &lt;code&gt;url&lt;/code&gt; or &lt;code&gt;urlRegex&lt;/code&gt; must be specified.
 /// </summary>
-public string UrlRegex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("urlRegex")] public string UrlRegex { get; set; }
+
 /// <summary>
 /// Offset in the line to set breakpoint at.
 /// </summary>
-public int? ColumnNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
+
 /// <summary>
 /// Options to apply to this breakpoint to modify its behavior.
 /// </summary>
-public BreakpointOptions Options { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("options")] public BreakpointOptions Options { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointByUrlRequest"/>
 /// </summary>
@@ -5357,11 +3772,13 @@ internal partial class DebuggerSetBreakpointByUrlResponse: IWebkitResponse
 /// <summary>
 /// Id of the created breakpoint for further reference.
 /// </summary>
-public string BreakpointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+
 /// <summary>
 /// List of the locations this breakpoint resolved into upon addition.
 /// </summary>
-public Location[] Locations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("locations")] public Location[] Locations { get; set; }
+}
 /// <summary>
 /// Sets JavaScript breakpoint at a given location.
 /// </summary>
@@ -5375,11 +3792,13 @@ public string Command { get; } = "Debugger.setBreakpoint";
 /// <summary>
 /// Location to set breakpoint in.
 /// </summary>
-public Location Location { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+
 /// <summary>
 /// Options to apply to this breakpoint to modify its behavior.
 /// </summary>
-public BreakpointOptions Options { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("options")] public BreakpointOptions Options { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetBreakpointRequest"/>
 /// </summary>
@@ -5388,11 +3807,13 @@ internal partial class DebuggerSetBreakpointResponse: IWebkitResponse
 /// <summary>
 /// Id of the created breakpoint for further reference.
 /// </summary>
-public string BreakpointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+
 /// <summary>
 /// Location this breakpoint resolved into.
 /// </summary>
-public Location ActualLocation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("actualLocation")] public Location ActualLocation { get; set; }
+}
 /// <summary>
 /// Removes JavaScript breakpoint.
 /// </summary>
@@ -5406,7 +3827,8 @@ public string Command { get; } = "Debugger.removeBreakpoint";
 /// <summary>
 /// 
 /// </summary>
-public string BreakpointId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerRemoveBreakpointRequest"/>
 /// </summary>
@@ -5443,7 +3865,8 @@ public string Command { get; } = "Debugger.continueToLocation";
 /// <summary>
 /// Location to continue to.
 /// </summary>
-public Location Location { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerContinueToLocationRequest"/>
 /// </summary>
@@ -5548,19 +3971,23 @@ public string Command { get; } = "Debugger.searchInContent";
 /// <summary>
 /// Id of the script to search in.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// String to search for.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool? IsRegex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSearchInContentRequest"/>
 /// </summary>
@@ -5569,7 +3996,8 @@ internal partial class DebuggerSearchInContentResponse: IWebkitResponse
 /// <summary>
 /// List of search matches.
 /// </summary>
-public GenericTypes.SearchMatch[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public GenericTypes.SearchMatch[] Result { get; set; }
+}
 /// <summary>
 /// Returns source for the script with given id.
 /// </summary>
@@ -5583,7 +4011,8 @@ public string Command { get; } = "Debugger.getScriptSource";
 /// <summary>
 /// Id of the script to get source for.
 /// </summary>
-public string ScriptId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerGetScriptSourceRequest"/>
 /// </summary>
@@ -5592,7 +4021,8 @@ internal partial class DebuggerGetScriptSourceResponse: IWebkitResponse
 /// <summary>
 /// Script source.
 /// </summary>
-public string ScriptSource { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("scriptSource")] public string ScriptSource { get; set; }
+}
 /// <summary>
 /// Returns detailed information on given function.
 /// </summary>
@@ -5606,7 +4036,8 @@ public string Command { get; } = "Debugger.getFunctionDetails";
 /// <summary>
 /// Id of the function to get location for.
 /// </summary>
-public string FunctionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("functionId")] public string FunctionId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerGetFunctionDetailsRequest"/>
 /// </summary>
@@ -5615,7 +4046,8 @@ internal partial class DebuggerGetFunctionDetailsResponse: IWebkitResponse
 /// <summary>
 /// Information about the function.
 /// </summary>
-public FunctionDetails Details { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("details")] public FunctionDetails Details { get; set; }
+}
 /// <summary>
 /// Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or no exceptions. Initial pause on exceptions state is &lt;code&gt;none&lt;/code&gt;.
 /// </summary>
@@ -5629,7 +4061,8 @@ public string Command { get; } = "Debugger.setPauseOnExceptions";
 /// <summary>
 /// Pause on exceptions mode.
 /// </summary>
-public string State { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("state")] public string State { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetPauseOnExceptionsRequest"/>
 /// </summary>
@@ -5649,7 +4082,8 @@ public string Command { get; } = "Debugger.setPauseOnAssertions";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetPauseOnAssertionsRequest"/>
 /// </summary>
@@ -5669,7 +4103,8 @@ public string Command { get; } = "Debugger.setPauseOnMicrotasks";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetPauseOnMicrotasksRequest"/>
 /// </summary>
@@ -5689,7 +4124,8 @@ public string Command { get; } = "Debugger.setPauseForInternalScripts";
 /// <summary>
 /// 
 /// </summary>
-public bool? ShouldPause { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("shouldPause")] public bool? ShouldPause { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetPauseForInternalScriptsRequest"/>
 /// </summary>
@@ -5709,39 +4145,48 @@ public string Command { get; } = "Debugger.evaluateOnCallFrame";
 /// <summary>
 /// Call frame identifier to evaluate on.
 /// </summary>
-public string CallFrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrameId")] public string CallFrameId { get; set; }
+
 /// <summary>
 /// Expression to evaluate.
 /// </summary>
-public string Expression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expression")] public string Expression { get; set; }
+
 /// <summary>
 /// String object group name to put result into (allows rapid releasing resulting object handles using &lt;code&gt;releaseObjectGroup&lt;/code&gt;).
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// Specifies whether command line API should be available to the evaluated expression, defaults to false.
 /// </summary>
-public bool? IncludeCommandLineAPI { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeCommandLineAPI")] public bool? IncludeCommandLineAPI { get; set; }
+
 /// <summary>
 /// Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.
 /// </summary>
-public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("doNotPauseOnExceptionsAndMuteConsole")] public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether the resulting value should be considered for saving in the $n history.
 /// </summary>
-public bool? SaveResult { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("saveResult")] public bool? SaveResult { get; set; }
+
 /// <summary>
 /// Whether the expression should be considered to be in a user gesture or not.
 /// </summary>
-public bool? EmulateUserGesture { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("emulateUserGesture")] public bool? EmulateUserGesture { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerEvaluateOnCallFrameRequest"/>
 /// </summary>
@@ -5750,15 +4195,18 @@ internal partial class DebuggerEvaluateOnCallFrameResponse: IWebkitResponse
 /// <summary>
 /// Object wrapper for the evaluation result.
 /// </summary>
-public Runtime.RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+
 /// <summary>
 /// If the result was saved, this is the $n index that can be used to access the value.
 /// </summary>
-public int? SavedResultIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("savedResultIndex")] public int? SavedResultIndex { get; set; }
+}
 /// <summary>
 /// Sets whether the given URL should be in the list of blackboxed scripts, which are ignored when pausing/stepping/debugging.
 /// </summary>
@@ -5772,19 +4220,23 @@ public string Command { get; } = "Debugger.setShouldBlackboxURL";
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? ShouldBlackbox { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("shouldBlackbox")] public bool? ShouldBlackbox { get; set; }
+
 /// <summary>
 /// If true, &lt;code&gt;url&lt;/code&gt; is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treat &lt;code&gt;url&lt;/code&gt; as regular expression.
 /// </summary>
-public bool? IsRegex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DebuggerSetShouldBlackboxURLRequest"/>
 /// </summary>
@@ -5813,43 +4265,53 @@ public string InternalName { get; } = "Debugger.scriptParsed";
 /// <summary>
 /// Identifier of the script parsed.
 /// </summary>
-public string ScriptId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
+
 /// <summary>
 /// URL of the script parsed (if any).
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Line offset of the script within the resource with given URL (for script tags).
 /// </summary>
-public int? StartLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public int? StartLine { get; set; }
+
 /// <summary>
 /// Column offset of the script within the resource with given URL.
 /// </summary>
-public int? StartColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startColumn")] public int? StartColumn { get; set; }
+
 /// <summary>
 /// Last line of the script.
 /// </summary>
-public int? EndLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endLine")] public int? EndLine { get; set; }
+
 /// <summary>
 /// Length of the last line of the script.
 /// </summary>
-public int? EndColumn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endColumn")] public int? EndColumn { get; set; }
+
 /// <summary>
 /// Determines whether this script is a user extension script.
 /// </summary>
-public bool? IsContentScript { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isContentScript")] public bool? IsContentScript { get; set; }
+
 /// <summary>
 /// sourceURL name of the script (if any).
 /// </summary>
-public string SourceURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
+
 /// <summary>
 /// URL of source map associated with script (if any).
 /// </summary>
-public string SourceMapURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+
 /// <summary>
 /// True if this script was parsed as a module.
 /// </summary>
-public bool? Module { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("module")] public bool? Module { get; set; }
+}
 /// <summary>
 /// Fired when virtual machine fails to parse the script.
 /// </summary>
@@ -5862,23 +4324,28 @@ public string InternalName { get; } = "Debugger.scriptFailedToParse";
 /// <summary>
 /// URL of the script that failed to parse.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Source text of the script that failed to parse.
 /// </summary>
-public string ScriptSource { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("scriptSource")] public string ScriptSource { get; set; }
+
 /// <summary>
 /// Line offset of the script within the resource.
 /// </summary>
-public int? StartLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startLine")] public int? StartLine { get; set; }
+
 /// <summary>
 /// Line with error.
 /// </summary>
-public int? ErrorLine { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorLine")] public int? ErrorLine { get; set; }
+
 /// <summary>
 /// Parse error message.
 /// </summary>
-public string ErrorMessage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public string ErrorMessage { get; set; }
+}
 /// <summary>
 /// Fired when breakpoint is resolved to an actual script and location.
 /// </summary>
@@ -5891,11 +4358,13 @@ public string InternalName { get; } = "Debugger.breakpointResolved";
 /// <summary>
 /// Breakpoint unique identifier.
 /// </summary>
-public string BreakpointId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
+
 /// <summary>
 /// Actual breakpoint location.
 /// </summary>
-public Location Location { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
+}
 /// <summary>
 /// Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria.
 /// </summary>
@@ -5908,19 +4377,23 @@ public string InternalName { get; } = "Debugger.paused";
 /// <summary>
 /// Call stack the virtual machine stopped on.
 /// </summary>
-public CallFrame[] CallFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("callFrames")] public CallFrame[] CallFrames { get; set; }
+
 /// <summary>
 /// Pause reason.
 /// </summary>
-public string Reason { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public string Reason { get; set; }
+
 /// <summary>
 /// Object containing break-specific auxiliary properties.
 /// </summary>
-public object Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public object Data { get; set; }
+
 /// <summary>
 /// Linked list of asynchronous StackTraces.
 /// </summary>
-public Console.StackTrace AsyncStackTrace { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("asyncStackTrace")] public Console.StackTrace AsyncStackTrace { get; set; }
+}
 /// <summary>
 /// Fired when the virtual machine resumed execution.
 /// </summary>
@@ -5943,7 +4416,8 @@ public string InternalName { get; } = "Debugger.didSampleProbe";
 /// <summary>
 /// A collected probe sample.
 /// </summary>
-public ProbeSample Sample { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sample")] public ProbeSample Sample { get; set; }
+}
 /// <summary>
 /// Fired when a "sound" breakpoint action is triggered on a breakpoint.
 /// </summary>
@@ -5956,7 +4430,8 @@ public string InternalName { get; } = "Debugger.playBreakpointActionSound";
 /// <summary>
 /// Breakpoint action identifier.
 /// </summary>
-public int? BreakpointActionId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("breakpointActionId")] public int? BreakpointActionId { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Dialog
 {
@@ -6007,11 +4482,13 @@ public string Command { get; } = "Dialog.handleJavaScriptDialog";
 /// <summary>
 /// Whether to accept or dismiss the dialog.
 /// </summary>
-public bool? Accept { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("accept")] public bool? Accept { get; set; }
+
 /// <summary>
 /// The text to enter into the dialog prompt before accepting. Used only if this is a prompt dialog.
 /// </summary>
-public string PromptText { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("promptText")] public string PromptText { get; set; }
+}
 /// <summary>
 /// Response from <see cref="DialogHandleJavaScriptDialogRequest"/>
 /// </summary>
@@ -6030,15 +4507,2449 @@ public string InternalName { get; } = "Dialog.javascriptDialogOpening";
 /// <summary>
 /// Dialog type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Message that will be displayed by the dialog.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Default dialog prompt.
 /// </summary>
-public string DefaultPrompt { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("defaultPrompt")] public string DefaultPrompt { get; set; }
+}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOM
+{
+/// <summary>
+/// DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type.
+/// </summary>
+internal partial class Node
+{
+/// <summary>
+/// Node identifier that is passed into the rest of the DOM messages as the &lt;code&gt;nodeId&lt;/code&gt;. Backend will only push node with given &lt;code&gt;id&lt;/code&gt; once. It is aware of all requested nodes and will only fire DOM events for nodes known to the client.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Node&lt;/code&gt;'s nodeType.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeType")] public int? NodeType { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Node&lt;/code&gt;'s nodeName.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeName")] public string NodeName { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Node&lt;/code&gt;'s localName.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("localName")] public string LocalName { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Node&lt;/code&gt;'s nodeValue.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeValue")] public string NodeValue { get; set; }
+
+/// <summary>
+/// Identifier of the containing frame.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
+/// <summary>
+/// Child count for &lt;code&gt;Container&lt;/code&gt; nodes.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("childNodeCount")] public int? ChildNodeCount { get; set; }
+
+/// <summary>
+/// Child nodes of this node when requested with children.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("children")] public Node[] Children { get; set; }
+
+/// <summary>
+/// Attributes of the &lt;code&gt;Element&lt;/code&gt; node in the form of flat array &lt;code&gt;[name1, value1, name2, value2]&lt;/code&gt;.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public string[] Attributes { get; set; }
+
+/// <summary>
+/// Document URL that &lt;code&gt;Document&lt;/code&gt; or &lt;code&gt;FrameOwner&lt;/code&gt; node points to.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public string DocumentURL { get; set; }
+
+/// <summary>
+/// Base URL that &lt;code&gt;Document&lt;/code&gt; or &lt;code&gt;FrameOwner&lt;/code&gt; node uses for URL completion.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("baseURL")] public string BaseURL { get; set; }
+
+/// <summary>
+/// &lt;code&gt;DocumentType&lt;/code&gt;'s publicId.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("publicId")] public string PublicId { get; set; }
+
+/// <summary>
+/// &lt;code&gt;DocumentType&lt;/code&gt;'s systemId.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("systemId")] public string SystemId { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Document&lt;/code&gt;'s XML version in case of XML documents.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("xmlVersion")] public string XmlVersion { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Attr&lt;/code&gt;'s name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// &lt;code&gt;Attr&lt;/code&gt;'s value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
+/// <summary>
+/// Pseudo element type for this node.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("pseudoType")] public PseudoType? PseudoType { get; set; }
+
+/// <summary>
+/// Shadow root type.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("shadowRootType")] public ShadowRootType? ShadowRootType { get; set; }
+
+/// <summary>
+/// Custom element state.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("customElementState")] public CustomElementState? CustomElementState { get; set; }
+
+/// <summary>
+/// Content document for frame owner elements.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("contentDocument")] public Node ContentDocument { get; set; }
+
+/// <summary>
+/// Shadow root list for given element host.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("shadowRoots")] public Node[] ShadowRoots { get; set; }
+
+/// <summary>
+/// Content document fragment for template elements
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("templateContent")] public Node TemplateContent { get; set; }
+
+/// <summary>
+/// Pseudo elements associated with this node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElements")] public Node[] PseudoElements { get; set; }
+
+/// <summary>
+/// Computed SHA-256 Content Security Policy hash source for given element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("contentSecurityPolicyHash")] public string ContentSecurityPolicyHash { get; set; }
+}
+/// <summary>
+/// Relationship between data that is associated with a node and the node itself.
+/// </summary>
+internal partial class DataBinding
+{
+/// <summary>
+/// The binding key that is specified.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("binding")] public string Binding { get; set; }
+
+/// <summary>
+/// A more descriptive name for the type of binding that represents this paritcular data relationship
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
+/// <summary>
+/// The value that is resolved to with this data binding relationship.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// A structure holding event listener properties.
+/// </summary>
+internal partial class EventListener
+{
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventListenerId")] public int? EventListenerId { get; set; }
+
+/// <summary>
+/// &lt;code&gt;EventListener&lt;/code&gt;'s type.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
+/// <summary>
+/// &lt;code&gt;EventListener&lt;/code&gt;'s useCapture.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("useCapture")] public bool? UseCapture { get; set; }
+
+/// <summary>
+/// &lt;code&gt;EventListener&lt;/code&gt;'s isAttribute.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("isAttribute")] public bool? IsAttribute { get; set; }
+
+/// <summary>
+/// The target &lt;code&gt;DOMNode&lt;/code&gt; id if the event listener is for a node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// True if the event listener was added to the window.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("onWindow")] public bool? OnWindow { get; set; }
+
+/// <summary>
+/// Handler code location.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("location")] public Debugger.Location Location { get; set; }
+
+/// <summary>
+/// Event handler function name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("handlerName")] public string HandlerName { get; set; }
+
+/// <summary>
+/// &lt;code&gt;EventListener&lt;/code&gt;'s passive.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("passive")] public bool? Passive { get; set; }
+
+/// <summary>
+/// &lt;code&gt;EventListener&lt;/code&gt;'s once.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("once")] public bool? Once { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("hasBreakpoint")] public bool? HasBreakpoint { get; set; }
+}
+/// <summary>
+/// A structure holding accessibility properties.
+/// </summary>
+internal partial class AccessibilityProperties
+{
+/// <summary>
+/// &lt;code&gt;DOMNode&lt;/code&gt; id of the accessibility object referenced by aria-activedescendant.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("activeDescendantNodeId")] public int? ActiveDescendantNodeId { get; set; }
+
+/// <summary>
+/// Value of @aria-busy on current or ancestor node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("busy")] public bool? Busy { get; set; }
+
+/// <summary>
+/// Checked state of certain form controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("checked")] public string Checked { get; set; }
+
+/// <summary>
+/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of the accessibility tree children if available.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("childNodeIds")] public int?[] ChildNodeIds { get; set; }
+
+/// <summary>
+/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any nodes referenced via @aria-controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("controlledNodeIds")] public int?[] ControlledNodeIds { get; set; }
+
+/// <summary>
+/// Current item within a container or set of related elements.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("current")] public string Current { get; set; }
+
+/// <summary>
+/// Disabled state of form controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+
+/// <summary>
+/// Heading level of a heading element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("headingLevel")] public double? HeadingLevel { get; set; }
+
+/// <summary>
+/// The hierarchical level of an element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("hierarchyLevel")] public double? HierarchyLevel { get; set; }
+
+/// <summary>
+/// Whether an element is a popup button.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("isPopUpButton")] public bool? IsPopUpButton { get; set; }
+
+/// <summary>
+/// Indicates whether there is an existing AX object for the DOM node. If this is false, all the other properties will be default values.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("exists")] public bool? Exists { get; set; }
+
+/// <summary>
+/// Expanded state.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("expanded")] public bool? Expanded { get; set; }
+
+/// <summary>
+/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any nodes referenced via @aria-flowto.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("flowedNodeIds")] public int?[] FlowedNodeIds { get; set; }
+
+/// <summary>
+/// Focused state. Only defined on focusable elements.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("focused")] public bool? Focused { get; set; }
+
+/// <summary>
+/// Indicates whether the accessibility of the associated AX object node is ignored, whether heuristically or explicitly.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ignored")] public bool? Ignored { get; set; }
+
+/// <summary>
+/// State indicating whether the accessibility of the associated AX object node is ignored by default for node type.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ignoredByDefault")] public bool? IgnoredByDefault { get; set; }
+
+/// <summary>
+/// Invalid status of form controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("invalid")] public string Invalid { get; set; }
+
+/// <summary>
+/// Hidden state. True if node or an ancestor is hidden via CSS or explicit @aria-hidden, to clarify why the element is ignored.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("hidden")] public bool? Hidden { get; set; }
+
+/// <summary>
+/// Computed label value for the node, sometimes calculated by referencing other nodes.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("label")] public string Label { get; set; }
+
+/// <summary>
+/// Value of @aria-atomic.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("liveRegionAtomic")] public bool? LiveRegionAtomic { get; set; }
+
+/// <summary>
+/// Token value(s) of element's @aria-relevant attribute. Array of string values matching $ref LiveRegionRelevant. FIXME: Enum values blocked by http://webkit.org/b/133711
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("liveRegionRelevant")] public string[] LiveRegionRelevant { get; set; }
+
+/// <summary>
+/// Value of element's @aria-live attribute.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("liveRegionStatus")] public string LiveRegionStatus { get; set; }
+
+/// <summary>
+/// &lt;code&gt;DOMNode&lt;/code&gt; id of node or closest ancestor node that has a mousedown, mouseup, or click event handler.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("mouseEventNodeId")] public int? MouseEventNodeId { get; set; }
+
+/// <summary>
+/// Target &lt;code&gt;DOMNode&lt;/code&gt; id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any nodes referenced via @aria-owns.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ownedNodeIds")] public int?[] OwnedNodeIds { get; set; }
+
+/// <summary>
+/// &lt;code&gt;DOMNode&lt;/code&gt; id of the accessibility tree parent object if available.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parentNodeId")] public int? ParentNodeId { get; set; }
+
+/// <summary>
+/// Pressed state for toggle buttons.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("pressed")] public bool? Pressed { get; set; }
+
+/// <summary>
+/// Readonly state of text controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("readonly")] public bool? Readonly { get; set; }
+
+/// <summary>
+/// Required state of form controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("required")] public bool? Required { get; set; }
+
+/// <summary>
+/// Computed value for first recognized role token, default role per element, or overridden role.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("role")] public string Role { get; set; }
+
+/// <summary>
+/// Selected state of certain form controls.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selected")] public bool? Selected { get; set; }
+
+/// <summary>
+/// Array of &lt;code&gt;DOMNode&lt;/code&gt; ids of any children marked as selected.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selectedChildNodeIds")] public int?[] SelectedChildNodeIds { get; set; }
+}
+/// <summary>
+/// A structure holding an RGBA color.
+/// </summary>
+internal partial class RGBAColor
+{
+/// <summary>
+/// The red component, in the [0-255] range.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("r")] public int? R { get; set; }
+
+/// <summary>
+/// The green component, in the [0-255] range.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("g")] public int? G { get; set; }
+
+/// <summary>
+/// The blue component, in the [0-255] range.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("b")] public int? B { get; set; }
+
+/// <summary>
+/// The alpha component, in the [0-1] range (default: 1).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("a")] public double? A { get; set; }
+}
+/// <summary>
+/// Configuration data for the highlighting of page elements.
+/// </summary>
+internal partial class HighlightConfig
+{
+/// <summary>
+/// Whether the node info tooltip should be shown (default: false).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("showInfo")] public bool? ShowInfo { get; set; }
+
+/// <summary>
+/// The content box highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("contentColor")] public RGBAColor ContentColor { get; set; }
+
+/// <summary>
+/// The padding highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("paddingColor")] public RGBAColor PaddingColor { get; set; }
+
+/// <summary>
+/// The border highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("borderColor")] public RGBAColor BorderColor { get; set; }
+
+/// <summary>
+/// The margin highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("marginColor")] public RGBAColor MarginColor { get; set; }
+}
+/// <summary>
+/// Data to construct File object.
+/// </summary>
+internal partial class FilePayload
+{
+/// <summary>
+/// File name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// File type.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
+/// <summary>
+/// Base64-encoded file data.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+}
+/// <summary>
+/// Returns the root DOM node to the caller.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getDocument</c>
+/// </remarks>
+internal partial class DOMGetDocumentRequest : IWebkitRequest<DOMGetDocumentResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getDocument";
+}
+/// <summary>
+/// Response from <see cref="DOMGetDocumentRequest"/>
+/// </summary>
+internal partial class DOMGetDocumentResponse: IWebkitResponse
+{
+/// <summary>
+/// Resulting node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("root")] public Node Root { get; set; }
+}
+/// <summary>
+/// Requests that children of the node with given id are returned to the caller in form of &lt;code&gt;setChildNodes&lt;/code&gt; events where not only immediate children are retrieved, but all children down to the specified depth.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.requestChildNodes</c>
+/// </remarks>
+internal partial class DOMRequestChildNodesRequest : IWebkitRequest<DOMRequestChildNodesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.requestChildNodes";
+/// <summary>
+/// Id of the node to get children for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("depth")] public int? Depth { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMRequestChildNodesRequest"/>
+/// </summary>
+internal partial class DOMRequestChildNodesResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Executes &lt;code&gt;querySelector&lt;/code&gt; on a given node.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.querySelector</c>
+/// </remarks>
+internal partial class DOMQuerySelectorRequest : IWebkitRequest<DOMQuerySelectorResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.querySelector";
+/// <summary>
+/// Id of the node to query upon.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Selector string.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMQuerySelectorRequest"/>
+/// </summary>
+internal partial class DOMQuerySelectorResponse: IWebkitResponse
+{
+/// <summary>
+/// Query selector result.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Executes &lt;code&gt;querySelectorAll&lt;/code&gt; on a given node.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.querySelectorAll</c>
+/// </remarks>
+internal partial class DOMQuerySelectorAllRequest : IWebkitRequest<DOMQuerySelectorAllResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.querySelectorAll";
+/// <summary>
+/// Id of the node to query upon.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Selector string.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMQuerySelectorAllRequest"/>
+/// </summary>
+internal partial class DOMQuerySelectorAllResponse: IWebkitResponse
+{
+/// <summary>
+/// Query selector result.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
+/// <summary>
+/// Sets node name for a node with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setNodeName</c>
+/// </remarks>
+internal partial class DOMSetNodeNameRequest : IWebkitRequest<DOMSetNodeNameResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setNodeName";
+/// <summary>
+/// Id of the node to set name for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// New node's name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetNodeNameRequest"/>
+/// </summary>
+internal partial class DOMSetNodeNameResponse: IWebkitResponse
+{
+/// <summary>
+/// New node's id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Sets node value for a node with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setNodeValue</c>
+/// </remarks>
+internal partial class DOMSetNodeValueRequest : IWebkitRequest<DOMSetNodeValueResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setNodeValue";
+/// <summary>
+/// Id of the node to set value for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// New node's value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetNodeValueRequest"/>
+/// </summary>
+internal partial class DOMSetNodeValueResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Removes node with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.removeNode</c>
+/// </remarks>
+internal partial class DOMRemoveNodeRequest : IWebkitRequest<DOMRemoveNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.removeNode";
+/// <summary>
+/// Id of the node to remove.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMRemoveNodeRequest"/>
+/// </summary>
+internal partial class DOMRemoveNodeResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Sets attribute for an element with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setAttributeValue</c>
+/// </remarks>
+internal partial class DOMSetAttributeValueRequest : IWebkitRequest<DOMSetAttributeValueResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setAttributeValue";
+/// <summary>
+/// Id of the element to set attribute for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Attribute name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// Attribute value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetAttributeValueRequest"/>
+/// </summary>
+internal partial class DOMSetAttributeValueResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Sets attributes on element with given id. This method is useful when user edits some existing attribute value and types in several attribute name/value pairs.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setAttributesAsText</c>
+/// </remarks>
+internal partial class DOMSetAttributesAsTextRequest : IWebkitRequest<DOMSetAttributesAsTextResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setAttributesAsText";
+/// <summary>
+/// Id of the element to set attributes for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Text with a number of attributes. Will parse this text using HTML parser.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
+/// <summary>
+/// Attribute name to replace with new attributes derived from text in case text parsed successfully.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetAttributesAsTextRequest"/>
+/// </summary>
+internal partial class DOMSetAttributesAsTextResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Removes attribute with given name from an element with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.removeAttribute</c>
+/// </remarks>
+internal partial class DOMRemoveAttributeRequest : IWebkitRequest<DOMRemoveAttributeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.removeAttribute";
+/// <summary>
+/// Id of the element to remove attribute from.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Name of the attribute to remove.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMRemoveAttributeRequest"/>
+/// </summary>
+internal partial class DOMRemoveAttributeResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Gets the list of builtin DOM event names.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getSupportedEventNames</c>
+/// </remarks>
+internal partial class DOMGetSupportedEventNamesRequest : IWebkitRequest<DOMGetSupportedEventNamesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getSupportedEventNames";
+}
+/// <summary>
+/// Response from <see cref="DOMGetSupportedEventNamesRequest"/>
+/// </summary>
+internal partial class DOMGetSupportedEventNamesResponse: IWebkitResponse
+{
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventNames")] public string[] EventNames { get; set; }
+}
+/// <summary>
+/// Returns all data binding relationships between data that is associated with the node and the node itself.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getDataBindingsForNode</c>
+/// </remarks>
+internal partial class DOMGetDataBindingsForNodeRequest : IWebkitRequest<DOMGetDataBindingsForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getDataBindingsForNode";
+/// <summary>
+/// Id of the node to get data bindings for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetDataBindingsForNodeRequest"/>
+/// </summary>
+internal partial class DOMGetDataBindingsForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Array of binding relationships between data and node
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("dataBindings")] public DataBinding[] DataBindings { get; set; }
+}
+/// <summary>
+/// Returns all data that has been associated with the node and is available for data binding.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getAssociatedDataForNode</c>
+/// </remarks>
+internal partial class DOMGetAssociatedDataForNodeRequest : IWebkitRequest<DOMGetAssociatedDataForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getAssociatedDataForNode";
+/// <summary>
+/// Id of the node to get associated data for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetAssociatedDataForNodeRequest"/>
+/// </summary>
+internal partial class DOMGetAssociatedDataForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Associated data bound to this node. Sent as a JSON string.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("associatedData")] public string AssociatedData { get; set; }
+}
+/// <summary>
+/// Returns event listeners relevant to the node.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getEventListenersForNode</c>
+/// </remarks>
+internal partial class DOMGetEventListenersForNodeRequest : IWebkitRequest<DOMGetEventListenersForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getEventListenersForNode";
+/// <summary>
+/// Id of the node to get listeners for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetEventListenersForNodeRequest"/>
+/// </summary>
+internal partial class DOMGetEventListenersForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Array of relevant listeners.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("listeners")] public EventListener[] Listeners { get; set; }
+}
+/// <summary>
+/// Enable/disable the given event listener. A disabled event listener will not fire.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setEventListenerDisabled</c>
+/// </remarks>
+internal partial class DOMSetEventListenerDisabledRequest : IWebkitRequest<DOMSetEventListenerDisabledResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setEventListenerDisabled";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventListenerId")] public int? EventListenerId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetEventListenerDisabledRequest"/>
+/// </summary>
+internal partial class DOMSetEventListenerDisabledResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Set a breakpoint on the given event listener.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setBreakpointForEventListener</c>
+/// </remarks>
+internal partial class DOMSetBreakpointForEventListenerRequest : IWebkitRequest<DOMSetBreakpointForEventListenerResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setBreakpointForEventListener";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventListenerId")] public int? EventListenerId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetBreakpointForEventListenerRequest"/>
+/// </summary>
+internal partial class DOMSetBreakpointForEventListenerResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Remove any breakpoints on the given event listener.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.removeBreakpointForEventListener</c>
+/// </remarks>
+internal partial class DOMRemoveBreakpointForEventListenerRequest : IWebkitRequest<DOMRemoveBreakpointForEventListenerResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.removeBreakpointForEventListener";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventListenerId")] public int? EventListenerId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMRemoveBreakpointForEventListenerRequest"/>
+/// </summary>
+internal partial class DOMRemoveBreakpointForEventListenerResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Returns a dictionary of accessibility properties for the node.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getAccessibilityPropertiesForNode</c>
+/// </remarks>
+internal partial class DOMGetAccessibilityPropertiesForNodeRequest : IWebkitRequest<DOMGetAccessibilityPropertiesForNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getAccessibilityPropertiesForNode";
+/// <summary>
+/// Id of the node for which to get accessibility properties.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetAccessibilityPropertiesForNodeRequest"/>
+/// </summary>
+internal partial class DOMGetAccessibilityPropertiesForNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Dictionary of relevant accessibility properties.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public AccessibilityProperties Properties { get; set; }
+}
+/// <summary>
+/// Returns node's HTML markup.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getOuterHTML</c>
+/// </remarks>
+internal partial class DOMGetOuterHTMLRequest : IWebkitRequest<DOMGetOuterHTMLResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getOuterHTML";
+/// <summary>
+/// Id of the node to get markup for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetOuterHTMLRequest"/>
+/// </summary>
+internal partial class DOMGetOuterHTMLResponse: IWebkitResponse
+{
+/// <summary>
+/// Outer HTML markup.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("outerHTML")] public string OuterHTML { get; set; }
+}
+/// <summary>
+/// Sets node HTML markup, returns new node id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setOuterHTML</c>
+/// </remarks>
+internal partial class DOMSetOuterHTMLRequest : IWebkitRequest<DOMSetOuterHTMLResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setOuterHTML";
+/// <summary>
+/// Id of the node to set markup for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Outer HTML markup to set.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("outerHTML")] public string OuterHTML { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetOuterHTMLRequest"/>
+/// </summary>
+internal partial class DOMSetOuterHTMLResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.insertAdjacentHTML</c>
+/// </remarks>
+internal partial class DOMInsertAdjacentHTMLRequest : IWebkitRequest<DOMInsertAdjacentHTMLResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.insertAdjacentHTML";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("position")] public string Position { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("html")] public string Html { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMInsertAdjacentHTMLRequest"/>
+/// </summary>
+internal partial class DOMInsertAdjacentHTMLResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Searches for a given string in the DOM tree. Use &lt;code&gt;getSearchResults&lt;/code&gt; to access search results or &lt;code&gt;cancelSearch&lt;/code&gt; to end this search session.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.performSearch</c>
+/// </remarks>
+internal partial class DOMPerformSearchRequest : IWebkitRequest<DOMPerformSearchResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.performSearch";
+/// <summary>
+/// Plain text or query selector or XPath search query.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
+/// <summary>
+/// Ids of nodes to use as starting points for the search.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+
+/// <summary>
+/// If true, search is case sensitive.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMPerformSearchRequest"/>
+/// </summary>
+internal partial class DOMPerformSearchResponse: IWebkitResponse
+{
+/// <summary>
+/// Unique search session identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("searchId")] public string SearchId { get; set; }
+
+/// <summary>
+/// Number of search results.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("resultCount")] public int? ResultCount { get; set; }
+}
+/// <summary>
+/// Returns search results from given &lt;code&gt;fromIndex&lt;/code&gt; to given &lt;code&gt;toIndex&lt;/code&gt; from the sarch with the given identifier.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getSearchResults</c>
+/// </remarks>
+internal partial class DOMGetSearchResultsRequest : IWebkitRequest<DOMGetSearchResultsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getSearchResults";
+/// <summary>
+/// Unique search session identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("searchId")] public string SearchId { get; set; }
+
+/// <summary>
+/// Start index of the search result to be returned.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("fromIndex")] public int? FromIndex { get; set; }
+
+/// <summary>
+/// End index of the search result to be returned.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("toIndex")] public int? ToIndex { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetSearchResultsRequest"/>
+/// </summary>
+internal partial class DOMGetSearchResultsResponse: IWebkitResponse
+{
+/// <summary>
+/// Ids of the search result nodes.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
+/// <summary>
+/// Discards search results from the session with the given id. &lt;code&gt;getSearchResults&lt;/code&gt; should no longer be called for that search.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.discardSearchResults</c>
+/// </remarks>
+internal partial class DOMDiscardSearchResultsRequest : IWebkitRequest<DOMDiscardSearchResultsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.discardSearchResults";
+/// <summary>
+/// Unique search session identifier.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("searchId")] public string SearchId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDiscardSearchResultsRequest"/>
+/// </summary>
+internal partial class DOMDiscardSearchResultsResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Requests that the node is sent to the caller given the JavaScript node object reference. All nodes that form the path from the node to the root are also sent to the client as a series of &lt;code&gt;setChildNodes&lt;/code&gt; notifications.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.requestNode</c>
+/// </remarks>
+internal partial class DOMRequestNodeRequest : IWebkitRequest<DOMRequestNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.requestNode";
+/// <summary>
+/// JavaScript object id to convert into node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMRequestNodeRequest"/>
+/// </summary>
+internal partial class DOMRequestNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Node id for given object.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspect' command upon element selection.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setInspectModeEnabled</c>
+/// </remarks>
+internal partial class DOMSetInspectModeEnabledRequest : IWebkitRequest<DOMSetInspectModeEnabledResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setInspectModeEnabled";
+/// <summary>
+/// True to enable inspection mode, false to disable it.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+
+/// <summary>
+/// A descriptor for the highlight appearance of hovered-over nodes. May be omitted if &lt;code&gt;enabled == false&lt;/code&gt;.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("highlightConfig")] public HighlightConfig HighlightConfig { get; set; }
+
+/// <summary>
+/// Whether the rulers should be shown during element selection. This overrides Page.setShowRulers.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("showRulers")] public bool? ShowRulers { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetInspectModeEnabledRequest"/>
+/// </summary>
+internal partial class DOMSetInspectModeEnabledResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.highlightRect</c>
+/// </remarks>
+internal partial class DOMHighlightRectRequest : IWebkitRequest<DOMHighlightRectResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.highlightRect";
+/// <summary>
+/// X coordinate
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
+/// <summary>
+/// Y coordinate
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
+/// <summary>
+/// Rectangle width
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
+/// <summary>
+/// Rectangle height
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
+/// <summary>
+/// The highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("color")] public RGBAColor Color { get; set; }
+
+/// <summary>
+/// The highlight outline color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("outlineColor")] public RGBAColor OutlineColor { get; set; }
+
+/// <summary>
+/// Indicates whether the provided parameters are in page coordinates or in viewport coordinates (the default).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("usePageCoordinates")] public bool? UsePageCoordinates { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMHighlightRectRequest"/>
+/// </summary>
+internal partial class DOMHighlightRectResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Highlights given quad. Coordinates are absolute with respect to the main frame viewport.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.highlightQuad</c>
+/// </remarks>
+internal partial class DOMHighlightQuadRequest : IWebkitRequest<DOMHighlightQuadResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.highlightQuad";
+/// <summary>
+/// Quad to highlight
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("quad")] public double?[] Quad { get; set; }
+
+/// <summary>
+/// The highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("color")] public RGBAColor Color { get; set; }
+
+/// <summary>
+/// The highlight outline color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("outlineColor")] public RGBAColor OutlineColor { get; set; }
+
+/// <summary>
+/// Indicates whether the provided parameters are in page coordinates or in viewport coordinates (the default).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("usePageCoordinates")] public bool? UsePageCoordinates { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMHighlightQuadRequest"/>
+/// </summary>
+internal partial class DOMHighlightQuadResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Highlights all DOM nodes that match a given selector. A string containing a CSS selector must be specified.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.highlightSelector</c>
+/// </remarks>
+internal partial class DOMHighlightSelectorRequest : IWebkitRequest<DOMHighlightSelectorResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.highlightSelector";
+/// <summary>
+/// A descriptor for the highlight appearance.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("highlightConfig")] public HighlightConfig HighlightConfig { get; set; }
+
+/// <summary>
+/// A CSS selector for finding matching nodes to highlight.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("selectorString")] public string SelectorString { get; set; }
+
+/// <summary>
+/// Identifier of the frame which will be searched using the selector.  If not provided, the main frame will be used.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMHighlightSelectorRequest"/>
+/// </summary>
+internal partial class DOMHighlightSelectorResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.highlightNode</c>
+/// </remarks>
+internal partial class DOMHighlightNodeRequest : IWebkitRequest<DOMHighlightNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.highlightNode";
+/// <summary>
+/// A descriptor for the highlight appearance.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("highlightConfig")] public HighlightConfig HighlightConfig { get; set; }
+
+/// <summary>
+/// Identifier of the node to highlight.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// JavaScript object id of the node to be highlighted.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMHighlightNodeRequest"/>
+/// </summary>
+internal partial class DOMHighlightNodeResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Highlights each DOM node in the given list.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.highlightNodeList</c>
+/// </remarks>
+internal partial class DOMHighlightNodeListRequest : IWebkitRequest<DOMHighlightNodeListResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.highlightNodeList";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("highlightConfig")] public HighlightConfig HighlightConfig { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMHighlightNodeListRequest"/>
+/// </summary>
+internal partial class DOMHighlightNodeListResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Hides DOM node highlight.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.hideHighlight</c>
+/// </remarks>
+internal partial class DOMHideHighlightRequest : IWebkitRequest<DOMHideHighlightResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.hideHighlight";
+}
+/// <summary>
+/// Response from <see cref="DOMHideHighlightRequest"/>
+/// </summary>
+internal partial class DOMHideHighlightResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Highlights owner element of the frame with given id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.highlightFrame</c>
+/// </remarks>
+internal partial class DOMHighlightFrameRequest : IWebkitRequest<DOMHighlightFrameResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.highlightFrame";
+/// <summary>
+/// Identifier of the frame to highlight.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
+/// <summary>
+/// The content box highlight fill color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("contentColor")] public RGBAColor ContentColor { get; set; }
+
+/// <summary>
+/// The content box highlight outline color (default: transparent).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("contentOutlineColor")] public RGBAColor ContentOutlineColor { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMHighlightFrameRequest"/>
+/// </summary>
+internal partial class DOMHighlightFrameResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Requests that the node is sent to the caller given its path.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.pushNodeByPathToFrontend</c>
+/// </remarks>
+internal partial class DOMPushNodeByPathToFrontendRequest : IWebkitRequest<DOMPushNodeByPathToFrontendResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.pushNodeByPathToFrontend";
+/// <summary>
+/// Path to node in the proprietary format.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMPushNodeByPathToFrontendRequest"/>
+/// </summary>
+internal partial class DOMPushNodeByPathToFrontendResponse: IWebkitResponse
+{
+/// <summary>
+/// Id of the node for given path.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Resolves JavaScript node object for given node id.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.resolveNode</c>
+/// </remarks>
+internal partial class DOMResolveNodeRequest : IWebkitRequest<DOMResolveNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.resolveNode";
+/// <summary>
+/// Id of the node to resolve.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Source element handle.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
+/// <summary>
+/// Specifies in which execution context to adopt to.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
+
+/// <summary>
+/// Symbolic group name that can be used to release multiple objects.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMResolveNodeRequest"/>
+/// </summary>
+internal partial class DOMResolveNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// JavaScript object wrapper for given node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+}
+/// <summary>
+/// Returns attributes for the specified node.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getAttributes</c>
+/// </remarks>
+internal partial class DOMGetAttributesRequest : IWebkitRequest<DOMGetAttributesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getAttributes";
+/// <summary>
+/// Id of the node to retrieve attributes for.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetAttributesRequest"/>
+/// </summary>
+internal partial class DOMGetAttributesResponse: IWebkitResponse
+{
+/// <summary>
+/// An interleaved array of node attribute names and values.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public string[] Attributes { get; set; }
+}
+/// <summary>
+/// Moves node into the new container, places it before the given anchor.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.moveTo</c>
+/// </remarks>
+internal partial class DOMMoveToRequest : IWebkitRequest<DOMMoveToResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.moveTo";
+/// <summary>
+/// Id of the node to drop.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Id of the element to drop into.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("targetNodeId")] public int? TargetNodeId { get; set; }
+
+/// <summary>
+/// Drop node before given one.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("insertBeforeNodeId")] public int? InsertBeforeNodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMMoveToRequest"/>
+/// </summary>
+internal partial class DOMMoveToResponse: IWebkitResponse
+{
+/// <summary>
+/// New id of the moved node.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Undoes the last performed action.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.undo</c>
+/// </remarks>
+internal partial class DOMUndoRequest : IWebkitRequest<DOMUndoResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.undo";
+}
+/// <summary>
+/// Response from <see cref="DOMUndoRequest"/>
+/// </summary>
+internal partial class DOMUndoResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Re-does the last undone action.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.redo</c>
+/// </remarks>
+internal partial class DOMRedoRequest : IWebkitRequest<DOMRedoResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.redo";
+}
+/// <summary>
+/// Response from <see cref="DOMRedoRequest"/>
+/// </summary>
+internal partial class DOMRedoResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Marks last undoable state.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.markUndoableState</c>
+/// </remarks>
+internal partial class DOMMarkUndoableStateRequest : IWebkitRequest<DOMMarkUndoableStateResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.markUndoableState";
+}
+/// <summary>
+/// Response from <see cref="DOMMarkUndoableStateRequest"/>
+/// </summary>
+internal partial class DOMMarkUndoableStateResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Focuses the given element.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.focus</c>
+/// </remarks>
+internal partial class DOMFocusRequest : IWebkitRequest<DOMFocusResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.focus";
+/// <summary>
+/// Id of the node to focus.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMFocusRequest"/>
+/// </summary>
+internal partial class DOMFocusResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Enables console to refer to the node with given id via $0 (see Command Line API for more details).
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setInspectedNode</c>
+/// </remarks>
+internal partial class DOMSetInspectedNodeRequest : IWebkitRequest<DOMSetInspectedNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setInspectedNode";
+/// <summary>
+/// DOM node id to be accessible by means of $0 command line API.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetInspectedNodeRequest"/>
+/// </summary>
+internal partial class DOMSetInspectedNodeResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Controls whether any DOM commands work for nodes inside a UserAgent shadow tree.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setAllowEditingUserAgentShadowTrees</c>
+/// </remarks>
+internal partial class DOMSetAllowEditingUserAgentShadowTreesRequest : IWebkitRequest<DOMSetAllowEditingUserAgentShadowTreesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setAllowEditingUserAgentShadowTrees";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("allow")] public bool? Allow { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetAllowEditingUserAgentShadowTreesRequest"/>
+/// </summary>
+internal partial class DOMSetAllowEditingUserAgentShadowTreesResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Returns node description.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.describeNode</c>
+/// </remarks>
+internal partial class DOMDescribeNodeRequest : IWebkitRequest<DOMDescribeNodeResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.describeNode";
+/// <summary>
+/// JavaScript object id of the node wrapper.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDescribeNodeRequest"/>
+/// </summary>
+internal partial class DOMDescribeNodeResponse: IWebkitResponse
+{
+/// <summary>
+/// Frame ID for frame owner elements.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("contentFrameId")] public string ContentFrameId { get; set; }
+
+/// <summary>
+/// ID of the owning frame element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("ownerFrameId")] public string OwnerFrameId { get; set; }
+}
+/// <summary>
+/// Returns quads that describe node position on the page. This method
+/// might return multiple quads for inline nodes.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.getContentQuads</c>
+/// </remarks>
+internal partial class DOMGetContentQuadsRequest : IWebkitRequest<DOMGetContentQuadsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.getContentQuads";
+/// <summary>
+/// JavaScript object id of the node wrapper.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMGetContentQuadsRequest"/>
+/// </summary>
+internal partial class DOMGetContentQuadsResponse: IWebkitResponse
+{
+/// <summary>
+/// Quads that describe node layout relative to viewport.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("quads")] public double?[][] Quads { get; set; }
+}
+/// <summary>
+/// Sets input files for given &lt;input type=file&gt;
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOM.setInputFiles</c>
+/// </remarks>
+internal partial class DOMSetInputFilesRequest : IWebkitRequest<DOMSetInputFilesResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOM.setInputFiles";
+/// <summary>
+/// Input element handle.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
+/// <summary>
+/// Files to set
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("files")] public FilePayload[] Files { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMSetInputFilesRequest"/>
+/// </summary>
+internal partial class DOMSetInputFilesResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Fired when &lt;code&gt;Document&lt;/code&gt; has been totally updated. Node ids are no longer valid.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.documentUpdated</c>
+/// </remarks>
+internal partial class DOMDocumentUpdatedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.documentUpdated";
+}
+/// <summary>
+/// Inspect a particular node.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.inspect</c>
+/// </remarks>
+internal partial class DOMInspectWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.inspect";
+/// <summary>
+/// Equivalent of Inspector.inspect but with a nodeId instead of a RemoteObject. Useful for augmented contexts.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Fired when backend wants to provide client with the missing DOM structure. This happens upon most of the calls requesting node ids.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.setChildNodes</c>
+/// </remarks>
+internal partial class DOMSetChildNodesWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.setChildNodes";
+/// <summary>
+/// Parent node id to populate with children.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
+/// <summary>
+/// Child nodes array.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodes")] public Node[] Nodes { get; set; }
+}
+/// <summary>
+/// Fired when &lt;code&gt;Element&lt;/code&gt;'s attribute is modified.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.attributeModified</c>
+/// </remarks>
+internal partial class DOMAttributeModifiedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.attributeModified";
+/// <summary>
+/// Id of the node that has changed.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Attribute name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
+/// <summary>
+/// Attribute value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// Fired when &lt;code&gt;Element&lt;/code&gt;'s attribute is removed.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.attributeRemoved</c>
+/// </remarks>
+internal partial class DOMAttributeRemovedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.attributeRemoved";
+/// <summary>
+/// Id of the node that has changed.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Attribute name.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
+/// <summary>
+/// Fired when &lt;code&gt;Element&lt;/code&gt;'s inline style is modified via a CSS property modification.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.inlineStyleInvalidated</c>
+/// </remarks>
+internal partial class DOMInlineStyleInvalidatedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.inlineStyleInvalidated";
+/// <summary>
+/// Ids of the nodes for which the inline styles have been invalidated.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeIds")] public int?[] NodeIds { get; set; }
+}
+/// <summary>
+/// Mirrors &lt;code&gt;DOMCharacterDataModified&lt;/code&gt; event.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.characterDataModified</c>
+/// </remarks>
+internal partial class DOMCharacterDataModifiedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.characterDataModified";
+/// <summary>
+/// Id of the node that has changed.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// New text value.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("characterData")] public string CharacterData { get; set; }
+}
+/// <summary>
+/// Fired when &lt;code&gt;Container&lt;/code&gt;'s child node count has changed.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.childNodeCountUpdated</c>
+/// </remarks>
+internal partial class DOMChildNodeCountUpdatedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.childNodeCountUpdated";
+/// <summary>
+/// Id of the node that has changed.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// New node count.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("childNodeCount")] public int? ChildNodeCount { get; set; }
+}
+/// <summary>
+/// Mirrors &lt;code&gt;DOMNodeInserted&lt;/code&gt; event.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.childNodeInserted</c>
+/// </remarks>
+internal partial class DOMChildNodeInsertedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.childNodeInserted";
+/// <summary>
+/// Id of the node that has changed.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parentNodeId")] public int? ParentNodeId { get; set; }
+
+/// <summary>
+/// Id of the previous sibling.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("previousNodeId")] public int? PreviousNodeId { get; set; }
+
+/// <summary>
+/// Inserted node data.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("node")] public Node Node { get; set; }
+}
+/// <summary>
+/// Mirrors &lt;code&gt;DOMNodeRemoved&lt;/code&gt; event.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.childNodeRemoved</c>
+/// </remarks>
+internal partial class DOMChildNodeRemovedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.childNodeRemoved";
+/// <summary>
+/// Parent id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parentNodeId")] public int? ParentNodeId { get; set; }
+
+/// <summary>
+/// Id of the node that has been removed.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Called when shadow root is pushed into the element.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.shadowRootPushed</c>
+/// </remarks>
+internal partial class DOMShadowRootPushedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.shadowRootPushed";
+/// <summary>
+/// Host element id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("hostId")] public int? HostId { get; set; }
+
+/// <summary>
+/// Shadow root.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("root")] public Node Root { get; set; }
+}
+/// <summary>
+/// Called when shadow root is popped from the element.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.shadowRootPopped</c>
+/// </remarks>
+internal partial class DOMShadowRootPoppedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.shadowRootPopped";
+/// <summary>
+/// Host element id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("hostId")] public int? HostId { get; set; }
+
+/// <summary>
+/// Shadow root id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("rootId")] public int? RootId { get; set; }
+}
+/// <summary>
+/// Called when the custom element state is changed.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.customElementStateChanged</c>
+/// </remarks>
+internal partial class DOMCustomElementStateChangedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.customElementStateChanged";
+/// <summary>
+/// Element id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Custom element state.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("customElementState")] public CustomElementState CustomElementState { get; set; }
+}
+/// <summary>
+/// Called when a pseudo element is added to an element.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.pseudoElementAdded</c>
+/// </remarks>
+internal partial class DOMPseudoElementAddedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.pseudoElementAdded";
+/// <summary>
+/// Pseudo element's parent element id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
+/// <summary>
+/// The added pseudo element.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElement")] public Node PseudoElement { get; set; }
+}
+/// <summary>
+/// Called when a pseudo element is removed from an element.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.pseudoElementRemoved</c>
+/// </remarks>
+internal partial class DOMPseudoElementRemovedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.pseudoElementRemoved";
+/// <summary>
+/// Pseudo element's parent element id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public int? ParentId { get; set; }
+
+/// <summary>
+/// The removed pseudo element id.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElementId")] public int? PseudoElementId { get; set; }
+}
+/// <summary>
+/// Called when an event listener is added to a node.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.didAddEventListener</c>
+/// </remarks>
+internal partial class DOMDidAddEventListenerWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.didAddEventListener";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Called after a request has been made to remove an event listener from a node.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.willRemoveEventListener</c>
+/// </remarks>
+internal partial class DOMWillRemoveEventListenerWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.willRemoveEventListener";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
+/// <summary>
+/// Called when an event is fired on a node.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.didFireEvent</c>
+/// </remarks>
+internal partial class DOMDidFireEventWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.didFireEvent";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+
+/// <summary>
+/// Time when the event was fired
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
+/// <summary>
+/// Holds ancillary information about the event or its target.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("data")] public object Data { get; set; }
+}
+/// <summary>
+/// Called when an element enters/exits a power efficient playback state.
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOM.powerEfficientPlaybackStateChanged</c>
+/// </remarks>
+internal partial class DOMPowerEfficientPlaybackStateChangedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOM.powerEfficientPlaybackStateChanged";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("isPowerEfficient")] public bool? IsPowerEfficient { get; set; }
+}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOMDebugger
+{
+/// <summary>
+/// Sets breakpoint on particular operation with DOM.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMDebugger.setDOMBreakpoint</c>
+/// </remarks>
+internal partial class DOMDebuggerSetDOMBreakpointRequest : IWebkitRequest<DOMDebuggerSetDOMBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMDebugger.setDOMBreakpoint";
+/// <summary>
+/// Identifier of the node to set breakpoint on.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Type of the operation to stop upon.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public DOMBreakpointType Type { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDebuggerSetDOMBreakpointRequest"/>
+/// </summary>
+internal partial class DOMDebuggerSetDOMBreakpointResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Removes DOM breakpoint that was set using &lt;code&gt;setDOMBreakpoint&lt;/code&gt;.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMDebugger.removeDOMBreakpoint</c>
+/// </remarks>
+internal partial class DOMDebuggerRemoveDOMBreakpointRequest : IWebkitRequest<DOMDebuggerRemoveDOMBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMDebugger.removeDOMBreakpoint";
+/// <summary>
+/// Identifier of the node to remove breakpoint from.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
+/// <summary>
+/// Type of the breakpoint to remove.
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public DOMBreakpointType Type { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDebuggerRemoveDOMBreakpointRequest"/>
+/// </summary>
+internal partial class DOMDebuggerRemoveDOMBreakpointResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Sets breakpoint on particular event of given type.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMDebugger.setEventBreakpoint</c>
+/// </remarks>
+internal partial class DOMDebuggerSetEventBreakpointRequest : IWebkitRequest<DOMDebuggerSetEventBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMDebugger.setEventBreakpoint";
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("breakpointType")] public EventBreakpointType BreakpointType { get; set; }
+
+/// <summary>
+/// The name of the specific event to stop on.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDebuggerSetEventBreakpointRequest"/>
+/// </summary>
+internal partial class DOMDebuggerSetEventBreakpointResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Removes breakpoint on particular event of given type.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMDebugger.removeEventBreakpoint</c>
+/// </remarks>
+internal partial class DOMDebuggerRemoveEventBreakpointRequest : IWebkitRequest<DOMDebuggerRemoveEventBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMDebugger.removeEventBreakpoint";
+/// <summary>
+/// 
+/// </summary>
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("breakpointType")] public EventBreakpointType BreakpointType { get; set; }
+
+/// <summary>
+/// The name of the specific event to stop on.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("eventName")] public string EventName { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDebuggerRemoveEventBreakpointRequest"/>
+/// </summary>
+internal partial class DOMDebuggerRemoveEventBreakpointResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Sets breakpoint on network activity for the given URL.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMDebugger.setURLBreakpoint</c>
+/// </remarks>
+internal partial class DOMDebuggerSetURLBreakpointRequest : IWebkitRequest<DOMDebuggerSetURLBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMDebugger.setURLBreakpoint";
+/// <summary>
+/// Resource URL substring or regular expression. All requests having this substring in the URL will get stopped upon. An empty string will pause on all requests.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
+/// <summary>
+/// Whether the URL string is a regular expression.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDebuggerSetURLBreakpointRequest"/>
+/// </summary>
+internal partial class DOMDebuggerSetURLBreakpointResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Removes breakpoint from network activity for the given URL.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMDebugger.removeURLBreakpoint</c>
+/// </remarks>
+internal partial class DOMDebuggerRemoveURLBreakpointRequest : IWebkitRequest<DOMDebuggerRemoveURLBreakpointResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMDebugger.removeURLBreakpoint";
+/// <summary>
+/// Resource URL substring. An empty string will stop pausing on all requests.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMDebuggerRemoveURLBreakpointRequest"/>
+/// </summary>
+internal partial class DOMDebuggerRemoveURLBreakpointResponse: IWebkitResponse
+{
+}
+}
+namespace PlaywrightSharp.Webkit.Protocol.DOMStorage
+{
+/// <summary>
+/// DOM Storage identifier.
+/// </summary>
+internal partial class StorageId
+{
+/// <summary>
+/// Security origin for the storage.
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
+/// <summary>
+/// Whether the storage is local storage (not session storage).
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("isLocalStorage")] public bool? IsLocalStorage { get; set; }
+}
+/// <summary>
+/// Enables storage tracking, storage events will now be delivered to the client.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMStorage.enable</c>
+/// </remarks>
+internal partial class DOMStorageEnableRequest : IWebkitRequest<DOMStorageEnableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMStorage.enable";
+}
+/// <summary>
+/// Response from <see cref="DOMStorageEnableRequest"/>
+/// </summary>
+internal partial class DOMStorageEnableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// Disables storage tracking, prevents storage events from being sent to the client.
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMStorage.disable</c>
+/// </remarks>
+internal partial class DOMStorageDisableRequest : IWebkitRequest<DOMStorageDisableResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMStorage.disable";
+}
+/// <summary>
+/// Response from <see cref="DOMStorageDisableRequest"/>
+/// </summary>
+internal partial class DOMStorageDisableResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMStorage.getDOMStorageItems</c>
+/// </remarks>
+internal partial class DOMStorageGetDOMStorageItemsRequest : IWebkitRequest<DOMStorageGetDOMStorageItemsResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMStorage.getDOMStorageItems";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMStorageGetDOMStorageItemsRequest"/>
+/// </summary>
+internal partial class DOMStorageGetDOMStorageItemsResponse: IWebkitResponse
+{
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public string[][] Entries { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMStorage.setDOMStorageItem</c>
+/// </remarks>
+internal partial class DOMStorageSetDOMStorageItemRequest : IWebkitRequest<DOMStorageSetDOMStorageItemResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMStorage.setDOMStorageItem";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMStorageSetDOMStorageItemRequest"/>
+/// </summary>
+internal partial class DOMStorageSetDOMStorageItemResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Will send the command <c>DOMStorage.removeDOMStorageItem</c>
+/// </remarks>
+internal partial class DOMStorageRemoveDOMStorageItemRequest : IWebkitRequest<DOMStorageRemoveDOMStorageItemResponse>
+{
+[System.Text.Json.Serialization.JsonIgnore]
+public string Command { get; } = "DOMStorage.removeDOMStorageItem";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+}
+/// <summary>
+/// Response from <see cref="DOMStorageRemoveDOMStorageItemRequest"/>
+/// </summary>
+internal partial class DOMStorageRemoveDOMStorageItemResponse: IWebkitResponse
+{
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOMStorage.domStorageItemsCleared</c>
+/// </remarks>
+internal partial class DOMStorageDomStorageItemsClearedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOMStorage.domStorageItemRemoved</c>
+/// </remarks>
+internal partial class DOMStorageDomStorageItemRemovedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOMStorage.domStorageItemAdded</c>
+/// </remarks>
+internal partial class DOMStorageDomStorageItemAddedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOMStorage.domStorageItemAdded";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("newValue")] public string NewValue { get; set; }
+}
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Matches on the event <c>DOMStorage.domStorageItemUpdated</c>
+/// </remarks>
+internal partial class DOMStorageDomStorageItemUpdatedWebkitEvent : IWebkitEvent
+{
+public string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("oldValue")] public string OldValue { get; set; }
+
+/// <summary>
+/// 
+/// </summary>
+[System.Text.Json.Serialization.JsonPropertyName("newValue")] public string NewValue { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Emulation
 {
@@ -6055,19 +6966,23 @@ public string Command { get; } = "Emulation.setDeviceMetricsOverride";
 /// <summary>
 /// 
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? DeviceScaleFactor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deviceScaleFactor")] public double? DeviceScaleFactor { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? FixedLayout { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fixedLayout")] public bool? FixedLayout { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetDeviceMetricsOverrideRequest"/>
 /// </summary>
@@ -6087,7 +7002,8 @@ public string Command { get; } = "Emulation.setJavaScriptEnabled";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetJavaScriptEnabledRequest"/>
 /// </summary>
@@ -6107,11 +7023,13 @@ public string Command { get; } = "Emulation.setAuthCredentials";
 /// <summary>
 /// 
 /// </summary>
-public string Username { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("username")] public string Username { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Password { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("password")] public string Password { get; set; }
+}
 /// <summary>
 /// Response from <see cref="EmulationSetAuthCredentialsRequest"/>
 /// </summary>
@@ -6129,11 +7047,13 @@ internal partial class SearchMatch
 /// <summary>
 /// Line number in resource content.
 /// </summary>
-public double? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public double? LineNumber { get; set; }
+
 /// <summary>
 /// Line with match content.
 /// </summary>
-public string LineContent { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("lineContent")] public string LineContent { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Heap
 {
@@ -6145,15 +7065,18 @@ internal partial class GarbageCollection
 /// <summary>
 /// The type of garbage collection.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? StartTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startTime")] public double? StartTime { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? EndTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("endTime")] public double? EndTime { get; set; }
+}
 /// <summary>
 /// Enables Heap domain events.
 /// </summary>
@@ -6224,11 +7147,13 @@ internal partial class HeapSnapshotResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SnapshotData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotData")] public string SnapshotData { get; set; }
+}
 /// <summary>
 /// Start tracking heap changes. This will produce a `trackingStart` event.
 /// </summary>
@@ -6276,7 +7201,8 @@ public string Command { get; } = "Heap.getPreview";
 /// <summary>
 /// Identifier of the heap object within the snapshot.
 /// </summary>
-public int? HeapObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("heapObjectId")] public int? HeapObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapGetPreviewRequest"/>
 /// </summary>
@@ -6285,15 +7211,18 @@ internal partial class HeapGetPreviewResponse: IWebkitResponse
 /// <summary>
 /// String value.
 /// </summary>
-public string String { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("string")] public string String { get; set; }
+
 /// <summary>
 /// Function details.
 /// </summary>
-public Debugger.FunctionDetails FunctionDetails { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionDetails")] public Debugger.FunctionDetails FunctionDetails { get; set; }
+
 /// <summary>
 /// Object preview.
 /// </summary>
-public Runtime.ObjectPreview Preview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("preview")] public Runtime.ObjectPreview Preview { get; set; }
+}
 /// <summary>
 /// Returns the strongly referenced Runtime.RemoteObject for a Heap.HeapObjectId.
 /// </summary>
@@ -6307,11 +7236,13 @@ public string Command { get; } = "Heap.getRemoteObject";
 /// <summary>
 /// Identifier of the heap object within the snapshot.
 /// </summary>
-public int? HeapObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("heapObjectId")] public int? HeapObjectId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="HeapGetRemoteObjectRequest"/>
 /// </summary>
@@ -6320,7 +7251,8 @@ internal partial class HeapGetRemoteObjectResponse: IWebkitResponse
 /// <summary>
 /// Resulting object.
 /// </summary>
-public Runtime.RemoteObject Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
+}
 /// <summary>
 /// Information about the garbage collection.
 /// </summary>
@@ -6333,7 +7265,8 @@ public string InternalName { get; } = "Heap.garbageCollected";
 /// <summary>
 /// 
 /// </summary>
-public GarbageCollection Collection { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("collection")] public GarbageCollection Collection { get; set; }
+}
 /// <summary>
 /// Tracking started.
 /// </summary>
@@ -6346,11 +7279,13 @@ public string InternalName { get; } = "Heap.trackingStart";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Snapshot at the start of tracking.
 /// </summary>
-public string SnapshotData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotData")] public string SnapshotData { get; set; }
+}
 /// <summary>
 /// Tracking stopped.
 /// </summary>
@@ -6363,11 +7298,13 @@ public string InternalName { get; } = "Heap.trackingComplete";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Snapshot at the end of tracking.
 /// </summary>
-public string SnapshotData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("snapshotData")] public string SnapshotData { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.IndexedDB
 {
@@ -6379,15 +7316,18 @@ internal partial class DatabaseWithObjectStores
 /// <summary>
 /// Database name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Database version.
 /// </summary>
-public double? Version { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("version")] public double? Version { get; set; }
+
 /// <summary>
 /// Object stores in this database.
 /// </summary>
-public ObjectStore[] ObjectStores { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectStores")] public ObjectStore[] ObjectStores { get; set; }
+}
 /// <summary>
 /// Object store.
 /// </summary>
@@ -6396,19 +7336,23 @@ internal partial class ObjectStore
 /// <summary>
 /// Object store name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Object store key path.
 /// </summary>
-public KeyPath KeyPath { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyPath")] public KeyPath KeyPath { get; set; }
+
 /// <summary>
 /// If true, object store has auto increment flag set.
 /// </summary>
-public bool? AutoIncrement { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autoIncrement")] public bool? AutoIncrement { get; set; }
+
 /// <summary>
 /// Indexes in this object store.
 /// </summary>
-public ObjectStoreIndex[] Indexes { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("indexes")] public ObjectStoreIndex[] Indexes { get; set; }
+}
 /// <summary>
 /// Object store index.
 /// </summary>
@@ -6417,19 +7361,23 @@ internal partial class ObjectStoreIndex
 /// <summary>
 /// Index name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Index key path.
 /// </summary>
-public KeyPath KeyPath { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyPath")] public KeyPath KeyPath { get; set; }
+
 /// <summary>
 /// If true, index is unique.
 /// </summary>
-public bool? Unique { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unique")] public bool? Unique { get; set; }
+
 /// <summary>
 /// If true, index allows multiple entries for a key.
 /// </summary>
-public bool? MultiEntry { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("multiEntry")] public bool? MultiEntry { get; set; }
+}
 /// <summary>
 /// Key.
 /// </summary>
@@ -6438,23 +7386,28 @@ internal partial class Key
 /// <summary>
 /// Key type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Number value.
 /// </summary>
-public double? Number { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("number")] public double? Number { get; set; }
+
 /// <summary>
 /// String value.
 /// </summary>
-public string String { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("string")] public string String { get; set; }
+
 /// <summary>
 /// Date value.
 /// </summary>
-public double? Date { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("date")] public double? Date { get; set; }
+
 /// <summary>
 /// Array value.
 /// </summary>
-public Key[] Array { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("array")] public Key[] Array { get; set; }
+}
 /// <summary>
 /// Key range.
 /// </summary>
@@ -6463,19 +7416,23 @@ internal partial class KeyRange
 /// <summary>
 /// Lower bound.
 /// </summary>
-public Key Lower { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lower")] public Key Lower { get; set; }
+
 /// <summary>
 /// Upper bound.
 /// </summary>
-public Key Upper { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("upper")] public Key Upper { get; set; }
+
 /// <summary>
 /// If true lower bound is open.
 /// </summary>
-public bool? LowerOpen { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lowerOpen")] public bool? LowerOpen { get; set; }
+
 /// <summary>
 /// If true upper bound is open.
 /// </summary>
-public bool? UpperOpen { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("upperOpen")] public bool? UpperOpen { get; set; }
+}
 /// <summary>
 /// Data entry.
 /// </summary>
@@ -6484,15 +7441,18 @@ internal partial class DataEntry
 /// <summary>
 /// Key.
 /// </summary>
-public Runtime.RemoteObject Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public Runtime.RemoteObject Key { get; set; }
+
 /// <summary>
 /// Primary key.
 /// </summary>
-public Runtime.RemoteObject PrimaryKey { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("primaryKey")] public Runtime.RemoteObject PrimaryKey { get; set; }
+
 /// <summary>
 /// Value.
 /// </summary>
-public Runtime.RemoteObject Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public Runtime.RemoteObject Value { get; set; }
+}
 /// <summary>
 /// Key path.
 /// </summary>
@@ -6501,15 +7461,18 @@ internal partial class KeyPath
 /// <summary>
 /// Key path type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// String value.
 /// </summary>
-public string String { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("string")] public string String { get; set; }
+
 /// <summary>
 /// Array value.
 /// </summary>
-public string[] Array { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("array")] public string[] Array { get; set; }
+}
 /// <summary>
 /// Enables events from backend.
 /// </summary>
@@ -6557,7 +7520,8 @@ public string Command { get; } = "IndexedDB.requestDatabaseNames";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDatabaseNamesRequest"/>
 /// </summary>
@@ -6566,7 +7530,8 @@ internal partial class IndexedDBRequestDatabaseNamesResponse: IWebkitResponse
 /// <summary>
 /// Database names for origin.
 /// </summary>
-public string[] DatabaseNames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseNames")] public string[] DatabaseNames { get; set; }
+}
 /// <summary>
 /// Requests database with given name in given frame.
 /// </summary>
@@ -6580,11 +7545,13 @@ public string Command { get; } = "IndexedDB.requestDatabase";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDatabaseRequest"/>
 /// </summary>
@@ -6593,7 +7560,8 @@ internal partial class IndexedDBRequestDatabaseResponse: IWebkitResponse
 /// <summary>
 /// Database with an array of object stores.
 /// </summary>
-public DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("databaseWithObjectStores")] public DatabaseWithObjectStores DatabaseWithObjectStores { get; set; }
+}
 /// <summary>
 /// Requests data from object store or index.
 /// </summary>
@@ -6607,31 +7575,38 @@ public string Command { get; } = "IndexedDB.requestData";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// Object store name.
 /// </summary>
-public string ObjectStoreName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+
 /// <summary>
 /// Index name, empty string for object store data requests.
 /// </summary>
-public string IndexName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("indexName")] public string IndexName { get; set; }
+
 /// <summary>
 /// Number of records to skip.
 /// </summary>
-public int? SkipCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("skipCount")] public int? SkipCount { get; set; }
+
 /// <summary>
 /// Number of records to fetch.
 /// </summary>
-public int? PageSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pageSize")] public int? PageSize { get; set; }
+
 /// <summary>
 /// Key range.
 /// </summary>
-public KeyRange KeyRange { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("keyRange")] public KeyRange KeyRange { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBRequestDataRequest"/>
 /// </summary>
@@ -6640,11 +7615,13 @@ internal partial class IndexedDBRequestDataResponse: IWebkitResponse
 /// <summary>
 /// Array of object store data entries.
 /// </summary>
-public DataEntry[] ObjectStoreDataEntries { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreDataEntries")] public DataEntry[] ObjectStoreDataEntries { get; set; }
+
 /// <summary>
 /// If true, there are more entries to fetch in the given range.
 /// </summary>
-public bool? HasMore { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("hasMore")] public bool? HasMore { get; set; }
+}
 /// <summary>
 /// Clears all entries from an object store.
 /// </summary>
@@ -6658,15 +7635,18 @@ public string Command { get; } = "IndexedDB.clearObjectStore";
 /// <summary>
 /// Security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Database name.
 /// </summary>
-public string DatabaseName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
+
 /// <summary>
 /// Object store name.
 /// </summary>
-public string ObjectStoreName { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
+}
 /// <summary>
 /// Response from <see cref="IndexedDBClearObjectStoreRequest"/>
 /// </summary>
@@ -6689,54 +7669,66 @@ public string Command { get; } = "Input.dispatchKeyEvent";
 /// <summary>
 /// Type of the key event.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Bit field representing pressed modifier keys. (default: 0).
 /// </summary>
-public int? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public int? Modifiers { get; set; }
+
 /// <summary>
 /// Text as generated by processing a virtual key code with a keyboard layout. Not needed for
 /// for `keyUp` and `rawKeyDown` events (default: "")
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// Text that would have been generated by the keyboard if no modifiers were pressed (except for
 /// shift). Useful for shortcut (accelerator) key handling (default: "").
 /// </summary>
-public string UnmodifiedText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("unmodifiedText")] public string UnmodifiedText { get; set; }
+
 /// <summary>
 /// Unique DOM defined string value for each physical key (e.g., 'KeyA') (default: "").
 /// </summary>
-public string Code { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("code")] public string Code { get; set; }
+
 /// <summary>
 /// Unique DOM defined string value describing the meaning of the key in the context of active
 /// modifiers, keyboard layout, etc (e.g., 'AltGr') (default: "").
 /// </summary>
-public string Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
+
 /// <summary>
 /// Windows virtual key code (default: 0).
 /// </summary>
-public int? WindowsVirtualKeyCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("windowsVirtualKeyCode")] public int? WindowsVirtualKeyCode { get; set; }
+
 /// <summary>
 /// Native virtual key code (default: 0).
 /// </summary>
-public int? NativeVirtualKeyCode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nativeVirtualKeyCode")] public int? NativeVirtualKeyCode { get; set; }
+
 /// <summary>
 /// Whether the event was generated from auto repeat (default: false).
 /// </summary>
-public bool? AutoRepeat { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autoRepeat")] public bool? AutoRepeat { get; set; }
+
 /// <summary>
 /// Whether the event was generated from the keypad (default: false).
 /// </summary>
-public bool? IsKeypad { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isKeypad")] public bool? IsKeypad { get; set; }
+
 /// <summary>
 /// Whether the event was a system key event (default: false).
 /// </summary>
-public bool? IsSystemKey { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isSystemKey")] public bool? IsSystemKey { get; set; }
+
 /// <summary>
 /// Mac editing commands associated with this key
 /// </summary>
-public string[] MacCommands { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("macCommands")] public string[] MacCommands { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputDispatchKeyEventRequest"/>
 /// </summary>
@@ -6756,42 +7748,51 @@ public string Command { get; } = "Input.dispatchMouseEvent";
 /// <summary>
 /// Type of the mouse event.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// X coordinate of the event relative to the main frame's viewport in CSS pixels.
 /// </summary>
-public int? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
 /// <summary>
 /// Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to
 /// the top of the viewport and Y increases as it proceeds towards the bottom of the viewport.
 /// </summary>
-public int? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
 /// <summary>
 /// Bit field representing pressed modifier keys. Alt=1, Ctrl=2, Meta/Command=4, Shift=8
 /// (default: 0).
 /// </summary>
-public int? Modifiers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modifiers")] public int? Modifiers { get; set; }
+
 /// <summary>
 /// Mouse button (default: "none").
 /// </summary>
-public string Button { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("button")] public string Button { get; set; }
+
 /// <summary>
 /// A number indicating which buttons are pressed on the mouse when a mouse event is triggered.
 /// Left=1, Right=2, Middle=4, Back=8, Forward=16, None=0.
 /// </summary>
-public int? Buttons { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("buttons")] public int? Buttons { get; set; }
+
 /// <summary>
 /// Number of times the mouse button was clicked (default: 0).
 /// </summary>
-public int? ClickCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clickCount")] public int? ClickCount { get; set; }
+
 /// <summary>
 /// X delta in CSS pixels for mouse wheel event (default: 0).
 /// </summary>
-public int? DeltaX { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("deltaX")] public int? DeltaX { get; set; }
+
 /// <summary>
 /// Y delta in CSS pixels for mouse wheel event (default: 0).
 /// </summary>
-public int? DeltaY { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("deltaY")] public int? DeltaY { get; set; }
+}
 /// <summary>
 /// Response from <see cref="InputDispatchMouseEventRequest"/>
 /// </summary>
@@ -6864,7 +7865,8 @@ public string InternalName { get; } = "Inspector.evaluateForTestInFrontend";
 /// <summary>
 /// 
 /// </summary>
-public string Script { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("script")] public string Script { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -6877,11 +7879,13 @@ public string InternalName { get; } = "Inspector.inspect";
 /// <summary>
 /// 
 /// </summary>
-public Runtime.RemoteObject Object { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public object Hints { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("hints")] public object Hints { get; set; }
+}
 /// <summary>
 /// Fired when the backend has alternate domains that need to be activated.
 /// </summary>
@@ -6894,7 +7898,8 @@ public string InternalName { get; } = "Inspector.activateExtraDomains";
 /// <summary>
 /// Domain names that need activation
 /// </summary>
-public string[] Domains { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("domains")] public string[] Domains { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.LayerTree
 {
@@ -6906,19 +7911,23 @@ internal partial class IntRect
 /// <summary>
 /// The x position.
 /// </summary>
-public int? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
 /// <summary>
 /// The y position.
 /// </summary>
-public int? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
 /// <summary>
 /// The width metric.
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// The height metric.
 /// </summary>
-public int? Height { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+}
 /// <summary>
 /// Information about a compositing layer.
 /// </summary>
@@ -6927,51 +7936,63 @@ internal partial class Layer
 /// <summary>
 /// The unique id for this layer.
 /// </summary>
-public string LayerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("layerId")] public string LayerId { get; set; }
+
 /// <summary>
 /// The id for the node associated with this layer.
 /// </summary>
-public int? NodeId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+
 /// <summary>
 /// Bounds of the layer in absolute page coordinates.
 /// </summary>
-public IntRect Bounds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("bounds")] public IntRect Bounds { get; set; }
+
 /// <summary>
 /// Indicates how many time this layer has painted.
 /// </summary>
-public int? PaintCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("paintCount")] public int? PaintCount { get; set; }
+
 /// <summary>
 /// Estimated memory used by this layer.
 /// </summary>
-public int? Memory { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("memory")] public int? Memory { get; set; }
+
 /// <summary>
 /// The bounds of the composited layer.
 /// </summary>
-public IntRect CompositedBounds { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("compositedBounds")] public IntRect CompositedBounds { get; set; }
+
 /// <summary>
 /// Indicates whether this layer is associated with an element hosted in a shadow tree.
 /// </summary>
-public bool? IsInShadowTree { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isInShadowTree")] public bool? IsInShadowTree { get; set; }
+
 /// <summary>
 /// Indicates whether this layer was used to provide a reflection for the element.
 /// </summary>
-public bool? IsReflection { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isReflection")] public bool? IsReflection { get; set; }
+
 /// <summary>
 /// Indicates whether the layer is attached to a pseudo element that is CSS generated content.
 /// </summary>
-public bool? IsGeneratedContent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isGeneratedContent")] public bool? IsGeneratedContent { get; set; }
+
 /// <summary>
 /// Indicates whether the layer was created for a CSS anonymous block or box.
 /// </summary>
-public bool? IsAnonymous { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isAnonymous")] public bool? IsAnonymous { get; set; }
+
 /// <summary>
 /// The id for the pseudo element associated with this layer.
 /// </summary>
-public string PseudoElementId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElementId")] public string PseudoElementId { get; set; }
+
 /// <summary>
 /// The name of the CSS pseudo-element that prompted the layer to be generated.
 /// </summary>
-public string PseudoElement { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pseudoElement")] public string PseudoElement { get; set; }
+}
 /// <summary>
 /// An object containing the reasons why the layer was composited as properties.
 /// </summary>
@@ -6980,111 +8001,138 @@ internal partial class CompositingReasons
 /// <summary>
 /// Composition due to association with an element with a CSS 3D transform.
 /// </summary>
-public bool? Transform3D { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("transform3D")] public bool? Transform3D { get; set; }
+
 /// <summary>
 /// Composition due to association with a &lt;video&gt; element.
 /// </summary>
-public bool? Video { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("video")] public bool? Video { get; set; }
+
 /// <summary>
 /// Composition due to the element being a &lt;canvas&gt; element.
 /// </summary>
-public bool? Canvas { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canvas")] public bool? Canvas { get; set; }
+
 /// <summary>
 /// Composition due to association with a plugin.
 /// </summary>
-public bool? Plugin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("plugin")] public bool? Plugin { get; set; }
+
 /// <summary>
 /// Composition due to association with an &lt;iframe&gt; element.
 /// </summary>
-public bool? IFrame { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("iFrame")] public bool? IFrame { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "backface-visibility: hidden" style.
 /// </summary>
-public bool? BackfaceVisibilityHidden { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("backfaceVisibilityHidden")] public bool? BackfaceVisibilityHidden { get; set; }
+
 /// <summary>
 /// Composition due to association with an element clipping compositing descendants.
 /// </summary>
-public bool? ClipsCompositingDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("clipsCompositingDescendants")] public bool? ClipsCompositingDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an animated element.
 /// </summary>
-public bool? Animation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("animation")] public bool? Animation { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with CSS filters applied.
 /// </summary>
-public bool? Filters { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("filters")] public bool? Filters { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "position: fixed" style.
 /// </summary>
-public bool? PositionFixed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("positionFixed")] public bool? PositionFixed { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "position: sticky" style.
 /// </summary>
-public bool? PositionSticky { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("positionSticky")] public bool? PositionSticky { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "overflow-scrolling: touch" style.
 /// </summary>
-public bool? OverflowScrollingTouch { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("overflowScrollingTouch")] public bool? OverflowScrollingTouch { get; set; }
+
 /// <summary>
 /// Composition due to association with an element establishing a stacking context.
 /// </summary>
-public bool? Stacking { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stacking")] public bool? Stacking { get; set; }
+
 /// <summary>
 /// Composition due to association with an element overlapping other composited elements.
 /// </summary>
-public bool? Overlap { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("overlap")] public bool? Overlap { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with descendants that have a negative z-index.
 /// </summary>
-public bool? NegativeZIndexChildren { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("negativeZIndexChildren")] public bool? NegativeZIndexChildren { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with composited descendants.
 /// </summary>
-public bool? TransformWithCompositedDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("transformWithCompositedDescendants")] public bool? TransformWithCompositedDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with opacity applied and composited descendants.
 /// </summary>
-public bool? OpacityWithCompositedDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("opacityWithCompositedDescendants")] public bool? OpacityWithCompositedDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with a masked element and composited descendants.
 /// </summary>
-public bool? MaskWithCompositedDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("maskWithCompositedDescendants")] public bool? MaskWithCompositedDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a reflection and composited descendants.
 /// </summary>
-public bool? ReflectionWithCompositedDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("reflectionWithCompositedDescendants")] public bool? ReflectionWithCompositedDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with CSS filters applied and composited descendants.
 /// </summary>
-public bool? FilterWithCompositedDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("filterWithCompositedDescendants")] public bool? FilterWithCompositedDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with CSS blending applied and composited descendants.
 /// </summary>
-public bool? BlendingWithCompositedDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("blendingWithCompositedDescendants")] public bool? BlendingWithCompositedDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an element isolating compositing descendants having CSS blending applied.
 /// </summary>
-public bool? IsolatesCompositedBlendingDescendants { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isolatesCompositedBlendingDescendants")] public bool? IsolatesCompositedBlendingDescendants { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with perspective applied.
 /// </summary>
-public bool? Perspective { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("perspective")] public bool? Perspective { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "transform-style: preserve-3d" style.
 /// </summary>
-public bool? Preserve3D { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("preserve3D")] public bool? Preserve3D { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "will-change" style.
 /// </summary>
-public bool? WillChange { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("willChange")] public bool? WillChange { get; set; }
+
 /// <summary>
 /// Composition due to association with the root element.
 /// </summary>
-public bool? Root { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("root")] public bool? Root { get; set; }
+
 /// <summary>
 /// Composition due to association with an element with a "blend-mode" style.
 /// </summary>
-public bool? Blending { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("blending")] public bool? Blending { get; set; }
+}
 /// <summary>
 /// Enables compositing tree inspection.
 /// </summary>
@@ -7132,7 +8180,8 @@ public string Command { get; } = "LayerTree.layersForNode";
 /// <summary>
 /// Root of the subtree for which we want to gather layers.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeLayersForNodeRequest"/>
 /// </summary>
@@ -7141,7 +8190,8 @@ internal partial class LayerTreeLayersForNodeResponse: IWebkitResponse
 /// <summary>
 /// Child layers.
 /// </summary>
-public Layer[] Layers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("layers")] public Layer[] Layers { get; set; }
+}
 /// <summary>
 /// Provides the reasons why the given layer was composited.
 /// </summary>
@@ -7155,7 +8205,8 @@ public string Command { get; } = "LayerTree.reasonsForCompositingLayer";
 /// <summary>
 /// The id of the layer for which we want to get the reasons it was composited.
 /// </summary>
-public string LayerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("layerId")] public string LayerId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="LayerTreeReasonsForCompositingLayerRequest"/>
 /// </summary>
@@ -7164,7 +8215,8 @@ internal partial class LayerTreeReasonsForCompositingLayerResponse: IWebkitRespo
 /// <summary>
 /// An object containing the reasons why the layer was composited as properties.
 /// </summary>
-public CompositingReasons CompositingReasons { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("compositingReasons")] public CompositingReasons CompositingReasons { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -7186,11 +8238,13 @@ internal partial class Event
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Breakdown of memory in categories.
 /// </summary>
-public CategoryData[] Categories { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("categories")] public CategoryData[] Categories { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -7199,11 +8253,13 @@ internal partial class CategoryData
 /// <summary>
 /// Category type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Category size in bytes.
 /// </summary>
-public double? Size { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
+}
 /// <summary>
 /// Enables Memory domain events.
 /// </summary>
@@ -7284,11 +8340,13 @@ public string InternalName { get; } = "Memory.memoryPressure";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// The severity of the memory pressure event.
 /// </summary>
-public string Severity { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("severity")] public string Severity { get; set; }
+}
 /// <summary>
 /// Tracking started.
 /// </summary>
@@ -7301,7 +8359,8 @@ public string InternalName { get; } = "Memory.trackingStart";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Periodic tracking updates with event data.
 /// </summary>
@@ -7314,7 +8373,8 @@ public string InternalName { get; } = "Memory.trackingUpdate";
 /// <summary>
 /// 
 /// </summary>
-public Event Event { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("event")] public Event Event { get; set; }
+}
 /// <summary>
 /// Tracking stopped.
 /// </summary>
@@ -7327,7 +8387,8 @@ public string InternalName { get; } = "Memory.trackingComplete";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Network
 {
@@ -7345,51 +8406,63 @@ internal partial class ResourceTiming
 /// <summary>
 /// Request is initiated
 /// </summary>
-public double? StartTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startTime")] public double? StartTime { get; set; }
+
 /// <summary>
 /// Started redirect resolution.
 /// </summary>
-public double? RedirectStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("redirectStart")] public double? RedirectStart { get; set; }
+
 /// <summary>
 /// Finished redirect resolution.
 /// </summary>
-public double? RedirectEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("redirectEnd")] public double? RedirectEnd { get; set; }
+
 /// <summary>
 /// Resource fetching started.
 /// </summary>
-public double? FetchStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fetchStart")] public double? FetchStart { get; set; }
+
 /// <summary>
 /// Started DNS address resolve in milliseconds relative to fetchStart.
 /// </summary>
-public double? DomainLookupStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domainLookupStart")] public double? DomainLookupStart { get; set; }
+
 /// <summary>
 /// Finished DNS address resolve in milliseconds relative to fetchStart.
 /// </summary>
-public double? DomainLookupEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domainLookupEnd")] public double? DomainLookupEnd { get; set; }
+
 /// <summary>
 /// Started connecting to the remote host in milliseconds relative to fetchStart.
 /// </summary>
-public double? ConnectStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectStart")] public double? ConnectStart { get; set; }
+
 /// <summary>
 /// Connected to the remote host in milliseconds relative to fetchStart.
 /// </summary>
-public double? ConnectEnd { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectEnd")] public double? ConnectEnd { get; set; }
+
 /// <summary>
 /// Started SSL handshake in milliseconds relative to fetchStart.
 /// </summary>
-public double? SecureConnectionStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secureConnectionStart")] public double? SecureConnectionStart { get; set; }
+
 /// <summary>
 /// Started sending request in milliseconds relative to fetchStart.
 /// </summary>
-public double? RequestStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestStart")] public double? RequestStart { get; set; }
+
 /// <summary>
 /// Started receiving response headers in milliseconds relative to fetchStart.
 /// </summary>
-public double? ResponseStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseStart")] public double? ResponseStart { get; set; }
+
 /// <summary>
 /// Finished receiving response headers in milliseconds relative to fetchStart.
 /// </summary>
-public double? ResponseEnd { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("responseEnd")] public double? ResponseEnd { get; set; }
+}
 /// <summary>
 /// HTTP request data.
 /// </summary>
@@ -7398,19 +8471,23 @@ internal partial class Request
 /// <summary>
 /// Request URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// HTTP request method.
 /// </summary>
-public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+
 /// <summary>
 /// HTTP request headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// HTTP POST request data.
 /// </summary>
-public string PostData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+}
 /// <summary>
 /// HTTP response data.
 /// </summary>
@@ -7419,39 +8496,48 @@ internal partial class Response
 /// <summary>
 /// Response URL. This URL can be different from CachedResource.url in case of redirect.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+
 /// <summary>
 /// HTTP response status text.
 /// </summary>
-public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+
 /// <summary>
 /// HTTP response headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// Resource mimeType as determined by the browser.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// Specifies where the response came from.
 /// </summary>
-public string Source { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+
 /// <summary>
 /// Refined HTTP request headers that were actually transmitted over the network.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaders")] public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+
 /// <summary>
 /// Timing information for the given request.
 /// </summary>
-public ResourceTiming Timing { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timing")] public ResourceTiming Timing { get; set; }
+
 /// <summary>
 /// The security information for the given request.
 /// </summary>
-public Security.Security Security { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("security")] public Security.Security Security { get; set; }
+}
 /// <summary>
 /// Network load metrics.
 /// </summary>
@@ -7460,47 +8546,58 @@ internal partial class Metrics
 /// <summary>
 /// Network protocol. ALPN Protocol ID Identification Sequence, as per RFC 7301 (for example, http/2, http/1.1, spdy/3.1)
 /// </summary>
-public string Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public string Protocol { get; set; }
+
 /// <summary>
 /// Network priority.
 /// </summary>
-public string Priority { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("priority")] public string Priority { get; set; }
+
 /// <summary>
 /// Connection identifier.
 /// </summary>
-public string ConnectionIdentifier { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connectionIdentifier")] public string ConnectionIdentifier { get; set; }
+
 /// <summary>
 /// Remote IP address.
 /// </summary>
-public string RemoteAddress { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("remoteAddress")] public string RemoteAddress { get; set; }
+
 /// <summary>
 /// Refined HTTP request headers that were actually transmitted over the network.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaders")] public System.Collections.Generic.IDictionary<string, string> RequestHeaders { get; set; }
+
 /// <summary>
 /// Total HTTP request header bytes sent over the network.
 /// </summary>
-public double? RequestHeaderBytesSent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestHeaderBytesSent")] public double? RequestHeaderBytesSent { get; set; }
+
 /// <summary>
 /// Total HTTP request body bytes sent over the network.
 /// </summary>
-public double? RequestBodyBytesSent { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestBodyBytesSent")] public double? RequestBodyBytesSent { get; set; }
+
 /// <summary>
 /// Total HTTP response header bytes received over the network.
 /// </summary>
-public double? ResponseHeaderBytesReceived { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseHeaderBytesReceived")] public double? ResponseHeaderBytesReceived { get; set; }
+
 /// <summary>
 /// Total HTTP response body bytes received over the network.
 /// </summary>
-public double? ResponseBodyBytesReceived { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseBodyBytesReceived")] public double? ResponseBodyBytesReceived { get; set; }
+
 /// <summary>
 /// Total decoded response body size in bytes.
 /// </summary>
-public double? ResponseBodyDecodedSize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("responseBodyDecodedSize")] public double? ResponseBodyDecodedSize { get; set; }
+
 /// <summary>
 /// Connection information for the completed request.
 /// </summary>
-public Security.Connection SecurityConnection { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("securityConnection")] public Security.Connection SecurityConnection { get; set; }
+}
 /// <summary>
 /// WebSocket request data.
 /// </summary>
@@ -7509,7 +8606,8 @@ internal partial class WebSocketRequest
 /// <summary>
 /// HTTP response headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// WebSocket response data.
 /// </summary>
@@ -7518,15 +8616,18 @@ internal partial class WebSocketResponse
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+
 /// <summary>
 /// HTTP response status text.
 /// </summary>
-public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+
 /// <summary>
 /// HTTP response headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// WebSocket frame data.
 /// </summary>
@@ -7535,19 +8636,23 @@ internal partial class WebSocketFrame
 /// <summary>
 /// WebSocket frame opcode.
 /// </summary>
-public double? Opcode { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("opcode")] public double? Opcode { get; set; }
+
 /// <summary>
 /// WebSocket frame mask.
 /// </summary>
-public bool? Mask { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mask")] public bool? Mask { get; set; }
+
 /// <summary>
 /// WebSocket frame payload data.
 /// </summary>
-public string PayloadData { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("payloadData")] public string PayloadData { get; set; }
+
 /// <summary>
 /// WebSocket frame payload length in bytes.
 /// </summary>
-public double? PayloadLength { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("payloadLength")] public double? PayloadLength { get; set; }
+}
 /// <summary>
 /// Information about the cached resource.
 /// </summary>
@@ -7556,23 +8661,29 @@ internal partial class CachedResource
 /// <summary>
 /// Resource URL. This is the url of the original network request.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Type of this resource.
 /// </summary>
-public Page.ResourceType Type { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Page.ResourceType Type { get; set; }
+
 /// <summary>
 /// Cached response data.
 /// </summary>
-public Response Response { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("response")] public Response Response { get; set; }
+
 /// <summary>
 /// Cached response body size.
 /// </summary>
-public double? BodySize { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("bodySize")] public double? BodySize { get; set; }
+
 /// <summary>
 /// URL of source map associated with this resource (if any).
 /// </summary>
-public string SourceMapURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+}
 /// <summary>
 /// Information about the request initiator.
 /// </summary>
@@ -7581,30 +8692,28 @@ internal partial class Initiator
 /// <summary>
 /// Type of this initiator.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Initiator JavaScript stack trace, set for Script only.
 /// </summary>
-public Console.CallFrame[] StackTrace { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public Console.CallFrame[] StackTrace { get; set; }
+
 /// <summary>
 /// Initiator URL, set for Parser type only.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Initiator line number, set for Parser type only.
 /// </summary>
-public double? LineNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public double? LineNumber { get; set; }
+
 /// <summary>
 /// Set if the load was triggered by a DOM node, in addition to the other initiator information.
 /// </summary>
-public int? NodeId { get; set; }}
-/// <summary>
-/// Different stages of a network request.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum NetworkStage
-{
-[System.Runtime.Serialization.EnumMember(Value = "response")]Response}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Enables network tracking, network events will now be delivered to the client.
 /// </summary>
@@ -7652,7 +8761,8 @@ public string Command { get; } = "Network.setExtraHTTPHeaders";
 /// <summary>
 /// Map with extra HTTP headers.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetExtraHTTPHeadersRequest"/>
 /// </summary>
@@ -7672,7 +8782,8 @@ public string Command { get; } = "Network.getResponseBody";
 /// <summary>
 /// Identifier of the network request to get content for.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetResponseBodyRequest"/>
 /// </summary>
@@ -7681,11 +8792,13 @@ internal partial class NetworkGetResponseBodyResponse: IWebkitResponse
 /// <summary>
 /// Response body.
 /// </summary>
-public string Body { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("body")] public string Body { get; set; }
+
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+}
 /// <summary>
 /// Toggles whether the resource cache may be used when loading resources in the inspected page. If &lt;code&gt;true&lt;/code&gt;, the resource cache will not be used when loading resources.
 /// </summary>
@@ -7699,7 +8812,8 @@ public string Command { get; } = "Network.setResourceCachingDisabled";
 /// <summary>
 /// Whether to prevent usage of the resource cache.
 /// </summary>
-public bool? Disabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetResourceCachingDisabledRequest"/>
 /// </summary>
@@ -7719,11 +8833,13 @@ public string Command { get; } = "Network.loadResource";
 /// <summary>
 /// Frame to load the resource from.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// URL of the resource to load.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkLoadResourceRequest"/>
 /// </summary>
@@ -7732,15 +8848,18 @@ internal partial class NetworkLoadResourceResponse: IWebkitResponse
 /// <summary>
 /// Resource content.
 /// </summary>
-public string Content { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+
 /// <summary>
 /// Resource mimeType.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// HTTP response status code.
 /// </summary>
-public int? Status { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+}
 /// <summary>
 /// Fetches a serialized secure certificate for the given requestId to be displayed via InspectorFrontendHost.showCertificate.
 /// </summary>
@@ -7754,7 +8873,8 @@ public string Command { get; } = "Network.getSerializedCertificate";
 /// <summary>
 /// 
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkGetSerializedCertificateRequest"/>
 /// </summary>
@@ -7763,7 +8883,8 @@ internal partial class NetworkGetSerializedCertificateResponse: IWebkitResponse
 /// <summary>
 /// Represents a base64 encoded WebCore::CertificateInfo object.
 /// </summary>
-public string SerializedCertificate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("serializedCertificate")] public string SerializedCertificate { get; set; }
+}
 /// <summary>
 /// Resolves JavaScript WebSocket object for given request id.
 /// </summary>
@@ -7777,11 +8898,13 @@ public string Command { get; } = "Network.resolveWebSocket";
 /// <summary>
 /// Identifier of the WebSocket resource to resolve.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkResolveWebSocketRequest"/>
 /// </summary>
@@ -7790,7 +8913,8 @@ internal partial class NetworkResolveWebSocketResponse: IWebkitResponse
 /// <summary>
 /// JavaScript object wrapper for given node.
 /// </summary>
-public Runtime.RemoteObject Object { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
+}
 /// <summary>
 /// Enable interception of network requests.
 /// </summary>
@@ -7804,11 +8928,13 @@ public string Command { get; } = "Network.setInterceptionEnabled";
 /// <summary>
 /// 
 /// </summary>
-public bool? Enabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? InterceptRequests { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("interceptRequests")] public bool? InterceptRequests { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetInterceptionEnabledRequest"/>
 /// </summary>
@@ -7828,20 +8954,24 @@ public string Command { get; } = "Network.addInterception";
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// If false, ignores letter casing of `url` parameter.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats `url` parameter as a regular expression.
 /// </summary>
-public bool? IsRegex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+
 /// <summary>
 /// If not present this applies to all network stages.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public NetworkStage? Stage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stage")] public NetworkStage? Stage { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkAddInterceptionRequest"/>
 /// </summary>
@@ -7861,20 +8991,24 @@ public string Command { get; } = "Network.removeInterception";
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// If false, ignores letter casing of `url` parameter.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats `url` parameter as a regular expression.
 /// </summary>
-public bool? IsRegex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+
 /// <summary>
 /// If not present this applies to all network stages.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public NetworkStage? Stage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stage")] public NetworkStage? Stage { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkRemoveInterceptionRequest"/>
 /// </summary>
@@ -7894,19 +9028,23 @@ public string Command { get; } = "Network.interceptContinue";
 /// <summary>
 /// Identifier for the intercepted Network request or response to continue.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// HTTP request method.
 /// </summary>
-public string Method { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("method")] public string Method { get; set; }
+
 /// <summary>
 /// HTTP response headers. Pass through original values if unmodified.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+
 /// <summary>
 /// HTTP POST request data.
 /// </summary>
-public string PostData { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("postData")] public string PostData { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkInterceptContinueRequest"/>
 /// </summary>
@@ -7926,11 +9064,13 @@ public string Command { get; } = "Network.interceptAsError";
 /// <summary>
 /// Identifier for the intercepted Network request.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Deliver error reason for the request.
 /// </summary>
-public string Reason { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("reason")] public string Reason { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkInterceptAsErrorRequest"/>
 /// </summary>
@@ -7950,31 +9090,38 @@ public string Command { get; } = "Network.interceptWithResponse";
 /// <summary>
 /// Identifier for the intercepted Network response to modify.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Content { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+
 /// <summary>
 /// True, if content was sent as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+
 /// <summary>
 /// MIME Type for the data.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// HTTP response status code. Pass through original values if unmodified.
 /// </summary>
-public int? Status { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
+
 /// <summary>
 /// HTTP response status text. Pass through original values if unmodified.
 /// </summary>
-public string StatusText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("statusText")] public string StatusText { get; set; }
+
 /// <summary>
 /// HTTP response headers. Pass through original values if unmodified.
 /// </summary>
-public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("headers")] public System.Collections.Generic.IDictionary<string, string> Headers { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkInterceptWithResponseRequest"/>
 /// </summary>
@@ -7994,7 +9141,8 @@ public string Command { get; } = "Network.setEmulateOfflineState";
 /// <summary>
 /// True to emulate offline.
 /// </summary>
-public bool? Offline { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("offline")] public bool? Offline { get; set; }
+}
 /// <summary>
 /// Response from <see cref="NetworkSetEmulateOfflineStateRequest"/>
 /// </summary>
@@ -8013,47 +9161,59 @@ public string InternalName { get; } = "Network.requestWillBeSent";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Loader identifier.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// URL of the document this request is loaded for.
 /// </summary>
-public string DocumentURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public string DocumentURL { get; set; }
+
 /// <summary>
 /// Request data.
 /// </summary>
-public Request Request { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("request")] public Request Request { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Walltime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("walltime")] public double? Walltime { get; set; }
+
 /// <summary>
 /// Request initiator.
 /// </summary>
-public Initiator Initiator { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("initiator")] public Initiator Initiator { get; set; }
+
 /// <summary>
 /// Redirect response data.
 /// </summary>
-public Response RedirectResponse { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("redirectResponse")] public Response RedirectResponse { get; set; }
+
 /// <summary>
 /// Resource type.
 /// </summary>
-public Page.ResourceType Type { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Page.ResourceType? Type { get; set; }
+
 /// <summary>
 /// Identifier for the context of where the load originated. In general this is the target identifier. For Workers this will be the workerId.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Fired when HTTP response is available.
 /// </summary>
@@ -8066,27 +9226,34 @@ public string InternalName { get; } = "Network.responseReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Loader identifier.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Resource type.
 /// </summary>
-public Page.ResourceType Type { get; set; }
+[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Page.ResourceType Type { get; set; }
+
 /// <summary>
 /// Response data.
 /// </summary>
-public Response Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public Response Response { get; set; }
+}
 /// <summary>
 /// Fired when data chunk was received over the network.
 /// </summary>
@@ -8099,19 +9266,23 @@ public string InternalName { get; } = "Network.dataReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Data chunk length.
 /// </summary>
-public int? DataLength { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dataLength")] public int? DataLength { get; set; }
+
 /// <summary>
 /// Actual bytes received (might be less than dataLength for compressed encodings).
 /// </summary>
-public int? EncodedDataLength { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("encodedDataLength")] public int? EncodedDataLength { get; set; }
+}
 /// <summary>
 /// Fired when HTTP request has finished loading.
 /// </summary>
@@ -8124,19 +9295,23 @@ public string InternalName { get; } = "Network.loadingFinished";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// URL of source map associated with this resource (if any).
 /// </summary>
-public string SourceMapURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+
 /// <summary>
 /// Network metrics.
 /// </summary>
-public Metrics Metrics { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("metrics")] public Metrics Metrics { get; set; }
+}
 /// <summary>
 /// Fired when HTTP request has failed to load.
 /// </summary>
@@ -8149,19 +9324,23 @@ public string InternalName { get; } = "Network.loadingFailed";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// User friendly error message.
 /// </summary>
-public string ErrorText { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("errorText")] public string ErrorText { get; set; }
+
 /// <summary>
 /// True if loading was canceled.
 /// </summary>
-public bool? Canceled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("canceled")] public bool? Canceled { get; set; }
+}
 /// <summary>
 /// Fired when HTTP request has been served from memory cache.
 /// </summary>
@@ -8174,31 +9353,38 @@ public string InternalName { get; } = "Network.requestServedFromMemoryCache";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Frame identifier.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Loader identifier.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// URL of the document this request is loaded for.
 /// </summary>
-public string DocumentURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("documentURL")] public string DocumentURL { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Request initiator.
 /// </summary>
-public Initiator Initiator { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("initiator")] public Initiator Initiator { get; set; }
+
 /// <summary>
 /// Cached resource data.
 /// </summary>
-public CachedResource Resource { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("resource")] public CachedResource Resource { get; set; }
+}
 /// <summary>
 /// Fired when HTTP response has been intercepted. The frontend must response with &lt;code&gt;Network.interceptContinue&lt;/code&gt; or &lt;code&gt;Network.interceptWithRespons&lt;/code&gt;` to continue this response.
 /// </summary>
@@ -8211,11 +9397,13 @@ public string InternalName { get; } = "Network.responseIntercepted";
 /// <summary>
 /// Identifier for this intercepted network. Corresponds with an earlier &lt;code&gt;Network.requestWillBeSent&lt;/code&gt;.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Original response content that would proceed if this is continued.
 /// </summary>
-public Response Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public Response Response { get; set; }
+}
 /// <summary>
 /// Fired when HTTP request has been intercepted. The frontend must response with &lt;code&gt;Network.interceptContinue&lt;/code&gt; or &lt;code&gt;Network.interceptWithRespons&lt;/code&gt;` to continue this response.
 /// </summary>
@@ -8228,11 +9416,13 @@ public string InternalName { get; } = "Network.requestIntercepted";
 /// <summary>
 /// Identifier for this intercepted network. Corresponds with an earlier &lt;code&gt;Network.requestWillBeSent&lt;/code&gt;.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Original request content that would proceed if this is continued.
 /// </summary>
-public Request Request { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("request")] public Request Request { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket is about to initiate handshake.
 /// </summary>
@@ -8245,19 +9435,23 @@ public string InternalName { get; } = "Network.webSocketWillSendHandshakeRequest
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Walltime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("walltime")] public double? Walltime { get; set; }
+
 /// <summary>
 /// WebSocket request data.
 /// </summary>
-public WebSocketRequest Request { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("request")] public WebSocketRequest Request { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket handshake response becomes available.
 /// </summary>
@@ -8270,15 +9464,18 @@ public string InternalName { get; } = "Network.webSocketHandshakeResponseReceive
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-public WebSocketResponse Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public WebSocketResponse Response { get; set; }
+}
 /// <summary>
 /// Fired upon WebSocket creation.
 /// </summary>
@@ -8291,11 +9488,13 @@ public string InternalName { get; } = "Network.webSocketCreated";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// WebSocket request URL.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket is closed.
 /// </summary>
@@ -8308,11 +9507,13 @@ public string InternalName { get; } = "Network.webSocketClosed";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket frame is received.
 /// </summary>
@@ -8325,15 +9526,18 @@ public string InternalName { get; } = "Network.webSocketFrameReceived";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-public WebSocketFrame Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public WebSocketFrame Response { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket frame error occurs.
 /// </summary>
@@ -8346,15 +9550,18 @@ public string InternalName { get; } = "Network.webSocketFrameError";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket frame error message.
 /// </summary>
-public string ErrorMessage { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public string ErrorMessage { get; set; }
+}
 /// <summary>
 /// Fired when WebSocket frame is sent.
 /// </summary>
@@ -8367,77 +9574,21 @@ public string InternalName { get; } = "Network.webSocketFrameSent";
 /// <summary>
 /// Request identifier.
 /// </summary>
-public string RequestId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+
 /// <summary>
 /// Timestamp.
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// WebSocket response data.
 /// </summary>
-public WebSocketFrame Response { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("response")] public WebSocketFrame Response { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Page
 {
-/// <summary>
-/// List of settings able to be overridden by WebInspector. Keep this in sync with FOR_EACH_INSPECTOR_OVERRIDE_SETTING.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Setting
-{
-[System.Runtime.Serialization.EnumMember(Value = "AuthorAndUserStylesEnabled")]AuthorAndUserStylesEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "ICECandidateFilteringEnabled")]ICECandidateFilteringEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "ImagesEnabled")]ImagesEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "MediaCaptureRequiresSecureConnection")]MediaCaptureRequiresSecureConnection,
-[System.Runtime.Serialization.EnumMember(Value = "MockCaptureDevicesEnabled")]MockCaptureDevicesEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "NeedsSiteSpecificQuirks")]NeedsSiteSpecificQuirks,
-[System.Runtime.Serialization.EnumMember(Value = "ScriptEnabled")]ScriptEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "ShowDebugBorders")]ShowDebugBorders,
-[System.Runtime.Serialization.EnumMember(Value = "ShowRepaintCounter")]ShowRepaintCounter,
-[System.Runtime.Serialization.EnumMember(Value = "WebRTCEncryptionEnabled")]WebRTCEncryptionEnabled,
-[System.Runtime.Serialization.EnumMember(Value = "WebSecurityEnabled")]WebSecurityEnabled}
-/// <summary>
-/// Resource type as it was perceived by the rendering engine.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ResourceType
-{
-[System.Runtime.Serialization.EnumMember(Value = "Document")]Document,
-[System.Runtime.Serialization.EnumMember(Value = "StyleSheet")]StyleSheet,
-[System.Runtime.Serialization.EnumMember(Value = "Image")]Image,
-[System.Runtime.Serialization.EnumMember(Value = "Font")]Font,
-[System.Runtime.Serialization.EnumMember(Value = "Script")]Script,
-[System.Runtime.Serialization.EnumMember(Value = "XHR")]XHR,
-[System.Runtime.Serialization.EnumMember(Value = "Fetch")]Fetch,
-[System.Runtime.Serialization.EnumMember(Value = "Ping")]Ping,
-[System.Runtime.Serialization.EnumMember(Value = "Beacon")]Beacon,
-[System.Runtime.Serialization.EnumMember(Value = "WebSocket")]WebSocket,
-[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
-/// <summary>
-/// Coordinate system used by supplied coordinates.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CoordinateSystem
-{
-[System.Runtime.Serialization.EnumMember(Value = "Viewport")]Viewport,
-[System.Runtime.Serialization.EnumMember(Value = "Page")]Page}
-/// <summary>
-/// Same-Site policy of a cookie.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum CookieSameSitePolicy
-{
-[System.Runtime.Serialization.EnumMember(Value = "None")]None,
-[System.Runtime.Serialization.EnumMember(Value = "Lax")]Lax,
-[System.Runtime.Serialization.EnumMember(Value = "Strict")]Strict}
-/// <summary>
-/// Page appearance name.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Appearance
-{
-[System.Runtime.Serialization.EnumMember(Value = "Light")]Light,
-[System.Runtime.Serialization.EnumMember(Value = "Dark")]Dark}
 /// <summary>
 /// Information about the Frame on the page.
 /// </summary>
@@ -8446,31 +9597,38 @@ internal partial class Frame
 /// <summary>
 /// Frame unique identifier.
 /// </summary>
-public string Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
+
 /// <summary>
 /// Parent frame identifier.
 /// </summary>
-public string ParentId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parentId")] public string ParentId { get; set; }
+
 /// <summary>
 /// Identifier of the loader associated with this frame.
 /// </summary>
-public string LoaderId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
+
 /// <summary>
 /// Frame's name as specified in the tag.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Frame document's URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Frame document's security origin.
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// Frame document's mimeType as determined by the browser.
 /// </summary>
-public string MimeType { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -8479,32 +9637,39 @@ internal partial class FrameResource
 /// <summary>
 /// Resource URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Type of this resource.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ResourceType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public ResourceType Type { get; set; }
+
 /// <summary>
 /// Resource mimeType as determined by the browser.
 /// </summary>
-public string MimeType { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("mimeType")] public string MimeType { get; set; }
+
 /// <summary>
 /// True if the resource failed to load.
 /// </summary>
-public bool? Failed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("failed")] public bool? Failed { get; set; }
+
 /// <summary>
 /// True if the resource was canceled during loading.
 /// </summary>
-public bool? Canceled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("canceled")] public bool? Canceled { get; set; }
+
 /// <summary>
 /// URL of source map associated with this resource (if any).
 /// </summary>
-public string SourceMapURL { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceMapURL")] public string SourceMapURL { get; set; }
+
 /// <summary>
 /// Identifier for the context of where the load originated. In general this is the target identifier. For Workers this will be the workerId.
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Information about the Frame hierarchy along with their cached resources.
 /// </summary>
@@ -8513,15 +9678,18 @@ internal partial class FrameResourceTree
 /// <summary>
 /// Frame information for this tree item.
 /// </summary>
-public Frame Frame { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frame")] public Frame Frame { get; set; }
+
 /// <summary>
 /// Child frames.
 /// </summary>
-public FrameResourceTree[] ChildFrames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("childFrames")] public FrameResourceTree[] ChildFrames { get; set; }
+
 /// <summary>
 /// Information about frame resources.
 /// </summary>
-public FrameResource[] Resources { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("resources")] public FrameResource[] Resources { get; set; }
+}
 /// <summary>
 /// Search result for resource.
 /// </summary>
@@ -8530,19 +9698,23 @@ internal partial class SearchResult
 /// <summary>
 /// Resource URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Resource frame id.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Number of matches in the resource content.
 /// </summary>
-public double? MatchesCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("matchesCount")] public double? MatchesCount { get; set; }
+
 /// <summary>
 /// Network request id.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Cookie object
 /// </summary>
@@ -8551,44 +9723,54 @@ internal partial class Cookie
 /// <summary>
 /// Cookie name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Cookie value.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Cookie domain.
 /// </summary>
-public string Domain { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("domain")] public string Domain { get; set; }
+
 /// <summary>
 /// Cookie path.
 /// </summary>
-public string Path { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
+
 /// <summary>
 /// Cookie expires.
 /// </summary>
-public double? Expires { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expires")] public double? Expires { get; set; }
+
 /// <summary>
 /// Cookie size.
 /// </summary>
-public int? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+
 /// <summary>
 /// True if cookie is http-only.
 /// </summary>
-public bool? HttpOnly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("httpOnly")] public bool? HttpOnly { get; set; }
+
 /// <summary>
 /// True if cookie is secure.
 /// </summary>
-public bool? Secure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("secure")] public bool? Secure { get; set; }
+
 /// <summary>
 /// True in case of session cookie.
 /// </summary>
-public bool? Session { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("session")] public bool? Session { get; set; }
+
 /// <summary>
 /// Cookie Same-Site policy.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CookieSameSitePolicy SameSite { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sameSite")] public CookieSameSitePolicy SameSite { get; set; }
+}
 /// <summary>
 /// Accessibility Node
 /// </summary>
@@ -8597,115 +9779,143 @@ internal partial class AXNode
 /// <summary>
 /// The role.
 /// </summary>
-public string Role { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("role")] public string Role { get; set; }
+
 /// <summary>
 /// A human readable name for the node.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The current value of the node.
 /// </summary>
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
+
 /// <summary>
 /// An additional human readable description of the node.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// Keyboard shortcuts associated with this node.
 /// </summary>
-public string Keyshortcuts { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("keyshortcuts")] public string Keyshortcuts { get; set; }
+
 /// <summary>
 /// A human readable alternative to the role.
 /// </summary>
-public string Roledescription { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("roledescription")] public string Roledescription { get; set; }
+
 /// <summary>
 /// A description of the current value.
 /// </summary>
-public string Valuetext { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valuetext")] public string Valuetext { get; set; }
+
 /// <summary>
 /// Whether the node is disabled.
 /// </summary>
-public bool? Disabled { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("disabled")] public bool? Disabled { get; set; }
+
 /// <summary>
 /// Whether the node is expanded or collapsed.
 /// </summary>
-public bool? Expanded { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expanded")] public bool? Expanded { get; set; }
+
 /// <summary>
 /// Whether the node is focused.
 /// </summary>
-public bool? Focused { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("focused")] public bool? Focused { get; set; }
+
 /// <summary>
 /// Whether the node is modal.
 /// </summary>
-public bool? Modal { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("modal")] public bool? Modal { get; set; }
+
 /// <summary>
 /// Whether the node text input supports multiline.
 /// </summary>
-public bool? Multiline { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("multiline")] public bool? Multiline { get; set; }
+
 /// <summary>
 /// Whether more than one child can be selected.
 /// </summary>
-public bool? Multiselectable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("multiselectable")] public bool? Multiselectable { get; set; }
+
 /// <summary>
 /// Whether the node is read only.
 /// </summary>
-public bool? Readonly { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("readonly")] public bool? Readonly { get; set; }
+
 /// <summary>
 /// Whether the node is required.
 /// </summary>
-public bool? Required { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("required")] public bool? Required { get; set; }
+
 /// <summary>
 /// Whether the node is selected in its parent node.
 /// </summary>
-public bool? Selected { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("selected")] public bool? Selected { get; set; }
+
 /// <summary>
 /// Whether the checkbox is checked, or "mixed".
 /// </summary>
-public string Checked { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("checked")] public string Checked { get; set; }
+
 /// <summary>
 /// Whether the toggle button is checked, or "mixed".
 /// </summary>
-public string Pressed { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("pressed")] public string Pressed { get; set; }
+
 /// <summary>
 /// The level of a heading.
 /// </summary>
-public int? Level { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("level")] public int? Level { get; set; }
+
 /// <summary>
 /// The minimum value in a node.
 /// </summary>
-public double? Valuemin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valuemin")] public double? Valuemin { get; set; }
+
 /// <summary>
 /// The maximum value in a node.
 /// </summary>
-public double? Valuemax { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valuemax")] public double? Valuemax { get; set; }
+
 /// <summary>
 /// What kind of autocomplete is supported by a control.
 /// </summary>
-public string Autocomplete { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("autocomplete")] public string Autocomplete { get; set; }
+
 /// <summary>
 /// What kind of popup is currently being shown for a node.
 /// </summary>
-public string Haspopup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("haspopup")] public string Haspopup { get; set; }
+
 /// <summary>
 /// Whether and in what way this node's value is invalid.
 /// </summary>
-public string Invalid { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("invalid")] public string Invalid { get; set; }
+
 /// <summary>
 /// Whether the node is oriented horizontally or vertically.
 /// </summary>
-public string Orientation { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("orientation")] public string Orientation { get; set; }
+
 /// <summary>
 /// Whether the node is focusable.
 /// </summary>
-public bool? Focusable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("focusable")] public bool? Focusable { get; set; }
+
 /// <summary>
 /// Child AXNodes of this node, if any.
 /// </summary>
-public AXNode[] Children { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("children")] public AXNode[] Children { get; set; }
+
 /// <summary>
 /// True if this AXNode corresponds with the ObjectId passed into acessibilitySnapshot.
 /// </summary>
-public bool? Found { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("found")] public bool? Found { get; set; }
+}
 /// <summary>
 /// Enables page domain notifications.
 /// </summary>
@@ -8753,11 +9963,13 @@ public string Command { get; } = "Page.reload";
 /// <summary>
 /// If true, the page is reloaded from its origin without using cached resources.
 /// </summary>
-public bool? IgnoreCache { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ignoreCache")] public bool? IgnoreCache { get; set; }
+
 /// <summary>
 /// If true, all cached subresources will be revalidated when the main resource loads. Otherwise, only expired cached subresources will be revalidated (the default behavior for most WebKit clients).
 /// </summary>
-public bool? RevalidateAllResources { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("revalidateAllResources")] public bool? RevalidateAllResources { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageReloadRequest"/>
 /// </summary>
@@ -8811,15 +10023,18 @@ public string Command { get; } = "Page.navigate";
 /// <summary>
 /// URL to navigate the page to.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Id of the frame to navigate.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Referrer URL.
 /// </summary>
-public string Referrer { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("referrer")] public string Referrer { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageNavigateRequest"/>
 /// </summary>
@@ -8839,7 +10054,8 @@ public string Command { get; } = "Page.overrideUserAgent";
 /// <summary>
 /// Value to override the user agent with. If this value is not provided, the override is removed. Overrides are removed when Web Inspector closes/disconnects.
 /// </summary>
-public string Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageOverrideUserAgentRequest"/>
 /// </summary>
@@ -8860,11 +10076,13 @@ public string Command { get; } = "Page.overrideSetting";
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public Setting Setting { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("setting")] public Setting Setting { get; set; }
+
 /// <summary>
 /// Value to override the setting with. If this value is not provided, the override is removed. Overrides are removed when Web Inspector closes/disconnects.
 /// </summary>
-public bool? Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public bool? Value { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageOverrideSettingRequest"/>
 /// </summary>
@@ -8890,7 +10108,8 @@ internal partial class PageGetCookiesResponse: IWebkitResponse
 /// <summary>
 /// Array of cookie objects.
 /// </summary>
-public Cookie[] Cookies { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cookies")] public Cookie[] Cookies { get; set; }
+}
 /// <summary>
 /// Deletes browser cookie with given name, domain and path.
 /// </summary>
@@ -8904,11 +10123,13 @@ public string Command { get; } = "Page.deleteCookie";
 /// <summary>
 /// Name of the cookie to remove.
 /// </summary>
-public string CookieName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("cookieName")] public string CookieName { get; set; }
+
 /// <summary>
 /// URL to match cookie domain and path.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageDeleteCookieRequest"/>
 /// </summary>
@@ -8934,7 +10155,8 @@ internal partial class PageGetResourceTreeResponse: IWebkitResponse
 /// <summary>
 /// Present frame / resource tree structure.
 /// </summary>
-public FrameResourceTree FrameTree { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameTree")] public FrameResourceTree FrameTree { get; set; }
+}
 /// <summary>
 /// Returns content of the given resource.
 /// </summary>
@@ -8948,11 +10170,13 @@ public string Command { get; } = "Page.getResourceContent";
 /// <summary>
 /// Frame id to get resource for.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// URL of the resource to get content for.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageGetResourceContentRequest"/>
 /// </summary>
@@ -8961,11 +10185,13 @@ internal partial class PageGetResourceContentResponse: IWebkitResponse
 /// <summary>
 /// Resource content.
 /// </summary>
-public string Content { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+
 /// <summary>
 /// True, if content was served as base64.
 /// </summary>
-public bool? Base64Encoded { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("base64Encoded")] public bool? Base64Encoded { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -8979,7 +10205,8 @@ public string Command { get; } = "Page.setBootstrapScript";
 /// <summary>
 /// If `source` is provided (and not empty), it will be injected into all future global objects as soon as they're created. Omitting `source` will stop this from happening.
 /// </summary>
-public string Source { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetBootstrapScriptRequest"/>
 /// </summary>
@@ -8999,27 +10226,33 @@ public string Command { get; } = "Page.searchInResource";
 /// <summary>
 /// Frame id for resource to search in.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// URL of the resource to search in.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// String to search for.
 /// </summary>
-public string Query { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
+
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool? IsRegex { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+
 /// <summary>
 /// Request id for resource to search in.
 /// </summary>
-public string RequestId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSearchInResourceRequest"/>
 /// </summary>
@@ -9028,7 +10261,8 @@ internal partial class PageSearchInResourceResponse: IWebkitResponse
 /// <summary>
 /// List of search matches.
 /// </summary>
-public GenericTypes.SearchMatch[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public GenericTypes.SearchMatch[] Result { get; set; }
+}
 /// <summary>
 /// Searches for given string in frame / resource tree structure.
 /// </summary>
@@ -9042,15 +10276,18 @@ public string Command { get; } = "Page.searchInResources";
 /// <summary>
 /// String to search for.
 /// </summary>
-public string Text { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+
 /// <summary>
 /// If true, search is case sensitive.
 /// </summary>
-public bool? CaseSensitive { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("caseSensitive")] public bool? CaseSensitive { get; set; }
+
 /// <summary>
 /// If true, treats string parameter as regex.
 /// </summary>
-public bool? IsRegex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isRegex")] public bool? IsRegex { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSearchInResourcesRequest"/>
 /// </summary>
@@ -9059,7 +10296,8 @@ internal partial class PageSearchInResourcesResponse: IWebkitResponse
 /// <summary>
 /// List of search results.
 /// </summary>
-public SearchResult[] Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public SearchResult[] Result { get; set; }
+}
 /// <summary>
 /// Requests that backend draw rulers in the inspector overlay
 /// </summary>
@@ -9073,7 +10311,8 @@ public string Command { get; } = "Page.setShowRulers";
 /// <summary>
 /// True for showing rulers
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetShowRulersRequest"/>
 /// </summary>
@@ -9093,7 +10332,8 @@ public string Command { get; } = "Page.setShowPaintRects";
 /// <summary>
 /// True for showing paint rectangles
 /// </summary>
-public bool? Result { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("result")] public bool? Result { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetShowPaintRectsRequest"/>
 /// </summary>
@@ -9113,7 +10353,8 @@ public string Command { get; } = "Page.setEmulatedMedia";
 /// <summary>
 /// Media type to emulate. Empty string disables the override.
 /// </summary>
-public string Media { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("media")] public string Media { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetEmulatedMediaRequest"/>
 /// </summary>
@@ -9134,7 +10375,8 @@ public string Command { get; } = "Page.setForcedAppearance";
 /// Appearance name to force. Empty string disables the override.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public Appearance Appearance { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("appearance")] public Appearance Appearance { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetForcedAppearanceRequest"/>
 /// </summary>
@@ -9154,7 +10396,8 @@ public string Command { get; } = "Page.setTouchEmulationEnabled";
 /// <summary>
 /// Whether touch should be enabled.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetTouchEmulationEnabledRequest"/>
 /// </summary>
@@ -9174,7 +10417,8 @@ public string Command { get; } = "Page.snapshotNode";
 /// <summary>
 /// Id of the node to snapshot.
 /// </summary>
-public int? NodeId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSnapshotNodeRequest"/>
 /// </summary>
@@ -9183,7 +10427,8 @@ internal partial class PageSnapshotNodeResponse: IWebkitResponse
 /// <summary>
 /// Base64-encoded image data (PNG).
 /// </summary>
-public string DataURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("dataURL")] public string DataURL { get; set; }
+}
 /// <summary>
 /// Capture a snapshot of the page within the specified rectangle and coordinate system.
 /// </summary>
@@ -9197,24 +10442,29 @@ public string Command { get; } = "Page.snapshotRect";
 /// <summary>
 /// X coordinate
 /// </summary>
-public int? X { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("x")] public int? X { get; set; }
+
 /// <summary>
 /// Y coordinate
 /// </summary>
-public int? Y { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("y")] public int? Y { get; set; }
+
 /// <summary>
 /// Rectangle width
 /// </summary>
-public int? Width { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("width")] public int? Width { get; set; }
+
 /// <summary>
 /// Rectangle height
 /// </summary>
-public int? Height { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("height")] public int? Height { get; set; }
+
 /// <summary>
 /// Indicates the coordinate system of the supplied rectangle.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public CoordinateSystem CoordinateSystem { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("coordinateSystem")] public CoordinateSystem CoordinateSystem { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSnapshotRectRequest"/>
 /// </summary>
@@ -9223,7 +10473,8 @@ internal partial class PageSnapshotRectResponse: IWebkitResponse
 /// <summary>
 /// Base64-encoded image data (PNG).
 /// </summary>
-public string DataURL { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("dataURL")] public string DataURL { get; set; }
+}
 /// <summary>
 /// Grab an archive of the page.
 /// </summary>
@@ -9243,7 +10494,8 @@ internal partial class PageArchiveResponse: IWebkitResponse
 /// <summary>
 /// Base64-encoded web archive.
 /// </summary>
-public string Data { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
+}
 /// <summary>
 /// Insert text into the current selection of the page.
 /// </summary>
@@ -9257,7 +10509,8 @@ public string Command { get; } = "Page.insertText";
 /// <summary>
 /// Text to insert.
 /// </summary>
-public string Text { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageInsertTextRequest"/>
 /// </summary>
@@ -9277,7 +10530,8 @@ public string Command { get; } = "Page.accessibilitySnapshot";
 /// <summary>
 /// Object Id of a node to find in the accessibility tree.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageAccessibilitySnapshotRequest"/>
 /// </summary>
@@ -9286,7 +10540,8 @@ internal partial class PageAccessibilitySnapshotResponse: IWebkitResponse
 /// <summary>
 /// The root AXNode.
 /// </summary>
-public AXNode AxNode { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("axNode")] public AXNode AxNode { get; set; }
+}
 /// <summary>
 /// Intercepts file chooser dialog
 /// </summary>
@@ -9300,7 +10555,8 @@ public string Command { get; } = "Page.setInterceptFileChooserDialog";
 /// <summary>
 /// True to enable.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetInterceptFileChooserDialogRequest"/>
 /// </summary>
@@ -9320,7 +10576,8 @@ public string Command { get; } = "Page.setDefaultBackgroundColorOverride";
 /// <summary>
 /// RGBA of the default background color. If not specified, any existing override will be cleared.
 /// </summary>
-public DOM.RGBAColor Color { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("color")] public DOM.RGBAColor Color { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetDefaultBackgroundColorOverrideRequest"/>
 /// </summary>
@@ -9340,7 +10597,8 @@ public string Command { get; } = "Page.createUserWorld";
 /// <summary>
 /// Isolated world name, will be used as an execution context name.
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageCreateUserWorldRequest"/>
 /// </summary>
@@ -9360,7 +10618,8 @@ public string Command { get; } = "Page.setBypassCSP";
 /// <summary>
 /// Whether to bypass page CSP.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="PageSetBypassCSPRequest"/>
 /// </summary>
@@ -9396,11 +10655,13 @@ public string InternalName { get; } = "Page.domContentEventFired";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Id of the frame that has fired DOMContentLoaded event.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9413,11 +10674,13 @@ public string InternalName { get; } = "Page.loadEventFired";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Id of the frame that has fired load event.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired once navigation of the frame has completed. Frame is now associated with the new loader.
 /// </summary>
@@ -9430,7 +10693,8 @@ public string InternalName { get; } = "Page.frameNavigated";
 /// <summary>
 /// Frame object.
 /// </summary>
-public Frame Frame { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frame")] public Frame Frame { get; set; }
+}
 /// <summary>
 /// Fired when frame has been attached to its parent.
 /// </summary>
@@ -9443,11 +10707,13 @@ public string InternalName { get; } = "Page.frameAttached";
 /// <summary>
 /// Id of the frame that has been detached.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Parent frame id if non-root.
 /// </summary>
-public string ParentFrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("parentFrameId")] public string ParentFrameId { get; set; }
+}
 /// <summary>
 /// Fired when frame has been detached from its parent.
 /// </summary>
@@ -9460,7 +10726,8 @@ public string InternalName { get; } = "Page.frameDetached";
 /// <summary>
 /// Id of the frame that has been detached.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when frame has started loading.
 /// </summary>
@@ -9473,7 +10740,8 @@ public string InternalName { get; } = "Page.frameStartedLoading";
 /// <summary>
 /// Id of the frame that has started loading.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when frame has stopped loading.
 /// </summary>
@@ -9486,7 +10754,8 @@ public string InternalName { get; } = "Page.frameStoppedLoading";
 /// <summary>
 /// Id of the frame that has stopped loading.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when frame schedules a potential navigation.
 /// </summary>
@@ -9499,11 +10768,13 @@ public string InternalName { get; } = "Page.frameScheduledNavigation";
 /// <summary>
 /// Id of the frame that has scheduled a navigation.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Delay (in seconds) until the navigation is scheduled to begin. The navigation is not guaranteed to start.
 /// </summary>
-public double? Delay { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("delay")] public double? Delay { get; set; }
+}
 /// <summary>
 /// Fired when frame no longer has a scheduled navigation.
 /// </summary>
@@ -9516,7 +10787,8 @@ public string InternalName { get; } = "Page.frameClearedScheduledNavigation";
 /// <summary>
 /// Id of the frame that has cleared its scheduled navigation.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.
 /// </summary>
@@ -9529,11 +10801,13 @@ public string InternalName { get; } = "Page.navigatedWithinDocument";
 /// <summary>
 /// Id of the frame.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Frame's new url.
 /// </summary>
-public string Url { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+}
 /// <summary>
 /// Fired when page's default appearance changes, even if there is a forced appearance.
 /// </summary>
@@ -9547,7 +10821,8 @@ public string InternalName { get; } = "Page.defaultAppearanceDidChange";
 /// Name of the appearance that is active (not considering any forced appearance.)
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public Appearance Appearance { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("appearance")] public Appearance Appearance { get; set; }
+}
 /// <summary>
 /// Fired when the page shows file chooser for it's &lt;input type=file&gt;.
 /// </summary>
@@ -9560,33 +10835,16 @@ public string InternalName { get; } = "Page.fileChooserOpened";
 /// <summary>
 /// Frame where file chooser is opened.
 /// </summary>
-public string FrameId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+
 /// <summary>
 /// Input element.
 /// </summary>
-public Runtime.RemoteObject Element { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("element")] public Runtime.RemoteObject Element { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Recording
 {
-/// <summary>
-/// The type of the recording.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Type
-{
-[System.Runtime.Serialization.EnumMember(Value = "canvas-2d")]Canvas2D,
-[System.Runtime.Serialization.EnumMember(Value = "canvas-bitmaprenderer")]CanvasBitmaprenderer,
-[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl")]CanvasWebgl,
-[System.Runtime.Serialization.EnumMember(Value = "canvas-webgl2")]CanvasWebgl2}
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Initiator
-{
-[System.Runtime.Serialization.EnumMember(Value = "frontend")]Frontend,
-[System.Runtime.Serialization.EnumMember(Value = "console")]Console,
-[System.Runtime.Serialization.EnumMember(Value = "auto-capture")]AutoCapture}
 /// <summary>
 /// Information about the initial state of the recorded object.
 /// </summary>
@@ -9595,19 +10853,23 @@ internal partial class InitialState
 /// <summary>
 /// Key-value map for each attribute of the state.
 /// </summary>
-public object Attributes { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("attributes")] public object Attributes { get; set; }
+
 /// <summary>
 /// Array of saved states of the context.
 /// </summary>
-public object[] States { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("states")] public object[] States { get; set; }
+
 /// <summary>
 /// Array of values that were used to construct the recorded object.
 /// </summary>
-public object[] Parameters { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("parameters")] public object[] Parameters { get; set; }
+
 /// <summary>
 /// Current content at the start of the recording.
 /// </summary>
-public string Content { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+}
 /// <summary>
 /// Container object for a single frame of the recording.
 /// </summary>
@@ -9616,15 +10878,18 @@ internal partial class Frame
 /// <summary>
 /// Information about an action made to the recorded object. Follows the structure [name, parameters, swizzleTypes, trace], where name is a string, parameters is an array, swizzleTypes is an array, and trace is an array.
 /// </summary>
-public object[] Actions { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("actions")] public object[] Actions { get; set; }
+
 /// <summary>
 /// Total execution time of all actions recorded in this frame in milliseconds. 
 /// </summary>
-public double? Duration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("duration")] public double? Duration { get; set; }
+
 /// <summary>
 /// Flag indicating if the recording was stopped before this frame ended.
 /// </summary>
-public bool? Incomplete { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("incomplete")] public bool? Incomplete { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9633,24 +10898,29 @@ internal partial class Recording
 /// <summary>
 /// Used for future/backwards compatibility.
 /// </summary>
-public int? Version { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("version")] public int? Version { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public Type Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public Type Type { get; set; }
+
 /// <summary>
 /// JSON data of inital state of object before recording.
 /// </summary>
-public InitialState InitialState { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("initialState")] public InitialState InitialState { get; set; }
+
 /// <summary>
 /// Array of objects that can be referenced by index. Used to avoid duplicating objects.
 /// </summary>
-public object[] Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public object[] Data { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Name { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Runtime
 {
@@ -9662,39 +10932,48 @@ internal partial class RemoteObject
 /// <summary>
 /// Object type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Object subtype hint. Specified for &lt;code&gt;object&lt;/code&gt; &lt;code&gt;function&lt;/code&gt; (for class) type values only.
 /// </summary>
-public string Subtype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
+
 /// <summary>
 /// Object class (constructor) name. Specified for &lt;code&gt;object&lt;/code&gt; type values only.
 /// </summary>
-public string ClassName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("className")] public string ClassName { get; set; }
+
 /// <summary>
 /// Remote object value (in case of primitive values or JSON values if it was requested).
 /// </summary>
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
+
 /// <summary>
 /// String representation of the object.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// Unique object identifier (for non-primitive values).
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Size of the array/collection. Specified for array/map/set/weakmap/weakset object type values only.
 /// </summary>
-public int? Size { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+
 /// <summary>
 /// Remote object for the class prototype. Specified for class object type values only.
 /// </summary>
-public RemoteObject ClassPrototype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("classPrototype")] public RemoteObject ClassPrototype { get; set; }
+
 /// <summary>
 /// Preview containing abbreviated property values. Specified for &lt;code&gt;object&lt;/code&gt; type values only.
 /// </summary>
-public ObjectPreview Preview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("preview")] public ObjectPreview Preview { get; set; }
+}
 /// <summary>
 /// Object containing abbreviated remote object value.
 /// </summary>
@@ -9703,35 +10982,43 @@ internal partial class ObjectPreview
 /// <summary>
 /// Object type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Object subtype hint. Specified for &lt;code&gt;object&lt;/code&gt; type values only.
 /// </summary>
-public string Subtype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
+
 /// <summary>
 /// String representation of the object.
 /// </summary>
-public string Description { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("description")] public string Description { get; set; }
+
 /// <summary>
 /// Determines whether preview is lossless (contains all information of the original object).
 /// </summary>
-public bool? Lossless { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("lossless")] public bool? Lossless { get; set; }
+
 /// <summary>
 /// True iff some of the properties of the original did not fit.
 /// </summary>
-public bool? Overflow { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("overflow")] public bool? Overflow { get; set; }
+
 /// <summary>
 /// List of the properties.
 /// </summary>
-public PropertyPreview[] Properties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public PropertyPreview[] Properties { get; set; }
+
 /// <summary>
 /// List of the entries. Specified for &lt;code&gt;map&lt;/code&gt; and &lt;code&gt;set&lt;/code&gt; subtype values only.
 /// </summary>
-public EntryPreview[] Entries { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public EntryPreview[] Entries { get; set; }
+
 /// <summary>
 /// Size of the array/collection. Specified for array/map/set/weakmap/weakset object type values only.
 /// </summary>
-public int? Size { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9740,27 +11027,33 @@ internal partial class PropertyPreview
 /// <summary>
 /// Property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Object type.
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// Object subtype hint. Specified for &lt;code&gt;object&lt;/code&gt; type values only.
 /// </summary>
-public string Subtype { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
+
 /// <summary>
 /// User-friendly property value string.
 /// </summary>
-public string Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
+
 /// <summary>
 /// Nested value preview.
 /// </summary>
-public ObjectPreview ValuePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("valuePreview")] public ObjectPreview ValuePreview { get; set; }
+
 /// <summary>
 /// True if this is an internal property.
 /// </summary>
-public bool? Internal { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("internal")] public bool? Internal { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9769,11 +11062,13 @@ internal partial class EntryPreview
 /// <summary>
 /// Entry key. Specified for map-like collection entries.
 /// </summary>
-public ObjectPreview Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public ObjectPreview Key { get; set; }
+
 /// <summary>
 /// Entry value.
 /// </summary>
-public ObjectPreview Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public ObjectPreview Value { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9782,11 +11077,13 @@ internal partial class CollectionEntry
 /// <summary>
 /// Entry key of a map-like collection, otherwise not provided.
 /// </summary>
-public Runtime.RemoteObject Key { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("key")] public Runtime.RemoteObject Key { get; set; }
+
 /// <summary>
 /// Entry value.
 /// </summary>
-public Runtime.RemoteObject Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public Runtime.RemoteObject Value { get; set; }
+}
 /// <summary>
 /// Object property descriptor.
 /// </summary>
@@ -9795,47 +11092,58 @@ internal partial class PropertyDescriptor
 /// <summary>
 /// Property name or symbol description.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The value associated with the property.
 /// </summary>
-public RemoteObject Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public RemoteObject Value { get; set; }
+
 /// <summary>
 /// True if the value associated with the property may be changed (data descriptors only).
 /// </summary>
-public bool? Writable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("writable")] public bool? Writable { get; set; }
+
 /// <summary>
 /// A function which serves as a getter for the property, or &lt;code&gt;undefined&lt;/code&gt; if there is no getter (accessor descriptors only).
 /// </summary>
-public RemoteObject Get { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("get")] public RemoteObject Get { get; set; }
+
 /// <summary>
 /// A function which serves as a setter for the property, or &lt;code&gt;undefined&lt;/code&gt; if there is no setter (accessor descriptors only).
 /// </summary>
-public RemoteObject Set { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("set")] public RemoteObject Set { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+
 /// <summary>
 /// True if the type of this property descriptor may be changed and if the property may be deleted from the corresponding object.
 /// </summary>
-public bool? Configurable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("configurable")] public bool? Configurable { get; set; }
+
 /// <summary>
 /// True if this property shows up during enumeration of the properties on the corresponding object.
 /// </summary>
-public bool? Enumerable { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("enumerable")] public bool? Enumerable { get; set; }
+
 /// <summary>
 /// True if the property is owned for the object.
 /// </summary>
-public bool? IsOwn { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isOwn")] public bool? IsOwn { get; set; }
+
 /// <summary>
 /// Property symbol object, if the property is a symbol.
 /// </summary>
-public Runtime.RemoteObject Symbol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("symbol")] public Runtime.RemoteObject Symbol { get; set; }
+
 /// <summary>
 /// True if the property value came from a native getter.
 /// </summary>
-public bool? NativeGetter { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("nativeGetter")] public bool? NativeGetter { get; set; }
+}
 /// <summary>
 /// Object internal property descriptor. This property isn't normally visible in JavaScript code.
 /// </summary>
@@ -9844,11 +11152,13 @@ internal partial class InternalPropertyDescriptor
 /// <summary>
 /// Conventional property name.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// The value associated with the property.
 /// </summary>
-public RemoteObject Value { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("value")] public RemoteObject Value { get; set; }
+}
 /// <summary>
 /// Represents function call argument. Either remote object id &lt;code&gt;objectId&lt;/code&gt; or primitive &lt;code&gt;value&lt;/code&gt; or neither of (for undefined) them should be specified.
 /// </summary>
@@ -9857,20 +11167,13 @@ internal partial class CallArgument
 /// <summary>
 /// Primitive value.
 /// </summary>
-public object Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public object Value { get; set; }
+
 /// <summary>
 /// Remote object handle.
 /// </summary>
-public string ObjectId { get; set; }}
-/// <summary>
-/// Type of the execution context.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum ExecutionContextType
-{
-[System.Runtime.Serialization.EnumMember(Value = "normal")]Normal,
-[System.Runtime.Serialization.EnumMember(Value = "user")]User,
-[System.Runtime.Serialization.EnumMember(Value = "internal")]Internal}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Description of an isolated world.
 /// </summary>
@@ -9879,30 +11182,24 @@ internal partial class ExecutionContextDescription
 /// <summary>
 /// Unique id of the execution context. It can be used to specify in which execution context script evaluation should be performed.
 /// </summary>
-public int? Id { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("id")] public int? Id { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public ExecutionContextType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public ExecutionContextType Type { get; set; }
+
 /// <summary>
 /// Human readable name describing given context.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// Id of the owning frame.
 /// </summary>
-public string FrameId { get; set; }}
-/// <summary>
-/// Syntax error type: "none" for no error, "irrecoverable" for unrecoverable errors, "unterminated-literal" for when there is an unterminated literal, "recoverable" for when the expression is unfinished but valid so far.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum SyntaxErrorType
-{
-[System.Runtime.Serialization.EnumMember(Value = "none")]None,
-[System.Runtime.Serialization.EnumMember(Value = "irrecoverable")]Irrecoverable,
-[System.Runtime.Serialization.EnumMember(Value = "unterminated-literal")]UnterminatedLiteral,
-[System.Runtime.Serialization.EnumMember(Value = "recoverable")]Recoverable}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// Range of an error in source code.
 /// </summary>
@@ -9911,11 +11208,13 @@ internal partial class ErrorRange
 /// <summary>
 /// Start offset of range (inclusive).
 /// </summary>
-public int? StartOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startOffset")] public int? StartOffset { get; set; }
+
 /// <summary>
 /// End offset of range (exclusive).
 /// </summary>
-public int? EndOffset { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("endOffset")] public int? EndOffset { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9924,23 +11223,28 @@ internal partial class StructureDescription
 /// <summary>
 /// Array of strings, where the strings represent object properties.
 /// </summary>
-public string[] Fields { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fields")] public string[] Fields { get; set; }
+
 /// <summary>
 /// Array of strings, where the strings represent optional object properties.
 /// </summary>
-public string[] OptionalFields { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("optionalFields")] public string[] OptionalFields { get; set; }
+
 /// <summary>
 /// Name of the constructor.
 /// </summary>
-public string ConstructorName { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("constructorName")] public string ConstructorName { get; set; }
+
 /// <summary>
 /// Pointer to the StructureRepresentation of the protoype if one exists.
 /// </summary>
-public StructureDescription PrototypeStructure { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("prototypeStructure")] public StructureDescription PrototypeStructure { get; set; }
+
 /// <summary>
 /// If true, it indicates that the fields in this StructureDescription may be inaccurate. I.e, there might have been fields that have been deleted before it was profiled or it has fields we haven't profiled.
 /// </summary>
-public bool? IsImprecise { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isImprecise")] public bool? IsImprecise { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -9949,43 +11253,53 @@ internal partial class TypeSet
 /// <summary>
 /// Indicates if this type description has been type Function.
 /// </summary>
-public bool? IsFunction { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isFunction")] public bool? IsFunction { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Undefined.
 /// </summary>
-public bool? IsUndefined { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isUndefined")] public bool? IsUndefined { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Null.
 /// </summary>
-public bool? IsNull { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isNull")] public bool? IsNull { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Boolean.
 /// </summary>
-public bool? IsBoolean { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isBoolean")] public bool? IsBoolean { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Integer.
 /// </summary>
-public bool? IsInteger { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isInteger")] public bool? IsInteger { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Number.
 /// </summary>
-public bool? IsNumber { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isNumber")] public bool? IsNumber { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type String.
 /// </summary>
-public bool? IsString { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isString")] public bool? IsString { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Object.
 /// </summary>
-public bool? IsObject { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isObject")] public bool? IsObject { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type Symbol.
 /// </summary>
-public bool? IsSymbol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isSymbol")] public bool? IsSymbol { get; set; }
+
 /// <summary>
 /// Indicates if this type description has been type BigInt.
 /// </summary>
-public bool? IsBigInt { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isBigInt")] public bool? IsBigInt { get; set; }
+}
 /// <summary>
 /// Container for type information that has been gathered.
 /// </summary>
@@ -9994,23 +11308,28 @@ internal partial class TypeDescription
 /// <summary>
 /// If true, we were able to correlate the offset successfuly with a program location. If false, the offset may be bogus or the offset may be from a CodeBlock that hasn't executed.
 /// </summary>
-public bool? IsValid { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isValid")] public bool? IsValid { get; set; }
+
 /// <summary>
 /// Least common ancestor of all Constructors if the TypeDescription has seen any structures. This string is the display name of the shared constructor function.
 /// </summary>
-public string LeastCommonAncestor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("leastCommonAncestor")] public string LeastCommonAncestor { get; set; }
+
 /// <summary>
 /// Set of booleans for determining the aggregate type of this type description.
 /// </summary>
-public TypeSet TypeSet { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("typeSet")] public TypeSet TypeSet { get; set; }
+
 /// <summary>
 /// Array of descriptions for all structures seen for this variable.
 /// </summary>
-public StructureDescription[] Structures { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("structures")] public StructureDescription[] Structures { get; set; }
+
 /// <summary>
 /// If true, this indicates that no more structures are being profiled because some maximum threshold has been reached and profiling has stopped because of memory pressure.
 /// </summary>
-public bool? IsTruncated { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isTruncated")] public bool? IsTruncated { get; set; }
+}
 /// <summary>
 /// Describes the location of an expression we want type information for.
 /// </summary>
@@ -10019,15 +11338,18 @@ internal partial class TypeLocation
 /// <summary>
 /// What kind of type information do we want (normal, function return values, 'this' statement).
 /// </summary>
-public int? TypeInformationDescriptor { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("typeInformationDescriptor")] public int? TypeInformationDescriptor { get; set; }
+
 /// <summary>
 /// sourceID uniquely identifying a script
 /// </summary>
-public string SourceID { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceID")] public string SourceID { get; set; }
+
 /// <summary>
 /// character offset for assignment range
 /// </summary>
-public int? Divot { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("divot")] public int? Divot { get; set; }
+}
 /// <summary>
 /// From Wikipedia: a basic block is a portion of the code within a program with only one entry point and only one exit point. This type gives the location of a basic block and if that basic block has executed.
 /// </summary>
@@ -10036,19 +11358,23 @@ internal partial class BasicBlock
 /// <summary>
 /// Start offset of the basic block.
 /// </summary>
-public int? StartOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startOffset")] public int? StartOffset { get; set; }
+
 /// <summary>
 /// End offset of the basic block.
 /// </summary>
-public int? EndOffset { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endOffset")] public int? EndOffset { get; set; }
+
 /// <summary>
 /// Indicates if the basic block has executed before.
 /// </summary>
-public bool? HasExecuted { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("hasExecuted")] public bool? HasExecuted { get; set; }
+
 /// <summary>
 /// Indicates how many times the basic block has executed.
 /// </summary>
-public int? ExecutionCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("executionCount")] public int? ExecutionCount { get; set; }
+}
 /// <summary>
 /// Parses JavaScript source code for errors.
 /// </summary>
@@ -10062,7 +11388,8 @@ public string Command { get; } = "Runtime.parse";
 /// <summary>
 /// Source code to parse.
 /// </summary>
-public string Source { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeParseRequest"/>
 /// </summary>
@@ -10072,15 +11399,18 @@ internal partial class RuntimeParseResponse: IWebkitResponse
 /// Parse result.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public SyntaxErrorType Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public SyntaxErrorType Result { get; set; }
+
 /// <summary>
 /// Parse error message.
 /// </summary>
-public string Message { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+
 /// <summary>
 /// Range in the source where the error occurred.
 /// </summary>
-public ErrorRange Range { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("range")] public ErrorRange Range { get; set; }
+}
 /// <summary>
 /// Evaluates expression on global object.
 /// </summary>
@@ -10094,39 +11424,48 @@ public string Command { get; } = "Runtime.evaluate";
 /// <summary>
 /// Expression to evaluate.
 /// </summary>
-public string Expression { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("expression")] public string Expression { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple objects.
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// Determines whether Command Line API should be available during the evaluation.
 /// </summary>
-public bool? IncludeCommandLineAPI { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("includeCommandLineAPI")] public bool? IncludeCommandLineAPI { get; set; }
+
 /// <summary>
 /// Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.
 /// </summary>
-public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("doNotPauseOnExceptionsAndMuteConsole")] public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+
 /// <summary>
 /// Specifies in which isolated context to perform evaluation. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page.
 /// </summary>
-public int? ContextId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public int? ContextId { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether the resulting value should be considered for saving in the $n history.
 /// </summary>
-public bool? SaveResult { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("saveResult")] public bool? SaveResult { get; set; }
+
 /// <summary>
 /// Whether the expression should be considered to be in a user gesture or not.
 /// </summary>
-public bool? EmulateUserGesture { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("emulateUserGesture")] public bool? EmulateUserGesture { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeEvaluateRequest"/>
 /// </summary>
@@ -10135,15 +11474,18 @@ internal partial class RuntimeEvaluateResponse: IWebkitResponse
 /// <summary>
 /// Evaluation result.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+
 /// <summary>
 /// If the result was saved, this is the $n index that can be used to access the value.
 /// </summary>
-public int? SavedResultIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("savedResultIndex")] public int? SavedResultIndex { get; set; }
+}
 /// <summary>
 /// Calls the async callback when the promise with the given ID gets settled.
 /// </summary>
@@ -10157,19 +11499,23 @@ public string Command { get; } = "Runtime.awaitPromise";
 /// <summary>
 /// Identifier of the promise.
 /// </summary>
-public string PromiseObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("promiseObjectId")] public string PromiseObjectId { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object that should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether the resulting value should be considered for saving in the $n history.
 /// </summary>
-public bool? SaveResult { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("saveResult")] public bool? SaveResult { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeAwaitPromiseRequest"/>
 /// </summary>
@@ -10178,15 +11524,18 @@ internal partial class RuntimeAwaitPromiseResponse: IWebkitResponse
 /// <summary>
 /// Evaluation result.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+
 /// <summary>
 /// If the result was saved, this is the $n index that can be used to access the value.
 /// </summary>
-public int? SavedResultIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("savedResultIndex")] public int? SavedResultIndex { get; set; }
+}
 /// <summary>
 /// Calls function with given declaration on the given object. Object group of the result is inherited from the target object.
 /// </summary>
@@ -10200,31 +11549,38 @@ public string Command { get; } = "Runtime.callFunctionOn";
 /// <summary>
 /// Identifier of the object to call function on.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Declaration of the function to call.
 /// </summary>
-public string FunctionDeclaration { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("functionDeclaration")] public string FunctionDeclaration { get; set; }
+
 /// <summary>
 /// Call arguments. All call arguments must belong to the same JavaScript world as the target object.
 /// </summary>
-public CallArgument[] Arguments { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("arguments")] public CallArgument[] Arguments { get; set; }
+
 /// <summary>
 /// Specifies whether function call should stop on exceptions and mute console. Overrides setPauseOnException state.
 /// </summary>
-public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("doNotPauseOnExceptionsAndMuteConsole")] public bool? DoNotPauseOnExceptionsAndMuteConsole { get; set; }
+
 /// <summary>
 /// Whether the result is expected to be a JSON object which should be sent by value.
 /// </summary>
-public bool? ReturnByValue { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("returnByValue")] public bool? ReturnByValue { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for the result.
 /// </summary>
-public bool? GeneratePreview { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+
 /// <summary>
 /// Whether the expression should be considered to be in a user gesture or not.
 /// </summary>
-public bool? EmulateUserGesture { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("emulateUserGesture")] public bool? EmulateUserGesture { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeCallFunctionOnRequest"/>
 /// </summary>
@@ -10233,11 +11589,13 @@ internal partial class RuntimeCallFunctionOnResponse: IWebkitResponse
 /// <summary>
 /// Call result.
 /// </summary>
-public RemoteObject Result { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("result")] public RemoteObject Result { get; set; }
+
 /// <summary>
 /// True if the result was thrown during the evaluation.
 /// </summary>
-public bool? WasThrown { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("wasThrown")] public bool? WasThrown { get; set; }
+}
 /// <summary>
 /// Returns a preview for the given object.
 /// </summary>
@@ -10251,7 +11609,8 @@ public string Command { get; } = "Runtime.getPreview";
 /// <summary>
 /// Identifier of the object to return a preview for.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetPreviewRequest"/>
 /// </summary>
@@ -10260,7 +11619,8 @@ internal partial class RuntimeGetPreviewResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public ObjectPreview Preview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("preview")] public ObjectPreview Preview { get; set; }
+}
 /// <summary>
 /// Returns properties of a given object. Object group of the result is inherited from the target object.
 /// </summary>
@@ -10274,23 +11634,28 @@ public string Command { get; } = "Runtime.getProperties";
 /// <summary>
 /// Identifier of the object to return properties for.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// If true, returns properties belonging only to the object itself, not to its prototype chain.
 /// </summary>
-public bool? OwnProperties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("ownProperties")] public bool? OwnProperties { get; set; }
+
 /// <summary>
 /// If provided skip to this value before collecting values. Otherwise, start at the beginning. Has no effect when the `objectId` is for a `iterator`/`WeakMap`/`WeakSet` object.
 /// </summary>
-public int? FetchStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fetchStart")] public int? FetchStart { get; set; }
+
 /// <summary>
 /// If provided only return `fetchCount` values. Otherwise, return values all the way to the end.
 /// </summary>
-public int? FetchCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fetchCount")] public int? FetchCount { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for property values.
 /// </summary>
-public bool? GeneratePreview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetPropertiesRequest"/>
 /// </summary>
@@ -10299,11 +11664,13 @@ internal partial class RuntimeGetPropertiesResponse: IWebkitResponse
 /// <summary>
 /// Object properties.
 /// </summary>
-public PropertyDescriptor[] Properties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public PropertyDescriptor[] Properties { get; set; }
+
 /// <summary>
 /// Internal object properties. Only included if `fetchStart` is 0.
 /// </summary>
-public InternalPropertyDescriptor[] InternalProperties { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("internalProperties")] public InternalPropertyDescriptor[] InternalProperties { get; set; }
+}
 /// <summary>
 /// Returns displayable properties of a given object. Object group of the result is inherited from the target object. Displayable properties are own properties, internal properties, and native getters in the prototype chain (assumed to be bindings and treated like own properties for the frontend).
 /// </summary>
@@ -10317,19 +11684,23 @@ public string Command { get; } = "Runtime.getDisplayableProperties";
 /// <summary>
 /// Identifier of the object to return properties for.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// If provided skip to this value before collecting values. Otherwise, start at the beginning. Has no effect when the `objectId` is for a `iterator`/`WeakMap`/`WeakSet` object.
 /// </summary>
-public int? FetchStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fetchStart")] public int? FetchStart { get; set; }
+
 /// <summary>
 /// If provided only return `fetchCount` values. Otherwise, return values all the way to the end.
 /// </summary>
-public int? FetchCount { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fetchCount")] public int? FetchCount { get; set; }
+
 /// <summary>
 /// Whether preview should be generated for property values.
 /// </summary>
-public bool? GeneratePreview { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("generatePreview")] public bool? GeneratePreview { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetDisplayablePropertiesRequest"/>
 /// </summary>
@@ -10338,11 +11709,13 @@ internal partial class RuntimeGetDisplayablePropertiesResponse: IWebkitResponse
 /// <summary>
 /// Object properties.
 /// </summary>
-public PropertyDescriptor[] Properties { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("properties")] public PropertyDescriptor[] Properties { get; set; }
+
 /// <summary>
 /// Internal object properties. Only included if `fetchStart` is 0.
 /// </summary>
-public InternalPropertyDescriptor[] InternalProperties { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("internalProperties")] public InternalPropertyDescriptor[] InternalProperties { get; set; }
+}
 /// <summary>
 /// Returns entries of given Map / Set collection.
 /// </summary>
@@ -10356,19 +11729,23 @@ public string Command { get; } = "Runtime.getCollectionEntries";
 /// <summary>
 /// Id of the collection to get entries for.
 /// </summary>
-public string ObjectId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+
 /// <summary>
 /// Symbolic group name that can be used to release multiple. If not provided, it will be the same objectGroup as the RemoteObject determined from &lt;code&gt;objectId&lt;/code&gt;. This is useful for WeakMap to release the collection entries.
 /// </summary>
-public string ObjectGroup { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+
 /// <summary>
 /// If provided skip to this value before collecting values. Otherwise, start at the beginning. Has no effect when the `objectId&lt;` is for a `iterator&lt;`/`WeakMap&lt;`/`WeakSet&lt;` object.
 /// </summary>
-public int? FetchStart { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("fetchStart")] public int? FetchStart { get; set; }
+
 /// <summary>
 /// If provided only return `fetchCount` values. Otherwise, return values all the way to the end.
 /// </summary>
-public int? FetchCount { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("fetchCount")] public int? FetchCount { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetCollectionEntriesRequest"/>
 /// </summary>
@@ -10377,7 +11754,8 @@ internal partial class RuntimeGetCollectionEntriesResponse: IWebkitResponse
 /// <summary>
 /// Array of collection entries.
 /// </summary>
-public CollectionEntry[] Entries { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("entries")] public CollectionEntry[] Entries { get; set; }
+}
 /// <summary>
 /// Assign a saved result index to this value.
 /// </summary>
@@ -10391,11 +11769,13 @@ public string Command { get; } = "Runtime.saveResult";
 /// <summary>
 /// Id or value of the object to save.
 /// </summary>
-public CallArgument Value { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("value")] public CallArgument Value { get; set; }
+
 /// <summary>
 /// Unique id of the execution context. To specify in which execution context script evaluation should be performed. If not provided, determine from the CallArgument's objectId.
 /// </summary>
-public int? ContextId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("contextId")] public int? ContextId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeSaveResultRequest"/>
 /// </summary>
@@ -10404,7 +11784,8 @@ internal partial class RuntimeSaveResultResponse: IWebkitResponse
 /// <summary>
 /// If the value was saved, this is the $n index that can be used to access the value.
 /// </summary>
-public int? SavedResultIndex { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("savedResultIndex")] public int? SavedResultIndex { get; set; }
+}
 /// <summary>
 /// Creates an additional reference to all saved values in the Console using the the given string as a prefix instead of $.
 /// </summary>
@@ -10418,7 +11799,8 @@ public string Command { get; } = "Runtime.setSavedResultAlias";
 /// <summary>
 /// Passing an empty/null string will clear the alias.
 /// </summary>
-public string Alias { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("alias")] public string Alias { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeSetSavedResultAliasRequest"/>
 /// </summary>
@@ -10438,7 +11820,8 @@ public string Command { get; } = "Runtime.releaseObject";
 /// <summary>
 /// Identifier of the object to release.
 /// </summary>
-public string ObjectId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeReleaseObjectRequest"/>
 /// </summary>
@@ -10458,7 +11841,8 @@ public string Command { get; } = "Runtime.releaseObjectGroup";
 /// <summary>
 /// Symbolic object group name.
 /// </summary>
-public string ObjectGroup { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("objectGroup")] public string ObjectGroup { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeReleaseObjectGroupRequest"/>
 /// </summary>
@@ -10512,7 +11896,8 @@ public string Command { get; } = "Runtime.getRuntimeTypesForVariablesAtOffsets";
 /// <summary>
 /// An array of type locations we're requesting information for. Results are expected in the same order they're sent in.
 /// </summary>
-public TypeLocation[] Locations { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("locations")] public TypeLocation[] Locations { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetRuntimeTypesForVariablesAtOffsetsRequest"/>
 /// </summary>
@@ -10521,7 +11906,8 @@ internal partial class RuntimeGetRuntimeTypesForVariablesAtOffsetsResponse: IWeb
 /// <summary>
 /// 
 /// </summary>
-public TypeDescription[] Types { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("types")] public TypeDescription[] Types { get; set; }
+}
 /// <summary>
 /// Enables type profiling on the VM.
 /// </summary>
@@ -10603,7 +11989,8 @@ public string Command { get; } = "Runtime.getBasicBlocks";
 /// <summary>
 /// Indicates which sourceID information is requested for.
 /// </summary>
-public string SourceID { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("sourceID")] public string SourceID { get; set; }
+}
 /// <summary>
 /// Response from <see cref="RuntimeGetBasicBlocksRequest"/>
 /// </summary>
@@ -10612,7 +11999,8 @@ internal partial class RuntimeGetBasicBlocksResponse: IWebkitResponse
 /// <summary>
 /// 
 /// </summary>
-public BasicBlock[] BasicBlocks { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("basicBlocks")] public BasicBlock[] BasicBlocks { get; set; }
+}
 /// <summary>
 /// Issued when new execution context is created.
 /// </summary>
@@ -10625,19 +12013,11 @@ public string InternalName { get; } = "Runtime.executionContextCreated";
 /// <summary>
 /// A newly created execution context.
 /// </summary>
-public ExecutionContextDescription Context { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("context")] public ExecutionContextDescription Context { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.ScriptProfiler
 {
-/// <summary>
-/// 
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum EventType
-{
-[System.Runtime.Serialization.EnumMember(Value = "API")]API,
-[System.Runtime.Serialization.EnumMember(Value = "Microtask")]Microtask,
-[System.Runtime.Serialization.EnumMember(Value = "Other")]Other}
 /// <summary>
 /// 
 /// </summary>
@@ -10646,16 +12026,19 @@ internal partial class Event
 /// <summary>
 /// 
 /// </summary>
-public double? StartTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("startTime")] public double? StartTime { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? EndTime { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("endTime")] public double? EndTime { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public EventType Type { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("type")] public EventType Type { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -10664,11 +12047,13 @@ internal partial class ExpressionLocation
 /// <summary>
 /// 1-based.
 /// </summary>
-public int? Line { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("line")] public int? Line { get; set; }
+
 /// <summary>
 /// 1-based.
 /// </summary>
-public int? Column { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("column")] public int? Column { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -10677,27 +12062,33 @@ internal partial class StackFrame
 /// <summary>
 /// Unique script identifier.
 /// </summary>
-public string SourceID { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("sourceID")] public string SourceID { get; set; }
+
 /// <summary>
 /// A displayable name for the stack frame. i.e function name, (program), etc.
 /// </summary>
-public string Name { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
+
 /// <summary>
 /// -1 if unavailable. 1-based if available.
 /// </summary>
-public int? Line { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("line")] public int? Line { get; set; }
+
 /// <summary>
 /// -1 if unavailable. 1-based if available.
 /// </summary>
-public int? Column { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("column")] public int? Column { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public ExpressionLocation ExpressionLocation { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("expressionLocation")] public ExpressionLocation ExpressionLocation { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -10706,11 +12097,13 @@ internal partial class StackTrace
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// First array item is the bottom of the call stack and last array item is the top of the call stack.
 /// </summary>
-public StackFrame[] StackFrames { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stackFrames")] public StackFrame[] StackFrames { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -10719,7 +12112,8 @@ internal partial class Samples
 /// <summary>
 /// 
 /// </summary>
-public StackTrace[] StackTraces { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("stackTraces")] public StackTrace[] StackTraces { get; set; }
+}
 /// <summary>
 /// Start tracking script evaluations.
 /// </summary>
@@ -10733,7 +12127,8 @@ public string Command { get; } = "ScriptProfiler.startTracking";
 /// <summary>
 /// Start the sampling profiler, defaults to false.
 /// </summary>
-public bool? IncludeSamples { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("includeSamples")] public bool? IncludeSamples { get; set; }
+}
 /// <summary>
 /// Response from <see cref="ScriptProfilerStartTrackingRequest"/>
 /// </summary>
@@ -10769,7 +12164,8 @@ public string InternalName { get; } = "ScriptProfiler.trackingStart";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+}
 /// <summary>
 /// Periodic tracking updates with event data.
 /// </summary>
@@ -10782,7 +12178,8 @@ public string InternalName { get; } = "ScriptProfiler.trackingUpdate";
 /// <summary>
 /// 
 /// </summary>
-public Event Event { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("event")] public Event Event { get; set; }
+}
 /// <summary>
 /// Tracking stopped. Includes any buffered data during tracking, such as profiling information.
 /// </summary>
@@ -10795,11 +12192,13 @@ public string InternalName { get; } = "ScriptProfiler.trackingComplete";
 /// <summary>
 /// 
 /// </summary>
-public double? Timestamp { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
+
 /// <summary>
 /// Stack traces.
 /// </summary>
-public Samples Samples { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("samples")] public Samples Samples { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Security
 {
@@ -10811,11 +12210,13 @@ internal partial class Connection
 /// <summary>
 /// 
 /// </summary>
-public string Protocol { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("protocol")] public string Protocol { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Cipher { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("cipher")] public string Cipher { get; set; }
+}
 /// <summary>
 /// Information about a SSL certificate to display in the frontend.
 /// </summary>
@@ -10824,23 +12225,28 @@ internal partial class Certificate
 /// <summary>
 /// 
 /// </summary>
-public string Subject { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("subject")] public string Subject { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? ValidFrom { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validFrom")] public double? ValidFrom { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public double? ValidUntil { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("validUntil")] public double? ValidUntil { get; set; }
+
 /// <summary>
 /// DNS names listed on the certificate.
 /// </summary>
-public string[] DnsNames { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("dnsNames")] public string[] DnsNames { get; set; }
+
 /// <summary>
 /// IP addresses listed on the certificate.
 /// </summary>
-public string[] IpAddresses { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("ipAddresses")] public string[] IpAddresses { get; set; }
+}
 /// <summary>
 /// Security information for a given Network.Response.
 /// </summary>
@@ -10849,11 +12255,13 @@ internal partial class Security
 /// <summary>
 /// 
 /// </summary>
-public Connection Connection { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("connection")] public Connection Connection { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public Certificate Certificate { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("certificate")] public Certificate Certificate { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.ServiceWorker
 {
@@ -10865,19 +12273,23 @@ internal partial class Configuration
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string SecurityOrigin { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
+
 /// <summary>
 /// ServiceWorker main script URL.
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// ServiceWorker main script content.
 /// </summary>
-public string Content { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("content")] public string Content { get; set; }
+}
 /// <summary>
 /// Returns the initialization information for this target.
 /// </summary>
@@ -10897,7 +12309,8 @@ internal partial class ServiceWorkerGetInitializationInfoResponse: IWebkitRespon
 /// <summary>
 /// 
 /// </summary>
-public Configuration Info { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("info")] public Configuration Info { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Target
 {
@@ -10909,23 +12322,28 @@ internal partial class TargetInfo
 /// <summary>
 /// Unique identifier for the target.
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
+
 /// <summary>
 /// True value indicates that this is a provisional page target i.e. Such target may be created when current page starts cross-origin navigation. Eventually each provisional target is either committed and swaps with the current target or gets destroyed, e.g. in case of load request failure.
 /// </summary>
-public bool? IsProvisional { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("isProvisional")] public bool? IsProvisional { get; set; }
+
 /// <summary>
 /// Unique identifier of the target which is going to be replaced if this target is committed. Only set for provisional targets.
 /// </summary>
-public string OldTargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("oldTargetId")] public string OldTargetId { get; set; }
+
 /// <summary>
 /// Whether the target is paused on start and has to be explicitely resumed by inspector.
 /// </summary>
-public bool? IsPaused { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("isPaused")] public bool? IsPaused { get; set; }
+}
 /// <summary>
 /// If set to true, new targets will be paused on start waiting for resume command. Other commands can be dispatched on the target before it is resumed.
 /// </summary>
@@ -10939,7 +12357,8 @@ public string Command { get; } = "Target.setPauseOnStart";
 /// <summary>
 /// If set to true, new targets will be paused on start waiting for resume command.
 /// </summary>
-public bool? PauseOnStart { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("pauseOnStart")] public bool? PauseOnStart { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetSetPauseOnStartRequest"/>
 /// </summary>
@@ -10959,7 +12378,8 @@ public string Command { get; } = "Target.resume";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetResumeRequest"/>
 /// </summary>
@@ -10979,11 +12399,13 @@ public string Command { get; } = "Target.sendMessageToTarget";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// JSON Inspector Protocol message (command) to be dispatched on the backend.
 /// </summary>
-public string Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetSendMessageToTargetRequest"/>
 /// </summary>
@@ -11003,7 +12425,8 @@ public string Command { get; } = "Target.activate";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetActivateRequest"/>
 /// </summary>
@@ -11023,11 +12446,13 @@ public string Command { get; } = "Target.close";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? RunBeforeUnload { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("runBeforeUnload")] public bool? RunBeforeUnload { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TargetCloseRequest"/>
 /// </summary>
@@ -11046,7 +12471,8 @@ public string InternalName { get; } = "Target.targetCreated";
 /// <summary>
 /// 
 /// </summary>
-public TargetInfo TargetInfo { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -11059,11 +12485,13 @@ public string InternalName { get; } = "Target.targetDestroyed";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public bool? Crashed { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("crashed")] public bool? Crashed { get; set; }
+}
 /// <summary>
 /// This event is fired when provisional load is committed. Provisional target swaps with the current target.
 /// </summary>
@@ -11076,11 +12504,13 @@ public string InternalName { get; } = "Target.didCommitProvisionalTarget";
 /// <summary>
 /// ID of the old target that is swapped with the committed one.
 /// </summary>
-public string OldTargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("oldTargetId")] public string OldTargetId { get; set; }
+
 /// <summary>
 /// ID of the committed target.
 /// </summary>
-public string NewTargetId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("newTargetId")] public string NewTargetId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -11093,54 +12523,16 @@ public string InternalName { get; } = "Target.dispatchMessageFromTarget";
 /// <summary>
 /// 
 /// </summary>
-public string TargetId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
+
 /// <summary>
 /// JSON Inspector Protocol message (response or event) to be dispatched on the frontend.
 /// </summary>
-public string Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+}
 }
 namespace PlaywrightSharp.Webkit.Protocol.Timeline
 {
-/// <summary>
-/// Timeline record type.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum EventType
-{
-[System.Runtime.Serialization.EnumMember(Value = "EventDispatch")]EventDispatch,
-[System.Runtime.Serialization.EnumMember(Value = "ScheduleStyleRecalculation")]ScheduleStyleRecalculation,
-[System.Runtime.Serialization.EnumMember(Value = "RecalculateStyles")]RecalculateStyles,
-[System.Runtime.Serialization.EnumMember(Value = "InvalidateLayout")]InvalidateLayout,
-[System.Runtime.Serialization.EnumMember(Value = "Layout")]Layout,
-[System.Runtime.Serialization.EnumMember(Value = "Paint")]Paint,
-[System.Runtime.Serialization.EnumMember(Value = "Composite")]Composite,
-[System.Runtime.Serialization.EnumMember(Value = "RenderingFrame")]RenderingFrame,
-[System.Runtime.Serialization.EnumMember(Value = "TimerInstall")]TimerInstall,
-[System.Runtime.Serialization.EnumMember(Value = "TimerRemove")]TimerRemove,
-[System.Runtime.Serialization.EnumMember(Value = "TimerFire")]TimerFire,
-[System.Runtime.Serialization.EnumMember(Value = "EvaluateScript")]EvaluateScript,
-[System.Runtime.Serialization.EnumMember(Value = "TimeStamp")]TimeStamp,
-[System.Runtime.Serialization.EnumMember(Value = "Time")]Time,
-[System.Runtime.Serialization.EnumMember(Value = "TimeEnd")]TimeEnd,
-[System.Runtime.Serialization.EnumMember(Value = "FunctionCall")]FunctionCall,
-[System.Runtime.Serialization.EnumMember(Value = "ProbeSample")]ProbeSample,
-[System.Runtime.Serialization.EnumMember(Value = "ConsoleProfile")]ConsoleProfile,
-[System.Runtime.Serialization.EnumMember(Value = "RequestAnimationFrame")]RequestAnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "CancelAnimationFrame")]CancelAnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "FireAnimationFrame")]FireAnimationFrame,
-[System.Runtime.Serialization.EnumMember(Value = "ObserverCallback")]ObserverCallback}
-/// <summary>
-/// Instrument types.
-/// </summary>
-[JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-internal enum Instrument
-{
-[System.Runtime.Serialization.EnumMember(Value = "ScriptProfiler")]ScriptProfiler,
-[System.Runtime.Serialization.EnumMember(Value = "Timeline")]Timeline,
-[System.Runtime.Serialization.EnumMember(Value = "CPU")]CPU,
-[System.Runtime.Serialization.EnumMember(Value = "Memory")]Memory,
-[System.Runtime.Serialization.EnumMember(Value = "Heap")]Heap,
-[System.Runtime.Serialization.EnumMember(Value = "Animation")]Animation}
 /// <summary>
 /// Timeline record contains information about the recorded activity.
 /// </summary>
@@ -11150,15 +12542,18 @@ internal partial class TimelineEvent
 /// Event type.
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
-public EventType Type { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("type")] public EventType Type { get; set; }
+
 /// <summary>
 /// Event data.
 /// </summary>
-public object Data { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("data")] public object Data { get; set; }
+
 /// <summary>
 /// Nested records.
 /// </summary>
-public TimelineEvent[] Children { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("children")] public TimelineEvent[] Children { get; set; }
+}
 /// <summary>
 /// Enables Timeline domain events.
 /// </summary>
@@ -11206,7 +12601,8 @@ public string Command { get; } = "Timeline.start";
 /// <summary>
 /// Samples JavaScript stack traces up to &lt;code&gt;maxCallStackDepth&lt;/code&gt;, defaults to 5.
 /// </summary>
-public int? MaxCallStackDepth { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("maxCallStackDepth")] public int? MaxCallStackDepth { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TimelineStartRequest"/>
 /// </summary>
@@ -11243,7 +12639,8 @@ public string Command { get; } = "Timeline.setAutoCaptureEnabled";
 /// <summary>
 /// New auto capture state.
 /// </summary>
-public bool? Enabled { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TimelineSetAutoCaptureEnabledRequest"/>
 /// </summary>
@@ -11263,7 +12660,8 @@ public string Command { get; } = "Timeline.setInstruments";
 /// <summary>
 /// Instruments to enable.
 /// </summary>
-public Instrument[] Instruments { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("instruments")] public Instrument[] Instruments { get; set; }
+}
 /// <summary>
 /// Response from <see cref="TimelineSetInstrumentsRequest"/>
 /// </summary>
@@ -11282,7 +12680,8 @@ public string InternalName { get; } = "Timeline.eventRecorded";
 /// <summary>
 /// Timeline event record data.
 /// </summary>
-public TimelineEvent Record { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("record")] public TimelineEvent Record { get; set; }
+}
 /// <summary>
 /// Fired when recording has started.
 /// </summary>
@@ -11295,7 +12694,8 @@ public string InternalName { get; } = "Timeline.recordingStarted";
 /// <summary>
 /// Start time of this new recording.
 /// </summary>
-public double? StartTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("startTime")] public double? StartTime { get; set; }
+}
 /// <summary>
 /// Fired when recording has stopped.
 /// </summary>
@@ -11308,7 +12708,8 @@ public string InternalName { get; } = "Timeline.recordingStopped";
 /// <summary>
 /// End time of this recording.
 /// </summary>
-public double? EndTime { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("endTime")] public double? EndTime { get; set; }
+}
 /// <summary>
 /// Fired when auto capture started.
 /// </summary>
@@ -11369,7 +12770,8 @@ public string Command { get; } = "Worker.initialized";
 /// <summary>
 /// 
 /// </summary>
-public string WorkerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WorkerInitializedRequest"/>
 /// </summary>
@@ -11389,11 +12791,13 @@ public string Command { get; } = "Worker.sendMessageToWorker";
 /// <summary>
 /// 
 /// </summary>
-public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+
 /// <summary>
 /// JSON Inspector Protocol message (command) to be dispatched on the backend.
 /// </summary>
-public string Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+}
 /// <summary>
 /// Response from <see cref="WorkerSendMessageToWorkerRequest"/>
 /// </summary>
@@ -11412,15 +12816,18 @@ public string InternalName { get; } = "Worker.workerCreated";
 /// <summary>
 /// 
 /// </summary>
-public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+
 /// <summary>
 /// 
 /// </summary>
-public string Url { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
+
 /// <summary>
 /// Id of the frame this worker belongs to.
 /// </summary>
-public string FrameId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -11433,7 +12840,8 @@ public string InternalName { get; } = "Worker.workerTerminated";
 /// <summary>
 /// 
 /// </summary>
-public string WorkerId { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+}
 /// <summary>
 /// 
 /// </summary>
@@ -11446,10 +12854,12 @@ public string InternalName { get; } = "Worker.dispatchMessageFromWorker";
 /// <summary>
 /// 
 /// </summary>
-public string WorkerId { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("workerId")] public string WorkerId { get; set; }
+
 /// <summary>
 /// JSON Inspector Protocol message (response or event) to be dispatched on the frontend.
 /// </summary>
-public string Message { get; set; }}
+[System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
+}
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

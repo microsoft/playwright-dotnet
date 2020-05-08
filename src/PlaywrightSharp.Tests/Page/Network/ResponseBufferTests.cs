@@ -8,9 +8,13 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.buffer</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ResponseBufferTests : PlaywrightSharpPageBaseTest
     {
-        internal ResponseBufferTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ResponseBufferTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -21,7 +25,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
-            byte[] imageBuffer = File.ReadAllBytes("./Assets/pptr.png");
+            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.Equal(imageBuffer, await response.GetBufferAsync());
         }
 
@@ -33,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
             Server.EnableGzip("/pptr.png");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
-            byte[] imageBuffer = File.ReadAllBytes("./Assets/pptr.png");
+            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.Equal(imageBuffer, await response.GetBufferAsync());
         }
     }

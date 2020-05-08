@@ -228,7 +228,7 @@ namespace PlaywrightSharp
             }
             catch (PlaywrightSharpException ex)
             {
-                throw new NavigationException(ex.Message, url);
+                throw new NavigationException(ex.Message, url, ex);
             }
         }
 
@@ -367,9 +367,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IFrame.WaitForNavigationAsync(WaitUntilNavigation)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil)
-        {
-            throw new System.NotImplementedException();
-        }
+            => WaitForNavigationAsync(new WaitForNavigationOptions { WaitUntil = new[] { waitUntil } });
 
         /// <inheritdoc cref="IFrame.FocusAsync(string, WaitForSelectorOptions)"/>
         public async Task FocusAsync(string selector, WaitForSelectorOptions options)
@@ -418,6 +416,22 @@ namespace PlaywrightSharp
             options ??= new WaitForFunctionOptions { Timeout = Page.DefaultTimeout };
             var task = Dom.GetWaitForFunctionTask(null, pageFunction, options, args);
             return ScheduleRerunnableTaskAsync(task, ContextType.Main, options.Timeout, $"Function \"{pageFunction}\"");
+        }
+
+        /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>
+        public async Task WaitForLoadStateAsync(NavigationOptions options = null)
+        {
+            using var watcher = new LifecycleWatcher(this, options);
+            var errorTask = watcher.TimeoutOrTerminationTask;
+
+            await Task.WhenAny(
+                errorTask,
+                watcher.LifecycleTask).ConfigureAwait(false);
+
+            if (errorTask.IsCompleted)
+            {
+                await errorTask.ConfigureAwait(false);
+            }
         }
 
         internal Task<FrameExecutionContext> GetUtilityContextAsync() => GetContextAsync(ContextType.Utility);

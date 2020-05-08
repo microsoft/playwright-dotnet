@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,6 +13,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForNavigationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -42,10 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseCompleted = new TaskCompletionSource<bool>();
-            Server.SetRoute("/one-style.css", context =>
-            {
-                return responseCompleted.Task;
-            });
+            Server.SetRoute("/one-style.css", context => responseCompleted.Task);
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
@@ -98,11 +99,10 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync($"<a href='{TestConstants.HttpsPrefix}/empty.html'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Task.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
-            );
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await navigationTask);
+            ));
             TestUtils.AssertSSLError(exception.Message);
         }
 
@@ -190,23 +190,41 @@ namespace PlaywrightSharp.Tests.Page
         [Fact]
         public async Task ShouldWorkWhenSubframeIssuesWindowStop()
         {
-            Server.SetRoute("/frames/style.css", (context) => Task.CompletedTask);
-            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            //This test is slightly different from the one in PW because of .NET Threads (or thanks to .NET Threads)
+            var framesNavigated = new List<IFrame>();
+            IFrame frame = null;
+
             var frameAttachedTaskSource = new TaskCompletionSource<IFrame>();
             Page.FrameAttached += (sender, e) =>
             {
                 frameAttachedTaskSource.SetResult(e.Frame);
             };
-
-            var frame = await frameAttachedTaskSource.Task;
             var frameNavigatedTaskSource = new TaskCompletionSource<bool>();
             Page.FrameNavigated += (sender, e) =>
             {
-                if (e.Frame == frame)
+                if (frame != null)
                 {
-                    frameNavigatedTaskSource.TrySetResult(true);
+                    if (e.Frame == frame)
+                    {
+                        frameNavigatedTaskSource.TrySetResult(true);
+                    }
+                }
+                else
+                {
+                    framesNavigated.Add(frame);
                 }
             };
+
+            Server.SetRoute("/frames/style.css", (context) => Task.CompletedTask);
+            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+
+            frame = await frameAttachedTaskSource.Task;
+
+            if (framesNavigated.Contains(frame))
+            {
+                frameNavigatedTaskSource.TrySetResult(true);
+            }
+
             await frameNavigatedTaskSource.Task;
             await Task.WhenAll(
                 frame.EvaluateAsync("() => window.stop()"),
@@ -233,7 +251,11 @@ namespace PlaywrightSharp.Tests.Page
             IResponse response3 = null;
             var response3Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
             {
-                UrlPredicate = (url) => new Uri(url).Query.ParseQueryString()["foo"] == "bar"
+                UrlPredicate = (url) =>
+                {
+                    var query = new Uri(url).Query.ParseQueryString();
+                    return query.ContainsKey("foo") && query["foo"] == "bar";
+                }
             }).ContinueWith(t => response3 = t.Result);
 
             Assert.Null(response1);

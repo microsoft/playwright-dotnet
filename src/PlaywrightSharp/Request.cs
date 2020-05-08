@@ -13,9 +13,18 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<Response> _waitForResponseTsc;
         private readonly TaskCompletionSource<Response> _waitForFinishedTsc;
         private readonly Task<Response> _waitForResponse;
-        private bool _interceptionHandled = false;
+        private bool _interceptionHandled;
 
-        internal Request(IRequestDelegate requestDelegate, Frame frame, IEnumerable<Request> redirectChain, string documentId, string url, ResourceType resourceType, HttpMethod method, string postData, IDictionary<string, string> headers)
+        internal Request(
+            IRequestDelegate requestDelegate,
+            Frame frame,
+            List<Request> redirectChain,
+            string documentId,
+            string url,
+            ResourceType resourceType,
+            HttpMethod method,
+            string postData,
+            IDictionary<string, string> headers)
         {
             if (url.StartsWith("data:"))
             {
@@ -155,9 +164,15 @@ namespace PlaywrightSharp
                 _ => _waitForFinishedTsc.TrySetResult(response), TaskScheduler.Default);
         }
 
+        internal void SetFailureText(string failureText)
+        {
+            Failure = failureText;
+            _waitForFinishedTsc.TrySetResult(null);
+        }
+
         private string StripFragmentFromUrl(string url)
         {
-            int hashIndex = url.IndexOf("#");
+            int hashIndex = url.IndexOf("#", StringComparison.Ordinal);
             if (hashIndex == -1)
             {
                 return url;

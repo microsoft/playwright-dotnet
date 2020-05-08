@@ -281,7 +281,7 @@ namespace PlaywrightSharp.Chromium
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
     }

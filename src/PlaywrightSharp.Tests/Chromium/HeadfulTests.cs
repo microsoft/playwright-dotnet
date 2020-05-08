@@ -10,6 +10,9 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/headful.spec.js</playwright-file>
     ///<playwright-describe>ChromiumHeadful</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class HeadfulTests : PlaywrightSharpBrowserBaseTest, IDisposable
     {
         readonly LaunchOptions _extensionOptions;
@@ -17,7 +20,7 @@ namespace PlaywrightSharp.Tests.Chromium
         /// <inheritdoc/>
         public HeadfulTests(ITestOutputHelper output) : base(output)
         {
-            string extensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
+            string extensionPath = TestUtils.GetWebServerFile("simple-extension");
 
             _extensionOptions = TestConstants.GetDefaultBrowserOptions();
             _extensionOptions.Headless = false;
@@ -39,9 +42,9 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task BackgroundPageTargetTypeShouldBeAvailable()
         {
-            using var browserWithExtension = await Playwright.LaunchAsync(_extensionOptions);
+            await using var browserWithExtension = await Playwright.LaunchAsync(_extensionOptions);
             var page = await browserWithExtension.DefaultContext.NewPageAsync();
-            var backgroundPageTarget = await browserWithExtension.WaitForTargetAsync(target => target.Type == TargetType.BackgroundPage);
+            await browserWithExtension.WaitForTargetAsync(target => target.Type == TargetType.BackgroundPage);
             await page.CloseAsync();
             await browserWithExtension.CloseAsync();
         }
@@ -52,7 +55,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task TargetPageShouldReturnABackgroundPage()
         {
-            using var browserWithExtension = await Playwright.LaunchAsync(_extensionOptions);
+            await using var browserWithExtension = await Playwright.LaunchAsync(_extensionOptions);
             var backgroundPageTarget = await browserWithExtension.WaitForTargetAsync(target => target.Type == TargetType.BackgroundPage);
             var page = await backgroundPageTarget.GetPageAsync();
 
@@ -66,7 +69,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [Fact(Skip = "Ignored on Playwright")]
         public async Task OOPIFShouldReportGoogleComFrame()
         {
-            using var browser = await Playwright.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await Playwright.LaunchAsync(TestConstants.GetHeadfulOptions());
             var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.SetRequestInterceptionAsync(true);
@@ -92,7 +95,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             var headfulOptions = TestConstants.GetHeadfulOptions();
             headfulOptions.Devtools = true;
-            using var browser = await Playwright.LaunchAsync(headfulOptions);
+            await using var browser = await Playwright.LaunchAsync(headfulOptions);
             var context = await browser.NewContextAsync();
             await Task.WhenAll(
                 context.NewPageAsync(),

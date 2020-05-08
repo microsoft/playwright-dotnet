@@ -7,9 +7,13 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Request.headers</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class RequestHeadersTests : PlaywrightSharpPageBaseTest
     {
-        internal RequestHeadersTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public RequestHeadersTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -23,7 +27,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Contains(
                 TestConstants.Product switch
                 {
-                    TestConstants.ChromiumProduct => "Chromium",
+                    TestConstants.ChromiumProduct => "Chrome",
                     TestConstants.FirefoxProduct => "Firefox",
                     TestConstants.WebkitProduct => "WebKit",
                     _ => "None"

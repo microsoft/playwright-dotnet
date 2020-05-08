@@ -34,12 +34,4 @@
         <ProjectReference Include="..\PlaywrightSharp.Webkit\PlaywrightSharp.Webkit.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Tests.DumpIO\PlaywrightSharp.Tests.DumpIO.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <None Update="Assets\file-to-upload.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Assets\pptr.png">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
 </Project>

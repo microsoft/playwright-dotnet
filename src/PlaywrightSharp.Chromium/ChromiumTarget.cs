@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Chromium
                         return;
                     }
 
-                    var popupPage = await PageAsync().ConfigureAwait(false);
+                    var popupPage = await GetPageAsync().ConfigureAwait(false);
                     openerPage.OnPopup(popupPage);
                 },
                 CancellationToken.None,
@@ -105,19 +105,14 @@ namespace PlaywrightSharp.Chromium
                 return Task.FromResult<Worker>(null);
             }
 
-            return _workerTask ?? (_workerTask = WorkerInternalAsync());
-        }
-
-        /// <inheritdoc cref="ITarget.GetPageAsync"/>
-        public Task<IPage> GetPageAsync()
-        {
-            throw new NotImplementedException();
+            return _workerTask ??= WorkerInternalAsync();
         }
 
         /// <inheritdoc cref="ITarget.GetWorkerAsync"/>
         public Task<IWorker> GetWorkerAsync() => Task.FromResult<IWorker>(null);
 
-        internal async Task<IPage> PageAsync()
+        /// <inheritdoc cref="ITarget.GetPageAsync"/>
+        public async Task<IPage> GetPageAsync()
         {
             if ((Type == TargetType.Page || Type == TargetType.BackgroundPage) && PageTask == null)
             {

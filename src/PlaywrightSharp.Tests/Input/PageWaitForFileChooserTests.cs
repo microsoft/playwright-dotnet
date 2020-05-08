@@ -200,8 +200,8 @@ namespace PlaywrightSharp.Tests.Input
                Page.ClickAsync("input")
             );
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => fileChooser.Element.SetInputFilesAsync(
-                Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload),
-                Path.Combine(Directory.GetCurrentDirectory(), "Assets", "pptr.png"))
+                TestUtils.GetWebServerFile(TestConstants.FileToUpload),
+                TestUtils.GetWebServerFile("pptr.png"))
             );
         }
     }

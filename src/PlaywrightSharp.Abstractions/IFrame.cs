@@ -353,5 +353,14 @@ namespace PlaywrightSharp
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
         Task TypeAsync(string selector, string text, TypeOptions options = null);
+
+        /// <summary>
+        /// Completes when the page reaches a required load state, load by default.
+        /// The navigation can be in progress when it is called.
+        /// If navigation is already at a required state, completes immediately.
+        /// </summary>
+        /// <param name="options">Extra options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
+        Task WaitForLoadStateAsync(NavigationOptions options = null);
     }
 }

@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Debugger;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
@@ -124,7 +125,7 @@ namespace PlaywrightSharp.Chromium
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
             }
 
             return result?.Quads.Select(quad => new[]
@@ -313,8 +314,6 @@ namespace PlaywrightSharp.Chromium
                 Headers = headers,
             });
 
-        public Task SetRequestInterceptionAsync(bool value) => throw new NotImplementedException();
-
         public Task ReloadAsync() => Client.SendAsync(new PageReloadRequest());
 
         public Task<bool> GoBackAsync() => GoAsync(-1);
@@ -328,6 +327,12 @@ namespace PlaywrightSharp.Chromium
             => Client.SendAsync(new PageSetInterceptFileChooserDialogRequest { Enabled = enabled });
 
         public Task SetCacheEnabledAsync(bool enabled) => _networkManager.SetCacheEnabledAsync(enabled);
+
+        public Task SetRequestInterceptionAsync(bool enabled) => _networkManager.SetRequestInterceptionAsync(enabled);
+
+        public Task AuthenticateAsync(Credentials credentials) => _networkManager.AuthenticateAsync(credentials);
+
+        public Task SetOfflineModeAsync(bool enabled) => _networkManager.SetOfflineModeAsync(enabled);
 
         internal async Task InitializeAsync()
         {
@@ -449,6 +454,9 @@ namespace PlaywrightSharp.Chromium
                     case PageFrameDetachedChromiumEvent pageFrameDetached:
                         OnFrameDetached(pageFrameDetached);
                         break;
+                    case PageFrameStoppedLoadingChromiumEvent pageFrameStoppedLoading:
+                        OnFrameStoppedLoading(pageFrameStoppedLoading);
+                        break;
                     case PageFrameNavigatedChromiumEvent pageFrameNavigated:
                         OnFrameNavigated(pageFrameNavigated.Frame, false);
                         break;
@@ -479,6 +487,9 @@ namespace PlaywrightSharp.Chromium
                     case PageFileChooserOpenedChromiumEvent pageFileChooserOpened:
                         await OnFileChooserOpenedAsync(pageFileChooserOpened).ConfigureAwait(false);
                         break;
+                    case PageJavascriptDialogOpeningChromiumEvent pageJavascriptDialogOpening:
+                        OnDialog(pageJavascriptDialogOpening);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -488,10 +499,24 @@ namespace PlaywrightSharp.Chromium
                 var message = $"Page failed to process {e.MessageID}. {ex.Message}. {ex.StackTrace}";
                 _logger.LogError(ex, message);
                 */
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                Client.OnClosed(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
+                Client.OnClosed(ex.ToString());
             }
         }
+
+        private void OnDialog(PageJavascriptDialogOpeningChromiumEvent e)
+            => Page?.OnDialog(new Dialog(
+                e.Type.ToDialogType(),
+                e.Message,
+                (accept, promptText) => Client.SendAsync(new PageHandleJavaScriptDialogRequest
+                {
+                    Accept = accept,
+                    PromptText = promptText,
+                }),
+                e.DefaultPrompt));
+
+        private void OnFrameStoppedLoading(PageFrameStoppedLoadingChromiumEvent e)
+            => Page.FrameManager.FrameStoppedLoading(e.FrameId);
 
         private async Task OnFileChooserOpenedAsync(PageFileChooserOpenedChromiumEvent e)
         {

@@ -21,7 +21,7 @@ namespace PlaywrightSharp
 
         internal List<LifecycleWatcher> LifecycleWatchers { get; } = new List<LifecycleWatcher>();
 
-        internal Frame MainFrame { get; set; }
+        internal Frame MainFrame { get; private set; }
 
         internal ConcurrentDictionary<string, Frame> Frames { get; } = new ConcurrentDictionary<string, Frame>();
 
@@ -66,6 +66,34 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void FrameStoppedLoading(string frameId)
+        {
+            if (!Frames.TryGetValue(frameId, out var frame))
+            {
+                return;
+            }
+
+            bool hasDOMContentLoaded = frame.FiredLifecycleEvents.Contains(WaitUntilNavigation.DOMContentLoaded);
+            bool hasLoad = frame.FiredLifecycleEvents.Contains(WaitUntilNavigation.Load);
+            frame.FiredLifecycleEvents.Add(WaitUntilNavigation.DOMContentLoaded);
+            frame.FiredLifecycleEvents.Add(WaitUntilNavigation.Load);
+
+            foreach (var watcher in LifecycleWatchers.ToArray())
+            {
+                watcher.OnLifecycleEvent(frame);
+            }
+
+            if (frame == MainFrame && !hasDOMContentLoaded)
+            {
+                _page.OnDOMContentLoaded();
+            }
+
+            if (frame == MainFrame && !hasLoad)
+            {
+                _page.OnLoad();
+            }
+        }
+
         internal void FrameCommittedNewDocumentNavigation(string frameId, string url, string name, string documentId, bool initial)
         {
             if (!Frames.TryGetValue(frameId, out var frame))
@@ -103,7 +131,7 @@ namespace PlaywrightSharp
             }
 
             frame.Url = url;
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnNavigatedWithinDocument(frame);
             }
@@ -254,10 +282,10 @@ namespace PlaywrightSharp
             {
                 var cts = new CancellationTokenSource();
                 _ = Task.Delay(500, cts.Token).ContinueWith(
-                    t => FrameLifecycleEvent(frame.Id, lifecycleEvent),
-                    CancellationToken.None,
+                    _ => FrameLifecycleEvent(frame.Id, lifecycleEvent),
+                    cts.Token,
                     TaskContinuationOptions.NotOnCanceled,
-                    TaskScheduler.Current);
+                    TaskScheduler.Default);
                 return cts;
             }
         }
@@ -284,7 +312,7 @@ namespace PlaywrightSharp
 
             frame.OnDetached();
             Frames.TryRemove(frame.Id, out _);
-            foreach (var watcher in LifecycleWatchers)
+            foreach (var watcher in LifecycleWatchers.ToArray())
             {
                 watcher.OnFrameDetached(frame);
             }
@@ -336,12 +364,12 @@ namespace PlaywrightSharp
 
             if (frame.InflightRequests.Count == 0)
             {
-                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
+                StartNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle0);
             }
 
             if (frame.InflightRequests.Count == 2)
             {
-                StopNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
+                StartNetworkIdleTimer(frame, WaitUntilNavigation.Networkidle2);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Firefox
     {
         private readonly FirefoxSession _session;
         private readonly Page _page;
-        private readonly ConcurrentDictionary<string, FirefoxRequest> _requests = new ConcurrentDictionary<string, FirefoxRequest>();
+        private readonly ConcurrentDictionary<string, FirefoxInterceptableRequest> _requests = new ConcurrentDictionary<string, FirefoxInterceptableRequest>();
 
         public FirefoxNetworkManager(FirefoxSession session, Page page)
         {
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Firefox
                 _requests.TryRemove(redirectId.Id, out var _);
             }
 
-            var request = new FirefoxRequest(_session, frame, redirectChain, e);
+            var request = new FirefoxInterceptableRequest(_session, frame, redirectChain, e);
             _requests[request.Id] = request;
             _page.FrameManager.RequestStarted(request.Request);
         }
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Firefox
 
                 return Convert.FromBase64String(response.Base64Body);
             };
-            var headers = e.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value);
+            var headers = e.Headers.ToDictionary(header => header.Name.ToLower(), header => header.Value, StringComparer.InvariantCultureIgnoreCase);
             var response = new Response(request.Request, (HttpStatusCode)e.Status, e.StatusText, headers, getResponseBody);
             _page.FrameManager.RequestReceivedResponse(response);
         }

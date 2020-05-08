@@ -54,15 +54,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// Returns a <see cref="Task"/> which resolves to a <see cref="JsonDocument"/> representation of response body.
         /// </summary>
+        /// <param name="options">Parser options.</param>
         /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <see cref="JsonDocument"/> representation of response body.</returns>
-        Task<JsonDocument> GetJsonAsync();
+        Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default);
 
         /// <summary>
         /// Returns a <see cref="Task"/> which resolves to a <typeparamref name="T"/> representation of response body.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="options">Parser options.</param>
         /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <typeparamref name="T"/> representation of response body.</returns>
-        Task<T> GetJsonAsync<T>();
+        Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null);
 
         /// <summary>
         /// Returns a <see cref="Task"/> which resolves to a buffer with response body.

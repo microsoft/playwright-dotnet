@@ -39,6 +39,6 @@ namespace PlaywrightSharp
         /// Response status code.
         /// </summary>
         /// <value>Status Code.</value>
-        public HttpStatusCode Status { get; set; } = HttpStatusCode.OK;
+        public HttpStatusCode? Status { get; set; }
     }
 }

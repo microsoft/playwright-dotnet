@@ -9,9 +9,13 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Request.isNavigationRequest</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class RequestIsNavigationRequestTests : PlaywrightSharpPageBaseTest
     {
-        internal RequestIsNavigationRequestTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public RequestIsNavigationRequestTests(ITestOutputHelper output) : base(output)
         {
         }
 

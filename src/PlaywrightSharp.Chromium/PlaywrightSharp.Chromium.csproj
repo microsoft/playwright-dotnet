@@ -25,5 +25,6 @@
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Macross.Json.Extensions" Version="1.2.1" />
+      <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     </ItemGroup>
 </Project>

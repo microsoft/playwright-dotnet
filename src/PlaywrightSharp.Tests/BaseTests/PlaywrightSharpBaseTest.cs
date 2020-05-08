@@ -2,6 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.TestServer;
 using Xunit.Abstractions;
 
@@ -56,6 +57,12 @@ namespace PlaywrightSharp.Tests.BaseTests
 
             emitter.MessageReceived += handler;
             return completion.Task;
+        }
+
+        internal async Task<IPage> NewPageAsync(IBrowser browser, BrowserContextOptions options = null)
+        {
+            var context = await browser.NewContextAsync(options);
+            return await context.NewPageAsync();
         }
     }
 }

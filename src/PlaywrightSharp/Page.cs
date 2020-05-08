@@ -116,11 +116,13 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.Websocket"/>
         public event EventHandler<WebsocketEventArgs> Websocket;
 
+        internal event EventHandler ClientDisconnected;
+
         /// <inheritdoc cref="IPage.MainFrame"/>
         IFrame IPage.MainFrame => MainFrame;
 
         /// <inheritdoc cref="IPage.BrowserContext"/>
-        public IBrowserContext BrowserContext { get; internal set; }
+        public IBrowserContext BrowserContext { get; }
 
         /// <inheritdoc cref="IPage.Viewport"/>
         public Viewport Viewport => PageState.Viewport;
@@ -181,7 +183,8 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.AuthenticateAsync(Credentials)"/>
         public Task AuthenticateAsync(Credentials credentials)
         {
-            throw new NotImplementedException();
+            PageState.Credentials = credentials;
+            return Delegate.AuthenticateAsync(credentials);
         }
 
         /// <inheritdoc cref="IPage.ClickAsync(string, ClickOptions)"/>
@@ -368,9 +371,15 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.SetOfflineModeAsync(bool)"/>
-        public Task SetOfflineModeAsync(bool value)
+        public Task SetOfflineModeAsync(bool enabled)
         {
-            throw new NotImplementedException();
+            if (PageState.OfflineMode == enabled)
+            {
+                return Task.CompletedTask;
+            }
+
+            PageState.OfflineMode = enabled;
+            return Delegate.SetOfflineModeAsync(enabled);
         }
 
         /// <inheritdoc cref="IPage.SetRequestInterceptionAsync(bool)"/>
@@ -455,10 +464,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForLoadStateAsync(NavigationOptions)"/>
-        public Task WaitForLoadStateAsync(NavigationOptions options = null)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WaitForLoadStateAsync(NavigationOptions options = null) => MainFrame.WaitForLoadStateAsync(options);
 
         /// <inheritdoc cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default)
@@ -622,7 +628,11 @@ namespace PlaywrightSharp
 
         internal void OnResponse(IResponse response) => Response?.Invoke(this, new ResponseEventArgs(response));
 
-        internal void DidDisconnected() => _disconnected = true;
+        internal void DidDisconnected()
+        {
+            _disconnected = true;
+            ClientDisconnected?.Invoke(this, new EventArgs());
+        }
 
         internal void DidClose()
         {
@@ -644,9 +654,13 @@ namespace PlaywrightSharp
 
         internal void OnFrameNavigated(Frame frame) => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
+        internal void OnRequestFailed(Request request) => RequestFailed?.Invoke(this, new RequestEventArgs(request));
+
         internal void OnLoad() => Load?.Invoke(this, new EventArgs());
 
         internal void OnPageError(PageErrorEventArgs args) => PageError?.Invoke(this, args);
+
+        internal void OnDialog(Dialog dialog) => Dialog?.Invoke(this, new DialogEventArgs(dialog));
 
         internal async Task OnBindingCalledAsync(string payload, IFrameExecutionContext context)
         {
@@ -697,7 +711,7 @@ namespace PlaywrightSharp
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
 

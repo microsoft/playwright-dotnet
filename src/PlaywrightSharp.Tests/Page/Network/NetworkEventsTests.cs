@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.TestServer;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,9 +13,13 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Network Events</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class NetworkEventsTests : PlaywrightSharpPageBaseTest
     {
-        internal NetworkEventsTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public NetworkEventsTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -58,13 +63,19 @@ namespace PlaywrightSharp.Tests.Page.Network
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task PageEventsRequestFailed()
         {
-            Server.SetRoute("/one-style.css", context => context.Response.WriteAsync("deadbeef"));
+            int port = TestConstants.Port + 100;
+            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"), false);
+            await disposableServer.StartAsync();
+
+            disposableServer.SetRoute("/one-style.css", async context =>
+            {
+                await disposableServer.StopAsync();
+            });
             var failedRequests = new List<IRequest>();
 
-            await Page.SetRequestInterceptionAsync(true);
             Page.RequestFailed += (sender, e) => failedRequests.Add(e.Request);
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GoToAsync($"http://localhost:{port}/one-style.html");
 
             Assert.Single(failedRequests);
             Assert.Contains("one-style.css", failedRequests[0].Url);
@@ -75,7 +86,8 @@ namespace PlaywrightSharp.Tests.Page.Network
 
             if (TestConstants.IsChromium)
             {
-                error = "net::ERR_INVALID_HTTP_RESPONSE";
+                // It's not the same error as in Playwright but it works for testing purposes.
+                error = "net::ERR_CONNECTION_REFUSED";
             }
             else if (TestConstants.IsWebKit)
             {

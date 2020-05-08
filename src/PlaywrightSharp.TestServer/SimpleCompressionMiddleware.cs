@@ -41,7 +41,7 @@ namespace PlaywrightSharp.TestServer
                 context.Response.Headers["Content-Encoding"] = "gzip";
                 context.Response.Headers["Content-Length"] = stream.Length.ToString();
                 stream.Position = 0;
-                stream.CopyTo(response);
+                await stream.CopyToAsync(response);
                 context.Response.Body = response;
             }
         }

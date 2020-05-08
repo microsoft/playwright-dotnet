@@ -7,9 +7,13 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.headers</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ResponseHeadersTests : PlaywrightSharpPageBaseTest
     {
-        internal ResponseHeadersTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ResponseHeadersTests(ITestOutputHelper output) : base(output)
         {
         }
 

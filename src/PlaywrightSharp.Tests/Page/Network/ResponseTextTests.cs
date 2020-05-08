@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.text</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ResponseTextTests : PlaywrightSharpPageBaseTest
     {
-        internal ResponseTextTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public ResponseTextTests(ITestOutputHelper output) : base(output)
         {
         }
 

@@ -212,19 +212,36 @@ namespace PlaywrightSharp
         Task SetInputFilesAsync(ElementHandle handle, IEnumerable<FilePayload> files);
 
         /// <summary>
-        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
-        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.FulfillAsync(ResponseData)">request.FulfillAsync</see> methods.
-        /// </summary>
-        /// <param name="value">Whether to enable request interception..</param>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SetRequestInterceptionAsync(bool value);
-
-        /// <summary>
         /// Toggles ignoring cache for each request based on the <paramref name="enabled"/> state.
         /// </summary>
         /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetCacheEnabledAsync(bool enabled);
+
+        /// <summary>
+        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
+        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.FulfillAsync(ResponseData)">request.FulfillAsync</see> methods.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="enabled">Whether to enable request interception..</param>
+        Task SetRequestInterceptionAsync(bool enabled);
+
+        /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task AuthenticateAsync(Credentials credentials);
+
+        /// <summary>
+        /// Set offline mode for the page.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineModeAsync(bool enabled);
 
         /// <summary>
         /// Enables file chooser interception.

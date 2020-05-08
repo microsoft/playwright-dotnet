@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Esprima;
 using Esprima.Ast;
 
@@ -64,7 +65,12 @@ namespace PlaywrightSharp.Helpers
 
             var result = new Dictionary<string, string>();
 
-            foreach (string keyValue in query.Split('&'))
+            if (query.StartsWith("?"))
+            {
+                query = query.Substring(1, query.Length - 1);
+            }
+
+            foreach (string keyValue in query.Split('&').Where(kv => kv.Contains("=")))
             {
                 string[] pair = keyValue.Split('=');
                 result[pair[0]] = pair[1];

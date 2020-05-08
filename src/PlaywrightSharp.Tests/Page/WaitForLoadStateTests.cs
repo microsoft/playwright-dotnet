@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
@@ -9,6 +11,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForLoadStateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -62,7 +66,7 @@ namespace PlaywrightSharp.Tests.Page
 
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.WaitForLoadStateAsync(new NavigationOptions { Timeout = 1 }));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(new NavigationOptions { Timeout = 1 }));
             Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
             responseTask.TrySetResult(true);
             await navigationTask;
@@ -107,7 +111,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>Page.waitForLoadState</playwright-describe>
         ///<playwright-it>should work with pages that have loaded before being connected to</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTso()
+        public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync(@"async () => {
@@ -117,12 +121,17 @@ namespace PlaywrightSharp.Tests.Page
             }");
             var pages = await Context.GetPagesAsync();
             Assert.Equal(2, pages.Length);
-            Assert.Equal(Page, pages[0]);
-            Assert.Equal(TestConstants.EmptyPage, pages[0].Url);
 
-            Assert.Equal(TestConstants.EmptyPage, pages[1].Url);
-            await pages[1].WaitForLoadStateAsync();
-            Assert.Equal(TestConstants.EmptyPage, pages[1].Url);
+            // order is not guaranteed
+            var mainPage = pages.FirstOrDefault(p => ReferenceEquals(Page, p));
+            var connectedPage = pages.FirstOrDefault(p => !ReferenceEquals(Page, p));
+
+            Assert.NotNull(mainPage);
+            Assert.Equal(TestConstants.EmptyPage, mainPage.Url);
+
+            Assert.Equal(TestConstants.EmptyPage, connectedPage.Url);
+            await connectedPage.WaitForLoadStateAsync();
+            Assert.Equal(TestConstants.EmptyPage, connectedPage.Url);
         }
     }
 }

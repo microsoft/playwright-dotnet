@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -14,6 +15,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>network idle</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class NetworkIdleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -97,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
             await NetworkIdleTestAsync(
                 Page.MainFrame,
                 waitUntil,
-                () => Page.SetContentAsync("<script>fetch('networkiddle.js')</script>", waitUntil),
+                () => Page.SetContentAsync("<script src='networkidle.js'></script>", waitUntil),
                 true);
         }
 
@@ -113,7 +116,7 @@ namespace PlaywrightSharp.Tests.Page
             await NetworkIdleTestAsync(
                 Page.MainFrame,
                 WaitUntilNavigation.Networkidle0,
-                () => Page.SetContentAsync("<script>fetch('networkiddle.js')</script>", WaitUntilNavigation.Networkidle0),
+                () => Page.SetContentAsync("<script src='networkidle.js'></script>", WaitUntilNavigation.Networkidle0),
                 true);
         }
 
@@ -129,7 +132,7 @@ namespace PlaywrightSharp.Tests.Page
             await NetworkIdleTestAsync(
                 Page.MainFrame,
                 WaitUntilNavigation.Networkidle2,
-                () => Page.SetContentAsync("<script>fetch('networkiddle.js')</script>", WaitUntilNavigation.Networkidle2),
+                () => Page.SetContentAsync("<script src='networkidle.js'></script>", WaitUntilNavigation.Networkidle2),
                 true);
         }
 
@@ -149,7 +152,7 @@ namespace PlaywrightSharp.Tests.Page
             await NetworkIdleTestAsync(
                 frame,
                 waitUntil,
-                () => frame.GoToAsync(TestConstants.ServerUrl + "/networkiddle.html", waitUntil));
+                () => frame.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", waitUntil));
         }
 
         /// <playwright-file>navigation.spec.js</playwright-file>
@@ -182,36 +185,34 @@ namespace PlaywrightSharp.Tests.Page
         public Task ShouldWaitForFromTheChildFrame(WaitUntilNavigation waitUntil)
             => NetworkIdleTestAsync(
                 Page.MainFrame,
-                waitUntil, () => Page.GoToAsync(TestConstants.ServerUrl + "networkidle-frame.html", waitUntil),
-                true);
+                waitUntil,
+                () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle-frame.html", waitUntil));
 
-        private async Task NetworkIdleTestAsync(IFrame frame, WaitUntilNavigation signal, Func<Task> func, bool isSetContent = false)
+        private async Task NetworkIdleTestAsync(IFrame frame, WaitUntilNavigation signal, Func<Task> action, bool isSetContent = false)
         {
             var lastResponseFinished = new Stopwatch();
-            var responses = new Dictionary<string, TaskCompletionSource<Func<HttpResponse, Task>>>();
+            var responses = new ConcurrentDictionary<string, TaskCompletionSource<bool>>();
             var fetches = new Dictionary<string, TaskCompletionSource<bool>>();
 
-            Func<HttpResponse, Task> finishResponse = response =>
+            async Task RequestDelegate(HttpContext context)
             {
-                lastResponseFinished.Restart();
-                response.StatusCode = 404;
-                return response.WriteAsync("File not found");
-            };
-            RequestDelegate requestDelegate = async context =>
-            {
-                var taskCompletion = new TaskCompletionSource<Func<HttpResponse, Task>>();
+                System.Diagnostics.Debug.WriteLine($"Request {context.Request.Path}");
+                var taskCompletion = new TaskCompletionSource<bool>();
                 responses[context.Request.Path] = taskCompletion;
-                fetches[context.Request.Path].SetResult(true);
-                var actionResponse = await taskCompletion.Task;
-                await actionResponse(context.Response).WithTimeout();
-            };
+                fetches[context.Request.Path].TrySetResult(true);
+                await taskCompletion.Task;
+                lastResponseFinished.Restart();
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync("File not found");
+            }
+
             foreach (string url in new[] {
                 "/fetch-request-a.js",
                 "/fetch-request-b.js",
                 "/fetch-request-c.js"})
             {
                 fetches[url] = new TaskCompletionSource<bool>();
-                Server.SetRoute(url, requestDelegate);
+                Server.SetRoute(url, RequestDelegate);
             }
 
             var initialFetchResourcesRequested = Task.WhenAll(
@@ -224,21 +225,19 @@ namespace PlaywrightSharp.Tests.Page
             if (signal == WaitUntilNavigation.Networkidle0)
             {
                 fetches["/fetch-request-d.js"] = new TaskCompletionSource<bool>();
-                Server.SetRoute("/fetch-request-d.js", requestDelegate);
+                Server.SetRoute("/fetch-request-d.js", RequestDelegate);
                 secondFetchResourceRequested = Server.WaitForRequest("/fetch-request-d.js");
             }
 
-            var pageLoaded = isSetContent ? Task.CompletedTask : frame.WaitForNavigationAsync(WaitUntilNavigation.Load);
+            var waitForLoadTask = isSetContent ? Task.CompletedTask : frame.WaitForNavigationAsync(WaitUntilNavigation.Load);
 
-            bool navigationFinished = false;
-            var navigationTask = func();
-            _ = navigationTask.ContinueWith(t => navigationFinished = true);
+            var actionTask = action();
 
-            await pageLoaded.WithTimeout();
-            Assert.False(navigationFinished);
+            await waitForLoadTask;
+            Assert.False(actionTask.IsCompleted);
 
             await initialFetchResourcesRequested.WithTimeout();
-            Assert.False(navigationFinished);
+            Assert.False(actionTask.IsCompleted);
 
             await Task.WhenAll(
                 fetches["/fetch-request-a.js"].Task,
@@ -246,32 +245,33 @@ namespace PlaywrightSharp.Tests.Page
                 fetches["/fetch-request-c.js"].Task).WithTimeout();
 
             // Finishing first response should leave 2 requests alive and trigger networkidle2.
-            responses["/fetch-request-a.js"].TrySetResult(finishResponse);
+            responses["/fetch-request-a.js"].TrySetResult(true);
 
             if (signal == WaitUntilNavigation.Networkidle0)
             {
                 // Finishing two more responses should trigger the second round.
-                responses["/fetch-request-b.js"].TrySetResult(finishResponse);
-                responses["/fetch-request-c.js"].TrySetResult(finishResponse);
+                responses["/fetch-request-b.js"].TrySetResult(true);
+                responses["/fetch-request-c.js"].TrySetResult(true);
 
                 // Wait for the second round to be requested.
                 await secondFetchResourceRequested.WithTimeout();
-                Assert.False(navigationFinished);
+                Assert.False(actionTask.IsCompleted);
 
                 await fetches["/fetch-request-d.js"].Task.WithTimeout();
+                responses["/fetch-request-d.js"].TrySetResult(true);
             }
             IResponse navigationResponse = null;
             if (!isSetContent)
             {
-                navigationResponse = await (Task<IResponse>)navigationTask;
+                navigationResponse = await (Task<IResponse>)actionTask;
             }
             else
             {
-                await navigationTask;
+                await actionTask;
             }
 
             lastResponseFinished.Stop();
-            Assert.True(lastResponseFinished.ElapsedMilliseconds < 450);
+            Assert.True(lastResponseFinished.ElapsedMilliseconds > 450);
 
             if (!isSetContent)
             {
@@ -280,8 +280,8 @@ namespace PlaywrightSharp.Tests.Page
 
             if (signal == WaitUntilNavigation.Networkidle2)
             {
-                responses["/fetch-request-b.js"].TrySetResult(finishResponse);
-                responses["/fetch-request-c.js"].TrySetResult(finishResponse);
+                responses["/fetch-request-b.js"].TrySetResult(true);
+                responses["/fetch-request-c.js"].TrySetResult(true);
             }
         }
     }

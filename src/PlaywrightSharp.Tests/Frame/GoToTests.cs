@@ -11,6 +11,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.goto</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GoToTests : PlaywrightSharpPageBaseTest
     {
@@ -47,7 +48,7 @@ namespace PlaywrightSharp.Tests.Frame
             await waitForRequestTask;
             await Page.QuerySelectorEvaluateAsync("iframe", "frame => frame.remove()");
             var exception = await Assert.ThrowsAsync<NavigationException>(async () => await navigationTask);
-            Assert.Equal("Navigating frame was detached", exception.Message);
+            Assert.Contains("frame was detached", exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
