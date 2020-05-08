@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
     /// <playwright-describe>defaultContext()</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DefaultBrowserContextTests : PlaywrightSharpPageBaseTest
     {
-        internal DefaultBrowserContextTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public DefaultBrowserContextTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -45,6 +48,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.BrowserContext.SetCookiesAsync(new SetNetworkCookieParam
             {
+                Url = TestConstants.EmptyPage,
                 Name = "username",
                 Value = "John Doe"
             });
@@ -72,11 +76,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.BrowserContext.SetCookiesAsync(
                 new SetNetworkCookieParam
                 {
+                    Url = TestConstants.EmptyPage,
                     Name = "cookie1",
                     Value = "1"
                 },
                 new SetNetworkCookieParam
                 {
+                    Url = TestConstants.EmptyPage,
                     Name = "cookie2",
                     Value = "2"
                 });
