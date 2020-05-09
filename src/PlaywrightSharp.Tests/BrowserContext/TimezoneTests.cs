@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class TimezoneTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

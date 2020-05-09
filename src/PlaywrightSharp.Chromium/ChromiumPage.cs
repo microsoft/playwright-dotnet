@@ -721,9 +721,16 @@ namespace PlaywrightSharp.Chromium
             })).ToArray()).ConfigureAwait(false);
         }
 
-        private Task EmulateTimezoneAsync(string timezoneId)
+        private async Task EmulateTimezoneAsync(string timezoneId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await Client.SendAsync(new EmulationSetTimezoneOverrideRequest { TimezoneId = timezoneId }).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex.Message.Contains("Invalid timezone"))
+            {
+                throw new PlaywrightSharpException($"Invalid timezone ID: {timezoneId}", ex);
+            }
         }
 
         private void HandleFrameTree(FrameTree frameTree)
