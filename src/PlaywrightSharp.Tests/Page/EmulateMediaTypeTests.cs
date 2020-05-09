@@ -7,6 +7,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulateMedia type</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class EmulateMediaTypeTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>

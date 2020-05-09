@@ -337,6 +337,26 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetOfflineModeAsync(bool enabled) => _networkManager.SetOfflineModeAsync(enabled);
 
+        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme)
+        {
+            var features = colorScheme != null
+                ? new[]
+                {
+                    new MediaFeature
+                    {
+                        Name = "prefers-color-scheme",
+                        Value = colorScheme.Value.ToValueString(),
+                    },
+                }
+                : Array.Empty<MediaFeature>();
+
+            return Client.SendAsync(new EmulationSetEmulatedMediaRequest
+            {
+                Media = mediaType != null ? mediaType.Value.ToValueString() : string.Empty,
+                Features = features,
+            });
+        }
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());

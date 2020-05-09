@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PlaywrightSharp
 {
@@ -7,17 +9,22 @@ namespace PlaywrightSharp
     /// </summary>
     public class ConsoleMessage
     {
+        private readonly Func<IJSHandle, bool, string> _handleToString;
+        private string _text;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleMessage"/> class.
         /// </summary>
         /// <param name="type">Type.</param>
         /// <param name="text">Text.</param>
         /// <param name="args">Arguments.</param>
+        /// <param name="handleToString">IJSHandle to string.</param>
         /// <param name="location">Message location.</param>
-        public ConsoleMessage(ConsoleType type, string text, IList<IJSHandle> args, ConsoleMessageLocation location = null)
+        internal ConsoleMessage(ConsoleType type, string text, IList<IJSHandle> args, Func<IJSHandle, bool, string> handleToString, ConsoleMessageLocation location = null)
         {
             Type = type;
-            Text = text;
+            _text = text;
+            _handleToString = handleToString;
             Args = args;
             Location = location;
         }
@@ -43,6 +50,17 @@ namespace PlaywrightSharp
         /// Gets the console text.
         /// </summary>
         /// <value>The text.</value>
-        internal string Text { get; }
+        internal string Text
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_text))
+                {
+                    _text = string.Join(" ", Args.Select(arg => _handleToString(arg, false)).ToArray());
+                }
+
+                return _text;
+            }
+        }
     }
 }

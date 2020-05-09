@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -8,16 +10,19 @@ namespace PlaywrightSharp
         /// <summary>
         /// Light
         /// </summary>
+        [EnumMember(Value = "light")]
         Light,
 
         /// <summary>
         /// Dark
         /// </summary>
+        [EnumMember(Value = "dark")]
         Dark,
 
         /// <summary>
         /// No preference
         /// </summary>
+        [EnumMember(Value = "no-preference")]
         NoPreference,
     }
 }

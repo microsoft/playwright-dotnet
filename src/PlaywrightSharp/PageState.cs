@@ -6,9 +6,9 @@ namespace PlaywrightSharp
     {
         public Viewport Viewport { get; set; }
 
-        public MediaType MediaType { get; set; }
+        public MediaType? MediaType { get; set; }
 
-        public ColorScheme ColorScheme { get; set; }
+        public ColorScheme? ColorScheme { get; set; }
 
         public Dictionary<string, string> ExtraHTTPHeaders { get; set; } = new Dictionary<string, string>();
 

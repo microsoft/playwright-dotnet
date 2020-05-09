@@ -7,6 +7,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulate</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class EmulateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -26,6 +28,7 @@ namespace PlaywrightSharp.Tests.Page
                 UserAgent = TestConstants.IPhone.UserAgent
             });
 
+            await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Equal(375, await page.EvaluateAsync<int>("window.innerWidth"));
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
@@ -44,9 +47,9 @@ namespace PlaywrightSharp.Tests.Page
 
             await page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await page.QuerySelectorAsync("button");
-            await Page.EvaluateAsync("button => button.style.marginTop = '200px'", button);
+            await page.EvaluateAsync("button => button.style.marginTop = '200px'", button);
             await button.ClickAsync();
-            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
+            Assert.Equal("Clicked", await page.EvaluateAsync<string>("result"));
         }
     }
 }
