@@ -256,5 +256,13 @@ namespace PlaywrightSharp
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
         Task SetOfflineModeAsync(bool enabled);
+
+        /// <summary>
+        /// Setup media emulation.
+        /// </summary>
+        /// <param name="mediaType">Media type.</param>
+        /// <param name="colorScheme">Color Scheme.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme);
     }
 }

@@ -337,6 +337,26 @@ namespace PlaywrightSharp.Chromium
 
         public Task SetOfflineModeAsync(bool enabled) => _networkManager.SetOfflineModeAsync(enabled);
 
+        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme)
+        {
+            var features = colorScheme != null
+                ? new[]
+                {
+                    new MediaFeature
+                    {
+                        Name = "prefers-color-scheme",
+                        Value = colorScheme.Value.ToValueString(),
+                    },
+                }
+                : Array.Empty<MediaFeature>();
+
+            return Client.SendAsync(new EmulationSetEmulatedMediaRequest
+            {
+                Media = mediaType != null ? mediaType.Value.ToValueString() : string.Empty,
+                Features = features,
+            });
+        }
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -721,9 +741,16 @@ namespace PlaywrightSharp.Chromium
             })).ToArray()).ConfigureAwait(false);
         }
 
-        private Task EmulateTimezoneAsync(string timezoneId)
+        private async Task EmulateTimezoneAsync(string timezoneId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await Client.SendAsync(new EmulationSetTimezoneOverrideRequest { TimezoneId = timezoneId }).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex.Message.Contains("Invalid timezone"))
+            {
+                throw new PlaywrightSharpException($"Invalid timezone ID: {timezoneId}", ex);
+            }
         }
 
         private void HandleFrameTree(FrameTree frameTree)

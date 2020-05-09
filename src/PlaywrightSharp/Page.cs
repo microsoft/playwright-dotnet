@@ -220,7 +220,18 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.EmulateMediaAsync(EmulateMedia)"/>
         public Task EmulateMediaAsync(EmulateMedia options)
         {
-            throw new NotImplementedException();
+            options ??= new EmulateMedia();
+            if (options.Media != null)
+            {
+                PageState.MediaType = options.Media.Value;
+            }
+
+            if (options.ColorScheme != null)
+            {
+                PageState.ColorScheme = options.ColorScheme.Value;
+            }
+
+            return Delegate.SetEmulateMediaAsync(PageState.MediaType, PageState.ColorScheme);
         }
 
         /// <inheritdoc cref="IPage.EvaluateAsync{T}(string, object[])"/>
@@ -603,7 +614,12 @@ namespace PlaywrightSharp
 
         internal void AddConsoleMessage(ConsoleType type, IJSHandle[] args, ConsoleMessageLocation location, string text = null)
         {
-            var message = new ConsoleMessage(type, text, args, location);
+            var message = new ConsoleMessage(
+                type,
+                text,
+                args,
+                (handle, includeType) => ((JSHandle)handle).Context.Delegate.HandleToString(handle, includeType),
+                location);
             bool intercepted = FrameManager.InterceptConsoleMessage(message);
             if (intercepted || Console?.GetInvocationList()?.Length == 0)
             {

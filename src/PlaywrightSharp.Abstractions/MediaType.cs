@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -8,16 +10,19 @@ namespace PlaywrightSharp
         /// <summary>
         /// Media Print.
         /// </summary>
+        [EnumMember(Value = "print")]
         Print,
 
         /// <summary>
         /// Media Screen.
         /// </summary>
+        [EnumMember(Value = "screen")]
         Screen,
 
         /// <summary>
         /// None
         /// </summary>
+        [EnumMember(Value = "")]
         None,
     }
 }

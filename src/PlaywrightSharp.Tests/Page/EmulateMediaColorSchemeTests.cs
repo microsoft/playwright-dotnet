@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class EmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -35,8 +37,8 @@ namespace PlaywrightSharp.Tests.Page
             {
                 await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = ColorScheme.NoPreference });
 
-                Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
                 Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+                Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
                 Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: no-preference)').matches"));
             }
         }

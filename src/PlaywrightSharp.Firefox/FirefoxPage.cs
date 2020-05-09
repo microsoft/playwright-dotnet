@@ -247,6 +247,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
+        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme) => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>

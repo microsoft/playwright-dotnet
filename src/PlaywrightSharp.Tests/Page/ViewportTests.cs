@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.viewport</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ViewportTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -135,13 +137,15 @@ namespace PlaywrightSharp.Tests.Page
                 window.addEventListener('orientationchange', () => console.log(++window.counter));
             }");
 
-            var event1 = Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+            var event1Task = Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
             await Page.SetViewportAsync(TestConstants.IPhoneLandscape.ViewPort);
-            Assert.Equal("1", (await event1).Message.Text);
+            var event1 = await event1Task;
+            Assert.Equal("1", event1.Message.Text);
 
-            var event2 = Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+            var event2Task = Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
             await Page.SetViewportAsync(TestConstants.IPhone.ViewPort);
-            Assert.Equal("2", (await event2).Message.Text);
+            var event2 = await event2Task;
+            Assert.Equal("2", event2.Message.Text);
         }
 
         ///<playwright-file>emulation.spec.js</playwright-file>

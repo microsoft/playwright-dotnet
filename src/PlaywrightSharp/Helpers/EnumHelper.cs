@@ -44,10 +44,10 @@ namespace PlaywrightSharp.Helpers
             {
                 string[] names = Enum.GetNames(type);
                 var dictionary = new Dictionary<Enum, string>();
-                for (int i = 0; i < names.Length; i++)
+                foreach (string t in names)
                 {
-                    var field = type.GetField(names[i]);
-                    string valueName = field.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? names[i];
+                    var field = type.GetField(t);
+                    string valueName = field.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? t;
                     var value = (TEnum)field.GetValue(null);
                     dictionary[value] = valueName;
                 }
