@@ -12,6 +12,7 @@ namespace PlaywrightSharp.Tests.Playwright
     ///<playwright-describe>Web SDK</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureWebCollectionName)]
     public class WebTests : PlaywrightSharpBaseTest, IAsyncLifetime
     {
