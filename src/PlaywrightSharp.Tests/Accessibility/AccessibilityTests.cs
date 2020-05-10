@@ -78,17 +78,17 @@ namespace PlaywrightSharp.Tests.Accessibility
                         },
                         new SerializedAXNode{
                             Role = "textbox",
-                            Name = "",
+                            Name = string.Empty,
                             Value= "value only"
                         },
                         new SerializedAXNode{
                             Role = "textbox",
-                            Name = "placeholder",
+                            Name = string.Empty,
                             Value= "and a value"
                         },
                         new SerializedAXNode{
                             Role = "textbox",
-                            Name = "placeholder",
+                            Name = string.Empty,
                             Value= "and a value",
                             Description= "This is a description!"}
                     }
@@ -332,7 +332,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                         new SerializedAXNode
                         {
                             Role = "text leaf",
-                            Name = "Edit this image:"
+                            Name = "Edit this image: "
                         },
                         new SerializedAXNode
                         {

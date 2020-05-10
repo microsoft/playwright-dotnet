@@ -182,6 +182,7 @@ namespace PlaywrightSharp.Firefox
             node.ValueText = _payload.Valuetext;
             node.KeyShortcuts = _payload.Keyshortcuts;
 
+            node.Disabled = _payload.Disabled ?? false;
             node.Expanded = _payload.Expanded ?? false;
             if (_role != "document")
             {
