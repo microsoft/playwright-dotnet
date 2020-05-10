@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Firefox.Protocol.Network;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
@@ -109,5 +111,15 @@ namespace PlaywrightSharp.Firefox.Helper
 
             return mask;
         }
+
+        public static PermissionsGrantPermissions ToPermissions(this ContextPermission permission)
+            => permission switch
+            {
+                ContextPermission.Geolocation => PermissionsGrantPermissions.Geo,
+                ContextPermission.Notifications => PermissionsGrantPermissions.DesktopNotifications,
+                ContextPermission.Camera => PermissionsGrantPermissions.Camera,
+                ContextPermission.Microphone => PermissionsGrantPermissions.Microphone,
+                _ => throw new ArgumentOutOfRangeException(nameof(permission), "Unknown permission: " + permission)
+            };
     }
 }

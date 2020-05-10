@@ -142,6 +142,9 @@ namespace PlaywrightSharp
                 Permissions = Array.ConvertAll(permissions, permission => _webPermissionToProtocol[permission]),
             });
 
+        /// <inheritdoc cref="IBrowserContextDelegate.ClearPermissionsAsync"/>
+        public Task ClearPermissionsAsync() => throw new System.NotImplementedException();
+
         /// <inheritdoc cref="IBrowserContextDelegate.SetCookiesAsync(SetNetworkCookieParam[])"/>
         public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies)
             => _client.SendAsync(new StorageSetCookiesRequest

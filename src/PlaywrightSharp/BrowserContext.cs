@@ -84,7 +84,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IBrowserContext.ClearPermissionsAsync"/>
-        public Task ClearPermissionsAsync() => throw new System.NotImplementedException();
+        public Task ClearPermissionsAsync() => _delegate.ClearPermissionsAsync();
 
         /// <inheritdoc cref="IBrowserContext.GetExistingPages"/>
         public IEnumerable<IPage> GetExistingPages() => _delegate.GetExistingPages();

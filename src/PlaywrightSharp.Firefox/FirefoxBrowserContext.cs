@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Firefox.Helper;
 using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Firefox.Protocol.Target;
 
@@ -71,9 +72,16 @@ namespace PlaywrightSharp.Firefox
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetPermissionsAsync(string, ContextPermission[])"/>
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _connection.SendAsync(new BrowserGrantPermissionsRequest
+            {
+                Origin = origin,
+                BrowserContextId = _browserContextId,
+                Permissions = Array.ConvertAll(permissions, p => p.ToPermissions()),
+            });
+
+        /// <inheritdoc cref="IBrowserContextDelegate.ClearPermissionsAsync"/>
+        public Task ClearPermissionsAsync()
+            => _connection.SendAsync(new BrowserResetPermissionsRequest { BrowserContextId = _browserContextId });
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetCookiesAsync(SetNetworkCookieParam[])"/>
         public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies)
