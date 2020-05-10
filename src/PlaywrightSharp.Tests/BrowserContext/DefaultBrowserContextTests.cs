@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
     /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
     /// <playwright-describe>defaultContext()</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DefaultBrowserContextTests : PlaywrightSharpPageBaseTest
     {
