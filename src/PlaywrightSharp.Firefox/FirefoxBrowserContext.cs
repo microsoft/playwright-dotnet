@@ -45,9 +45,7 @@ namespace PlaywrightSharp.Firefox
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetGeolocationAsync(GeolocationOption)"/>
         public Task SetGeolocationAsync(GeolocationOption geolocation)
-        {
-            throw new System.NotImplementedException();
-        }
+            => throw new NotSupportedException("Geolocation emulation is not supported in Firefox");
 
         /// <inheritdoc cref="IBrowserContextDelegate.CloseAsync"/>
         public async Task CloseAsync()
