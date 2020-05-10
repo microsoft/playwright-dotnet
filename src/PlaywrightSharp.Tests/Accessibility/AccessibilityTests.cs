@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>Accessibility</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class AccessibilityTests : PlaywrightSharpPageBaseTest
     {
@@ -364,7 +365,8 @@ namespace PlaywrightSharp.Tests.Accessibility
                 };
             }
 
-            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
+            var snapshot = await Page.Accessibility.SnapshotAsync();
+            Assert.Equal(node, snapshot.Children[0]);
         }
 
         ///<playwright-file>accessibility.spec.js</playwright-file>
