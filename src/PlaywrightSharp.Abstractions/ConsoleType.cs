@@ -99,5 +99,10 @@ namespace PlaywrightSharp
         /// Verbose.
         /// </summary>
         Verbose,
+
+        /// <summary>
+        /// TimeStamp.
+        /// </summary>
+        TimeStamp,
     }
 }
