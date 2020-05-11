@@ -241,7 +241,7 @@ namespace PlaywrightSharp.Firefox
         public Task SetCacheEnabledAsync(bool enabled)
             => _session.SendAsync(new PageSetCacheDisabledRequest { CacheDisabled = !enabled });
 
-        public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
+        public Task SetRequestInterceptionAsync(bool enabled) => _networkManager.SetRequestInterception(enabled);
 
         public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
 
