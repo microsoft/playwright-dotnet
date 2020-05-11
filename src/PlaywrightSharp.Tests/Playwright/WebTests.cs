@@ -10,9 +10,13 @@ namespace PlaywrightSharp.Tests.Playwright
     // I don't know yet if this will be a valid test for us, we will see when we implement it.
     ///<playwright-file>web.spec.js</playwright-file>
     ///<playwright-describe>Web SDK</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
+    [Collection(TestConstants.TestFixtureWebCollectionName)]
     public class WebTests : PlaywrightSharpBaseTest, IAsyncLifetime
     {
-        internal IPage Page { get; private set; }
+        private IPage Page { get; set; }
 
         /// <inheritdoc/>
         public WebTests(ITestOutputHelper output) : base(output)
@@ -20,6 +24,7 @@ namespace PlaywrightSharp.Tests.Playwright
         }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
+        [Fact(Skip = "It's node.js only")]
         public async Task InitializeAsync()
         {
             Page = await PlaywrightSharpWebLoaderFixture.HostBrowser.DefaultContext.NewPageAsync();
@@ -40,7 +45,7 @@ namespace PlaywrightSharp.Tests.Playwright
         ///<playwright-file>web.spec.js</playwright-file>
         ///<playwright-describe>Web SDK</playwright-describe>
         ///<playwright-it>should navigate</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Fact(Skip = "It's node.js only")]
         public async Task ShouldNavigate()
         {
             string url = await Page.EvaluateAsync<string>(
@@ -55,7 +60,7 @@ namespace PlaywrightSharp.Tests.Playwright
         ///<playwright-file>web.spec.js</playwright-file>
         ///<playwright-describe>Web SDK</playwright-describe>
         ///<playwright-it>should receive events</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Fact(Skip = "It's node.js only")]
         public async Task ShouldReceiveEvents()
         {
             string[] logs = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -71,7 +76,7 @@ namespace PlaywrightSharp.Tests.Playwright
         ///<playwright-file>web.spec.js</playwright-file>
         ///<playwright-describe>Web SDK</playwright-describe>
         ///<playwright-it>should take screenshot</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Fact(Skip = "It's node.js only")]
         public async Task ShouldTakeScreenshot()
         {
             string[] result = await Page.EvaluateAsync<string[]>(
