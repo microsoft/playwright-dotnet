@@ -47,7 +47,12 @@ namespace PlaywrightSharp
 
         internal static Func<IFrameExecutionContext, Task<IJSHandle>> GetWaitForFunctionTask(string selector, string pageFunction, WaitForFunctionOptions options, params object[] args)
         {
-            var polling = options?.Polling ?? WaitForFunctionPollingOption.Raf;
+            if (options?.PollingInterval != null && options.PollingInterval < 0)
+            {
+                throw new ArgumentOutOfRangeException($"Cannot poll with non-positive interval: {options.PollingInterval}");
+            }
+
+            var polling = (object)options?.PollingInterval ?? options?.Polling ?? WaitForFunctionPollingOption.Raf;
             string predicateBody = pageFunction.IsJavascriptFunction() ? $"return ({pageFunction})(...args)" : $"return ({pageFunction})";
             if (selector != null)
             {
