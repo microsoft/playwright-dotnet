@@ -36,6 +36,12 @@ namespace PlaywrightSharp
         Task SetPermissionsAsync(string origin, params ContextPermission[] permissions);
 
         /// <summary>
+        /// Clears all permission overrides for the browser context.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task ClearPermissionsAsync();
+
+        /// <summary>
         /// Sets the page's geolocation.
         /// </summary>
         /// <param name="geolocation">Geolocation.</param>

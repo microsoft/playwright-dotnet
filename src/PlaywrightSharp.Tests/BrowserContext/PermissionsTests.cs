@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>features/permissions.spec.js</playwright-file>
     ///<playwright-describe>Permissions</playwright-describe>
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PermissionsTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
