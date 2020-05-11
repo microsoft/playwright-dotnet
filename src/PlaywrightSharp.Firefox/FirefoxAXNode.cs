@@ -173,54 +173,49 @@ namespace PlaywrightSharp.Firefox
             {
                 Role = nodeRole ?? _role,
                 Name = _name ?? string.Empty,
+                Value = _payload.Value,
+                Description = _payload.Description,
+                RoleDescription = _payload.Roledescription,
+                ValueText = _payload.Valuetext,
+                KeyShortcuts = _payload.Keyshortcuts,
+                Disabled = _payload.Disabled ?? false,
+                Expanded = _payload.Expanded ?? false,
+                Focused = _role != "document" && _payload.Focused == true,
+                Modal = _payload.Modal ?? false,
+                Multiline = _payload.Multiline ?? false,
+                Multiselectable = _payload.Multiselectable ?? false,
+                Readonly = _payload.Readonly ?? false,
+                Required = _payload.Required ?? false,
+                Selected = _payload.Selected ?? false,
+                Checked = GetChecked(_payload.Checked),
+                Pressed = GetPressed(_payload.Pressed),
+                Level = _payload.Level.HasValue ? (int)_payload.Level : 0,
+                AutoComplete = GetTokenProperty(_payload.Autocomplete),
+                HasPopup = GetTokenProperty(_payload.Haspopup == true ? "true" : null),
+                Invalid = GetTokenProperty(_payload.Invalid == true ? "true" : null),
+                Orientation = GetTokenProperty(_payload.Orientation),
             };
 
-            node.Name = _payload.Name;
-            node.Value = _payload.Value;
-            node.Description = _payload.Description;
-            node.RoleDescription = _payload.Roledescription;
-            node.ValueText = _payload.Valuetext;
-            node.KeyShortcuts = _payload.Keyshortcuts;
-
-            node.Disabled = _payload.Disabled ?? false;
-            node.Expanded = _payload.Expanded ?? false;
-            if (_role != "document")
+            static CheckedState GetChecked(AXTreeChecked? value)
             {
-                node.Focused = _payload.Focused ?? false;
-            }
-
-            node.Modal = _payload.Modal ?? false;
-            node.Multiline = _payload.Multiline ?? false;
-            node.Multiselectable = _payload.Multiselectable ?? false;
-            node.Readonly = _payload.Readonly ?? false;
-            node.Required = _payload.Required ?? false;
-            node.Selected = _payload.Selected ?? false;
-
-            if (_payload.Checked != null)
-            {
-                if (_payload.Checked == AXTreeChecked.Mixed)
+                if (value != null)
                 {
-                    node.Checked = CheckedState.Mixed;
+                    if (value == AXTreeChecked.Mixed)
+                    {
+                        return CheckedState.Mixed;
+                    }
+                    else if (value == AXTreeChecked.True)
+                    {
+                        return CheckedState.True;
+                    }
                 }
-                else if (_payload.Checked == AXTreeChecked.True)
-                {
-                    node.Checked = CheckedState.True;
-                }
+
+                return CheckedState.False;
             }
 
-            if (_payload.Pressed != null)
-            {
-                node.Pressed = _payload.Pressed == true ? CheckedState.True : CheckedState.False;
-            }
+            static CheckedState GetPressed(bool? value) => value != null ? value == true ? CheckedState.True : CheckedState.False : CheckedState.False;
 
-            node.Level = _payload.Level.HasValue ? (int)_payload.Level : 0;
-
-            node.AutoComplete = GetTokenProperty(_payload.Autocomplete);
-            node.HasPopup = GetTokenProperty(_payload.Haspopup == true ? "true" : null);
-            node.Invalid = GetTokenProperty(_payload.Invalid == true ? "true" : null);
-            node.Orientation = GetTokenProperty(_payload.Orientation);
-
-            string GetTokenProperty(string value) => string.IsNullOrWhiteSpace(value) || value == "false" ? null : value;
+            static string GetTokenProperty(string value) => string.IsNullOrWhiteSpace(value) || value == "false" ? null : value;
 
             return node;
         }
