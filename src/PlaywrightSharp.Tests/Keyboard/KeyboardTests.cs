@@ -11,6 +11,7 @@ namespace PlaywrightSharp.Tests.Keyboard
     ///<playwright-file>keyboard.spec.js</playwright-file>
     ///<playwright-describe>Keyboard</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class KeyboardTests : PlaywrightSharpPageBaseTest
     {
