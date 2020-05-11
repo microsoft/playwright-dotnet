@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Mouse
     ///<playwright-file>mouse.spec.js</playwright-file>
     ///<playwright-describe>Mouse</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class MouseTests : PlaywrightSharpPageBaseTest
     {
