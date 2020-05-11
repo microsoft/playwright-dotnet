@@ -88,7 +88,17 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowser.DisconnectAsync"/>
         public Task DisconnectAsync()
         {
-            throw new NotImplementedException();
+            var disconnectedTsc = new TaskCompletionSource<bool>();
+            void DisconnectedEventHandler(object sender, EventArgs e)
+            {
+                disconnectedTsc.TrySetResult(true);
+                Disconnected -= DisconnectedEventHandler;
+            }
+
+            Disconnected += DisconnectedEventHandler;
+            _connection.Close(string.Empty);
+
+            return disconnectedTsc.Task;
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
