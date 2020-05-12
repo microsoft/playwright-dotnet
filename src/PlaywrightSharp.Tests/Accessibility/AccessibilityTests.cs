@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>Accessibility</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class AccessibilityTests : PlaywrightSharpPageBaseTest
     {
@@ -77,17 +78,17 @@ namespace PlaywrightSharp.Tests.Accessibility
                         },
                         new SerializedAXNode{
                             Role = "textbox",
-                            Name = "",
+                            Name = string.Empty,
                             Value= "value only"
                         },
                         new SerializedAXNode{
                             Role = "textbox",
-                            Name = "placeholder",
+                            Name = string.Empty,
                             Value= "and a value"
                         },
                         new SerializedAXNode{
                             Role = "textbox",
-                            Name = "placeholder",
+                            Name = string.Empty,
                             Value= "and a value",
                             Description= "This is a description!"}
                     }
@@ -331,7 +332,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                         new SerializedAXNode
                         {
                             Role = "text leaf",
-                            Name = "Edit this image:"
+                            Name = "Edit this image: "
                         },
                         new SerializedAXNode
                         {
@@ -364,7 +365,8 @@ namespace PlaywrightSharp.Tests.Accessibility
                 };
             }
 
-            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
+            var snapshot = await Page.Accessibility.SnapshotAsync();
+            Assert.Equal(node, snapshot.Children[0]);
         }
 
         ///<playwright-file>accessibility.spec.js</playwright-file>

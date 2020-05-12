@@ -8,6 +8,7 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>root option</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class RootOptionTests : PlaywrightSharpPageBaseTest
     {
@@ -91,7 +92,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                             Name = "Third Item"
                         }
                     },
-                    Orientation = TestConstants.IsFirefox ? "vertical" : null
+                    Orientation = TestConstants.IsWebKit ? "vertical" : null
                 },
                 await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { Root = menu }));
         }

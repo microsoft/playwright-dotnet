@@ -9,6 +9,7 @@ using PlaywrightSharp.Firefox.Helper;
 using PlaywrightSharp.Firefox.Input;
 using PlaywrightSharp.Firefox.Messaging;
 using PlaywrightSharp.Firefox.Protocol;
+using PlaywrightSharp.Firefox.Protocol.Accessibility;
 using PlaywrightSharp.Firefox.Protocol.Network;
 using PlaywrightSharp.Firefox.Protocol.Page;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
@@ -99,7 +100,7 @@ namespace PlaywrightSharp.Firefox
 
         public bool IsElementHandle(IRemoteObject remoteObject) => ((RemoteObject)remoteObject).Subtype == RemoteObjectSubtype.Node;
 
-        public Task<AccessibilityTree> GetAccessibilityTreeAsync(IElementHandle needle) => throw new NotImplementedException();
+        public Task<AccessibilityTree> GetAccessibilityTreeAsync(IElementHandle needle) => GetAccessibilityTreeAsync(_session, needle);
 
         public async Task<GotoResult> NavigateFrameAsync(IFrame frame, string url, string referrer)
         {
@@ -538,6 +539,21 @@ namespace PlaywrightSharp.Firefox
         private void OnDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<AccessibilityTree> GetAccessibilityTreeAsync(FirefoxSession session, IElementHandle needle)
+        {
+            string objectId = (needle as ElementHandle)?.RemoteObject.ObjectId;
+            var result = await session.SendAsync(new AccessibilityGetFullAXTreeRequest
+            {
+                ObjectId = objectId,
+            }).ConfigureAwait(false);
+            var axNode = new FirefoxAXNode(result.Tree);
+            return new AccessibilityTree
+            {
+                Tree = axNode,
+                Needle = needle != null ? axNode.FindNeedle() : null,
+            };
         }
 
         private class WorkerSession
