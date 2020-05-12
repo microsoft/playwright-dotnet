@@ -8,11 +8,14 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForSelectorTests : PlaywrightSharpPageBaseTest
     {
-        const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
+        private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
-        internal WaitForSelectorTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public WaitForSelectorTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -116,7 +119,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.FirstChildFrame();
-            var waitTask = frame.WaitForSelectorAsync(".box").ContinueWith(task => task?.Exception?.InnerException);
+            var waitTask = frame.WaitForSelectorAsync(".box").ContinueWith(task => task.Exception?.InnerException);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var waitException = await waitTask;
             Assert.NotNull(waitException);
@@ -179,7 +182,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-its>
-        /// <playwright-it>shidden should wait for visibility: hidden</playwright-it>
+        /// <playwright-it>hidden should wait for visibility: hidden</playwright-it>
         /// <playwright-it>hidden should wait for display: none</playwright-it>
         ///</playwright-its>
         [Theory]
@@ -234,7 +237,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
                 => await Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { Timeout = 10 }));
 
-            Assert.Contains("waiting for selector 'div' failed: timeout", exception.Message);
+            Assert.Contains("waiting for selector \"[visible] div\" failed: timeout", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -247,7 +250,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
                 => await Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden, Timeout = 10 }));
 
-            Assert.Contains("waiting for selector 'div' to be hidden failed: timeout", exception.Message);
+            Assert.Contains("waiting for selector \"[hidden] div\" failed: timeout", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>

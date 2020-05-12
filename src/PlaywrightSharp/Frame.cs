@@ -450,9 +450,9 @@ namespace PlaywrightSharp
             Detached = true;
             foreach (var data in _contextData.Values)
             {
-                foreach (var rerunnableTask in data.RerunnableTasks)
+                foreach (var rerunnableTask in data.RerunnableTasks.ToArray())
                 {
-                    rerunnableTask.Terminate(new PlaywrightSharpException("waitForFunction failed: frame got detached."));
+                    rerunnableTask?.Terminate(new PlaywrightSharpException("waitForFunction failed: frame got detached."));
                 }
             }
 
