@@ -9,11 +9,14 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForSelectorXPathTests : PlaywrightSharpPageBaseTest
     {
         const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
-        internal WaitForSelectorXPathTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public WaitForSelectorXPathTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -37,7 +40,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
                     => Page.WaitForSelectorAsync("//div", new WaitForSelectorOptions { Timeout = 10 }));
 
-            Assert.Contains("waiting for XPath '//div' failed: timeout", exception.Message);
+            Assert.Contains("waiting for selector \"[visible] //div\" failed: timeout", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -89,7 +92,7 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldAllowYouToSelectAnElementWithSingleSlash()
         {
             await Page.SetContentAsync("<div>some text</div>");
-            var waitForXPath = Page.WaitForSelectorAsync("/html/body/div");
+            var waitForXPath = Page.WaitForSelectorAsync("//html/body/div");
             Assert.Equal("some text", await Page.EvaluateAsync<string>("x => x.textContent", await waitForXPath));
         }
     }
