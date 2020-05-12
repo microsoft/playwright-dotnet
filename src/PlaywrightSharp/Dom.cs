@@ -73,7 +73,12 @@ namespace PlaywrightSharp
                       return innerPredicate(element, ...args);
                     }
                   }",
-                args.Prepend(await context.GetInjectedAsync().ConfigureAwait(false), selector, predicateBody, polling)).ConfigureAwait(false);
+                args.Prepend(
+                    await context.GetInjectedAsync().ConfigureAwait(false),
+                    selector,
+                    predicateBody,
+                    polling,
+                    options.Timeout)).ConfigureAwait(false);
         }
 
         internal static string NormalizeSelector(string selector)

@@ -411,6 +411,14 @@ namespace PlaywrightSharp
             return handle;
         }
 
+        /// <inheritdoc cref="IFrame.WaitForSelectorEvaluateAsync(string, string, WaitForFunctionOptions, object[])"/>
+        public async Task<IJSHandle> WaitForSelectorEvaluateAsync(string selector, string pageFunction, WaitForFunctionOptions options = null, params object[] args)
+        {
+            options ??= new WaitForFunctionOptions { Timeout = Page.DefaultTimeout };
+            var task = Dom.GetWaitForFunctionTask(selector, pageFunction, options, args);
+            return await ScheduleRerunnableTaskAsync(task, ContextType.Main, options.Timeout).ConfigureAwait(false);
+        }
+
         /// <inheritdoc cref="IFrame.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args)
         {
