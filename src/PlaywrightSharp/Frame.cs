@@ -416,7 +416,7 @@ namespace PlaywrightSharp
         {
             options ??= new WaitForFunctionOptions { Timeout = Page.DefaultTimeout };
             var task = Dom.GetWaitForFunctionTask(null, pageFunction, options, args);
-            return ScheduleRerunnableTaskAsync(task, ContextType.Main, options.Timeout, $"Function \"{pageFunction}\"");
+            return ScheduleRerunnableTaskAsync(task, ContextType.Main, options.Timeout);
         }
 
         /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>
@@ -604,7 +604,7 @@ namespace PlaywrightSharp
             Task<IJSHandle>> task,
             ContextType contextType,
             int? timeout,
-            string title)
+            string title = null)
         {
             var data = _contextData[contextType];
             var rerunnableTask = new RerunnableTask(data, task, timeout, title);

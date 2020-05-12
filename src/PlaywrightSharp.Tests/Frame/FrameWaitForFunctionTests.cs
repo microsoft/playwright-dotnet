@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForFunction</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FrameWaitForFunctionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -44,16 +46,17 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact]
         public async Task ShouldPollOnInterval()
         {
-            bool success = false;
-            var startTime = DateTime.Now;
             int polling = 100;
-            var watchdog = Page.WaitForFunctionAsync("() => window.__FOO === 'hit'", new WaitForFunctionOptions { PollingInterval = polling })
-                .ContinueWith(_ => success = true);
-            await Page.EvaluateAsync("window.__FOO = 'hit'");
-            Assert.False(success);
-            await Page.EvaluateAsync("document.body.appendChild(document.createElement('div'))");
-            await watchdog;
-            Assert.True((DateTime.Now - startTime).TotalMilliseconds > polling / 2);
+            var timeDelta = await Page.WaitForFunctionAsync(@"() => {
+                if (!window.__startTime) {
+                    window.__startTime = Date.now();
+                    return false;
+                }
+                return Date.now() - window.__startTime;
+            }", new WaitForFunctionOptions { PollingInterval = polling });
+            int value = (await timeDelta.GetJsonValueAsync<int>());
+
+            Assert.True(value >= polling);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
