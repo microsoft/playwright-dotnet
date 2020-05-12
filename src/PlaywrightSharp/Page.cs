@@ -577,11 +577,9 @@ namespace PlaywrightSharp
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
             => MainFrame.WaitForSelectorAsync(selector, options);
 
-        /// <inheritdoc cref="IPage.WaitForSelectorEvaluateAsync(string, string, WaitForSelectorOptions, object[])"/>
-        public Task<IElementHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForSelectorOptions options = null, params object[] args)
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc cref="IPage.WaitForSelectorEvaluateAsync(string, string, WaitForFunctionOptions, object[])"/>
+        public Task<IJSHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForFunctionOptions options = null, params object[] args)
+            => MainFrame.WaitForSelectorEvaluateAsync(selector, script, options, args);
 
         /// <inheritdoc cref="IPage.ScreenshotBase64Async(ScreenshotOptions)"/>
         public async Task<string> ScreenshotBase64Async(ScreenshotOptions options = null)

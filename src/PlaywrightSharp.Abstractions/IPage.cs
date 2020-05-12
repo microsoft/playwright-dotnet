@@ -665,7 +665,7 @@ namespace PlaywrightSharp
         /// <param name="args">Arguments to be passed.</param>
         /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        Task<IElementHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForSelectorOptions options = null, params object[] args);
+        Task<IJSHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForFunctionOptions options = null, params object[] args);
 
         /// <summary>
         /// Executes a script in browser context.

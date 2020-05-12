@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.$wait</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForSelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
-        internal WaitForSelectorEvaluateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public WaitForSelectorEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -38,7 +41,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.False(waitTask.IsCompleted);
             await Page.SetContentAsync("<span>text</span>");
             await waitTask;
-            Assert.Equal("text", await waitTask.Result.EvaluateAsync<string>("e => textContent"));
+            Assert.Equal("text", await waitTask.Result.EvaluateAsync<string>("e => e.textContent"));
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
