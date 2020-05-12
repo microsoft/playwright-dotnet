@@ -8,6 +8,7 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Page.WaitFor</playwright-describe>
+    [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForTests : PlaywrightSharpPageBaseTest
@@ -99,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should throw when unknown type</playwright-it>
         [Fact(Skip = "We don't this test")]
-        public void ShouldThrowWhenUnknownYype() { }
+        public void ShouldThrowWhenUnknownType() { }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
