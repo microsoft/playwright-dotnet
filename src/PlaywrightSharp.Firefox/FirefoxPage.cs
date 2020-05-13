@@ -513,15 +513,23 @@ namespace PlaywrightSharp.Firefox
             }
 
             workerSession.MessageReceived += HandleRuntimeExecutionContextCreated;
-            workerSession.MessageReceived += (sender, e) =>
+            workerSession.MessageReceived += async (sender, e) =>
             {
-                if (e is RuntimeConsoleFirefoxEvent runtimeConsole)
+                try
                 {
-                    var context = worker.ExistingExecutionContext;
-                    var type = runtimeConsole.GetConsoleType();
-                    var location = runtimeConsole.ToConsoleMessageLocation();
+                    if (e is RuntimeConsoleFirefoxEvent runtimeConsole)
+                    {
+                        var context = await worker.GetExistingExecutionContextAsync().ConfigureAwait(false);
+                        var type = runtimeConsole.GetConsoleType();
+                        var location = runtimeConsole.ToConsoleMessageLocation();
 
-                    Page.AddConsoleMessage(type, Array.ConvertAll(runtimeConsole.Args, arg => context.CreateHandle(arg)), location);
+                        Page.AddConsoleMessage(type, Array.ConvertAll(runtimeConsole.Args, arg => context.CreateHandle(arg)), location);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                    workerSession.OnClosed(ex.ToString());
                 }
             };
         }

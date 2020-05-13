@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Chromium
             {
                 if (e is TargetAttachedToTargetChromiumEvent response)
                 {
-                    if (response.TargetInfo.GetTargetType() != TargetType.ServiceWorker)
+                    if (response.TargetInfo.GetTargetType() != TargetType.Worker)
                     {
                         _ = client.SendAsync(new TargetDetachFromTargetRequest { SessionId = response.SessionId });
                     }

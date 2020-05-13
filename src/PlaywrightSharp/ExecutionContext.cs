@@ -4,7 +4,7 @@ namespace PlaywrightSharp
 {
     internal class ExecutionContext
     {
-        protected ExecutionContext(IExecutionContextDelegate executionContextDelegate) => Delegate = executionContextDelegate;
+        internal ExecutionContext(IExecutionContextDelegate executionContextDelegate) => Delegate = executionContextDelegate;
 
         internal IExecutionContextDelegate Delegate { get; }
 

@@ -513,6 +513,9 @@ namespace PlaywrightSharp.Chromium
                     case PageJavascriptDialogOpeningChromiumEvent pageJavascriptDialogOpening:
                         OnDialog(pageJavascriptDialogOpening);
                         break;
+                    case TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget:
+                        OnDetachedFromTarget(targetDetachedFromTarget);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -526,6 +529,9 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.ToString());
             }
         }
+
+        private void OnDetachedFromTarget(TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
+            => Page.RemoveWorker(targetDetachedFromTarget.SessionId);
 
         private void OnDialog(PageJavascriptDialogOpeningChromiumEvent e)
             => Page?.OnDialog(new Dialog(
@@ -603,29 +609,42 @@ namespace PlaywrightSharp.Chromium
 
             void HandleRuntimeExecutionContextCreated(object sender, IChromiumEvent e)
             {
-                switch (e)
+                if (e is RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated)
                 {
-                    case RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated:
-
-                        worker.CreateExecutionContext(new ChromiumExecutionContext(session, runtimeExecutionContextCreated.Context));
-                        session.MessageReceived -= HandleRuntimeExecutionContextCreated;
-                        break;
-
-                    case RuntimeConsoleAPICalledChromiumEvent runtimeConsoleAPICalled:
-                        var args = runtimeConsoleAPICalled.Args.Select(o =>
-                            worker.ExistingExecutionContext.CreateHandle(o));
-                        Page.AddConsoleMessage(
-                            runtimeConsoleAPICalled.Type.ToEnum<ConsoleType>(),
-                            args.ToArray(),
-                            ToConsoleMessageLocation(runtimeConsoleAPICalled.StackTrace));
-                        break;
-
-                    case RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown:
-                        Page.OnPageError(ExceptionToError(runtimeExceptionThrown.ExceptionDetails));
-                        break;
+                    worker.CreateExecutionContext(new ChromiumExecutionContext(session, runtimeExecutionContextCreated.Context));
+                    session.MessageReceived -= HandleRuntimeExecutionContextCreated;
                 }
             }
 
+            async void HandleRuntimeExecutionMessages(object sender, IChromiumEvent e)
+            {
+                try
+                {
+                    switch (e)
+                    {
+                        case RuntimeConsoleAPICalledChromiumEvent runtimeConsoleAPICalled:
+                            var executionContext = await worker.GetExistingExecutionContextAsync().ConfigureAwait(false);
+                            var args = runtimeConsoleAPICalled.Args.Select(o => executionContext.CreateHandle(o));
+                            Page.AddConsoleMessage(
+                                runtimeConsoleAPICalled.Type.ToEnum<ConsoleType>(),
+                                args.ToArray(),
+                                ToConsoleMessageLocation(runtimeConsoleAPICalled.StackTrace));
+                            break;
+
+                        case RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown:
+                            Page.OnPageError(ExceptionToError(runtimeExceptionThrown.ExceptionDetails));
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // TODO Add Logger
+                    System.Diagnostics.Debug.WriteLine(ex);
+                    session.OnClosed(ex.ToString());
+                }
+            }
+
+            session.MessageReceived += HandleRuntimeExecutionMessages;
             session.MessageReceived += HandleRuntimeExecutionContextCreated;
 
             try

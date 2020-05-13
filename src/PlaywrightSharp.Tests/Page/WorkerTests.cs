@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -9,6 +10,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>worker.spec.js</playwright-file>
     ///<playwright-describe>Workers</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WorkerTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -23,12 +26,12 @@ namespace PlaywrightSharp.Tests.Page
         public async Task PageWorkers()
         {
             await Task.WhenAll(
-                Page.WaitForEvent(PageEvent.WorkerCreated),
+                Page.WaitForEvent<WorkerEventArgs>(PageEvent.WorkerCreated),
                 Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html"));
             var worker = Page.Workers[0];
             Assert.Contains("worker.js", worker.Url);
 
-            Assert.Equal("worker function result", await worker.EvaluateAsync<string>("self.workerFunction()"));
+            Assert.Equal("worker function result", await worker.EvaluateAsync<string>("() => self['workerFunction']()"));
 
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Empty(Page.Workers);
@@ -78,7 +81,7 @@ namespace PlaywrightSharp.Tests.Page
             var log = await consoleTcs.Task;
             Assert.Equal("1 2 3 JSHandle@object", log.Text);
             Assert.Equal(4, log.Args.Count);
-            object json = await (await log.Args[3].GetPropertyAsync("origin")).GetJsonValueAsync<object>();
+            string json = await (await log.Args[3].GetPropertyAsync("origin")).GetJsonValueAsync<string>();
             Assert.Equal("null", json);
         }
 
@@ -89,7 +92,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldEvaluate()
         {
             var workerCreatedTask = Page.WaitForEvent<WorkerEventArgs>(PageEvent.WorkerCreated);
-            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
+            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))");
 
             await workerCreatedTask;
             Assert.Equal(2, await workerCreatedTask.Result.Worker.EvaluateAsync<int>("1+1"));
@@ -160,7 +163,7 @@ namespace PlaywrightSharp.Tests.Page
                 Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html")
             );
 
-            string url = TestConstants.ServerUrl + "one-style.css";
+            string url = TestConstants.ServerUrl + "/one-style.css";
             var requestTask = Page.WaitForRequestAsync(url);
             var responseTask = Page.WaitForResponseAsync(url);
 
@@ -212,8 +215,8 @@ namespace PlaywrightSharp.Tests.Page
 
             Page.Websocket += (sender, websocketEventArgs) =>
             {
-                websocketEventArgs.Websocket.Open += (sender, e) => log.Add($"open<{websocketEventArgs.Websocket.Url}");
-                websocketEventArgs.Websocket.Close += (sender, e) =>
+                websocketEventArgs.Websocket.Open += (s, e) => log.Add($"open<{websocketEventArgs.Websocket.Url}");
+                websocketEventArgs.Websocket.Close += (s, e) =>
                 {
                     log.Add("close");
                     socketClosedTcs.TrySetResult(true);
