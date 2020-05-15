@@ -206,7 +206,7 @@ namespace PlaywrightSharp.Chromium
                         return;
 
                     case TargetTargetInfoChangedChromiumEvent targetInfoChanged:
-                        ChangeTargetInfo(targetInfoChanged);
+                        TargetInfoChanged(targetInfoChanged);
                         return;
                 }
             }
@@ -270,15 +270,21 @@ namespace PlaywrightSharp.Chromium
             }
         }
 
-        private void ChangeTargetInfo(TargetTargetInfoChangedChromiumEvent e)
+        private void TargetInfoChanged(TargetTargetInfoChangedChromiumEvent e)
         {
-            if (!TargetsMap.ContainsKey(e.TargetInfo.TargetId))
+            if (!TargetsMap.TryGetValue(e.TargetInfo.TargetId, out var target))
             {
                 throw new PlaywrightSharpException("Target should exists before ChangeTargetInfo");
             }
 
-            var target = TargetsMap[e.TargetInfo.TargetId];
+            string previousUrl = target.Url;
+            bool wasInitialized = target.IsInitialized;
             target.TargetInfoChanged(e.TargetInfo);
+
+            if (wasInitialized && previousUrl != target.Url)
+            {
+                TargetChanged?.Invoke(this, new TargetChangedArgs { Target = target });
+            }
         }
 
         private BrowserContext CreateBrowserContext(string contextId, BrowserContextOptions options = null)
