@@ -406,11 +406,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 }
                 spinner = !spinner;
             };
-            var results = await Page.EvaluateAsync<string[]>(@"() => Promise.all([
-                fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
-                fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
-                fetch('/zzz').then(response => response.text()).catch (e => 'FAILED'),
-            ])");
+            var results = new List<string>();
+            for (int i = 0; i < 3; ++i)
+            {
+                results.Add(await Page.EvaluateAsync<string>("fetch('/zzz').then(response => response.text()).catch (e => 'FAILED')"));
+            }
+
             Assert.Equal(new[] { "11", "FAILED", "22" }, results);
         }
 
