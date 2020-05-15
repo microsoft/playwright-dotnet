@@ -23,15 +23,14 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact]
         public async Task ShouldWorkWithRequestInterception()
         {
-            var context = await Browser.NewContextAsync(new BrowserContextOptions
+            var page = await NewPageAsync(new BrowserContextOptions
             {
                 IgnoreHTTPSErrors = true
             });
-            var page = await context.NewPageAsync();
 
             await page.SetRequestInterceptionAsync(true);
             page.Request += async (sender, e) => await e.Request.ContinueAsync();
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
     }
