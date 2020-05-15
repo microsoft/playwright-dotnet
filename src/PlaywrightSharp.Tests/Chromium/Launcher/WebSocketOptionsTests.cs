@@ -8,6 +8,8 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
 {
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class WebSocketOptionsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -18,7 +20,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
         ///<playwright-it>should support the remote-debugging-port argument</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportTheRemoteDebuggingPortArgument()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
