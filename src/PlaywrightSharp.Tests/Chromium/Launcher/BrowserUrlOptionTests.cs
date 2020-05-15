@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
@@ -9,6 +10,10 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
 {
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch |browserURL| option</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserUrlOptionTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -19,7 +24,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch |browserURL| option</playwright-describe>
         ///<playwright-it>should be able to connect using browserUrl, with and without trailing slash</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToConnectUsingBrowserURLWithAndWithoutTrailingSlash()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -41,14 +46,14 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch |browserURL| option</playwright-describe>
         ///<playwright-it>should throw when using both browserWSEndpoint and browserURL</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowWhenUsingBothBrowserWSEndpointAndBrowserURL()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => Playwright.ConnectAsync(new ConnectOptions
+            await Assert.ThrowsAsync<ArgumentException>(() => Playwright.ConnectAsync(new ConnectOptions
             {
                 BrowserURL = browserURL,
                 BrowserWSEndpoint = browserApp.WebSocketEndpoint
@@ -60,16 +65,16 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch |browserURL| option</playwright-describe>
         ///<playwright-it>should throw when trying to connect to non-existing browser</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowWhenTryingToConnectToNonExistingBrowser()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
             var browserApp = await Playwright.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => Playwright.ConnectAsync(new ConnectOptions
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Playwright.ConnectAsync(new ConnectOptions
             {
-                BrowserURL = browserURL
+                BrowserURL = browserURL + "foo"
             }));
 
             await browserApp.CloseAsync();
@@ -78,8 +83,8 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         private string GetBrowserUrl(string wsEndpoint)
         {
             var regex = new Regex(@"ws:\/\/([0-9A-Za-z\.]*):(\d+)\/");
-            string port = regex.Match(wsEndpoint).Captures[2].Value;
-            return $"http://127.0.0.1:${port}";
+            string port = regex.Match(wsEndpoint).Groups[2].Value;
+            return $"http://127.0.0.1:{port}";
         }
     }
 }

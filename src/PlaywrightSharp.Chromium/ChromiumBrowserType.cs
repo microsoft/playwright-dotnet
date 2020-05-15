@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Chromium
                 return await ChromiumBrowser.ConnectAsync(options).ConfigureAwait(false);
             }
 
-            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) && options.TransportFactory != null)
+            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) || options.TransportFactory != null)
             {
                 throw new ArgumentException("Exactly one of BrowserWSEndpoint or TransportFactory must be passed to connect");
             }
