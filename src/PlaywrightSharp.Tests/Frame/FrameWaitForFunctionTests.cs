@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -9,6 +10,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForFunction</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FrameWaitForFunctionTests : PlaywrightSharpPageBaseTest
     {
@@ -90,7 +92,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should work with strict CSP policy</playwright-it>
-        [Fact]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithStrictCSPPolicy()
         {
             Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
