@@ -72,6 +72,8 @@ namespace PlaywrightSharp.Chromium
             });
         }
 
+        internal void InstrumentNetworkEvents(ChromiumSession session) => session.MessageReceived += Client_MessageReceived;
+
         private async void Client_MessageReceived(object sender, IChromiumEvent e)
         {
             try
@@ -203,11 +205,7 @@ namespace PlaywrightSharp.Chromium
                 }
             }
 
-            if (!_page.FrameManager.Frames.TryGetValue(e.FrameId, out var frame))
-            {
-                return;
-            }
-
+            _page.FrameManager.Frames.TryGetValue(e.FrameId ?? string.Empty, out var frame);
             bool isNavigationRequest = e.RequestId == e.LoaderId && e.Type == Protocol.Network.ResourceType.Document;
             string documentId = isNavigationRequest ? e.LoaderId : null;
             var request = new ChromiumInterceptableRequest(

@@ -1,4 +1,4 @@
-using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -6,6 +6,9 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IWorker"/>
     public class Worker : IWorker
     {
+        private readonly TaskCompletionSource<ExecutionContext> _executionContextTcs = new TaskCompletionSource<ExecutionContext>();
+        private ExecutionContext _existingExecutionContext;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Worker"/> class.
         /// </summary>
@@ -15,23 +18,20 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IWorker.Url"/>
         public string Url { get; }
 
-        internal ExecutionContext ExistingExecutionContext { get; private set; }
-
         /// <inheritdoc cref="IWorker.EvaluateAsync{T}(string, object[])"/>
-        public Task<T> EvaluateAsync<T>(string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async Task<T> EvaluateAsync<T>(string script, params object[] args)
+            => await (await GetExistingExecutionContextAsync().ConfigureAwait(false)).EvaluateAsync<T>(script, args).ConfigureAwait(false);
 
         /// <inheritdoc cref="IWorker.EvaluateAsync(string, object[])"/>
-        public Task EvaluateAsync(string script, params object[] args)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async Task<JsonElement?> EvaluateAsync(string script, params object[] args)
+            => await (await GetExistingExecutionContextAsync().ConfigureAwait(false)).EvaluateAsync<JsonElement?>(script, args).ConfigureAwait(false);
+
+        internal Task<ExecutionContext> GetExistingExecutionContextAsync() => _executionContextTcs.Task;
 
         internal void CreateExecutionContext(IExecutionContextDelegate executionContextDelegate)
         {
-            throw new NotImplementedException();
+            _existingExecutionContext = new ExecutionContext(executionContextDelegate);
+            _executionContextTcs.TrySetResult(_existingExecutionContext);
         }
     }
 }

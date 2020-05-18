@@ -427,30 +427,6 @@ namespace PlaywrightSharp
         Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null);
 
         /// <summary>
-        /// Waits for event to fire and passes its value into the predicate function.
-        /// </summary>
-        /// <param name="e">Event to wait for.</param>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// // wait for console event:
-        /// var console = await page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
-        ///
-        /// // wait for popup event:
-        /// var popup = await page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
-        ///
-        /// // wait for dialog event:
-        /// var dialog = await page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
-        ///
-        /// // wait for request event:
-        /// var request = await page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task WaitForEvent(PageEvent e);
-
-        /// <summary>
         /// Navigates to an url.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>

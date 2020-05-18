@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +20,7 @@ namespace PlaywrightSharp
 
         private readonly TaskCompletionSource<bool> _closeTsc = new TaskCompletionSource<bool>();
         private readonly Dictionary<string, Delegate> _pageBindings = new Dictionary<string, Delegate>();
+        private readonly ConcurrentDictionary<string, Worker> _workers = new ConcurrentDictionary<string, Worker>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
         private readonly object _fileChooserEventLock = new object();
 
@@ -160,7 +162,7 @@ namespace PlaywrightSharp
         public bool IsClosed { get; private set; }
 
         /// <inheritdoc cref="IPage.Workers"/>
-        public IWorker[] Workers => null;
+        public IWorker[] Workers => _workers.Values.ToArray();
 
         /// <inheritdoc cref="IPage.Coverage"/>
         public ICoverage Coverage => null;
@@ -468,12 +470,6 @@ namespace PlaywrightSharp
             }
         }
 
-        /// <inheritdoc cref="IPage.WaitForEvent(PageEvent)"/>
-        public Task WaitForEvent(PageEvent e)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IPage.WaitForLoadStateAsync(NavigationOptions)"/>
         public Task WaitForLoadStateAsync(NavigationOptions options = null) => MainFrame.WaitForLoadStateAsync(options);
 
@@ -602,12 +598,25 @@ namespace PlaywrightSharp
 
         internal void RemoveWorker(string workerId)
         {
-            throw new NotImplementedException();
+            if (_workers.TryRemove(workerId, out var worker))
+            {
+                WorkerDestroyed?.Invoke(this, new WorkerEventArgs(worker));
+            }
         }
 
         internal void AddWorker(string workerId, Worker worker)
         {
-            throw new NotImplementedException();
+            _workers[workerId] = worker;
+            WorkerCreated?.Invoke(this, new WorkerEventArgs(worker));
+        }
+
+        internal void ClearWorkers()
+        {
+            foreach (var kv in _workers)
+            {
+                WorkerDestroyed?.Invoke(this, new WorkerEventArgs(kv.Value));
+                _workers.TryRemove(kv.Key, out _);
+            }
         }
 
         internal void AddConsoleMessage(ConsoleType type, IJSHandle[] args, ConsoleMessageLocation location, string text = null)

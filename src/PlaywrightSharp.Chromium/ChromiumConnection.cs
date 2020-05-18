@@ -130,19 +130,14 @@ namespace PlaywrightSharp.Chromium
                 string sessionId = targetAttachedToTarget.SessionId;
                 ChromiumSession session = new ChromiumSession(this, targetAttachedToTarget.TargetInfo.GetTargetType(), sessionId);
                 _asyncSessions.AddItem(sessionId, session);
-
-                return;
             }
-
-            if (param is TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
+            else if (param is TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             {
                 string sessionId = targetDetachedFromTarget.SessionId;
                 if (_sessions.TryRemove(sessionId, out var session) && !session.IsClosed)
                 {
                     session.OnClosed(targetDetachedFromTarget.InternalName);
                 }
-
-                return;
             }
 
             GetSession(obj.SessionId ?? string.Empty).OnMessageReceived(param);

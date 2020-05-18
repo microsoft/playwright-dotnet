@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -34,6 +35,6 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvaluateAsync(string script, params object[] args);
+        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
     }
 }
