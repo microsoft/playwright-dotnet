@@ -118,7 +118,7 @@ namespace PlaywrightSharp
             {
                 foreach (var watcher in LifecycleWatchers.ToArray())
                 {
-                    watcher.OnCommittedNewDocumentNavigation(frame);
+                    watcher?.OnCommittedNewDocumentNavigation(frame);
                 }
 
                 _page.OnFrameNavigated(frame);
@@ -135,7 +135,7 @@ namespace PlaywrightSharp
             frame.Url = url;
             foreach (var watcher in LifecycleWatchers.ToArray())
             {
-                watcher.OnNavigatedWithinDocument(frame);
+                watcher?.OnNavigatedWithinDocument(frame);
             }
 
             _page.OnFrameNavigated(frame);
@@ -152,7 +152,7 @@ namespace PlaywrightSharp
 
             foreach (var watcher in LifecycleWatchers.ToArray())
             {
-                watcher.OnLifecycleEvent(frame);
+                watcher?.OnLifecycleEvent(frame);
             }
 
             if (frame == MainFrame && name == WaitUntilNavigation.Load)
@@ -217,7 +217,7 @@ namespace PlaywrightSharp
             {
                 foreach (var watcher in LifecycleWatchers.ToArray())
                 {
-                    watcher.OnNavigationRequest(frame, request);
+                    watcher?.OnNavigationRequest(frame, request);
                 }
             }
 
@@ -260,7 +260,7 @@ namespace PlaywrightSharp
 
                     foreach (var watcher in LifecycleWatchers.ToArray())
                     {
-                        watcher.OnAbortedNewDocumentNavigation(frame, request.DocumentId, errorText);
+                        watcher?.OnAbortedNewDocumentNavigation(frame, request.DocumentId, errorText);
                     }
                 }
             }
@@ -315,7 +315,7 @@ namespace PlaywrightSharp
             Frames.TryRemove(frame.Id, out _);
             foreach (var watcher in LifecycleWatchers.ToArray())
             {
-                watcher.OnFrameDetached(frame);
+                watcher?.OnFrameDetached(frame);
             }
 
             _page.OnFrameDetached(frame);
