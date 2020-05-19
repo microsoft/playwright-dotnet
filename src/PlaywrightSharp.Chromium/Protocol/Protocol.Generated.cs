@@ -153,7 +153,7 @@ internal enum WindowState
 [System.Runtime.Serialization.EnumMember(Value = "maximized")]Maximized,
 [System.Runtime.Serialization.EnumMember(Value = "fullscreen")]Fullscreen}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PermissionType
@@ -180,7 +180,7 @@ internal enum PermissionType
 [System.Runtime.Serialization.EnumMember(Value = "wakeLockScreen")]WakeLockScreen,
 [System.Runtime.Serialization.EnumMember(Value = "wakeLockSystem")]WakeLockSystem}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum PermissionSetting
@@ -307,7 +307,7 @@ namespace PlaywrightSharp.Chromium.Protocol.IndexedDB
 namespace PlaywrightSharp.Chromium.Protocol.Input
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum GestureSourceType
@@ -316,7 +316,7 @@ internal enum GestureSourceType
 [System.Runtime.Serialization.EnumMember(Value = "touch")]Touch,
 [System.Runtime.Serialization.EnumMember(Value = "mouse")]Mouse}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum MouseButton
@@ -519,7 +519,7 @@ internal enum SignedExchangeErrorField
 namespace PlaywrightSharp.Chromium.Protocol.Overlay
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum InspectMode
@@ -562,7 +562,7 @@ internal enum DialogType
 [System.Runtime.Serialization.EnumMember(Value = "prompt")]Prompt,
 [System.Runtime.Serialization.EnumMember(Value = "beforeunload")]Beforeunload}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ClientNavigationReason
@@ -603,7 +603,7 @@ internal enum SecurityState
 [System.Runtime.Serialization.EnumMember(Value = "info")]Info,
 [System.Runtime.Serialization.EnumMember(Value = "insecure-broken")]InsecureBroken}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum SafetyTipStatus
@@ -623,7 +623,7 @@ internal enum CertificateErrorAction
 namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ServiceWorkerVersionRunningStatus
@@ -633,7 +633,7 @@ internal enum ServiceWorkerVersionRunningStatus
 [System.Runtime.Serialization.EnumMember(Value = "running")]Running,
 [System.Runtime.Serialization.EnumMember(Value = "stopping")]Stopping}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum ServiceWorkerVersionStatus
@@ -773,7 +773,7 @@ internal enum AutomationRate
 namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AuthenticatorProtocol
@@ -781,7 +781,7 @@ internal enum AuthenticatorProtocol
 [System.Runtime.Serialization.EnumMember(Value = "u2f")]U2F,
 [System.Runtime.Serialization.EnumMember(Value = "ctap2")]Ctap2}
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 internal enum AuthenticatorTransport
@@ -877,7 +877,7 @@ internal partial class AXValueSource
 [System.Text.Json.Serialization.JsonPropertyName("invalidReason")] public string InvalidReason { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class AXRelatedNode
 {
@@ -897,7 +897,7 @@ internal partial class AXRelatedNode
 [System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class AXProperty
 {
@@ -1086,7 +1086,7 @@ public string Command { get; } = "Accessibility.getFullAXTree";
 internal partial class AccessibilityGetFullAXTreeResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodes")] public AXNode[] Nodes { get; set; }
 }
@@ -1670,7 +1670,7 @@ internal partial class ApplicationCacheGetManifestForFrameResponse: IChromiumRes
 [System.Text.Json.Serialization.JsonPropertyName("manifestURL")] public string ManifestURL { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>ApplicationCache.applicationCacheStatusUpdated</c>
@@ -1694,7 +1694,7 @@ public string InternalName { get; } = "ApplicationCache.applicationCacheStatusUp
 [System.Text.Json.Serialization.JsonPropertyName("status")] public int? Status { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>ApplicationCache.networkStateUpdated</c>
@@ -1703,7 +1703,7 @@ internal partial class ApplicationCacheNetworkStateUpdatedChromiumEvent : IChrom
 {
 public string InternalName { get; } = "ApplicationCache.networkStateUpdated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("isNowOnline")] public bool? IsNowOnline { get; set; }
 }
@@ -1770,17 +1770,17 @@ namespace PlaywrightSharp.Chromium.Protocol.BackgroundService
 internal partial class EventMetadata
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class BackgroundServiceEvent
 {
@@ -1831,7 +1831,7 @@ internal partial class BackgroundServiceStartObservingRequest : IChromiumRequest
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.startObserving";
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
@@ -1853,7 +1853,7 @@ internal partial class BackgroundServiceStopObservingRequest : IChromiumRequest<
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.stopObserving";
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
@@ -1875,12 +1875,12 @@ internal partial class BackgroundServiceSetRecordingRequest : IChromiumRequest<B
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.setRecording";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("shouldRecord")] public bool? ShouldRecord { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
@@ -1902,7 +1902,7 @@ internal partial class BackgroundServiceClearEventsRequest : IChromiumRequest<Ba
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "BackgroundService.clearEvents";
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
@@ -1923,12 +1923,12 @@ internal partial class BackgroundServiceRecordingStateChangedChromiumEvent : ICh
 {
 public string InternalName { get; } = "BackgroundService.recordingStateChanged";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("isRecording")] public bool? IsRecording { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("service")] public ServiceName Service { get; set; }
@@ -1944,7 +1944,7 @@ internal partial class BackgroundServiceBackgroundServiceEventReceivedChromiumEv
 {
 public string InternalName { get; } = "BackgroundService.backgroundServiceEventReceived";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("backgroundServiceEvent")] public BackgroundServiceEvent BackgroundServiceEvent { get; set; }
 }
@@ -2108,12 +2108,12 @@ internal partial class BrowserGrantPermissionsRequest : IChromiumRequest<Browser
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.grantPermissions";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("permissions")] public PermissionType[] Permissions { get; set; }
 
@@ -2420,7 +2420,7 @@ internal partial class BrowserSetDockTileRequest : IChromiumRequest<BrowserSetDo
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Browser.setDockTile";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("badgeLabel")] public string BadgeLabel { get; set; }
 
@@ -2681,7 +2681,7 @@ internal partial class SourceRange
 [System.Text.Json.Serialization.JsonPropertyName("endColumn")] public int? EndColumn { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class ShorthandEntry
 {
@@ -2701,7 +2701,7 @@ internal partial class ShorthandEntry
 [System.Text.Json.Serialization.JsonPropertyName("important")] public bool? Important { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class CSSComputedStyleProperty
 {
@@ -3049,7 +3049,7 @@ internal partial class CSSCollectClassNamesRequest : IChromiumRequest<CSSCollect
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.collectClassNames";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 }
@@ -3151,7 +3151,7 @@ internal partial class CSSForcePseudoStateResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>CSS.getBackgroundColors</c>
@@ -3201,7 +3201,7 @@ internal partial class CSSGetComputedStyleForNodeRequest : IChromiumRequest<CSSG
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getComputedStyleForNode";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
 }
@@ -3227,7 +3227,7 @@ internal partial class CSSGetInlineStylesForNodeRequest : IChromiumRequest<CSSGe
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getInlineStylesForNode";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
 }
@@ -3257,7 +3257,7 @@ internal partial class CSSGetMatchedStylesForNodeRequest : IChromiumRequest<CSSG
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getMatchedStylesForNode";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
 }
@@ -3313,7 +3313,7 @@ public string Command { get; } = "CSS.getMediaQueries";
 internal partial class CSSGetMediaQueriesResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("medias")] public CSSMedia[] Medias { get; set; }
 }
@@ -3329,7 +3329,7 @@ internal partial class CSSGetPlatformFontsForNodeRequest : IChromiumRequest<CSSG
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getPlatformFontsForNode";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
 }
@@ -3354,7 +3354,7 @@ internal partial class CSSGetStyleSheetTextRequest : IChromiumRequest<CSSGetStyl
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.getStyleSheetText";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 }
@@ -3385,12 +3385,12 @@ public string Command { get; } = "CSS.setEffectivePropertyValueForNode";
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("propertyName")] public string PropertyName { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
@@ -3411,17 +3411,17 @@ internal partial class CSSSetKeyframeKeyRequest : IChromiumRequest<CSSSetKeyfram
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setKeyframeKey";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("keyText")] public string KeyText { get; set; }
 }
@@ -3446,17 +3446,17 @@ internal partial class CSSSetMediaTextRequest : IChromiumRequest<CSSSetMediaText
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setMediaText";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
 }
@@ -3481,17 +3481,17 @@ internal partial class CSSSetRuleSelectorRequest : IChromiumRequest<CSSSetRuleSe
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setRuleSelector";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("range")] public SourceRange Range { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("selector")] public string Selector { get; set; }
 }
@@ -3516,12 +3516,12 @@ internal partial class CSSSetStyleSheetTextRequest : IChromiumRequest<CSSSetStyl
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setStyleSheetText";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("text")] public string Text { get; set; }
 }
@@ -3546,7 +3546,7 @@ internal partial class CSSSetStyleTextsRequest : IChromiumRequest<CSSSetStyleTex
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "CSS.setStyleTexts";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("edits")] public StyleDeclarationEdit[] Edits { get; set; }
 }
@@ -3595,7 +3595,7 @@ public string Command { get; } = "CSS.stopRuleUsageTracking";
 internal partial class CSSStopRuleUsageTrackingResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("ruleUsage")] public RuleUsage[] RuleUsage { get; set; }
 }
@@ -3617,7 +3617,7 @@ public string Command { get; } = "CSS.takeCoverageDelta";
 internal partial class CSSTakeCoverageDeltaResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("coverage")] public RuleUsage[] Coverage { get; set; }
 
@@ -3676,7 +3676,7 @@ internal partial class CSSStyleSheetChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "CSS.styleSheetChanged";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("styleSheetId")] public string StyleSheetId { get; set; }
 }
@@ -3764,17 +3764,17 @@ internal partial class Cache
 [System.Text.Json.Serialization.JsonPropertyName("cacheName")] public string CacheName { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class Header
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
@@ -3945,17 +3945,17 @@ internal partial class CacheStorageRequestEntriesResponse: IChromiumResponse
 namespace PlaywrightSharp.Chromium.Protocol.Cast
 {
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class Sink
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
 
@@ -3980,7 +3980,7 @@ internal partial class CastEnableRequest : IChromiumRequest<CastEnableResponse>
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.enable";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("presentationUrl")] public string PresentationUrl { get; set; }
 }
@@ -4019,7 +4019,7 @@ internal partial class CastSetSinkToUseRequest : IChromiumRequest<CastSetSinkToU
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.setSinkToUse";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sinkName")] public string SinkName { get; set; }
 }
@@ -4040,7 +4040,7 @@ internal partial class CastStartTabMirroringRequest : IChromiumRequest<CastStart
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.startTabMirroring";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sinkName")] public string SinkName { get; set; }
 }
@@ -4061,7 +4061,7 @@ internal partial class CastStopCastingRequest : IChromiumRequest<CastStopCasting
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Cast.stopCasting";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sinkName")] public string SinkName { get; set; }
 }
@@ -4082,7 +4082,7 @@ internal partial class CastSinksUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Cast.sinksUpdated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sinks")] public Sink[] Sinks { get; set; }
 }
@@ -4097,7 +4097,7 @@ internal partial class CastIssueUpdatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Cast.issueUpdated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("issueMessage")] public string IssueMessage { get; set; }
 }
@@ -4120,7 +4120,7 @@ internal partial class BackendNode
 [System.Text.Json.Serialization.JsonPropertyName("nodeName")] public string NodeName { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("backendNodeId")] public int? BackendNodeId { get; set; }
 }
@@ -5473,7 +5473,7 @@ public string Command { get; } = "DOM.getFileInfo";
 internal partial class DOMGetFileInfoResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("path")] public string Path { get; set; }
 }
@@ -5609,7 +5609,7 @@ internal partial class DOMGetFrameOwnerRequest : IChromiumRequest<DOMGetFrameOwn
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOM.getFrameOwner";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("frameId")] public string FrameId { get; set; }
 }
@@ -6329,7 +6329,7 @@ internal partial class DOMNode
 [System.Text.Json.Serialization.JsonPropertyName("scrollOffsetX")] public double? ScrollOffsetX { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scrollOffsetY")] public double? ScrollOffsetY { get; set; }
 }
@@ -6429,37 +6429,37 @@ internal partial class NameValue
 internal partial class RareStringData
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("index")] public int?[] Index { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public int[] Value { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class RareBooleanData
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("index")] public int?[] Index { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class RareIntegerData
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("index")] public int?[] Index { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public int?[] Value { get; set; }
 }
@@ -6854,7 +6854,7 @@ internal partial class StorageId
 [System.Text.Json.Serialization.JsonPropertyName("isLocalStorage")] public bool? IsLocalStorage { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>DOMStorage.clear</c>
@@ -6864,7 +6864,7 @@ internal partial class DOMStorageClearRequest : IChromiumRequest<DOMStorageClear
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.clear";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 }
@@ -6909,7 +6909,7 @@ internal partial class DOMStorageEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>DOMStorage.getDOMStorageItems</c>
@@ -6919,7 +6919,7 @@ internal partial class DOMStorageGetDOMStorageItemsRequest : IChromiumRequest<DO
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.getDOMStorageItems";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 }
@@ -6929,12 +6929,12 @@ public string Command { get; } = "DOMStorage.getDOMStorageItems";
 internal partial class DOMStorageGetDOMStorageItemsResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("entries")] public string[][] Entries { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>DOMStorage.removeDOMStorageItem</c>
@@ -6944,12 +6944,12 @@ internal partial class DOMStorageRemoveDOMStorageItemRequest : IChromiumRequest<
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.removeDOMStorageItem";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
 }
@@ -6960,7 +6960,7 @@ internal partial class DOMStorageRemoveDOMStorageItemResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>DOMStorage.setDOMStorageItem</c>
@@ -6970,17 +6970,17 @@ internal partial class DOMStorageSetDOMStorageItemRequest : IChromiumRequest<DOM
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "DOMStorage.setDOMStorageItem";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
@@ -6991,7 +6991,7 @@ internal partial class DOMStorageSetDOMStorageItemResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemAdded</c>
@@ -7000,22 +7000,22 @@ internal partial class DOMStorageDomStorageItemAddedChromiumEvent : IChromiumEve
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemAdded";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("newValue")] public string NewValue { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemRemoved</c>
@@ -7024,17 +7024,17 @@ internal partial class DOMStorageDomStorageItemRemovedChromiumEvent : IChromiumE
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemRemoved";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemUpdated</c>
@@ -7043,27 +7043,27 @@ internal partial class DOMStorageDomStorageItemUpdatedChromiumEvent : IChromiumE
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemUpdated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("key")] public string Key { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("oldValue")] public string OldValue { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("newValue")] public string NewValue { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>DOMStorage.domStorageItemsCleared</c>
@@ -7072,7 +7072,7 @@ internal partial class DOMStorageDomStorageItemsClearedChromiumEvent : IChromium
 {
 public string InternalName { get; } = "DOMStorage.domStorageItemsCleared";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("storageId")] public StorageId StorageId { get; set; }
 }
@@ -7154,7 +7154,7 @@ internal partial class DatabaseEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Database.executeSQL</c>
@@ -7164,12 +7164,12 @@ internal partial class DatabaseExecuteSQLRequest : IChromiumRequest<DatabaseExec
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Database.executeSQL";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("databaseId")] public string DatabaseId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("query")] public string Query { get; set; }
 }
@@ -7179,22 +7179,22 @@ public string Command { get; } = "Database.executeSQL";
 internal partial class DatabaseExecuteSQLResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("columnNames")] public string[] ColumnNames { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("values")] public JsonElement?[] Values { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sqlError")] public Error SqlError { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Database.getDatabaseTableNames</c>
@@ -7204,7 +7204,7 @@ internal partial class DatabaseGetDatabaseTableNamesRequest : IChromiumRequest<D
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Database.getDatabaseTableNames";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("databaseId")] public string DatabaseId { get; set; }
 }
@@ -7214,12 +7214,12 @@ public string Command { get; } = "Database.getDatabaseTableNames";
 internal partial class DatabaseGetDatabaseTableNamesResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("tableNames")] public string[] TableNames { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>Database.addDatabase</c>
@@ -7228,7 +7228,7 @@ internal partial class DatabaseAddDatabaseChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Database.addDatabase";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("database")] public Database Database { get; set; }
 }
@@ -7302,17 +7302,17 @@ internal partial class ScreenOrientation
 [System.Text.Json.Serialization.JsonPropertyName("angle")] public int? Angle { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class MediaFeature
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
@@ -7534,7 +7534,7 @@ internal partial class EmulationSetDeviceMetricsOverrideResponse: IChromiumRespo
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Emulation.setScrollbarsHidden</c>
@@ -7555,7 +7555,7 @@ internal partial class EmulationSetScrollbarsHiddenResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Emulation.setDocumentCookieDisabled</c>
@@ -7576,7 +7576,7 @@ internal partial class EmulationSetDocumentCookieDisabledResponse: IChromiumResp
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Emulation.setEmitTouchEventsForMouse</c>
@@ -7760,7 +7760,7 @@ internal partial class EmulationSetVirtualTimePolicyRequest : IChromiumRequest<E
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Emulation.setVirtualTimePolicy";
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("policy")] public VirtualTimePolicy Policy { get; set; }
@@ -8344,17 +8344,17 @@ internal partial class IndexedDBDeleteObjectStoreEntriesRequest : IChromiumReque
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "IndexedDB.deleteObjectStoreEntries";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("securityOrigin")] public string SecurityOrigin { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("databaseName")] public string DatabaseName { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("objectStoreName")] public string ObjectStoreName { get; set; }
 
@@ -8564,7 +8564,7 @@ internal partial class IndexedDBRequestDatabaseNamesResponse: IChromiumResponse
 namespace PlaywrightSharp.Chromium.Protocol.Input
 {
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class TouchPoint
 {
@@ -9412,7 +9412,7 @@ internal partial class LayerTreeMakeSnapshotResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("snapshotId")] public string SnapshotId { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>LayerTree.profileSnapshot</c>
@@ -9538,7 +9538,7 @@ internal partial class LayerTreeSnapshotCommandLogResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("commandLog")] public JsonElement?[] CommandLog { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>LayerTree.layerPainted</c>
@@ -9557,7 +9557,7 @@ public string InternalName { get; } = "LayerTree.layerPainted";
 [System.Text.Json.Serialization.JsonPropertyName("clip")] public DOM.Rect Clip { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>LayerTree.layerTreeDidChange</c>
@@ -9776,12 +9776,12 @@ internal partial class SamplingProfileNode
 internal partial class SamplingProfile
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("samples")] public SamplingProfileNode[] Samples { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("modules")] public Module[] Modules { get; set; }
 }
@@ -9812,7 +9812,7 @@ internal partial class Module
 [System.Text.Json.Serialization.JsonPropertyName("size")] public double? Size { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Memory.getDOMCounters</c>
@@ -9828,22 +9828,22 @@ public string Command { get; } = "Memory.getDOMCounters";
 internal partial class MemoryGetDOMCountersResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("documents")] public int? Documents { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodes")] public int? Nodes { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("jsEventListeners")] public int? JsEventListeners { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Memory.prepareForLeakDetection</c>
@@ -9980,7 +9980,7 @@ public string Command { get; } = "Memory.getAllTimeSamplingProfile";
 internal partial class MemoryGetAllTimeSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingProfile Profile { get; set; }
 }
@@ -10002,7 +10002,7 @@ public string Command { get; } = "Memory.getBrowserSamplingProfile";
 internal partial class MemoryGetBrowserSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingProfile Profile { get; set; }
 }
@@ -10024,7 +10024,7 @@ public string Command { get; } = "Memory.getSamplingProfile";
 internal partial class MemoryGetSamplingProfileResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingProfile Profile { get; set; }
 }
@@ -10991,7 +10991,7 @@ internal partial class NetworkContinueInterceptedRequestRequest : IChromiumReque
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.continueInterceptedRequest";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
 
@@ -11213,7 +11213,7 @@ public string Command { get; } = "Network.getCertificate";
 internal partial class NetworkGetCertificateResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("tableNames")] public string[] TableNames { get; set; }
 }
@@ -11342,7 +11342,7 @@ internal partial class NetworkTakeResponseBodyForInterceptionAsStreamRequest : I
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Network.takeResponseBodyForInterceptionAsStream";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
 }
@@ -11352,7 +11352,7 @@ public string Command { get; } = "Network.takeResponseBodyForInterceptionAsStrea
 internal partial class NetworkTakeResponseBodyForInterceptionAsStreamResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("stream")] public string Stream { get; set; }
 }
@@ -11830,7 +11830,7 @@ public string InternalName { get; } = "Network.requestIntercepted";
 [System.Text.Json.Serialization.JsonPropertyName("interceptionId")] public string InterceptionId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("request")] public Request Request { get; set; }
 
@@ -12640,7 +12640,7 @@ internal partial class OverlaySetShowAdHighlightsResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Overlay.setPausedInDebuggerMessage</c>
@@ -12832,7 +12832,7 @@ internal partial class OverlayNodeHighlightRequestedChromiumEvent : IChromiumEve
 {
 public string InternalName { get; } = "Overlay.nodeHighlightRequested";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public int? NodeId { get; set; }
 }
@@ -13262,7 +13262,7 @@ internal partial class PageAddScriptToEvaluateOnLoadRequest : IChromiumRequest<P
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addScriptToEvaluateOnLoad";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scriptSource")] public string ScriptSource { get; set; }
 }
@@ -13287,7 +13287,7 @@ internal partial class PageAddScriptToEvaluateOnNewDocumentRequest : IChromiumRe
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addScriptToEvaluateOnNewDocument";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("source")] public string Source { get; set; }
 
@@ -13539,7 +13539,7 @@ internal partial class PageEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Page.getAppManifest</c>
@@ -13560,7 +13560,7 @@ internal partial class PageGetAppManifestResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("errors")] public AppManifestError[] Errors { get; set; }
 
@@ -13575,7 +13575,7 @@ internal partial class PageGetAppManifestResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("parsed")] public AppManifestParsedProperties Parsed { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Page.getInstallabilityErrors</c>
@@ -13591,12 +13591,12 @@ public string Command { get; } = "Page.getInstallabilityErrors";
 internal partial class PageGetInstallabilityErrorsResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("errors")] public string[] Errors { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Page.getManifestIcons</c>
@@ -13612,7 +13612,7 @@ public string Command { get; } = "Page.getManifestIcons";
 internal partial class PageGetManifestIconsResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("primaryIcon")] public byte[] PrimaryIcon { get; set; }
 }
@@ -13968,7 +13968,7 @@ public string Command { get; } = "Page.printToPDF";
 /// - `url`: document location
 /// - `pageNumber`: current page number
 /// - `totalPages`: total pages in the document
-/// 
+///
 /// For example, `&lt;span class=title&gt;&lt;/span&gt;` would generate span containing the title.
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("headerTemplate")] public string HeaderTemplate { get; set; }
@@ -14043,7 +14043,7 @@ internal partial class PageRemoveScriptToEvaluateOnLoadRequest : IChromiumReques
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.removeScriptToEvaluateOnLoad";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("identifier")] public string Identifier { get; set; }
 }
@@ -14064,7 +14064,7 @@ internal partial class PageRemoveScriptToEvaluateOnNewDocumentRequest : IChromiu
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.removeScriptToEvaluateOnNewDocument";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("identifier")] public string Identifier { get; set; }
 }
@@ -14609,7 +14609,7 @@ internal partial class PageSetProduceCompilationCacheRequest : IChromiumRequest<
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setProduceCompilationCache";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
@@ -14631,7 +14631,7 @@ internal partial class PageAddCompilationCacheRequest : IChromiumRequest<PageAdd
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.addCompilationCache";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 
@@ -14719,7 +14719,7 @@ internal partial class PageSetInterceptFileChooserDialogRequest : IChromiumReque
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Page.setInterceptFileChooserDialog";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
@@ -14730,7 +14730,7 @@ internal partial class PageSetInterceptFileChooserDialogResponse: IChromiumRespo
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>Page.domContentEventFired</c>
@@ -14739,7 +14739,7 @@ internal partial class PageDomContentEventFiredChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.domContentEventFired";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
 }
@@ -14834,7 +14834,7 @@ public string InternalName { get; } = "Page.frameNavigated";
 [System.Text.Json.Serialization.JsonPropertyName("frame")] public Frame Frame { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>Page.frameResized</c>
@@ -15044,17 +15044,17 @@ public string InternalName { get; } = "Page.lifecycleEvent";
 [System.Text.Json.Serialization.JsonPropertyName("loaderId")] public string LoaderId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>Page.loadEventFired</c>
@@ -15063,7 +15063,7 @@ internal partial class PageLoadEventFiredChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Page.loadEventFired";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
 }
@@ -15165,7 +15165,7 @@ internal partial class PageCompilationCacheProducedChromiumEvent : IChromiumEven
 {
 public string InternalName { get; } = "Page.compilationCacheProduced";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 
@@ -15388,7 +15388,7 @@ internal partial class CertificateSecurityState
 [System.Text.Json.Serialization.JsonPropertyName("obsoleteSslSignature")] public bool? ObsoleteSslSignature { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class SafetyTipInfo
 {
@@ -15703,17 +15703,17 @@ namespace PlaywrightSharp.Chromium.Protocol.ServiceWorker
 internal partial class ServiceWorkerRegistration
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("isDeleted")] public bool? IsDeleted { get; set; }
 }
@@ -15723,28 +15723,28 @@ internal partial class ServiceWorkerRegistration
 internal partial class ServiceWorkerVersion
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scriptURL")] public string ScriptURL { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("runningStatus")] public ServiceWorkerVersionRunningStatus RunningStatus { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("status")] public ServiceWorkerVersionStatus Status { get; set; }
@@ -15761,12 +15761,12 @@ internal partial class ServiceWorkerVersion
 [System.Text.Json.Serialization.JsonPropertyName("scriptResponseTime")] public double? ScriptResponseTime { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("controlledClients")] public string[] ControlledClients { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
@@ -15776,37 +15776,37 @@ internal partial class ServiceWorkerVersion
 internal partial class ServiceWorkerErrorMessage
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public string ErrorMessage { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceURL")] public string SourceURL { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.deliverPushMessage</c>
@@ -15816,17 +15816,17 @@ internal partial class ServiceWorkerDeliverPushMessageRequest : IChromiumRequest
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.deliverPushMessage";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("data")] public string Data { get; set; }
 }
@@ -15837,7 +15837,7 @@ internal partial class ServiceWorkerDeliverPushMessageResponse: IChromiumRespons
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.disable</c>
@@ -15854,7 +15854,7 @@ internal partial class ServiceWorkerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.dispatchSyncEvent</c>
@@ -15864,22 +15864,22 @@ internal partial class ServiceWorkerDispatchSyncEventRequest : IChromiumRequest<
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.dispatchSyncEvent";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("tag")] public string Tag { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("lastChance")] public bool? LastChance { get; set; }
 }
@@ -15890,7 +15890,7 @@ internal partial class ServiceWorkerDispatchSyncEventResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.dispatchPeriodicSyncEvent</c>
@@ -15900,17 +15900,17 @@ internal partial class ServiceWorkerDispatchPeriodicSyncEventRequest : IChromium
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.dispatchPeriodicSyncEvent";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("origin")] public string Origin { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrationId")] public string RegistrationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("tag")] public string Tag { get; set; }
 }
@@ -15921,7 +15921,7 @@ internal partial class ServiceWorkerDispatchPeriodicSyncEventResponse: IChromium
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.enable</c>
@@ -15938,7 +15938,7 @@ internal partial class ServiceWorkerEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.inspectWorker</c>
@@ -15948,7 +15948,7 @@ internal partial class ServiceWorkerInspectWorkerRequest : IChromiumRequest<Serv
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.inspectWorker";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
 }
@@ -15959,7 +15959,7 @@ internal partial class ServiceWorkerInspectWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.setForceUpdateOnPageLoad</c>
@@ -15969,7 +15969,7 @@ internal partial class ServiceWorkerSetForceUpdateOnPageLoadRequest : IChromiumR
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.setForceUpdateOnPageLoad";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("forceUpdateOnPageLoad")] public bool? ForceUpdateOnPageLoad { get; set; }
 }
@@ -15980,7 +15980,7 @@ internal partial class ServiceWorkerSetForceUpdateOnPageLoadResponse: IChromiumR
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.skipWaiting</c>
@@ -15990,7 +15990,7 @@ internal partial class ServiceWorkerSkipWaitingRequest : IChromiumRequest<Servic
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.skipWaiting";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
 }
@@ -16001,7 +16001,7 @@ internal partial class ServiceWorkerSkipWaitingResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.startWorker</c>
@@ -16011,7 +16011,7 @@ internal partial class ServiceWorkerStartWorkerRequest : IChromiumRequest<Servic
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.startWorker";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
 }
@@ -16022,7 +16022,7 @@ internal partial class ServiceWorkerStartWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.stopAllWorkers</c>
@@ -16039,7 +16039,7 @@ internal partial class ServiceWorkerStopAllWorkersResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.stopWorker</c>
@@ -16049,7 +16049,7 @@ internal partial class ServiceWorkerStopWorkerRequest : IChromiumRequest<Service
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.stopWorker";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("versionId")] public string VersionId { get; set; }
 }
@@ -16060,7 +16060,7 @@ internal partial class ServiceWorkerStopWorkerResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.unregister</c>
@@ -16070,7 +16070,7 @@ internal partial class ServiceWorkerUnregisterRequest : IChromiumRequest<Service
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.unregister";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
 }
@@ -16081,7 +16081,7 @@ internal partial class ServiceWorkerUnregisterResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>ServiceWorker.updateRegistration</c>
@@ -16091,7 +16091,7 @@ internal partial class ServiceWorkerUpdateRegistrationRequest : IChromiumRequest
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "ServiceWorker.updateRegistration";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("scopeURL")] public string ScopeURL { get; set; }
 }
@@ -16102,7 +16102,7 @@ internal partial class ServiceWorkerUpdateRegistrationResponse: IChromiumRespons
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>ServiceWorker.workerErrorReported</c>
@@ -16111,12 +16111,12 @@ internal partial class ServiceWorkerWorkerErrorReportedChromiumEvent : IChromium
 {
 public string InternalName { get; } = "ServiceWorker.workerErrorReported";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("errorMessage")] public ServiceWorkerErrorMessage ErrorMessage { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>ServiceWorker.workerRegistrationUpdated</c>
@@ -16125,12 +16125,12 @@ internal partial class ServiceWorkerWorkerRegistrationUpdatedChromiumEvent : ICh
 {
 public string InternalName { get; } = "ServiceWorker.workerRegistrationUpdated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("registrations")] public ServiceWorkerRegistration[] Registrations { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>ServiceWorker.workerVersionUpdated</c>
@@ -16139,7 +16139,7 @@ internal partial class ServiceWorkerWorkerVersionUpdatedChromiumEvent : IChromiu
 {
 public string InternalName { get; } = "ServiceWorker.workerVersionUpdated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("versions")] public ServiceWorkerVersion[] Versions { get; set; }
 }
@@ -16558,7 +16558,7 @@ internal partial class VideoEncodeAcceleratorCapability
 [System.Text.Json.Serialization.JsonPropertyName("maxFramerateNumerator")] public int? MaxFramerateNumerator { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("maxFramerateDenominator")] public int? MaxFramerateDenominator { get; set; }
 }
@@ -16714,27 +16714,27 @@ internal partial class SystemInfoGetProcessInfoResponse: IChromiumResponse
 namespace PlaywrightSharp.Chromium.Protocol.Target
 {
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class TargetInfo
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("title")] public string Title { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("url")] public string Url { get; set; }
 
@@ -16749,22 +16749,22 @@ internal partial class TargetInfo
 [System.Text.Json.Serialization.JsonPropertyName("openerId")] public string OpenerId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class RemoteLocation
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("host")] public string Host { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("port")] public int? Port { get; set; }
 }
@@ -16779,7 +16779,7 @@ internal partial class TargetActivateTargetRequest : IChromiumRequest<TargetActi
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.activateTarget";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
@@ -16800,7 +16800,7 @@ internal partial class TargetAttachToTargetRequest : IChromiumRequest<TargetAtta
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.attachToTarget";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 
@@ -16853,7 +16853,7 @@ internal partial class TargetCloseTargetRequest : IChromiumRequest<TargetCloseTa
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.closeTarget";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
@@ -16863,16 +16863,16 @@ public string Command { get; } = "Target.closeTarget";
 internal partial class TargetCloseTargetResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("success")] public bool? Success { get; set; }
 }
 /// <summary>
 /// Inject object to the target's main frame that provides a communication
 /// channel with browser target.
-/// 
+///
 /// Injected object will be available as `window[bindingName]`.
-/// 
+///
 /// The object has the follwing API:
 /// - `binding.send(json)` - a method to send messages over the remote debugging protocol
 /// - `binding.onmessage = json =&gt; handleMessage(json)` - a callback that will be called for the protocol notifications and command responses.
@@ -16885,7 +16885,7 @@ internal partial class TargetExposeDevToolsProtocolRequest : IChromiumRequest<Ta
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.exposeDevToolsProtocol";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 
@@ -17038,7 +17038,7 @@ internal partial class TargetDisposeBrowserContextRequest : IChromiumRequest<Tar
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.disposeBrowserContext";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("browserContextId")] public string BrowserContextId { get; set; }
 }
@@ -17059,7 +17059,7 @@ internal partial class TargetGetTargetInfoRequest : IChromiumRequest<TargetGetTa
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.getTargetInfo";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
@@ -17069,7 +17069,7 @@ public string Command { get; } = "Target.getTargetInfo";
 internal partial class TargetGetTargetInfoResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
 }
@@ -17107,7 +17107,7 @@ internal partial class TargetSendMessageToTargetRequest : IChromiumRequest<Targe
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Target.sendMessageToTarget";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
 
@@ -17227,12 +17227,12 @@ public string InternalName { get; } = "Target.attachedToTarget";
 [System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("waitingForDebugger")] public bool? WaitingForDebugger { get; set; }
 }
@@ -17272,7 +17272,7 @@ public string InternalName { get; } = "Target.receivedMessageFromTarget";
 [System.Text.Json.Serialization.JsonPropertyName("sessionId")] public string SessionId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("message")] public string Message { get; set; }
 
@@ -17291,7 +17291,7 @@ internal partial class TargetTargetCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetCreated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
 }
@@ -17305,7 +17305,7 @@ internal partial class TargetTargetDestroyedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetDestroyed";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 }
@@ -17319,7 +17319,7 @@ internal partial class TargetTargetCrashedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetCrashed";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetId")] public string TargetId { get; set; }
 
@@ -17344,7 +17344,7 @@ internal partial class TargetTargetInfoChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Target.targetInfoChanged";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetInfo")] public TargetInfo TargetInfo { get; set; }
 }
@@ -17422,7 +17422,7 @@ internal partial class MemoryDumpConfig
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class TraceConfig
 {
@@ -17601,7 +17601,7 @@ public string Command { get; } = "Tracing.start";
 [System.Text.Json.Serialization.JsonPropertyName("streamCompression")] public StreamCompression? StreamCompression { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("traceConfig")] public TraceConfig TraceConfig { get; set; }
 }
@@ -17612,7 +17612,7 @@ internal partial class TracingStartResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>Tracing.bufferUsage</c>
@@ -17648,7 +17648,7 @@ internal partial class TracingDataCollectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Tracing.dataCollected";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public object[] Value { get; set; }
 }
@@ -17689,7 +17689,7 @@ public string InternalName { get; } = "Tracing.tracingComplete";
 namespace PlaywrightSharp.Chromium.Protocol.Fetch
 {
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class RequestPattern
 {
@@ -17717,12 +17717,12 @@ internal partial class RequestPattern
 internal partial class HeaderEntry
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
@@ -18021,7 +18021,7 @@ internal partial class FetchTakeResponseBodyAsStreamRequest : IChromiumRequest<F
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Fetch.takeResponseBodyAsStream";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("requestId")] public string RequestId { get; set; }
 }
@@ -18031,7 +18031,7 @@ public string Command { get; } = "Fetch.takeResponseBodyAsStream";
 internal partial class FetchTakeResponseBodyAsStreamResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("stream")] public string Stream { get; set; }
 }
@@ -18166,24 +18166,24 @@ internal partial class ContextRealtimeData
 internal partial class BaseAudioContext
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("contextType")] public ContextType ContextType { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("contextState")] public ContextState ContextState { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("realtimeData")] public ContextRealtimeData RealtimeData { get; set; }
 
@@ -18208,12 +18208,12 @@ internal partial class BaseAudioContext
 internal partial class AudioListener
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("listenerId")] public string ListenerId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 }
@@ -18223,43 +18223,43 @@ internal partial class AudioListener
 internal partial class AudioNode
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeType")] public string NodeType { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("numberOfInputs")] public double? NumberOfInputs { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("numberOfOutputs")] public double? NumberOfOutputs { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("channelCount")] public double? ChannelCount { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("channelCountMode")] public ChannelCountMode ChannelCountMode { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("channelInterpretation")] public ChannelInterpretation ChannelInterpretation { get; set; }
@@ -18270,43 +18270,43 @@ internal partial class AudioNode
 internal partial class AudioParam
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("paramId")] public string ParamId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("paramType")] public string ParamType { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("rate")] public AutomationRate Rate { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("defaultValue")] public double? DefaultValue { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("minValue")] public double? MinValue { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("maxValue")] public double? MaxValue { get; set; }
 }
@@ -18355,7 +18355,7 @@ internal partial class WebAudioGetRealtimeDataRequest : IChromiumRequest<WebAudi
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAudio.getRealtimeData";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 }
@@ -18365,7 +18365,7 @@ public string Command { get; } = "WebAudio.getRealtimeData";
 internal partial class WebAudioGetRealtimeDataResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("realtimeData")] public ContextRealtimeData RealtimeData { get; set; }
 }
@@ -18379,7 +18379,7 @@ internal partial class WebAudioContextCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.contextCreated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("context")] public BaseAudioContext Context { get; set; }
 }
@@ -18393,7 +18393,7 @@ internal partial class WebAudioContextWillBeDestroyedChromiumEvent : IChromiumEv
 {
 public string InternalName { get; } = "WebAudio.contextWillBeDestroyed";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 }
@@ -18407,7 +18407,7 @@ internal partial class WebAudioContextChangedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.contextChanged";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("context")] public BaseAudioContext Context { get; set; }
 }
@@ -18421,7 +18421,7 @@ internal partial class WebAudioAudioListenerCreatedChromiumEvent : IChromiumEven
 {
 public string InternalName { get; } = "WebAudio.audioListenerCreated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("listener")] public AudioListener Listener { get; set; }
 }
@@ -18435,12 +18435,12 @@ internal partial class WebAudioAudioListenerWillBeDestroyedChromiumEvent : IChro
 {
 public string InternalName { get; } = "WebAudio.audioListenerWillBeDestroyed";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("listenerId")] public string ListenerId { get; set; }
 }
@@ -18454,7 +18454,7 @@ internal partial class WebAudioAudioNodeCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioNodeCreated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("node")] public AudioNode Node { get; set; }
 }
@@ -18468,12 +18468,12 @@ internal partial class WebAudioAudioNodeWillBeDestroyedChromiumEvent : IChromium
 {
 public string InternalName { get; } = "WebAudio.audioNodeWillBeDestroyed";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
 }
@@ -18487,7 +18487,7 @@ internal partial class WebAudioAudioParamCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.audioParamCreated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("param")] public AudioParam Param { get; set; }
 }
@@ -18501,17 +18501,17 @@ internal partial class WebAudioAudioParamWillBeDestroyedChromiumEvent : IChromiu
 {
 public string InternalName { get; } = "WebAudio.audioParamWillBeDestroyed";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("nodeId")] public string NodeId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("paramId")] public string ParamId { get; set; }
 }
@@ -18525,27 +18525,27 @@ internal partial class WebAudioNodesConnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodesConnected";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("destinationInputIndex")] public double? DestinationInputIndex { get; set; }
 }
@@ -18559,27 +18559,27 @@ internal partial class WebAudioNodesDisconnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodesDisconnected";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("destinationInputIndex")] public double? DestinationInputIndex { get; set; }
 }
@@ -18593,22 +18593,22 @@ internal partial class WebAudioNodeParamConnectedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "WebAudio.nodeParamConnected";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
 }
@@ -18622,22 +18622,22 @@ internal partial class WebAudioNodeParamDisconnectedChromiumEvent : IChromiumEve
 {
 public string InternalName { get; } = "WebAudio.nodeParamDisconnected";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("contextId")] public string ContextId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceId")] public string SourceId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("destinationId")] public string DestinationId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("sourceOutputIndex")] public double? SourceOutputIndex { get; set; }
 }
@@ -18645,18 +18645,18 @@ public string InternalName { get; } = "WebAudio.nodeParamDisconnected";
 namespace PlaywrightSharp.Chromium.Protocol.WebAuthn
 {
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class VirtualAuthenticatorOptions
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("protocol")] public AuthenticatorProtocol Protocol { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("transport")] public AuthenticatorTransport Transport { get; set; }
@@ -18684,17 +18684,17 @@ internal partial class VirtualAuthenticatorOptions
 [System.Text.Json.Serialization.JsonPropertyName("isUserVerified")] public bool? IsUserVerified { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class Credential
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("credentialId")] public byte[] CredentialId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("isResidentCredential")] public bool? IsResidentCredential { get; set; }
 
@@ -18768,7 +18768,7 @@ internal partial class WebAuthnAddVirtualAuthenticatorRequest : IChromiumRequest
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.addVirtualAuthenticator";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("options")] public VirtualAuthenticatorOptions Options { get; set; }
 }
@@ -18778,7 +18778,7 @@ public string Command { get; } = "WebAuthn.addVirtualAuthenticator";
 internal partial class WebAuthnAddVirtualAuthenticatorResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 }
@@ -18793,7 +18793,7 @@ internal partial class WebAuthnRemoveVirtualAuthenticatorRequest : IChromiumRequ
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.removeVirtualAuthenticator";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 }
@@ -18814,12 +18814,12 @@ internal partial class WebAuthnAddCredentialRequest : IChromiumRequest<WebAuthnA
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.addCredential";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("credential")] public Credential Credential { get; set; }
 }
@@ -18841,12 +18841,12 @@ internal partial class WebAuthnGetCredentialRequest : IChromiumRequest<WebAuthnG
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.getCredential";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("credentialId")] public byte[] CredentialId { get; set; }
 }
@@ -18856,7 +18856,7 @@ public string Command { get; } = "WebAuthn.getCredential";
 internal partial class WebAuthnGetCredentialResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("credential")] public Credential Credential { get; set; }
 }
@@ -18871,7 +18871,7 @@ internal partial class WebAuthnGetCredentialsRequest : IChromiumRequest<WebAuthn
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.getCredentials";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 }
@@ -18881,7 +18881,7 @@ public string Command { get; } = "WebAuthn.getCredentials";
 internal partial class WebAuthnGetCredentialsResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("credentials")] public Credential[] Credentials { get; set; }
 }
@@ -18896,12 +18896,12 @@ internal partial class WebAuthnRemoveCredentialRequest : IChromiumRequest<WebAut
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.removeCredential";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("credentialId")] public byte[] CredentialId { get; set; }
 }
@@ -18922,7 +18922,7 @@ internal partial class WebAuthnClearCredentialsRequest : IChromiumRequest<WebAut
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.clearCredentials";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 }
@@ -18944,12 +18944,12 @@ internal partial class WebAuthnSetUserVerifiedRequest : IChromiumRequest<WebAuth
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "WebAuthn.setUserVerified";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("authenticatorId")] public string AuthenticatorId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("isUserVerified")] public bool? IsUserVerified { get; set; }
 }
@@ -18968,22 +18968,22 @@ namespace PlaywrightSharp.Chromium.Protocol.Media
 internal partial class PlayerProperty
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class PlayerEvent
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
 [System.Text.Json.Serialization.JsonPropertyName("type")] public PlayerEventType Type { get; set; }
@@ -18995,12 +18995,12 @@ internal partial class PlayerEvent
 [System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("value")] public string Value { get; set; }
 }
@@ -19049,12 +19049,12 @@ internal partial class MediaPlayerPropertiesChangedChromiumEvent : IChromiumEven
 {
 public string InternalName { get; } = "Media.playerPropertiesChanged";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("playerId")] public string PlayerId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("properties")] public PlayerProperty[] Properties { get; set; }
 }
@@ -19069,12 +19069,12 @@ internal partial class MediaPlayerEventsAddedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Media.playerEventsAdded";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("playerId")] public string PlayerId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("events")] public PlayerEvent[] Events { get; set; }
 }
@@ -19090,7 +19090,7 @@ internal partial class MediaPlayersCreatedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Media.playersCreated";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("players")] public string[] Players { get; set; }
 }
@@ -19227,12 +19227,12 @@ internal partial class Location
 internal partial class ScriptPosition
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("lineNumber")] public int? LineNumber { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
 }
@@ -19299,7 +19299,7 @@ internal partial class Scope
 [System.Text.Json.Serialization.JsonPropertyName("object")] public Runtime.RemoteObject Object { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
@@ -19329,7 +19329,7 @@ internal partial class SearchMatch
 [System.Text.Json.Serialization.JsonPropertyName("lineContent")] public string LineContent { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class BreakLocation
 {
@@ -19349,7 +19349,7 @@ internal partial class BreakLocation
 [System.Text.Json.Serialization.JsonPropertyName("columnNumber")] public int? ColumnNumber { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("type")] public string Type { get; set; }
 }
@@ -19369,7 +19369,7 @@ public string Command { get; } = "Debugger.continueToLocation";
 [System.Text.Json.Serialization.JsonPropertyName("location")] public Location Location { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("targetCallFrames")] public string TargetCallFrames { get; set; }
 }
@@ -19599,7 +19599,7 @@ internal partial class DebuggerGetStackTraceRequest : IChromiumRequest<DebuggerG
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.getStackTrace";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("stackTraceId")] public Runtime.StackTraceId StackTraceId { get; set; }
 }
@@ -19609,7 +19609,7 @@ public string Command { get; } = "Debugger.getStackTrace";
 internal partial class DebuggerGetStackTraceResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("stackTrace")] public Runtime.StackTrace StackTrace { get; set; }
 }
@@ -19631,7 +19631,7 @@ internal partial class DebuggerPauseResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Debugger.pauseOnAsyncCall</c>
@@ -19662,7 +19662,7 @@ internal partial class DebuggerRemoveBreakpointRequest : IChromiumRequest<Debugg
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Debugger.removeBreakpoint";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("breakpointId")] public string BreakpointId { get; set; }
 }
@@ -19828,7 +19828,7 @@ public string Command { get; } = "Debugger.setBlackboxedRanges";
 [System.Text.Json.Serialization.JsonPropertyName("scriptId")] public string ScriptId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("positions")] public ScriptPosition[] Positions { get; set; }
 }
@@ -20519,12 +20519,12 @@ internal partial class SamplingHeapProfileSample
 internal partial class SamplingHeapProfile
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("head")] public SamplingHeapProfileNode Head { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("samples")] public SamplingHeapProfileSample[] Samples { get; set; }
 }
@@ -20551,7 +20551,7 @@ internal partial class HeapProfilerAddInspectedHeapObjectResponse: IChromiumResp
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.collectGarbage</c>
@@ -20568,7 +20568,7 @@ internal partial class HeapProfilerCollectGarbageResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.disable</c>
@@ -20585,7 +20585,7 @@ internal partial class HeapProfilerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.enable</c>
@@ -20602,7 +20602,7 @@ internal partial class HeapProfilerEnableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.getHeapObjectId</c>
@@ -20627,7 +20627,7 @@ internal partial class HeapProfilerGetHeapObjectIdResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("heapSnapshotObjectId")] public string HeapSnapshotObjectId { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.getObjectByHeapObjectId</c>
@@ -20637,7 +20637,7 @@ internal partial class HeapProfilerGetObjectByHeapObjectIdRequest : IChromiumReq
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.getObjectByHeapObjectId";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("objectId")] public string ObjectId { get; set; }
 
@@ -20657,7 +20657,7 @@ internal partial class HeapProfilerGetObjectByHeapObjectIdResponse: IChromiumRes
 [System.Text.Json.Serialization.JsonPropertyName("result")] public Runtime.RemoteObject Result { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.getSamplingProfile</c>
@@ -20678,7 +20678,7 @@ internal partial class HeapProfilerGetSamplingProfileResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingHeapProfile Profile { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.startSampling</c>
@@ -20700,7 +20700,7 @@ internal partial class HeapProfilerStartSamplingResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.startTrackingHeapObjects</c>
@@ -20710,7 +20710,7 @@ internal partial class HeapProfilerStartTrackingHeapObjectsRequest : IChromiumRe
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "HeapProfiler.startTrackingHeapObjects";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("trackAllocations")] public bool? TrackAllocations { get; set; }
 }
@@ -20721,7 +20721,7 @@ internal partial class HeapProfilerStartTrackingHeapObjectsResponse: IChromiumRe
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.stopSampling</c>
@@ -20742,7 +20742,7 @@ internal partial class HeapProfilerStopSamplingResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("profile")] public SamplingHeapProfile Profile { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.stopTrackingHeapObjects</c>
@@ -20758,7 +20758,7 @@ public string Command { get; } = "HeapProfiler.stopTrackingHeapObjects";
 [System.Text.Json.Serialization.JsonPropertyName("reportProgress")] public bool? ReportProgress { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("treatGlobalObjectsAsRoots")] public bool? TreatGlobalObjectsAsRoots { get; set; }
 }
@@ -20769,7 +20769,7 @@ internal partial class HeapProfilerStopTrackingHeapObjectsResponse: IChromiumRes
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>HeapProfiler.takeHeapSnapshot</c>
@@ -20795,7 +20795,7 @@ internal partial class HeapProfilerTakeHeapSnapshotResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.addHeapSnapshotChunk</c>
@@ -20804,7 +20804,7 @@ internal partial class HeapProfilerAddHeapSnapshotChunkChromiumEvent : IChromium
 {
 public string InternalName { get; } = "HeapProfiler.addHeapSnapshotChunk";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("chunk")] public string Chunk { get; set; }
 }
@@ -20836,17 +20836,17 @@ internal partial class HeapProfilerLastSeenObjectIdChromiumEvent : IChromiumEven
 {
 public string InternalName { get; } = "HeapProfiler.lastSeenObjectId";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("lastSeenObjectId")] public int? LastSeenObjectId { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.reportHeapSnapshotProgress</c>
@@ -20855,22 +20855,22 @@ internal partial class HeapProfilerReportHeapSnapshotProgressChromiumEvent : ICh
 {
 public string InternalName { get; } = "HeapProfiler.reportHeapSnapshotProgress";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("done")] public int? Done { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("total")] public int? Total { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("finished")] public bool? Finished { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>HeapProfiler.resetProfiles</c>
@@ -20982,7 +20982,7 @@ internal partial class CoverageRange
 /// <summary>
 /// Collected execution count of the source range.
 /// </summary>
-[System.Text.Json.Serialization.JsonPropertyName("count")] public int? Count { get; set; }
+[System.Text.Json.Serialization.JsonPropertyName("count")] public int Count { get; set; }
 }
 /// <summary>
 /// Coverage data for a JavaScript function.
@@ -21085,7 +21085,7 @@ internal partial class CounterInfo
 [System.Text.Json.Serialization.JsonPropertyName("value")] public int? Value { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Profiler.disable</c>
@@ -21102,7 +21102,7 @@ internal partial class ProfilerDisableResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Profiler.enable</c>
@@ -21162,7 +21162,7 @@ internal partial class ProfilerSetSamplingIntervalResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Profiler.start</c>
@@ -21228,7 +21228,7 @@ internal partial class ProfilerStartTypeProfileResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Profiler.stop</c>
@@ -21387,7 +21387,7 @@ internal partial class ProfilerGetRuntimeCallStatsResponse: IChromiumResponse
 [System.Text.Json.Serialization.JsonPropertyName("result")] public CounterInfo[] Result { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Matches on the event <c>Profiler.consoleProfileFinished</c>
@@ -21396,7 +21396,7 @@ internal partial class ProfilerConsoleProfileFinishedChromiumEvent : IChromiumEv
 {
 public string InternalName { get; } = "Profiler.consoleProfileFinished";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
 
@@ -21406,7 +21406,7 @@ public string InternalName { get; } = "Profiler.consoleProfileFinished";
 [System.Text.Json.Serialization.JsonPropertyName("location")] public Debugger.Location Location { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("profile")] public Profile Profile { get; set; }
 
@@ -21425,7 +21425,7 @@ internal partial class ProfilerConsoleProfileStartedChromiumEvent : IChromiumEve
 {
 public string InternalName { get; } = "Profiler.consoleProfileStarted";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
 
@@ -21489,12 +21489,12 @@ internal partial class RemoteObject
 [System.Text.Json.Serialization.JsonPropertyName("preview")] public ObjectPreview Preview { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("customPreview")] public CustomPreview CustomPreview { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class CustomPreview
 {
@@ -21547,7 +21547,7 @@ internal partial class ObjectPreview
 [System.Text.Json.Serialization.JsonPropertyName("entries")] public EntryPreview[] Entries { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class PropertyPreview
 {
@@ -21577,7 +21577,7 @@ internal partial class PropertyPreview
 [System.Text.Json.Serialization.JsonPropertyName("subtype")] public string Subtype { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 internal partial class EntryPreview
 {
@@ -21853,12 +21853,12 @@ internal partial class StackTrace
 internal partial class StackTraceId
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("id")] public string Id { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("debuggerId")] public string DebuggerId { get; set; }
 }
@@ -22304,12 +22304,12 @@ public string Command { get; } = "Runtime.globalLexicalScopeNames";
 internal partial class RuntimeGlobalLexicalScopeNamesResponse: IChromiumResponse
 {
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("names")] public string[] Names { get; set; }
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Runtime.queryObjects</c>
@@ -22488,7 +22488,7 @@ internal partial class RuntimeSetAsyncCallStackDepthResponse: IChromiumResponse
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Runtime.setCustomObjectFormatterEnabled</c>
@@ -22498,7 +22498,7 @@ internal partial class RuntimeSetCustomObjectFormatterEnabledRequest : IChromium
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.setCustomObjectFormatterEnabled";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("enabled")] public bool? Enabled { get; set; }
 }
@@ -22509,7 +22509,7 @@ internal partial class RuntimeSetCustomObjectFormatterEnabledResponse: IChromium
 {
 }
 /// <summary>
-/// 
+///
 /// </summary>
 /// <remarks>
 /// Will send the command <c>Runtime.setMaxCallStackSizeToCapture</c>
@@ -22519,7 +22519,7 @@ internal partial class RuntimeSetMaxCallStackSizeToCaptureRequest : IChromiumReq
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.setMaxCallStackSizeToCapture";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("size")] public int? Size { get; set; }
 }
@@ -22565,12 +22565,12 @@ internal partial class RuntimeAddBindingRequest : IChromiumRequest<RuntimeAddBin
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.addBinding";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("executionContextId")] public int? ExecutionContextId { get; set; }
 }
@@ -22592,7 +22592,7 @@ internal partial class RuntimeRemoveBindingRequest : IChromiumRequest<RuntimeRem
 [System.Text.Json.Serialization.JsonIgnore]
 public string Command { get; } = "Runtime.removeBinding";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 }
@@ -22612,12 +22612,12 @@ internal partial class RuntimeBindingCalledChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.bindingCalled";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("name")] public string Name { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("payload")] public string Payload { get; set; }
 
@@ -22703,7 +22703,7 @@ public string InternalName { get; } = "Runtime.exceptionThrown";
 [System.Text.Json.Serialization.JsonPropertyName("timestamp")] public double? Timestamp { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("exceptionDetails")] public ExceptionDetails ExceptionDetails { get; set; }
 }
@@ -22756,12 +22756,12 @@ internal partial class RuntimeInspectRequestedChromiumEvent : IChromiumEvent
 {
 public string InternalName { get; } = "Runtime.inspectRequested";
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("object")] public RemoteObject Object { get; set; }
 
 /// <summary>
-/// 
+///
 /// </summary>
 [System.Text.Json.Serialization.JsonPropertyName("hints")] public object Hints { get; set; }
 }

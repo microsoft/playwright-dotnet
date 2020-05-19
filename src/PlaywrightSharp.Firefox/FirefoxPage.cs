@@ -52,6 +52,8 @@ namespace PlaywrightSharp.Firefox
 
         public ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; } = new ConcurrentDictionary<object, FrameExecutionContext>();
 
+        public ICoverage Coverage { get; }
+
         internal Page Page { get; }
 
         public async Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
