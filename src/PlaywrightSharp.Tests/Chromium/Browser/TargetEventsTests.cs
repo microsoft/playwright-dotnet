@@ -10,6 +10,8 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser target events</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class TargetEventsTests : PlaywrightSharpBaseTest
     {
@@ -21,7 +23,7 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser target events</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
             var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
