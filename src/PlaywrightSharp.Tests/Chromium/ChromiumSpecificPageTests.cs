@@ -9,6 +9,10 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>Chromium-Specific Page Tests</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ChromiumSpecificPageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
