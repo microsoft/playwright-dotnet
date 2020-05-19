@@ -371,7 +371,7 @@ namespace PlaywrightSharp.Firefox
             var frame = Page.FrameManager.Frames[e.FrameId];
             foreach (var watcher in Page.FrameManager.LifecycleWatchers.ToArray())
             {
-                watcher.OnAbortedNewDocumentNavigation(frame, e.NavigationId, e.ErrorText);
+                watcher?.OnAbortedNewDocumentNavigation(frame, e.NavigationId, e.ErrorText);
             }
         }
 
