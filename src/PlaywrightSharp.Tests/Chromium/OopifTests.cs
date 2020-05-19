@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,15 +8,17 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Chromium
 {
-    ///<playwright-file>chromium/chromium.spec.js</playwright-file>
+    ///<playwright-file>chromium/oopif.spec.js</playwright-file>
     ///<playwright-describe>OOPIF</playwright-describe>
-    public class OopifTests : PlaywrightSharpPageBaseTest
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
+    public class OopifTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public OopifTests(ITestOutputHelper output) : base(output)
         {
-            DefaultOptions = TestConstants.GetDefaultBrowserOptions();
-            DefaultOptions.Args = new[] { "--site-per-process" };
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -26,9 +27,14 @@ namespace PlaywrightSharp.Tests.Chromium
         [Fact(Skip = "Ignored in Playwright")]
         public async Task ShouldReportOopifFrames()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
-            Assert.Single(Oopifs);
-            Assert.Equal(2, Page.Frames.Length);
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.Args = options.Args.Prepend("--site-per-process").ToArray();
+            await using var browser = await Playwright.LaunchAsync(options);
+            var page = await browser.DefaultContext.NewPageAsync();
+            await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
+            Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
+            Assert.Equal(2, page.Frames.Length);
+
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -37,12 +43,14 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldLoadOopifIframesWithSubresourcesAndRequestInterception()
         {
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += (sender, e) => _ = e.Request.ContinueAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
-            Assert.Single(Oopifs);
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.Args = options.Args.Prepend("--site-per-process").ToArray();
+            await using var browser = await Playwright.LaunchAsync(options);
+            var page = await browser.DefaultContext.NewPageAsync();
+            await page.SetRequestInterceptionAsync(true);
+            page.Request += (sender, e) => _ = e.Request.ContinueAsync();
+            await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
+            Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
         }
-
-        private IEnumerable<ITarget> Oopifs => Browser.GetTargets().Where(target => target.Type == TargetType.IFrame);
     }
 }

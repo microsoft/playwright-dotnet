@@ -151,7 +151,8 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowser.GetTargets"/>
-        public IEnumerable<ITarget> GetTargets(IBrowserContext context = null) => null;
+        public IEnumerable<ITarget> GetTargets(IBrowserContext context = null)
+            => context == null ? GetAllTargets() : GetAllTargets().Where(t => t.BrowserContext == context);
 
         /// <inheritdoc cref="IBrowser.GetPageTarget(IPage)"/>
         public ITarget GetPageTarget(IPage page)
