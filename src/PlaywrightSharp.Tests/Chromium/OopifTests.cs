@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
+        ///<playwright-file>chromium/oopif.spec.js</playwright-file>
         ///<playwright-describe>OOPIF</playwright-describe>
         ///<playwright-it>should wait for a target</playwright-it>
         [Fact(Skip = "Ignored in Playwright")]
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
+        ///<playwright-file>chromium/oopif.spec.js</playwright-file>
         ///<playwright-describe>OOPIF</playwright-describe>
         ///<playwright-it>should load oopif iframes with subresources and request interception</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
