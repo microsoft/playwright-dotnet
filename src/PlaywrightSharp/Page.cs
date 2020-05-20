@@ -165,7 +165,10 @@ namespace PlaywrightSharp
         public IWorker[] Workers => _workers.Values.ToArray();
 
         /// <inheritdoc cref="IPage.Coverage"/>
-        public ICoverage Coverage => null;
+        /// <summary>
+        /// Browser-specific Coverage implementation, only available for Chromium atm.
+        /// </summary>
+        public ICoverage Coverage => Delegate.Coverage;
 
         internal Frame MainFrame => FrameManager.MainFrame;
 
@@ -561,10 +564,7 @@ namespace PlaywrightSharp
             => MainFrame.QuerySelectorAllAsync(selector);
 
         /// <inheritdoc cref="IPage.AddStyleTagAsync(AddTagOptions)"/>
-        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => MainFrame.AddStyleTagAsync(options);
 
         /// <inheritdoc cref="IPage.WaitForTimeoutAsync(int)"/>
         public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);

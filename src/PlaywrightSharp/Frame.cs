@@ -14,7 +14,7 @@ namespace PlaywrightSharp
     {
         private readonly IDictionary<ContextType, ContextData> _contextData;
         private readonly bool _detached = false;
-        private int _setContentCounter = 0;
+        private int _setContentCounter;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
         {
@@ -425,6 +425,65 @@ namespace PlaywrightSharp
             options ??= new WaitForFunctionOptions { Timeout = Page.DefaultTimeout };
             var task = Dom.GetWaitForFunctionTask(null, pageFunction, options, args);
             return ScheduleRerunnableTaskAsync(task, ContextType.Main, options.Timeout);
+        }
+
+        /// <inheritdoc cref="IFrame.AddStyleTagAsync(AddTagOptions)"/>
+        public async Task<IElementHandle> AddStyleTagAsync(AddTagOptions options)
+        {
+            if (
+                options == null ||
+                (
+                    string.IsNullOrEmpty(options.Url) &&
+                    string.IsNullOrEmpty(options.Path) &&
+                    string.IsNullOrEmpty(options.Content)))
+            {
+                throw new ArgumentException("Provide an object with a 'url', 'path' or 'content' property");
+            }
+
+            var context = await GetMainContextAsync().ConfigureAwait(false);
+            return await RaceWithCSPErrorAsync(async () =>
+            {
+                if (!string.IsNullOrEmpty(options.Url))
+                {
+                    return await context.EvaluateHandleAsync(
+                        @"async function addStyleUrl(url) {
+                            const link = document.createElement('link');
+                            link.rel = 'stylesheet';
+                            link.href = url;
+                            const promise = new Promise((res, rej) => {
+                                link.onload = res;
+                                link.onerror = rej;
+                            });
+                            document.head.appendChild(link);
+                            await promise;
+                            return link;
+                        }",
+                        options.Url).ConfigureAwait(false) as ElementHandle;
+                }
+
+                const string addStyleContent =
+                    @"async function addStyleContent(content) {
+                        const style = document.createElement('style');
+                        style.type = 'text/css';
+                        style.appendChild(document.createTextNode(content));
+                        const promise = new Promise((res, rej) => {
+                            style.onload = res;
+                            style.onerror = rej;
+                        });
+                        document.head.appendChild(style);
+                        await promise;
+                        return style;
+                    }";
+
+                if (!string.IsNullOrEmpty(options.Path))
+                {
+                    string contents = File.ReadAllText(options.Path);
+                    contents += "/*# sourceURL=" + options.Path.Replace("\n", string.Empty) + "*/";
+                    return await context.EvaluateHandleAsync(addStyleContent, contents).ConfigureAwait(false) as ElementHandle;
+                }
+
+                return await context.EvaluateHandleAsync(addStyleContent, options.Content).ConfigureAwait(false) as ElementHandle;
+            }).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>

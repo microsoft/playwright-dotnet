@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Accessibility;
-using PlaywrightSharp.Chromium.Protocol.Debugger;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
@@ -25,8 +24,9 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IPageDelegate"/>
     internal class ChromiumPage : IPageDelegate
     {
+        internal const string EvaluationScriptUrl = "__playwright_evaluation_script__";
+
         private const string UtilityWorldName = "__playwright_utility_world__";
-        private const string EvaluationScriptUrl = "__playwright_evaluation_script__";
 
         private readonly ChromiumBrowser _browser;
         private readonly IBrowserContext _browserContext;
@@ -40,6 +40,7 @@ namespace PlaywrightSharp.Chromium
             _browserContext = browserContext;
             RawKeyboard = new ChromiumRawKeyboard(client);
             RawMouse = new ChromiumRawMouse(client);
+            Coverage = new Coverage(client);
             Page = new Page(this, browserContext);
             _networkManager = new ChromiumNetworkManager(Client, Page);
 
@@ -53,6 +54,8 @@ namespace PlaywrightSharp.Chromium
         public IRawMouse RawMouse { get; }
 
         public ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; } = new ConcurrentDictionary<object, FrameExecutionContext>();
+
+        public ICoverage Coverage { get; }
 
         internal Page Page { get; }
 

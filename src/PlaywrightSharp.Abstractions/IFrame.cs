@@ -373,5 +373,12 @@ namespace PlaywrightSharp
         /// <param name="options">Extra options.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
         Task WaitForLoadStateAsync(NavigationOptions options = null);
+
+        /// <summary>
+        /// Adds a <c><![CDATA[<link rel="stylesheet">]]></c> tag into the page with the desired url or a <c><![CDATA[<link rel="stylesheet">]]></c> tag with the content.
+        /// </summary>
+        /// <param name="options">add style tag options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the stylesheet's onload fires or when the CSS content was injected into frame, yieling the added <see cref="IElementHandle"/>.</returns>
+        Task<IElementHandle> AddStyleTagAsync(AddTagOptions options);
     }
 }

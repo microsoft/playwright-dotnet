@@ -29,6 +29,11 @@ namespace PlaywrightSharp
         ConcurrentDictionary<object, FrameExecutionContext> ContextIdToContext { get; }
 
         /// <summary>
+        /// Browser-specific Coverage implementation, only available for Chromium atm.
+        /// </summary>
+        ICoverage Coverage { get; }
+
+        /// <summary>
         /// Used by <see cref="Accessibility"/>.
         /// </summary>
         /// <param name="needle">Root element.</param>

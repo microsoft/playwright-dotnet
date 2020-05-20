@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,10 +12,12 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>JSCoverage</playwright-describe>
-    public class CoverageTests : PlaywrightSharpPageBaseTest
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+    public class JSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public CoverageTests(ITestOutputHelper output) : base(output)
+        public JSCoverageTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -31,7 +32,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
-            Assert.Equal(new CoverageEntryRange[]
+            Assert.Equal(new[]
             {
                 new CoverageEntryRange
                 {
@@ -84,7 +85,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.NotNull(coverage.FirstOrDefault(entry => entry.Url.StartsWith("debugger://", StringComparison.Ordinal)));
-            Assert.Equal(2, coverage.Count());
+            Assert.Equal(2, coverage.Length);
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -114,9 +115,9 @@ namespace PlaywrightSharp.Tests.Chromium
             await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Equal(2, coverage.Length);
-            var orderedList = coverage.OrderBy(c => c.Url);
-            Assert.Contains("/jscoverage/script1.js", orderedList.ElementAt(0).Url);
-            Assert.Contains("/jscoverage/script2.js", orderedList.ElementAt(1).Url);
+            var orderedList = coverage.OrderBy(c => c.Url).ToArray();
+            Assert.Contains("/jscoverage/script1.js", orderedList[0].Url);
+            Assert.Contains("/jscoverage/script2.js", orderedList[1].Url);
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
