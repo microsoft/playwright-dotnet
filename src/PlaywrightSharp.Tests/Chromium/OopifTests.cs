@@ -11,8 +11,6 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/oopif.spec.js</playwright-file>
     ///<playwright-describe>OOPIF</playwright-describe>
     [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
-    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class OopifTests : PlaywrightSharpBaseTest
     {
