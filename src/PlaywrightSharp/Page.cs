@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -515,7 +516,22 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.GetPdfAsync(string)"/>
-        public Task GetPdfAsync(string file) => throw new NotImplementedException();
+        public Task GetPdfAsync(string file) => GetPdfAsync(file, new PdfOptions());
+
+        /// <inheritdoc cref="IPage.GetPdfAsync(string, PdfOptions)"/>
+        public Task GetPdfAsync(string file, PdfOptions options) => Delegate.GetPdfAsync(file, options);
+
+        /// <inheritdoc cref="IPage.GetPdfStreamAsync()"/>
+        public Task<Stream> GetPdfStreamAsync() => GetPdfStreamAsync(new PdfOptions());
+
+        /// <inheritdoc cref="IPage.GetPdfStreamAsync(PdfOptions)"/>
+        public async Task<Stream> GetPdfStreamAsync(PdfOptions options) => new MemoryStream(await GetPdfDataAsync(options).ConfigureAwait(false));
+
+        /// <inheritdoc cref="IPage.GetPdfDataAsync()"/>
+        public Task<byte[]> GetPdfDataAsync() => GetPdfDataAsync(new PdfOptions());
+
+        /// <inheritdoc cref="IPage.GetPdfDataAsync(PdfOptions)"/>
+        public Task<byte[]> GetPdfDataAsync(PdfOptions options) => Delegate.GetPdfAsync(null, options);
 
         /// <inheritdoc cref="IPage.WaitForFunctionAsync(string, WaitForFunctionOptions, object[])"/>
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
@@ -264,5 +265,16 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Color Scheme.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme);
+
+        /// <summary>
+        ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="SetEmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
+        /// </summary>
+        /// <param name="file">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
+        /// <param name="options">pdf options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
+        /// <remarks>
+        /// Generating a pdf is currently only supported in Chrome headless.
+        /// </remarks>
+        public Task<byte[]> GetPdfAsync(string file, PdfOptions options);
     }
 }

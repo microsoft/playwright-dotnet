@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Input;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Accessibility;
-using PlaywrightSharp.Chromium.Protocol.Debugger;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Log;
@@ -32,6 +31,7 @@ namespace PlaywrightSharp.Chromium
         private readonly IBrowserContext _browserContext;
         private readonly ChromiumNetworkManager _networkManager;
         private readonly ISet<string> _isolatedWorlds = new HashSet<string>();
+        private readonly ChromiumPdf _pdf;
 
         public ChromiumPage(ChromiumSession client, ChromiumBrowser browser, IBrowserContext browserContext)
         {
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Chromium
             RawMouse = new ChromiumRawMouse(client);
             Page = new Page(this, browserContext);
             _networkManager = new ChromiumNetworkManager(Client, Page);
-
+            _pdf = new ChromiumPdf(client);
             client.MessageReceived += Client_MessageReceived;
         }
 
@@ -356,6 +356,8 @@ namespace PlaywrightSharp.Chromium
                 Features = features,
             });
         }
+
+        public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => _pdf.GenerateAsync(file, options);
 
         internal async Task InitializeAsync()
         {
