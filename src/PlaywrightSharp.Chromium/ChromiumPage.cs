@@ -47,8 +47,6 @@ namespace PlaywrightSharp.Chromium
             client.MessageReceived += Client_MessageReceived;
         }
 
-        public ChromiumTarget Target { get; set; }
-
         public IRawKeyboard RawKeyboard { get; }
 
         public IRawMouse RawMouse { get; }
@@ -104,7 +102,7 @@ namespace PlaywrightSharp.Chromium
         }
 
         public Task ClosePageAsync(bool runBeforeUnload)
-            => runBeforeUnload ? Client.SendAsync(new PageCloseRequest()) : _browser.ClosePageAsync(this);
+            => runBeforeUnload ? Client.SendAsync(new PageCloseRequest()) : _browser.ClosePageAsync(Page);
 
         public async Task<ElementHandle> AdoptElementHandleAsync(ElementHandle handle, FrameExecutionContext to)
         {

@@ -126,5 +126,12 @@ namespace PlaywrightSharp
         /// <param name="context">Optional <see cref="IBrowserContext"/> to use as a filter.</param>
         /// <returns>A list of all the browser's <see cref="ITarget"/>.</returns>
         IEnumerable<ITarget> GetTargets(IBrowserContext context = null);
+
+        /// <summary>
+        /// Gets the <see cref="IWorker"/> associated to the <see cref="ITarget"/>.
+        /// </summary>
+        /// <param name="target">Target worker.</param>
+        /// <returns>A <see cref="Task"/> that completes when the worker is found, yielding the associated worker.</returns>
+        Task<IWorker> GetServiceWorkerAsync(ITarget target);
     }
 }

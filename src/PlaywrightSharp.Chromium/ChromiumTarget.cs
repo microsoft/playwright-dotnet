@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Helpers;
+using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Runtime;
 using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Helpers;
 
@@ -13,7 +15,7 @@ namespace PlaywrightSharp.Chromium
         private readonly ChromiumBrowser _browser;
         private readonly Func<Task<ChromiumSession>> _sessionFactory;
         private readonly TaskCompletionSource<bool> _initializedTaskWrapper = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        private Task<Worker> _workerTask;
+        private Task<IWorker> _workerTask;
 
         internal ChromiumTarget(
             TargetInfo targetInfo,
@@ -98,18 +100,15 @@ namespace PlaywrightSharp.Chromium
         /// If the target is not of type `"service_worker"` or `"shared_worker"`, returns `null`.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the worker is resolved, yielding the <see cref="Worker"/>.</returns>
-        public Task<Worker> WorkerAsync()
+        public Task<IWorker> GetWorkerAsync()
         {
             if (Type != TargetType.ServiceWorker && Type != TargetType.SharedWorker)
             {
-                return Task.FromResult<Worker>(null);
+                return Task.FromResult<IWorker>(null);
             }
 
             return _workerTask ??= WorkerInternalAsync();
         }
-
-        /// <inheritdoc cref="ITarget.GetWorkerAsync"/>
-        public Task<IWorker> GetWorkerAsync() => Task.FromResult<IWorker>(null);
 
         /// <inheritdoc cref="ITarget.GetPageAsync"/>
         public async Task<IPage> GetPageAsync()
@@ -121,6 +120,8 @@ namespace PlaywrightSharp.Chromium
 
             return await (PageTask ?? Task.FromResult<Page>(null)).ConfigureAwait(false);
         }
+
+        internal static ChromiumTarget FromPage(Page page) => page.Target as ChromiumTarget;
 
         internal void TargetInfoChanged(TargetInfo targetInfo)
         {
@@ -140,14 +141,40 @@ namespace PlaywrightSharp.Chromium
 
         internal void DidClose() => ChromiumPage?.DidClose();
 
-        private static Task<Worker> WorkerInternalAsync() => Task.FromResult<Worker>(null);
+        private async Task<IWorker> WorkerInternalAsync()
+        {
+            var session = await _sessionFactory().ConfigureAwait(false);
+            var worker = new Worker(TargetInfo.Url);
+
+            void HandleRuntimeExecutionContextCreated(object sender, IChromiumEvent e)
+            {
+                if (e is RuntimeExecutionContextCreatedChromiumEvent runtimeExecutionContextCreated)
+                {
+                    worker.CreateExecutionContext(new ChromiumExecutionContext(session, runtimeExecutionContextCreated.Context));
+                    session.MessageReceived -= HandleRuntimeExecutionContextCreated;
+                }
+            }
+
+            session.MessageReceived += HandleRuntimeExecutionContextCreated;
+
+            try
+            {
+                await session.SendAsync(new RuntimeEnableRequest()).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            return worker;
+        }
 
         private async Task<Page> CreatePageAsync()
         {
             var client = await _sessionFactory().ConfigureAwait(false);
             ChromiumPage = new ChromiumPage(client, _browser, BrowserContext);
             var page = ChromiumPage.Page;
-            ChromiumPage.Target = this;
+            page.Target = this;
 
             client.Disconnected += (sender, e) => page.DidDisconnected();
 

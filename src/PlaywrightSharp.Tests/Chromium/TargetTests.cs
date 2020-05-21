@@ -19,6 +19,8 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>Chromium.startTracing</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class TargetTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
@@ -46,10 +48,9 @@ namespace PlaywrightSharp.Tests.Chromium
         public async Task BrowserPagesShouldReturnAllOfThePages()
         {
             // The pages will be the testing page and the original new tab page
-            var allPages = await Browser.DefaultContext.GetPagesAsync();
-            Assert.Equal(2, allPages.Length);
+            var allPages = await Context.GetPagesAsync();
+            Assert.Single(allPages);
             Assert.Contains(Page, allPages);
-            Assert.NotSame(allPages[0], allPages[1]);
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -70,9 +71,8 @@ namespace PlaywrightSharp.Tests.Chromium
         public async Task ShouldBeAbleToUseTheDefaultPageInTheBrowser()
         {
             // The pages will be the testing page and the original newtab page
-            var allPages = await Browser.DefaultContext.GetPagesAsync();
-            var originalPage = allPages.First(p => p != Page);
-            Assert.Equal("Hello world", await originalPage.EvaluateAsync<string>("['Hello', 'world'].join(' ')"));
+            var originalPage = (await Browser.DefaultContext.GetPagesAsync()).First();
+            Assert.Equal("Hello world", await originalPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
             Assert.NotNull(await originalPage.QuerySelectorAsync("body"));
         }
 
@@ -152,10 +152,11 @@ namespace PlaywrightSharp.Tests.Chromium
         [Fact]
         public async Task ShouldCreateAWorkerFromAServiceWorker()
         {
+            var workerTask = Browser.WaitForTargetAsync(t => t.Type == TargetType.ServiceWorker);
             await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html");
 
-            var target = await Browser.WaitForTargetAsync(t => t.Type == TargetType.ServiceWorker);
-            var worker = await target.GetWorkerAsync();
+            var target = await workerTask;
+            var worker = await Browser.GetServiceWorkerAsync(target);
             Assert.Equal("[object ServiceWorkerGlobalScope]", await worker.EvaluateAsync<string>("() => self.toString()"));
         }
 
@@ -165,13 +166,14 @@ namespace PlaywrightSharp.Tests.Chromium
         [Fact]
         public async Task ShouldCreateAWorkerFromASharedWorker()
         {
+            var workerTask = Browser.WaitForTargetAsync(t => t.Type == TargetType.SharedWorker);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync(@"() =>
             {
                 new SharedWorker('data:text/javascript,console.log(""hi"")');
             }");
-            var target = await Browser.WaitForTargetAsync(t => t.Type == TargetType.SharedWorker);
-            var worker = await target.GetWorkerAsync();
+            var target = await workerTask;
+            var worker = await Browser.GetServiceWorkerAsync(target);
             Assert.Equal("[object SharedWorkerGlobalScope]", await worker.EvaluateAsync<string>("() => self.toString()"));
         }
 
