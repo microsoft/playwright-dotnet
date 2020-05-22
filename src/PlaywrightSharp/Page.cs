@@ -182,6 +182,8 @@ namespace PlaywrightSharp
 
         internal Screenshotter Screenshotter { get; }
 
+        internal ITarget Target { get; set; }
+
         /// <inheritdoc cref="IPage.AddScriptTagAsync(AddTagOptions)"/>
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => MainFrame.AddScriptTagAsync(options);
 

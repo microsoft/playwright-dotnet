@@ -167,6 +167,9 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc cref="IBrowser.GetServiceWorkerAsync(ITarget)" />
+        public Task<IWorker> GetServiceWorkerAsync(ITarget target) => throw new NotImplementedException();
+
         internal static Task<IBrowser> ConnectAsync(ConnectOptions options) => ConnectAsync(null, options);
 
         internal static async Task<IBrowser> ConnectAsync(IBrowserApp app, ConnectOptions options)

@@ -154,10 +154,26 @@ namespace PlaywrightSharp.Chromium
         public IEnumerable<ITarget> GetTargets(IBrowserContext context = null)
             => context == null ? GetAllTargets() : GetAllTargets().Where(t => t.BrowserContext == context);
 
+        /// <inheritdoc cref="IBrowser.GetServiceWorkerAsync"/>
+        public Task<IWorker> GetServiceWorkerAsync(ITarget target)
+        {
+            if (target == null)
+            {
+                return Task.FromResult<IWorker>(null);
+            }
+
+            return target.GetWorkerAsync();
+        }
+
         /// <inheritdoc cref="IBrowser.GetPageTarget(IPage)"/>
         public ITarget GetPageTarget(IPage page)
         {
-            throw new NotImplementedException();
+            if (page == null)
+            {
+                return null;
+            }
+
+            return ChromiumTarget.FromPage(page as Page);
         }
 
         /// <inheritdoc cref="IBrowser.StartTracingAsync(TracingOptions)"/>
@@ -187,8 +203,8 @@ namespace PlaywrightSharp.Chromium
 
         internal IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
 
-        internal Task ClosePageAsync(ChromiumPage page)
-            => _session.SendAsync(new TargetCloseTargetRequest { TargetId = page.Target.TargetId });
+        internal Task ClosePageAsync(Page page)
+            => _session.SendAsync(new TargetCloseTargetRequest { TargetId = ChromiumTarget.FromPage(page).TargetId });
 
         internal void RemoveContext(string contextId) => _contexts.Remove(contextId);
 
