@@ -10,8 +10,6 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser target events</playwright-describe>
     [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
-    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class TargetEventsTests : PlaywrightSharpBaseTest
     {

@@ -252,6 +252,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme) => throw new NotImplementedException();
 
+        public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>

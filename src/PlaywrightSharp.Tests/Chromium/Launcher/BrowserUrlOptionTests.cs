@@ -11,8 +11,6 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch |browserURL| option</playwright-describe>
     [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
-    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class BrowserUrlOptionTests : PlaywrightSharpBaseTest
     {

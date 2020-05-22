@@ -11,7 +11,6 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/headful.spec.js</playwright-file>
     ///<playwright-describe>ChromiumHeadful</playwright-describe>
     [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class HeadfulTests : PlaywrightSharpBrowserBaseTest, IDisposable
     {
