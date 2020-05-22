@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
 using PlaywrightSharp.Chromium.Protocol.Network;
 using PlaywrightSharp.Chromium.Protocol.Storage;
 using PlaywrightSharp.Chromium.Protocol.Target;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Chromium
 {
     /// <inheritdoc cref="IBrowserContextDelegate"/>
     public class ChromiumBrowserContext : IBrowserContextDelegate
@@ -143,7 +142,7 @@ namespace PlaywrightSharp
             });
 
         /// <inheritdoc cref="IBrowserContextDelegate.ClearPermissionsAsync"/>
-        public Task ClearPermissionsAsync() => throw new System.NotImplementedException();
+        public Task ClearPermissionsAsync() => _client.SendAsync(new BrowserResetPermissionsRequest { BrowserContextId = _contextId });
 
         /// <inheritdoc cref="IBrowserContextDelegate.SetCookiesAsync(SetNetworkCookieParam[])"/>
         public Task SetCookiesAsync(params SetNetworkCookieParam[] cookies)
