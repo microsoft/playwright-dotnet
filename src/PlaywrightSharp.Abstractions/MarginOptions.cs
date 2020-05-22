@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// margin options used in <see cref="PdfOptions"/>.
+    /// Margin options used in <see cref="PdfOptions"/>.
     /// </summary>
     public class MarginOptions : IEquatable<MarginOptions>
     {
