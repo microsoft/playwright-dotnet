@@ -13,8 +13,8 @@ namespace PlaywrightSharp.Chromium
 {
     internal class ChromiumExecutionContext : IExecutionContextDelegate
     {
-        private const string EvaluationScriptUrl = "__playwright_evaluation_script__";
-        private static readonly Regex _sourceUrlRegex = new Regex("/^[\040\t] *\\/\\/[@#] sourceURL=\\s*(\\S*?)\\s*$", RegexOptions.Compiled);
+        internal const string EvaluationScriptUrl = "__playwright_evaluation_script__";
+        private static readonly Regex _sourceUrlRegex = new Regex(@"^[\040\t]*\/\/[@#] sourceURL=\s*(\S*?)\s*$", RegexOptions.Compiled);
         private readonly ChromiumSession _client;
 
         public ChromiumExecutionContext(ChromiumSession client, ExecutionContextDescription contextPayload)
