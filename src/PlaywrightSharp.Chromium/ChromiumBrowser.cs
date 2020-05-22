@@ -2,10 +2,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Chromium.Protocol.Target;
+using PlaywrightSharp.Chromium.Protocol.Tracing;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Chromium
@@ -17,15 +19,18 @@ namespace PlaywrightSharp.Chromium
     {
         private readonly IBrowserApp _app;
         private readonly ChromiumConnection _connection;
-        private readonly ChromiumSession _session;
+        private readonly ChromiumSession _client;
         private readonly Dictionary<string, IBrowserContext> _contexts;
         private bool _isClosed;
+        private bool _tracingRecording;
+        private string _tracingPath;
+        private ChromiumSession _tracingClient;
 
         private ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
         {
             _app = app;
             _connection = connection;
-            _session = connection.RootSession;
+            _client = connection.RootSession;
 
             DefaultContext = new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this));
 
@@ -33,7 +38,7 @@ namespace PlaywrightSharp.Chromium
                 contextId => contextId,
                 contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
-            _session.MessageReceived += Session_MessageReceived;
+            _client.MessageReceived += ClientMessageReceived;
             _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
@@ -108,7 +113,7 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowser.NewContextAsync"/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
         {
-            string browserContextId = (await _session.SendAsync(new TargetCreateBrowserContextRequest()).ConfigureAwait(false)).BrowserContextId;
+            string browserContextId = (await _client.SendAsync(new TargetCreateBrowserContextRequest()).ConfigureAwait(false)).BrowserContextId;
             var context = CreateBrowserContext(browserContextId, options);
             await context.InitializeAsync().ConfigureAwait(false);
             _contexts.Add(browserContextId, context);
@@ -176,16 +181,81 @@ namespace PlaywrightSharp.Chromium
             return ChromiumTarget.FromPage(page as Page);
         }
 
-        /// <inheritdoc cref="IBrowser.StartTracingAsync(TracingOptions)"/>
-        public Task StartTracingAsync(TracingOptions options = null)
+        /// <inheritdoc cref="IBrowser.StartTracingAsync(IPage, TracingOptions)"/>
+        public Task StartTracingAsync(IPage page, TracingOptions options = null)
         {
-            throw new NotImplementedException();
+            if (_tracingRecording)
+            {
+                throw new InvalidOperationException("Cannot start recording trace while already recording trace.");
+            }
+
+            _tracingClient = page != null ? ((ChromiumPage)((Page)page).Delegate).Client : _client;
+
+            var defaultCategories = new List<string>
+            {
+                "-*",
+                "devtools.timeline",
+                "v8.execute",
+                "disabled-by-default-devtools.timeline",
+                "disabled-by-default-devtools.timeline.frame",
+                "toplevel",
+                "blink.console",
+                "blink.user_timing",
+                "latencyInfo",
+                "disabled-by-default-devtools.timeline.stack",
+                "disabled-by-default-v8.cpu_profiler",
+            };
+
+            var categories = options?.Categories ?? defaultCategories;
+
+            if (options?.Screenshots == true)
+            {
+                categories.Add("disabled-by-default-devtools.screenshot");
+            }
+
+            _tracingPath = options?.Path;
+            _tracingRecording = true;
+
+            return _tracingClient.SendAsync(new TracingStartRequest
+            {
+                TransferMode = "ReturnAsStream",
+                Categories = string.Join(", ", categories),
+            });
         }
 
         /// <inheritdoc cref="IBrowser.StopTracingAsync"/>
-        public Task<string> StopTracingAsync()
+        public async Task<string> StopTracingAsync()
         {
-            throw new NotImplementedException();
+            var taskWrapper = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            async void EventHandler(object sender, IChromiumEvent e)
+            {
+                try
+                {
+                    if (e is TracingTracingCompleteChromiumEvent tracingTracingComplete)
+                    {
+                        string stream = tracingTracingComplete.Stream;
+                        string tracingData = await ProtocolStreamReader.ReadProtocolStreamStringAsync(_tracingClient, stream, _tracingPath).ConfigureAwait(false);
+
+                        _client.MessageReceived -= EventHandler;
+                        taskWrapper.TrySetResult(tracingData);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string message = $"Tracing failed to process the tracing complete. {ex.Message}. {ex.StackTrace}";
+                    System.Diagnostics.Debug.WriteLine(ex);
+                    _tracingClient.OnClosed(message);
+                }
+            }
+
+            _tracingClient.MessageReceived += EventHandler;
+
+            await _tracingClient.SendAsync(new TracingEndRequest()).ConfigureAwait(false);
+
+            _tracingRecording = false;
+
+            return await taskWrapper.Task.ConfigureAwait(false);
         }
 
         internal static Task<IBrowser> ConnectAsync(ConnectOptions options) => ConnectAsync(null, options);
@@ -204,11 +274,11 @@ namespace PlaywrightSharp.Chromium
         internal IEnumerable<ChromiumTarget> GetAllTargets() => TargetsMap.Values.Where(t => t.IsInitialized);
 
         internal Task ClosePageAsync(Page page)
-            => _session.SendAsync(new TargetCloseTargetRequest { TargetId = ChromiumTarget.FromPage(page).TargetId });
+            => _client.SendAsync(new TargetCloseTargetRequest { TargetId = ChromiumTarget.FromPage(page).TargetId });
 
         internal void RemoveContext(string contextId) => _contexts.Remove(contextId);
 
-        private async void Session_MessageReceived(object sender, IChromiumEvent e)
+        private async void ClientMessageReceived(object sender, IChromiumEvent e)
         {
             try
             {
@@ -305,6 +375,6 @@ namespace PlaywrightSharp.Chromium
         }
 
         private BrowserContext CreateBrowserContext(string contextId, BrowserContextOptions options = null)
-            => new BrowserContext(new ChromiumBrowserContext(_session, this, contextId, options), options);
+            => new BrowserContext(new ChromiumBrowserContext(_client, this, contextId, options), options);
     }
 }

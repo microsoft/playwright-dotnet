@@ -57,8 +57,9 @@ namespace PlaywrightSharp
         /// Starts tracing.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        /// <param name="page">Optional, if specified, tracing includes screenshots of the given page.</param>
         /// <param name="options">Tracing options.</param>
-        Task StartTracingAsync(TracingOptions options = null);
+        Task StartTracingAsync(IPage page = null, TracingOptions options = null);
 
         /// <summary>
         /// Stops tracing.
