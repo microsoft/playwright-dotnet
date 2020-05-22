@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
 using PlaywrightSharp.Chromium.Protocol;
+using PlaywrightSharp.Chromium.Protocol.Target;
 using PlaywrightSharp.Messaging;
 
 namespace PlaywrightSharp.Chromium
@@ -102,7 +103,12 @@ namespace PlaywrightSharp.Chromium
 
         internal Task DetachAsync()
         {
-            throw new NotImplementedException();
+            if (Connection == null || Connection.IsClosed)
+            {
+                throw new PlaywrightSharpException($"Session already detached. Most likely the {_targetType} has been closed.");
+            }
+
+            return Connection.RootSession.SendAsync(new TargetDetachFromTargetRequest { SessionId = _sessionId });
         }
     }
 }

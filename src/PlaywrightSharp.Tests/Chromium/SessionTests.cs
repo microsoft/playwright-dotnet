@@ -17,6 +17,8 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/session.spec.js</playwright-file>
     ///<playwright-describe>Chromium.createCDPSession</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class SessionTests : PlaywrightSharpPageBaseTest, IDisposable
     {
         /// <inheritdoc/>

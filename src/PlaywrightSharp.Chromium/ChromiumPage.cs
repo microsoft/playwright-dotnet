@@ -24,8 +24,6 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IPageDelegate"/>
     internal class ChromiumPage : IPageDelegate
     {
-        internal const string EvaluationScriptUrl = "__playwright_evaluation_script__";
-
         private const string UtilityWorldName = "__playwright_utility_world__";
 
         private readonly ChromiumBrowser _browser;
@@ -751,7 +749,7 @@ namespace PlaywrightSharp.Chromium
 
             await Client.SendAsync(new PageAddScriptToEvaluateOnNewDocumentRequest
             {
-                Source = $"//# sourceURL={EvaluationScriptUrl}",
+                Source = $"//# sourceURL={ChromiumExecutionContext.EvaluationScriptUrl}",
                 WorldName = name,
             }).ConfigureAwait(false);
 

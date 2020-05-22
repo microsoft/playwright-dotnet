@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Chromium
 
         private async Task OnScriptParsedAsync(DebuggerScriptParsedChromiumEvent scriptParseResponse)
         {
-            if (scriptParseResponse.Url == ChromiumPage.EvaluationScriptUrl ||
+            if (scriptParseResponse.Url == ChromiumExecutionContext.EvaluationScriptUrl ||
                 (string.IsNullOrEmpty(scriptParseResponse.Url) && !_reportAnonymousScripts))
             {
                 return;
