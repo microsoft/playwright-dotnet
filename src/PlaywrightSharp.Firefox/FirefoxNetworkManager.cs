@@ -120,7 +120,15 @@ namespace PlaywrightSharp.Firefox
 
         private void OnRequestFailed(NetworkRequestFailedFirefoxEvent e)
         {
-            throw new NotImplementedException();
+            if (_requests.TryRemove(e.RequestId, out var request))
+            {
+                var response = request.Request.Response;
+                if (response != null)
+                {
+                    request.Request.SetFailureText(e.ErrorCode);
+                    _page.FrameManager.RequestFailed(request.Request, e.ErrorCode == "NS_BINDING_ABORTED");
+                }
+            }
         }
     }
 }

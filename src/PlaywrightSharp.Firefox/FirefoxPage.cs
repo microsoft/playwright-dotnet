@@ -214,11 +214,7 @@ namespace PlaywrightSharp.Firefox
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
             => _session.SendAsync(new NetworkSetExtraHTTPHeadersRequest
             {
-                Headers = headers.Select(pair => new HTTPHeader
-                {
-                    Name = pair.Key,
-                    Value = pair.Value,
-                }).ToArray(),
+                Headers = headers.ToHttpHeaders(),
             });
 
         public Task ReloadAsync() => _session.SendAsync(new PageReloadRequest { FrameId = Page.MainFrame.Id });
@@ -244,11 +240,11 @@ namespace PlaywrightSharp.Firefox
         public Task SetCacheEnabledAsync(bool enabled)
             => _session.SendAsync(new PageSetCacheDisabledRequest { CacheDisabled = !enabled });
 
-        public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
+        public Task SetRequestInterceptionAsync(bool enabled) => _networkManager.SetRequestInterception(enabled);
 
         public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
 
-        public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
+        public Task SetOfflineModeAsync(bool enabled) => throw new NotSupportedException("Offline mode not implemented in Firefox");
 
         public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme) => throw new NotImplementedException();
 

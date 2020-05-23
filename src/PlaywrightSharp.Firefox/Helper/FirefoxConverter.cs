@@ -121,5 +121,11 @@ namespace PlaywrightSharp.Firefox.Helper
                 ContextPermission.Microphone => PermissionsGrantPermissions.Microphone,
                 _ => throw new ArgumentOutOfRangeException(nameof(permission), "Unknown permission: " + permission)
             };
+
+        public static HTTPHeader[] ToHttpHeaders(this IDictionary<string, string> headers) => headers.Select(pair => new HTTPHeader
+        {
+            Name = pair.Key,
+            Value = pair.Value,
+        }).ToArray();
     }
 }

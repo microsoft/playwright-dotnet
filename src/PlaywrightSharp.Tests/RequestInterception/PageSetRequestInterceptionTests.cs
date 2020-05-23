@@ -14,6 +14,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.setRequestInterception</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetRequestInterceptionTests : PlaywrightSharpPageBaseTest
     {
@@ -80,7 +81,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             };
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
         }
-
 
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
