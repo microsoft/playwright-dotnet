@@ -149,8 +149,8 @@ namespace PlaywrightSharp.Firefox
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IBrowser.StartTracingAsync(TracingOptions)" />
-        public Task StartTracingAsync(TracingOptions options = null)
+        /// <inheritdoc cref="IBrowser.StartTracingAsync(IPage, TracingOptions)" />
+        public Task StartTracingAsync(IPage page, TracingOptions options = null)
         {
             throw new NotImplementedException();
         }

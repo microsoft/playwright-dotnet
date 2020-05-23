@@ -12,6 +12,8 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/tracing.spec.js</playwright-file>
     ///<playwright-describe>Chromium.startTracing</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class TracingTests : PlaywrightSharpPageBaseTest
     {
         private readonly string _file;
@@ -59,7 +61,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldOutputATrace()
         {
-            await Browser.StartTracingAsync(new TracingOptions
+            await Browser.StartTracingAsync(Page, new TracingOptions
             {
                 Screenshots = true,
                 Path = _file
@@ -76,7 +78,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldRunWithCustomCategoriesProvided()
         {
-            await Browser.StartTracingAsync(new TracingOptions
+            await Browser.StartTracingAsync(Page, new TracingOptions
             {
                 Screenshots = true,
                 Path = _file,
@@ -99,14 +101,14 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowIfTracingOnTwoPages()
         {
-            await Browser.StartTracingAsync(new TracingOptions
+            await Browser.StartTracingAsync(Page, new TracingOptions
             {
                 Path = _file
             });
             var newPage = await Browser.DefaultContext.NewPageAsync();
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                await Browser.StartTracingAsync(new TracingOptions
+                await Browser.StartTracingAsync(newPage, new TracingOptions
                 {
                     Path = _file
                 });
@@ -122,7 +124,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReturnABuffer()
         {
-            await Browser.StartTracingAsync(new TracingOptions
+            await Browser.StartTracingAsync(Page, new TracingOptions
             {
                 Screenshots = true,
                 Path = _file
@@ -139,7 +141,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithoutOptions()
         {
-            await Browser.StartTracingAsync();
+            await Browser.StartTracingAsync(Page);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             string trace = await Browser.StopTracingAsync();
             Assert.NotNull(trace);
@@ -157,7 +159,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportABufferWithoutAPath()
         {
-            await Browser.StartTracingAsync(new TracingOptions
+            await Browser.StartTracingAsync(Page, new TracingOptions
             {
                 Screenshots = true
             });
