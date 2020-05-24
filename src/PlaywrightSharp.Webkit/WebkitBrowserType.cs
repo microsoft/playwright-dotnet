@@ -65,7 +65,29 @@ namespace PlaywrightSharp.Webkit
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
         public override string[] GetDefaultArgs(BrowserArgOptions options = null)
         {
-            throw new NotImplementedException();
+            bool devtools = options?.Devtools ?? false;
+            bool headless = options?.Headless ?? !devtools;
+            string userDataDir = options?.UserDataDir;
+            string[] args = options?.Args ?? Array.Empty<string>();
+
+            if (devtools)
+            {
+                throw new PlaywrightSharpException("Option \"devtools\" is not supported by WebKit");
+            }
+
+            var webkitArguments = new List<string> { "--inspector-pipe" };
+            if (!string.IsNullOrEmpty(userDataDir))
+            {
+                webkitArguments.Add($"--user-data-dir={userDataDir.Quote()}");
+            }
+
+            if (headless)
+            {
+                webkitArguments.Add("--headless");
+            }
+
+            webkitArguments.AddRange(args);
+            return webkitArguments.ToArray();
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>

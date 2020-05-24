@@ -11,6 +11,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
+    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class DefaultArgumentsTests : PlaywrightSharpBaseTest
     {
