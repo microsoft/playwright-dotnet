@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Firefox;
+using PlaywrightSharp.Webkit;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
@@ -33,7 +34,7 @@ namespace PlaywrightSharp.Tests
         internal static IBrowserType GetNewBrowserType()
             => Product switch
             {
-                WebkitProduct => null,
+                WebkitProduct => new WebkitBrowserType(),
                 FirefoxProduct => new FirefoxBrowserType(),
                 ChromiumProduct => new ChromiumBrowserType(),
                 _ => throw new ArgumentOutOfRangeException($"product {Product} does not exist")
