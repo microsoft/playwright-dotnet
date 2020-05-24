@@ -49,19 +49,19 @@ namespace PlaywrightSharp.Firefox
 
         private void OnRequestWillBeSent(NetworkRequestWillBeSentFirefoxEvent e)
         {
-            _requests.TryGetValue(e.RedirectedFrom ?? string.Empty, out var redirectId);
-            var frame = (redirectId != null ? redirectId.Request.Frame : (e.FrameId != null ? _page.FrameManager.Frames[e.FrameId] : null)) as Frame;
+            _requests.TryGetValue(e.RedirectedFrom ?? string.Empty, out var redirected);
+            var frame = redirected?.Request?.Frame ?? (e.FrameId != null ? _page.FrameManager.Frames[e.FrameId] : null);
             if (frame == null)
             {
                 return;
             }
 
             var redirectChain = new List<Request>();
-            if (redirectId != null)
+            if (redirected != null)
             {
-                redirectChain = new List<Request>(redirectId.Request.RedirectChain);
-                redirectChain.Add(redirectId.Request);
-                _requests.TryRemove(redirectId.Id, out var _);
+                redirectChain = redirected.Request.RedirectChain;
+                redirectChain.Add(redirected.Request);
+                _requests.TryRemove(redirected.Id, out var _);
             }
 
             var request = new FirefoxInterceptableRequest(_session, frame, redirectChain, e);
@@ -125,9 +125,11 @@ namespace PlaywrightSharp.Firefox
                 var response = request.Request.Response;
                 if (response != null)
                 {
-                    request.Request.SetFailureText(e.ErrorCode);
-                    _page.FrameManager.RequestFailed(request.Request, e.ErrorCode == "NS_BINDING_ABORTED");
+                    response.RequestFinished();
                 }
+
+                request.Request.SetFailureText(e.ErrorCode);
+                _page.FrameManager.RequestFailed(request.Request, e.ErrorCode == "NS_BINDING_ABORTED");
             }
         }
     }

@@ -28,21 +28,41 @@ namespace PlaywrightSharp.Firefox
 
         internal string Id { get; }
 
-        public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed) => _session.SendAsync(new NetworkAbortInterceptedRequestRequest
+        public async Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed)
         {
-            RequestId = Id,
-            ErrorCode = errorCode.ToString(),
-        });
+            try
+            {
+                await _session.SendAsync(new NetworkAbortInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    ErrorCode = errorCode.ToString().ToLower(),
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
 
-        public Task ContinueAsync(Payload payload = null) => _session.SendAsync(new NetworkResumeInterceptedRequestRequest
+        public async Task ContinueAsync(Payload payload = null)
         {
-            RequestId = Id,
-            Method = payload?.Method?.Method,
-            Headers = payload?.Headers?.ToHttpHeaders(),
-            PostData = payload?.PostData,
-        });
+            try
+            {
+                await _session.SendAsync(new NetworkResumeInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    Method = payload?.Method?.Method,
+                    Headers = payload?.Headers?.ToHttpHeaders(),
+                    PostData = payload?.PostData,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
 
-        public Task FulfillAsync(ResponseData response)
+        public async Task FulfillAsync(ResponseData response)
         {
             var responseHeaders = response.Headers?.ToDictionary(header => header.Key.ToLower(), header => header.Value)
                 ?? new Dictionary<string, string>();
@@ -56,14 +76,21 @@ namespace PlaywrightSharp.Firefox
                 responseHeaders["content-length"] = response.BodyData.Length.ToString();
             }
 
-            return _session.SendAsync(new NetworkFulfillInterceptedRequestRequest
+            try
             {
-                RequestId = Id,
-                Status = (int)(response.Status ?? HttpStatusCode.OK),
-                StatusText = ReasonPhrases.GetReasonPhrase((int)(response.Status ?? HttpStatusCode.OK)),
-                Headers = responseHeaders.ToHttpHeaders(),
-                Base64Body = Convert.ToBase64String(response.BodyData),
-            });
+                await _session.SendAsync(new NetworkFulfillInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    Status = (int)(response.Status ?? HttpStatusCode.OK),
+                    StatusText = ReasonPhrases.GetReasonPhrase((int)(response.Status ?? HttpStatusCode.OK)),
+                    Headers = responseHeaders.ToHttpHeaders(),
+                    Base64Body = Convert.ToBase64String(response.BodyData),
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
     }
 }
