@@ -121,3 +121,58 @@ jobs:
         env:
           PRODUCT: FIREFOX
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=firefox -c Debug -f ${{ matrix.framework }}
+  webkit-ubuntu:
+    name: WebKit on ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        run: |
+          sudo apt-get update
+          sudo apt-get install libgbm-dev xvfb apt-transport-https
+          sudo apt-get update
+          sudo apt-get install dotnet-sdk-3.1
+      - name: Create Certificate
+        run: dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+      - name: Run tests
+        env:
+          PRODUCT: WEBKIT
+        run: xvfb-run --auto-servernum -- bash -c "dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=webkit -c Debug -f netcoreapp3.1"
+  webkit-mac:
+    name: WebKit on MacOS
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https --clean
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+      - name: Run tests
+        env:
+          PRODUCT: WEBKIT
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=webkit -c Debug -f netcoreapp3.1
+  webkit-windows:
+    name: WebKit on Windows (${{ matrix.framework }})
+    runs-on: windows-latest
+    strategy:
+      matrix:
+#        framework: [netcoreapp3.1, net48]
+        framework: [netcoreapp3.1]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https --clean
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+      - name: Run tests
+        env:
+          PRODUCT: WEBKIT
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=webkit -c Debug -f ${{ matrix.framework }}
