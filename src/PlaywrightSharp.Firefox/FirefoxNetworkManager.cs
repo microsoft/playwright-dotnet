@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Firefox
         private void OnRequestWillBeSent(NetworkRequestWillBeSentFirefoxEvent e)
         {
             _requests.TryGetValue(e.RedirectedFrom ?? string.Empty, out var redirected);
-            var frame = redirected?.Request?.Frame ?? (e.FrameId != null ? _page.FrameManager.Frames[e.FrameId] : null);
+            var frame = redirected != null ? redirected.Request.Frame : (e.FrameId != null ? _page.FrameManager.Frames[e.FrameId] : null);
             if (frame == null)
             {
                 return;
