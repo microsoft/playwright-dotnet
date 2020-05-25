@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -7,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.DOMContentLoaded</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsDOMContentLoadedTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsDOMContentLoadedTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsDOMContentLoadedTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -20,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldFireWhenExpected()
         {
             _ = Page.GoToAsync("about:blank");
-            await Page.WaitForEvent<object>(PageEvent.DOMContentLoaded);
+            await Page.WaitForEvent<EventArgs>(PageEvent.DOMContentLoaded);
         }
     }
 }
