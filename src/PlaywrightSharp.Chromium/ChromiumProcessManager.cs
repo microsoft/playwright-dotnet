@@ -454,7 +454,15 @@ namespace PlaywrightSharp.Chromium
 
                     try
                     {
-                        await p._attemptToGracefullyCloseFunc().ConfigureAwait(false);
+                        try
+                        {
+                            await p._attemptToGracefullyCloseFunc().ConfigureAwait(false);
+                        }
+                        catch
+                        {
+                            // If we fail here we'll kill the process
+                        }
+
                         if (!p.Process.HasExited)
                         {
                             p.Process.Kill();
