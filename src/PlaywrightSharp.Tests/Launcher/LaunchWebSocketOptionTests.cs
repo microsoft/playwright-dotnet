@@ -8,6 +8,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch |webSocket| option</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class LaunchWebSocketOptionTests : PlaywrightSharpBaseTest
     {
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch |webSocket| option</playwright-describe>
         ///<playwright-it>should not have websocket by default</playwright-it>
-        [Fact(Skip = "Websockets will be the default in PLaywright sharp")]
+        [Fact(Skip = "Websockets will be the default in Playwright sharp")]
         public void ShouldNotHaveWebsocketByDefault() { }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
