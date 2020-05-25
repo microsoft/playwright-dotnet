@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Chromium
         public int DefaultWaitForTimeout { get; set; } = Playwright.DefaultTimeout;
 
         /// <inheritdoc cref="IBrowser.IsConnected"/>
-        public bool IsConnected => false;
+        public bool IsConnected => !_connection.IsClosed;
 
         internal ConcurrentDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
 
