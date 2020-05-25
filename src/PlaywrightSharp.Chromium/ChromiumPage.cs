@@ -10,6 +10,7 @@ using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Accessibility;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
+using PlaywrightSharp.Chromium.Protocol.Inspector;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Network;
 using PlaywrightSharp.Chromium.Protocol.Page;
@@ -518,6 +519,12 @@ namespace PlaywrightSharp.Chromium
                     case TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget:
                         OnDetachedFromTarget(targetDetachedFromTarget);
                         break;
+                    case RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown:
+                        HandleException(runtimeExceptionThrown);
+                        break;
+                    case InspectorTargetCrashedChromiumEvent _:
+                        OnTargetCrashed();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -531,6 +538,11 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.ToString());
             }
         }
+
+        private void OnTargetCrashed() => Page.DidCrash();
+
+        private void HandleException(RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown)
+            => Page.OnPageError(ExceptionToError(runtimeExceptionThrown.ExceptionDetails));
 
         private void OnDetachedFromTarget(TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             => Page.RemoveWorker(targetDetachedFromTarget.SessionId);
