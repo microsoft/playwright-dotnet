@@ -6,9 +6,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.browserContext</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageBrowserContextTests : PlaywrightSharpPageBaseTest
     {
-        internal PageBrowserContextTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageBrowserContextTests(ITestOutputHelper output) : base(output)
         {
         }
 
