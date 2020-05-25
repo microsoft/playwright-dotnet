@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -9,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.close</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageCloseTests : PlaywrightSharpPageBaseTest
     {
-        internal PageCloseTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageCloseTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -22,11 +24,11 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<AggregateException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
-            Assert.Contains("Protocol error", Assert.IsType<PlaywrightSharpException>(exception).Message);
+            Assert.Contains("Protocol error", Assert.IsType<TargetClosedException>(exception).Message);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -106,14 +108,14 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var aggregateException = await Assert.ThrowsAsync<AggregateException>(() => Task.WhenAll(
+            var aggregateException = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
                 newPage.WaitForRequestAsync(TestConstants.EmptyPage),
                 newPage.WaitForResponseAsync(TestConstants.EmptyPage),
                 newPage.CloseAsync()
             ));
             for (int i = 0; i < 2; i++)
             {
-                string message = aggregateException.InnerExceptions[i].Message;
+                string message = aggregateException.Message;
                 Assert.Contains("Target closed", message);
                 Assert.DoesNotContain("Timeout", message);
             }
