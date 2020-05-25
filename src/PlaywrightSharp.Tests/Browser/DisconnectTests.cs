@@ -7,6 +7,8 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.disconnect</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class DisconnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -52,8 +54,7 @@ namespace PlaywrightSharp.Tests.Browser
             await page.WaitForSelectorAsync("body");
 
             await remote.DisconnectAsync();
-            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => watchdog);
-            Assert.Equal("Connection disposed", exception.CloseReason);
+            await Assert.ThrowsAsync<TargetClosedException>(() => watchdog);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
