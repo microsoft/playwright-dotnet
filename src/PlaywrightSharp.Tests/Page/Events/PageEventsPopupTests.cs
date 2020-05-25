@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Popup</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsPopupTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsPopupTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsPopupTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -61,9 +64,10 @@ namespace PlaywrightSharp.Tests.Page.Events
                 return popup;
             });
             await Task.WhenAll(
-                await popupTask,
+                popupTask,
                 Page.ClickAsync("a")
             );
+
             var popup = await popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));

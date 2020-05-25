@@ -667,7 +667,7 @@ namespace PlaywrightSharp
             }
         }
 
-        internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
+        internal void OnPopup(IPage popup) => Popup?.Invoke(this, new PopupEventArgs(popup));
 
         internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
 
