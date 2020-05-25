@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -80,8 +80,8 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync("() => new Worker(`data:text/javascript,console.log(1, 2, 3, this)`)");
             var log = await consoleTcs.Task;
             Assert.Equal("1 2 3 JSHandle@object", log.Text);
-            Assert.Equal(4, log.Args.Count);
-            string json = await (await log.Args[3].GetPropertyAsync("origin")).GetJsonValueAsync<string>();
+            Assert.Equal(4, log.Args.Count());
+            string json = await (await log.Args.ElementAt(3).GetPropertyAsync("origin")).GetJsonValueAsync<string>();
             Assert.Equal("null", json);
         }
 

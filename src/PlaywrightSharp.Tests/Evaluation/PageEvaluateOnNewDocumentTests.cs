@@ -61,7 +61,15 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.injected"));
 
             // Make sure CSP works.
-            await Page.AddScriptTagAsync(new AddTagOptions { Content = "window.e = 10;" });
+            try
+            {
+                await Page.AddScriptTagAsync(new AddTagOptions { Content = "window.e = 10;" });
+            }
+            catch
+            {
+                //Silent exception
+            }
+
             Assert.Null(await Page.EvaluateAsync("() => window.e"));
         }
 

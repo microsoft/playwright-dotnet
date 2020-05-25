@@ -645,6 +645,8 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void OnConsole(ConsoleMessage message) => Console?.Invoke(this, new ConsoleEventArgs(message));
+
         internal void AddConsoleMessage(ConsoleType type, IJSHandle[] args, ConsoleMessageLocation location, string text = null)
         {
             var message = new ConsoleMessage(
@@ -663,7 +665,7 @@ namespace PlaywrightSharp
             }
             else
             {
-                Console?.Invoke(this, new ConsoleEventArgs(message));
+                OnConsole(message);
             }
         }
 
