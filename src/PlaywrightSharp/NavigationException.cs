@@ -30,7 +30,7 @@ namespace PlaywrightSharp
         /// <param name="message">Message.</param>
         /// <param name="url">Url.</param>
         /// <param name="innerException">Inner exception.</param>
-        public NavigationException(string message, string url, Exception innerException = null) : base(BuildMessage(message, url), innerException)
+        public NavigationException(string message, string url, Exception innerException = null) : base(TryAddUrl(message, url), innerException)
         {
             Url = url;
         }
@@ -60,7 +60,6 @@ namespace PlaywrightSharp
         /// <value>The URL.</value>
         public string Url { get; }
 
-        private static string BuildMessage(string message, string url)
-            => "Navigation failed because browser has disconnected!\n" + (message.Contains(url) ? message : $"{message} ({url})");
+        private static string TryAddUrl(string message, string url) => message.Contains(url) ? message : $"{message} ({url})";
     }
 }

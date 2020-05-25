@@ -34,8 +34,7 @@ namespace PlaywrightSharp.Tests.Browser
             });
             await Server.WaitForRequest("/one-style.css");
             await remote.DisconnectAsync();
-            var exception = await Assert.ThrowsAsync<NavigationException>(() => navigationTask);
-            Assert.Contains("Navigation failed because browser has disconnected!", exception.Message);
+            await Assert.ThrowsAsync<NavigationException>(() => navigationTask);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
