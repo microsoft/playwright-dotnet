@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {
-        internal FrameEvaluateTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public FrameEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
