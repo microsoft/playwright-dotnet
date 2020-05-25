@@ -72,10 +72,10 @@ namespace PlaywrightSharp
         public event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <inheritdoc cref="IPage.Load"/>
-        public event EventHandler Load;
+        public event EventHandler<EventArgs> Load;
 
         /// <inheritdoc cref="IPage.DOMContentLoaded"/>
-        public event EventHandler DOMContentLoaded;
+        public event EventHandler<EventArgs> DOMContentLoaded;
 
         /// <inheritdoc cref="IPage.Response"/>
         public event EventHandler<ResponseEventArgs> Response;
@@ -103,7 +103,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.Close"/>
-        public event EventHandler Close;
+        public event EventHandler<EventArgs> Close;
 
         /// <inheritdoc cref="IPage.Error"/>
         public event EventHandler<ErrorEventArgs> Error;
@@ -120,7 +120,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.Websocket"/>
         public event EventHandler<WebsocketEventArgs> Websocket;
 
-        internal event EventHandler ClientDisconnected;
+        internal event EventHandler<EventArgs> ClientDisconnected;
 
         /// <inheritdoc cref="IPage.MainFrame"/>
         IFrame IPage.MainFrame => MainFrame;
