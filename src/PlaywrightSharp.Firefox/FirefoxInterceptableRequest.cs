@@ -66,6 +66,7 @@ namespace PlaywrightSharp.Firefox
         {
             var responseHeaders = response.Headers?.ToDictionary(header => header.Key.ToLower(), header => header.Value)
                 ?? new Dictionary<string, string>();
+
             if (!string.IsNullOrEmpty(response.ContentType))
             {
                 responseHeaders["content-type"] = response.ContentType;
