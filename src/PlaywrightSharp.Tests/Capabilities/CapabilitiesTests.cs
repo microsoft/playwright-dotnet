@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Capabilities
 {
     ///<playwright-file>capabilities.spec.js</playwright-file>
     ///<playwright-describe>Capabilities</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class CapabilitiesTests : PlaywrightSharpPageBaseTest
     {
-        internal CapabilitiesTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public CapabilitiesTests(ITestOutputHelper output) : base(output)
         {
         }
 
