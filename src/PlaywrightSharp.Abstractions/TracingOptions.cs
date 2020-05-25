@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Tracing options used on <see cref="IBrowser.StartTracingAsync(TracingOptions)"/>.
+    /// Tracing options used on <see cref="IBrowser.StartTracingAsync(IPage, TracingOptions)"/>.
     /// </summary>
     public class TracingOptions
     {

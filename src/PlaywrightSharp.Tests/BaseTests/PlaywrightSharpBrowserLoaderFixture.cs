@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal static IBrowser Browser { get; private set; }
 
         /// <inheritdoc />
-        public PlaywrightSharpBrowserLoaderFixture() : base()
+        public PlaywrightSharpBrowserLoaderFixture()
         {
             SetupBrowserAsync().GetAwaiter().GetResult();
         }
