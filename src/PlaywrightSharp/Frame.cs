@@ -13,7 +13,6 @@ namespace PlaywrightSharp
     public class Frame : IFrame
     {
         private readonly IDictionary<ContextType, ContextData> _contextData;
-        private readonly bool _detached = false;
         private int _setContentCounter;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
@@ -595,7 +594,7 @@ namespace PlaywrightSharp
 
         private Task<FrameExecutionContext> GetContextAsync(ContextType contextType)
         {
-            if (_detached)
+            if (Detached)
             {
                 throw new PlaywrightSharpException(
                     $"Execution Context is not available in detached frame \"{Url}\" (are you trying to evaluate ?)");
@@ -616,7 +615,7 @@ namespace PlaywrightSharp
                 var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, waitFor, timeout)
                     .ConfigureAwait(false);
 
-                handle = maybeHandle ?? throw new SelectorException($"No node found for selector", SelectorToString(selector, options.WaitFor));
+                handle = maybeHandle ?? throw new SelectorException("No node found for selector", SelectorToString(selector, options.WaitFor));
             }
             else
             {
@@ -625,7 +624,7 @@ namespace PlaywrightSharp
 
                 if (maybeHandle == null)
                 {
-                    throw new SelectorException($"No node found for selector", selector);
+                    throw new SelectorException("No node found for selector", selector);
                 }
 
                 handle = maybeHandle!;
