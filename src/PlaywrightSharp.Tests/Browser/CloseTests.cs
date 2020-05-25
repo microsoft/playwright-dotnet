@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Browser
         public async Task ShouldTerminateNetworkWaiters()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            await using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
 
             var newPage = await remote.DefaultContext.NewPageAsync();
             var requestTask = newPage.WaitForRequestAsync(TestConstants.EmptyPage);

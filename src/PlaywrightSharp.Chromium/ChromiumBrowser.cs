@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Chromium
                 contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
             _session.MessageReceived += Session_MessageReceived;
-            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
+            _connection.Disconnected += Connection_OnDisconnected;
         }
 
         /// <inheritdoc cref="IBrowser.TargetChanged"/>
@@ -207,6 +207,12 @@ namespace PlaywrightSharp.Chromium
             => _session.SendAsync(new TargetCloseTargetRequest { TargetId = ChromiumTarget.FromPage(page).TargetId });
 
         internal void RemoveContext(string contextId) => _contexts.Remove(contextId);
+
+        private void Connection_OnDisconnected(object sender, EventArgs e)
+        {
+            Disconnected?.Invoke(this, EventArgs.Empty);
+            _isClosed = true;
+        }
 
         private async void Session_MessageReceived(object sender, IChromiumEvent e)
         {

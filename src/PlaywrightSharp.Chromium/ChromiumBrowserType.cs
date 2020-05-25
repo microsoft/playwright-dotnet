@@ -190,7 +190,11 @@ namespace PlaywrightSharp.Chromium
                     }
 
                     var transport = await BrowserHelper.CreateTransportAsync(browserApp.ConnectOptions).ConfigureAwait(false);
-                    await transport.SendAsync(new BrowserCloseRequest().Command).ConfigureAwait(false);
+                    await transport.SendAsync(new ConnectionRequest
+                    {
+                        Id = ChromiumConnection.BrowserCloseMessageId,
+                        Method = new BrowserCloseRequest().Command,
+                    }.ToJson()).ConfigureAwait(false);
                 },
                 exitCode =>
                 {
