@@ -7,6 +7,8 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -21,7 +23,7 @@ namespace PlaywrightSharp.Tests.Browser
         public async Task ShouldTerminateNetworkWaiters()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            await using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
 
             var newPage = await remote.DefaultContext.NewPageAsync();
             var requestTask = newPage.WaitForRequestAsync(TestConstants.EmptyPage);

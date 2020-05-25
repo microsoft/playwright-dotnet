@@ -27,6 +27,7 @@ namespace PlaywrightSharp
 
         private bool _disconnected;
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
+        private TaskCompletionSource<bool> _disconnectedTcs = new TaskCompletionSource<bool>();
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -447,7 +448,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
-        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
+        public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
             var info = _pageEventsMap[e];
             ValidateArgumentsTypes();
@@ -462,7 +463,14 @@ namespace PlaywrightSharp
             }
 
             info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
-            return eventTsc.Task.WithTimeout(options?.Timeout ?? DefaultTimeout);
+            await Task.WhenAny(eventTsc.Task, _disconnectedTcs.Task).WithTimeout(options?.Timeout ?? DefaultTimeout).ConfigureAwait(false);
+
+            if (_disconnectedTcs.Task.IsCompleted)
+            {
+                await _disconnectedTcs.Task.ConfigureAwait(false);
+            }
+
+            return await eventTsc.Task.ConfigureAwait(false);
 
             void ValidateArgumentsTypes()
             {
@@ -670,7 +678,8 @@ namespace PlaywrightSharp
         internal void DidDisconnected()
         {
             _disconnected = true;
-            ClientDisconnected?.Invoke(this, new EventArgs());
+            ClientDisconnected?.Invoke(this, EventArgs.Empty);
+            _disconnectedTcs.TrySetException(new TargetClosedException("Target closed."));
         }
 
         internal void DidClose()

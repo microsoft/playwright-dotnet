@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace PlaywrightSharp.Chromium
             return await GetSessionAsync(sessionId).ConfigureAwait(false);
         }
 
-        private void Transport_Closed(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, e);
+        private void Transport_Closed(object sender, TransportClosedEventArgs e) => OnClose("Transport closed");
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e) => ProcessMessage(e);
 
@@ -141,6 +142,20 @@ namespace PlaywrightSharp.Chromium
             }
 
             GetSession(obj.SessionId ?? string.Empty).OnMessageReceived(param);
+        }
+
+        private void OnClose(string reason)
+        {
+            IsClosed = true;
+            _transport.MessageReceived -= Transport_MessageReceived;
+            _transport.Closed -= Transport_Closed;
+            foreach (var session in _sessions.Values.ToArray())
+            {
+                session.OnClosed(reason);
+            }
+
+            _sessions.Clear();
+            Disconnected?.Invoke(this, EventArgs.Empty);
         }
     }
 }
