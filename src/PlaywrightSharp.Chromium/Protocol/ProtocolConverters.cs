@@ -130,5 +130,15 @@ namespace PlaywrightSharp.Chromium.Protocol
                 RequestAbortErrorCode.Failed => Network.ErrorReason.Failed,
                 _ => Network.ErrorReason.Failed,
             };
+
+        internal static ConsoleType LogLevelToConsoleType(this string value)
+            => value switch
+            {
+                "verbose" => ConsoleType.Verbose,
+                "info" => ConsoleType.Info,
+                "warning" => ConsoleType.Warning,
+                "error" => ConsoleType.Error,
+                _ => ConsoleType.Info
+            };
     }
 }

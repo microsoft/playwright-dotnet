@@ -518,6 +518,9 @@ namespace PlaywrightSharp.Chromium
                     case TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget:
                         OnDetachedFromTarget(targetDetachedFromTarget);
                         break;
+                    case LogEntryAddedChromiumEvent logEntryAdded:
+                        OnLogEntryAdded(logEntryAdded);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -529,6 +532,27 @@ namespace PlaywrightSharp.Chromium
                 */
                 System.Diagnostics.Debug.WriteLine(ex);
                 Client.OnClosed(ex.ToString());
+            }
+        }
+
+        private void OnLogEntryAdded(LogEntryAddedChromiumEvent e)
+        {
+            if (e.Entry.Args != null)
+            {
+                foreach (var arg in e.Entry.Args)
+                {
+                    _ = ChromiumExecutionContext.ReleaseObjectAsync(Client, arg);
+                }
+            }
+
+            if (e.Entry.Source != "worker")
+            {
+                Page.OnConsole(new ConsoleMessage(
+                    e.Entry.Level.LogLevelToConsoleType(),
+                    e.Entry.Text,
+                    Array.Empty<IJSHandle>(),
+                    null,
+                    new ConsoleMessageLocation { URL = e.Entry.Url, LineNumber = e.Entry.LineNumber }));
             }
         }
 

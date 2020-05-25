@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -10,9 +11,12 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Console</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsConsoleTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsConsoleTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -35,9 +39,9 @@ namespace PlaywrightSharp.Tests.Page.Events
             );
             Assert.Equal("hello 5 JSHandle@object", message.Text);
             Assert.Equal(ConsoleType.Log, message.Type);
-            Assert.Equal("hello", await message.Args[0].GetJsonValueAsync<string>());
-            Assert.Equal(5, await message.Args[1].GetJsonValueAsync<int>());
-            Assert.Equal(new { foo = "bar" }, await message.Args[2].GetJsonValueAsync<object>());
+            Assert.Equal("hello", await message.Args.ElementAt(0).GetJsonValueAsync<string>());
+            Assert.Equal(5, await message.Args.ElementAt(1).GetJsonValueAsync<int>());
+            Assert.Equal("bar", (await message.Args.ElementAt(2).GetJsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -145,7 +149,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                     await new Promise(f => setTimeout(f, 100));
                 }
                 // 2. In this popup, create an iframe that console.logs a message.
-                win.document.body.innerHTML = `< iframe src = '/consolelog.html' ></ iframe >`;
+                win.document.body.innerHTML = `<iframe src='/consolelog.html'></iframe>`;
                 var frame = win.document.querySelector('iframe');
                 while (frame.contentDocument.readyState !== 'complete')
                 {

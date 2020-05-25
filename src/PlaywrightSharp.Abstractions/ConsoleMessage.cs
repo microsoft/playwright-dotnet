@@ -20,7 +20,7 @@ namespace PlaywrightSharp
         /// <param name="args">Arguments.</param>
         /// <param name="handleToString">IJSHandle to string.</param>
         /// <param name="location">Message location.</param>
-        internal ConsoleMessage(ConsoleType type, string text, IList<IJSHandle> args, Func<IJSHandle, bool, string> handleToString, ConsoleMessageLocation location = null)
+        internal ConsoleMessage(ConsoleType type, string text, IEnumerable<IJSHandle> args, Func<IJSHandle, bool, string> handleToString, ConsoleMessageLocation location = null)
         {
             Type = type;
             _text = text;
@@ -39,7 +39,7 @@ namespace PlaywrightSharp
         /// Gets the arguments.
         /// </summary>
         /// <value>The arguments.</value>
-        public IList<IJSHandle> Args { get; }
+        public IEnumerable<IJSHandle> Args { get; }
 
         /// <summary>
         /// Gets the location.
