@@ -684,6 +684,8 @@ namespace PlaywrightSharp
             _disconnectedTcs.TrySetException(new TargetClosedException("Target closed."));
         }
 
+        internal void DidCrash() => Error?.Invoke(this, new ErrorEventArgs("Page crashed!"));
+
         internal void DidClose()
         {
             if (IsClosed)

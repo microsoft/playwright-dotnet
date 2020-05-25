@@ -10,6 +10,7 @@ using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Accessibility;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
+using PlaywrightSharp.Chromium.Protocol.Inspector;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Network;
 using PlaywrightSharp.Chromium.Protocol.Page;
@@ -521,6 +522,12 @@ namespace PlaywrightSharp.Chromium
                     case LogEntryAddedChromiumEvent logEntryAdded:
                         OnLogEntryAdded(logEntryAdded);
                         break;
+                    case RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown:
+                        HandleException(runtimeExceptionThrown);
+                        break;
+                    case InspectorTargetCrashedChromiumEvent _:
+                        OnTargetCrashed();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -555,6 +562,11 @@ namespace PlaywrightSharp.Chromium
                     new ConsoleMessageLocation { URL = e.Entry.Url, LineNumber = e.Entry.LineNumber }));
             }
         }
+
+        private void OnTargetCrashed() => Page.DidCrash();
+
+        private void HandleException(RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown)
+            => Page.OnPageError(ExceptionToError(runtimeExceptionThrown.ExceptionDetails));
 
         private void OnDetachedFromTarget(TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             => Page.RemoveWorker(targetDetachedFromTarget.SessionId);
