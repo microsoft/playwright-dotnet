@@ -48,7 +48,8 @@ namespace PlaywrightSharp.Tests.Launcher
 
             if (TestConstants.IsFirefox)
             {
-                options.Args = options.Args.Concat(new[] { $"-profile", userDataDir.Path.Quote() }).ToArray();
+                options.Args = options.Args.Concat(new[] { "-profile", userDataDir.Path.Quote() }).ToArray();
+
             }
             else
             {
