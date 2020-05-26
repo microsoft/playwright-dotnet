@@ -108,14 +108,14 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var aggregateException = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
                 newPage.WaitForRequestAsync(TestConstants.EmptyPage),
                 newPage.WaitForResponseAsync(TestConstants.EmptyPage),
                 newPage.CloseAsync()
             ));
             for (int i = 0; i < 2; i++)
             {
-                string message = aggregateException.Message;
+                string message = exception.Message;
                 Assert.Contains("Target closed", message);
                 Assert.DoesNotContain("Timeout", message);
             }
