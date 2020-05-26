@@ -12,6 +12,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class UserDataDirTests : PlaywrightSharpBaseTest
     {
@@ -47,7 +48,8 @@ namespace PlaywrightSharp.Tests.Launcher
 
             if (TestConstants.IsFirefox)
             {
-                options.Args = options.Args.Concat(new[] { $"--profile=\"{userDataDir}\"" }).ToArray();
+                options.Args = options.Args.Concat(new[] { "-profile", userDataDir.Path.Quote() }).ToArray();
+
             }
             else
             {
