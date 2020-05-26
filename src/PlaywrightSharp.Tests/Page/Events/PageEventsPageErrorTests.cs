@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.PageError</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsPageErrorTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsPageErrorTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsPageErrorTests(ITestOutputHelper output) : base(output)
         {
         }
 
