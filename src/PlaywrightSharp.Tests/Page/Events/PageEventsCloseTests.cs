@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Close</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsCloseTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsCloseTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsCloseTests(ITestOutputHelper output) : base(output)
         {
         }
 
