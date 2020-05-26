@@ -752,6 +752,15 @@ namespace PlaywrightSharp
 
                 expression = GetEvaluationString(deliverResult, bindingPayload.Name, bindingPayload.Seq, result);
             }
+            catch (TargetInvocationException ex)
+            {
+                expression = GetEvaluationString(
+                    deliverError,
+                    bindingPayload.Name,
+                    bindingPayload.Seq,
+                    ex.InnerException?.Message ?? ex.Message,
+                    ex.InnerException?.StackTrace ?? ex.StackTrace);
+            }
             catch (Exception ex)
             {
                 expression = GetEvaluationString(deliverError, bindingPayload.Name, bindingPayload.Seq, ex.Message, ex.StackTrace);
