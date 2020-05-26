@@ -442,10 +442,7 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc cref="IPage.GetOpenerAsync"/>
-        public Task<IPage> GetOpenerAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IPage> GetOpenerAsync() => Delegate.GetOpenerAsync();
 
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
         public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)

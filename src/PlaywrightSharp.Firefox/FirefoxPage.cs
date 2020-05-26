@@ -254,6 +254,8 @@ namespace PlaywrightSharp.Firefox
 
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => throw new NotImplementedException();
 
+        public Task<IPage> GetOpenerAsync() => throw new NotImplementedException();
+
         internal async Task InitializeAsync()
         {
             var tasks = new List<Task>

@@ -7,9 +7,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.opener</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageOpenerTests : PlaywrightSharpPageBaseTest
     {
-        internal PageOpenerTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageOpenerTests(ITestOutputHelper output) : base(output)
         {
         }
 
