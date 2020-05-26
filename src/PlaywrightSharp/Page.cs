@@ -565,22 +565,13 @@ namespace PlaywrightSharp
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, string[])"/>
-        public Task<string[]> SelectAsync(string selector, params string[] values)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string[]> SelectAsync(string selector, params string[] values) => MainFrame.SelectAsync(selector, values);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, SelectOption[])"/>
-        public Task<string[]> SelectAsync(string selector, params SelectOption[] values)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => MainFrame.SelectAsync(selector, values);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, IElementHandle[])"/>
-        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => MainFrame.SelectAsync(selector, values);
 
         /// <inheritdoc cref="IPage.GetContentAsync"/>
         public Task<string> GetContentAsync() => MainFrame.GetContentAsync();

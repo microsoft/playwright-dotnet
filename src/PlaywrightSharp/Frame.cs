@@ -485,6 +485,24 @@ namespace PlaywrightSharp
             }).ConfigureAwait(false);
         }
 
+        /// <inheritdoc cref="IFrame.SelectAsync(string, string[])"/>
+        public Task<string[]> SelectAsync(string selector, params string[] values) => SelectInternalAsync(selector, values);
+
+        /// <inheritdoc cref="IFrame.SelectAsync(selector, SelectOption[])"/>
+        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => SelectInternalAsync(selector, values);
+
+        /// <inheritdoc cref="IFrame.SelectAsync(selector, IElementHandle[])"/>
+        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => SelectInternalAsync(selector, values);
+
+        internal async Task<string[]> SelectInternalAsync(string selector, object[] values)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options);
+            const values = value === undefined ? [] : Array.isArray(value) ? value : [value];
+            const result = await handle.select(...values);
+            await handle.dispose();
+            return result;
+        }
+
         /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>
         public async Task WaitForLoadStateAsync(NavigationOptions options = null)
         {

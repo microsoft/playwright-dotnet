@@ -594,6 +594,36 @@ namespace PlaywrightSharp
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options = null);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params SelectOption[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, params IElementHandle[] values);
+
+                /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<string[]> SelectAsync(string selector, params string[] values);
 
         /// <summary>
@@ -611,7 +641,7 @@ namespace PlaywrightSharp
         /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="values">Option elements to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<string[]> SelectAsync(string selector, params IElementHandle[] values);

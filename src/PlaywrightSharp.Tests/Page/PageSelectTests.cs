@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.select</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSelectTests : PlaywrightSharpPageBaseTest
     {
-        internal PageSelectTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageSelectTests(ITestOutputHelper output) : base(output)
         {
         }
 
