@@ -8,9 +8,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.exposeFunction</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageExposeFunctionTests : PlaywrightSharpPageBaseTest
     {
-        internal PageExposeFunctionTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageExposeFunctionTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -99,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
             int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await compute(3, 5);
             }");
-            Assert.Equal(36, result);
+            Assert.Equal(15, result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
