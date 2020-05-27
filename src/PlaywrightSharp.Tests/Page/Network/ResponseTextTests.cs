@@ -76,12 +76,10 @@ namespace PlaywrightSharp.Tests.Page.Network
                 return serverResponseCompletion.Task;
             });
             // Setup page to trap response.
-            IResponse pageResponse = null;
             bool requestFinished = false;
-            Page.Response += (sender, e) => pageResponse = e.Response;
             Page.RequestFinished += (sender, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
             // send request and wait for server response
-            await Task.WhenAll(
+            var (pageResponse, _) = await TaskUtils.WhenAll(
                 Page.WaitForEvent<ResponseEventArgs>(PageEvent.Response),
                 Page.EvaluateAsync("fetch('./get', { method: 'GET'})"),
                 Server.WaitForRequest("/get")
@@ -89,10 +87,10 @@ namespace PlaywrightSharp.Tests.Page.Network
 
             Assert.NotNull(serverResponse);
             Assert.NotNull(pageResponse);
-            Assert.Equal(HttpStatusCode.OK, pageResponse.Status);
+            Assert.Equal(HttpStatusCode.OK, pageResponse.Response.Status);
             Assert.False(requestFinished);
 
-            var responseText = pageResponse.GetTextAsync();
+            var responseText = pageResponse.Response.GetTextAsync();
             // Write part of the response and wait for it to be flushed.
             await serverResponse.WriteAsync("wor");
             // Finish response.
