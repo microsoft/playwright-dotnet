@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -485,23 +486,38 @@ namespace PlaywrightSharp
             }).ConfigureAwait(false);
         }
 
-        /// <inheritdoc cref="IFrame.SelectAsync(string, string[])"/>
-        public Task<string[]> SelectAsync(string selector, params string[] values) => SelectInternalAsync(selector, values);
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null)
+            => SelectAsync(selector, new[] { value }, options);
 
-        /// <inheritdoc cref="IFrame.SelectAsync(selector, SelectOption[])"/>
-        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => SelectInternalAsync(selector, values);
+        /// <inheritdoc/>
+        public Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null)
+            => SelectAsync(selector, new[] { value }, options);
 
-        /// <inheritdoc cref="IFrame.SelectAsync(selector, IElementHandle[])"/>
-        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => SelectInternalAsync(selector, values);
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null)
+            => SelectAsync(selector, new[] { value }, options);
 
-        internal async Task<string[]> SelectInternalAsync(string selector, object[] values)
-        {
-            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options);
-            const values = value === undefined ? [] : Array.isArray(value) ? value : [value];
-            const result = await handle.select(...values);
-            await handle.dispose();
-            return result;
-        }
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options)
+            => SelectInternalAsync(selector, values.Select(v => new SelectOption { Value = v }), options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options)
+            => SelectInternalAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options)
+            => SelectInternalAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, params string[] values) => SelectAsync(selector, values, null);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => SelectAsync(selector, values, null);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => SelectAsync(selector, values, null);
 
         /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>
         public async Task WaitForLoadStateAsync(NavigationOptions options = null)
@@ -699,6 +715,15 @@ namespace PlaywrightSharp
             }
 
             return rerunnableTask.Task;
+        }
+
+        private async Task<string[]> SelectInternalAsync(string selector, IEnumerable<object> values, WaitForSelectorOptions options)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false) as ElementHandle;
+            values ??= Array.Empty<object>();
+            var result = await handle.SelectInternalAsync(values).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
     }
 }

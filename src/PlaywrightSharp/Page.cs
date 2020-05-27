@@ -333,6 +333,30 @@ namespace PlaywrightSharp
         public Task HoverAsync(string selector, WaitForSelectorOptions options = null)
             => MainFrame.HoverAsync(selector, options);
 
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null)
+            => MainFrame.SelectAsync(selector, value, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null)
+            => MainFrame.SelectAsync(selector, value, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null)
+            => MainFrame.SelectAsync(selector, value, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options)
+            => MainFrame.SelectAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options)
+            => MainFrame.SelectAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options)
+            => MainFrame.SelectAsync(selector, values, options);
+
         /// <inheritdoc cref="IPage.QuerySelectorAsync(string)"/>
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
 

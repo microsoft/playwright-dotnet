@@ -169,7 +169,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>Page.select</playwright-describe>
         ///<playwright-it>should throw when element is not a &lt;select&gt;</playwright-it>
         [Fact]
-        public async Task ShouldThrowWhenElementIsNotA<select>()
+        public async Task ShouldThrowWhenElementIsNotASelect()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.SelectAsync("body", string.Empty));
@@ -231,7 +231,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectAsync("select", "blue", "black", "magenta");
             await Page.SelectAsync("select", Array.Empty<string>());
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected))"));
+            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -243,7 +243,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.SelectAsync("select", "blue", "black", "magenta");
             await Page.SelectAsync("select", Array.Empty<string>());
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected))"));
+            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
