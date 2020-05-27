@@ -360,6 +360,15 @@ namespace PlaywrightSharp.Chromium
 
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => _pdf.GenerateAsync(file, options);
 
+        public Task<IPage> GetOpenerAsync()
+        {
+            var openerTarget = ChromiumTarget.FromPage(Page).GetOpenerAsync();
+
+            return openerTarget == null
+                ? Task.FromResult<IPage>(null)
+                : openerTarget.GetPageAsync();
+        }
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
