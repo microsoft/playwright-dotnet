@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Helpers
         /// <inheritdoc />
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)
         {
-            int maxRetries = factAttribute.GetNamedArgument<int>("MaxRetries");
+            int maxRetries = factAttribute.GetNamedArgument<int>(nameof(RetryAttribute.MaxRetries));
             if (maxRetries < 1)
                 maxRetries = 3;
 
