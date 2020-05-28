@@ -54,8 +54,13 @@ namespace PlaywrightSharp.Tests.Helpers
                 // contain run status) until we know we've decided to accept the final result;
                 var delayedMessageBus = new DelayedMessageBus(messageBus);
 
-                var summary = await base.RunAsync(diagnosticMessageSink, delayedMessageBus, constructorArguments,
-                    aggregator, cancellationTokenSource);
+                var summary = await base.RunAsync(
+                    diagnosticMessageSink,
+                    delayedMessageBus,
+                    constructorArguments,
+                    aggregator,
+                    cancellationTokenSource);
+
                 if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
                 {
                     delayedMessageBus.Dispose(); // Sends all the delayed messages

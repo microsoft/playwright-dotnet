@@ -21,7 +21,9 @@ namespace PlaywrightSharp.Tests.Helpers
         public bool QueueMessage(IMessageSinkMessage message)
         {
             lock (_messages)
+            {
                 _messages.Add(message);
+            }
 
             // No way to ask the inner bus if they want to cancel without sending them the message, so
             // we just go ahead and continue always.
@@ -31,7 +33,9 @@ namespace PlaywrightSharp.Tests.Helpers
         public void Dispose()
         {
             foreach (var message in _messages)
+            {
                 _innerBus.QueueMessage(message);
+            }
         }
     }
 }

@@ -23,7 +23,9 @@ namespace PlaywrightSharp.Tests.Helpers
         {
             int maxRetries = factAttribute.GetNamedArgument<int>("MaxRetries");
             if (maxRetries < 1)
+            {
                 maxRetries = 3;
+            }
 
             yield return new RetryTestCase(_diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), TestMethodDisplayOptions.All, testMethod, maxRetries);
         }
