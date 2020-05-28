@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.toString</playwright-describe>
         ///<playwright-it>should work for primitives</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForPrimitives()
         {
             var numberHandle = await Page.EvaluateHandleAsync("() => 2");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.toString</playwright-describe>
         ///<playwright-it>should work for complicated objects</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForComplicatedObjects()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => window");
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.toString</playwright-describe>
         ///<playwright-it>should work for promises</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForPromises()
         {
             // wrap the promise in an object, otherwise we will await.
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.toString</playwright-describe>
         ///<playwright-it>should work with different subtypes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithDifferentSubtypes()
         {
             Assert.Equal("JSHandle@function", (await Page.EvaluateHandleAsync("(function(){})")).ToString());

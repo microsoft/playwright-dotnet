@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.title</playwright-describe>
         ///<playwright-it>should return the page title</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnThePageTitle()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/title.html");

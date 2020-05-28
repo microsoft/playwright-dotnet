@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept object handle as an argument</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAcceptObjectHandleAsAnArgument()
         {
             var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept object handle to primitive types</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAcceptObjectHandleToPrimitiveTypes()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 5");
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should warn on nested object handles</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWarnOnNestedObjectHandles()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => document.body");
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept object handle to unserializable value</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAcceptObjectHandleToUnserializableValue()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => Infinity");
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should use the same JS wrappers</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldUseTheSameJSWrappers()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should work with primitives</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithPrimitives()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {

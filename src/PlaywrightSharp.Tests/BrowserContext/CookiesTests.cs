@@ -22,14 +22,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should return no cookies in pristine browser context</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNoCookiesInPristineBrowserContext()
             => Assert.Empty(await Context.GetCookiesAsync());
 
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should get a cookie</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldGetACookie()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should properly report httpOnly cookie</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldProperlyReportHttpOnlyCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should get multiple cookies</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldGetMultipleCookies()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -138,7 +138,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.cookies</playwright-describe>
         /// <playwright-it>should get cookies from multiple urls</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldGetCookiesFromMultipleUrls()
         {
             await Context.SetCookiesAsync(

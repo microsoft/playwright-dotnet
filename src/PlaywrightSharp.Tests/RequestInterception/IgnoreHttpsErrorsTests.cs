@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with request interception</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithRequestInterception()
         {
             var page = await NewPageAsync(new BrowserContextOptions

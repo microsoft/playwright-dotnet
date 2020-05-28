@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$</playwright-describe>
         ///<playwright-it>should query existing element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$</playwright-describe>
         ///<playwright-it>should query existing element with zs selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElementWithZsSelector()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$</playwright-describe>
         ///<playwright-it>should return null for non-existing element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullForNonExistingElement()
         {
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");

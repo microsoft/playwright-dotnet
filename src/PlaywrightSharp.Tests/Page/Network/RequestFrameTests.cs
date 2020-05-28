@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.frame</playwright-describe>
         ///<playwright-it>should work for main frame navigation request</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForMainFrameNavigationRequests()
         {
             var requests = new List<IRequest>();
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.frame</playwright-describe>
         ///<playwright-it>should work for subframe navigation request</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForSubframeNavigationRequest()
         {
             var requests = new List<IRequest>();
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.frame</playwright-describe>
         ///<playwright-it>should work for fetch requests</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForFetchRequests()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

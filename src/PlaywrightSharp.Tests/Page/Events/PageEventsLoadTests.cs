@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Load</playwright-describe>
         ///<playwright-it>should fire when expected</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFireWhenExpected()
         {
             await Task.WhenAll(

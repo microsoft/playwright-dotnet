@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$eval</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"retweets\">10</div></div></body></html>");
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$eval</playwright-describe>
         ///<playwright-it>should retrieve content from subtree</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRetrieveContentFromSubtree()
         {
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a-child-div</div></div>";
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$eval</playwright-describe>
         ///<playwright-it>should throw in case of missing selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowInCaseOfMissingSelector()
         {
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";

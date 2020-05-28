@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should evaluate before anything else on the page</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
         {
             await Page.EvaluateOnNewDocumentAsync(@"function(){
@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should support multiple scripts</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportMultipleScripts()
         {
             await Page.EvaluateOnNewDocumentAsync(@"function(){
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with CSP</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work after a cross origin navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.CrossProcessUrl);

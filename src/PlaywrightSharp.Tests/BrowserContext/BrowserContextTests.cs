@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should create new incognito context</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveDefaultContext()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should have default context</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCreateNewIncognitoContext()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>window.open should use parent tab context</playwright-it>
-        [Fact]
+        [Retry]
         public async Task WindowOpenShouldUseParentTabContext()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should isolate localStorage and cookies</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
@@ -120,7 +120,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should propagate default viewport to the page</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should take fullPage screenshots when default viewport is null</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -167,7 +167,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should restore default viewport after fullPage screenshot</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should make a copy of default viewport</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
             var viewport = new Viewport
@@ -228,7 +228,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should take element screenshot when default viewport is null and restore back</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());

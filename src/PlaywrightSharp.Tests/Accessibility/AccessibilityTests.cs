@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync(@"
@@ -220,7 +220,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>roledescription</playwright-it>
-        [Fact]
+        [Retry]
         public async Task RoleDescription()
         {
             await Page.SetContentAsync("<div tabIndex=-1 aria-roledescription=\"foo\">Hi</div>");
@@ -231,7 +231,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>orientation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task Orientation()
         {
             await Page.SetContentAsync("<a href=\"\" role=\"slider\" aria-orientation=\"vertical\">11</a>");
@@ -242,7 +242,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>autocomplete</playwright-it>
-        [Fact]
+        [Retry]
         public async Task Autocomplete()
         {
             await Page.SetContentAsync("<div role=\"textbox\" aria-autocomplete=\"list\">hi</div>");
@@ -253,7 +253,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>multiselectable</playwright-it>
-        [Fact]
+        [Retry]
         public async Task Multiselectable()
         {
             await Page.SetContentAsync("<div role=\"grid\" tabIndex=-1 aria-multiselectable=true>hey</div>");
@@ -264,7 +264,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>keyshortcuts</playwright-it>
-        [Fact]
+        [Retry]
         public async Task KeyShortcuts()
         {
             await Page.SetContentAsync("<div role=\"grid\" tabIndex=-1 aria-keyshortcuts=\"foo\">hey</div>");

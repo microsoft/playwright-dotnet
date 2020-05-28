@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should ignore eval() scripts by default</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldIgnoreEvalScriptsByDefault()
         {
             await Page.Coverage.StartJSCoverageAsync();
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>shouldn't ignore eval() scripts if reportAnonymousScripts is true</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotIgnoreEvalScriptsIfReportAnonymousScriptsIsTrue()
         {
             await Page.Coverage.StartJSCoverageAsync(new CoverageStartOptions
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should ignore playwright internal scripts if reportAnonymousScripts is true</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldIgnorePlaywrightInternalScriptsIfReportAnonymousScriptsIsTrue()
         {
             await Page.Coverage.StartJSCoverageAsync(new CoverageStartOptions
@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should report multiple scripts</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportMultipleScripts()
         {
             await Page.Coverage.StartJSCoverageAsync();
@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should report right ranges</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportRightRanges()
         {
             await Page.Coverage.StartJSCoverageAsync();
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should report scripts that have no coverage</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportScriptsThatHaveNoCoverage()
         {
             await Page.Coverage.StartJSCoverageAsync();
@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should work with conditionals</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithConditionals()
         {
             const string involved = @"[

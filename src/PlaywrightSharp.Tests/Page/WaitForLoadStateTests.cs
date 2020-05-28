@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForLoadState</playwright-describe>
         ///<playwright-it>should pick up ongoing navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldPickUpOngoingNavigation()
         {
             var responseTask = new TaskCompletionSource<bool>();
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForLoadState</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespectTimeout()
         {
             var responseTask = new TaskCompletionSource<bool>();
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForLoadState</playwright-describe>
         ///<playwright-it>should resolve immediately if loaded</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldResolveImmediatelyIfLoaded()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForLoadState</playwright-describe>
         ///<playwright-it>should resolve immediately if load state matches</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
         {
             var responseTask = new TaskCompletionSource<bool>();

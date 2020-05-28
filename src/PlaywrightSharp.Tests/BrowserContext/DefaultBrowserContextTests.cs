@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>defaultContext()</playwright-describe>
         /// <playwright-it>page.cookies() should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ContextGetCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>defaultContext()</playwright-describe>
         /// <playwright-it>context.setCookies() should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ContextSetCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>defaultContext()</playwright-describe>
         /// <playwright-it>context.clearCookies() should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ContextClearCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

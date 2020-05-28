@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP meta tag</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBypassCSPMetatag()
         {
             // Make sure CSP prohibits addScriptTag.
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP header</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBypassCSPHeader()
         {
             // Make sure CSP prohibits addScriptTag.
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass after cross-process navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBypassAfterCrossProcessNavigation()
         {
             var page = await NewPageAsync(new BrowserContextOptions { BypassCSP = true });
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP in iframes as well</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBypassCSPInIframesAsWell()
         {
             var page = await NewPageAsync();

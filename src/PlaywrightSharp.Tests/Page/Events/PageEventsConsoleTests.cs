@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             ConsoleMessage message = null;
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work for different console API calls</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
             var messages = new List<ConsoleMessage>();
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should not fail for window object</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotFailForWindowObject()
         {
             ConsoleMessage message = null;
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should trigger correct Log</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTriggerCorrectLog()
         {
             await Page.GoToAsync("about:blank");
@@ -113,7 +113,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should have location for console API calls</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia type</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));

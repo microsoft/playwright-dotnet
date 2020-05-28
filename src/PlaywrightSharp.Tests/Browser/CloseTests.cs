@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should terminate network waiters</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTerminateNetworkWaiters()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should be able to close remote browser</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToCloseRemoteBrowser()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());

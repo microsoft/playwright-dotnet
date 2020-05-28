@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.visibleRatio</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.visibleRatio</playwright-describe>
         ///<playwright-it>should work when Node is removed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenNodeIsRemoved()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");

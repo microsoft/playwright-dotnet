@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var page = await NewPageAsync(new BrowserContextOptions { JavaScriptEnabled = false });
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
         ///<playwright-it>should be able to navigate after disabling javascript</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
             var page = await NewPageAsync(new BrowserContextOptions { JavaScriptEnabled = false });

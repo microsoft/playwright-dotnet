@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForNavigation</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForNavigation</playwright-describe>
         ///<playwright-it>should fail when frame detaches</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");

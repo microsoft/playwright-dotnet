@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var page = await NewPageAsync();
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should work for subframes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForSubframes()
         {
             var page = await NewPageAsync();
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should emulate device user-agent</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldEmulateDeviceUserAgent()
         {
             var page = await NewPageAsync();
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should make a copy of default options</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldMakeACopyOfDefaultOptions()
         {
             var options = new BrowserContextOptions

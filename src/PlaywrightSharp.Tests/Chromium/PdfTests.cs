@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/pdf.spec.js</playwright-file>
         ///<playwright-describe>Page.pdf</playwright-describe>
         ///<playwright-it>should be able to save file</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToSaveFile()
         {
             var options = TestConstants.GetDefaultBrowserOptions();

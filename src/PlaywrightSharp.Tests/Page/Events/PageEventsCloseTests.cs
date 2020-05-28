@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Close</playwright-describe>
         ///<playwright-it>should work with window.close</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithWindowClose()
         {
             var newPageTsc = new TaskCompletionSource<IPage>();
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Close</playwright-describe>
         ///<playwright-it>should work with page.close</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithPageClose()
         {
             var newPage = await Context.NewPageAsync();

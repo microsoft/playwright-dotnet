@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseCompleted = new TaskCompletionSource<bool>();
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with clicking on anchor links</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithClickingOnAnchorLinks()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with clicking on links which do not commit navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithClickingOnLinksWhichDoNotCommitNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with history.pushState()</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithHistoryPushState()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with history.replaceState()</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithHistoryReplaceState()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with DOM history.back()/history.forward()</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithDOMHistoryBackAndHistoryForward()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -187,7 +187,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work when subframe issues window.stop()</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenSubframeIssuesWindowStop()
         {
             //This test is slightly different from the one in PW because of .NET Threads (or thanks to .NET Threads)
@@ -235,7 +235,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with url match</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithUrlMatch()
         {
             IResponse response1 = null;
@@ -289,7 +289,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForNavigation</playwright-describe>
         ///<playwright-it>should work with url match for same document navigations</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithUrlMatchForSameDocumentNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

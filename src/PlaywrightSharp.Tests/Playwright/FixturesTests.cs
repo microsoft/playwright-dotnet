@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests.Playwright
         ///<playwright-file>fixtures.spec.js</playwright-file>
         ///<playwright-describe>Fixtures</playwright-describe>
         ///<playwright-it>should dump browser process stderr</playwright-it>
-        [Fact]
+        [Retry]
         public void ShouldDumpBrowserProcessStderr()
         {
             bool success = false;
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Playwright
         ///<playwright-file>fixtures.spec.js</playwright-file>
         ///<playwright-describe>Fixtures</playwright-describe>
         ///<playwright-it>should close the browser when the node process closes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCloseTheBrowserWhenTheConnectedProcessCloses()
         {
             var browserApp = await TestSignal(process => KillProcess(process.Id));

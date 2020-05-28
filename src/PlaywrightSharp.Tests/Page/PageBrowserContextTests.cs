@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.browserContext</playwright-describe>
         ///<playwright-it>should return the correct browser instance</playwright-it>
-        [Fact]
+        [Retry]
         public void ShouldReturnTheCorrectBrowserInstance() => Assert.Equal(Context, Page.BrowserContext);
     }
 }

@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should work with Node removed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithNodeRemoved()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should work for Shadow DOM v1</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForShadowDOMV1()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/shadow.html");
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should work for TextNodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForTextNodes()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should throw for detached nodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowForDetachedNodes()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should throw for hidden nodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowForHiddenNodes()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -95,7 +95,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should throw for recursively hidden nodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowForRecursivelyHiddenNodes()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.click</playwright-describe>
         ///<playwright-it>should throw for &lt;br&gt; elements</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowForBrElements()
         {
             await Page.SetContentAsync("hello<br>goodbye");

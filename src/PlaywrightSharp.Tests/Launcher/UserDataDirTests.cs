@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
         ///<playwright-it>userDataDir option</playwright-it>
-        [Fact]
+        [Retry]
         public async Task UserDataDirOption()
         {
             using var userDataDir = new TempDirectory();
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
         ///<playwright-it>userDataDir argument</playwright-it>
-        [Fact]
+        [Retry]
         public async Task UserDataDirArgument()
         {
             using var userDataDir = new TempDirectory();

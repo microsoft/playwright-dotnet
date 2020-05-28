@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.authenticate</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             Server.SetAuth("/empty.html", "user", "pass");
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.authenticate</playwright-describe>
         ///<playwright-it>should fail if wrong credentials</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailIfWrongCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.authenticate</playwright-describe>
         ///<playwright-it>should allow disable authentication</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAllowDisableAuthentication()
         {
             // Use unique user/password since Chromium caches credentials per origin.
