@@ -8,6 +8,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>dialog.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Dialog</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DialogTests : PlaywrightSharpPageBaseTest
     {
