@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
@@ -34,7 +35,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should handle nested frames</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHandleNestedFrames()
         {
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
@@ -48,7 +49,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should return null for invisible elements</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullForInvisibleElements()
         {
             await Page.SetContentAsync("<div style=\"display:none\">hi</div>");
@@ -59,7 +60,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should force a layout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldForceALayout()
         {
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
@@ -73,7 +74,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work with SVG nodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithSVGNodes()
         {
             await Page.SetContentAsync(@"

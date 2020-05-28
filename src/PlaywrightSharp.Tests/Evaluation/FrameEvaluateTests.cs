@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should have different execution contexts</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveDifferentExecutionContexts()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -36,7 +37,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should have correct execution contexts</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveCorrectExecutionContexts()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -48,7 +49,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should dispose context on navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldDisposeContextOnNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -61,7 +62,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should dispose context on cross-origin navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldDisposeContextOnCrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -74,7 +75,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should execute after cross-site navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldExecuteAfterCrossSiteNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -109,7 +110,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should allow cross-frame element handles</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAllowCrossFrameElementHandles()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
         ///<playwright-it>should return the default arguments</playwright-it>
-        [Fact]
+        [Retry]
         public void ShouldReturnTheDefaultArguments()
         {
             if (TestConstants.IsChromium)
@@ -44,7 +45,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
         ///<playwright-it>should filter out ignored default arguments</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFilterOutIgnoredDefaultArguments()
         {
             string[] defaultArgsWithoutUserDataDir = Playwright.GetDefaultArgs(TestConstants.GetDefaultBrowserOptions());

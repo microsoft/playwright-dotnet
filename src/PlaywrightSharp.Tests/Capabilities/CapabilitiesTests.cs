@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.Tests.Capabilities
         ///<playwright-file>capabilities.spec.js</playwright-file>
         ///<playwright-describe>Capabilities</playwright-describe>
         ///<playwright-it>Web Assembly should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task WebAssemblyShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/wasm/table2.html");

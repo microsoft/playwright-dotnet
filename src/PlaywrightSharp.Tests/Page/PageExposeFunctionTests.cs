@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => a * b);
@@ -33,7 +34,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should throw exception in page context</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowExceptionInPageContext()
         {
             await Page.ExposeFunctionAsync("woof", () =>
@@ -65,7 +66,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should be callable from-inside evaluateOnNewDocument</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeCallableFromInsideEvaluateOnNewDocument()
         {
             bool called = false;
@@ -81,7 +82,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should survive navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSurviveNavigation()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => a * b);
@@ -95,7 +96,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should await returned promise</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAwaitReturnedPromise()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
@@ -108,7 +109,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should work on frames</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkOnFrames()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
@@ -123,7 +124,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should work on frames before navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkOnFramesBeforeNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
@@ -138,7 +139,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should work after cross origin navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkAfterCrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -153,7 +154,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
         ///<playwright-it>should work with complex objects</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithComplexObjects()
         {
             await Page.ExposeFunctionAsync("complexObject", (ComplexObject a, ComplexObject b) =>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should click the document</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -52,7 +53,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should select the text with mouse</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSelectTheTextWithMouse()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -86,7 +87,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should trigger hover state</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTriggerHoverState()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
@@ -101,7 +102,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should trigger hover state with removed window.Node</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
@@ -113,7 +114,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should set modifier keys on click</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSetModifierKeysOnClick()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
@@ -143,7 +144,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should tween mouse movement</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTweenMouseMovement()
         {
             // The test becomes flaky on WebKit without next line.
@@ -174,7 +175,7 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should work with mobile viewports and cross process navigations</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

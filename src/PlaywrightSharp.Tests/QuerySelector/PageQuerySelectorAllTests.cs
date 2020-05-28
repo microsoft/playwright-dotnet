@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$</playwright-describe>
         ///<playwright-it>should query existing elements</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElements()
         {
             await Page.SetContentAsync("<div>A</div><br/><div>B</div>");
@@ -34,7 +35,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$</playwright-describe>
         ///<playwright-it>should return empty array if nothing is found</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnEmptyArrayIfNothingIsFound()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

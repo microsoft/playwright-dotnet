@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should get the proper viewport size</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldGetTheProperViewPortSize()
         {
             Assert.Equal(800, Page.Viewport.Width);
@@ -35,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should support mobile emulation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportMobileEmulation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
@@ -50,7 +51,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should support touch emulation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportTouchEmulation()
         {
             const string dispatchTouch = @"
@@ -81,7 +82,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should be detectable by Modernizr</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeDetectableByModernizr()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/detect-touch.html");
@@ -94,7 +95,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should detect touch when applying viewport with touches</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldDetectTouchWhenApplyingViewportWithTouches()
         {
             await Page.SetViewportAsync(new Viewport
@@ -113,7 +114,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should support landscape emulation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportLandscapeEmulation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");

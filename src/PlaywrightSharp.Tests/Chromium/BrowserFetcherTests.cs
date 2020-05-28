@@ -79,21 +79,21 @@ namespace PlaywrightSharp.Tests.Chromium
         }
 
 #if NETCOREAPP
-        private Mono.Unix.FileAccessPermissions ConvertPermissions(Helpers.Linux.FileAccessPermissions executableFilePermissions)
+        private Mono.Unix.FileAccessPermissions ConvertPermissions(PlaywrightSharp.Helpers.Linux.FileAccessPermissions executableFilePermissions)
         {
             Mono.Unix.FileAccessPermissions output = 0;
 
-            var map = new Dictionary<Helpers.Linux.FileAccessPermissions, Mono.Unix.FileAccessPermissions>()
+            var map = new Dictionary<PlaywrightSharp.Helpers.Linux.FileAccessPermissions, Mono.Unix.FileAccessPermissions>()
             {
-                {Helpers.Linux.FileAccessPermissions.OtherExecute, Mono.Unix.FileAccessPermissions.OtherExecute},
-                {Helpers.Linux.FileAccessPermissions.OtherWrite, Mono.Unix.FileAccessPermissions.OtherWrite},
-                {Helpers.Linux.FileAccessPermissions.OtherRead, Mono.Unix.FileAccessPermissions.OtherRead},
-                {Helpers.Linux.FileAccessPermissions.GroupExecute, Mono.Unix.FileAccessPermissions.GroupExecute},
-                {Helpers.Linux.FileAccessPermissions.GroupWrite, Mono.Unix.FileAccessPermissions.GroupWrite},
-                {Helpers.Linux.FileAccessPermissions.GroupRead, Mono.Unix.FileAccessPermissions.GroupRead},
-                {Helpers.Linux.FileAccessPermissions.UserExecute, Mono.Unix.FileAccessPermissions.UserExecute},
-                {Helpers.Linux.FileAccessPermissions.UserWrite, Mono.Unix.FileAccessPermissions.UserWrite},
-                {Helpers.Linux.FileAccessPermissions.UserRead, Mono.Unix.FileAccessPermissions.UserRead}
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.OtherExecute, Mono.Unix.FileAccessPermissions.OtherExecute},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.OtherWrite, Mono.Unix.FileAccessPermissions.OtherWrite},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.OtherRead, Mono.Unix.FileAccessPermissions.OtherRead},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.GroupExecute, Mono.Unix.FileAccessPermissions.GroupExecute},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.GroupWrite, Mono.Unix.FileAccessPermissions.GroupWrite},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.GroupRead, Mono.Unix.FileAccessPermissions.GroupRead},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.UserExecute, Mono.Unix.FileAccessPermissions.UserExecute},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.UserWrite, Mono.Unix.FileAccessPermissions.UserWrite},
+                {PlaywrightSharp.Helpers.Linux.FileAccessPermissions.UserRead, Mono.Unix.FileAccessPermissions.UserRead}
             };
 
             foreach (var item in map.Keys)
