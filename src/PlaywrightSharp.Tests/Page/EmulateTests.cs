@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulate</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var page = await NewPageAsync(new BrowserContextOptions
@@ -36,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulate</playwright-describe>
         ///<playwright-it>should support clicking</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportClicking()
         {
             var page = await NewPageAsync(new BrowserContextOptions

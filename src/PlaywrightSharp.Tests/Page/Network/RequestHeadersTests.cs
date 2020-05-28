@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.headers</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Features;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.statusText</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             Server.SetRoute("/cool", (context) =>

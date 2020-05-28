@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -48,7 +49,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
         ///<playwright-it>should throw for invalid timezone IDs</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowForInvalidTimezoneId()
         {
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(

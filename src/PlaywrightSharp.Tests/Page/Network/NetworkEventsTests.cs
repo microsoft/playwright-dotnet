@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,7 +27,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Network Events</playwright-describe>
         ///<playwright-it>Page.Events.Request</playwright-it>
-        [Fact]
+        [Retry]
         public async Task PageEventsRequest()
         {
             var requests = new List<IRequest>();
@@ -44,7 +45,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Network Events</playwright-describe>
         ///<playwright-it>Page.Events.Response</playwright-it>
-        [Fact]
+        [Retry]
         public async Task PageEventsResponse()
         {
             var responses = new List<IResponse>();
@@ -116,7 +117,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Network Events</playwright-describe>
         ///<playwright-it>Page.Events.RequestFinished</playwright-it>
-        [Fact]
+        [Retry]
         public async Task PageEventsRequestFinished()
         {
             var requests = new List<IRequest>();
@@ -133,7 +134,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Network Events</playwright-describe>
         ///<playwright-it>should fire events in proper order</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFireEventsInProperOrder()
         {
             var events = new List<string>();
@@ -147,7 +148,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Network Events</playwright-describe>
         ///<playwright-it>should support redirects</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportRedirects()
         {
             var events = new List<string>();

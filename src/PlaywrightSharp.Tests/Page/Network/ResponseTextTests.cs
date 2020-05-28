@@ -2,6 +2,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
@@ -32,7 +33,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should return uncompressed text</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnUncompressedText()
         {
             Server.EnableGzip("/simple.json");
@@ -44,7 +45,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should throw when requesting body of redirected response</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
@@ -61,7 +62,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should wait until response completes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWaitUntilResponseCompletes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

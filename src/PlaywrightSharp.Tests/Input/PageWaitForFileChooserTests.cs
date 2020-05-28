@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should emit event</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldEmitEvent()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -43,7 +44,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should work when file input is attached to DOM</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenFileInputIsAttachedToDOM()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -57,7 +58,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should work when file input is not attached to DOM</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenFileInputIsNotAttachedToDOM()
         {
             var (chooser, _) = await TaskUtils.WhenAll(
@@ -74,14 +75,14 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact]
+        [Retry]
         public Task ShouldRespectTimeout() => Assert.ThrowsAsync<TimeoutException>(()
             => Page.WaitForEvent(PageEvent.FileChooser, new WaitForEventOptions<FileChooserEventArgs> { Timeout = 1 }));
 
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should respect default timeout when there is no custom timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
         {
             Page.DefaultTimeout = 1;
@@ -91,7 +92,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should prioritize exact timeout over default timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
             Page.DefaultTimeout = 0;
@@ -102,7 +103,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should work with no timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithNoTimeout()
         {
             var (chooser, _) = await TaskUtils.WhenAll(
@@ -119,7 +120,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should return the same file chooser when there are many watchdogs simultaneously</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -134,7 +135,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should accept single file</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAcceptSingleFile()
         {
             await Page.SetContentAsync("<input type=file oninput='javascript:console.timeStamp()'>");
@@ -150,7 +151,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should be able to read selected file</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToReadSelectedFile()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -169,7 +170,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should be able to reset selected files with empty file list</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToResetSelectedFilesWithEmptyFileList()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -192,7 +193,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should not accept multiple files for single-file input</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotAcceptMultipleFilesForSingleFileInput()
         {
             await Page.SetContentAsync("<input type=file>");

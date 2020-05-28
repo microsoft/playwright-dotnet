@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,7 +26,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -35,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work cross-process</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkCrossProcess()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -61,7 +62,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should capture iframe navigation request</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCaptureIframeNavigationRequest()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -88,7 +89,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should capture cross-process iframe navigation request</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCaptureCrossProcessIframeNavigationRequest()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -115,7 +116,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work with anchor navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAnchorNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -129,7 +130,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work with redirects</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -142,7 +143,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should navigate to about:blank</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNavigateToAboutBlank()
         {
             var response = await Page.GoToAsync(TestConstants.AboutBlank);
@@ -152,7 +153,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should return response when page changes its URL after load</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnResponseWhenPageChangesItsURLAfterLoad()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/historyapi.html");
@@ -162,7 +163,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work with subframes return 204</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithSubframesReturn204()
         {
             Server.SetRoute("/frames/frame.html", context =>
@@ -192,7 +193,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should navigate to empty page with domcontentloaded</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage, waitUntil: new[]
@@ -205,7 +206,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work when page calls history API in beforeunload</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenPageCallsHistoryAPIInBeforeunload()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -220,7 +221,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating to bad url</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenNavigatingToBadUrl()
         {
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync("asdfasdf"));
@@ -237,7 +238,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating to bad SSL</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
             Page.Request += (sender, e) => Assert.NotNull(e.Request);
@@ -251,7 +252,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating to bad SSL after redirects</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -263,7 +264,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should not crash when navigating to bad SSL after a cross origin navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
@@ -279,7 +280,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should throw if networkidle is passed as an option</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenMainResourcesFailedToLoad()
         {
             var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await Page.GoToAsync("http://localhost:44123/non-existing-url"));
@@ -305,7 +306,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when exceeding maximum navigation timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
@@ -317,7 +318,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when exceeding maximum navigation timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
@@ -329,7 +330,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when exceeding default maximum timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
             // Hang for request to the empty.html
@@ -342,7 +343,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when exceeding default maximum timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
             // Hang for request to the empty.html
@@ -356,7 +357,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should disable timeout when its set to 0</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
             bool loaded = false;
@@ -374,7 +375,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work when navigating to valid url</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenNavigatingToValidUrl()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -384,7 +385,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work when navigating to data url</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenNavigatingToDataUrl()
         {
             var response = await Page.GoToAsync("data:text/html,hello");
@@ -394,7 +395,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work when navigating to 404</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenNavigatingTo404()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/not-found");
@@ -404,7 +405,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should return last response in redirect chain</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnLastResponseInRedirectChain()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -437,7 +438,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should navigate to dataURL and not fire dataURL requests</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
@@ -452,7 +453,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should navigate to URL with hash and fire requests without hash</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNavigateToURLWithHashAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();
@@ -468,7 +469,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work with self requesting page</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithSelfRequestingPage()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/self-request.html");
@@ -479,7 +480,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating and show the url at the error message</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             const string url = TestConstants.HttpsPrefix + "/redirect/1.html";
@@ -491,7 +492,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should send referer</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSendReferer()
         {
             string referer1 = null;
@@ -515,7 +516,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should reject referer option when setExtraHTTPHeaders provides referer</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRejectRefererOptionWhenSetExtraHTTPHeadersProvidesReferer()
         {
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
@@ -535,7 +536,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should override referrer-policy</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldOverrideReferrerPolicy()
         {
             Server.Subscribe("/grid.html", context =>

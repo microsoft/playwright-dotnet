@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>root option</playwright-describe>
         ///<playwright-it>should work a button</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkAButton()
         {
             await Page.SetContentAsync("<button>My Button</button>");
@@ -38,7 +39,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>root option</playwright-describe>
         ///<playwright-it>should work an input</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkAnInput()
         {
             await Page.SetContentAsync("<input title=\"My Input\" value=\"My Value\">");
@@ -57,7 +58,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>root option</playwright-describe>
         ///<playwright-it>should work on a menu</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkOnAMenu()
         {
             await Page.SetContentAsync(@"
@@ -100,7 +101,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>root option</playwright-describe>
         ///<playwright-it>should return null when the element is no longer in DOM</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullWhenTheElementIsNoLongerInDOM()
         {
             await Page.SetContentAsync("<button>My Button</button>");
@@ -113,7 +114,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>root option</playwright-describe>
         ///<playwright-it>should show uninteresting nodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportUninterestingNodes()
         {
             await Page.SetContentAsync(@"

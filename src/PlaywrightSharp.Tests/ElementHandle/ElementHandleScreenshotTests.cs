@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.SetViewportAsync(new Viewport
@@ -39,7 +40,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should take into account padding and border</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTakeIntoAccountPaddingAndBorder()
         {
             await Page.SetViewportAsync(new Viewport
@@ -65,7 +66,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should capture full element when larger than viewport in parallel</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel()
         {
             await Page.SetViewportAsync(new Viewport
@@ -100,7 +101,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should capture full element when larger than viewport</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCaptureFullElementWhenLargerThanViewport()
         {
             await Page.SetViewportAsync(new Viewport
@@ -134,7 +135,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should scroll element into view</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldScrollElementIntoView()
         {
             await Page.SetViewportAsync(new Viewport
@@ -166,7 +167,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should work with a rotated element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithARotatedElement()
         {
             await Page.SetViewportAsync(new Viewport
@@ -191,7 +192,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should fail to screenshot a detached element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFailToScreenshotADetachedElement()
         {
             await Page.SetContentAsync("<h1>remove this</h1>");
@@ -205,7 +206,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should not hang with zero width/height element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotHangWithZeroWidthHeightElement()
         {
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
@@ -217,7 +218,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should work for an element with fractional dimensions</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForAnElementWithFractionalDimensions()
         {
             await Page.SetContentAsync("<div style=\"width:48.51px;height:19.8px;border:1px solid black;\"></div>");
@@ -229,7 +230,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should work for an element with an offset</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForAnElementWithAnOffset()
         {
             await Page.SetContentAsync("<div style=\"position:absolute; top: 10.3px; left: 20.4px;width:50.3px;height:20.2px;border:1px solid black;\"></div>");

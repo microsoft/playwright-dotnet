@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should wait for selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWaitForSelector()
         {
             bool found = false;
@@ -38,7 +39,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should wait for an xpath</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWaitForAnXpath()
         {
             bool found = false;
@@ -53,7 +54,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should not allow you to select an element with single slash xpath</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotAllowYouToSelectAnElementWithSingleSlashXpath()
         {
             await Page.SetContentAsync("<div>some text</div>");
@@ -65,7 +66,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTimeout()
         {
             var startTime = DateTime.Now;
@@ -77,7 +78,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should work with multiline body</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithMultilineBody()
         {
             var result = await Page.WaitForFunctionAsync(@"
@@ -89,7 +90,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should work with multiline body</playwright-it>
-        [Fact]
+        [Retry]
         public Task ShouldWaitForPredicate()
             => Task.WhenAll(
                 Page.WaitForFunctionAsync("() => window.innerWidth < 100"),
@@ -105,7 +106,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should wait for predicate with arguments</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWaitForPredicateWithArguments()
             => await Page.WaitForFunctionAsync("(arg1, arg2) => arg1 !== arg2", new WaitForSelectorOptions(), 1, 2);
     }

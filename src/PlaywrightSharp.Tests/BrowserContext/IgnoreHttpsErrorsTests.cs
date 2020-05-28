@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var page = await NewPageAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
@@ -43,7 +44,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with mixed content</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithMixedContent()
         {
             HttpsServer.SetRoute("/mixedcontent.html", async (context) =>

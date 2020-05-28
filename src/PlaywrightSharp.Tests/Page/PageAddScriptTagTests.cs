@@ -2,6 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -29,7 +30,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a url</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -41,7 +42,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a url and type=module</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAUrlAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -52,7 +53,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a path and type=module</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAPathAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -64,7 +65,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a content and type=module</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAContentAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -76,7 +77,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should throw an error if loading from url fail</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -86,7 +87,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a path</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAPath()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -98,7 +99,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should include sourceURL when path is provided</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -110,7 +111,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with content</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithContent()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -133,7 +134,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should throw when added with URL to the CSP page</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");

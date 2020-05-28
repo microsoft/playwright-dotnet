@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should navigate subframes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNavigateSubFrames()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -38,7 +39,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should reject when frame detaches</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRejectWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -54,7 +55,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should return matching responses</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnMatchingResponses()
         {
             // Disable cache: otherwise, chromium will cache similar requests.
