@@ -12,6 +12,7 @@ using PlaywrightSharp.Chromium.Protocol.Page;
 using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -67,7 +68,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should be able to use the default page in the browser</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToUseTheDefaultPageInTheBrowser()
         {
             // The pages will be the testing page and the original newtab page
@@ -79,7 +80,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should report when a new page is created and closed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportWhenANewPageIsCreatedAndClosed()
         {
             var otherPageTask = Browser.WaitForTargetAsync(t => t.Url == TestConstants.CrossProcessUrl + "/empty.html")
@@ -118,7 +119,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should report when a service worker is created and destroyed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportWhenAServiceWorkerIsCreatedAndDestroyed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -149,7 +150,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should create a worker from a service worker</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCreateAWorkerFromAServiceWorker()
         {
             var workerTask = Browser.WaitForTargetAsync(t => t.Type == TargetType.ServiceWorker);
@@ -163,7 +164,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should create a worker from a shared worker</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldCreateAWorkerFromASharedWorker()
         {
             var workerTask = Browser.WaitForTargetAsync(t => t.Type == TargetType.SharedWorker);
@@ -180,7 +181,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should report when a target url changes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportWhenATargetUrlChanges()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -207,7 +208,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should not report uninitialized pages</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotReportUninitializedPages()
         {
             bool targetChanged = false;
@@ -239,7 +240,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should not crash while redirecting if original request was missed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotCrashWhileRedirectingIfOriginalRequestWasMissed()
         {
             var serverResponseEnd = new TaskCompletionSource<bool>();
@@ -265,7 +266,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should have an opener</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveAnOpener()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -382,6 +382,14 @@ namespace PlaywrightSharp
         Task<IElementHandle> AddStyleTagAsync(AddTagOptions options);
 
         /// <summary>
+        /// Triggers a change and input event once all, unselecting all the selected elements.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="options">Wait options.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null);
+
+        /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
         /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
         /// </summary>

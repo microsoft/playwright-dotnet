@@ -197,7 +197,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string[] values)
-            => SelectInternalAsync(values.Select(v => new SelectOption { Value = v }));
+            => SelectInternalAsync(values.Select(v => new SelectOption { Value = v }).ToArray());
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(IElementHandle[] values) => SelectInternalAsync(values);
@@ -315,7 +315,7 @@ namespace PlaywrightSharp
 
         internal Task<string[]> SelectInternalAsync(IEnumerable<object> values)
             => EvaluateInUtilityAsync<string[]>(
-                @"(node, ...optionsToSelect) => {
+                @"(node, optionsToSelect) => {
                     if (node.nodeName.toLowerCase() !== 'select')
                         throw new Error('Element is not a <select> element.');
                     const element = node;
@@ -323,7 +323,7 @@ namespace PlaywrightSharp
                     element.value = undefined;
                     for (let index = 0; index < options.length; index++) {
                         const option = options[index];
-                        option.selected = optionsToSelect.some(optionToSelect => {
+                        option.selected = optionsToSelect && optionsToSelect.some(optionToSelect => {
                             if (optionToSelect instanceof Node)
                                 return option === optionToSelect;
                             let matches = true;
@@ -342,7 +342,7 @@ namespace PlaywrightSharp
                     element.dispatchEvent(new Event('change', { 'bubbles': true }));
                     return options.filter(option => option.selected).map(option => option.value);
                 }",
-                values);
+                new object[] { values });
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {

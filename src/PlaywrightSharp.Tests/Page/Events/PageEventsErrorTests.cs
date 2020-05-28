@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.error</playwright-describe>
         ///<playwright-it>should throw when page crashes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenPageCrashes()
         {
             var errorTask = Page.WaitForEvent<ErrorEventArgs>(PageEvent.Error);

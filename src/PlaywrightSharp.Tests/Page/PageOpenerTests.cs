@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,16 +8,19 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.opener</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageOpenerTests : PlaywrightSharpPageBaseTest
     {
-        internal PageOpenerTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageOpenerTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.opener</playwright-describe>
         ///<playwright-it>should provide access to the opener page</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
@@ -30,7 +34,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.opener</playwright-describe>
         ///<playwright-it>should return null if parent page has been closed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(

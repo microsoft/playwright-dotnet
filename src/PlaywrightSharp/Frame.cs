@@ -487,6 +487,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null)
+            => SelectInternalAsync(selector, null, options);
+
+        /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null)
             => SelectAsync(selector, new[] { value }, options);
 
@@ -500,7 +504,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options)
-            => SelectInternalAsync(selector, values.Select(v => new SelectOption { Value = v }), options);
+            => SelectInternalAsync(selector, values.Select(v => new SelectOption { Value = v }).ToArray(), options);
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options)
@@ -720,7 +724,6 @@ namespace PlaywrightSharp
         private async Task<string[]> SelectInternalAsync(string selector, IEnumerable<object> values, WaitForSelectorOptions options)
         {
             var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false) as ElementHandle;
-            values ??= Array.Empty<object>();
             var result = await handle.SelectInternalAsync(values).ConfigureAwait(false);
             await handle.DisposeAsync().ConfigureAwait(false);
             return result;

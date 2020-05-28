@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should have default url when launching browser</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
             await using var browser = await Playwright.LaunchAsync(TestConstants.GetHeadfulOptions());
@@ -34,7 +35,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>headless should be able to read cookies written by headful</playwright-it>
-        [Fact]
+        [Retry]
         public async Task HeadlessShouldBeAbleToReadCookiesWrittenByHeadful()
         {
             // "Too" complex for our skip attribute

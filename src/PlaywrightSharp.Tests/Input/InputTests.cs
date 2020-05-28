@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>input</playwright-describe>
         ///<playwright-it>should upload the file</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldUploadTheFile()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/fileupload.html");

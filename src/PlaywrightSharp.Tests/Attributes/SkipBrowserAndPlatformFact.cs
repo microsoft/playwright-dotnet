@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 
 namespace PlaywrightSharp.Tests.Attributes
@@ -6,7 +7,7 @@ namespace PlaywrightSharp.Tests.Attributes
     /// <summary>
     /// Skip browsers and/or platforms
     /// </summary>
-    public class SkipBrowserAndPlatformFact : FactAttribute
+    public class SkipBrowserAndPlatformFact : RetryAttribute
     {
         /// <summary>
         /// Creates a new <seealso cref="SkipBrowserAndPlatformFact"/>

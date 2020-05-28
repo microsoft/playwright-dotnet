@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
             => new LaunchOptions
             {
                 SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-                Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
+                Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "false"),
                 Timeout = 0,
                 LogProcess = true,
             };

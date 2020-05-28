@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>zselector</playwright-describe>
         ///<playwright-it>query</playwright-it>
-        [Fact]
+        [Retry]
         public async Task Query()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>ye</div>");
@@ -63,7 +64,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>zselector</playwright-describe>
         ///<playwright-it>create</playwright-it>
-        [Fact]
+        [Retry]
         public async Task Create()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>ya</div>");
@@ -82,7 +83,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>zselector</playwright-describe>
         ///<playwright-it>children of various display parents</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ChildrenOfVariousDisplayParents()
         {
             await Page.SetContentAsync("<body><div style='position: fixed;'><span>yo</span></div></body>");
@@ -99,7 +100,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>zselector</playwright-describe>
         ///<playwright-it>boundary</playwright-it>
-        [Fact]
+        [Retry]
         public async Task Boundary()
         {
             await Page.SetContentAsync(@"

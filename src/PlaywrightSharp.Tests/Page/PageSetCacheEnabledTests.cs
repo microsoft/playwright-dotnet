@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,7 +18,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
         ///<playwright-it>should enable or disable the cache based on the state passed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldEnableOrDisableTheCacheBasedOnTheStatePassed()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/cached/one-style.html");

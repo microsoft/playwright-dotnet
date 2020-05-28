@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should immediately resolve promise if node exists</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldImmediatelyResolveTaskIfNodeExists()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -36,7 +37,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should work with removed MutationObserver</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithRemovedMutationObserver()
         {
             await Page.EvaluateAsync("delete window.MutationObserver");
@@ -52,7 +53,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should resolve promise when node is added</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldResolveTaskWhenNodeIsAdded()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -69,7 +70,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should work when node is added through innerHTML</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -82,7 +83,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>Page.$ waitFor is shortcut for main frame</playwright-it>
-        [Fact]
+        [Retry]
         public async Task PageWaitForSelectorAsyncIsShortcutForMainFrame()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -98,7 +99,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should run in specified frame</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRunInSpecifiedFrame()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -115,7 +116,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should throw when frame is detached</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenFrameIsDetached()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -130,7 +131,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should survive cross-process navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSurviveCrossProcessNavigation()
         {
             bool boxFound = false;
@@ -147,7 +148,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should wait for visible</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWaitForVisible()
         {
             bool divFound = false;
@@ -165,7 +166,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should wait for visible recursively</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWaitForVisibleRecursively()
         {
             bool divVisible = false;
@@ -205,7 +206,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>hidden should wait for removal</playwright-it>
-        [Fact]
+        [Retry]
         public async Task HiddenShouldWaitForRemoval()
         {
             await Page.SetContentAsync("<div></div>");
@@ -222,7 +223,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should return null if waiting to hide non-existing element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullIfWaitingToHideNonExistingElement()
         {
             var handle = await Page.WaitForSelectorAsync("non-existing", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden });
@@ -232,7 +233,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
@@ -244,7 +245,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should have an error message specifically for awaiting an element to be hidden</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
         {
             await Page.SetContentAsync("<div></div>");
@@ -257,7 +258,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should respond to node attribute mutation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespondToNodeAttributeMutation()
         {
             bool divFound = false;
@@ -271,7 +272,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should return the element handle</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnTheElementHandle()
         {
             var waitForSelector = Page.WaitForSelectorAsync(".zombo");
@@ -282,7 +283,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should have correct stack trace for timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveCorrectStackTraceForTimeout()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
@@ -317,7 +318,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should support >> selector syntax</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportSelectorSyntax()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

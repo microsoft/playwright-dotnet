@@ -466,10 +466,7 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc cref="IPage.GetOpenerAsync"/>
-        public Task<IPage> GetOpenerAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IPage> GetOpenerAsync() => Delegate.GetOpenerAsync();
 
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
         public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
@@ -587,6 +584,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IPage.FillAsync(string, string, WaitForSelectorOptions)"/>
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
+
+        /// <inheritdoc cref="IPage.SelectAsync(string, WaitForSelectorOptions)"/>
+        public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null) => MainFrame.SelectAsync(selector, options);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, string[])"/>
         public Task<string[]> SelectAsync(string selector, params string[] values) => MainFrame.SelectAsync(selector, values);
@@ -766,6 +766,15 @@ namespace PlaywrightSharp
                 }
 
                 expression = GetEvaluationString(deliverResult, bindingPayload.Name, bindingPayload.Seq, result);
+            }
+            catch (TargetInvocationException ex)
+            {
+                expression = GetEvaluationString(
+                    deliverError,
+                    bindingPayload.Name,
+                    bindingPayload.Seq,
+                    ex.InnerException?.Message ?? ex.Message,
+                    ex.InnerException?.StackTrace ?? ex.StackTrace);
             }
             catch (Exception ex)
             {

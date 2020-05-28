@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should query existing element with css selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElementWithCssSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -31,7 +32,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should query existing element with zs selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElementWithZsSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -42,7 +43,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should query existing element with xpath selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElementWithXpathSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -53,7 +54,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should return null for non-existing element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullForNonExistingElement()
         {
             var element = await Page.QuerySelectorAsync("non-existing-element");
@@ -63,7 +64,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should auto-detect xpath selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAutoDetectXpathSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -74,7 +75,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should auto-detect text selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAutoDetectTextSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -85,7 +86,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should auto-detect css selector</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -96,7 +97,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should support >> syntax</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<section><div>test</div></section>");
@@ -107,7 +108,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should respect waitFor visibility</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespectWaitForVisibility()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");

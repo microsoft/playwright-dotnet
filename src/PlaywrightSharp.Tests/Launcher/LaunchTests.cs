@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch</playwright-describe>
         ///<playwright-it>should reject all promises when browser is closed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
             using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -37,7 +38,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch</playwright-describe>
         ///<playwright-it>should reject if executable path is invalid</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -55,7 +56,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch</playwright-describe>
         ///<playwright-it>should have default URL when launching browser</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
             using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -67,7 +68,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch</playwright-describe>
         ///<playwright-it>should have custom URL when launching browser</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveCustomUrlWhenLaunchingBrowser()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -86,7 +87,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch</playwright-describe>
         ///<playwright-it>should return child_process instance</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnChildProcessInstance()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());

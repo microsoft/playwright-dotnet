@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => ({ foo: 'bar'})");
@@ -32,7 +33,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
         ///<playwright-it>should not work with dates</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotWorkWithDates()
         {
             var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
@@ -43,7 +44,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
         ///<playwright-it>should throw for circular objects</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowForCircularObjects()
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
@@ -65,7 +66,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
         ///<playwright-it>should work with tricky values</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithTrickyValues()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => ({ a: 1})");

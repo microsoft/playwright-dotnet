@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.asElement</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => document.body");
@@ -30,7 +31,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.asElement</playwright-describe>
         ///<playwright-it>should return null for non-elements</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnNullForNonElements()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 2");
@@ -41,7 +42,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.asElement</playwright-describe>
         ///<playwright-it>should return ElementHandle for TextNodes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnElementHandleForTextNodes()
         {
             await Page.SetContentAsync("<div>ee!</div>");
@@ -54,7 +55,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.asElement</playwright-describe>
         ///<playwright-it>should work with nullified Node</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithNullifiedNode()
         {
             await Page.SetContentAsync("<section>test</section>");

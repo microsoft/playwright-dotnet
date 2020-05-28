@@ -27,6 +27,6 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Matches by the index.
         /// </remarks>
-        public int Index { get; set; }
+        public int? Index { get; set; }
     }
 }

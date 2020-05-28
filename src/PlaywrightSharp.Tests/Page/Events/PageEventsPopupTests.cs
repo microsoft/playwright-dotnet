@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
@@ -36,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with noopener</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithNoopener()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);

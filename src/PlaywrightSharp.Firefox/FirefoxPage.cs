@@ -250,9 +250,16 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
-        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme) => throw new NotImplementedException();
+        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme)
+            => _session.SendAsync(new PageSetEmulatedMediaRequest
+            {
+                Type = mediaType?.ToEmulatedMediaType(),
+                ColorScheme = colorScheme?.ToEmulatedMediaColorScheme(),
+            });
 
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => throw new NotImplementedException();
+
+        public Task<IPage> GetOpenerAsync() => throw new NotImplementedException();
 
         internal async Task InitializeAsync()
         {
