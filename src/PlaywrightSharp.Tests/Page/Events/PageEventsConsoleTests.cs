@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Console</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
     {
@@ -35,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             }
             Page.Console += EventHandler;
             await Task.WhenAll(
-                Page.EvaluateAsync<string>("() => console.log('hello', 5, { foo: 'bar'})"),
+                Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"),
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
             );
             Assert.Equal("hello 5 JSHandle@object", message.Text);
