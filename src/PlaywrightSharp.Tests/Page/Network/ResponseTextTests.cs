@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.text</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ResponseTextTests : PlaywrightSharpPageBaseTest
     {
@@ -70,34 +71,26 @@ namespace PlaywrightSharp.Tests.Page.Network
             Server.SetRoute("/get", context =>
             {
                 serverResponse = context.Response;
+                context.Response.Headers["Content-Type"] = "text/plain; charset=utf-8";
                 context.Response.WriteAsync("hello ");
                 return serverResponseCompletion.Task;
             });
             // Setup page to trap response.
-            IResponse pageResponse = null;
             bool requestFinished = false;
-            Page.Response += (sender, e) => pageResponse = e.Response;
-            Page.RequestFinished += (sender, e) => requestFinished = true;
+            Page.RequestFinished += (sender, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
             // send request and wait for server response
-            Task WaitForPageResponseEvent()
-            {
-                var completion = new TaskCompletionSource<bool>();
-                Page.Response += (sender, e) => completion.SetResult(true);
-                return completion.Task;
-            }
-
-            await Task.WhenAll(
-                Server.WaitForRequest("/get"),
-                Page.EvaluateAsync("fetch('/get', { method: 'GET'})"),
-                WaitForPageResponseEvent()
+            var (pageResponse, _) = await TaskUtils.WhenAll(
+                Page.WaitForEvent<ResponseEventArgs>(PageEvent.Response),
+                Page.EvaluateAsync("fetch('./get', { method: 'GET'})"),
+                Server.WaitForRequest("/get")
             );
 
             Assert.NotNull(serverResponse);
             Assert.NotNull(pageResponse);
-            Assert.Equal(HttpStatusCode.OK, pageResponse.Status);
+            Assert.Equal(HttpStatusCode.OK, pageResponse.Response.Status);
             Assert.False(requestFinished);
 
-            var responseText = pageResponse.GetTextAsync();
+            var responseText = pageResponse.Response.GetTextAsync();
             // Write part of the response and wait for it to be flushed.
             await serverResponse.WriteAsync("wor");
             // Finish response.
