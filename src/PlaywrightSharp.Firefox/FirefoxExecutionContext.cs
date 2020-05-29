@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Firefox
                 return "JSHandle@" + (string.IsNullOrEmpty(payload.Subtype) ? payload.Type : payload.Subtype);
             }
 
-            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<string>((RemoteObject)payload);
+            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<object>((RemoteObject)payload);
         }
 
         public async Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle)
