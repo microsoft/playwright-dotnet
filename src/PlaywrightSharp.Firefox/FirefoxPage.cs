@@ -471,7 +471,7 @@ namespace PlaywrightSharp.Firefox
         }
 
         private void OnDialogOpened(PageDialogOpenedFirefoxEvent e)
-        => Page.OnDialog(new Dialog(
+            => Page.OnDialog(new Dialog(
                e.Type.ToDialogType(),
                e.Message,
                (accept, promptText) => _session.SendAsync(new PageHandleDialogRequest
