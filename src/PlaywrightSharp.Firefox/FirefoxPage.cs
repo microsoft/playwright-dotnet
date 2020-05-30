@@ -345,6 +345,7 @@ namespace PlaywrightSharp.Firefox
                     OnConsole(runtimeConsole);
                     break;
                 case PageDialogOpenedFirefoxEvent pageDialogOpened:
+                    OnDialogOpened(pageDialogOpened);
                     break;
                 case PageBindingCalledFirefoxEvent pageBindingCalled:
                     OnBindingCalled(pageBindingCalled);
@@ -468,6 +469,18 @@ namespace PlaywrightSharp.Firefox
 
             Page.AddConsoleMessage(type, Array.ConvertAll(e.Args, arg => context.CreateHandle(arg)), location);
         }
+
+        private void OnDialogOpened(PageDialogOpenedFirefoxEvent e)
+            => Page.OnDialog(new Dialog(
+               e.Type.ToDialogType(),
+               e.Message,
+               (accept, promptText) => _session.SendAsync(new PageHandleDialogRequest
+               {
+                   DialogId = e.DialogId,
+                   Accept = accept,
+                   PromptText = promptText,
+               }),
+               e.DefaultValue));
 
         private void OnFileChooserOpened(PageFileChooserOpenedFirefoxEvent e)
         {
