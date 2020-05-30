@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -9,10 +10,14 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.select</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSelectTests : PlaywrightSharpPageBaseTest
     {
-        internal PageSelectTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageSelectTests(ITestOutputHelper output) : base(output)
         {
+            DefaultOptions = TestConstants.GetHeadfulOptions();
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -134,8 +139,8 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectAsync("select", "blue", "green", "red");
-            Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onInput)"));
-            Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onChange)"));
+            Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
+            Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -167,7 +172,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>Page.select</playwright-describe>
         ///<playwright-it>should throw when element is not a &lt;select&gt;</playwright-it>
         [Retry]
-        public async Task ShouldThrowWhenElementIsNotA<select>()
+        public async Task ShouldThrowWhenElementIsNotASelect()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.SelectAsync("body", string.Empty));
@@ -194,7 +199,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync<string>("() => makeMultiple()");
             string[] result = await Page.SelectAsync("select", "blue", "black", "magenta");
-            Assert.Equal(new[] { "blue", "black", "magenta" }, result);
+            Assert.Equal(new[] { "blue", "black", "magenta" }.OrderBy(v => v), result.OrderBy(v => v));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -228,8 +233,8 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectAsync("select", "blue", "black", "magenta");
-            await Page.SelectAsync("select", Array.Empty<string>());
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected))"));
+            await Page.SelectAsync("select");
+            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -241,7 +246,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.SelectAsync("select", "blue", "black", "magenta");
             await Page.SelectAsync("select", Array.Empty<string>());
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected))"));
+            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
