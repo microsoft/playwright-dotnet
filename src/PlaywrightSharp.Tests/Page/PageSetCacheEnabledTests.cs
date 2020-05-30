@@ -9,9 +9,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetCacheEnabledTests : PlaywrightSharpPageBaseTest
     {
-        internal PageSetCacheEnabledTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageSetCacheEnabledTests(ITestOutputHelper output) : base(output)
         {
         }
 
