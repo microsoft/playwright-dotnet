@@ -313,11 +313,9 @@ namespace PlaywrightSharp
             await Page.Keyboard.TypeAsync(text, delay).ConfigureAwait(false);
         }
 
-        internal async Task<string[]> SelectInternalAsync(IEnumerable<object> values)
-        {
-            var utility = await Context.Frame.GetUtilityContextAsync().ConfigureAwait(false);
-            return await utility.EvaluateAsync<string[]>(
-                @"(node, optionsToSelect) => {
+        internal Task<string[]> SelectInternalAsync(IEnumerable<object> values)
+            => EvaluateInUtilityAsync<string[]>(
+                @"(node, ...optionsToSelect) => {
                     if (node.nodeName.toLowerCase() !== 'select')
                         throw new Error('Element is not a <select> element.');
                     const element = node;
@@ -346,8 +344,7 @@ namespace PlaywrightSharp
                     element.dispatchEvent(new Event('change', { 'bubbles': true }));
                     return options.filter(option => option.selected).map(option => option.value);
                 }",
-                values.Prepend(this)).ConfigureAwait(false);
-        }
+                (values ?? Array.Empty<object>()).ToArray());
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {

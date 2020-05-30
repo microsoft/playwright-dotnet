@@ -36,17 +36,16 @@ namespace PlaywrightSharp
 
             List<Task<ElementHandle>> toDispose = new List<Task<ElementHandle>>();
 
-            var adoptedTasks = args.Select<object, Task<object>>(async (arg) =>
+            var adoptedTasks = args.Select<object, Task<object>>(async arg =>
             {
                 if (!NeedsAdoption(arg))
                 {
-                    return Task.FromResult(arg);
+                    return arg;
                 }
 
                 var adopted = Frame.Page.Delegate.AdoptElementHandleAsync(arg as ElementHandle, this);
                 toDispose.Add(adopted);
-                await adopted.ConfigureAwait(false);
-                return adopted.Result;
+                return await adopted.ConfigureAwait(false);
             }).ToArray();
 
             await Task.WhenAll(adoptedTasks).ConfigureAwait(false);
