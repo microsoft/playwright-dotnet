@@ -135,6 +135,26 @@ namespace PlaywrightSharp.Chromium
                 .ToDictionary(property => property.Name, property => handle.Context.CreateHandle(property.Value));
         }
 
+        internal static async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)
+        {
+            if (string.IsNullOrEmpty(remoteObject.ObjectId))
+            {
+                return;
+            }
+
+            try
+            {
+                await client.SendAsync(new RuntimeReleaseObjectRequest
+                {
+                    ObjectId = remoteObject.ObjectId,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
+
         private string GetStringFromRemoteObject(IRemoteObject remote)
             => remote.Type == "undefined"
                 ? "undefined"
@@ -263,26 +283,6 @@ namespace PlaywrightSharp.Chromium
             }
 
             return ((JsonElement)remoteObject.Value).ToObject<T>();
-        }
-
-        private async Task ReleaseObjectAsync(ChromiumSession client, IRemoteObject remoteObject)
-        {
-            if (string.IsNullOrEmpty(remoteObject.ObjectId))
-            {
-                return;
-            }
-
-            try
-            {
-                await client.SendAsync(new RuntimeReleaseObjectRequest
-                {
-                    ObjectId = remoteObject.ObjectId,
-                }).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex);
-            }
         }
     }
 }

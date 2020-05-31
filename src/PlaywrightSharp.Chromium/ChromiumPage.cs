@@ -10,6 +10,7 @@ using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Accessibility;
 using PlaywrightSharp.Chromium.Protocol.DOM;
 using PlaywrightSharp.Chromium.Protocol.Emulation;
+using PlaywrightSharp.Chromium.Protocol.Inspector;
 using PlaywrightSharp.Chromium.Protocol.Log;
 using PlaywrightSharp.Chromium.Protocol.Network;
 using PlaywrightSharp.Chromium.Protocol.Page;
@@ -359,6 +360,15 @@ namespace PlaywrightSharp.Chromium
 
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => _pdf.GenerateAsync(file, options);
 
+        public Task<IPage> GetOpenerAsync()
+        {
+            var openerTarget = ChromiumTarget.FromPage(Page).GetOpenerAsync();
+
+            return openerTarget == null
+                ? Task.FromResult<IPage>(null)
+                : openerTarget.GetPageAsync();
+        }
+
         internal async Task InitializeAsync()
         {
             var getFrameTreeTask = Client.SendAsync(new PageGetFrameTreeRequest());
@@ -518,6 +528,15 @@ namespace PlaywrightSharp.Chromium
                     case TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget:
                         OnDetachedFromTarget(targetDetachedFromTarget);
                         break;
+                    case LogEntryAddedChromiumEvent logEntryAdded:
+                        OnLogEntryAdded(logEntryAdded);
+                        break;
+                    case RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown:
+                        HandleException(runtimeExceptionThrown);
+                        break;
+                    case InspectorTargetCrashedChromiumEvent _:
+                        OnTargetCrashed();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -531,6 +550,32 @@ namespace PlaywrightSharp.Chromium
                 Client.OnClosed(ex.ToString());
             }
         }
+
+        private void OnLogEntryAdded(LogEntryAddedChromiumEvent e)
+        {
+            if (e.Entry.Args != null)
+            {
+                foreach (var arg in e.Entry.Args)
+                {
+                    _ = ChromiumExecutionContext.ReleaseObjectAsync(Client, arg);
+                }
+            }
+
+            if (e.Entry.Source != "worker")
+            {
+                Page.OnConsole(new ConsoleMessage(
+                    e.Entry.Level.LogLevelToConsoleType(),
+                    e.Entry.Text,
+                    Array.Empty<IJSHandle>(),
+                    null,
+                    new ConsoleMessageLocation { URL = e.Entry.Url, LineNumber = e.Entry.LineNumber }));
+            }
+        }
+
+        private void OnTargetCrashed() => Page.DidCrash();
+
+        private void HandleException(RuntimeExceptionThrownChromiumEvent runtimeExceptionThrown)
+            => Page.OnPageError(ExceptionToError(runtimeExceptionThrown.ExceptionDetails));
 
         private void OnDetachedFromTarget(TargetDetachedFromTargetChromiumEvent targetDetachedFromTarget)
             => Page.RemoveWorker(targetDetachedFromTarget.SessionId);

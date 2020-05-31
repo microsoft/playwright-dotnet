@@ -7,16 +7,20 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Async stacks</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class AsyncStacksTests : PlaywrightSharpPageBaseTest
     {
-        internal AsyncStacksTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public AsyncStacksTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Async stacks</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Skip = "We don't need to test this in .NET")]
         public async Task ShouldWork()
         {
             Server.SetRoute("/empty.html", context =>

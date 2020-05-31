@@ -1,7 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,30 +9,33 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.close</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageCloseTests : PlaywrightSharpPageBaseTest
     {
-        internal PageCloseTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageCloseTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should reject all promises when page is closed</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<AggregateException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
-            Assert.Contains("Protocol error", Assert.IsType<PlaywrightSharpException>(exception).Message);
+            Assert.Contains("Protocol error", Assert.IsType<TargetClosedException>(exception).Message);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should not be visible in context.pages</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotBeVisibleInContextPages()
         {
             var newPage = await Context.NewPageAsync();
@@ -44,7 +47,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should run beforeunload if asked for</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {
             var newPage = await Context.NewPageAsync();
@@ -76,7 +79,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should *not* run beforeunload by default</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotRunBeforeunloadByDefault()
         {
             var newPage = await Context.NewPageAsync();
@@ -90,7 +93,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should set the page close state</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSetThePageCloseState()
         {
             var newPage = await Context.NewPageAsync();
@@ -106,14 +109,14 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var aggregateException = await Assert.ThrowsAsync<AggregateException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
                 newPage.WaitForRequestAsync(TestConstants.EmptyPage),
                 newPage.WaitForResponseAsync(TestConstants.EmptyPage),
                 newPage.CloseAsync()
             ));
             for (int i = 0; i < 2; i++)
             {
-                string message = aggregateException.InnerExceptions[i].Message;
+                string message = exception.Message;
                 Assert.Contains("Target closed", message);
                 Assert.DoesNotContain("Timeout", message);
             }

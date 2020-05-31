@@ -19,10 +19,11 @@ namespace PlaywrightSharp.Chromium
         private readonly TaskCompletionSource<string> _startCompletionSource = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource<bool> _exitCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         private State _currentState = State.Initial;
+        private bool _gracefullyClosing;
 
         public ChromiumProcessManager(
             string chromiumExecutable,
-            List<string> chromiumArgs,
+            IEnumerable<string> chromiumArgs,
             TempDirectory tempUserDataDir,
             int timeout,
             Func<Task> attemptToGracefullyCloseFunc,
@@ -36,11 +37,14 @@ namespace PlaywrightSharp.Chromium
             Process = new Process
             {
                 EnableRaisingEvents = true,
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = chromiumExecutable,
+                    Arguments = string.Join(" ", chromiumArgs),
+                    RedirectStandardError = true,
+                },
             };
-            Process.StartInfo.UseShellExecute = false;
-            Process.StartInfo.FileName = chromiumExecutable;
-            Process.StartInfo.Arguments = string.Join(" ", chromiumArgs);
-            Process.StartInfo.RedirectStandardError = true;
         }
 
         /// <summary>
@@ -65,6 +69,32 @@ namespace PlaywrightSharp.Chromium
         {
             GC.SuppressFinalize(this);
             Dispose(true);
+        }
+
+        public async Task GracefullyClose()
+        {
+            // We keep listeners until we are done, to handle 'exit' and 'SIGINT' while
+            // asynchronously closing to prevent zombie processes. This might introduce
+            // reentrancy to this function, for example user sends SIGINT second time.
+            // In this case, let's forcefully kill the process.
+            if (_gracefullyClosing)
+            {
+                await KillAsync().ConfigureAwait(false);
+                return;
+            }
+
+            _gracefullyClosing = true;
+
+            try
+            {
+                await _attemptToGracefullyCloseFunc().ConfigureAwait(false);
+            }
+            catch
+            {
+                await KillAsync().ConfigureAwait(false);
+            }
+
+            await _exitCompletionSource.Task.ConfigureAwait(false);
         }
 
         /// <summary>
@@ -93,7 +123,7 @@ namespace PlaywrightSharp.Chromium
         /// Disposes Chromium process and any temporary user directory.
         /// </summary>
         /// <param name="disposing">Indicates whether disposal was initiated by <see cref="Dispose()"/> operation.</param>
-        protected virtual void Dispose(bool disposing) => _currentState.Dispose(this);
+        protected void Dispose(bool disposing) => _currentState.Dispose(this);
 
         /// <summary>
         /// Represents state machine for Chromium process instances. The happy path runs along the
@@ -424,7 +454,15 @@ namespace PlaywrightSharp.Chromium
 
                     try
                     {
-                        await p._attemptToGracefullyCloseFunc().ConfigureAwait(false);
+                        try
+                        {
+                            await p._attemptToGracefullyCloseFunc().ConfigureAwait(false);
+                        }
+                        catch
+                        {
+                            // If we fail here we'll kill the process
+                        }
+
                         if (!p.Process.HasExited)
                         {
                             p.Process.Kill();

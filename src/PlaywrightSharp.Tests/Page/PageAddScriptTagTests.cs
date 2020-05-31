@@ -2,6 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,9 +10,12 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.addScriptTag</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageAddScriptTagTests : PlaywrightSharpPageBaseTest
     {
-        internal PageAddScriptTagTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageAddScriptTagTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -26,7 +30,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a url</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -38,7 +42,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a url and type=module</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAUrlAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -49,11 +53,11 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a path and type=module</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAPathAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/es6/es6pathimport.js"), Type = "module" });
+            await Page.AddScriptTagAsync(new AddTagOptions { Path = TestUtils.GetWebServerFile("es6/es6pathimport.js"), Type = "module" });
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -61,7 +65,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a content and type=module</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAContentAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -73,7 +77,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should throw an error if loading from url fail</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -83,11 +87,11 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with a path</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAPath()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/injectedfile.js") });
+            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Path = TestUtils.GetWebServerFile("injectedfile.js") });
             Assert.NotNull(scriptHandle);
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -95,19 +99,19 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should include sourceURL when path is provided</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Path = Path.Combine(Directory.GetCurrentDirectory(), "assets/injectedfile.js") });
+            await Page.AddScriptTagAsync(new AddTagOptions { Path = TestUtils.GetWebServerFile("injectedfile.js") });
             string result = await Page.EvaluateAsync<string>("() => __injectedError.stack");
-            Assert.Contains(Path.Combine("assets", "injectedfile.js"), result);
+            Assert.Contains(TestUtils.GetWebServerFile("injectedfile.js"), result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should work with content</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithContent()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -130,7 +134,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should throw when added with URL to the CSP page</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");

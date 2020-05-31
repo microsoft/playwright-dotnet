@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>selectors.register</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             string createTagSelector = @"() => ({
@@ -48,7 +49,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>selectors.register</playwright-describe>
         ///<playwright-it>should update</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldUpdate()
         {
             await Page.SetContentAsync("<div><dummy id=d1></dummy></div><span><dummy id=d2></dummy></span>");

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,16 +9,19 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Popup</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsPopupTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsPopupTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsPopupTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
@@ -33,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with noopener</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithNoopener()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
@@ -61,9 +65,10 @@ namespace PlaywrightSharp.Tests.Page.Events
                 return popup;
             });
             await Task.WhenAll(
-                await popupTask,
+                popupTask,
                 Page.ClickAsync("a")
             );
+
             var popup = await popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));

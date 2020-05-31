@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class EmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
     {
@@ -20,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = ColorScheme.Light });

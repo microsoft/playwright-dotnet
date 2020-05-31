@@ -1,4 +1,5 @@
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,6 +8,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.name</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class NameTests : PlaywrightSharpBaseTest
     {
@@ -18,7 +20,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.name</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public void ShouldRejectAllPromisesWhenBrowserIsClosed()
             => Assert.Equal(
                 TestConstants.Product switch

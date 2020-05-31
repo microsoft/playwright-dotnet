@@ -281,5 +281,23 @@ namespace PlaywrightSharp
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options);
+
+        /// <summary>
+        /// Returns the opener for popup pages and <c>null</c> for others.
+        /// </summary>
+        /// <remarks>
+        /// If the opener has been closed already the task may resolve to <c>null</c>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// IPage popup;
+        /// page.Popup += (sender, e) => popup = e.Page;
+        /// await page.EvaluateAsync("() => window.open('about:blank')");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task"/> that completes when the opener is resolved, yielding the opener <see cref="IPage"/>.</returns>
+        Task<IPage> GetOpenerAsync();
     }
 }

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,6 +9,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>dialog.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Dialog</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DialogTests : PlaywrightSharpPageBaseTest
     {
@@ -19,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>dialog.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Dialog</playwright-describe>
         ///<playwright-it>should fire</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFire()
         {
             Page.Dialog += async (sender, e) =>
@@ -37,7 +39,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>dialog.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Dialog</playwright-describe>
         ///<playwright-it>should allow accepting prompts</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAllowAcceptingPrompts()
         {
             Page.Dialog += async (sender, e) =>
@@ -56,7 +58,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>dialog.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Dialog</playwright-describe>
         ///<playwright-it>should dismiss the prompt</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldDismissThePrompt()
         {
             Page.Dialog += async (sender, e) =>
@@ -71,7 +73,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>dialog.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Dialog</playwright-describe>
         ///<playwright-it>should accept the confirm prompt</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAcceptTheConfirmPrompts()
         {
             Page.Dialog += async (sender, e) =>
@@ -86,7 +88,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>dialog.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Dialog</playwright-describe>
         ///<playwright-it>should dismiss the confirm prompt</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldDismissTheConfirmPrompt()
         {
             Page.Dialog += async (sender, e) =>

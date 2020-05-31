@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Interception vs isNavigationRequest</playwright-describe>
         ///<playwright-it>should work with request interception</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithRequestInterception()
         {
             var requests = new Dictionary<string, IRequest>();

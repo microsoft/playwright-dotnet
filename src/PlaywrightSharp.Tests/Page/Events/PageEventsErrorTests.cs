@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,20 +8,23 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.error</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsErrorTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsErrorTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsErrorTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.error</playwright-describe>
         ///<playwright-it>should throw when page crashes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenPageCrashes()
         {
-            string error = null;
-            Page.Error += (sender, e) => error = e.Error;
+            var errorTask = Page.WaitForEvent<ErrorEventArgs>(PageEvent.Error);
+
             if (TestConstants.IsChromium)
             {
                 _ = Page.GoToAsync("chrome://crash").ContinueWith(t => { });
@@ -29,8 +33,8 @@ namespace PlaywrightSharp.Tests.Page.Events
             {
                 Assert.True(false, "TODO: expose PageDelegate and invoke Page._delegate._session.send('Page.crash', }");
             }
-            await Page.WaitForEvent<ErrorEventArgs>(PageEvent.Error);
-            Assert.Equal("Page crashed!", error);
+            await errorTask;
+            Assert.Equal("Page crashed!", errorTask.Result.Error);
         }
     }
 }

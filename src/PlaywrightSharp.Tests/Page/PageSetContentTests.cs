@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<div>hello</div>");
@@ -34,7 +35,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with domcontentloaded</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithDomcontentloaded()
         {
             await Page.SetContentAsync("<div>hello</div>", WaitUntilNavigation.DOMContentLoaded);
@@ -45,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should not confuse with previous navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotConfuseWithPreviousNavigation()
         {
             string imgPath = "/img.png";
@@ -75,7 +76,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with doctype</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithDoctype()
         {
             string doctype = "<!DOCTYPE html>";
@@ -87,7 +88,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with HTML 4 doctype</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithHTML4Doctype()
         {
             string doctype = "<!DOCTYPE html PUBLIC \" -//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
@@ -99,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespectTimeout()
         {
             string imgPath = "/img.png";
@@ -113,7 +114,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should respect default navigation timeout</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldRespectDefaultNavigationTimeout()
         {
             Page.DefaultNavigationTimeout = 1;
@@ -128,7 +129,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should await resources to load</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAwaitResourcesToLoad()
         {
             string imgPath = "/img.png";
@@ -145,7 +146,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work fast enough</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkFastEnough()
         {
             for (int i = 0; i < 20; ++i)
@@ -157,7 +158,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with tricky content</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithTrickyContent()
         {
             await Page.SetContentAsync("<div>hello world</div>" + "\x7F");
@@ -167,7 +168,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with accents</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithAccents()
         {
             await Page.SetContentAsync("<div>aberración</div>");
@@ -177,7 +178,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with emojis</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithEmojis()
         {
             await Page.SetContentAsync("<div>🐥</div>");
@@ -187,7 +188,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setContent</playwright-describe>
         ///<playwright-it>should work with newline</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithNewline()
         {
             await Page.SetContentAsync("<div>\n</div>");

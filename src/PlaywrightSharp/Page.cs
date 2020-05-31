@@ -27,6 +27,7 @@ namespace PlaywrightSharp
 
         private bool _disconnected;
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
+        private TaskCompletionSource<bool> _disconnectedTcs = new TaskCompletionSource<bool>();
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -71,10 +72,10 @@ namespace PlaywrightSharp
         public event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <inheritdoc cref="IPage.Load"/>
-        public event EventHandler Load;
+        public event EventHandler<EventArgs> Load;
 
         /// <inheritdoc cref="IPage.DOMContentLoaded"/>
-        public event EventHandler DOMContentLoaded;
+        public event EventHandler<EventArgs> DOMContentLoaded;
 
         /// <inheritdoc cref="IPage.Response"/>
         public event EventHandler<ResponseEventArgs> Response;
@@ -102,7 +103,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IPage.Close"/>
-        public event EventHandler Close;
+        public event EventHandler<EventArgs> Close;
 
         /// <inheritdoc cref="IPage.Error"/>
         public event EventHandler<ErrorEventArgs> Error;
@@ -119,7 +120,7 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.Websocket"/>
         public event EventHandler<WebsocketEventArgs> Websocket;
 
-        internal event EventHandler ClientDisconnected;
+        internal event EventHandler<EventArgs> ClientDisconnected;
 
         /// <inheritdoc cref="IPage.MainFrame"/>
         IFrame IPage.MainFrame => MainFrame;
@@ -332,6 +333,30 @@ namespace PlaywrightSharp
         public Task HoverAsync(string selector, WaitForSelectorOptions options = null)
             => MainFrame.HoverAsync(selector, options);
 
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null)
+            => MainFrame.SelectAsync(selector, value, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null)
+            => MainFrame.SelectAsync(selector, value, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null)
+            => MainFrame.SelectAsync(selector, value, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options)
+            => MainFrame.SelectAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options)
+            => MainFrame.SelectAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options)
+            => MainFrame.SelectAsync(selector, values, options);
+
         /// <inheritdoc cref="IPage.QuerySelectorAsync(string)"/>
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
 
@@ -441,13 +466,10 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc cref="IPage.GetOpenerAsync"/>
-        public Task<IPage> GetOpenerAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IPage> GetOpenerAsync() => Delegate.GetOpenerAsync();
 
         /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
-        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
+        public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
         {
             var info = _pageEventsMap[e];
             ValidateArgumentsTypes();
@@ -462,7 +484,14 @@ namespace PlaywrightSharp
             }
 
             info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
-            return eventTsc.Task.WithTimeout(options?.Timeout ?? DefaultTimeout);
+            await Task.WhenAny(eventTsc.Task, _disconnectedTcs.Task).WithTimeout(options?.Timeout ?? DefaultTimeout).ConfigureAwait(false);
+
+            if (_disconnectedTcs.Task.IsCompleted)
+            {
+                await _disconnectedTcs.Task.ConfigureAwait(false);
+            }
+
+            return await eventTsc.Task.ConfigureAwait(false);
 
             void ValidateArgumentsTypes()
             {
@@ -556,23 +585,17 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IPage.FillAsync(string, string, WaitForSelectorOptions)"/>
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => MainFrame.FillAsync(selector, text, options);
 
+        /// <inheritdoc cref="IPage.SelectAsync(string, WaitForSelectorOptions)"/>
+        public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null) => MainFrame.SelectAsync(selector, options);
+
         /// <inheritdoc cref="IPage.SelectAsync(string, string[])"/>
-        public Task<string[]> SelectAsync(string selector, params string[] values)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string[]> SelectAsync(string selector, params string[] values) => MainFrame.SelectAsync(selector, values);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, SelectOption[])"/>
-        public Task<string[]> SelectAsync(string selector, params SelectOption[] values)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => MainFrame.SelectAsync(selector, values);
 
         /// <inheritdoc cref="IPage.SelectAsync(string, IElementHandle[])"/>
-        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => MainFrame.SelectAsync(selector, values);
 
         /// <inheritdoc cref="IPage.GetContentAsync"/>
         public Task<string> GetContentAsync() => MainFrame.GetContentAsync();
@@ -637,6 +660,8 @@ namespace PlaywrightSharp
             }
         }
 
+        internal void OnConsole(ConsoleMessage message) => Console?.Invoke(this, new ConsoleEventArgs(message));
+
         internal void AddConsoleMessage(ConsoleType type, IJSHandle[] args, ConsoleMessageLocation location, string text = null)
         {
             var message = new ConsoleMessage(
@@ -655,11 +680,11 @@ namespace PlaywrightSharp
             }
             else
             {
-                Console?.Invoke(this, new ConsoleEventArgs(message));
+                OnConsole(message);
             }
         }
 
-        internal void OnPopup(object parent) => Popup?.Invoke(parent, new PopupEventArgs(this));
+        internal void OnPopup(IPage popup) => Popup?.Invoke(this, new PopupEventArgs(popup));
 
         internal void OnRequest(IRequest request) => Request?.Invoke(this, new RequestEventArgs(request));
 
@@ -670,8 +695,11 @@ namespace PlaywrightSharp
         internal void DidDisconnected()
         {
             _disconnected = true;
-            ClientDisconnected?.Invoke(this, new EventArgs());
+            ClientDisconnected?.Invoke(this, EventArgs.Empty);
+            _disconnectedTcs.TrySetException(new TargetClosedException("Target closed."));
         }
+
+        internal void DidCrash() => Error?.Invoke(this, new ErrorEventArgs("Page crashed!"));
 
         internal void DidClose()
         {
@@ -738,6 +766,15 @@ namespace PlaywrightSharp
                 }
 
                 expression = GetEvaluationString(deliverResult, bindingPayload.Name, bindingPayload.Seq, result);
+            }
+            catch (TargetInvocationException ex)
+            {
+                expression = GetEvaluationString(
+                    deliverError,
+                    bindingPayload.Name,
+                    bindingPayload.Seq,
+                    ex.InnerException?.Message ?? ex.Message,
+                    ex.InnerException?.StackTrace ?? ex.StackTrace);
             }
             catch (Exception ex)
             {

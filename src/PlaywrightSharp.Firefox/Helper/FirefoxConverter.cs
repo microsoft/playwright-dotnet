@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Firefox.Protocol.Network;
+using PlaywrightSharp.Firefox.Protocol.Page;
 using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -120,6 +121,34 @@ namespace PlaywrightSharp.Firefox.Helper
                 ContextPermission.Camera => PermissionsGrantPermissions.Camera,
                 ContextPermission.Microphone => PermissionsGrantPermissions.Microphone,
                 _ => throw new ArgumentOutOfRangeException(nameof(permission), "Unknown permission: " + permission)
+            };
+
+        public static SetEmulatedMediaType ToEmulatedMediaType(this MediaType mediaType)
+            => mediaType switch
+            {
+                MediaType.None => SetEmulatedMediaType.Empty,
+                MediaType.Print => SetEmulatedMediaType.Print,
+                MediaType.Screen => SetEmulatedMediaType.Screen,
+                _ => throw new ArgumentOutOfRangeException(nameof(mediaType), "Unknown mediaType: " + mediaType)
+            };
+
+        public static SetEmulatedMediaColorScheme ToEmulatedMediaColorScheme(this ColorScheme colorScheme)
+            => colorScheme switch
+            {
+                ColorScheme.Dark => SetEmulatedMediaColorScheme.Dark,
+                ColorScheme.Light => SetEmulatedMediaColorScheme.Light,
+                ColorScheme.NoPreference => SetEmulatedMediaColorScheme.NoPreference,
+                _ => throw new ArgumentOutOfRangeException(nameof(colorScheme), "Unknown colorScheme: " + colorScheme)
+            };
+
+        public static DialogType ToDialogType(this DialogOpenedType dialogType)
+            => dialogType switch
+            {
+                DialogOpenedType.Alert => DialogType.Alert,
+                DialogOpenedType.Beforeunload => DialogType.BeforeUnload,
+                DialogOpenedType.Confirm => DialogType.Confirm,
+                DialogOpenedType.Prompt => DialogType.Prompt,
+                _ => throw new ArgumentOutOfRangeException(nameof(dialogType), "Unknown dialogType: " + dialogType)
             };
 
         public static HTTPHeader[] ToHttpHeaders(this IDictionary<string, string> headers) => headers.Select(pair => new HTTPHeader

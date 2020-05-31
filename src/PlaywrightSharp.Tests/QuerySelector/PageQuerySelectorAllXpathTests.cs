@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$ xpath</playwright-describe>
         ///<playwright-it>should query existing element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldQueryExistingElement()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -32,7 +33,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$ xpath</playwright-describe>
         ///<playwright-it>should return empty array for non-existing element</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnEmptyArrayForNonExistingElement()
         {
             var elements = await Page.QuerySelectorAllAsync("//html/body/non-existing-element");
@@ -42,7 +43,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$ xpath</playwright-describe>
         ///<playwright-it>should return multiple elements</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReturnMultipleElements()
         {
             await Page.SetContentAsync("<div></div><div></div>");

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ namespace PlaywrightSharp
     public class Frame : IFrame
     {
         private readonly IDictionary<ContextType, ContextData> _contextData;
-        private readonly bool _detached = false;
         private int _setContentCounter;
 
         internal Frame(Page page, string frameId, Frame parentFrame)
@@ -486,6 +486,43 @@ namespace PlaywrightSharp
             }).ConfigureAwait(false);
         }
 
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null)
+            => SelectInternalAsync(selector, null, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null)
+            => SelectAsync(selector, new[] { value }, options);
+
+        /// <inheritdoc/>
+        public Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null)
+            => SelectAsync(selector, new[] { value }, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null)
+            => SelectAsync(selector, new[] { value }, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options)
+            => SelectInternalAsync(selector, values.Select(v => new SelectOption { Value = v }).ToArray(), options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options)
+            => SelectInternalAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options)
+            => SelectInternalAsync(selector, values, options);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, params string[] values) => SelectAsync(selector, values, null);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => SelectAsync(selector, values, null);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => SelectAsync(selector, values, null);
+
         /// <inheritdoc cref="IFrame.WaitForLoadStateAsync(NavigationOptions)"/>
         public async Task WaitForLoadStateAsync(NavigationOptions options = null)
         {
@@ -595,7 +632,7 @@ namespace PlaywrightSharp
 
         private Task<FrameExecutionContext> GetContextAsync(ContextType contextType)
         {
-            if (_detached)
+            if (Detached)
             {
                 throw new PlaywrightSharpException(
                     $"Execution Context is not available in detached frame \"{Url}\" (are you trying to evaluate ?)");
@@ -616,7 +653,7 @@ namespace PlaywrightSharp
                 var maybeHandle = await WaitForSelectorInUtilityContextAsync(selector, waitFor, timeout)
                     .ConfigureAwait(false);
 
-                handle = maybeHandle ?? throw new SelectorException($"No node found for selector", SelectorToString(selector, options.WaitFor));
+                handle = maybeHandle ?? throw new SelectorException("No node found for selector", SelectorToString(selector, options.WaitFor));
             }
             else
             {
@@ -625,7 +662,7 @@ namespace PlaywrightSharp
 
                 if (maybeHandle == null)
                 {
-                    throw new SelectorException($"No node found for selector", selector);
+                    throw new SelectorException("No node found for selector", selector);
                 }
 
                 handle = maybeHandle!;
@@ -682,6 +719,14 @@ namespace PlaywrightSharp
             }
 
             return rerunnableTask.Task;
+        }
+
+        private async Task<string[]> SelectInternalAsync(string selector, IEnumerable<object> values, WaitForSelectorOptions options)
+        {
+            var handle = await OptionallyWaitForSelectorInUtilityContextAsync(selector, options).ConfigureAwait(false) as ElementHandle;
+            var result = await handle.SelectInternalAsync(values).ConfigureAwait(false);
+            await handle.DisposeAsync().ConfigureAwait(false);
+            return result;
         }
     }
 }

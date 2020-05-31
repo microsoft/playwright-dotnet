@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -54,7 +55,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
         ///<playwright-it>should work with status code 422</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkWithStatusCode422()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -75,7 +76,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
         ///<playwright-it>should allow mocking binary responses</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldAllowMockingBinaryResponses()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -101,7 +102,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
         ///<playwright-it>should stringify intercepted request response headers</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
             await Page.SetRequestInterceptionAsync(true);

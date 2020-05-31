@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,6 +13,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class UserDataDirTests : PlaywrightSharpBaseTest
     {
@@ -23,7 +25,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
         ///<playwright-it>userDataDir option</playwright-it>
-        [Fact]
+        [Retry]
         public async Task UserDataDirOption()
         {
             using var userDataDir = new TempDirectory();
@@ -39,7 +41,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
         ///<playwright-it>userDataDir argument</playwright-it>
-        [Fact]
+        [Retry]
         public async Task UserDataDirArgument()
         {
             using var userDataDir = new TempDirectory();
@@ -47,7 +49,8 @@ namespace PlaywrightSharp.Tests.Launcher
 
             if (TestConstants.IsFirefox)
             {
-                options.Args = options.Args.Concat(new[] { $"--profile=\"{userDataDir}\"" }).ToArray();
+                options.Args = options.Args.Concat(new[] { "-profile", userDataDir.Path.Quote() }).ToArray();
+
             }
             else
             {

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia type</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,16 +12,20 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Console</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
     {
-        internal PageEventsConsoleTests(ITestOutputHelper output) : base(output)
+        /// <inheritdoc/>
+        public PageEventsConsoleTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWork()
         {
             ConsoleMessage message = null;
@@ -30,20 +36,20 @@ namespace PlaywrightSharp.Tests.Page.Events
             }
             Page.Console += EventHandler;
             await Task.WhenAll(
-                Page.EvaluateAsync<string>("() => console.log('hello', 5, { foo: 'bar'})"),
+                Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"),
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
             );
             Assert.Equal("hello 5 JSHandle@object", message.Text);
             Assert.Equal(ConsoleType.Log, message.Type);
-            Assert.Equal("hello", await message.Args[0].GetJsonValueAsync<string>());
-            Assert.Equal(5, await message.Args[1].GetJsonValueAsync<int>());
-            Assert.Equal(new { foo = "bar" }, await message.Args[2].GetJsonValueAsync<object>());
+            Assert.Equal("hello", await message.Args.ElementAt(0).GetJsonValueAsync<string>());
+            Assert.Equal(5, await message.Args.ElementAt(1).GetJsonValueAsync<int>());
+            Assert.Equal("bar", (await message.Args.ElementAt(2).GetJsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work for different console API calls</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
             var messages = new List<ConsoleMessage>();
@@ -74,7 +80,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should not fail for window object</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldNotFailForWindowObject()
         {
             ConsoleMessage message = null;
@@ -94,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should trigger correct Log</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTriggerCorrectLog()
         {
             await Page.GoToAsync("about:blank");
@@ -109,7 +115,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should have location for console API calls</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -145,7 +151,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                     await new Promise(f => setTimeout(f, 100));
                 }
                 // 2. In this popup, create an iframe that console.logs a message.
-                win.document.body.innerHTML = `< iframe src = '/consolelog.html' ></ iframe >`;
+                win.document.body.innerHTML = `<iframe src='/consolelog.html'></iframe>`;
                 var frame = win.document.querySelector('iframe');
                 while (frame.contentDocument.readyState !== 'complete')
                 {

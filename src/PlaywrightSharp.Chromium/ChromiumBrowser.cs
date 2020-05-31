@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Protocol;
 using PlaywrightSharp.Chromium.Protocol.Browser;
@@ -17,7 +16,6 @@ namespace PlaywrightSharp.Chromium
     /// </summary>
     public sealed class ChromiumBrowser : IBrowser
     {
-        private readonly IBrowserApp _app;
         private readonly ChromiumConnection _connection;
         private readonly ChromiumSession _client;
         private readonly Dictionary<string, IBrowserContext> _contexts;
@@ -26,9 +24,8 @@ namespace PlaywrightSharp.Chromium
         private string _tracingPath;
         private ChromiumSession _tracingClient;
 
-        private ChromiumBrowser(IBrowserApp app, ChromiumConnection connection, string[] browserContextIds)
+        private ChromiumBrowser(ChromiumConnection connection, string[] browserContextIds)
         {
-            _app = app;
             _connection = connection;
             _client = connection.RootSession;
 
@@ -38,8 +35,8 @@ namespace PlaywrightSharp.Chromium
                 contextId => contextId,
                 contextId => (IBrowserContext)new BrowserContext(new ChromiumBrowserContext(connection.RootSession, this, contextId, null)));
 
-            _client.MessageReceived += ClientMessageReceived;
-            _connection.Disconnected += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
+            _connection.Disconnected += Connection_OnDisconnected;
+            _client.MessageReceived += Client_MessageReceived;
         }
 
         /// <inheritdoc cref="IBrowser.TargetChanged"/>
@@ -77,7 +74,7 @@ namespace PlaywrightSharp.Chromium
         public int DefaultWaitForTimeout { get; set; } = Playwright.DefaultTimeout;
 
         /// <inheritdoc cref="IBrowser.IsConnected"/>
-        public bool IsConnected => false;
+        public bool IsConnected => !_connection.IsClosed;
 
         internal ConcurrentDictionary<string, ChromiumTarget> TargetsMap { get; } = new ConcurrentDictionary<string, ChromiumTarget>();
 
@@ -265,7 +262,7 @@ namespace PlaywrightSharp.Chromium
             var transport = await BrowserHelper.CreateTransportAsync(options).ConfigureAwait(false);
             var connection = new ChromiumConnection(transport);
             var response = await connection.RootSession.SendAsync(new TargetGetBrowserContextsRequest()).ConfigureAwait(false);
-            var browser = new ChromiumBrowser(app, connection, response.BrowserContextIds);
+            var browser = new ChromiumBrowser(connection, response.BrowserContextIds);
             await connection.RootSession.SendAsync(new TargetSetDiscoverTargetsRequest { Discover = true }).ConfigureAwait(false);
             await browser.WaitForTargetAsync(t => t.Type == TargetType.Page).ConfigureAwait(false);
             return browser;
@@ -278,7 +275,13 @@ namespace PlaywrightSharp.Chromium
 
         internal void RemoveContext(string contextId) => _contexts.Remove(contextId);
 
-        private async void ClientMessageReceived(object sender, IChromiumEvent e)
+        private void Connection_OnDisconnected(object sender, EventArgs e)
+        {
+            Disconnected?.Invoke(this, EventArgs.Empty);
+            _isClosed = true;
+        }
+
+        private async void Client_MessageReceived(object sender, IChromiumEvent e)
         {
             try
             {

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,6 +8,8 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.isConnected</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class IsConnectedTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -17,7 +20,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.isConnected</playwright-describe>
         ///<playwright-it>should set the browser connected state</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldSetTheBrowserConnectedState()
         {
             var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
@@ -33,7 +36,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.isConnected</playwright-describe>
         ///<playwright-it>should throw when used after isConnected returns false</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
             var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());

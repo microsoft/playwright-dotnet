@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,6 +8,8 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
+    [Trait("Category", "chromium")]
+    [Collection(TestConstants.TestFixtureCollectionName)]
     public class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -17,11 +20,11 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should terminate network waiters</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldTerminateNetworkWaiters()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            await using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
 
             var newPage = await remote.DefaultContext.NewPageAsync();
             var requestTask = newPage.WaitForRequestAsync(TestConstants.EmptyPage);
@@ -41,7 +44,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should be able to close remote browser</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldBeAbleToCloseRemoteBrowser()
         {
             using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());

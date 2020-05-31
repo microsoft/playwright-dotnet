@@ -246,9 +246,16 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotSupportedException("Offline mode not implemented in Firefox");
 
-        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme) => throw new NotImplementedException();
+        public Task SetEmulateMediaAsync(MediaType? mediaType, ColorScheme? colorScheme)
+            => _session.SendAsync(new PageSetEmulatedMediaRequest
+            {
+                Type = mediaType?.ToEmulatedMediaType(),
+                ColorScheme = colorScheme?.ToEmulatedMediaColorScheme(),
+            });
 
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => throw new NotImplementedException();
+
+        public Task<IPage> GetOpenerAsync() => throw new NotImplementedException();
 
         internal async Task InitializeAsync()
         {
@@ -334,6 +341,7 @@ namespace PlaywrightSharp.Firefox
                     OnConsole(runtimeConsole);
                     break;
                 case PageDialogOpenedFirefoxEvent pageDialogOpened:
+                    OnDialogOpened(pageDialogOpened);
                     break;
                 case PageBindingCalledFirefoxEvent pageBindingCalled:
                     OnBindingCalled(pageBindingCalled);
@@ -457,6 +465,18 @@ namespace PlaywrightSharp.Firefox
 
             Page.AddConsoleMessage(type, Array.ConvertAll(e.Args, arg => context.CreateHandle(arg)), location);
         }
+
+        private void OnDialogOpened(PageDialogOpenedFirefoxEvent e)
+            => Page.OnDialog(new Dialog(
+               e.Type.ToDialogType(),
+               e.Message,
+               (accept, promptText) => _session.SendAsync(new PageHandleDialogRequest
+               {
+                   DialogId = e.DialogId,
+                   Accept = accept,
+                   PromptText = promptText,
+               }),
+               e.DefaultValue));
 
         private void OnFileChooserOpened(PageFileChooserOpenedFirefoxEvent e)
         {

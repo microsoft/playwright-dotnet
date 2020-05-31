@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         //<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
         ///<playwright-it>should stay disabled when toggling request interception on/off</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldStayDisabledWhenTogglingRequestInterceptionOnOff()
         {
             await Page.SetCacheEnabledAsync(false);

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>Page.Workers</playwright-it>
-        [Fact]
+        [Retry]
         public async Task PageWorkers()
         {
             await Task.WhenAll(
@@ -40,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should emit created and destroyed events</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
@@ -57,7 +58,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report console logs</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
@@ -71,7 +72,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should have JSHandles for console logs</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
             var consoleTcs = new TaskCompletionSource<ConsoleMessage>();
@@ -80,15 +81,15 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync("() => new Worker(`data:text/javascript,console.log(1, 2, 3, this)`)");
             var log = await consoleTcs.Task;
             Assert.Equal("1 2 3 JSHandle@object", log.Text);
-            Assert.Equal(4, log.Args.Count);
-            string json = await (await log.Args[3].GetPropertyAsync("origin")).GetJsonValueAsync<string>();
+            Assert.Equal(4, log.Args.Count());
+            string json = await (await log.Args.ElementAt(3).GetPropertyAsync("origin")).GetJsonValueAsync<string>();
             Assert.Equal("null", json);
         }
 
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should evaluate</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldEvaluate()
         {
             var workerCreatedTask = Page.WaitForEvent<WorkerEventArgs>(PageEvent.WorkerCreated);
@@ -101,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report errors</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
@@ -115,7 +116,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should clear upon navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldClearUponNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -135,7 +136,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should clear upon cross-process navigation</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -155,7 +156,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report network activity</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldReportNetworkActivity()
         {
             var (worker, _) = await TaskUtils.WhenAll(

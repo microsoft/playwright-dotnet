@@ -219,5 +219,56 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task FocusAsync();
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(IElementHandle[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(SelectOption[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="value">Value to select.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(string value);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="value">Value to select.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(IElementHandle value);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="value">Value to select.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectAsync(SelectOption value);
     }
 }

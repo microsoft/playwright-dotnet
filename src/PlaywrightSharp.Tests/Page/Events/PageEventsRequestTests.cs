@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should fire for navigation requests</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFireForNavigationRequests()
         {
             var requests = new List<IRequest>();
@@ -32,7 +33,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should fire for iframes</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFireForIframes()
         {
             var requests = new List<IRequest>();
@@ -45,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should fire for fetches</playwright-it>
-        [Fact]
+        [Retry]
         public async Task ShouldFireForFetches()
         {
             var requests = new List<IRequest>();

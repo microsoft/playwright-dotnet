@@ -138,6 +138,12 @@ namespace PlaywrightSharp.Chromium
 
         internal void DidClose() => ChromiumPage?.DidClose();
 
+        internal ChromiumTarget GetOpenerAsync()
+        {
+            _browser.TargetsMap.TryGetValue(TargetInfo.OpenerId ?? string.Empty, out var opener);
+            return opener;
+        }
+
         private async Task<IWorker> WorkerInternalAsync()
         {
             var session = await _sessionFactory().ConfigureAwait(false);
