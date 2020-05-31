@@ -1,13 +1,14 @@
 using System;
 using PlaywrightSharp.Firefox.Helper;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Firefox.Protocol.Runtime
 {
     internal partial class RemoteObject : IRemoteObject
     {
-        string IRemoteObject.Type => Type.ToString();
+        string IRemoteObject.Type => Type?.ToValueString();
 
-        string IRemoteObject.Subtype => Subtype.ToString();
+        string IRemoteObject.Subtype => Subtype?.ToValueString();
 
         string IRemoteObject.UnserializableValue => UnserializableValue?.ToStringValue();
 

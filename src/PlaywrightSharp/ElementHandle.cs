@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -194,6 +195,25 @@ namespace PlaywrightSharp
             }
         }
 
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string[] values)
+            => SelectInternalAsync(values.Select(v => new SelectOption { Value = v }).ToArray());
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(IElementHandle[] values) => SelectInternalAsync(values);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(SelectOption[] values) => SelectInternalAsync(values);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(string value) => SelectInternalAsync(new[] { value });
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(IElementHandle value) => SelectInternalAsync(new[] { value });
+
+        /// <inheritdoc />
+        public Task<string[]> SelectAsync(SelectOption value) => SelectInternalAsync(new[] { value });
+
         /// <inheritdoc cref="IElementHandle.QuerySelectorAsync"/>
         public Task<IElementHandle> QuerySelectorAsync(string selector)
             => Context.QuerySelectorAsync(selector, this);
@@ -292,6 +312,39 @@ namespace PlaywrightSharp
             await FocusAsync().ConfigureAwait(false);
             await Page.Keyboard.TypeAsync(text, delay).ConfigureAwait(false);
         }
+
+        internal Task<string[]> SelectInternalAsync(IEnumerable<object> values)
+            => EvaluateInUtilityAsync<string[]>(
+                @"(node, ...optionsToSelect) => {
+                    if (node.nodeName.toLowerCase() !== 'select')
+                        throw new Error('Element is not a <select> element.');
+                    const element = node;
+                    const options = Array.from(element.options);
+                    element.value = undefined;
+                    for (let index = 0; index < options.length; index++) {
+                        const option = options[index];
+                        option.selected = optionsToSelect.some(optionToSelect => {
+                            if (!optionToSelect)
+                                return false;
+                            if (optionToSelect instanceof Node)
+                                return option === optionToSelect;
+                            let matches = true;
+                            if (optionToSelect.value !== undefined)
+                                matches = matches && optionToSelect.value === option.value;
+                            if (optionToSelect.label !== undefined)
+                                matches = matches && optionToSelect.label === option.label;
+                            if (optionToSelect.index !== undefined)
+                                matches = matches && optionToSelect.index === index;
+                            return matches;
+                        });
+                        if (option.selected && !element.multiple)
+                            break;
+                    }
+                    element.dispatchEvent(new Event('input', { 'bubbles': true }));
+                    element.dispatchEvent(new Event('change', { 'bubbles': true }));
+                    return options.filter(option => option.selected).map(option => option.value);
+                }",
+                (values ?? Array.Empty<object>()).ToArray());
 
         private async Task PerformPointerActionAsync(Func<Point, Task> action, IPointerActionOptions options)
         {

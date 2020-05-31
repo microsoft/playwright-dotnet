@@ -140,5 +140,15 @@ namespace PlaywrightSharp.Firefox.Helper
                 ColorScheme.NoPreference => SetEmulatedMediaColorScheme.NoPreference,
                 _ => throw new ArgumentOutOfRangeException(nameof(colorScheme), "Unknown colorScheme: " + colorScheme)
             };
+
+        public static DialogType ToDialogType(this DialogOpenedType dialogType)
+            => dialogType switch
+            {
+                DialogOpenedType.Alert => DialogType.Alert,
+                DialogOpenedType.Beforeunload => DialogType.BeforeUnload,
+                DialogOpenedType.Confirm => DialogType.Confirm,
+                DialogOpenedType.Prompt => DialogType.Prompt,
+                _ => throw new ArgumentOutOfRangeException(nameof(dialogType), "Unknown dialogType: " + dialogType)
+            };
     }
 }
