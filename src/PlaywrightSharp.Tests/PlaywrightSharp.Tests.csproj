@@ -6,6 +6,9 @@
         <IsTestProject>true</IsTestProject>
         <LangVersion>8.0</LangVersion>
         <ReleaseVersion>0.0.0</ReleaseVersion>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\keys\public.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
