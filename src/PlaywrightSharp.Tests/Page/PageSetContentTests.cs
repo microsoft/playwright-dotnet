@@ -11,10 +11,11 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setContent</playwright-describe>
     [Trait("Category", "firefox")]
+    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageSetContentTests : PlaywrightSharpPageBaseTest
     {
-        const string expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
+        const string _expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
 
         /// <inheritdoc />
         public PageSetContentTests(ITestOutputHelper output) : base(output)
@@ -29,7 +30,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetContentAsync("<div>hello</div>");
             string result = await Page.GetContentAsync();
-            Assert.Equal(expectedOutput, result);
+            Assert.Equal(_expectedOutput, result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -40,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetContentAsync("<div>hello</div>", WaitUntilNavigation.DOMContentLoaded);
             string result = await Page.GetContentAsync();
-            Assert.Equal(expectedOutput, result);
+            Assert.Equal(_expectedOutput, result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -82,7 +83,7 @@ namespace PlaywrightSharp.Tests.Page
             string doctype = "<!DOCTYPE html>";
             await Page.SetContentAsync($"{doctype}<div>hello</div>");
             string result = await Page.GetContentAsync();
-            Assert.Equal($"{doctype}{expectedOutput}", result);
+            Assert.Equal($"{doctype}{_expectedOutput}", result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -94,7 +95,7 @@ namespace PlaywrightSharp.Tests.Page
             string doctype = "<!DOCTYPE html PUBLIC \" -//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
             await Page.SetContentAsync($"{doctype}<div>hello</div>");
             string result = await Page.GetContentAsync();
-            Assert.Equal($"{doctype}{expectedOutput}", result);
+            Assert.Equal($"{doctype}{_expectedOutput}", result);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -106,7 +107,7 @@ namespace PlaywrightSharp.Tests.Page
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() =>
+            await Assert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new NavigationOptions { Timeout = 1 })
             );
         }
@@ -121,7 +122,7 @@ namespace PlaywrightSharp.Tests.Page
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() =>
+            await Assert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new NavigationOptions { Timeout = 1 })
             );
         }
