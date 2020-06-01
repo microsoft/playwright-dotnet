@@ -56,12 +56,14 @@ namespace PlaywrightSharp.Firefox
 
             try
             {
-                await RawSendAsync(new ConnectionRequest
-                {
-                    Id = id,
-                    Method = request.Command,
-                    Params = request,
-                }).ConfigureAwait(false);
+                await RawSendAsync(
+                    new ConnectionRequest
+                    {
+                        Id = id,
+                        Method = request.Command,
+                        Params = request,
+                    },
+                    FirefoxJsonHelper.DefaultJsonSerializerOptions).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -75,7 +77,7 @@ namespace PlaywrightSharp.Firefox
             return (TFirefoxResponse)result;
         }
 
-        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions));
+        internal Task RawSendAsync(ConnectionRequest request, JsonSerializerOptions jsonOptions) => _transport.SendAsync(request.ToJson(jsonOptions));
 
         internal void Close(string closeReason)
         {
@@ -142,14 +144,15 @@ namespace PlaywrightSharp.Firefox
                 if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
                 {
                     string sessionId = targetAttachedToTarget.SessionId;
-                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type.ToString(), sessionId, (id, request) =>
-                        RawSendAsync(new ConnectionRequest
-                        {
-                            Id = id,
-                            Method = request.Command,
-                            Params = request,
-                            SessionId = sessionId,
-                        }));
+                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type.ToString(), sessionId, (id, request, jsonOptions) =>
+                        RawSendAsync(
+                            new ConnectionRequest
+                            {
+                                Id = id,
+                                Method = request.Command,
+                                Params = request,
+                                SessionId = sessionId,
+                            }, jsonOptions));
                     _asyncSessions.AddItem(sessionId, session);
                 }
                 else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)

@@ -16,7 +16,6 @@ using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Messaging;
-using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -24,6 +23,11 @@ namespace PlaywrightSharp.Firefox
     internal class FirefoxPage : IPageDelegate
     {
         private const string UtilityWorldName = "__playwright_utility_world__";
+
+        private static readonly JsonSerializerOptions _authenticateJsonOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = Helper.JsonHelper.DefaultJsonSerializerOptions.PropertyNamingPolicy,
+        };
 
         private readonly FirefoxSession _session;
         private readonly IBrowserContext _context;
@@ -246,7 +250,13 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
 
-        public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
+        public Task AuthenticateAsync(Credentials credentials)
+            => _session.SendAsync(
+                new NetworkSetAuthCredentialsRequest
+                {
+                    Username = credentials?.Username,
+                    Password = credentials?.Password,
+                }, options: _authenticateJsonOptions);
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
@@ -494,7 +504,7 @@ namespace PlaywrightSharp.Firefox
             string workerId = e.WorkerId;
             var worker = new Worker(e.Url);
             FirefoxSession tempWorkerSession = null;
-            var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request) =>
+            var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request, jsonOptions) =>
             {
                 try
                 {
@@ -507,7 +517,7 @@ namespace PlaywrightSharp.Firefox
                             Id = id,
                             Method = request.Command,
                             Params = request,
-                        }.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions),
+                        }.ToJson(jsonOptions),
                     }).ConfigureAwait(false);
                 }
                 catch (Exception e)
