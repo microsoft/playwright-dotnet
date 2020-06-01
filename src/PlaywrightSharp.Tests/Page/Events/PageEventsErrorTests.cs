@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -9,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.error</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsErrorTests : PlaywrightSharpPageBaseTest
     {
@@ -20,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.error</playwright-describe>
         ///<playwright-it>should throw when page crashes</playwright-it>
-        [Retry]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowWhenPageCrashes()
         {
             var errorTask = Page.WaitForEvent<ErrorEventArgs>(PageEvent.Error);
