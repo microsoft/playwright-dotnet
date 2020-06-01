@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForResponse</playwright-describe>
     [Trait("Category", "firefox")]
+    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForResponseTests : PlaywrightSharpPageBaseTest
     {
