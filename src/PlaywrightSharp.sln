@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Common\Dependencies.props = Common\Dependencies.props
 		PlaywrightSharp.ruleset = PlaywrightSharp.ruleset
 		stylecop.json = stylecop.json
+		Common\SignAssembly.props = Common\SignAssembly.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base Libraries", "Base Libraries", "{16E85370-63ED-44F6-9F9C-DB9C9E456DCD}"

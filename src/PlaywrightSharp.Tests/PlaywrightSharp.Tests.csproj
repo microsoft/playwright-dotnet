@@ -6,10 +6,8 @@
         <IsTestProject>true</IsTestProject>
         <LangVersion>8.0</LangVersion>
         <ReleaseVersion>0.0.0</ReleaseVersion>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>..\keys\public.snk</AssemblyOriginatorKeyFile>
-        <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <Import Project="../Common/SignAssembly.props" />
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <DocumentationFile>bin\Debug\netcoreapp3.1\PlaywrightSharp.Tests.xml</DocumentationFile>

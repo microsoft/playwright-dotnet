@@ -12,15 +12,13 @@
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
         <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
         <LangVersion>8.0</LangVersion>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>..\keys\public.snk</AssemblyOriginatorKeyFile>
-        <PublicSign>true</PublicSign>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <LangVersion>8.0</LangVersion>
     </PropertyGroup>
     <Import Project="../Common/Dependencies.props" />
-    <ItemGroup>
+    <Import Project="../Common/SignAssembly.props" />
+  <ItemGroup>
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
         <PackageReference Include="System.Json" Version="4.7.0" />
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
