@@ -20,18 +20,19 @@
         <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
     </ItemGroup>
     <Import Project="../Common/Dependencies.props" />
+    <Import Project="../Common/SignAssembly.props" />
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Tests</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Chromium</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Chromium, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Firefox</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Firefox, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Webkit</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Webkit, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
     <ItemGroup>
