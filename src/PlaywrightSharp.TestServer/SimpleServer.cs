@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace PlaywrightSharp.TestServer
 {
@@ -60,6 +59,14 @@ namespace PlaywrightSharp.TestServer
                             return handler(context);
                         }
 
+                        if (
+                            context.Request.Path.ToString().Contains("/cached/") &&
+                            !string.IsNullOrEmpty(context.Request.Headers["if-modified-since"]))
+                        {
+                            context.Response.StatusCode = StatusCodes.Status304NotModified;
+                            return Task.CompletedTask;
+                        }
+
                         return next();
                     })
                     .UseMiddleware<SimpleCompressionMiddleware>(this)
@@ -75,9 +82,17 @@ namespace PlaywrightSharp.TestServer
                             if (fileResponseContext.Context.Request.Path.ToString().EndsWith(".html"))
                             {
                                 fileResponseContext.Context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-                                fileResponseContext.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
-                            }
 
+                                if (fileResponseContext.Context.Request.Path.ToString().Contains("/cached/"))
+                                {
+                                    fileResponseContext.Context.Response.Headers["Cache-Control"] = "public, max-age=31536000, no-cache";
+                                    fileResponseContext.Context.Response.Headers["Last-Modified"] = DateTime.Now.ToString("s");
+                                }
+                                else
+                                {
+                                    fileResponseContext.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
+                                }
+                            }
                         }
                     }))
                 .UseKestrel(options =>
