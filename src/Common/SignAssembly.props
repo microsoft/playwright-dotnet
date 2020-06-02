@@ -4,4 +4,9 @@
     <AssemblyOriginatorKeyFile>..\keys\public.snk</AssemblyOriginatorKeyFile>
     <PublicSign>true</PublicSign>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\keys\public.snk">
+      <Link>public.snk</Link>
+    </None>
+  </ItemGroup>
 </Project>
