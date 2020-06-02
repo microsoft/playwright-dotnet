@@ -24,11 +24,6 @@ namespace PlaywrightSharp.Firefox
     {
         private const string UtilityWorldName = "__playwright_utility_world__";
 
-        private static readonly JsonSerializerOptions _authenticateJsonOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = Helper.JsonHelper.DefaultJsonSerializerOptions.PropertyNamingPolicy,
-        };
-
         private readonly FirefoxSession _session;
         private readonly IBrowserContext _context;
         private readonly Func<Task<Page>> _openerResolver;
@@ -256,7 +251,10 @@ namespace PlaywrightSharp.Firefox
                 {
                     Username = credentials?.Username,
                     Password = credentials?.Password,
-                }, options: _authenticateJsonOptions);
+                }, options: new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = Helper.JsonHelper.DefaultJsonSerializerOptions.PropertyNamingPolicy,
+                });
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
