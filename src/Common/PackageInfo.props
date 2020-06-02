@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageVersion>0.10.3</PackageVersion>
+    <AssemblyVersion>0.10.3</AssemblyVersion>
+    <Authors>Darío Kondratiuk</Authors>
+    <Owners>Darío Kondratiuk</Owners>
+    <PackageProjectUrl>https://github.com/kblok/playwright-sharp</PackageProjectUrl>
+    <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
+    <PackageReleaseNotes><![CDATA[
+]]></PackageReleaseNotes>
+  </PropertyGroup>
+</Project>

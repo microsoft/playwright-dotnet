@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <Title>PlaywrightSharp.Abstractions</Title>
+        <PackageId>PlaywrightSharp.Abstractions</PackageId>
+        <Summary>Playwright-Sharp .NET library to automate Chromium, Firefox and WebKit with a single API.</Summary>
+        <Description>
+          This is the abstraction library. You should install this library if you want to create a browser agnostic library.
+          If you want to create browser specific code, please download PlaywrightSharp.Chromium, PlaywrightSharp.Firefox or PlaywrightSharp.Webkit
+        </Description>
+
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-        <ReleaseVersion>0.0.0</ReleaseVersion>
-        <RootNamespace>PlaywrightSharp</RootNamespace>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Abstractions.xml</DocumentationFile>
-        <Commandlineparameters>
-        </Commandlineparameters>
+        <LangVersion>8.0</LangVersion>
+        <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
         <RunWithWarnings>true</RunWithWarnings>
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
         <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
-        <LangVersion>8.0</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <LangVersion>8.0</LangVersion>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <NoWarn>1701;1702;CS0067</NoWarn>
     </PropertyGroup>
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />
-  <ItemGroup>
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
-        <PackageReference Include="System.Json" Version="4.7.0" />
-        <PackageReference Include="System.Text.Json" Version="4.7.0" />
-    </ItemGroup>
+    <Import Project="../Common/PackageInfo.props" />
     <ItemGroup>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp, PublicKey=$(AssemblyPublicKey)</_Parameter1>
-        </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
@@ -39,5 +36,24 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>PlaywrightSharp.Webkit, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Transport\" />
+        <Folder Include="Resources\" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Esprima" Version="1.0.1270" />
+        <PackageReference Include="System.Text.Json" Version="4.7.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\injectedSource.ts" />
+        <None Remove="Resources\zsSelectorEngineSource.ts" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\injectedSource.ts" />
+        <EmbeddedResource Include="Resources\zsSelectorEngineSource.ts" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Input\Button.cs" />
     </ItemGroup>
 </Project>

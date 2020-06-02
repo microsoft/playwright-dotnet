@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <Title>PlaywrightSharp.Chromium</Title>
+        <PackageId>PlaywrightSharp.Chromium</PackageId>
+        <Summary>Chromium client for Playwright-Sharp</Summary>
+        <Description>
+          Chromium client for Playwright-Sharp.
+          Playwright-Sharp .NET library to automate Chromium, Firefox and WebKit with a single API.
+        </Description>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-        <ReleaseVersion>0.0.0</ReleaseVersion>
         <LangVersion>8.0</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Chromium.xml</DocumentationFile>
@@ -14,11 +20,13 @@
         <NoWarn>1701;1702;CS0067</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
+      <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj">
+        <SpecificVersion>true</SpecificVersion>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />
+    <Import Project="../Common/PackageInfo.props" />
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
