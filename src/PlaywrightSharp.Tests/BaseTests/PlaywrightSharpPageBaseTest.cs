@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Xunit.Abstractions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
