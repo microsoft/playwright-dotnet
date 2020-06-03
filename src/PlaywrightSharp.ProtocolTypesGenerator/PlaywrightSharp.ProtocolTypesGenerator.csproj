@@ -28,9 +28,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
-    <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.Webkit\PlaywrightSharp.Webkit.csproj" />
+    <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
