@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Title>PlaywrightSharp.Chromium</Title>
-        <PackageId>PlaywrightSharp.Chromium</PackageId>
-        <Summary>Chromium client for Playwright-Sharp</Summary>
+        <Title>PlaywrightSharp.Firefox</Title>
+        <PackageId>PlaywrightSharp.Firefox</PackageId>
+        <Summary>Firefox client for Playwright-Sharp</Summary>
         <Description>
-          Chromium client for Playwright-Sharp.
+          Firefox client for Playwright-Sharp.
           Playwright-Sharp .NET library to automate Chromium, Firefox and WebKit with a single API.
         </Description>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
@@ -17,9 +17,9 @@
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
     <ItemGroup>
-      <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj">
-        <SpecificVersion>true</SpecificVersion>
-      </ProjectReference>
+        <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj">
+            <SpecificVersion>true</SpecificVersion>
+        </ProjectReference>
     </ItemGroup>
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />

@@ -12,7 +12,6 @@
         <LangVersion>8.0</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.Chromium.xml</DocumentationFile>
-        <RunWithWarnings>true</RunWithWarnings>
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
         <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
@@ -20,9 +19,9 @@
         <NoWarn>1701;1702;CS0067</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj">
-        <SpecificVersion>true</SpecificVersion>
-      </ProjectReference>
+        <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj">
+            <SpecificVersion>true</SpecificVersion>
+        </ProjectReference>
     </ItemGroup>
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />
