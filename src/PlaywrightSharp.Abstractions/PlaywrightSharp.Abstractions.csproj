@@ -16,6 +16,7 @@
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
         <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <RootNamespace>PlaywrightSharp</RootNamespace>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <NoWarn>1701;1702;CS0067</NoWarn>
