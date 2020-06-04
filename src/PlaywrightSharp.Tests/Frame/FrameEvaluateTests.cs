@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {
@@ -45,7 +46,7 @@ namespace PlaywrightSharp.Tests.Frame
                 frames[0].EvaluateAsync("() => window.a = 1"),
                 frames[1].EvaluateAsync("() => window.a = 2")
             );
-            var results = await Task.WhenAll(
+            int[] results = await Task.WhenAll(
                 frames[0].EvaluateAsync<int>("() => window.a"),
                 frames[1].EvaluateAsync<int>("() => window.a")
             );
