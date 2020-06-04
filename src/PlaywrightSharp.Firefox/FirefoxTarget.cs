@@ -41,7 +41,14 @@ namespace PlaywrightSharp.Firefox
 
         internal bool IsInitialized { get; set; }
 
-        internal FirefoxTarget Opener => _openerId != null ? _browser.TargetsMap[_openerId] : null;
+        internal FirefoxTarget Opener
+        {
+            get
+            {
+                _browser.TargetsMap.TryGetValue(_openerId ?? string.Empty, out var opener);
+                return opener;
+            }
+        }
 
         internal Task<Page> PageTask { get; set; }
 
