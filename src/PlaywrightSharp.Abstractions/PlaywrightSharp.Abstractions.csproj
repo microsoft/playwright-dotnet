@@ -17,26 +17,27 @@
         <LangVersion>8.0</LangVersion>
     </PropertyGroup>
     <Import Project="../Common/Dependencies.props" />
-    <ItemGroup>
+    <Import Project="../Common/SignAssembly.props" />
+  <ItemGroup>
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
         <PackageReference Include="System.Json" Version="4.7.0" />
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp</_Parameter1>
+            <_Parameter1>PlaywrightSharp, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Tests</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Chromium</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Chromium, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Firefox</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Firefox, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Webkit</_Parameter1>
+            <_Parameter1>PlaywrightSharp.Webkit, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
 </Project>
