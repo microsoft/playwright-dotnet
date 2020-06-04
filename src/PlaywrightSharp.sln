@@ -12,9 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Common\Dependencies.props = Common\Dependencies.props
 		PlaywrightSharp.ruleset = PlaywrightSharp.ruleset
 		stylecop.json = stylecop.json
+		Common\SignAssembly.props = Common\SignAssembly.props
+		Common\PackageInfo.props = Common\PackageInfo.props
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base Libraries", "Base Libraries", "{16E85370-63ED-44F6-9F9C-DB9C9E456DCD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Chromium", "PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj", "{90666F55-EE58-4FDA-B029-E1699CB519B0}"
 EndProject
@@ -26,13 +26,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.TestServer"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests", "PlaywrightSharp.Tests\PlaywrightSharp.Tests.csproj", "{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp", "PlaywrightSharp\PlaywrightSharp.csproj", "{5ACEC1FF-4820-47AA-8D75-6153F90527F5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Abstractions", "PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj", "{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.ProtocolTypesGenerator", "PlaywrightSharp.ProtocolTypesGenerator\PlaywrightSharp.ProtocolTypesGenerator.csproj", "{1E580718-B961-4E14-9F5A-A74BC54EB0C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests.DumpIO", "PlaywrightSharp.Tests.DumpIO\PlaywrightSharp.Tests.DumpIO.csproj", "{CB6AA501-251C-48E2-BF88-F67FCA6F7C19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Abstractions", "PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj", "{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,14 +58,6 @@ Global
 		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5ACEC1FF-4820-47AA-8D75-6153F90527F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5ACEC1FF-4820-47AA-8D75-6153F90527F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5ACEC1FF-4820-47AA-8D75-6153F90527F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5ACEC1FF-4820-47AA-8D75-6153F90527F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E580718-B961-4E14-9F5A-A74BC54EB0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -76,6 +66,10 @@ Global
 		{CB6AA501-251C-48E2-BF88-F67FCA6F7C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB6AA501-251C-48E2-BF88-F67FCA6F7C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB6AA501-251C-48E2-BF88-F67FCA6F7C19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,8 +79,6 @@ Global
 		{E86F4820-F657-4904-BF88-B4CD226E2AEE} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
 		{99B5F65B-BA43-437C-ADFD-9A93064CCEC7} = {24D46C64-EDC5-47EC-9F96-103F22EBF93B}
 		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
-		{5ACEC1FF-4820-47AA-8D75-6153F90527F5} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
-		{FD41DFE2-6C0B-4717-BC60-7EC5EA224FDA} = {16E85370-63ED-44F6-9F9C-DB9C9E456DCD}
 		{1E580718-B961-4E14-9F5A-A74BC54EB0C7} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 		{CB6AA501-251C-48E2-BF88-F67FCA6F7C19} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 	EndGlobalSection
