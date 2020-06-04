@@ -6,6 +6,10 @@ using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Firefox.Helper
 {
+    /// <summary>
+    /// We need this in order to differentiate between undefined value - {} and null value {value:null}.
+    /// This makes a difference with calling <see cref="object.ToString"/> on a <see cref="JSHandle"/>.
+    /// </summary>
     internal class RemoteObjectJsonConverter : JsonConverter<RemoteObject>
     {
         public override RemoteObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -62,8 +66,6 @@ namespace PlaywrightSharp.Firefox.Helper
         }
 
         public override void Write(Utf8JsonWriter writer, RemoteObject value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToJson(JsonHelper.DefaultJsonSerializerOptions));
-        }
+            => writer.WriteStringValue(value.ToJson(JsonHelper.DefaultJsonSerializerOptions));
     }
 }
