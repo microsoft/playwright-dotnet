@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForLoadState</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForLoadStateTests : PlaywrightSharpPageBaseTest
     {
