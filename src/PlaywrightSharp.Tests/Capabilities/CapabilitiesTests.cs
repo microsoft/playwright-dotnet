@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Capabilities
     ///<playwright-file>capabilities.spec.js</playwright-file>
     ///<playwright-describe>Capabilities</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class CapabilitiesTests : PlaywrightSharpPageBaseTest
     {
