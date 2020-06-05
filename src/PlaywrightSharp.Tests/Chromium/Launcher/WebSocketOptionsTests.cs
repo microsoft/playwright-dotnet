@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class WebSocketOptionsTests : PlaywrightSharpBaseTest
     {
