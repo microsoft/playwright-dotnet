@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.title</playwright-describe>
     [Trait("Category", "firefox")]
+    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageTitleTests : PlaywrightSharpPageBaseTest
     {

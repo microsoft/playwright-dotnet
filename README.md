@@ -1,20 +1,22 @@
 # Playwright-Sharp
 
-[![NuGet](https://buildstats.info/nuget/PlaywrightSharp)][NugetUrl]
+[![NuGetAbstractions](https://buildstats.info/nuget/PlaywrightSharp.Abstractions)][NuGetAbstractions]
+[![NuGetChromium](https://buildstats.info/nuget/PlaywrightSharp.Chromium)][NugetChromiumUrl]
 [![CodeFactor](https://www.codefactor.io/repository/github/hardkoded/playwright-sharp/badge)][CodeFactorUrl]
 [![Join Slack](https://img.shields.io/badge/join-slack-infomational)](https://join.slack.com/t/playwright/shared_invite/enQtOTEyMTUxMzgxMjIwLThjMDUxZmIyNTRiMTJjNjIyMzdmZDA3MTQxZWUwZTFjZjQwNGYxZGM5MzRmNzZlMWI5ZWUyOTkzMjE5Njg1NDg)
 [![Backers](https://opencollective.com/hardkoded-projects/backers/badge.svg)][Backers]
 
-[NugetUrl]: https://www.nuget.org/packages/PlaywrightSharp/
+[NuGetAbstractions]: https://www.nuget.org/packages/PlaywrightSharp.Abstractions/
+[NugetChromiumUrl]: https://www.nuget.org/packages/PlaywrightSharp.Chromium/
 [CodeFactorUrl]: https://www.codefactor.io/repository/github/hardkoded/playwright-sharp
 [Backers]: https://opencollective.com/hardkoded-projects
 
 Playwright Sharp is a .NET port of the official [Node.JS Playwright API](https://github.com/microsoft/playwright). 
 
 # Monthly reports
- * [May 2020](https://www.hardkoded.com/blogs/playwright-sharp-monthly-may-2020)
- * [April 2020](https://www.hardkoded.com/blogs/playwright-sharp-monthly-apr-2020)
- * [March 2020](https://www.hardkoded.com/blogs/playwright-sharp-monthly-march-2020)
+ * [May 2020](https://www.hardkoded.com/blog/playwright-sharp-monthly-may-2020)
+ * [April 2020](https://www.hardkoded.com/blog/playwright-sharp-monthly-apr-2020)
+ * [March 2020](https://www.hardkoded.com/blog/playwright-sharp-monthly-march-2020)
 
 # Useful links
 
