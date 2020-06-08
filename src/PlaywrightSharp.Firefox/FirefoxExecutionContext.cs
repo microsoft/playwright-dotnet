@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Firefox
                 return "JSHandle@" + (string.IsNullOrEmpty(payload.Subtype) ? payload.Type : payload.Subtype);
             }
 
-            return (includeType ? "JSHandle:" : string.Empty) + DeserializeValue<object>((RemoteObject)payload);
+            return (includeType ? "JSHandle:" : string.Empty) + GetStringFromRemoteObject((RemoteObject)payload);
         }
 
         public async Task<T> HandleJSONValueAsync<T>(IJSHandle jsHandle)
@@ -233,5 +233,10 @@ namespace PlaywrightSharp.Firefox
                     throw new Exception("Unsupported unserializable value: " + unserializableValue);
             }
         }
+
+        private string GetStringFromRemoteObject(RemoteObject remote)
+            => remote.Type == RemoteObjectType.Undefined
+                ? "undefined"
+                : DeserializeValue<object>(remote)?.ToString() ?? "null";
     }
 }
