@@ -16,6 +16,7 @@ using PlaywrightSharp.Firefox.Protocol.Runtime;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Messaging;
+using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -251,9 +252,6 @@ namespace PlaywrightSharp.Firefox
                 {
                     Username = credentials?.Username,
                     Password = credentials?.Password,
-                }, options: new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = Helper.JsonHelper.DefaultJsonSerializerOptions.PropertyNamingPolicy,
                 });
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
@@ -502,7 +500,7 @@ namespace PlaywrightSharp.Firefox
             string workerId = e.WorkerId;
             var worker = new Worker(e.Url);
             FirefoxSession tempWorkerSession = null;
-            var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request, jsonOptions) =>
+            var workerSession = new FirefoxSession(_session.Connection, "worker", workerId, async (id, request) =>
             {
                 try
                 {
@@ -515,7 +513,7 @@ namespace PlaywrightSharp.Firefox
                             Id = id,
                             Method = request.Command,
                             Params = request,
-                        }.ToJson(jsonOptions),
+                        }.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions),
                     }).ConfigureAwait(false);
                 }
                 catch (Exception e)

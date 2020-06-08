@@ -15,6 +15,7 @@ namespace PlaywrightSharp.Firefox.Helper
                 Converters =
                 {
                     new RemoteObjectJsonConverter(),
+                    new NetworkSetAuthCredentialsRequestJsonConverter(),
                     new JSHandleConverter(),
                 },
             };

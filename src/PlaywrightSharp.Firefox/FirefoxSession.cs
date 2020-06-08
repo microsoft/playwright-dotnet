@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Firefox.Messaging;
 using PlaywrightSharp.Firefox.Protocol;
 using PlaywrightSharp.Messaging;
-using FirefoxJsonHelper = PlaywrightSharp.Firefox.Helper.JsonHelper;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -13,12 +12,12 @@ namespace PlaywrightSharp.Firefox
     {
         private readonly string _targetType;
         private readonly string _sessionId;
-        private readonly Func<int, IFirefoxRequest<IFirefoxResponse>, JsonSerializerOptions, Task> _rawSend;
+        private readonly Func<int, IFirefoxRequest<IFirefoxResponse>, Task> _rawSend;
         private readonly string _closeReason = string.Empty;
         private readonly ConcurrentDictionary<int, MessageTask<IFirefoxResponse>> _callbacks = new ConcurrentDictionary<int, MessageTask<IFirefoxResponse>>();
         private bool _disposed = false;
 
-        public FirefoxSession(FirefoxConnection connection, string targetType, string sessionId, Func<int, IFirefoxRequest<IFirefoxResponse>, JsonSerializerOptions, Task> rawSend)
+        public FirefoxSession(FirefoxConnection connection, string targetType, string sessionId, Func<int, IFirefoxRequest<IFirefoxResponse>, Task> rawSend)
         {
             Connection = connection;
             _targetType = targetType;
@@ -37,7 +36,7 @@ namespace PlaywrightSharp.Firefox
 
         internal FirefoxConnection Connection { get; }
 
-        internal async Task<TFirefoxResponse> SendAsync<TFirefoxResponse>(IFirefoxRequest<TFirefoxResponse> request, bool waitForCallback = true, JsonSerializerOptions options = null)
+        internal async Task<TFirefoxResponse> SendAsync<TFirefoxResponse>(IFirefoxRequest<TFirefoxResponse> request, bool waitForCallback = true)
             where TFirefoxResponse : IFirefoxResponse
         {
             if (_disposed)
@@ -62,7 +61,7 @@ namespace PlaywrightSharp.Firefox
 
             try
             {
-                await _rawSend(id, (IFirefoxRequest<IFirefoxResponse>)request, options ?? FirefoxJsonHelper.DefaultJsonSerializerOptions).ConfigureAwait(false);
+                await _rawSend(id, (IFirefoxRequest<IFirefoxResponse>)request).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

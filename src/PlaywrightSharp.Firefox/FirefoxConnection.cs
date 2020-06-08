@@ -144,7 +144,7 @@ namespace PlaywrightSharp.Firefox
                 if (param is TargetAttachedToTargetFirefoxEvent targetAttachedToTarget)
                 {
                     string sessionId = targetAttachedToTarget.SessionId;
-                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type.ToString(), sessionId, (id, request, jsonOptions) =>
+                    var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type.ToString(), sessionId, (id, request) =>
                         RawSendAsync(
                             new ConnectionRequest
                             {
@@ -152,7 +152,7 @@ namespace PlaywrightSharp.Firefox
                                 Method = request.Command,
                                 Params = request,
                                 SessionId = sessionId,
-                            }, jsonOptions));
+                            }, FirefoxJsonHelper.DefaultJsonSerializerOptions));
                     _asyncSessions.AddItem(sessionId, session);
                 }
                 else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
