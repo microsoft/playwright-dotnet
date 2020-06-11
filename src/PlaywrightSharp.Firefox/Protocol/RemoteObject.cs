@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using PlaywrightSharp.Firefox.Helper;
 using PlaywrightSharp.Helpers;
 

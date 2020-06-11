@@ -9,6 +9,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluateHandle</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEvaluateHandleTests : PlaywrightSharpPageBaseTest
     {
