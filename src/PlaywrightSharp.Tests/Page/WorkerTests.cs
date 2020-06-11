@@ -12,6 +12,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>worker.spec.js</playwright-file>
     ///<playwright-describe>Workers</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WorkerTests : PlaywrightSharpPageBaseTest
     {
@@ -184,13 +185,13 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            string url = TestConstants.ServerUrl + "one-style.css";
+            string url = TestConstants.ServerUrl + "/one-style.css";
 
             var requestTask = Page.WaitForRequestAsync(url);
             var responseTask = Page.WaitForResponseAsync(url);
 
             await Page.EvaluateAsync(@"url => new Worker(URL.createObjectURL(new Blob([`
-                fetch(""${ url}"").then(response => response.text()).then(console.log);
+                fetch(""${url}"").then(response => response.text()).then(console.log);
               `], { type: 'application/javascript'})))", url);
 
             await Task.WhenAll(requestTask, responseTask);

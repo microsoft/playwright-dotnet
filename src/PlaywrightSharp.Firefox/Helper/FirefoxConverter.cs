@@ -150,5 +150,16 @@ namespace PlaywrightSharp.Firefox.Helper
                 DialogOpenedType.Prompt => DialogType.Prompt,
                 _ => throw new ArgumentOutOfRangeException(nameof(dialogType), "Unknown dialogType: " + dialogType)
             };
+
+        internal static string ToExceptionMessage(this PageUncaughtErrorFirefoxEvent exceptionDetails)
+        {
+            string message = exceptionDetails.Message;
+            if (exceptionDetails.Stack != null)
+            {
+                message += $"\n ${exceptionDetails.Stack}";
+            }
+
+            return message;
+        }
     }
 }
