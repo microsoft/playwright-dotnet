@@ -59,11 +59,6 @@ namespace PlaywrightSharp
                 browserExecutable = ResolveExecutablePath();
             }
 
-            if (!File.Exists(browserExecutable))
-            {
-                throw new FileNotFoundException($"Failed to launch {Name}! path to executable does not exist", browserExecutable);
-            }
-
             return browserExecutable;
         }
 

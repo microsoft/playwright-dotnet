@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Tests.Playwright
     ///<playwright-file>fixtures.spec.js</playwright-file>
     ///<playwright-describe>Fixtures</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FixturesTests : PlaywrightSharpBaseTest
     {
@@ -33,20 +34,20 @@ namespace PlaywrightSharp.Tests.Playwright
         [Retry]
         public void ShouldDumpBrowserProcessStderr()
         {
-            bool success = false;
+            string dumpioData = string.Empty;
             var process = GetTestAppProcess(
                 "PlaywrightSharp.Tests.DumpIO",
                 $"\"{Playwright.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
 
             process.ErrorDataReceived += (sender, e) =>
             {
-                success |= e.Data != null && e.Data.Contains("DevTools listening on ws://");
+                dumpioData += e.Data;
             };
 
             process.Start();
             process.BeginErrorReadLine();
             process.WaitForExit();
-            Assert.True(success);
+            Assert.Contains("message from dumpio", dumpioData);
         }
 
         ///<playwright-file>fixtures.spec.js</playwright-file>
