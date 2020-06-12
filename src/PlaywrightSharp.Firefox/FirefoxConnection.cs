@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -95,7 +96,7 @@ namespace PlaywrightSharp.Firefox
             return GetSession(response.SessionId);
         }
 
-        private void Transport_Closed(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, e);
+        private void Transport_Closed(object sender, TransportClosedEventArgs e) => OnClose("Transport closed");
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e) => ProcessMessage(e);
 
@@ -184,6 +185,27 @@ namespace PlaywrightSharp.Firefox
             {
                 MessageReceived?.Invoke(this, param);
             }
+        }
+
+        private void OnClose(string reason)
+        {
+            IsClosed = true;
+            _transport.MessageReceived -= Transport_MessageReceived;
+            _transport.Closed -= Transport_Closed;
+            foreach (var callback in _callbacks.Values.ToArray())
+            {
+                callback.TaskWrapper.TrySetException(new TargetClosedException($"Protocol error ({callback.Method}): Target closed. {reason}"));
+            }
+
+            _callbacks.Clear();
+
+            foreach (var session in _sessions.Values.ToArray())
+            {
+                session.OnClosed(reason);
+            }
+
+            _sessions.Clear();
+            Disconnected?.Invoke(this, new TransportClosedEventArgs(reason));
         }
     }
 }

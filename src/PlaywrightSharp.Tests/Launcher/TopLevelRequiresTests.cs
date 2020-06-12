@@ -7,6 +7,7 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Top-level requires</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
     public class TopLevelRequiresTests : PlaywrightSharpBaseTest
     {

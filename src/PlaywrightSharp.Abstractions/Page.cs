@@ -24,10 +24,10 @@ namespace PlaywrightSharp
         private readonly ConcurrentDictionary<string, Worker> _workers = new ConcurrentDictionary<string, Worker>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
         private readonly object _fileChooserEventLock = new object();
+        private readonly TaskCompletionSource<bool> _disconnectedTcs = new TaskCompletionSource<bool>();
 
         private bool _disconnected;
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
-        private TaskCompletionSource<bool> _disconnectedTcs = new TaskCompletionSource<bool>();
 
         /// <inheritdoc cref="IPage"/>
         internal Page(IPageDelegate pageDelegate, IBrowserContext browserContext)
@@ -485,7 +485,6 @@ namespace PlaywrightSharp
 
             info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
             await Task.WhenAny(eventTsc.Task, _disconnectedTcs.Task).WithTimeout(options?.Timeout ?? DefaultTimeout).ConfigureAwait(false);
-
             if (_disconnectedTcs.Task.IsCompleted)
             {
                 await _disconnectedTcs.Task.ConfigureAwait(false);
