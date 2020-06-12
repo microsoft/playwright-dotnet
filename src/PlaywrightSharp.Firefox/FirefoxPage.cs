@@ -246,7 +246,13 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
 
-        public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
+        public Task AuthenticateAsync(Credentials credentials)
+            => _session.SendAsync(
+                new NetworkSetAuthCredentialsRequest
+                {
+                    Username = credentials?.Username,
+                    Password = credentials?.Password,
+                });
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
