@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.DumpIO
                 IgnoreDefaultArgs = true,
                 DumpIO = true,
                 ExecutablePath = "dotnet",
-                Args =  new [] { "./PlaywrightSharp.Tests.DumpIO.dll", "dump" }
+                Args = new[] { "./PlaywrightSharp.Tests.DumpIO.dll", "dump" }
             };
 
             IBrowserType playwright = args[1] switch
