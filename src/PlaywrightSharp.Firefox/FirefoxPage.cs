@@ -345,8 +345,6 @@ namespace PlaywrightSharp.Firefox
                 case RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed:
                     OnExecutionContextDestroyed(runtimeExecutionContextDestroyed);
                     break;
-                case PageUncaughtErrorFirefoxEvent pageUncaughtError:
-                    break;
                 case RuntimeConsoleFirefoxEvent runtimeConsole:
                     OnConsole(runtimeConsole);
                     break;
@@ -368,8 +366,14 @@ namespace PlaywrightSharp.Firefox
                 case PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker:
                     OnDispatchMessageFromWorker(pageDispatchMessageFromWorker);
                     break;
+                case PageUncaughtErrorFirefoxEvent pageUncaughtError:
+                    OnUncaughtError(pageUncaughtError);
+                    break;
             }
         }
+
+        private void OnUncaughtError(PageUncaughtErrorFirefoxEvent e)
+            => Page.OnPageError(new PageErrorEventArgs(e.ToExceptionMessage()));
 
         private void OnEventFired(PageEventFiredFirefoxEvent e)
         {
@@ -407,7 +411,7 @@ namespace PlaywrightSharp.Firefox
         {
             foreach (var pair in _workers)
             {
-                if (pair.Key == e.FrameId)
+                if (pair.Value.FrameId == e.FrameId)
                 {
                     OnWorkerDestroyed(new PageWorkerDestroyedFirefoxEvent { WorkerId = pair.Key });
                 }
@@ -574,9 +578,14 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private void OnDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker)
+        private void OnDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent e)
         {
-            throw new NotImplementedException();
+            if (!_workers.TryGetValue(e.WorkerId, out var worker))
+            {
+                return;
+            }
+
+            worker.Session.OnMessage(JsonSerializer.Deserialize<ConnectionResponse>(e.Message, FirefoxJsonHelper.DefaultJsonSerializerOptions));
         }
 
         private async Task<AccessibilityTree> GetAccessibilityTreeAsync(FirefoxSession session, IElementHandle needle)
