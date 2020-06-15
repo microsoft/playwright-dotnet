@@ -31,6 +31,7 @@
         <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Webkit\PlaywrightSharp.Webkit.csproj" />
+        <ProjectReference Include="..\PlaywrightSharp.Tests.CloseMe\PlaywrightSharp.Tests.CloseMe.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Tests.DumpIO\PlaywrightSharp.Tests.DumpIO.csproj" />
     </ItemGroup>
 </Project>

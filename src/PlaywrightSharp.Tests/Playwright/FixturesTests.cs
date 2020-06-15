@@ -2,7 +2,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -13,6 +15,7 @@ namespace PlaywrightSharp.Tests.Playwright
     ///<playwright-file>fixtures.spec.js</playwright-file>
     ///<playwright-describe>Fixtures</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class FixturesTests : PlaywrightSharpBaseTest
     {
@@ -33,30 +36,30 @@ namespace PlaywrightSharp.Tests.Playwright
         [Retry]
         public void ShouldDumpBrowserProcessStderr()
         {
-            bool success = false;
+            string dumpioData = string.Empty;
             var process = GetTestAppProcess(
                 "PlaywrightSharp.Tests.DumpIO",
                 $"\"{Playwright.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
 
             process.ErrorDataReceived += (sender, e) =>
             {
-                success |= e.Data != null && e.Data.Contains("DevTools listening on ws://");
+                dumpioData += e.Data;
             };
 
             process.Start();
             process.BeginErrorReadLine();
             process.WaitForExit();
-            Assert.True(success);
+            Assert.Contains("message from dumpio", dumpioData);
         }
 
         ///<playwright-file>fixtures.spec.js</playwright-file>
         ///<playwright-describe>Fixtures</playwright-describe>
         ///<playwright-it>should close the browser when the node process closes</playwright-it>
-        [Retry]
+        [Fact(Skip = "We don't have a good way to get close signals in .NET")]
         public async Task ShouldCloseTheBrowserWhenTheConnectedProcessCloses()
         {
-            var browserApp = await TestSignal(process => KillProcess(process.Id));
-            Assert.Equal(TestConstants.IsWindows ? 1 : 0, browserApp.Process.ExitCode);
+            int exitCode = await TestSignal(process => KillProcess(process));
+            Assert.Equal(TestConstants.IsWindows ? 1 : 0, exitCode);
         }
 
         ///<playwright-file>fixtures.spec.js</playwright-file>
@@ -107,50 +110,84 @@ namespace PlaywrightSharp.Tests.Playwright
         [Fact(Skip = "We don't have a good way to get close signals in .NET")]
         public void ShouldCloseTheBrowserOnSIGTERMAndSIGINT() { }
 
-        private async Task<IBrowserApp> TestSignal(Action<Process> killAction)
+        private async Task<int> TestSignal(Action<Process> killAction)
         {
-            var browserClosedTcs = new TaskCompletionSource<bool>();
-            var processExitedTcs = new TaskCompletionSource<bool>();
-            var browserApp = await Playwright.LaunchBrowserAppAsync();
+            string output = string.Empty;
+            var browserWebSocketTcs = new TaskCompletionSource<string>();
+            var wsMatch = new Regex("browserWS:(.+):browserWS", RegexOptions.Compiled);
+            var closeMatch = new Regex("browserClose:([^:]+):browserClose");
+            var pidMatch = new Regex("browserPid:([^:]+):browserPid");
+            int browserPid = 0;
+            int browserExitCode = -1;
 
-            browserApp.Process.Exited += (sender, e) => processExitedTcs.TrySetResult(true);
+            var process = GetTestAppProcess(
+                "PlaywrightSharp.Tests.CloseMe",
+                $"\"{Playwright.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
+
+            process.OutputDataReceived += (sender, args) =>
+            {
+                output += args.Data;
+
+                var match = wsMatch.Match(output);
+                if (match.Success)
+                {
+                    browserWebSocketTcs.TrySetResult(match.Groups[1].Value);
+                }
+
+                match = closeMatch.Match(output);
+                if (match.Success)
+                {
+                    browserExitCode = Convert.ToInt32(match.Groups[1].Value);
+                }
+
+                match = pidMatch.Match(output);
+                if (match.Success)
+                {
+                    browserPid = Convert.ToInt32(match.Groups[1].Value);
+                }
+            };
+
+            process.Start();
+            process.BeginOutputReadLine();
 
             var browser = await Playwright.ConnectAsync(new ConnectOptions
             {
-                BrowserWSEndpoint = browserApp.WebSocketEndpoint
+                BrowserWSEndpoint = await browserWebSocketTcs.Task
             });
 
-            browser.Disconnected += (sender, e) =>
-            {
-                browserClosedTcs.SetResult(true);
-            };
+            var browserDisconnectedTcs = new TaskCompletionSource<bool>();
+            var processExitedTcs = new TaskCompletionSource<bool>();
 
-            killAction(browserApp.Process);
+            browser.Disconnected += (sender, e) => processExitedTcs.TrySetResult(true);
 
-            await Task.WhenAll(browserClosedTcs.Task, processExitedTcs.Task);
+            killAction(process);
+            process.WaitForExit();
+            await browserDisconnectedTcs.Task.WithTimeout();
 
-            return browserApp;
+            return browserExitCode;
         }
 
-        private void KillProcess(int pid)
+        private void KillProcess(Process process)
         {
-            var process = new Process();
-
             //We need to kill the process tree manually
             //See: https://github.com/dotnet/corefx/issues/26234
+#if NETCOREAPP3_1
+            process.Kill(true);
+#else
+            var killerProcess = new Process();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                process.StartInfo.FileName = "taskkill";
-                process.StartInfo.Arguments = $"-pid {pid} -t -f";
+                killerProcess.StartInfo.FileName = "taskkill";
+                killerProcess.StartInfo.Arguments = $"-pid {process.Id} -t -f";
             }
             else
             {
-                process.StartInfo.FileName = "/bin/bash";
-                process.StartInfo.Arguments = $"-c \"kill {pid}\"";
+                killerProcess.StartInfo.FileName = "/bin/bash";
+                killerProcess.StartInfo.Arguments = $"-c \"kill {process.Id}\"";
             }
-
-            process.Start();
-            process.WaitForExit();
+            killerProcess.Start();
+            killerProcess.WaitForExit();
+#endif
         }
 
         private Process GetTestAppProcess(string appName, string arguments)
@@ -167,6 +204,7 @@ namespace PlaywrightSharp.Tests.Playwright
 #endif
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = true;
             return process;
         }
 

@@ -1,4 +1,3 @@
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -44,13 +43,9 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.ExecutablePath = "random-invalid-path";
 
-            var exception = await Assert.ThrowsAsync<FileNotFoundException>(() =>
-            {
-                return Playwright.LaunchAsync(options);
-            });
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Playwright.LaunchAsync(options));
 
             Assert.Contains("Failed to launch", exception.Message);
-            Assert.Equal(options.ExecutablePath, exception.FileName);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
