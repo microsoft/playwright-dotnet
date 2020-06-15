@@ -345,6 +345,10 @@ namespace PlaywrightSharp.Firefox
                             throw;
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        throw new PlaywrightSharpException("Failed to launch browser", ex);
+                    }
                     finally
                     {
                         cts?.Dispose();
