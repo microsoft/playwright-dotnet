@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Request</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventsRequestTests : PlaywrightSharpPageBaseTest
     {
