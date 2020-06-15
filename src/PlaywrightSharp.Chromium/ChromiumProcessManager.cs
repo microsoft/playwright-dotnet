@@ -373,6 +373,10 @@ namespace PlaywrightSharp.Chromium
                             throw;
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        throw new PlaywrightSharpException("Failed to launch browser", ex);
+                    }
                     finally
                     {
                         cts?.Dispose();
