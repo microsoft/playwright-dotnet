@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
+      <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
+      <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
+    </ItemGroup>
+
+</Project>
