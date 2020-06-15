@@ -17,7 +17,11 @@ namespace PlaywrightSharp.Firefox
         private readonly ConcurrentDictionary<int, MessageTask<IFirefoxResponse>> _callbacks = new ConcurrentDictionary<int, MessageTask<IFirefoxResponse>>();
         private bool _disposed = false;
 
-        public FirefoxSession(FirefoxConnection connection, string targetType, string sessionId, Func<int, IFirefoxRequest<IFirefoxResponse>, Task> rawSend)
+        public FirefoxSession(
+            FirefoxConnection connection,
+            string targetType,
+            string sessionId,
+            Func<int, IFirefoxRequest<IFirefoxResponse>, Task> rawSend)
         {
             Connection = connection;
             _targetType = targetType;

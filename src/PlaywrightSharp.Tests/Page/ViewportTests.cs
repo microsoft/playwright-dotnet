@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.viewport</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ViewportTests : PlaywrightSharpPageBaseTest
     {

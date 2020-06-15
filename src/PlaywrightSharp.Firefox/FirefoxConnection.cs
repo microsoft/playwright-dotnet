@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,12 +57,14 @@ namespace PlaywrightSharp.Firefox
 
             try
             {
-                await RawSendAsync(new ConnectionRequest
-                {
-                    Id = id,
-                    Method = request.Command,
-                    Params = request,
-                }).ConfigureAwait(false);
+                await RawSendAsync(
+                    new ConnectionRequest
+                    {
+                        Id = id,
+                        Method = request.Command,
+                        Params = request,
+                    },
+                    FirefoxJsonHelper.DefaultJsonSerializerOptions).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -75,7 +78,7 @@ namespace PlaywrightSharp.Firefox
             return (TFirefoxResponse)result;
         }
 
-        internal Task RawSendAsync(ConnectionRequest request) => _transport.SendAsync(request.ToJson(FirefoxJsonHelper.DefaultJsonSerializerOptions));
+        internal Task RawSendAsync(ConnectionRequest request, JsonSerializerOptions jsonOptions) => _transport.SendAsync(request.ToJson(jsonOptions));
 
         internal void Close(string closeReason)
         {
@@ -93,7 +96,7 @@ namespace PlaywrightSharp.Firefox
             return GetSession(response.SessionId);
         }
 
-        private void Transport_Closed(object sender, TransportClosedEventArgs e) => Disconnected?.Invoke(this, e);
+        private void Transport_Closed(object sender, TransportClosedEventArgs e) => OnClose("Transport closed");
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e) => ProcessMessage(e);
 
@@ -143,13 +146,14 @@ namespace PlaywrightSharp.Firefox
                 {
                     string sessionId = targetAttachedToTarget.SessionId;
                     var session = new FirefoxSession(this, targetAttachedToTarget.TargetInfo.Type.ToString(), sessionId, (id, request) =>
-                        RawSendAsync(new ConnectionRequest
-                        {
-                            Id = id,
-                            Method = request.Command,
-                            Params = request,
-                            SessionId = sessionId,
-                        }));
+                        RawSendAsync(
+                            new ConnectionRequest
+                            {
+                                Id = id,
+                                Method = request.Command,
+                                Params = request,
+                                SessionId = sessionId,
+                            }, FirefoxJsonHelper.DefaultJsonSerializerOptions));
                     _asyncSessions.AddItem(sessionId, session);
                 }
                 else if (param is TargetDetachedFromTargetFirefoxEvent targetDetachedFromTarget)
@@ -181,6 +185,27 @@ namespace PlaywrightSharp.Firefox
             {
                 MessageReceived?.Invoke(this, param);
             }
+        }
+
+        private void OnClose(string reason)
+        {
+            IsClosed = true;
+            _transport.MessageReceived -= Transport_MessageReceived;
+            _transport.Closed -= Transport_Closed;
+            foreach (var callback in _callbacks.Values.ToArray())
+            {
+                callback.TaskWrapper.TrySetException(new TargetClosedException($"Protocol error ({callback.Method}): Target closed. {reason}"));
+            }
+
+            _callbacks.Clear();
+
+            foreach (var session in _sessions.Values.ToArray())
+            {
+                session.OnClosed(reason);
+            }
+
+            _sessions.Clear();
+            Disconnected?.Invoke(this, new TransportClosedEventArgs(reason));
         }
     }
 }

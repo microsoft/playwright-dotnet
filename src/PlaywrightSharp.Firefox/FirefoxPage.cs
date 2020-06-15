@@ -242,7 +242,13 @@ namespace PlaywrightSharp.Firefox
 
         public Task SetRequestInterceptionAsync(bool enabled) => _networkManager.SetRequestInterception(enabled);
 
-        public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
+        public Task AuthenticateAsync(Credentials credentials)
+            => _session.SendAsync(
+                new NetworkSetAuthCredentialsRequest
+                {
+                    Username = credentials?.Username,
+                    Password = credentials?.Password,
+                });
 
         public Task SetOfflineModeAsync(bool enabled) => throw new NotSupportedException("Offline mode not implemented in Firefox");
 
@@ -255,7 +261,7 @@ namespace PlaywrightSharp.Firefox
 
         public Task<byte[]> GetPdfAsync(string file, PdfOptions options) => throw new NotImplementedException();
 
-        public Task<IPage> GetOpenerAsync() => throw new NotImplementedException();
+        public async Task<IPage> GetOpenerAsync() => await _openerResolver().ConfigureAwait(false);
 
         internal async Task InitializeAsync()
         {
@@ -335,8 +341,6 @@ namespace PlaywrightSharp.Firefox
                 case RuntimeExecutionContextDestroyedFirefoxEvent runtimeExecutionContextDestroyed:
                     OnExecutionContextDestroyed(runtimeExecutionContextDestroyed);
                     break;
-                case PageUncaughtErrorFirefoxEvent pageUncaughtError:
-                    break;
                 case RuntimeConsoleFirefoxEvent runtimeConsole:
                     OnConsole(runtimeConsole);
                     break;
@@ -358,8 +362,14 @@ namespace PlaywrightSharp.Firefox
                 case PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker:
                     OnDispatchMessageFromWorker(pageDispatchMessageFromWorker);
                     break;
+                case PageUncaughtErrorFirefoxEvent pageUncaughtError:
+                    OnUncaughtError(pageUncaughtError);
+                    break;
             }
         }
+
+        private void OnUncaughtError(PageUncaughtErrorFirefoxEvent e)
+            => Page.OnPageError(new PageErrorEventArgs(e.ToExceptionMessage()));
 
         private void OnEventFired(PageEventFiredFirefoxEvent e)
         {
@@ -397,7 +407,7 @@ namespace PlaywrightSharp.Firefox
         {
             foreach (var pair in _workers)
             {
-                if (pair.Key == e.FrameId)
+                if (pair.Value.FrameId == e.FrameId)
                 {
                     OnWorkerDestroyed(new PageWorkerDestroyedFirefoxEvent { WorkerId = pair.Key });
                 }
@@ -564,9 +574,14 @@ namespace PlaywrightSharp.Firefox
             }
         }
 
-        private void OnDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent pageDispatchMessageFromWorker)
+        private void OnDispatchMessageFromWorker(PageDispatchMessageFromWorkerFirefoxEvent e)
         {
-            throw new NotImplementedException();
+            if (!_workers.TryGetValue(e.WorkerId, out var worker))
+            {
+                return;
+            }
+
+            worker.Session.OnMessage(JsonSerializer.Deserialize<ConnectionResponse>(e.Message, FirefoxJsonHelper.DefaultJsonSerializerOptions));
         }
 
         private async Task<AccessibilityTree> GetAccessibilityTreeAsync(FirefoxSession session, IElementHandle needle)

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Firefox.Messaging;
 using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Helpers;
 
@@ -369,12 +370,13 @@ namespace PlaywrightSharp.Firefox
                     }
 
                     var transport = await BrowserHelper.CreateTransportAsync(browserApp.ConnectOptions).ConfigureAwait(false);
-                    await transport.SendAsync(new BrowserCloseRequest().Command).ConfigureAwait(false);
+                    await transport.SendAsync(new ConnectionRequest
+                    {
+                        Id = FirefoxConnection.BrowserCloseMessageId,
+                        Method = new BrowserCloseRequest().Command,
+                    }.ToJson()).ConfigureAwait(false);
                 },
-                (exitCode) =>
-                {
-                    browserApp?.ProcessKilled(exitCode);
-                });
+                exitCode => browserApp?.ProcessKilled(exitCode));
 
             try
             {
@@ -392,7 +394,8 @@ namespace PlaywrightSharp.Firefox
                     SlowMo = options.SlowMo,
                 };
 
-                return new BrowserApp(process, () => Task.CompletedTask, connectOptions);
+                browserApp = new BrowserApp(process, () => process.GracefullyClose(), connectOptions);
+                return browserApp;
             }
             catch
             {

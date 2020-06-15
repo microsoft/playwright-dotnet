@@ -12,6 +12,12 @@ namespace PlaywrightSharp.Firefox.Helper
             {
                 PropertyNamingPolicy = DefaultJsonHelper.DefaultJsonSerializerOptions.PropertyNamingPolicy,
                 IgnoreNullValues = DefaultJsonHelper.DefaultJsonSerializerOptions.IgnoreNullValues,
+                Converters =
+                {
+                    new RemoteObjectJsonConverter(),
+                    new NetworkSetAuthCredentialsRequestJsonConverter(),
+                    new JSHandleConverter(),
+                },
             };
         }
 

@@ -10,6 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.authenticate</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageAuthenticateTests : PlaywrightSharpPageBaseTest
     {

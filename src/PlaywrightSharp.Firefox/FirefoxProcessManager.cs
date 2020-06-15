@@ -18,6 +18,7 @@ namespace PlaywrightSharp.Firefox
         private readonly Action<int> _onKill;
         private readonly TaskCompletionSource<string> _startCompletionSource = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource<bool> _exitCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        private bool _gracefullyClosing;
         private State _currentState = State.Initial;
 
         public FirefoxProcessManager(
@@ -89,6 +90,32 @@ namespace PlaywrightSharp.Firefox
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the kill action is done.</returns>
         public Task KillAsync() => _currentState.KillAsync(this);
+
+        public async Task GracefullyClose()
+        {
+            // We keep listeners until we are done, to handle 'exit' and 'SIGINT' while
+            // asynchronously closing to prevent zombie processes. This might introduce
+            // reentrancy to this function, for example user sends SIGINT second time.
+            // In this case, let's forcefully kill the process.
+            if (_gracefullyClosing)
+            {
+                await KillAsync().ConfigureAwait(false);
+                return;
+            }
+
+            _gracefullyClosing = true;
+
+            try
+            {
+                await _attemptToGracefullyCloseFunc().ConfigureAwait(false);
+            }
+            catch
+            {
+                await KillAsync().ConfigureAwait(false);
+            }
+
+            await _exitCompletionSource.Task.ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Disposes Firefox process and any temporary user directory.
@@ -344,6 +371,10 @@ namespace PlaywrightSharp.Firefox
                             await Killing.EnterFromAsync(p, this).ConfigureAwait(false);
                             throw;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new PlaywrightSharpException("Failed to launch browser", ex);
                     }
                     finally
                     {
