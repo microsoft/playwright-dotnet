@@ -73,16 +73,20 @@ namespace PlaywrightSharp.Firefox
         /// <inheritdoc cref="IBrowser.CloseAsync"/>
         public async Task CloseAsync()
         {
-            var tsc = new TaskCompletionSource<bool>();
-            void EventHandler(object sender, EventArgs e)
+            if (!_connection.IsClosed)
             {
-                tsc.TrySetResult(true);
-                _connection.Disconnected -= EventHandler;
-            }
+                var tsc = new TaskCompletionSource<bool>();
 
-            _connection.Disconnected += EventHandler;
-            await _connection.SendAsync(new BrowserCloseRequest()).ConfigureAwait(false);
-            await tsc.Task.ConfigureAwait(false);
+                void EventHandler(object sender, EventArgs e)
+                {
+                    tsc.TrySetResult(true);
+                    _connection.Disconnected -= EventHandler;
+                }
+
+                _connection.Disconnected += EventHandler;
+                await _connection.SendAsync(new BrowserCloseRequest()).ConfigureAwait(false);
+                await tsc.Task.ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc cref="IBrowser.DisconnectAsync"/>
