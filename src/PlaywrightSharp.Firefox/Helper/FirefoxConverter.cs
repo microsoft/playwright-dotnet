@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Firefox.Helper
                 _ => throw new ArgumentOutOfRangeException(nameof(dialogType), "Unknown dialogType: " + dialogType)
             };
 
-        internal static string ToExceptionMessage(this PageUncaughtErrorFirefoxEvent exceptionDetails)
+        public static string ToExceptionMessage(this PageUncaughtErrorFirefoxEvent exceptionDetails)
         {
             string message = exceptionDetails.Message;
             if (exceptionDetails.Stack != null)
@@ -161,5 +161,11 @@ namespace PlaywrightSharp.Firefox.Helper
 
             return message;
         }
+
+        public static HTTPHeader[] ToHttpHeaders(this IDictionary<string, string> headers) => headers.Select(pair => new HTTPHeader
+        {
+            Name = pair.Key,
+            Value = pair.Value,
+        }).ToArray();
     }
 }
