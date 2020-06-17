@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 using PlaywrightSharp.Firefox.Helper;
 using PlaywrightSharp.Firefox.Protocol.Network;
 
@@ -26,19 +28,70 @@ namespace PlaywrightSharp.Firefox
 
         internal string Id { get; }
 
-        public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed)
+        public async Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                await _session.SendAsync(new NetworkAbortInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    ErrorCode = errorCode.ToString().ToLower(),
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
 
-        public Task ContinueAsync(Payload payload = null)
+        public async Task ContinueAsync(Payload payload = null)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                await _session.SendAsync(new NetworkResumeInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    Method = payload?.Method?.Method,
+                    Headers = payload?.Headers?.ToHttpHeaders(),
+                    PostData = payload?.PostData,
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
 
-        public Task FulfillAsync(ResponseData response)
+        public async Task FulfillAsync(ResponseData response)
         {
-            throw new System.NotImplementedException();
+            var responseHeaders = response.Headers?.ToDictionary(header => header.Key.ToLower(), header => header.Value)
+                ?? new Dictionary<string, string>();
+
+            if (!string.IsNullOrEmpty(response.ContentType))
+            {
+                responseHeaders["content-type"] = response.ContentType;
+            }
+
+            if (response.BodyData != null && !responseHeaders.ContainsKey("content-length"))
+            {
+                responseHeaders["content-length"] = response.BodyData.Length.ToString();
+            }
+
+            try
+            {
+                await _session.SendAsync(new NetworkFulfillInterceptedRequestRequest
+                {
+                    RequestId = Id,
+                    Status = (int)(response.Status ?? HttpStatusCode.OK),
+                    StatusText = ReasonPhrases.GetReasonPhrase((int)(response.Status ?? HttpStatusCode.OK)),
+                    Headers = responseHeaders.ToHttpHeaders(),
+                    Base64Body = Convert.ToBase64String(response.BodyData),
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
     }
 }

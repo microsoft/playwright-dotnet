@@ -82,7 +82,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
         }
 
-
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should be able to remove headers</playwright-it>

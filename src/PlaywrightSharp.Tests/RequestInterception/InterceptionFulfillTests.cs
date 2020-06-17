@@ -12,6 +12,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>interception.fulfill</playwright-describe>
     [Trait("Category", "chromium")]
+    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class InterceptionFulfillTests : PlaywrightSharpPageBaseTest
     {
@@ -81,7 +82,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += (sender, e) =>
             {
-                var imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
+                byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 e.Request.FulfillAsync(new ResponseData
                 {
                     ContentType = "image/png",
