@@ -10,7 +10,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
     [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class IgnoreHttpsErrorsTests : PlaywrightSharpPageBaseTest
     {
