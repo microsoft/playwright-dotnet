@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -48,7 +49,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch |webSocket| option</playwright-describe>
         ///<playwright-it>should fire "disconnected" when closing with webSocket</playwright-it>
-        [Retry]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipLinux: true)]
         public async Task ShouldFireDisconnectedWhenClosingWithWebSocket()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
