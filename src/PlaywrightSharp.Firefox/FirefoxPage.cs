@@ -85,9 +85,18 @@ namespace PlaywrightSharp.Firefox
 
         public bool CanScreenshotOutsideViewport() => true;
 
-        public Task ResetViewportAsync(Viewport viewport) => throw new NotImplementedException();
+        public Task ResetViewportAsync(Viewport viewport) =>
+            _session.SendAsync(new PageSetViewportRequest { Viewport = null });
 
-        public Task SetBackgroundColorAsync(Color? color = null) => throw new NotImplementedException();
+        public Task SetBackgroundColorAsync(Color? color = null)
+        {
+            if (color != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            return Task.CompletedTask;
+        }
 
         public async Task<byte[]> TakeScreenshotAsync(ScreenshotFormat format, ScreenshotOptions options, Viewport viewport)
         {
