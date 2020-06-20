@@ -206,7 +206,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>should work with regular text</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipLinux: true, skipWindows: true)]
+        [Retry]
         public async Task ShouldWorkWithRegularRext()
         {
             await Page.SetContentAsync("<div>Hello World</div>");
