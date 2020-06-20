@@ -1,24 +1,51 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Server
 {
     /// <summary>
     /// Base type for implementing <see cref="IBrowserType"/>.
     /// </summary>
-    public abstract class BrowserTypeBase : IBrowserType
+    internal abstract class BrowserTypeBase : IBrowserType
     {
+        private readonly string _browserPath;
+        private string _executablePath;
+        private ILoggerFactory _loggerFactory;
+
+        protected BrowserTypeBase(string executablePath, BrowserDescriptor browser, ILoggerFactory loggerFactory = null)
+        {
+            Name = browser.Browser;
+            string browserPath = BrowserPaths.GetBrowsersPath(executablePath);
+            _browserPath = BrowserPaths.GetBrowserDirectory(browserPath, browser);
+            _executablePath = BrowserPaths.GetExecutablePath(_browserPath, browser);
+            _loggerFactory = loggerFactory ?? new LoggerFactory();
+        }
+
         /// <inheritdoc cref="IBrowserType.Devices"/>
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => DeviceDescriptors.ToReadOnly();
 
         /// <inheritdoc cref="IBrowserType.ExecutablePath"/>
-        public string ExecutablePath => ResolveExecutablePath();
+        public string ExecutablePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_executablePath))
+                {
+                    throw new PlaywrightSharpException("Browser is not supported on current platform");
+                }
+
+                return _executablePath;
+            }
+        }
 
         /// <inheritdoc cref="IBrowserType.Name"/>
-        public abstract string Name { get; }
+        public Browser Name { get; }
 
         /// <inheritdoc cref="IBrowserType.CreateBrowserFetcher(BrowserFetcherOptions)"/>
         public abstract IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
@@ -27,7 +54,23 @@ namespace PlaywrightSharp
         public abstract Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null);
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
-        public abstract Task<IBrowser> LaunchAsync(LaunchOptions options = null);
+        public Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+        {
+            if (options != null && !string.IsNullOrEmpty(options.UserDataDir))
+            {
+                throw new ArgumentException("UserDataDir option is not supported in LauncheAsync. Use LaunchPersistentContextAsync instead");
+            }
+
+            if (options != null && options.Port.HasValue)
+            {
+                throw new ArgumentException("Cannot specify a port without launching as a server.");
+            }
+
+            options = ValidateLaunchOptions(options);
+            const loggers = new Loggers(options.logger);
+            const browser = await runAbortableTask(progress => this._innerLaunch(progress, options, loggers, undefined), loggers.browser, TimeoutSettings.timeout(options), `browserType.launch`);
+            return browser;
+        }
 
         /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
         public abstract string[] GetDefaultArgs(BrowserArgOptions options = null);

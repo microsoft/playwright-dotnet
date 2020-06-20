@@ -52,5 +52,10 @@ namespace PlaywrightSharp
         /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
         /// </summary>
         public IDictionary<string, string> Env { get; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Port to use for the web socket. Defaults to 0 that picks any available port.
+        /// </summary>
+        public int? Port { get; set; }
     }
 }

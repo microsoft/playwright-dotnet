@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium.Messaging;
 using PlaywrightSharp.Chromium.Protocol.Browser;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Server;
 
 namespace PlaywrightSharp.Chromium
 {
@@ -48,9 +49,6 @@ namespace PlaywrightSharp.Chromium
             "--password-store=basic",
             "--use-mock-keychain",
         };
-
-        /// <inheritdoc cref="IBrowserType"/>
-        public override string Name => "chromium";
 
         /// <inheritdoc cref="IBrowserType"/>
         public override async Task<IBrowser> ConnectAsync(ConnectOptions options = null)

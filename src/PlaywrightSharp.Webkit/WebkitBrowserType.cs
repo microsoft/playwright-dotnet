@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Server;
 
 namespace PlaywrightSharp.Webkit
 {
@@ -21,9 +18,6 @@ namespace PlaywrightSharp.Webkit
         public const int PreferredRevision = 1127;
 
         private static string _cachedMacVersion;
-
-        /// <inheritdoc cref="IBrowserType.Name"/>
-        public override string Name => "webkit";
 
         /// <inheritdoc cref="IBrowserType.ConnectAsync(ConnectOptions)"/>
         public override Task<IBrowser> ConnectAsync(ConnectOptions options = null)

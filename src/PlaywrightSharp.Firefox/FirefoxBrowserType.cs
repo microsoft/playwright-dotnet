@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.BrowserLocation;
 using PlaywrightSharp.Firefox.Messaging;
 using PlaywrightSharp.Firefox.Protocol.Browser;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Server;
 
 namespace PlaywrightSharp.Firefox
 {
@@ -244,9 +246,6 @@ namespace PlaywrightSharp.Firefox
             // Prevent starting into safe mode after application crashes
             ["toolkit.startup.max_resumed_crashes"] = -1,
         };
-
-        /// <inheritdoc cref="IBrowserType.Name"/>
-        public override string Name => "firefox";
 
         /// <inheritdoc cref="IBrowserType.ConnectAsync(ConnectOptions)"/>
         public override Task<IBrowser> ConnectAsync(ConnectOptions options = null)

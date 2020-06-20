@@ -20,9 +20,9 @@ namespace PlaywrightSharp
         string ExecutablePath { get; }
 
         /// <summary>
-        /// Returns browser name. For example: 'chromium', 'webkit' or 'firefox'.
+        /// Returns browser name.
         /// </summary>
-        string Name { get; }
+        Browser Name { get; }
 
         /// <summary>
         /// Creates the browser fetcher.
