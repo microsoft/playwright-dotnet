@@ -18,7 +18,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// A browser websocket endpoint to connect to.
         /// </summary>
-        public string BrowserWSEndpoint { get; set; }
+        public string WSEndpoint { get; set; }
 
         /// <summary>
         /// Optional factory for <see cref="IConnectionTransport"/> implementations.
@@ -26,9 +26,16 @@ namespace PlaywrightSharp
         public TransportFactory TransportFactory { get; set; }
 
         /// <summary>
+        /// Maximum time in milliseconds to wait for the browser instance to start.
+        /// </summary>
+        public int Timeout { get; set; }
+
+        /// <summary>
         /// Clones the <see cref="ConnectOptions"/>.
         /// </summary>
         /// <returns>A copy of the current <see cref="ConnectOptions"/>.</returns>
         public ConnectOptions Clone() => (ConnectOptions)MemberwiseClone();
+
+        internal TestHookBeforeCreateBrowserAsyncDelegate TestHookBeforeCreateBrowserAsync { get; set; }
     }
 }

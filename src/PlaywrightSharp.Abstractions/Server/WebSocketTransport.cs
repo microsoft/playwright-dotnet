@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Server
 
         internal static async Task<IConnectionTransport> CreateAsync(ConnectOptions options)
         {
-            var webSocket = await CreateWebSocket(options.BrowserWSEndpoint).ConfigureAwait(false);
+            var webSocket = await CreateWebSocket(options.WSEndpoint).ConfigureAwait(false);
             return new WebSocketTransport(webSocket, DefaultTransportScheduler);
         }
 

@@ -56,8 +56,8 @@ namespace PlaywrightSharp.Webkit
             return new BrowserFetcher(path, platform, PreferredRevision.ToString(CultureInfo.InvariantCulture.NumberFormat), ParamsGetter);
         }
 
-        /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
-        public override string[] GetDefaultArgs(BrowserArgOptions options = null)
+        /// <inheritdoc cref="IBrowserType.GetDefaultArgs"/>
+        public override string[] GetDefaultArgs(LaunchOptionsBase options = null)
         {
             throw new NotImplementedException();
         }

@@ -28,17 +28,17 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             if (TestConstants.IsChromium)
             {
-                Assert.Contains("--no-first-run", Playwright.GetDefaultArgs());
+                Assert.Contains("--no-first-run", Playwright.GetDefaultArgs(TODO, TODO));
             }
 
-            Assert.Contains(TestConstants.IsFirefox ? "-headless" : "--headless", Playwright.GetDefaultArgs());
+            Assert.Contains(TestConstants.IsFirefox ? "-headless" : "--headless", Playwright.GetDefaultArgs(TODO, TODO));
             Assert.DoesNotContain(
                 TestConstants.IsFirefox ? "-headless" : "--headless",
-                Playwright.GetDefaultArgs(new BrowserArgOptions { Headless = false }));
+                Playwright.GetDefaultArgs(new LaunchOptionsBase { Headless = false }, TODO, TODO));
 
             Assert.Contains(
                 TestConstants.IsFirefox ? "foo" : "--user-data-dir=\"foo\"",
-                Playwright.GetDefaultArgs(new BrowserArgOptions { UserDataDir = "foo" }));
+                Playwright.GetDefaultArgs(new LaunchOptionsBase { UserDataDir = "foo" }, TODO, TODO));
 
         }
 
@@ -48,11 +48,11 @@ namespace PlaywrightSharp.Tests.Launcher
         [Retry]
         public async Task ShouldFilterOutIgnoredDefaultArguments()
         {
-            string[] defaultArgsWithoutUserDataDir = Playwright.GetDefaultArgs(TestConstants.GetDefaultBrowserOptions());
+            string[] defaultArgsWithoutUserDataDir = Playwright.GetDefaultArgs(TestConstants.GetDefaultBrowserOptions(), TODO, TODO);
 
             var withUserDataDirOptions = TestConstants.GetDefaultBrowserOptions();
             withUserDataDirOptions.UserDataDir = "fake-profile";
-            string[] defaultArgsWithUserDataDir = Playwright.GetDefaultArgs(withUserDataDirOptions);
+            string[] defaultArgsWithUserDataDir = Playwright.GetDefaultArgs(withUserDataDirOptions, TODO, TODO);
 
             var launchOptions = TestConstants.GetDefaultBrowserOptions();
             launchOptions.UserDataDir = "fake-profile";

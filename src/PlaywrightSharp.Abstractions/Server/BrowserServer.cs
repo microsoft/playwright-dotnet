@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Server
     /// <summary>
     /// Manage the lifecycle of a browser process.
     /// </summary>
-    public class BrowserServer
+    public class BrowserServer : IBrowserServer
     {
         private readonly Func<Task> _gracefullyClose;
         private readonly Func<Task> _kill;

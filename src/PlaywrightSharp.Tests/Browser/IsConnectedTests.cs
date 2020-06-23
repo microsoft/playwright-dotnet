@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Browser
             var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await Playwright.ConnectAsync(new ConnectOptions
             {
-                BrowserWSEndpoint = browserApp.WebSocketEndpoint
+                WSEndpoint = browserApp.WebSocketEndpoint
             });
             Assert.True(remote.IsConnected);
             await remote.DisconnectAsync();
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Browser
             var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await Playwright.ConnectAsync(new ConnectOptions
             {
-                BrowserWSEndpoint = browserApp.WebSocketEndpoint
+                WSEndpoint = browserApp.WebSocketEndpoint
             });
             var page = await remote.DefaultContext.NewPageAsync();
             var disconnectedTask = new TaskCompletionSource<bool>();

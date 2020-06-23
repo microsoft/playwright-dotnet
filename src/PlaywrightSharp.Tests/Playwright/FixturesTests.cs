@@ -152,7 +152,7 @@ namespace PlaywrightSharp.Tests.Playwright
 
             var browser = await Playwright.ConnectAsync(new ConnectOptions
             {
-                BrowserWSEndpoint = await browserWebSocketTcs.Task
+                WSEndpoint = await browserWebSocketTcs.Task
             });
 
             var browserDisconnectedTcs = new TaskCompletionSource<bool>();

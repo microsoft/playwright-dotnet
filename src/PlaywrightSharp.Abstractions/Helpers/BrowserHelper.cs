@@ -8,18 +8,18 @@ namespace PlaywrightSharp.Helpers
     {
         public static async Task<IConnectionTransport> CreateTransportAsync(ConnectOptions options)
         {
-            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) && options.TransportFactory != null)
+            if (!string.IsNullOrEmpty(options.WSEndpoint) && options.TransportFactory != null)
             {
-                throw new ArgumentException("Exactly one of BrowserWSEndpoint or TransportFactory must be passed to connect");
+                throw new ArgumentException("Exactly one of WSEndpoint or TransportFactory must be passed to connect");
             }
 
             IConnectionTransport transport = null;
 
             if (options.TransportFactory != null)
             {
-                transport = await options.TransportFactory(new Uri(options.BrowserWSEndpoint), options).ConfigureAwait(false);
+                transport = await options.TransportFactory(new Uri(options.WSEndpoint), options).ConfigureAwait(false);
             }
-            else if (!string.IsNullOrEmpty(options.BrowserWSEndpoint))
+            else if (!string.IsNullOrEmpty(options.WSEndpoint))
             {
 #pragma warning disable CA2000 // Call dispose, this is a false alarm.
                 transport = await WebSocketTransport.CreateAsync(options).ConfigureAwait(false);

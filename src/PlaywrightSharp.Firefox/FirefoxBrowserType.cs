@@ -300,8 +300,8 @@ namespace PlaywrightSharp.Firefox
             return new BrowserFetcher(path, platform, PreferredRevision.ToString(CultureInfo.InvariantCulture.NumberFormat), paramsGetter);
         }
 
-        /// <inheritdoc cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>
-        public override string[] GetDefaultArgs(BrowserArgOptions options = null)
+        /// <inheritdoc cref="IBrowserType.GetDefaultArgs"/>
+        public override string[] GetDefaultArgs(LaunchOptionsBase options = null)
         {
             bool devtools = options?.Devtools ?? false;
             bool headless = options?.Headless ?? !devtools;
@@ -389,7 +389,7 @@ namespace PlaywrightSharp.Firefox
                 await process.StartAsync().ConfigureAwait(false);
                 var connectOptions = new ConnectOptions()
                 {
-                    BrowserWSEndpoint = process.Endpoint,
+                    WSEndpoint = process.Endpoint,
                     SlowMo = options.SlowMo,
                 };
 

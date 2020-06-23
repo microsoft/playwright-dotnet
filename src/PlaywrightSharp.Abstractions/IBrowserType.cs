@@ -32,13 +32,6 @@ namespace PlaywrightSharp
         IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
         /// <summary>
-        /// Launches a new browser app.
-        /// </summary>
-        /// <param name="options">Launch options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser app.</returns>
-        Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null);
-
-        /// <summary>
         /// Launches a new browser.
         /// </summary>
         /// <param name="options">Launch options.</param>
@@ -46,11 +39,32 @@ namespace PlaywrightSharp
         Task<IBrowser> LaunchAsync(LaunchOptions options = null);
 
         /// <summary>
+        /// Launches browser that uses persistent storage located at <paramref name="userDataDir"/> and returns the only context.
+        /// Closing this context will automatically close the browser.
+        /// </summary>
+        /// <param name="userDataDir">
+        /// Path to a User Data Directory, which stores browser session data like cookies and local storage.
+        /// More details for <see href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md">Chromium</see> and <see href="https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile">Firefox</see>.
+        /// </param>
+        /// <param name="options">Options</param>
+        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the context.</returns>
+        public Task<IBrowser> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options = null);
+
+        /// <summary>
+        /// Launches browser server that client can connect to.
+        /// </summary>
+        /// <param name="options">Launch options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the context.</returns>
+        public Task<IBrowserServer> LaunchServerAsync(LaunchServerOptions options = null);
+
+        /// <summary>
         /// The default flags that browser will be launched with.
         /// </summary>
         /// <param name="options">Set of configurable options to set on the browser.</param>
+        /// <param name="isPersistent">Whether the defaults args are needed to load a persistent context.</param>
+        /// <param name="userDataDir">User data dir.</param>
         /// <returns>Command arguments to be sent to the browser.</returns>
-        string[] GetDefaultArgs(BrowserArgOptions options = null);
+        string[] GetDefaultArgs(LaunchServerOptions options, bool isPersistent, string userDataDir);
 
         /// <summary>
         /// This methods attaches PlaywrightSharp to an existing browser instance.

@@ -30,7 +30,7 @@ namespace PlaywrightSharp
         public ConnectOptions ConnectOptions { get; }
 
         /// <inheritdoc cref="IBrowserApp.WebSocketEndpoint"/>
-        public string WebSocketEndpoint => ConnectOptions.BrowserWSEndpoint;
+        public string WebSocketEndpoint => ConnectOptions.WSEndpoint;
 
         /// <inheritdoc cref="IBrowserApp.Process"/>
         public Process Process => _processManager.Process;

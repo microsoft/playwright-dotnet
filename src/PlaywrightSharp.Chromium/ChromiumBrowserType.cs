@@ -60,12 +60,12 @@ namespace PlaywrightSharp.Chromium
                 return await ChromiumBrowser.ConnectAsync(options).ConfigureAwait(false);
             }
 
-            if (!string.IsNullOrEmpty(options.BrowserWSEndpoint) || options.TransportFactory != null)
+            if (!string.IsNullOrEmpty(options.WSEndpoint) || options.TransportFactory != null)
             {
-                throw new ArgumentException("Exactly one of BrowserWSEndpoint or TransportFactory must be passed to connect");
+                throw new ArgumentException("Exactly one of WSEndpoint or TransportFactory must be passed to connect");
             }
 
-            options.BrowserWSEndpoint = await GetWsEndpointAsync(options.BrowserURL).ConfigureAwait(false);
+            options.WSEndpoint = await GetWsEndpointAsync(options.BrowserURL).ConfigureAwait(false);
 
             return await ChromiumBrowser.ConnectAsync(options).ConfigureAwait(false);
         }
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Chromium
         }
 
         /// <inheritdoc cref="IBrowserType"/>
-        public override string[] GetDefaultArgs(BrowserArgOptions options = null)
+        public override string[] GetDefaultArgs(LaunchOptionsBase options = null)
         {
             bool devtools = options?.Devtools ?? false;
             bool headless = options?.Headless ?? !devtools;
@@ -175,7 +175,7 @@ namespace PlaywrightSharp.Chromium
             string chromiumExecutable = GetBrowserExecutablePath(options);
             BrowserApp browserApp = null;
 
-            var process = new ChromiumProcessManager(
+            var process = new ChromiumProcessManager.
                 chromiumExecutable,
                 chromiumArgs,
                 tempUserDataDir,
@@ -211,7 +211,7 @@ namespace PlaywrightSharp.Chromium
                 await process.StartAsync().ConfigureAwait(false);
                 var connectOptions = new ConnectOptions()
                 {
-                    BrowserWSEndpoint = process.Endpoint,
+                    WSEndpoint = process.Endpoint,
                     SlowMo = options.SlowMo,
                 };
 
