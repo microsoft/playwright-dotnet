@@ -7,9 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp.Server
 {
-    internal class ChromiumProcessManager : IProcessManager
+    internal class ProcessLauncher : IProcessManager
     {
         private static int _processCount;
 
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Chromium
         private State _currentState = State.Initial;
         private bool _gracefullyClosing;
 
-        public ChromiumProcessManager(
+        public ProcessLauncher(
             string chromiumExecutable,
             IEnumerable<string> chromiumArgs,
             TempDirectory tempUserDataDir,

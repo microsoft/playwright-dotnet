@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Chromium
+namespace PlaywrightSharp.Server
 {
     internal class LaunchResult
     {

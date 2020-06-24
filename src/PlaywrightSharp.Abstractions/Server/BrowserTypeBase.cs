@@ -161,6 +161,13 @@ namespace PlaywrightSharp.Server
 
             IConnectionTransport transport;
             IBrowserServer browserServer;
+
+            var launchResult = ProcessLauncher.LaunchProcess(new LaunchProcessOptions
+            {
+                ExecutablePath = executable,
+                Args = browserArguments,
+                Env = AmmendEnvironment(process.Process.StartInfo.Environment, userDataDir, executable, browserArguments),
+            });
 /*
 
     const { launchedProcess, gracefullyClose, kill } = await launchProcess({
