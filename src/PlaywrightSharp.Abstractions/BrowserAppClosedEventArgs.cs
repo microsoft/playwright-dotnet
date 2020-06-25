@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Raised when the <see cref="IBrowserApp"/> gets closed.
+    /// Raised when the <see cref="IBrowserServer"/> gets closed.
     /// </summary>
     public class BrowserAppClosedEventArgs : EventArgs
     {

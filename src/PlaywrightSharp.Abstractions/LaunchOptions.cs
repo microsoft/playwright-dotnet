@@ -1,11 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace PlaywrightSharp
 {
-    internal delegate void TestHookBeforeCreateBrowserDelegate();
-    internal delegate Task TestHookBeforeCreateBrowserAsyncDelegate();
-
     /// <summary>
     /// Options for <see cref="IBrowserType.LaunchAsync(LaunchOptions)"/>.
     /// </summary>
@@ -16,6 +10,20 @@ namespace PlaywrightSharp
         /// </summary>
         public int SlowMo { get; set; }
 
-        internal TestHookBeforeCreateBrowserDelegate TestHookBeforeCreateBrowser { get; set; }
+        internal TestHookDelegate TestHook { get; set; }
+
+        internal LaunchServerOptions ToLaunchServerOptions()
+            => new LaunchServerOptions
+            {
+                ExecutablePath = ExecutablePath,
+                Args = Args,
+                IgnoreDefaultArgs = IgnoreDefaultArgs,
+                IgnoredDefaultArgs = IgnoredDefaultArgs,
+                Timeout = Timeout,
+                Headless = Headless,
+                Devtools = Devtools,
+                Proxy = Proxy,
+                DownloadsPath = DownloadsPath,
+            };
     }
 }

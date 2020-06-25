@@ -1,10 +1,19 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
+    /// <summary>
+    /// Manage the lifecycle of a browser process.
+    /// </summary>
     public interface IBrowserServer
     {
+        /// <summary>
+        /// Triggered when the <see cref="IBrowserServer"/> gets closed.
+        /// </summary>
+        public event EventHandler<BrowserAppClosedEventArgs> Closed;
+
         /// <summary>
         /// Browser process.
         /// </summary>

@@ -36,6 +36,6 @@ namespace PlaywrightSharp
         /// <returns>A copy of the current <see cref="ConnectOptions"/>.</returns>
         public ConnectOptions Clone() => (ConnectOptions)MemberwiseClone();
 
-        internal TestHookBeforeCreateBrowserAsyncDelegate TestHookBeforeCreateBrowserAsync { get; set; }
+        internal AsyncDelegate Async { get; set; }
     }
 }

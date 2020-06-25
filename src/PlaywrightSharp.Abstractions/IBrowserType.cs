@@ -58,15 +58,6 @@ namespace PlaywrightSharp
         public Task<IBrowserServer> LaunchServerAsync(LaunchServerOptions options = null);
 
         /// <summary>
-        /// The default flags that browser will be launched with.
-        /// </summary>
-        /// <param name="options">Set of configurable options to set on the browser.</param>
-        /// <param name="isPersistent">Whether the defaults args are needed to load a persistent context.</param>
-        /// <param name="userDataDir">User data dir.</param>
-        /// <returns>Command arguments to be sent to the browser.</returns>
-        string[] GetDefaultArgs(LaunchServerOptions options, bool isPersistent, string userDataDir);
-
-        /// <summary>
         /// This methods attaches PlaywrightSharp to an existing browser instance.
         /// </summary>
         /// <param name="options">Connect options.</param>

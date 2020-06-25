@@ -14,6 +14,6 @@ namespace PlaywrightSharp.Server
 
         public ProxySettings Proxy { get; set; }
 
-        internal TestHookBeforeCreateBrowserDelegate TestHookBeforeCreateBrowser { get; set; }
+        internal TestHookDelegate TestHook { get; set; }
     }
 }

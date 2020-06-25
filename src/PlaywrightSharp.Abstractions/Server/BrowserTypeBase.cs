@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Server
@@ -51,6 +53,12 @@ namespace PlaywrightSharp.Server
         /// <inheritdoc cref="IBrowserType.Name"/>
         public Browser Name { get; }
 
+        protected abstract bool SupportsPipes { get; }
+
+        protected abstract ProcessStream WebSocketInfoStreamSource { get; }
+
+        protected abstract string WebSocketRegEx { get; }
+
         /// <inheritdoc cref="IBrowserType.CreateBrowserFetcher(BrowserFetcherOptions)"/>
         public abstract IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
@@ -92,9 +100,9 @@ namespace PlaywrightSharp.Server
                     options ??= new ConnectOptions();
                     var transport = await WebSocketTransport.CreateAsync(progress, options.WSEndpoint).ConfigureAwait(false);
 
-                    if (options.TestHookBeforeCreateBrowserAsync != null)
+                    if (options.Async != null)
                     {
-                        await options.TestHookBeforeCreateBrowserAsync().ConfigureAwait(false);
+                        await options.Async().ConfigureAwait(false);
                     }
 
                     return await ConnectToTransportAsync(
@@ -108,7 +116,7 @@ namespace PlaywrightSharp.Server
                 options?.Timeout ?? Playwright.DefaultTimeout,
                 "BrowserType.ConnectAsync");
 
-        private async Task<(IBrowserServer browserServer, string downloadsPath, IConnectionTransport transport> LaunchServerAsync(
+        private async Task<(BrowserServer browserServer, string downloadsPath, IConnectionTransport transport)> LaunchServerAsync(
             TaskProgress progress,
             LaunchServerOptions options,
             bool isPersistent,
@@ -159,54 +167,49 @@ namespace PlaywrightSharp.Server
                 throw new PlaywrightSharpException("No executable path is specified. Pass ExecutablePath option directly.");
             }
 
-            IConnectionTransport transport;
-            IBrowserServer browserServer;
+            IConnectionTransport transport = null;
+            BrowserServer browserServer = null;
 
             var launchResult = ProcessLauncher.LaunchProcess(new LaunchProcessOptions
             {
                 ExecutablePath = executable,
                 Args = browserArguments,
-                Env = AmmendEnvironment(process.Process.StartInfo.Environment, userDataDir, executable, browserArguments),
+                Env = AmmendEnvironment(Process.GetCurrentProcess().StartInfo.Environment, userDataDir, executable, browserArguments),
+                Pipe = SupportsPipes,
+                Progress = progress,
+                TempDirectories = tempDirectories,
+                AttemptToGracefullyClose = async () =>
+                {
+                    if (options.TestHookGracefullyCloseAsync != null)
+                    {
+                        await options.TestHookGracefullyCloseAsync().ConfigureAwait(false);
+                    }
+
+                    AttemptToGracefullyCloseBrowser(transport);
+                },
+                OnExit = (exitCode) => browserServer.OnClose(exitCode),
             });
-/*
 
-    const { launchedProcess, gracefullyClose, kill } = await launchProcess({
-      executablePath: executable,
-      args: browserArguments,
-      env: this._amendEnvironment(env, userDataDir, executable, browserArguments),
-      handleSIGINT,
-      handleSIGTERM,
-      handleSIGHUP,
-      progress,
-      pipe: !this._webSocketNotPipe,
-      tempDirectories,
-      attemptToGracefullyClose: async () => {
-        if ((options as any).__testHookGracefullyClose)
-          await (options as any).__testHookGracefullyClose();
-        // We try to gracefully close to prevent crash reporting and core dumps.
-        // Note that it's fine to reuse the pipe transport, since
-        // our connection ignores kBrowserCloseMessageId.
-        this._attemptToGracefullyCloseBrowser(transport!);
-      },
-      onExit: (exitCode, signal) => {
-        if (browserServer)
-          browserServer.emit(Events.BrowserServer.Close, exitCode, signal);
-      },
-    });
-    browserServer = new BrowserServer(launchedProcess, gracefullyClose, kill);
-    progress.cleanupWhenAborted(() => browserServer && browserServer._closeOrKill(progress.timeUntilDeadline()));
+            browserServer = new BrowserServer(launchResult);
+            progress.CleanupWhenAborted = () => browserServer?.CloseOrKillAsync(progress.TimeUntilDeadline);
 
-    if (this._webSocketNotPipe) {
-      const match = await waitForLine(progress, launchedProcess, this._webSocketNotPipe.stream === 'stdout' ? launchedProcess.stdout : launchedProcess.stderr, this._webSocketNotPipe.webSocketRegex);
-      const innerEndpoint = match[1];
-      transport = await WebSocketTransport.connect(progress, innerEndpoint);
-    } else {
-      const stdio = launchedProcess.stdio as unknown as [NodeJS.ReadableStream, NodeJS.WritableStream, NodeJS.WritableStream, NodeJS.WritableStream, NodeJS.ReadableStream];
-      transport = new PipeTransport(stdio[3], stdio[4], loggers.browser);
-    }
-    return { browserServer, downloadsPath, transport };
-    */
+            if (!SupportsPipes)
+            {
+                string innerEndpoint = await ProcessLauncher.WaitForLineAsync(progress, launchResult.Process, WebSocketInfoStreamSource, WebSocketRegEx).ConfigureAwait(false);
+                transport = await WebSocketTransport.CreateAsync(progress, innerEndpoint);
+            }
+
+            return (browserServer, downloadsPath, transport);
         }
+
+
+        protected abstract string[] GetDefaultArgs(LaunchServerOptions options, bool isPersistent, string userDataDir);
+
+        protected abstract Task<IBrowser> ConnectToTransportAsync(object transport, BrowserOptions browserOptions);
+
+        protected abstract Dictionary<string, string> AmmendEnvironment(IDictionary<string, string> startInfoEnvironment, string userDataDir, string executable, List<string> browserArguments);
+
+        protected abstract void AttemptToGracefullyCloseBrowser(IConnectionTransport transport);
 
         private LaunchPersistentOptions ValidateBrowserContextOptions(LaunchPersistentOptions options)
         {
@@ -221,9 +224,9 @@ namespace PlaywrightSharp.Server
         {
             options ??= new LaunchOptions();
             options.Proxy = options.Proxy != null ? VerifyProxySettings(options.Proxy) : null;
-            var (browserServer, downloadsPath, transport) = await LaunchServerAsync(progress, options, persistent != null, _loggerFactory, userDataDir).ConfigureAwait(false);
+            var (browserServer, downloadsPath, transport) = await LaunchServerAsync(progress, options.ToLaunchServerOptions(), persistent != null, _loggerFactory, userDataDir).ConfigureAwait(false);
 
-            options.TestHookBeforeCreateBrowser();
+            options.TestHook();
 
             var browserOptions = new BrowserOptions
             {
@@ -233,7 +236,7 @@ namespace PlaywrightSharp.Server
                 DownloadsPath = downloadsPath,
                 OwnedServer = browserServer,
                 Proxy = options.Proxy,
-                TestHookBeforeCreateBrowser = options.TestHookBeforeCreateBrowser,
+                TestHook = options.TestHook,
             };
 
             var browser = await ConnectToTransportAsync(transport, browserOptions).ConfigureAwait(false);
@@ -248,18 +251,10 @@ namespace PlaywrightSharp.Server
             return browser;
         }
 
-        private Task<IBrowser> ConnectToTransportAsync(object transport, BrowserOptions browserOptions)
-        {
-            throw new NotImplementedException();
-        }
-
         private ProxySettings VerifyProxySettings(ProxySettings proxy)
         {
             throw new NotImplementedException();
         }
-
-        /// <inheritdoc cref="IBrowserType.GetDefaultArgs(LaunchServerOptions, bool, string)"/>
-        public abstract string[] GetDefaultArgs(LaunchServerOptions options, bool isPersistent, string userDataDir);
 
         internal static void SetEnvVariables(IDictionary<string, string> environment, IDictionary<string, string> customEnv, IDictionary realEnv)
         {
@@ -275,19 +270,6 @@ namespace PlaywrightSharp.Server
                     environment[item.Key] = item.Value;
                 }
             }
-        }
-
-        internal string ResolveExecutablePath()
-        {
-            var browserFetcher = CreateBrowserFetcher();
-            var revisionInfo = browserFetcher.GetRevisionInfo();
-
-            if (!revisionInfo.Local)
-            {
-                throw new FileNotFoundException($"{Name} revision is not downloaded. Run BrowserFetcher.DownloadAsync or download {Name} manually", revisionInfo.ExecutablePath);
-            }
-
-            return revisionInfo.ExecutablePath;
         }
 
         internal virtual Platform GetPlatform()

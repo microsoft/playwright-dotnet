@@ -13,20 +13,16 @@ namespace PlaywrightSharp.Server
         private readonly Func<Task> _gracefullyClose;
         private readonly Func<Task> _kill;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BrowserServer"/> class.
-        /// </summary>
-        /// <param name="process">Browser process.</param>
-        /// <param name="gracefullyClose">Browser close func.</param>
-        /// <param name="kill">Process kill func.</param>
-        /// <param name="webSocketEndpoint">WebSocket endpoint.</param>
-        public BrowserServer(Process process, Func<Task> gracefullyClose, Func<Task> kill, string webSocketEndpoint)
+        internal BrowserServer(LaunchResult launchResult)
         {
-            Process = process;
-            WebSocketEndpoint = webSocketEndpoint;
-            _gracefullyClose = gracefullyClose;
-            _kill = kill;
+            Process = launchResult.Process;
+            WebSocketEndpoint = launchResult.WebSocketEndpoint;
+            _gracefullyClose = launchResult.GracefullyCloseFunction;
+            _kill = launchResult.KillFunction;
         }
+
+        /// <inheritdoc cref="IBrowserServer.Closed"/>
+        public event EventHandler<BrowserAppClosedEventArgs> Closed;
 
         /// <summary>
         /// Browser process.
@@ -69,5 +65,7 @@ namespace PlaywrightSharp.Server
                 }
             }
         }
+
+        internal void OnClose(int exitCode) => Closed?.Invoke(this, new BrowserAppClosedEventArgs { ExitCode = exitCode });
     }
 }

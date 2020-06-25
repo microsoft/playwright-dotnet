@@ -52,6 +52,12 @@ namespace PlaywrightSharp.Server
 
         }
 
+        private static async Task<string> WaitForLineAsync(TaskProgress progress, Process launchResultProcess, ProcessStream webSocketInfoStreamSource, string webSocketRegEx)
+        {
+            throw new NotImplementedException();
+        }
+
+
         /// <summary>
         /// Finalizes an instance of the <see cref="ChromiumProcessManager"/> class.
         /// </summary>
@@ -151,20 +157,20 @@ namespace PlaywrightSharp.Server
         /// Initial  --Dispose---------> Disposed     Cleanup temp user data
         /// Starting --StartAsync------> Starting     -
         /// Starting --ExitAsync-------> Exiting      Wait for process exit
-        /// Starting --KillAsync-------> Killing      Kill process
-        /// Starting --Dispose---------> Disposed     Kill process; Cleanup temp user data;  throw ObjectDisposedException on outstanding async operations;
+        /// Starting --KillAsync-------> Killing      KillFunction process
+        /// Starting --Dispose---------> Disposed     KillFunction process; Cleanup temp user data;  throw ObjectDisposedException on outstanding async operations;
         /// Starting --endpoint ready--> Started      Complete StartAsync successfully; Log process start
         /// Starting --process exit----> Exited       Complete StartAsync with exception; Cleanup temp user data
         /// Started  --StartAsync------> Started      -
         /// Started  --EnsureExitAsync-> Exiting      Start exit timer; Log process exit
-        /// Started  --KillAsync-------> Killing      Kill process; Log process exit
-        /// Started  --Dispose---------> Disposed     Kill process; Log process exit; Cleanup temp user data; throw ObjectDisposedException on outstanding async operations;
+        /// Started  --KillAsync-------> Killing      KillFunction process; Log process exit
+        /// Started  --Dispose---------> Disposed     KillFunction process; Log process exit; Cleanup temp user data; throw ObjectDisposedException on outstanding async operations;
         /// Started  --process exit----> Exited       Log process exit; Cleanup temp user data
         /// Exiting  --StartAsync------> Exiting      - (StartAsync throws InvalidOperationException)
         /// Exiting  --ExitAsync-------> Exiting      -
-        /// Exiting  --KillAsync-------> Killing      Kill process
-        /// Exiting  --Dispose---------> Disposed     Kill process; Cleanup temp user data; throw ObjectDisposedException on outstanding async operations;
-        /// Exiting  --exit timeout----> Killing      Kill process
+        /// Exiting  --KillAsync-------> Killing      KillFunction process
+        /// Exiting  --Dispose---------> Disposed     KillFunction process; Cleanup temp user data; throw ObjectDisposedException on outstanding async operations;
+        /// Exiting  --exit timeout----> Killing      KillFunction process
         /// Exiting  --process exit----> Exited       Cleanup temp user data; complete outstanding async operations;
         /// Killing  --StartAsync------> Killing      - (StartAsync throws InvalidOperationException)
         /// Killing  --KillAsync-------> Killing      -
