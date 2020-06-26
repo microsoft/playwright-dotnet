@@ -7,11 +7,12 @@ namespace PlaywrightSharp
     internal class TaskProgress
     {
         public AsyncDelegate CleanupWhenAborted { get; set; }
+
         public int TimeUntilDeadline { get; set; }
 
         public static Task<T> RunAbortableTaskAsync<T>(
             Func<TaskProgress, Task<T>> task,
-            LoggerFactory loggerFactory,
+            ILoggerFactory loggerFactory,
             int timeout,
             string apiName)
             => new ProgressController(loggerFactory, timeout, apiName).RunAsync(task);

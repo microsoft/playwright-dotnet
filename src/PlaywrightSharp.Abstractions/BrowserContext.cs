@@ -192,22 +192,9 @@ namespace PlaywrightSharp
             });
         }
 
-        private void VerifyGeolocation(GeolocationOption geolocation)
+        public Task LoadDefaultContextAsync()
         {
-            if (geolocation.Longitude < -180 || geolocation.Longitude > 180)
-            {
-                throw new ArgumentException($"Invalid longitude '{geolocation.Longitude}': precondition -180 <= LONGITUDE <= 180 failed.");
-            }
-
-            if (geolocation.Latitude < -90 || geolocation.Latitude > 90)
-            {
-                throw new ArgumentException($"Invalid latitude '{geolocation.Latitude}': precondition -90 <= LONGITUDE <= 90 failed.");
-            }
-
-            if (geolocation.Accuracy < 0)
-            {
-                throw new ArgumentException($"Invalid accuracy '{geolocation.Accuracy}': precondition 0 <= LONGITUDE failed.");
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -52,16 +52,16 @@ namespace PlaywrightSharp.Server
 
         }
 
-        private static async Task<string> WaitForLineAsync(TaskProgress progress, Process launchResultProcess, ProcessStream webSocketInfoStreamSource, string webSocketRegEx)
+        internal static async Task<Match> WaitForLineAsync(TaskProgress progress, Process launchResultProcess, ProcessStream webSocketInfoStreamSource, string webSocketRegEx)
         {
             throw new NotImplementedException();
         }
 
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="ChromiumProcessManager"/> class.
+        /// Finalizes an instance of the <see cref="ProcessLauncher"/> class.
         /// </summary>
-        ~ChromiumProcessManager()
+        ~ProcessLauncher()
         {
             Dispose(false);
         }

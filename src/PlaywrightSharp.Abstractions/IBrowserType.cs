@@ -46,9 +46,9 @@ namespace PlaywrightSharp
         /// Path to a User Data Directory, which stores browser session data like cookies and local storage.
         /// More details for <see href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md">Chromium</see> and <see href="https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile">Firefox</see>.
         /// </param>
-        /// <param name="options">Options</param>
+        /// <param name="options">Options.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the context.</returns>
-        public Task<IBrowser> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options = null);
+        public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options = null);
 
         /// <summary>
         /// Launches browser server that client can connect to.

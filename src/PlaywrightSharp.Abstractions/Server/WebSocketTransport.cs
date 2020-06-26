@@ -56,13 +56,16 @@ namespace PlaywrightSharp.Server
             _readerCancellationSource?.Dispose();
         }
 
-        internal static async Task<IConnectionTransport> CreateAsync(ConnectOptions options)
+        internal static async Task<IConnectionTransport> CreateAsync(TaskProgress progress, string url)
         {
-            var webSocket = await CreateWebSocket(options.WSEndpoint).ConfigureAwait(false);
+            var webSocket = await CreateWebSocketAsync(progress, url).ConfigureAwait(false);
             return new WebSocketTransport(webSocket, DefaultTransportScheduler);
         }
 
-        private static async Task<WebSocket> CreateWebSocket(string url)
+        internal static Task<IConnectionTransport> CreateAsync(TaskProgress progress, ConnectOptions options)
+            => CreateAsync(progress, options?.WSEndpoint);
+
+        internal static async Task<WebSocket> CreateWebSocketAsync(TaskProgress progress, string url)
         {
             var result = new ClientWebSocket();
             result.Options.KeepAliveInterval = TimeSpan.Zero;

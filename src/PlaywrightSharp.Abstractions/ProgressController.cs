@@ -6,7 +6,7 @@ namespace PlaywrightSharp
 {
     internal class ProgressController
     {
-        public ProgressController(LoggerFactory loggerFactory, int timeout, string apiName)
+        public ProgressController(ILoggerFactory loggerFactory, int timeout, string apiName)
         {
             throw new NotImplementedException();
         }

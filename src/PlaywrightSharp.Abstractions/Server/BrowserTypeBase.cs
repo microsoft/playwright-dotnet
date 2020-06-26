@@ -1,15 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Server
@@ -20,16 +17,15 @@ namespace PlaywrightSharp.Server
     internal abstract class BrowserTypeBase : IBrowserType
     {
         private static readonly string _downloadsFolder = Path.Combine(Path.GetTempPath(), "playwright_downloads-");
-        private readonly string _browserPath;
-        private string _executablePath;
-        private ILoggerFactory _loggerFactory;
+        private readonly string _executablePath;
+        private readonly ILoggerFactory _loggerFactory;
 
         protected BrowserTypeBase(string executablePath, BrowserDescriptor browser, ILoggerFactory loggerFactory = null)
         {
             Name = browser.Browser;
             string browserPath = BrowserPaths.GetBrowsersPath(executablePath);
-            _browserPath = BrowserPaths.GetBrowserDirectory(browserPath, browser);
-            _executablePath = BrowserPaths.GetExecutablePath(_browserPath, browser);
+            BrowserPath = BrowserPaths.GetBrowserDirectory(browserPath, browser);
+            _executablePath = BrowserPaths.GetExecutablePath(BrowserPath, browser);
             _loggerFactory = loggerFactory ?? new LoggerFactory();
         }
 
@@ -59,23 +55,26 @@ namespace PlaywrightSharp.Server
 
         protected abstract string WebSocketRegEx { get; }
 
+        protected string BrowserPath { get; }
+
         /// <inheritdoc cref="IBrowserType.CreateBrowserFetcher(BrowserFetcherOptions)"/>
         public abstract IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
-        public Task<IBrowser> LaunchAsync(LaunchOptions options = null)
-            => TaskProgress.RunAbortableTask(
+        public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+            => await TaskProgress.RunAbortableTaskAsync(
                     progress => InnerLaunchAsync(progress, options),
                     _loggerFactory,
                     options?.Timeout ?? Playwright.DefaultTimeout,
-                    "BrowserType.LaunchAsync");
+                    "BrowserType.LaunchAsync").ConfigureAwait(false);
 
-        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(userDataDir, LaunchPersistentOptions)"/>
-        public async Task<IBrowser> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options = null)
+        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string,LaunchPersistentOptions)"/>
+        public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options = null)
         {
-            options = ValidateBrowserContextOptions(options);
+            options ??= new LaunchPersistentOptions();
+            options.ContextOptions = ValidateBrowserContextOptions(options.ContextOptions);
 
-            var browser = await TaskProgress.RunAbortableTask(
+            var browser = await TaskProgress.RunAbortableTaskAsync(
                 progress => InnerLaunchAsync(progress, options, options.ContextOptions, userDataDir),
                 _loggerFactory,
                 options?.Timeout ?? Playwright.DefaultTimeout,
@@ -85,20 +84,20 @@ namespace PlaywrightSharp.Server
         }
 
         /// <inheritdoc cref="IBrowserType.LaunchServerAsync(LaunchServerOptions)"/>
-        public Task<IBrowserServer> LaunchServerAsync(LaunchServerOptions options = null)
-            => TaskProgress.RunAbortableTask(
+        public async Task<IBrowserServer> LaunchServerAsync(LaunchServerOptions options = null)
+            => (await TaskProgress.RunAbortableTaskAsync(
                 progress => LaunchServerAsync(progress, options, false, _loggerFactory),
                 _loggerFactory,
                 options?.Timeout ?? Playwright.DefaultTimeout,
-                "BrowserType.LaunchServerAsync");
+                "BrowserType.LaunchServerAsync").ConfigureAwait(false)).BrowserServer;
 
         /// <inheritdoc cref="IBrowserType.ConnectAsync(ConnectOptions)"/>
-        public Task<IBrowser> ConnectAsync(ConnectOptions options = null)
-            => TaskProgress.RunAbortableTask(
+        public async Task<IBrowser> ConnectAsync(ConnectOptions options = null)
+            => await TaskProgress.RunAbortableTaskAsync(
                 async progress =>
                 {
                     options ??= new ConnectOptions();
-                    var transport = await WebSocketTransport.CreateAsync(progress, options.WSEndpoint).ConfigureAwait(false);
+                    var transport = await WebSocketTransport.CreateAsync(progress, options).ConfigureAwait(false);
 
                     if (options.Async != null)
                     {
@@ -114,14 +113,23 @@ namespace PlaywrightSharp.Server
                 },
                 _loggerFactory,
                 options?.Timeout ?? Playwright.DefaultTimeout,
-                "BrowserType.ConnectAsync");
+                "BrowserType.ConnectAsync").ConfigureAwait(false);
 
-        private async Task<(BrowserServer browserServer, string downloadsPath, IConnectionTransport transport)> LaunchServerAsync(
+
+        protected abstract string[] GetDefaultArgs(LaunchServerOptions options, bool isPersistent, string userDataDir);
+
+        protected abstract Task<BrowserBase> ConnectToTransportAsync(object transport, BrowserOptions browserOptions);
+
+        protected abstract Dictionary<string, string> AmmendEnvironment(IDictionary<string, string> startInfoEnvironment, string userDataDir, string executable, List<string> browserArguments);
+
+        protected abstract void AttemptToGracefullyCloseBrowser(IConnectionTransport transport);
+
+        private async Task<LaunchServerResult> LaunchServerAsync(
             TaskProgress progress,
             LaunchServerOptions options,
             bool isPersistent,
             ILoggerFactory loggerFactory,
-            string userDataDir)
+            string userDataDir = null)
         {
             options ??= new LaunchServerOptions();
 
@@ -187,7 +195,7 @@ namespace PlaywrightSharp.Server
 
                     AttemptToGracefullyCloseBrowser(transport);
                 },
-                OnExit = (exitCode) => browserServer.OnClose(exitCode),
+                OnExit = exitCode => browserServer?.OnClose(exitCode),
             });
 
             browserServer = new BrowserServer(launchResult);
@@ -195,31 +203,63 @@ namespace PlaywrightSharp.Server
 
             if (!SupportsPipes)
             {
-                string innerEndpoint = await ProcessLauncher.WaitForLineAsync(progress, launchResult.Process, WebSocketInfoStreamSource, WebSocketRegEx).ConfigureAwait(false);
-                transport = await WebSocketTransport.CreateAsync(progress, innerEndpoint);
+                var match = await ProcessLauncher.WaitForLineAsync(progress, launchResult.Process, WebSocketInfoStreamSource, WebSocketRegEx).ConfigureAwait(false);
+                string innerEndpoint = match.Groups[1].Value;
+                transport = await WebSocketTransport.CreateAsync(progress, innerEndpoint).ConfigureAwait(false);
             }
 
-            return (browserServer, downloadsPath, transport);
+            return new LaunchServerResult
+            {
+                BrowserServer = browserServer,
+                DownloadsPath = downloadsPath,
+                Transport = transport,
+            };
         }
 
-
-        protected abstract string[] GetDefaultArgs(LaunchServerOptions options, bool isPersistent, string userDataDir);
-
-        protected abstract Task<IBrowser> ConnectToTransportAsync(object transport, BrowserOptions browserOptions);
-
-        protected abstract Dictionary<string, string> AmmendEnvironment(IDictionary<string, string> startInfoEnvironment, string userDataDir, string executable, List<string> browserArguments);
-
-        protected abstract void AttemptToGracefullyCloseBrowser(IConnectionTransport transport);
-
-        private LaunchPersistentOptions ValidateBrowserContextOptions(LaunchPersistentOptions options)
+        private BrowserContextOptions ValidateBrowserContextOptions(BrowserContextOptions options)
         {
-            throw new NotImplementedException();
+            var result = options?.Clone() ?? new BrowserContextOptions();
+
+            if (result.Viewport == null && result.DeviceScaleFactor != 1)
+            {
+                throw new PlaywrightSharpException("DeviceScaleFactor option is not supported with null viewport");
+            }
+
+            if (result.Viewport == null && result.IsMobile)
+            {
+                throw new PlaywrightSharpException("IsMobile option is not supported with null viewport");
+            }
+
+            if (result.Geolocation != null)
+            {
+                VerifyGeolocation(result.Geolocation);
+            }
+
+            return result;
+        }
+
+        private void VerifyGeolocation(GeolocationOption geolocation)
+        {
+            if (geolocation.Longitude < -180 || geolocation.Longitude > 180)
+            {
+                throw new ArgumentException($"Invalid longitude '{geolocation.Longitude}': precondition -180 <= LONGITUDE <= 180 failed.");
+            }
+
+            if (geolocation.Latitude < -90 || geolocation.Latitude > 90)
+            {
+                throw new ArgumentException($"Invalid latitude '{geolocation.Latitude}': precondition -90 <= LONGITUDE <= 90 failed.");
+            }
+
+            if (geolocation.Accuracy < 0)
+            {
+                throw new ArgumentException($"Invalid accuracy '{geolocation.Accuracy}': precondition 0 <= LONGITUDE failed.");
+            }
         }
 
         private async Task<BrowserBase> InnerLaunchAsync(
             TaskProgress progress,
             LaunchOptions options,
-            PersistentContextOptions persistent = null,
+            BrowserContextOptions persistent = null,
             string userDataDir = null)
         {
             options ??= new LaunchOptions();
@@ -245,7 +285,7 @@ namespace PlaywrightSharp.Server
             bool hasCustomArguments = options.IgnoreDefaultArgs && options.IgnoredDefaultArgs?.Any() == false;
             if (persistent != null && !hasCustomArguments)
             {
-                await browser.DefaultContext.LoadDefaultContextAsync().ConfigureAwait(false);
+                await ((BrowserContext)browser.DefaultContext).LoadDefaultContextAsync().ConfigureAwait(false);
             }
 
             return browser;
@@ -253,7 +293,15 @@ namespace PlaywrightSharp.Server
 
         private ProxySettings VerifyProxySettings(ProxySettings proxy)
         {
-            throw new NotImplementedException();
+            var url = new Url(proxy.Server);
+            if(url.P)
+            if (!['http:', 'https:', 'socks5:'].includes(url.protocol)) {
+                url = new URL('http://' + server);
+                server = `${url.protocol}//${url.host}`;
+            }
+            if (bypass)
+                bypass = bypass.split(',').map(t => t.trim()).join(',');
+            return { ...proxy, server, bypass };
         }
 
         internal static void SetEnvVariables(IDictionary<string, string> environment, IDictionary<string, string> customEnv, IDictionary realEnv)

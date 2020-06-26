@@ -10,6 +10,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Context options.
         /// </summary>
-        public PersistentContextOptions ContextOptions { get; set; } = new PersistentContextOptions();
+        public BrowserContextOptions ContextOptions { get; set; } = new BrowserContextOptions();
     }
 }
