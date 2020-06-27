@@ -11,7 +11,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="IBrowserContext"/> using the delegate.
         /// </summary>
-        BrowserContext BrowserContext { get; set; }
+        IBrowserContext BrowserContext { get; set; }
 
         /// <summary>
         /// Creates a new page in the context.

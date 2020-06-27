@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IBrowserType.LaunchAsync(LaunchOptions)"/> and <see cref="IBrowserType.LaunchBrowserAppAsync(LaunchOptions)"/>.
+    /// Options for <see cref="IBrowserType.LaunchAsync(LaunchOptions)"/>.
     /// </summary>
     public class LaunchOptions : BrowserArgOptions
     {

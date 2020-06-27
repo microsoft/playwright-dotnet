@@ -21,11 +21,6 @@ namespace PlaywrightSharp
         public string BrowserWSEndpoint { get; set; }
 
         /// <summary>
-        /// Optional factory for <see cref="IConnectionTransport"/> implementations.
-        /// </summary>
-        public TransportFactory TransportFactory { get; set; }
-
-        /// <summary>
         /// Clones the <see cref="ConnectOptions"/>.
         /// </summary>
         /// <returns>A copy of the current <see cref="ConnectOptions"/>.</returns>

@@ -32,13 +32,6 @@ namespace PlaywrightSharp
         IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
         /// <summary>
-        /// Launches a new browser app.
-        /// </summary>
-        /// <param name="options">Launch options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser app.</returns>
-        Task<IBrowserApp> LaunchBrowserAppAsync(LaunchOptions options = null);
-
-        /// <summary>
         /// Launches a new browser.
         /// </summary>
         /// <param name="options">Launch options.</param>
