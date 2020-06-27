@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -6,9 +6,6 @@
         <LangVersion>8.0</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Webkit\PlaywrightSharp.Webkit.csproj" />
+        <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
     </ItemGroup>
 </Project>
