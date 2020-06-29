@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Transport
     {
         private Process _process;
 
-        private StdIOTransport(Process process)
+        internal StdIOTransport(Process process)
         {
             _process = process;
             _process.OutputDataReceived += (sender, args) =>
