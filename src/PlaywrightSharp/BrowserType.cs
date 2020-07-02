@@ -1,11 +1,18 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport.Channel;
 
 namespace PlaywrightSharp
 {
-    /// <inheritdoc />
-    public class BrowserType : IBrowserType
+    /// <inheritdoc cref="IBrowserType" />
+    public class BrowserType : IChannelOwner, IBrowserType
     {
+        internal BrowserType(PlaywrightClient client, Channel channel, BrowserTypeInitializer initializer)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <summary>
         /// Browser type Chromium.
         /// </summary>

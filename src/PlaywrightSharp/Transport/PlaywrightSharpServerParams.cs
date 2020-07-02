@@ -1,4 +1,5 @@
 using System.Text.Json;
+using PlaywrightSharp.Transport.Channel;
 
 namespace PlaywrightSharp.Transport
 {

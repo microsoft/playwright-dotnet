@@ -48,6 +48,7 @@
         <None Remove="Resources\zsSelectorEngineSource.ts" />
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="Protocol" />
       <Folder Include="Server" />
       <Folder Include="Servers" />
     </ItemGroup>

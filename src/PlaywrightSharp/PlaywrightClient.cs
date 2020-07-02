@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
+using PlaywrightSharp.Transport.Channel;
 
 namespace PlaywrightSharp
 {
@@ -18,10 +17,10 @@ namespace PlaywrightSharp
     public class PlaywrightClient : IPlaywrightClient, IDisposable
     {
         private readonly ILoggerFactory _loggerFactory;
-        private Process _playwrightServerProcess;
         private readonly ConcurrentDictionary<string, Channel> _channels = new ConcurrentDictionary<string, Channel>();
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
         private readonly ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>> _callbacks = new ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>>();
+        private Process _playwrightServerProcess;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaywrightClient"/> class.
@@ -51,6 +50,8 @@ namespace PlaywrightSharp
             GC.SuppressFinalize(this);
         }
 
+        internal void AddChannel(Channel channel) => _channels.TryAdd(channel.Guid, channel);
+
         private async Task<IBrowserType> GetBrowserTypeAsync(string browserType)
         {
             if (_playwrightServerProcess == null)
@@ -69,7 +70,7 @@ namespace PlaywrightSharp
                 return channel.Object as T;
             }
 
-            var tcs = new TaskCompletionSource<object>();
+            var tcs = new TaskCompletionSource<IChannelOwner>();
             _waitingForObject.TryAdd(guid, tcs);
             return await tcs.Task.ConfigureAwait(false) as T;
         }
@@ -118,68 +119,62 @@ namespace PlaywrightSharp
 
         private void CreateRemoteObject(ChannelOwnerType type, string guid, JsonElement? initializer)
         {
-            var channel = CreateChannel(guid);
-            _channels.TryAdd(guid, channel);
-            IChannelOwner result;
+            Channel channel = null;
+            IChannelOwner result = null;
 
-            switch (type) {
-                case ChannelOwnerType.BindingCall :
-                    result = new BindingCall(this, channel, initializer);
+            switch (type)
+            {
+                case ChannelOwnerType.BindingCall:
+                    result = new BindingCall(this, new BindingCallChannel(guid, this), initializer?.ToObject<BindingCallInitializer>());
                     break;
                 case ChannelOwnerType.Browser:
-                    result = new Browser(this, channel, initializer);
+                    result = new Browser(this, new BrowserChannel(guid, this), initializer?.ToObject<BrowserInitializer>());
                     break;
                 case ChannelOwnerType.BrowserType:
-                    result = new BrowserType(this, channel, initializer);
+                    result = new BrowserType(this, channel, initializer?.ToObject<BrowserTypeInitializer>());
                     break;
                 case ChannelOwnerType.Context:
-                    result = new BrowserContext(this, channel, initializer);
+                    result = new BrowserContext(this, channel, initializer?.ToObject<BrowserContextInitializer>());
                     break;
                 case ChannelOwnerType.ConsoleMessage:
-                    result = new ConsoleMessage(this, channel, initializer);
+                    result = new ConsoleMessage(this, channel, initializer?.ToObject<ConsoleMessageInitializer>());
                     break;
                 case ChannelOwnerType.Dialog:
-                    result = new Dialog(this, channel, initializer);
+                    result = new Dialog(this, channel, initializer?.ToObject<DialogInitializer>());
                     break;
                 case ChannelOwnerType.Download:
-                    result = new Download(this, channel, initializer);
+                    result = new Download(this, channel, initializer?.ToObject<DownloadInitializer>());
                     break;
                 case ChannelOwnerType.ElementHandle:
-                    result = new ElementHandle(this, channel, initializer);
+                    result = new ElementHandle(this, channel, initializer?.ToObject<ElementHandleInitializer>());
                     break;
                 case ChannelOwnerType.Frame:
-                    result = new Frame(this, channel, initializer);
+                    result = new Frame(this, channel, initializer?.ToObject<FrameInitializer>());
                     break;
                 case ChannelOwnerType.JSHandle:
-                    result = new JSHandle(this, channel, initializer);
+                    result = new JSHandle(this, channel, initializer?.ToObject<JSHandleInitializer>());
                     break;
                 case ChannelOwnerType.Page:
-                    result = new Page(this, channel, initializer);
+                    result = new Page(this, channel, initializer?.ToObject<PageInitializer>());
                     break;
                 case ChannelOwnerType.Request:
-                    result = new Request(this, channel, initializer);
+                    result = new Request(this, channel, initializer?.ToObject<RequestInitializer>());
                     break;
                 case ChannelOwnerType.Response:
-                    result = new Response(this, channel, initializer);
+                    result = new Response(this, channel, initializer?.ToObject<ResponseInitializer>());
                     break;
                 case ChannelOwnerType.Route:
-                    result = new Route(this, channel, initializer);
+                    result = new Route(this, channel, initializer?.ToObject<RouteInitializer>());
                     break;
                 default:
                     Debug.Write("Missing type " + type);
+                    break;
             }
-
-            channel.Object = result;
 
             if (_waitingForObject.TryRemove(guid, out var callback))
             {
                 callback.TrySetResult(result);
             }
-        }
-
-        private Channel CreateChannel(string guid)
-        {
-            throw new NotImplementedException();
         }
 
         private Exception CreateException(PlaywrightServerError error)

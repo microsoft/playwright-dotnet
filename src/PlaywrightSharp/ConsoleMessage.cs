@@ -1,32 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PlaywrightSharp.Transport.Channel;
 
 namespace PlaywrightSharp
 {
     /// <summary>
     /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
     /// </summary>
-    public class ConsoleMessage
+    public class ConsoleMessage : IChannelOwner
     {
         private readonly Func<IJSHandle, bool, string> _handleToString;
         private string _text;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleMessage"/> class.
-        /// </summary>
-        /// <param name="type">Type.</param>
-        /// <param name="text">Text.</param>
-        /// <param name="args">Arguments.</param>
-        /// <param name="handleToString">IJSHandle to string.</param>
-        /// <param name="location">Message location.</param>
-        internal ConsoleMessage(ConsoleType type, string text, IEnumerable<IJSHandle> args, Func<IJSHandle, bool, string> handleToString, ConsoleMessageLocation location = null)
+        internal ConsoleMessage(PlaywrightClient client, Channel channel, ConsoleMessageInitializer initializer)
         {
-            Type = type;
-            _text = text;
-            _handleToString = handleToString;
-            Args = args;
-            Location = location;
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Transport
+namespace PlaywrightSharp.Transport.Channel
 {
     internal class ChannelMessageEventArgs : EventArgs
     {
