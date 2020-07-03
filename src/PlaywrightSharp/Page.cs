@@ -5,16 +5,22 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage" />
     public class Page : IChannelOwner, IPage
     {
-        internal Page(PlaywrightClient client, Channel channel, PageInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly PageChannel _channel;
+
+        internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new PageChannel(guid, scope);
         }
 
         /// <inheritdoc />
@@ -73,6 +79,12 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public event EventHandler<WebsocketEventArgs> Websocket;
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public bool IsClosed { get; }

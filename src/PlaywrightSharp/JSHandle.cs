@@ -2,17 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IJSHandle" />
     public class JSHandle : IChannelOwner, IJSHandle
     {
-        internal JSHandle(PlaywrightClient client, Channel channel, JSHandleInitializer toObject)
+        private readonly ConnectionScope _scope;
+        private readonly JSHandleChannel _channel;
+
+        internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer toObject)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new JSHandleChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();

@@ -1,14 +1,26 @@
 using System;
-using System.Text.Json;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class BindingCall : ChannelOwnerBase
+    internal class BindingCall : IChannelOwner
     {
-        public BindingCall(PlaywrightClient client, Channel channel, BindingCallInitializer initializer) : base(channel)
+        private readonly ConnectionScope _scope;
+        private readonly BindingCallChannel _channel;
+
+        public BindingCall(ConnectionScope scope, string guid, BindingCallInitializer initializer)
         {
+            _scope = scope;
+            _channel = new BindingCallChannel(guid, scope);
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
     }
 }

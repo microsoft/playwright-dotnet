@@ -1,28 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Browser : ChannelOwnerBase, IBrowser
+    internal class Browser : IChannelOwner, IBrowser
     {
-        public Browser(PlaywrightClient client, Channel channel, BrowserInitializer initializer) : base(channel)
+        private readonly ConnectionScope _scope;
+        private readonly BrowserChannel _channel;
+
+        public Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new BrowserChannel(guid, scope);
         }
 
-        public void Dispose() => throw new NotImplementedException();
-
-        public ValueTask DisposeAsync() => throw new NotImplementedException();
-
         public event EventHandler<TargetChangedArgs> TargetChanged;
+
         public event EventHandler<TargetChangedArgs> TargetCreated;
+
         public event EventHandler<TargetChangedArgs> TargetDestroyed;
+
         public event EventHandler Disconnected;
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
+
         public IEnumerable<IBrowserContext> BrowserContexts { get; }
+
         public IBrowserContext DefaultContext { get; }
+
         public bool IsConnected { get; }
+
         public Task StartTracingAsync(IPage page = null, TracingOptions options = null) => throw new NotImplementedException();
 
         public Task<string> StopTracingAsync() => throw new NotImplementedException();
@@ -34,6 +49,8 @@ namespace PlaywrightSharp
         public ITarget GetPageTarget(IPage page) => throw new NotImplementedException();
 
         public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null) => throw new NotImplementedException();
+
+        public Task<IPage> NewPageAsync(BrowserContextOptions options = null) => throw new NotImplementedException();
 
         public Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null) => throw new NotImplementedException();
 

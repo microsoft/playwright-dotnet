@@ -1,13 +1,25 @@
 using System;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     internal class Download : IChannelOwner
     {
-        public Download(PlaywrightClient client, Channel channel, DownloadInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly DownloadChannel _channel;
+
+        public Download(ConnectionScope scope, string guid, DownloadInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new DownloadChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
     }
 }

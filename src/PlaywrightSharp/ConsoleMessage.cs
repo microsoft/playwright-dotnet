@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
@@ -10,13 +12,21 @@ namespace PlaywrightSharp
     /// </summary>
     public class ConsoleMessage : IChannelOwner
     {
-        private readonly Func<IJSHandle, bool, string> _handleToString;
-        private string _text;
+        private ConnectionScope _scope;
+        private ConsoleMessageChannel _channel;
 
-        internal ConsoleMessage(PlaywrightClient client, Channel channel, ConsoleMessageInitializer initializer)
+        internal ConsoleMessage(ConnectionScope scope, string guid, ConsoleMessageInitializer initializer)
         {
+            _scope = scope;
+            _channel = new ConsoleMessageChannel(guid, scope);
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <summary>
         /// Gets the ConsoleMessage type.
@@ -39,17 +49,6 @@ namespace PlaywrightSharp
         /// Gets the console text.
         /// </summary>
         /// <value>The text.</value>
-        internal string Text
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_text))
-                {
-                    _text = string.Join(" ", Args.Select(arg => _handleToString(arg, false)).ToArray());
-                }
-
-                return _text;
-            }
-        }
+        internal string Text { get; }
     }
 }

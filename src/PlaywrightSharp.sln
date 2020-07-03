@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp", "Playwrig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests.CloseMe", "PlaywrightSharp.Tests.CloseMe\PlaywrightSharp.Tests.CloseMe.csproj", "{588787D0-8782-4067-A967-FABB0D22C433}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Demo", "PlaywrightSharp.Demo\PlaywrightSharp.Demo.csproj", "{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{588787D0-8782-4067-A967-FABB0D22C433}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{588787D0-8782-4067-A967-FABB0D22C433}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{588787D0-8782-4067-A967-FABB0D22C433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

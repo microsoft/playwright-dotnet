@@ -1,13 +1,25 @@
 using System;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     internal class Route : IChannelOwner
     {
-        public Route(PlaywrightClient client, Channel channel, RouteInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly RouteChannel _channel;
+
+        public Route(ConnectionScope scope, string guid, RouteInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new RouteChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
     }
 }

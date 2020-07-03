@@ -2,17 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IElementHandle" />
     public class ElementHandle : IChannelOwner, IElementHandle
     {
-        internal ElementHandle(PlaywrightClient client, Channel channel, ElementHandleInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly ElementHandleChannel _channel;
+
+        internal ElementHandle(ConnectionScope scope, string guid, ElementHandleInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new ElementHandleChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();

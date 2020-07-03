@@ -2,17 +2,29 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IFrame" />
     public class Frame : IChannelOwner, IFrame
     {
-        internal Frame(PlaywrightClient client, Channel channel, FrameInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly FrameChannel _channel;
+
+        internal Frame(ConnectionScope scope, string guid, FrameInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new FrameChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public IFrame[] ChildFrames { get; }

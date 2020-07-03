@@ -2,17 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IRequest" />
     public class Request : IChannelOwner, IRequest
     {
-        internal Request(PlaywrightClient client, Channel channel, RequestInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly RequestChannel _channel;
+
+        internal Request(ConnectionScope scope, string guid, RequestInitializer initializer)
         {
+            _scope = scope;
+            _channel = new RequestChannel(guid, scope);
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public string Url { get; }

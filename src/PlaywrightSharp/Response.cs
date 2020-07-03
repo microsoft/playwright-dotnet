@@ -3,17 +3,29 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IResponse" />
     public class Response : IChannelOwner, IResponse
     {
-        internal Response(PlaywrightClient clilent, Channel channel, ResponseInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly ResponseChannel _channel;
+
+        internal Response(ConnectionScope scope, string guid, ResponseInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new ResponseChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public HttpStatusCode Status { get; }

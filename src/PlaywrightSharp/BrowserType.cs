@@ -1,18 +1,15 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserType" />
     public class BrowserType : IChannelOwner, IBrowserType
     {
-        internal BrowserType(PlaywrightClient client, Channel channel, BrowserTypeInitializer initializer)
-        {
-            throw new System.NotImplementedException();
-        }
-
         /// <summary>
         /// Browser type Chromium.
         /// </summary>
@@ -28,20 +25,39 @@ namespace PlaywrightSharp
         /// </summary>
         public const string Webkit = "webkit";
 
+        private readonly BrowserTypeInitializer _initializer;
+        private readonly BrowserTypeChannel _channel;
+        private readonly ConnectionScope _scope;
+
+        internal BrowserType(ConnectionScope scope, string guid, BrowserTypeInitializer initializer)
+        {
+            _scope = scope;
+            _initializer = initializer;
+            _channel = new BrowserTypeChannel(guid, scope);
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
+
         /// <inheritdoc />
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
 
         /// <inheritdoc />
-        public string ExecutablePath { get; }
+        public string ExecutablePath => _initializer.ExecutablePath;
 
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name => _initializer.Name;
 
         /// <inheritdoc />
         public IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null) => throw new System.NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IBrowser> LaunchAsync(LaunchOptions options = null) => throw new System.NotImplementedException();
+        public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
+            => (await _channel.LaunchAsync(options).ConfigureAwait(false)).Object as IBrowser;
 
         /// <inheritdoc />
         public string[] GetDefaultArgs(BrowserArgOptions options = null) => throw new System.NotImplementedException();

@@ -1,17 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : IChannelOwner, IBrowserContext
     {
-        internal BrowserContext(PlaywrightClient client, Channel channel, BrowserContextInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly BrowserContextChannel _channel;
+
+        internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new BrowserContextChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
 
         /// <inheritdoc />
         public BrowserContextOptions Options { get; }

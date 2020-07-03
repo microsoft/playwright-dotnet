@@ -10,6 +10,7 @@
       <ProjectReference Include="..\PlaywrightSharp.Abstractions\PlaywrightSharp.Abstractions.csproj" />
       <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
       <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
+      <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,13 +1,25 @@
 using System;
+using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
     internal class Dialog : IChannelOwner
     {
-        public Dialog(PlaywrightClient client, Channel channel, DialogInitializer initializer)
+        private readonly ConnectionScope _scope;
+        private readonly DialogChannel _channel;
+
+        public Dialog(ConnectionScope scope, string guid, DialogInitializer initializer)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+            _channel = new DialogChannel(guid, scope);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        Channel IChannelOwner.Channel => _channel;
     }
 }

@@ -9,7 +9,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// A Browser is created when Playwright connects to a browser instance.
     /// </summary>
-    public interface IBrowser : IDisposable, IAsyncDisposable
+    public interface IBrowser
     {
         /// <summary>
         /// Raised when the url of a target changes
@@ -104,6 +104,13 @@ namespace PlaywrightSharp
         /// </example>
         /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created.</returns>
         Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null);
+
+        /// <summary>
+        /// Creates a new page in a new browser context. Closing this page will close the context as well.
+        /// </summary>
+        /// <param name="options">Context options.</param>
+        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
+        Task<IPage> NewPageAsync(BrowserContextOptions options = null);
 
         /// <summary>
         /// This searches for a target in this specific browser context.

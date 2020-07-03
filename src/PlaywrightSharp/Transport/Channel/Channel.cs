@@ -4,10 +4,9 @@ namespace PlaywrightSharp.Transport.Channel
 {
     internal class Channel
     {
-        public Channel(string guid, PlaywrightClient client)
+        public Channel(string guid, ConnectionScope scope)
         {
             Guid = guid;
-            client.AddChannel(this);
         }
 
         internal event EventHandler<ChannelMessageEventArgs> MessageReceived;
