@@ -40,8 +40,9 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Esprima" Version="1.0.1270" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
+        <PackageReference Include="Castle.Core" Version="4.4.1" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="Resources\injectedSource.ts" />

@@ -116,9 +116,8 @@ namespace PlaywrightSharp.Transport
             _client.OnObjectCreated(guid, result);
         }
 
-        internal Task<T> SendMessageToServer<T>(string guid, string method, params object[] args)
-            where T : class
-            => _client.SendMessageToServerAsync<T>(guid, method, args);
+        internal Task<JsonElement?> SendMessageToServer(string guid, string method, params object[] args)
+            => _client.SendMessageToServerAsync(guid, method, args);
 
         private void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
 

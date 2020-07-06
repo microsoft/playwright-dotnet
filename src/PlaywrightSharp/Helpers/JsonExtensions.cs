@@ -22,6 +22,9 @@ namespace PlaywrightSharp.Helpers
         public static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
             => JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? DefaultJsonSerializerOptions);
 
+        public static object ToObject(this JsonElement element, Type type, JsonSerializerOptions options = null)
+            => JsonSerializer.Deserialize(element.GetRawText(), type, options ?? DefaultJsonSerializerOptions);
+
         public static string ToJson<T>(this T value, JsonSerializerOptions options = null)
             => JsonSerializer.Serialize(value, options ?? DefaultJsonSerializerOptions);
 

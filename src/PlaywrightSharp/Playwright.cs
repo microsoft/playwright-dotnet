@@ -25,7 +25,7 @@ namespace PlaywrightSharp
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
         private readonly ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>> _callbacks = new ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>>();
         private Process _playwrightServerProcess;
-        private ConnectionScope _rootScript;
+        private readonly ConnectionScope _rootScript;
         private int _lastId;
         private IConnectionTransport _transport;
 
@@ -67,8 +67,7 @@ namespace PlaywrightSharp
             }
         }
 
-        internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, params object[] args)
-            where T : class
+        internal async Task<JsonElement?> SendMessageToServerAsync(string guid, string method, params object[] args)
         {
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
@@ -85,7 +84,7 @@ namespace PlaywrightSharp
 
             var tcs = new TaskCompletionSource<JsonElement?>();
             _callbacks.TryAdd(id, tcs);
-            return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>();
+            return await tcs.Task.ConfigureAwait(false);
         }
 
         internal ConnectionScope CreateScope(string guid)
@@ -132,7 +131,7 @@ namespace PlaywrightSharp
 
         private void TransportOnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message);
+            var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
 
             if (message.Id.HasValue)
             {
@@ -159,7 +158,7 @@ namespace PlaywrightSharp
             {
                 _objects.TryGetValue(message.Guid, out var scopeObject);
                 var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
-                scope.CreateRemoteObject(message.Params.Type, message.Guid, message.Params.Initializer);
+                scope.CreateRemoteObject(message.Params.Type, message.Params.Guid, message.Params.Initializer);
 
                 return;
             }

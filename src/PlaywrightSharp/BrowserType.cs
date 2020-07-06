@@ -26,15 +26,14 @@ namespace PlaywrightSharp
         public const string Webkit = "webkit";
 
         private readonly BrowserTypeInitializer _initializer;
-        private readonly BrowserTypeChannel _channel;
+        private readonly IBrowserTypeChannel _channel;
         private readonly ConnectionScope _scope;
 
         internal BrowserType(ConnectionScope scope, string guid, BrowserTypeInitializer initializer)
         {
             _scope = scope;
             _initializer = initializer;
-            _channel = new BrowserTypeChannel(guid, scope);
-            throw new System.NotImplementedException();
+            _channel = ChannelProxyFactory.CreateProxy<IBrowserTypeChannel>(guid, scope);
         }
 
         /// <inheritdoc/>
