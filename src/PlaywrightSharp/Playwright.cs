@@ -4,15 +4,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channel;
-using PlaywrightSharp.Transport.Protocol;
+using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp
 {
@@ -24,8 +22,8 @@ namespace PlaywrightSharp
         private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
         private readonly ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>> _callbacks = new ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>>();
-        private Process _playwrightServerProcess;
         private readonly ConnectionScope _rootScript;
+        private Process _playwrightServerProcess;
         private int _lastId;
         private IConnectionTransport _transport;
 
@@ -33,7 +31,7 @@ namespace PlaywrightSharp
         /// Initializes a new instance of the <see cref="Playwright"/> class.
         /// </summary>
         /// <param name="loggerFactory">Logger.</param>
-        public Playwright(ILoggerFactory loggerFactory = null)
+        internal Playwright(ILoggerFactory loggerFactory = null)
         {
             _loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
             _rootScript = CreateScope(string.Empty);
@@ -42,14 +40,27 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Playwright() => Dispose(false);
 
-        /// <inheritdoc />
-        public Task<IBrowserType> GetChromiumBrowserAsync() => GetBrowserTypeAsync(BrowserType.Chromium);
+        /// <inheritdoc/>
+        public IBrowserType Chromium { get; private set; }
 
-        /// <inheritdoc />
-        public Task<IBrowserType> GetFirefoxBrowserAsync() => GetBrowserTypeAsync(BrowserType.Chromium);
+        /// <inheritdoc/>
+        public IBrowserType Firefox { get; private set; }
 
-        /// <inheritdoc />
-        public Task<IBrowserType> GetWebkitTypeAsync() => GetBrowserTypeAsync(BrowserType.Chromium);
+        /// <inheritdoc/>
+        public IBrowserType Webkit { get; private set; }
+
+        /// <summary>
+        /// Launches a Playwright server.
+        /// </summary>
+        /// <param name="loggerFactory">Logger.</param>
+        /// <returns>A <see cref="Task"/> that completes when the playwright server is ready to be used.</returns>
+        public static async Task<Playwright> CreateAsync(ILoggerFactory loggerFactory = null)
+        {
+            var playwright = new Playwright(loggerFactory);
+            await playwright.LaunchPlaywrightServerAsync().ConfigureAwait(false);
+
+            return playwright;
+        }
 
         /// <inheritdoc />
         public void Dispose()
@@ -67,7 +78,8 @@ namespace PlaywrightSharp
             }
         }
 
-        internal async Task<JsonElement?> SendMessageToServerAsync(string guid, string method, params object[] args)
+        internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args)
+            where T : class
         {
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
@@ -78,13 +90,22 @@ namespace PlaywrightSharp
                 Params = args,
             };
 
-            string messageString = JsonSerializer.Serialize(message, JsonExtensions.DefaultJsonSerializerOptions);
+            string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
             Debug.WriteLine($"pw:channel:command {messageString}");
             await _transport.SendAsync(messageString).ConfigureAwait(false);
 
-            var tcs = new TaskCompletionSource<JsonElement?>();
+            var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
-            return await tcs.Task.ConfigureAwait(false);
+
+            if (typeof(Channel).IsAssignableFrom(typeof(T)))
+            {
+                _objects.TryGetValue(tcs.Task.Result.Value.GetProperty("guid").ToString(), out var result);
+                return result as T;
+            }
+            else
+            {
+                return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>();
+            }
         }
 
         internal ConnectionScope CreateScope(string guid)
@@ -98,16 +119,6 @@ namespace PlaywrightSharp
 
         internal void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
 
-        private Task<IBrowserType> GetBrowserTypeAsync(string browserType)
-        {
-            if (_playwrightServerProcess == null)
-            {
-                LaunchPlaywrightServer();
-            }
-
-            return WaitForObjectWithKnownName<IBrowserType>(browserType);
-        }
-
         private async Task<T> WaitForObjectWithKnownName<T>(string guid)
             where T : class
         {
@@ -116,17 +127,27 @@ namespace PlaywrightSharp
                 return channel as T;
             }
 
-            var tcs = new TaskCompletionSource<IChannelOwner>();
+            var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
             _waitingForObject.TryAdd(guid, tcs);
             return await tcs.Task.ConfigureAwait(false) as T;
         }
 
-        private void LaunchPlaywrightServer()
+        private async Task LaunchPlaywrightServerAsync()
         {
             _playwrightServerProcess = GetProcess();
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess);
             _transport.MessageReceived += TransportOnMessageReceived;
+
+            var chromiumTask = WaitForObjectWithKnownName<IBrowserType>(BrowserType.Chromium);
+            var firefoxTask = WaitForObjectWithKnownName<IBrowserType>(BrowserType.Firefox);
+            var webkitTask = WaitForObjectWithKnownName<IBrowserType>(BrowserType.Webkit);
+
+            await Task.WhenAll(chromiumTask, firefoxTask, webkitTask).ConfigureAwait(false);
+
+            Chromium = chromiumTask.Result;
+            Firefox = firefoxTask.Result;
+            Webkit = webkitTask.Result;
         }
 
         private void TransportOnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -196,6 +217,9 @@ namespace PlaywrightSharp
                 },
             };
 
+            process.StartInfo.FileName = "node";
+            process.StartInfo.Arguments = "/Users/neo/Documents/Coding/microsoft/playwright/lib/rpc/server.js";
+
             return process;
         }
 
@@ -232,6 +256,14 @@ namespace PlaywrightSharp
             }
 
             _playwrightServerProcess?.Dispose();
+        }
+
+        private JsonSerializerOptions GetDefaultJsonSerializerOptions()
+        {
+            var options = JsonExtensions.GetNewDefaultSerializerOptions();
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+
+            return options;
         }
     }
 }

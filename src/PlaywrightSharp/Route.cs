@@ -1,6 +1,6 @@
 using System;
 using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp

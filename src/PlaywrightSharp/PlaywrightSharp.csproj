@@ -17,6 +17,7 @@
         <CodeAnalysisRuleSet>../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <RootNamespace>PlaywrightSharp</RootNamespace>
+        <ReleaseVersion>0.0.0</ReleaseVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <NoWarn>1701;1702;CS0067</NoWarn>
@@ -42,7 +43,6 @@
         <PackageReference Include="Esprima" Version="1.0.1270" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
-        <PackageReference Include="Castle.Core" Version="4.4.1" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="Resources\injectedSource.ts" />

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
@@ -26,14 +26,14 @@ namespace PlaywrightSharp
         public const string Webkit = "webkit";
 
         private readonly BrowserTypeInitializer _initializer;
-        private readonly IBrowserTypeChannel _channel;
+        private readonly BrowserTypeChannel _channel;
         private readonly ConnectionScope _scope;
 
         internal BrowserType(ConnectionScope scope, string guid, BrowserTypeInitializer initializer)
         {
             _scope = scope;
             _initializer = initializer;
-            _channel = ChannelProxyFactory.CreateProxy<IBrowserTypeChannel>(guid, scope);
+            _channel = new BrowserTypeChannel(guid, scope);
         }
 
         /// <inheritdoc/>

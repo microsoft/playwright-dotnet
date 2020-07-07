@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Transport.Channel
+namespace PlaywrightSharp.Transport.Channels
 {
     /// <summary>
     /// An IChannelOwner has the ability to build data coming from a Playwright server and convert it into a Playwright class.

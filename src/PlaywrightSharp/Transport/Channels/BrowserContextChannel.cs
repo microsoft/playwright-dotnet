@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Transport.Channel
+namespace PlaywrightSharp.Transport.Channels
 {
     internal class BrowserContextChannel : Channel
     {

@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Transport
@@ -116,8 +116,9 @@ namespace PlaywrightSharp.Transport
             _client.OnObjectCreated(guid, result);
         }
 
-        internal Task<JsonElement?> SendMessageToServer(string guid, string method, params object[] args)
-            => _client.SendMessageToServerAsync(guid, method, args);
+        internal Task<T> SendMessageToServer<T>(string guid, string method, object args)
+            where T : class
+            => _client.SendMessageToServerAsync<T>(guid, method, args);
 
         private void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
 

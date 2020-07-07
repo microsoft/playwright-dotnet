@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace PlaywrightSharp.Transport.Channel
+namespace PlaywrightSharp.Transport.Channels
 {
     internal enum ChannelOwnerType
     {

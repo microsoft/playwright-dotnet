@@ -6,7 +6,7 @@ namespace PlaywrightSharp.Transport
 {
     internal class StdIOTransport : IConnectionTransport
     {
-        private Process _process;
+        private readonly Process _process;
 
         internal StdIOTransport(Process process)
         {
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Transport
         public Task SendAsync(string message)
         {
             Debug.WriteLine($"SEND ► {message}");
-            return _process.StandardInput.WriteAsync(message);
+            return _process.StandardInput.WriteLineAsync(message);
         }
     }
 }

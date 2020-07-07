@@ -20,7 +20,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Maximum time in milliseconds to wait for the browser instance to start.
         /// </summary>
-        public int Timeout { get; set; }
+        public int? Timeout { get; set; }
 
         /// <summary>
         ///  Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.

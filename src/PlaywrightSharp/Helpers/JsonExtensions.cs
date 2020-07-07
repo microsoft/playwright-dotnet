@@ -6,16 +6,7 @@ namespace PlaywrightSharp.Helpers
 {
     internal static class JsonExtensions
     {
-        static JsonExtensions()
-            => DefaultJsonSerializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = true,
-                Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
-                },
-            };
+        static JsonExtensions() => DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions();
 
         public static JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
@@ -37,5 +28,16 @@ namespace PlaywrightSharp.Helpers
 
             return document.RootElement.ToObject<T>(options ?? DefaultJsonSerializerOptions);
         }
+
+        public static JsonSerializerOptions GetNewDefaultSerializerOptions()
+            => new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                IgnoreNullValues = true,
+                Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                },
+            };
     }
 }

@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channel;
+using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
