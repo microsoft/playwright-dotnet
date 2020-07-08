@@ -5,7 +5,7 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Dialog : IChannelOwner
+    internal class Dialog : IChannelOwner<Dialog>
     {
         private readonly ConnectionScope _scope;
         private readonly DialogChannel _channel;
@@ -13,13 +13,13 @@ namespace PlaywrightSharp
         public Dialog(ConnectionScope scope, string guid, DialogInitializer initializer)
         {
             _scope = scope;
-            _channel = new DialogChannel(guid, scope);
+            _channel = new DialogChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
     }
 }

@@ -1,8 +1,8 @@
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class RequestChannel : Channel
+    internal class RequestChannel : Channel<Request>
     {
-        public RequestChannel(string guid, ConnectionScope scope) : base(guid, scope)
+        public RequestChannel(string guid, ConnectionScope scope, Request owner) : base(guid, scope, owner)
         {
         }
     }

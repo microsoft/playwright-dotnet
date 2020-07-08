@@ -13,9 +13,13 @@ namespace PlaywrightSharp.Transport.Channels
             _playwright = playwright;
         }
 
+        public override bool CanConvert(Type type) => typeof(IChannelOwner).IsAssignableFrom(type);
+
         public override IChannelOwner Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            using JsonDocument document = JsonDocument.ParseValue(ref reader);
+            string guid = document.RootElement.GetProperty("guid").ToString();
+            return _playwright.GetObject(guid);
         }
 
         public override void Write(Utf8JsonWriter writer, IChannelOwner value, JsonSerializerOptions options)

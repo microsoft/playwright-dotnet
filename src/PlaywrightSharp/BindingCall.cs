@@ -5,7 +5,7 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class BindingCall : IChannelOwner
+    internal class BindingCall : IChannelOwner<BindingCall>
     {
         private readonly ConnectionScope _scope;
         private readonly BindingCallChannel _channel;
@@ -13,14 +13,16 @@ namespace PlaywrightSharp
         public BindingCall(ConnectionScope scope, string guid, BindingCallInitializer initializer)
         {
             _scope = scope;
-            _channel = new BindingCallChannel(guid, scope);
-            throw new NotImplementedException();
+            _channel = new BindingCallChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        /// <inheritdoc/>
+        Channel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
     }
 }

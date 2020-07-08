@@ -9,7 +9,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IRequest" />
-    public class Request : IChannelOwner, IRequest
+    public class Request : IChannelOwner<Request>, IRequest
     {
         private readonly ConnectionScope _scope;
         private readonly RequestChannel _channel;
@@ -17,15 +17,14 @@ namespace PlaywrightSharp
         internal Request(ConnectionScope scope, string guid, RequestInitializer initializer)
         {
             _scope = scope;
-            _channel = new RequestChannel(guid, scope);
-            throw new NotImplementedException();
+            _channel = new RequestChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Request> IChannelOwner<Request>.Channel => _channel;
 
         /// <inheritdoc />
         public string Url { get; }

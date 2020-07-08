@@ -8,7 +8,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserType" />
-    public class BrowserType : IChannelOwner, IBrowserType
+    public class BrowserType : IChannelOwner<BrowserType>, IBrowserType
     {
         /// <summary>
         /// Browser type Chromium.
@@ -33,14 +33,14 @@ namespace PlaywrightSharp
         {
             _scope = scope;
             _initializer = initializer;
-            _channel = new BrowserTypeChannel(guid, scope);
+            _channel = new BrowserTypeChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
         /// <inheritdoc />
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
@@ -56,7 +56,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
-            => (await _channel.LaunchAsync(options).ConfigureAwait(false)).Object as IBrowser;
+            => (await _channel.LaunchAsync(options).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public string[] GetDefaultArgs(BrowserArgOptions options = null) => throw new System.NotImplementedException();

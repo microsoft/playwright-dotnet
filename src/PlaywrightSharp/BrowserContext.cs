@@ -8,7 +8,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserContext" />
-    public class BrowserContext : IChannelOwner, IBrowserContext
+    public class BrowserContext : IChannelOwner<BrowserContext>, IBrowserContext
     {
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
@@ -16,20 +16,23 @@ namespace PlaywrightSharp
         internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
             _scope = scope;
-            _channel = new BrowserContextChannel(guid, scope);
+            _channel = new BrowserContextChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<BrowserContext> IChannelOwner<BrowserContext>.Channel => _channel;
 
         /// <inheritdoc />
         public BrowserContextOptions Options { get; }
 
+        internal Page OwnerPage { get; set; }
+
         /// <inheritdoc />
-        public Task<IPage> NewPageAsync(string url = null) => throw new NotImplementedException();
+        public async Task<IPage> NewPageAsync(string url = null)
+            => (await _channel.NewPageAsync(url).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public Task CloseAsync() => throw new NotImplementedException();

@@ -1,8 +1,8 @@
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class JSHandleChannel : Channel
+    internal class JSHandleChannel : Channel<JSHandle>
     {
-        public JSHandleChannel(string guid, ConnectionScope scope) : base(guid, scope)
+        public JSHandleChannel(string guid, ConnectionScope scope, JSHandle owner) : base(guid, scope, owner)
         {
         }
     }

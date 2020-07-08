@@ -10,7 +10,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IResponse" />
-    public class Response : IChannelOwner, IResponse
+    public class Response : IChannelOwner<Response>, IResponse
     {
         private readonly ConnectionScope _scope;
         private readonly ResponseChannel _channel;
@@ -18,14 +18,14 @@ namespace PlaywrightSharp
         internal Response(ConnectionScope scope, string guid, ResponseInitializer initializer)
         {
             _scope = scope;
-            _channel = new ResponseChannel(guid, scope);
+            _channel = new ResponseChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />
         public HttpStatusCode Status { get; }

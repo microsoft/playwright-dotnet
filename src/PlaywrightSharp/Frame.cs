@@ -9,7 +9,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IFrame" />
-    public class Frame : IChannelOwner, IFrame
+    public class Frame : IChannelOwner<Frame>, IFrame
     {
         private readonly ConnectionScope _scope;
         private readonly FrameChannel _channel;
@@ -17,14 +17,14 @@ namespace PlaywrightSharp
         internal Frame(ConnectionScope scope, string guid, FrameInitializer initializer)
         {
             _scope = scope;
-            _channel = new FrameChannel(guid, scope);
+            _channel = new FrameChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
         /// <inheritdoc />
         public IFrame[] ChildFrames { get; }
@@ -39,6 +39,9 @@ namespace PlaywrightSharp
         public IFrame ParentFrame { get; }
 
         /// <inheritdoc />
+        public IPage Page { get; internal set; }
+
+        /// <inheritdoc />
         public bool Detached { get; }
 
         /// <inheritdoc />
@@ -48,7 +51,8 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => throw new NotImplementedException();
+        public async Task<IResponse> GoToAsync(string url, GoToOptions options = null)
+            => (await _channel.GoToAsync(url, options).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil) => throw new NotImplementedException();

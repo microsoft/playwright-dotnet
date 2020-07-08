@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class BrowserTypeChannel : Channel
+    internal class BrowserTypeChannel : Channel<BrowserType>
     {
-        public BrowserTypeChannel(string guid, ConnectionScope scope) : base(guid, scope)
+        public BrowserTypeChannel(string guid, ConnectionScope scope, BrowserType owner) : base(guid, scope, owner)
         {
         }
 
@@ -12,16 +13,9 @@ namespace PlaywrightSharp.Transport.Channels
             => Scope.SendMessageToServer<BrowserChannel>(
                 Guid,
                 "launch",
-                new LaunchRequest { Options = new LaunchOptionsRequest { Headless = false } });
-
-        internal class LaunchRequest
-        {
-            public LaunchOptionsRequest Options { get; set; }
-        }
-
-        internal class LaunchOptionsRequest
-        {
-            public bool Headless { get; set; }
-        }
+                new Dictionary<string, object>
+                {
+                    ["options"] = options ?? new LaunchOptions(),
+                });
     }
 }

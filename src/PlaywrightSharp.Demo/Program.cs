@@ -12,6 +12,7 @@ namespace PlaywrightSharp.Demo
             var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });
             var page = await browser.NewPageAsync();
             await page.GoToAsync("https://example.com");
+            Console.ReadLine();
         }
     }
 }

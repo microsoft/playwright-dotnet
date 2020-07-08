@@ -10,7 +10,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
     /// </summary>
-    public class ConsoleMessage : IChannelOwner
+    public class ConsoleMessage : IChannelOwner<ConsoleMessage>
     {
         private ConnectionScope _scope;
         private ConsoleMessageChannel _channel;
@@ -18,15 +18,14 @@ namespace PlaywrightSharp
         internal ConsoleMessage(ConnectionScope scope, string guid, ConsoleMessageInitializer initializer)
         {
             _scope = scope;
-            _channel = new ConsoleMessageChannel(guid, scope);
-            throw new NotImplementedException();
+            _channel = new ConsoleMessageChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
 
         /// <summary>
         /// Gets the ConsoleMessage type.

@@ -1,8 +1,8 @@
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class BindingCallChannel : Channel
+    internal class BindingCallChannel : Channel<BindingCall>
     {
-        public BindingCallChannel(string guid, ConnectionScope scope) : base(guid, scope)
+        public BindingCallChannel(string guid, ConnectionScope scope, BindingCall owner) : base(guid, scope, owner)
         {
         }
     }

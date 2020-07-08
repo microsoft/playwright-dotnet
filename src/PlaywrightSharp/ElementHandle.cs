@@ -9,7 +9,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IElementHandle" />
-    public class ElementHandle : IChannelOwner, IElementHandle
+    public class ElementHandle : IChannelOwner<ElementHandle>, IElementHandle
     {
         private readonly ConnectionScope _scope;
         private readonly ElementHandleChannel _channel;
@@ -17,14 +17,14 @@ namespace PlaywrightSharp
         internal ElementHandle(ConnectionScope scope, string guid, ElementHandleInitializer initializer)
         {
             _scope = scope;
-            _channel = new ElementHandleChannel(guid, scope);
+            _channel = new ElementHandleChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();

@@ -96,16 +96,7 @@ namespace PlaywrightSharp
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
-
-            if (typeof(Channel).IsAssignableFrom(typeof(T)))
-            {
-                _objects.TryGetValue(tcs.Task.Result.Value.GetProperty("guid").ToString(), out var result);
-                return result as T;
-            }
-            else
-            {
-                return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>();
-            }
+            return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>(GetDefaultJsonSerializerOptions());
         }
 
         internal ConnectionScope CreateScope(string guid)
@@ -118,6 +109,12 @@ namespace PlaywrightSharp
         internal void RemoveScope(string guid) => _scopes.TryRemove(guid, out _);
 
         internal void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
+
+        internal IChannelOwner GetObject(string guid)
+        {
+            _objects.TryGetValue(guid, out var result);
+            return result;
+        }
 
         private async Task<T> WaitForObjectWithKnownName<T>(string guid)
             where T : class
@@ -262,6 +259,7 @@ namespace PlaywrightSharp
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions();
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelToGuidConverter(this));
 
             return options;
         }

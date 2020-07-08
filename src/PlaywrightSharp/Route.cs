@@ -5,7 +5,7 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Route : IChannelOwner
+    internal class Route : IChannelOwner<Route>
     {
         private readonly ConnectionScope _scope;
         private readonly RouteChannel _channel;
@@ -13,13 +13,13 @@ namespace PlaywrightSharp
         public Route(ConnectionScope scope, string guid, RouteInitializer initializer)
         {
             _scope = scope;
-            _channel = new RouteChannel(guid, scope);
+            _channel = new RouteChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Route> IChannelOwner<Route>.Channel => _channel;
     }
 }

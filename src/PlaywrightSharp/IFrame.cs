@@ -50,6 +50,11 @@ namespace PlaywrightSharp
         string Id { get; set; }
 
         /// <summary>
+        /// Owner page.
+        /// </summary>
+        IPage Page { get; }
+
+        /// <summary>
         /// Returns page's title.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the action completed, yielding the frame's title.</returns>

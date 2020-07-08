@@ -1,28 +1,15 @@
-using System;
+﻿using System;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class Channel
+    internal class Channel<T> : ChannelBase
+        where T : IChannelOwner<T>
     {
-        public Channel(string guid, ConnectionScope scope)
+        public Channel(string guid, ConnectionScope scope, T owner) : base(guid, scope)
         {
-            Guid = guid;
-            Scope = scope;
+            Object = owner;
         }
 
-        internal event EventHandler<ChannelMessageEventArgs> MessageReceived;
-
-        public string Guid { get; }
-
-        public ConnectionScope Scope { get; }
-
-        public IChannelOwner Object { get; set; }
-
-        internal void OnMessage(string method, PlaywrightSharpServerParams serverParams)
-            => MessageReceived?.Invoke(this, new ChannelMessageEventArgs
-            {
-                Method = method,
-                Params = serverParams,
-            });
+        public T Object { get; set; }
     }
 }

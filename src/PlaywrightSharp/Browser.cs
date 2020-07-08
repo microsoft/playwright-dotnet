@@ -7,7 +7,7 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Browser : IChannelOwner, IBrowser
+    internal class Browser : IChannelOwner<Browser>, IBrowser
     {
         private readonly ConnectionScope _scope;
         private readonly BrowserChannel _channel;
@@ -15,7 +15,7 @@ namespace PlaywrightSharp
         public Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
         {
             _scope = scope;
-            _channel = new BrowserChannel(guid, scope);
+            _channel = new BrowserChannel(guid, scope, this);
         }
 
         public event EventHandler<TargetChangedArgs> TargetChanged;
@@ -30,7 +30,7 @@ namespace PlaywrightSharp
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Browser> IChannelOwner<Browser>.Channel => _channel;
 
         public IEnumerable<IBrowserContext> BrowserContexts { get; }
 
@@ -48,9 +48,17 @@ namespace PlaywrightSharp
 
         public ITarget GetPageTarget(IPage page) => throw new NotImplementedException();
 
-        public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null) => throw new NotImplementedException();
+        public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
+            => (await _channel.NewContextAsync(options).ConfigureAwait(false)).Object;
 
-        public Task<IPage> NewPageAsync(BrowserContextOptions options = null) => throw new NotImplementedException();
+        public async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
+        {
+            var context = await NewContextAsync(options).ConfigureAwait(false) as BrowserContext;
+            var page = await context.NewPageAsync().ConfigureAwait(false) as Page;
+            page.BrowserContext = context;
+            context.OwnerPage = page;
+            return page;
+        }
 
         public Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null) => throw new NotImplementedException();
 

@@ -12,15 +12,22 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage" />
-    public class Page : IChannelOwner, IPage
+    public class Page : IChannelOwner<Page>, IPage
     {
         private readonly ConnectionScope _scope;
         private readonly PageChannel _channel;
+        private readonly List<Frame> _frames = new List<Frame>();
+        private readonly ViewportSize _viewportSize;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
             _scope = scope;
-            _channel = new PageChannel(guid, scope);
+            _channel = new PageChannel(guid, scope, this);
+
+            MainFrame = initializer.MainFrame.Object;
+            MainFrame.Page = this;
+            _frames.Add(MainFrame);
+            _viewportSize = initializer.ViewportSize;
         }
 
         /// <inheritdoc />
@@ -84,16 +91,19 @@ namespace PlaywrightSharp
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<Page> IChannelOwner<Page>.Channel => _channel;
 
         /// <inheritdoc />
         public bool IsClosed { get; }
 
         /// <inheritdoc />
-        public IFrame MainFrame { get; }
+        IFrame IPage.MainFrame => MainFrame;
+
+        /// <inheritdoc cref="IPage.MainFrame" />
+        public Frame MainFrame { get; }
 
         /// <inheritdoc />
-        public IBrowserContext BrowserContext { get; }
+        public IBrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc />
         public Viewport Viewport { get; }
@@ -141,7 +151,7 @@ namespace PlaywrightSharp
         public Task EmulateMediaAsync(EmulateMedia options) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(url, options);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();

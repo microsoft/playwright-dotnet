@@ -9,7 +9,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IJSHandle" />
-    public class JSHandle : IChannelOwner, IJSHandle
+    public class JSHandle : IChannelOwner<JSHandle>, IJSHandle
     {
         private readonly ConnectionScope _scope;
         private readonly JSHandleChannel _channel;
@@ -17,14 +17,14 @@ namespace PlaywrightSharp
         internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer toObject)
         {
             _scope = scope;
-            _channel = new JSHandleChannel(guid, scope);
+            _channel = new JSHandleChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        Channel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();

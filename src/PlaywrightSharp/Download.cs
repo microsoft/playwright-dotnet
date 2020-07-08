@@ -5,7 +5,7 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Download : IChannelOwner
+    internal class Download : IChannelOwner<Download>
     {
         private readonly ConnectionScope _scope;
         private readonly DownloadChannel _channel;
@@ -13,13 +13,16 @@ namespace PlaywrightSharp
         public Download(ConnectionScope scope, string guid, DownloadInitializer initializer)
         {
             _scope = scope;
-            _channel = new DownloadChannel(guid, scope);
+            _channel = new DownloadChannel(guid, scope, this);
         }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel IChannelOwner.Channel => _channel;
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        /// <inheritdoc/>
+        Channel<Download> IChannelOwner<Download>.Channel => _channel;
     }
 }
