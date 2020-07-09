@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.goBack</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class GoBackTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class GoBackTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public GoBackTests(ITestOutputHelper output) : base(output)

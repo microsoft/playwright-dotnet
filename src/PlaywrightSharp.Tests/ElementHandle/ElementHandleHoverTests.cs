@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.hover</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ElementHandleHoverTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ElementHandleHoverTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleHoverTests(ITestOutputHelper output) : base(output)

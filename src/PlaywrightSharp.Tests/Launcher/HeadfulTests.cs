@@ -11,10 +11,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>headful.spec.js</playwright-file>
     ///<playwright-describe>Headful</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class HeadfulTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class HeadfulTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public HeadfulTests(ITestOutputHelper output) : base(output)
@@ -27,7 +25,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Retry]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
-            await using var browser = await Playwright.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
             string[] pages = (await browser.DefaultContext.GetPagesAsync()).Select(page => page.Url).ToArray();
             Assert.Equal(new[] { "about:blank" }, pages);
         }
@@ -49,7 +47,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var headfulOptions = TestConstants.GetHeadfulOptions();
             headfulOptions.UserDataDir = userDataDir.Path;
 
-            var headfulBrowser = await Playwright.LaunchAsync(headfulOptions);
+            var headfulBrowser = await BrowserType.LaunchAsync(headfulOptions);
             var headfulPage = await headfulBrowser.DefaultContext.NewPageAsync();
             await headfulPage.GoToAsync(TestConstants.EmptyPage);
             await headfulPage.EvaluateAsync("() => document.cookie = 'foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT'");
@@ -59,7 +57,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var headlessOptions = TestConstants.GetDefaultBrowserOptions();
             headlessOptions.UserDataDir = userDataDir.Path;
 
-            var headlessBrowser = await Playwright.LaunchAsync(headlessOptions);
+            var headlessBrowser = await BrowserType.LaunchAsync(headlessOptions);
             var headlessPage = await headlessBrowser.DefaultContext.NewPageAsync();
             await headlessPage.GoToAsync(TestConstants.EmptyPage);
             string cookie = await headlessPage.EvaluateAsync<string>("() => document.cookie");
@@ -76,7 +74,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             var headfulOptions = TestConstants.GetDefaultBrowserOptions();
             headfulOptions.Headless = false;
-            await using var browser = await Playwright.LaunchAsync(headfulOptions);
+            await using var browser = await BrowserType.LaunchAsync(headfulOptions);
             var page = await browser.DefaultContext.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/beforeunload.html");

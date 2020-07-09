@@ -10,10 +10,8 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Interception vs isNavigationRequest</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class InterceptionVsIsNavigationRequestTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class InterceptionVsIsNavigationRequestTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public InterceptionVsIsNavigationRequestTests(ITestOutputHelper output) : base(output)

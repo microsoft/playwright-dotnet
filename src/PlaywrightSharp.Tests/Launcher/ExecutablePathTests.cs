@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.executablePath</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class ExecutablePathTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ExecutablePathTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ExecutablePathTests(ITestOutputHelper output) : base(output)
@@ -22,6 +20,6 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-describe>Playwright.executablePath</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Retry]
-        public void ShouldRejectAllPromisesWhenBrowserIsClosed() => Assert.True(File.Exists(Playwright.ExecutablePath));
+        public void ShouldRejectAllPromisesWhenBrowserIsClosed() => Assert.True(File.Exists(BrowserType.ExecutablePath));
     }
 }

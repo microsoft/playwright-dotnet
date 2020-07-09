@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>OOPIF</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class OopifTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class OopifTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public OopifTests(ITestOutputHelper output) : base(output)
@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend("--site-per-process").ToArray();
-            await using var browser = await Playwright.LaunchAsync(options);
+            await using var browser = await BrowserType.LaunchAsync(options);
             var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend("--site-per-process").ToArray();
-            await using var browser = await Playwright.LaunchAsync(options);
+            await using var browser = await BrowserType.LaunchAsync(options);
             var page = await browser.DefaultContext.NewPageAsync();
             await page.SetRequestInterceptionAsync(true);
             page.Request += (sender, e) => _ = e.Request.ContinueAsync();

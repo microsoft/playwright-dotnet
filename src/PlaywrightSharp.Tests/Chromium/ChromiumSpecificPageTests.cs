@@ -9,9 +9,8 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>Chromium-Specific Page Tests</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ChromiumSpecificPageTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ChromiumSpecificPageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ChromiumSpecificPageTests(ITestOutputHelper output) : base(output)

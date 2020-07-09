@@ -11,9 +11,8 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>CSSCoverage</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class CSSCoverageTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class CSSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public CSSCoverageTests(ITestOutputHelper output) : base(output)

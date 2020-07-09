@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.asElement</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class JSHandleAsElementTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class JSHandleAsElementTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSHandleAsElementTests(ITestOutputHelper output) : base(output)

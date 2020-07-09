@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulate</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class EmulateTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class EmulateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public EmulateTests(ITestOutputHelper output) : base(output)

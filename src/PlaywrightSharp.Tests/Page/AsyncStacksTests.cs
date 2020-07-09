@@ -7,10 +7,8 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Async stacks</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class AsyncStacksTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class AsyncStacksTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public AsyncStacksTests(ITestOutputHelper output) : base(output)

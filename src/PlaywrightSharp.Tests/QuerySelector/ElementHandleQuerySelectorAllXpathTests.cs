@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.QuerySelector
 {
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.$$ xpath</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ElementHandleQuerySelectorAllXpathTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ElementHandleQuerySelectorAllXpathTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleQuerySelectorAllXpathTests(ITestOutputHelper output) : base(output)

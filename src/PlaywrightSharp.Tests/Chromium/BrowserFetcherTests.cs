@@ -15,9 +15,8 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>BrowserFetcher</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class BrowserFetcherTests : PlaywrightSharpBaseTest, IDisposable
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class BrowserFetcherTests : PlaywrightSharpBaseTest, IDisposable
     {
         private readonly TempDirectory _downloadsFolder;
 
@@ -39,7 +38,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldDownloadAndExtractLinuxBinary()
         {
-            var browserFetcher = Playwright.CreateBrowserFetcher(new BrowserFetcherOptions
+            var browserFetcher = BrowserType.CreateBrowserFetcher(new BrowserFetcherOptions
             {
                 Platform = Platform.Linux,
                 Path = _downloadsFolder.Path,

@@ -9,10 +9,8 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class IgnoreHttpsErrorsTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class IgnoreHttpsErrorsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public IgnoreHttpsErrorsTests(ITestOutputHelper output) : base(output)
@@ -25,7 +23,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Retry]
         public async Task ShouldWorkWithRequestInterception()
         {
-            await using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var context = await browser.NewContextAsync(new BrowserContextOptions
             {
                 IgnoreHTTPSErrors = true

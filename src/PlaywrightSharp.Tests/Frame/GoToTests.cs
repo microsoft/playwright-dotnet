@@ -11,10 +11,8 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.goto</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class GoToTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class GoToTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public GoToTests(ITestOutputHelper output) : base(output)
@@ -101,7 +99,7 @@ namespace PlaywrightSharp.Tests.Frame
             }
         }
 
-        private class MatchingResponseData
+        class MatchingResponseData
         {
             public Task<IFrame> FrameTask { get; internal set; }
             public TaskCompletionSource<string> ServerResponseTcs { get; internal set; } = new TaskCompletionSource<string>();

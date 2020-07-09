@@ -8,12 +8,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.defaultArguments</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class DefaultArgumentsTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class DefaultArgumentsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public DefaultArgumentsTests(ITestOutputHelper output) : base(output)
@@ -28,17 +27,17 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             if (TestConstants.IsChromium)
             {
-                Assert.Contains("--no-first-run", Playwright.GetDefaultArgs());
+                Assert.Contains("--no-first-run", BrowserType.GetDefaultArgs());
             }
 
-            Assert.Contains(TestConstants.IsFirefox ? "-headless" : "--headless", Playwright.GetDefaultArgs());
+            Assert.Contains(TestConstants.IsFirefox ? "-headless" : "--headless", BrowserType.GetDefaultArgs());
             Assert.DoesNotContain(
                 TestConstants.IsFirefox ? "-headless" : "--headless",
-                Playwright.GetDefaultArgs(new BrowserArgOptions { Headless = false }));
+                BrowserType.GetDefaultArgs(new BrowserArgOptions { Headless = false }));
 
             Assert.Contains(
                 TestConstants.IsFirefox ? "foo" : "--user-data-dir=\"foo\"",
-                Playwright.GetDefaultArgs(new BrowserArgOptions { UserDataDir = "foo" }));
+                BrowserType.GetDefaultArgs(new BrowserArgOptions { UserDataDir = "foo" }));
 
         }
 
@@ -48,20 +47,21 @@ namespace PlaywrightSharp.Tests.Launcher
         [Retry]
         public async Task ShouldFilterOutIgnoredDefaultArguments()
         {
-            string[] defaultArgsWithoutUserDataDir = Playwright.GetDefaultArgs(TestConstants.GetDefaultBrowserOptions());
+            string[] defaultArgsWithoutUserDataDir = BrowserType.GetDefaultArgs(TestConstants.GetDefaultBrowserOptions());
 
             var withUserDataDirOptions = TestConstants.GetDefaultBrowserOptions();
             withUserDataDirOptions.UserDataDir = "fake-profile";
-            string[] defaultArgsWithUserDataDir = Playwright.GetDefaultArgs(withUserDataDirOptions);
+            string[] defaultArgsWithUserDataDir = BrowserType.GetDefaultArgs(withUserDataDirOptions);
 
             var launchOptions = TestConstants.GetDefaultBrowserOptions();
             launchOptions.UserDataDir = "fake-profile";
             launchOptions.IgnoreDefaultArgs = true;
             launchOptions.IgnoredDefaultArgs = defaultArgsWithUserDataDir.Where(x => !defaultArgsWithoutUserDataDir.Contains(x)).ToArray();
 
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(launchOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(launchOptions);
 
             Assert.DoesNotContain("fake-profile", browserApp.Process.StartInfo.Arguments);
         }
     }
+    */
 }

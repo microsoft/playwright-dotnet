@@ -9,9 +9,8 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Interception.setOfflineMode</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class InterceptionSetOfflineModeTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class InterceptionSetOfflineModeTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public InterceptionSetOfflineModeTests(ITestOutputHelper output) : base(output)

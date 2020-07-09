@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Helpers
             _maxRetries = maxRetries;
         }
 
-        // This method is called by the xUnit test framework classes to run the test case. We will do the
+        // This method is called by the xUnit test framework class es to run the test case. We will do the
         // loop here, forwarding on to the implementation in XunitTestCase to do the heavy lifting. We will
         // continue to re-run the test until the aggregator has an error (meaning that some internal error
         // condition happened), or the test runs without failure, or we've hit the maximum number of tries.

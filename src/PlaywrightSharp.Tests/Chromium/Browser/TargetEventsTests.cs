@@ -9,9 +9,9 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
 {
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser target events</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class TargetEventsTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class TargetEventsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public TargetEventsTests(ITestOutputHelper output) : base(output)
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
-            var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var events = new List<string>();
             browser.TargetCreated += (sender, e) => events.Add("CREATED: " + e.Target.Url);
             browser.TargetChanged += (sender, e) => events.Add("CHANGED: " + e.Target.Url);

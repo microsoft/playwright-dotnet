@@ -11,10 +11,8 @@ namespace PlaywrightSharp.Tests.Keyboard
 {
     ///<playwright-file>keyboard.spec.js</playwright-file>
     ///<playwright-describe>Keyboard</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class KeyboardTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class KeyboardTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public KeyboardTests(ITestOutputHelper output) : base(output)

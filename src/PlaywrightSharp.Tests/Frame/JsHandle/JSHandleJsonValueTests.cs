@@ -10,10 +10,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class JSHandleJsonValueTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class JSHandleJsonValueTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSHandleJsonValueTests(ITestOutputHelper output) : base(output)

@@ -6,12 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Chromium.Launcher
 {
+    /*
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch webSocket option</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class WebSocketOptionsTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class WebSocketOptionsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public WebSocketOptionsTests(ITestOutputHelper output) : base(output)
@@ -27,9 +26,9 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = new[] { "--remote-debugging-port=0" };
 
-            var browserApp = await Playwright.LaunchBrowserAppAsync(options);
+            var browserApp = await BrowserType.LaunchBrowserAppAsync(options);
 
-            var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            var browser = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             Assert.NotNull(browserApp.WebSocketEndpoint);
             var page = await browser.DefaultContext.NewPageAsync();
             Assert.Equal(121, await page.EvaluateAsync<int>("11 * 11"));
@@ -49,4 +48,5 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         [Fact(Skip = "We don't support pipes yet")]
         public void ShouldThrowWithRemoteDebuggingPipeArgumentAndWebSocket() { }
     }
+    */
 }

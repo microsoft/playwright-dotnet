@@ -9,10 +9,8 @@ namespace PlaywrightSharp.Tests.ElementHandle
 {
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ElementHandleBoundingBoxTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ElementHandleBoundingBoxTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleBoundingBoxTests(ITestOutputHelper output) : base(output)

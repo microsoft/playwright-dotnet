@@ -10,11 +10,9 @@ namespace PlaywrightSharp.Tests.Playwright
     // I don't know yet if this will be a valid test for us, we will see when we implement it.
     ///<playwright-file>web.spec.js</playwright-file>
     ///<playwright-describe>Web SDK</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
-    [Trait("Category", "webkit")]
     [Collection(TestConstants.TestFixtureWebCollectionName)]
-    public class WebTests : PlaywrightSharpBaseTest, IAsyncLifetime
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class WebTests : PlaywrightSharpBaseTest, IAsyncLifetime
     {
         private IPage Page { get; set; }
 
@@ -29,9 +27,11 @@ namespace PlaywrightSharp.Tests.Playwright
         {
             Page = await PlaywrightSharpWebLoaderFixture.HostBrowser.DefaultContext.NewPageAsync();
             await Page.GoToAsync(TestConstants.ServerUrl + "/test/assets/playwrightweb.html");
+            /*
             await Page.EvaluateAsync(
                 "(product, connectOptions) => setup(product, connectOptions)",
                 TestConstants.Product.ToLower(), PlaywrightSharpWebLoaderFixture.ControlledBrowserApp.ConnectOptions);
+            */
         }
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>

@@ -9,10 +9,8 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Popup</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEventsPopupTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageEventsPopupTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEventsPopupTests(ITestOutputHelper output) : base(output)

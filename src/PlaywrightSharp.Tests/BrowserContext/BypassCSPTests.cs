@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BypassCSPTests : PlaywrightSharpBrowserBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class BypassCSPTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public BypassCSPTests(ITestOutputHelper output) : base(output)

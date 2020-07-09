@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 {
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.getProperty</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class JSHandleGetPropertyTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class JSHandleGetPropertyTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSHandleGetPropertyTests(ITestOutputHelper output) : base(output)

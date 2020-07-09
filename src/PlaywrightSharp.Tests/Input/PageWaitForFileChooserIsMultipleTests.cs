@@ -8,10 +8,8 @@ namespace PlaywrightSharp.Tests.Input
 {
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForFileChooser isMultiple</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageWaitForFileChooserIsMultipleTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageWaitForFileChooserIsMultipleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageWaitForFileChooserIsMultipleTests(ITestOutputHelper output) : base(output)

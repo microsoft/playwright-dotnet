@@ -8,11 +8,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Chromium.Launcher
 {
+    /*
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch |browserURL| option</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class BrowserUrlOptionTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class BrowserUrlOptionTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public BrowserUrlOptionTests(ITestOutputHelper output) : base(output)
@@ -26,15 +26,15 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         public async Task ShouldBeAbleToConnectUsingBrowserURLWithAndWithoutTrailingSlash()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
-            var browserApp = await Playwright.LaunchBrowserAppAsync(options);
+            var browserApp = await BrowserType.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
-            var browser1 = await Playwright.ConnectAsync(new ConnectOptions { BrowserURL = browserURL });
+            var browser1 = await BrowserType.ConnectAsync(new ConnectOptions { BrowserURL = browserURL });
             var page1 = await browser1.DefaultContext.NewPageAsync();
             Assert.Equal(56, await page1.EvaluateAsync<int>("7 * 8"));
             await browser1.DisconnectAsync();
 
-            var browser2 = await Playwright.ConnectAsync(new ConnectOptions { BrowserURL = browserURL + "/" });
+            var browser2 = await BrowserType.ConnectAsync(new ConnectOptions { BrowserURL = browserURL + "/" });
             var page2 = await browser2.DefaultContext.NewPageAsync();
             Assert.Equal(56, await page2.EvaluateAsync<int>("7 * 8"));
             await browser2.DisconnectAsync();
@@ -48,10 +48,10 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         public async Task ShouldThrowWhenUsingBothBrowserWSEndpointAndBrowserURL()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
-            var browserApp = await Playwright.LaunchBrowserAppAsync(options);
+            var browserApp = await BrowserType.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => Playwright.ConnectAsync(new ConnectOptions
+            await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.ConnectAsync(new ConnectOptions
             {
                 BrowserURL = browserURL,
                 BrowserWSEndpoint = browserApp.WebSocketEndpoint
@@ -67,10 +67,10 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         public async Task ShouldThrowWhenTryingToConnectToNonExistingBrowser()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
-            var browserApp = await Playwright.LaunchBrowserAppAsync(options);
+            var browserApp = await BrowserType.LaunchBrowserAppAsync(options);
             string browserURL = GetBrowserUrl(browserApp.WebSocketEndpoint);
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Playwright.ConnectAsync(new ConnectOptions
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.ConnectAsync(new ConnectOptions
             {
                 BrowserURL = browserURL + "foo"
             }));
@@ -85,4 +85,5 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
             return $"http://127.0.0.1:{port}";
         }
     }
+    */
 }

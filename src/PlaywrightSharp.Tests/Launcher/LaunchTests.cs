@@ -7,12 +7,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class LaunchTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class LaunchTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public LaunchTests(ITestOutputHelper output) : base(output)
@@ -25,7 +24,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Retry]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
-            using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var page = await browser.DefaultContext.NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
@@ -43,7 +42,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.ExecutablePath = "random-invalid-path";
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Playwright.LaunchAsync(options));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
 
             Assert.Contains("Failed to launch", exception.Message);
         }
@@ -54,7 +53,7 @@ namespace PlaywrightSharp.Tests.Launcher
         [Retry]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
-            using var browser = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var pages = (await browser.DefaultContext.GetPagesAsync()).Select(page => page.Url);
             Assert.Equal(new[] { TestConstants.AboutBlank }, pages);
 
@@ -68,7 +67,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend(TestConstants.EmptyPage).ToArray();
-            using var browser = await Playwright.LaunchAsync(options);
+            await using var browser = await BrowserType.LaunchAsync(options);
 
             var pages = await browser.DefaultContext.GetPagesAsync();
             Assert.Single(pages);
@@ -85,8 +84,9 @@ namespace PlaywrightSharp.Tests.Launcher
         [Retry]
         public async Task ShouldReturnChildProcessInstance()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             Assert.True(browserApp.Process.Id > 0);
         }
     }
+    */
 }
