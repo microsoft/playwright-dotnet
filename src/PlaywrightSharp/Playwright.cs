@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,6 +23,7 @@ namespace PlaywrightSharp
         private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
         private readonly ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>> _callbacks = new ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>>();
+        private readonly Dictionary<string, IBrowserType> _browserTypes = new Dictionary<string, IBrowserType>(StringComparer.OrdinalIgnoreCase);
         private readonly ConnectionScope _rootScript;
         private Process _playwrightServerProcess;
         private int _lastId;
@@ -40,14 +42,29 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Playwright() => Dispose(false);
 
-        /// <inheritdoc/>
-        public IBrowserType Chromium { get; private set; }
+        /// <summary>
+        /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
+        /// </summary>
+        public static IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices => DeviceDescriptors.ToReadOnly();
 
         /// <inheritdoc/>
-        public IBrowserType Firefox { get; private set; }
+        public IBrowserType Chromium => _browserTypes[BrowserType.Chromium];
 
         /// <inheritdoc/>
-        public IBrowserType Webkit { get; private set; }
+        public IBrowserType Firefox => _browserTypes[BrowserType.Firefox];
+
+        /// <inheritdoc/>
+        public IBrowserType Webkit => _browserTypes[BrowserType.Webkit];
+
+        /// <inheritdoc/>
+        public IBrowserType this[string browserType]
+        {
+            get
+            {
+                _browserTypes.TryGetValue(browserType, out var result);
+                return result;
+            }
+        }
 
         /// <summary>
         /// Launches a Playwright server.
@@ -116,6 +133,15 @@ namespace PlaywrightSharp
             return result;
         }
 
+        internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
+        {
+            var options = JsonExtensions.GetNewDefaultSerializerOptions();
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelToGuidConverter(this));
+
+            return options;
+        }
+
         private async Task<T> WaitForObjectWithKnownName<T>(string guid)
             where T : class
         {
@@ -142,9 +168,9 @@ namespace PlaywrightSharp
 
             await Task.WhenAll(chromiumTask, firefoxTask, webkitTask).ConfigureAwait(false);
 
-            Chromium = chromiumTask.Result;
-            Firefox = firefoxTask.Result;
-            Webkit = webkitTask.Result;
+            _browserTypes[BrowserType.Chromium] = chromiumTask.Result;
+            _browserTypes[BrowserType.Firefox] = firefoxTask.Result;
+            _browserTypes[BrowserType.Webkit] = webkitTask.Result;
         }
 
         private void TransportOnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -214,9 +240,6 @@ namespace PlaywrightSharp
                 },
             };
 
-            process.StartInfo.FileName = "node";
-            process.StartInfo.Arguments = "/Users/neo/Documents/Coding/microsoft/playwright/lib/rpc/server.js";
-
             return process;
         }
 
@@ -253,15 +276,6 @@ namespace PlaywrightSharp
             }
 
             _playwrightServerProcess?.Dispose();
-        }
-
-        private JsonSerializerOptions GetDefaultJsonSerializerOptions()
-        {
-            var options = JsonExtensions.GetNewDefaultSerializerOptions();
-            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
-            options.Converters.Add(new ChannelToGuidConverter(this));
-
-            return options;
         }
     }
 }

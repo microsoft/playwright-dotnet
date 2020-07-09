@@ -40,10 +40,10 @@ namespace PlaywrightSharp
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
-        Channel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
+        ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc />
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
+        /// <inheritdoc/>
+        Channel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
         /// <inheritdoc />
         public string ExecutablePath => _initializer.ExecutablePath;

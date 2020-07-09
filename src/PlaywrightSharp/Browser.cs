@@ -30,6 +30,9 @@ namespace PlaywrightSharp
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        /// <inheritdoc/>
         Channel<Browser> IChannelOwner<Browser>.Channel => _channel;
 
         public IEnumerable<IBrowserContext> BrowserContexts { get; }
@@ -65,5 +68,7 @@ namespace PlaywrightSharp
         public IEnumerable<ITarget> GetTargets(IBrowserContext context = null) => throw new NotImplementedException();
 
         public Task<IWorker> GetServiceWorkerAsync(ITarget target) => throw new NotImplementedException();
+
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
     }
 }

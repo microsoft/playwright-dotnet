@@ -10,11 +10,6 @@ namespace PlaywrightSharp
     public interface IBrowserType
     {
         /// <summary>
-        /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
-        /// </summary>
-        IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
-
-        /// <summary>
         /// Executable path based on <see cref="IBrowserFetcher"/>.
         /// </summary>
         string ExecutablePath { get; }

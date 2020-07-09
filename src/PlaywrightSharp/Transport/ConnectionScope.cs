@@ -66,46 +66,46 @@ namespace PlaywrightSharp.Transport
             switch (type)
             {
                 case ChannelOwnerType.BindingCall:
-                    result = new BindingCall(this, guid, initializer?.ToObject<BindingCallInitializer>());
+                    result = new BindingCall(this, guid, initializer?.ToObject<BindingCallInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Browser:
-                    result = new Browser(this, guid, initializer?.ToObject<BrowserInitializer>());
+                    result = new Browser(this, guid, initializer?.ToObject<BrowserInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.BrowserType:
-                    result = new BrowserType(this, guid, initializer?.ToObject<BrowserTypeInitializer>());
+                    result = new BrowserType(this, guid, initializer?.ToObject<BrowserTypeInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Context:
-                    result = new BrowserContext(this, guid, initializer?.ToObject<BrowserContextInitializer>());
+                    result = new BrowserContext(this, guid, initializer?.ToObject<BrowserContextInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.ConsoleMessage:
-                    result = new ConsoleMessage(this, guid, initializer?.ToObject<ConsoleMessageInitializer>());
+                    result = new ConsoleMessage(this, guid, initializer?.ToObject<ConsoleMessageInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Dialog:
-                    result = new Dialog(this, guid, initializer?.ToObject<DialogInitializer>());
+                    result = new Dialog(this, guid, initializer?.ToObject<DialogInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Download:
-                    result = new Download(this, guid, initializer?.ToObject<DownloadInitializer>());
+                    result = new Download(this, guid, initializer?.ToObject<DownloadInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.ElementHandle:
-                    result = new ElementHandle(this, guid, initializer?.ToObject<ElementHandleInitializer>());
+                    result = new ElementHandle(this, guid, initializer?.ToObject<ElementHandleInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Frame:
-                    result = new Frame(this, guid, initializer?.ToObject<FrameInitializer>());
+                    result = new Frame(this, guid, initializer?.ToObject<FrameInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.JSHandle:
-                    result = new JSHandle(this, guid, initializer?.ToObject<JSHandleInitializer>());
+                    result = new JSHandle(this, guid, initializer?.ToObject<JSHandleInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Page:
-                    result = new Page(this, guid, initializer?.ToObject<PageInitializer>());
+                    result = new Page(this, guid, initializer?.ToObject<PageInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Request:
-                    result = new Request(this, guid, initializer?.ToObject<RequestInitializer>());
+                    result = new Request(this, guid, initializer?.ToObject<RequestInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Response:
-                    result = new Response(this, guid, initializer?.ToObject<ResponseInitializer>());
+                    result = new Response(this, guid, initializer?.ToObject<ResponseInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Route:
-                    result = new Route(this, guid, initializer?.ToObject<RouteInitializer>());
+                    result = new Route(this, guid, initializer?.ToObject<RouteInitializer>(_client.GetDefaultJsonSerializerOptions()));
                     break;
                 default:
                     Debug.Write("Missing type " + type);

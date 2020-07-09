@@ -25,6 +25,9 @@ namespace PlaywrightSharp
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        /// <inheritdoc/>
         Channel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />

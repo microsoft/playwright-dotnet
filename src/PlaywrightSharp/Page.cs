@@ -91,6 +91,9 @@ namespace PlaywrightSharp
         ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        /// <inheritdoc/>
         Channel<Page> IChannelOwner<Page>.Channel => _channel;
 
         /// <inheritdoc />

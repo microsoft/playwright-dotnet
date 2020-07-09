@@ -9,7 +9,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// A Browser is created when Playwright connects to a browser instance.
     /// </summary>
-    public interface IBrowser
+    public interface IBrowser : IAsyncDisposable
     {
         /// <summary>
         /// Raised when the url of a target changes

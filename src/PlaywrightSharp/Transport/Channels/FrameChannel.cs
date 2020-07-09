@@ -13,11 +13,11 @@ namespace PlaywrightSharp.Transport.Channels
         internal Task<ResponseChannel> GoToAsync(string url, GoToOptions options)
             => Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
-                "goTo",
+                "goto",
                 new Dictionary<string, object>
                 {
                     ["url"] = url,
-                    ["options"] = options,
+                    ["options"] = options ?? new GoToOptions(),
                 });
     }
 }
