@@ -16,7 +16,8 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>BrowserFetcher</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class BrowserFetcherTests : PlaywrightSharpBaseTest, IDisposable
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class BrowserFetcherTests : PlaywrightSharpBaseTest, IDisposable
     {
         private readonly TempDirectory _downloadsFolder;
 

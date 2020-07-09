@@ -11,7 +11,8 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForFunction</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class FrameWaitForFunctionTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class FrameWaitForFunctionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public FrameWaitForFunctionTests(ITestOutputHelper output) : base(output)

@@ -13,7 +13,8 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/tracing.spec.js</playwright-file>
     ///<playwright-describe>Chromium.startTracing</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class TracingTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class TracingTests : PlaywrightSharpPageBaseTest
     {
         private readonly string _file;
 

@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>root option</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class RootOptionTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class RootOptionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public RootOptionTests(ITestOutputHelper output) : base(output)

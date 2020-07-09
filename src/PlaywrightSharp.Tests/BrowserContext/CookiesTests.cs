@@ -11,7 +11,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
     /// <playwright-file>cookies.spec.js</playwright-file>
     /// <playwright-describe>BrowserContext.cookies</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class CookiesTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class CookiesTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public CookiesTests(ITestOutputHelper output) : base(output)

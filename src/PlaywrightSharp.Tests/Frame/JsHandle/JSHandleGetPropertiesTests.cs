@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.getProperties</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class JSHandleGetPropertiesTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class JSHandleGetPropertiesTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSHandleGetPropertiesTests(ITestOutputHelper output) : base(output)

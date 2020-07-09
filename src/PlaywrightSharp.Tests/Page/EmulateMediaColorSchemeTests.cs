@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class EmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class EmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public EmulateMediaColorSchemeTests(ITestOutputHelper output) : base(output)

@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>dialog.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Dialog</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class DialogTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class DialogTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public DialogTests(ITestOutputHelper output) : base(output)

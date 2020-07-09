@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.ElementHandle
     ///<playwright-file>screenshot.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ElementHandleScreenshotTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class ElementHandleScreenshotTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleScreenshotTests(ITestOutputHelper output) : base(output)

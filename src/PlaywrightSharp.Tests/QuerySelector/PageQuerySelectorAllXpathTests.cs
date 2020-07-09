@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$$ xpath</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageQuerySelectorAllXpathTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageQuerySelectorAllXpathTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageQuerySelectorAllXpathTests(ITestOutputHelper output) : base(output)

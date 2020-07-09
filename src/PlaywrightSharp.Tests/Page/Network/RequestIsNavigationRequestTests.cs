@@ -11,7 +11,8 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Request.isNavigationRequest</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class RequestIsNavigationRequestTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class RequestIsNavigationRequestTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public RequestIsNavigationRequestTests(ITestOutputHelper output) : base(output)

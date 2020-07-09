@@ -14,7 +14,8 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/pdf.spec.js</playwright-file>
     ///<playwright-describe>Page.pdf</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PdfTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PdfTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public PdfTests(ITestOutputHelper output) : base(output)

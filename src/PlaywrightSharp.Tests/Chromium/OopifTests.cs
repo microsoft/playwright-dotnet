@@ -12,7 +12,8 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>OOPIF</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class OopifTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class OopifTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public OopifTests(ITestOutputHelper output) : base(output)

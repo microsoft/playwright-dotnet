@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.viewport</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ViewportTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class ViewportTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ViewportTests(ITestOutputHelper output) : base(output)

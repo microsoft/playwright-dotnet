@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Page.WaitFor</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageWaitForTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageWaitForTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageWaitForTests(ITestOutputHelper output) : base(output)

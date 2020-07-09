@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-describe>Page.$eval</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)

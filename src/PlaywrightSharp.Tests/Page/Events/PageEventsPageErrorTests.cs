@@ -11,7 +11,8 @@ namespace PlaywrightSharp.Tests.Page
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageEventsPageErrorTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageEventsPageErrorTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEventsPageErrorTests(ITestOutputHelper output) : base(output)

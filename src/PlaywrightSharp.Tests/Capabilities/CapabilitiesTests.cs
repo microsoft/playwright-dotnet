@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.Capabilities
     ///<playwright-file>capabilities.spec.js</playwright-file>
     ///<playwright-describe>Capabilities</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class CapabilitiesTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class CapabilitiesTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public CapabilitiesTests(ITestOutputHelper output) : base(output)

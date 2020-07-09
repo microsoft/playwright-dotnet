@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForNavigation</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class WaitForNavigationTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class WaitForNavigationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public WaitForNavigationTests(ITestOutputHelper output) : base(output)

@@ -12,7 +12,8 @@ namespace PlaywrightSharp.Tests.Launcher
     ///<playwright-file>headful.spec.js</playwright-file>
     ///<playwright-describe>Headful</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class HeadfulTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class HeadfulTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public HeadfulTests(ITestOutputHelper output) : base(output)

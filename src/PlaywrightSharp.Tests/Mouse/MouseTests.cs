@@ -11,7 +11,8 @@ namespace PlaywrightSharp.Tests.Mouse
     ///<playwright-file>mouse.spec.js</playwright-file>
     ///<playwright-describe>Mouse</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class MouseTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class MouseTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public MouseTests(ITestOutputHelper output) : base(output)

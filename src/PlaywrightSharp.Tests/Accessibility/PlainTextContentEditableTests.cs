@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>plaintext contenteditable</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PlainTextContentEditableTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PlainTextContentEditableTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PlainTextContentEditableTests(ITestOutputHelper output) : base(output)

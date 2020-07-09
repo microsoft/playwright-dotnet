@@ -17,7 +17,8 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>network idle</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class NetworkIdleTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class NetworkIdleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public NetworkIdleTests(ITestOutputHelper output) : base(output)

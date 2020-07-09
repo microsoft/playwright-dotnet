@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.buffer</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ResponseBufferTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class ResponseBufferTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ResponseBufferTests(ITestOutputHelper output) : base(output)

@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class TimezoneTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class TimezoneTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public TimezoneTests(ITestOutputHelper output) : base(output)

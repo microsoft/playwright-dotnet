@@ -10,7 +10,8 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.authenticate</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageAuthenticateTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageAuthenticateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageAuthenticateTests(ITestOutputHelper output) : base(output)

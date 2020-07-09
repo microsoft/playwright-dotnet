@@ -13,7 +13,8 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Console</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEventsConsoleTests(ITestOutputHelper output) : base(output)

@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class SetUserAgentTests : PlaywrightSharpBrowserBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class SetUserAgentTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public SetUserAgentTests(ITestOutputHelper output) : base(output)
