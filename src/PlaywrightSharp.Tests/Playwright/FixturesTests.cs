@@ -14,10 +14,9 @@ namespace PlaywrightSharp.Tests.Playwright
 {
     ///<playwright-file>fixtures.spec.js</playwright-file>
     ///<playwright-describe>Fixtures</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class FixturesTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class FixturesTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public FixturesTests(ITestOutputHelper output) : base(output)
@@ -39,7 +38,7 @@ namespace PlaywrightSharp.Tests.Playwright
             string dumpioData = string.Empty;
             var process = GetTestAppProcess(
                 "PlaywrightSharp.Tests.DumpIO",
-                $"\"{Playwright.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
+                $"\"{BrowserType.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
 
             process.ErrorDataReceived += (sender, e) =>
             {
@@ -122,7 +121,7 @@ namespace PlaywrightSharp.Tests.Playwright
 
             var process = GetTestAppProcess(
                 "PlaywrightSharp.Tests.CloseMe",
-                $"\"{Playwright.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
+                $"\"{BrowserType.CreateBrowserFetcher().GetRevisionInfo().ExecutablePath}\" {TestConstants.Product}");
 
             process.OutputDataReceived += (sender, args) =>
             {
@@ -150,7 +149,7 @@ namespace PlaywrightSharp.Tests.Playwright
             process.Start();
             process.BeginOutputReadLine();
 
-            var browser = await Playwright.ConnectAsync(new ConnectOptions
+            var browser = await BrowserType.ConnectAsync(new ConnectOptions
             {
                 BrowserWSEndpoint = await browserWebSocketTcs.Task
             });

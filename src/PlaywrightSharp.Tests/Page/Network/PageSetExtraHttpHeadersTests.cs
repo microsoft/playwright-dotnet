@@ -12,7 +12,8 @@ namespace PlaywrightSharp.Tests.Page.Network
     [Trait("Category", "chromium")]
     [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageSetExtraHttpHeadersTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageSetExtraHttpHeadersTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageSetExtraHttpHeadersTests(ITestOutputHelper output) : base(output)

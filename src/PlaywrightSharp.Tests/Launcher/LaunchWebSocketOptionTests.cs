@@ -7,12 +7,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch |webSocket| option</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class LaunchWebSocketOptionTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class LaunchWebSocketOptionTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public LaunchWebSocketOptionTests(ITestOutputHelper output) : base(output)
@@ -32,8 +31,8 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldSupportTheWebSocketOption()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(options);
-            using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(options);
+            using var browser = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             Assert.Single(await browser.DefaultContext.GetPagesAsync());
             Assert.NotNull(browserApp.WebSocketEndpoint);
             var page = await browser.DefaultContext.NewPageAsync();
@@ -53,12 +52,13 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldFireDisconnectedWhenClosingWithWebSocket()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(options);
-            using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(options);
+            using var browser = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             var disconnectedTask = new TaskCompletionSource<bool>();
             browser.Disconnected += (sender, e) => disconnectedTask.TrySetResult(true);
             browserApp.Kill();
             await disconnectedTask.Task;
         }
     }
+    */
 }

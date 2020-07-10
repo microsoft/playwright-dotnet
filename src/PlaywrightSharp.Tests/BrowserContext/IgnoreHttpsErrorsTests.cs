@@ -11,10 +11,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class IgnoreHttpsErrorsTests : PlaywrightSharpBrowserBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class IgnoreHttpsErrorsTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public IgnoreHttpsErrorsTests(ITestOutputHelper output) : base(output)

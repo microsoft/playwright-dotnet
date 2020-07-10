@@ -8,11 +8,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
 {
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$eval</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
 
-    public class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)

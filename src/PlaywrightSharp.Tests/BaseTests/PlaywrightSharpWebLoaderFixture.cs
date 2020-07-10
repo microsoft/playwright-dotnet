@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp.Tests.BaseTests
 {
     /// <summary>
-    /// This class setup web tests.
+    /// This [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class setup web tests.
     /// </summary>
     public class PlaywrightSharpWebLoaderFixture : IDisposable
     {
@@ -14,26 +14,26 @@ namespace PlaywrightSharp.Tests.BaseTests
             SetupWebAsync().GetAwaiter().GetResult();
         }
 
-        internal static IBrowserApp ControlledBrowserApp { get; private set; }
-        internal static IBrowserApp HostBrowserApp { get; private set; }
+        //internal static IBrowserApp ControlledBrowserApp { get; private set; }
+        //internal static IBrowserApp HostBrowserApp { get; private set; }
         internal static IBrowser HostBrowser { get; private set; }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
-            HostBrowserApp.CloseAsync().GetAwaiter().GetResult();
-            HostBrowserApp = null;
+            //HostBrowserApp.CloseAsync().GetAwaiter().GetResult();
+            //HostBrowserApp = null;
             HostBrowser = null;
 
-            ControlledBrowserApp.CloseAsync().GetAwaiter().GetResult();
-            ControlledBrowserApp = null;
+            //ControlledBrowserApp.CloseAsync().GetAwaiter().GetResult();
+            //ControlledBrowserApp = null;
         }
 
         private async Task SetupWebAsync()
         {
-            ControlledBrowserApp = await TestConstants.GetNewBrowserType().LaunchBrowserAppAsync();
-            HostBrowserApp = await TestConstants.GetNewBrowserType().LaunchBrowserAppAsync();
-            HostBrowser = await TestConstants.GetNewBrowserType().ConnectAsync(HostBrowserApp.ConnectOptions);
+            //ControlledBrowserApp = await TestConstants.GetNewBrowserType().LaunchBrowserAppAsync();
+            //HostBrowserApp = await TestConstants.GetNewBrowserType().LaunchBrowserAppAsync();
+            //HostBrowser = await TestConstants.GetNewBrowserType().ConnectAsync(HostBrowserApp.ConnectOptions);
         }
     }
 }

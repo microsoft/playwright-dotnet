@@ -10,10 +10,9 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class WaitForSelectorXPathTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class WaitForSelectorXPathTests : PlaywrightSharpPageBaseTest
     {
         const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 

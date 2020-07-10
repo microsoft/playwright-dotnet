@@ -1,8 +1,5 @@
 using System.IO;
 using System.Threading.Tasks;
-using PlaywrightSharp.Chromium;
-using PlaywrightSharp.Chromium.Protocol;
-using PlaywrightSharp.Helpers;
 using PlaywrightSharp.TestServer;
 using Xunit.Abstractions;
 
@@ -13,8 +10,9 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpBaseTest
     {
+        private IPlaywright _playwright;
         internal string BaseDirectory { get; set; }
-        internal IBrowserType Playwright { get; set; }
+        internal IBrowserType BrowserType { get; set; }
 
         internal SimpleServer Server => PlaywrightSharpLoader.Server;
         internal SimpleServer HttpsServer => PlaywrightSharpLoader.HttpsServer;
@@ -31,7 +29,8 @@ namespace PlaywrightSharp.Tests.BaseTests
                 dirInfo.Create();
             }
 
-            Playwright = TestConstants.GetNewBrowserType();
+            _playwright = PlaywrightSharp.Playwright.CreateAsync().GetAwaiter().GetResult();
+            BrowserType = _playwright[TestConstants.Product];
             Initialize();
         }
 
@@ -41,6 +40,7 @@ namespace PlaywrightSharp.Tests.BaseTests
             HttpsServer.Reset();
         }
 
+        /*
         internal static Task<T> WaitEventAsync<T>(ChromiumSession emitter) where T : IChromiumEvent
         {
             var completion = new TaskCompletionSource<T>();
@@ -58,6 +58,7 @@ namespace PlaywrightSharp.Tests.BaseTests
             emitter.MessageReceived += handler;
             return completion.Task;
         }
+        */
 
         internal async Task<IPage> NewPageAsync(IBrowser browser, BrowserContextOptions options = null)
         {

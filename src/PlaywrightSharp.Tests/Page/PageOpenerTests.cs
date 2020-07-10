@@ -8,10 +8,9 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.opener</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageOpenerTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageOpenerTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageOpenerTests(ITestOutputHelper output) : base(output)

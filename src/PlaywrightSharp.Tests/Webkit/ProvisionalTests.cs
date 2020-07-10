@@ -14,7 +14,8 @@ namespace PlaywrightSharp.Tests.Webkit
 {
     ///<playwright-file>webkit/provisional.spec.js</playwright-file>
     ///<playwright-describe>provisional page</playwright-describe>
-    public class ProvisionalTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class ProvisionalTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ProvisionalTests(ITestOutputHelper output) : base(output)

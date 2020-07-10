@@ -8,10 +8,9 @@ namespace PlaywrightSharp.Tests.Evaluation
 {
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEvaluateOnNewDocumentTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageEvaluateOnNewDocumentTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEvaluateOnNewDocumentTests(ITestOutputHelper output) : base(output)

@@ -6,12 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Browser
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.disconnect</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class DisconnectTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class DisconnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public DisconnectTests(ITestOutputHelper output) : base(output)
@@ -26,9 +25,9 @@ namespace PlaywrightSharp.Tests.Browser
         {
             Server.SetRoute("/one-style.css", context => Task.Delay(10000));
 
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
 
-            var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             var page = await remote.DefaultContext.NewPageAsync();
             var navigationTask = page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
             {
@@ -47,8 +46,8 @@ namespace PlaywrightSharp.Tests.Browser
         {
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
 
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             var page = await remote.DefaultContext.NewPageAsync();
             var watchdog = page.WaitForSelectorAsync("div", new WaitForSelectorOptions { Timeout = 60000 });
 
@@ -64,8 +63,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldThrowIfUsedAfterDisconnect()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             var page = await remote.DefaultContext.NewPageAsync();
             await remote.DisconnectAsync();
 
@@ -73,4 +72,5 @@ namespace PlaywrightSharp.Tests.Browser
             Assert.Contains("has been closed", exception.Message);
         }
     }
+    */
 }

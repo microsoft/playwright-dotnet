@@ -10,10 +10,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>geolocation.spec.js</playwright-file>
     ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class GeolocationTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class GeolocationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public GeolocationTests(ITestOutputHelper output) : base(output)

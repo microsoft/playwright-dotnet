@@ -8,10 +8,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>features/permissions.spec.js</playwright-file>
     ///<playwright-describe>Permissions</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PermissionsTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PermissionsTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PermissionsTests(ITestOutputHelper output) : base(output)

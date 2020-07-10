@@ -8,10 +8,9 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public FrameEvaluateTests(ITestOutputHelper output) : base(output)

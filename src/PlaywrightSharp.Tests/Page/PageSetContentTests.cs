@@ -10,10 +10,9 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setContent</playwright-describe>
-    [Trait("Category", "firefox")]
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageSetContentTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageSetContentTests : PlaywrightSharpPageBaseTest
     {
         const string _expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
 

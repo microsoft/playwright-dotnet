@@ -27,7 +27,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: xvfb-run --auto-servernum -- bash -c "dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium -c Debug -f netcoreapp3.1"
+        run: xvfb-run --auto-servernum -- bash -c "dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1"
   chromium-mac:
     name: Chromium on MacOS
     runs-on: macOS-latest
@@ -44,7 +44,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium -c Debug -f netcoreapp3.1
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1
   chromium-windows:
     name: Chromium on Windows (${{ matrix.framework }})
     runs-on: windows-latest
@@ -65,7 +65,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=chromium -c Debug -f ${{ matrix.framework }}
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f ${{ matrix.framework }}
   firefox-ubuntu:
     name: Firefox on ubuntu-latest
     runs-on: ubuntu-latest
@@ -82,7 +82,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: FIREFOX
-        run: xvfb-run --auto-servernum -- bash -c "dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=firefox -c Debug -f netcoreapp3.1"
+        run: xvfb-run --auto-servernum -- bash -c "dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1"
   firefox-mac:
     name: Firefox on MacOS
     runs-on: macOS-latest
@@ -99,7 +99,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: FIREFOX
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=firefox -c Debug -f netcoreapp3.1
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1
   firefox-windows:
     name: Firefox on Windows (${{ matrix.framework }})
     runs-on: windows-latest
@@ -120,4 +120,4 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: FIREFOX
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj --filter Category=firefox -c Debug -f ${{ matrix.framework }}
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f ${{ matrix.framework }}

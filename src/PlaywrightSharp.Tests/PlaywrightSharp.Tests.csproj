@@ -27,10 +27,8 @@
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Chromium\PlaywrightSharp.Chromium.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Firefox\PlaywrightSharp.Firefox.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Webkit\PlaywrightSharp.Webkit.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Tests.CloseMe\PlaywrightSharp.Tests.CloseMe.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.Tests.DumpIO\PlaywrightSharp.Tests.DumpIO.csproj" />
     </ItemGroup>

@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.Frame
 {
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForSelector</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class WaitForSelectorTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class WaitForSelectorTests : PlaywrightSharpPageBaseTest
     {
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
@@ -265,7 +264,7 @@ namespace PlaywrightSharp.Tests.Frame
             var waitForSelector = Page.WaitForSelectorAsync(".zombo").ContinueWith(_ => divFound = true);
             await Page.SetContentAsync("<div class='notZombo'></div>");
             Assert.False(divFound);
-            await Page.EvaluateAsync("document.querySelector('div').className = 'zombo'");
+            await Page.EvaluateAsync("document.querySelector('div').class Name = 'zombo'");
             Assert.True(await waitForSelector);
         }
 

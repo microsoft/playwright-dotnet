@@ -10,10 +10,9 @@ namespace PlaywrightSharp.Tests.Input
 {
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageWaitForFileChooserTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageWaitForFileChooserTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageWaitForFileChooserTests(ITestOutputHelper output) : base(output)

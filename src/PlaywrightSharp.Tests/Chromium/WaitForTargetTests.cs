@@ -10,9 +10,9 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>Chromium.waitForTarget</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class WaitForTargetTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class WaitForTargetTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public WaitForTargetTests(ITestOutputHelper output) : base(output)

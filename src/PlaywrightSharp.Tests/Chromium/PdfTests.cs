@@ -13,9 +13,9 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/pdf.spec.js</playwright-file>
     ///<playwright-describe>Page.pdf</playwright-describe>
-    [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class PdfTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PdfTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public PdfTests(ITestOutputHelper output) : base(output)
@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend("--site-per-process").ToArray();
-            await using var browser = await Playwright.LaunchAsync(options);
+            await using var browser = await BrowserType.LaunchAsync(options);
             var page = await browser.DefaultContext.NewPageAsync();
 
             string outputFile = Path.Combine(BaseDirectory, "output.pdf");

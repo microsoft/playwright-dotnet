@@ -7,10 +7,9 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.name</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class NameTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class NameTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public NameTests(ITestOutputHelper output) : base(output)
@@ -30,6 +29,6 @@ namespace PlaywrightSharp.Tests.Launcher
                     TestConstants.ChromiumProduct => "chromium",
                     _ => null
                 },
-                Playwright.Name);
+                BrowserType.Name);
     }
 }

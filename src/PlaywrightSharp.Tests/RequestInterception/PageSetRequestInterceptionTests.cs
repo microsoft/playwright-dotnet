@@ -14,10 +14,9 @@ namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>Page.setRequestInterception</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageSetRequestInterceptionTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageSetRequestInterceptionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageSetRequestInterceptionTests(ITestOutputHelper output) : base(output)

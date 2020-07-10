@@ -6,10 +6,9 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Top-level requires</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class TopLevelRequiresTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class TopLevelRequiresTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public TopLevelRequiresTests(ITestOutputHelper output) : base(output)

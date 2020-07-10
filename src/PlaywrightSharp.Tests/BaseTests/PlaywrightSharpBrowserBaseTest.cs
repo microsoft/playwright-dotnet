@@ -11,7 +11,6 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBrowserBaseTest : PlaywrightSharpBaseTest, IAsyncLifetime
     {
         internal IBrowser Browser => PlaywrightSharpBrowserLoaderFixture.Browser;
-        internal IBrowserApp BrowserApp => PlaywrightSharpBrowserLoaderFixture.BrowserApp;
 
         private readonly List<IBrowserContext> _contexts = new List<IBrowserContext>();
 

@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.Accessibility
 {
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>Accessibility</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class AccessibilityTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class AccessibilityTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public AccessibilityTests(ITestOutputHelper output) : base(output)

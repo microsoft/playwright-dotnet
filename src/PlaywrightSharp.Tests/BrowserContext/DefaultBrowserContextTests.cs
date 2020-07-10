@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
     /// <playwright-describe>defaultContext()</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class DefaultBrowserContextTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class DefaultBrowserContextTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public DefaultBrowserContextTests(ITestOutputHelper output) : base(output)

@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.Page.Events
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.error</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEventsErrorTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageEventsErrorTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEventsErrorTests(ITestOutputHelper output) : base(output)

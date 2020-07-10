@@ -6,12 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.QuerySelector
 {
+    /*
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>zselector</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ZselectorTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ZselectorTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ZselectorTests(ITestOutputHelper output) : base(output)
@@ -158,4 +157,5 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<div id=\"target\">hello</div>\n<div id=\"target2\">hello</div>", await Page.QuerySelectorAllEvaluateAsync<string>("zs=\"ya\" ~\"hey\" ~\"hello\"", "es => es.map(e => e.outerHTML).join('\\n')"));
         }
     }
+    */
 }

@@ -10,12 +10,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class UserDataDirTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class UserDataDirTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public UserDataDirTests(ITestOutputHelper output) : base(output)
@@ -32,7 +31,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.UserDataDir = userDataDir.Path;
 
-            using var browser = await Playwright.LaunchAsync(options);
+            using var browser = await BrowserType.LaunchAsync(options);
             Assert.True(Directory.GetFiles(userDataDir.Path).Length > 0);
             await browser.CloseAsync();
             Assert.True(Directory.GetFiles(userDataDir.Path).Length > 0);
@@ -57,7 +56,7 @@ namespace PlaywrightSharp.Tests.Launcher
                 options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
             }
 
-            using var browser = await Playwright.LaunchAsync(options);
+            using var browser = await BrowserType.LaunchAsync(options);
             // Open a page to make sure its functional.
             await browser.DefaultContext.NewPageAsync();
             Assert.True(Directory.GetDirectories(userDataDir.Path).Length > 0);
@@ -76,7 +75,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.UserDataDir = userDataDir.Path;
 
-            await using (var browser = await Playwright.LaunchAsync(options))
+            await using (var browser = await BrowserType.LaunchAsync(options))
             {
                 var page = await browser.DefaultContext.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -84,14 +83,14 @@ namespace PlaywrightSharp.Tests.Launcher
                 await browser.CloseAsync();
             }
 
-            await using (var browser2 = await Playwright.LaunchAsync(options))
+            await using (var browser2 = await BrowserType.LaunchAsync(options))
             {
                 var page2 = await browser2.DefaultContext.NewPageAsync();
                 await page2.GoToAsync(TestConstants.EmptyPage);
                 Assert.Equal("hello", await page2.EvaluateAsync<string>("localStorage.hey"));
             }
 
-            await using (var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
+            await using (var browser3 = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
             {
                 var page3 = await browser3.DefaultContext.NewPageAsync();
                 await page3.GoToAsync(TestConstants.EmptyPage);
@@ -108,20 +107,20 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.UserDataDir = userDataDir.Path;
 
-            var browser = await Playwright.LaunchAsync(options);
+            var browser = await BrowserType.LaunchAsync(options);
 
             var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.EvaluateAsync("localStorage.hey = 'hello'");
             await browser.CloseAsync();
 
-            var browser2 = await Playwright.LaunchAsync(options);
+            var browser2 = await BrowserType.LaunchAsync(options);
             var page2 = await browser2.DefaultContext.NewPageAsync();
             await page2.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal("hello", await page2.EvaluateAsync<string>("localStorage.hey"));
             await browser2.CloseAsync();
 
-            var browser3 = await Playwright.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var browser3 = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var page3 = await browser3.DefaultContext.NewPageAsync();
             await page3.GoToAsync(TestConstants.EmptyPage);
             await browser3.CloseAsync();
@@ -137,7 +136,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Concat(new[] { $"--user-data-dir=\"{userDataDir}\"" }).ToArray();
 
-            using (var browser = await Playwright.LaunchAsync(options))
+            using (var browser = await BrowserType.LaunchAsync(options))
             {
                 var page = await browser.DefaultContext.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -145,7 +144,7 @@ namespace PlaywrightSharp.Tests.Launcher
                     "document.cookie = 'doSomethingOnlyOnce=true; expires=Fri, 31 Dec 9999 23:59:59 GMT'");
             }
 
-            using (var browser2 = await Playwright.LaunchAsync(options))
+            using (var browser2 = await BrowserType.LaunchAsync(options))
             {
                 var page2 = await browser2.DefaultContext.NewPageAsync();
                 await page2.GoToAsync(TestConstants.EmptyPage);
@@ -153,4 +152,5 @@ namespace PlaywrightSharp.Tests.Launcher
             }
         }
     }
+    */
 }

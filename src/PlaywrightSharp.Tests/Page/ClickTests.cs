@@ -13,10 +13,9 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>click.spec.js</playwright-file>
     ///<playwright-describe>Page.click</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ClickTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class ClickTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ClickTests(ITestOutputHelper output) : base(output)
@@ -178,7 +177,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
             var messages = new List<string>();
-            Page.Console += (sender, e) => messages.Add(e.Message.GetText());
+            Page.Console += (sender, e) => messages.Add(e.Message.Text);
 
             for (int i = 0; i < 11; ++i)
             {

@@ -6,12 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Browser
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.isConnected</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class IsConnectedTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class IsConnectedTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public IsConnectedTests(ITestOutputHelper output) : base(output)
@@ -24,8 +23,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldSetTheBrowserConnectedState()
         {
-            var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await Playwright.ConnectAsync(new ConnectOptions
+            var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions
             {
                 BrowserWSEndpoint = browserApp.WebSocketEndpoint
             });
@@ -40,8 +39,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
-            var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await Playwright.ConnectAsync(new ConnectOptions
+            var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions
             {
                 BrowserWSEndpoint = browserApp.WebSocketEndpoint
             });
@@ -57,4 +56,5 @@ namespace PlaywrightSharp.Tests.Browser
             Assert.Contains("has been closed", exception.Message);
         }
     }
+    */
 }

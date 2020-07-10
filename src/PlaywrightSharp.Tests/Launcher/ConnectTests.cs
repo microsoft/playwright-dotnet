@@ -7,12 +7,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.connect</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class ConnectTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ConnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ConnectTests(ITestOutputHelper output) : base(output)
@@ -25,15 +24,15 @@ namespace PlaywrightSharp.Tests.Launcher
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBeAbleToReconnectToADisconnectedBrowser()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var browser = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            using var browser = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             string url = TestConstants.ServerUrl + "/frames/nested-frames.html";
             var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync(url);
 
             await browser.DisconnectAsync();
 
-            using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
 
             var pages = (await remote.DefaultContext.GetPagesAsync()).ToList();
             var restoredPage = pages.FirstOrDefault(x => x.Url == url);
@@ -46,4 +45,5 @@ namespace PlaywrightSharp.Tests.Launcher
             await remote.DisconnectAsync();
         }
     }
+    */
 }

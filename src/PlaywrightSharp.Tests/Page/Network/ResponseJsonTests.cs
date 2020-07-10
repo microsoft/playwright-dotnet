@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.json</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ResponseJsonTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class ResponseJsonTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ResponseJsonTests(ITestOutputHelper output) : base(output)
@@ -39,7 +38,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal("bar", (await response.GetJsonAsync<TestClass>()).Foo);
         }
 
-        private class TestClass
+        class TestClass
         {
             public string Foo { get; set; }
         }

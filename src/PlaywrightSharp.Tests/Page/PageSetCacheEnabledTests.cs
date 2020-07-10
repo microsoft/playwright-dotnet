@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageSetCacheEnabledTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageSetCacheEnabledTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageSetCacheEnabledTests(ITestOutputHelper output) : base(output)

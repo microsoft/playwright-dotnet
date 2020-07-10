@@ -5,8 +5,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
-using PlaywrightSharp.Chromium;
-using PlaywrightSharp.Firefox;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
@@ -30,16 +28,6 @@ namespace PlaywrightSharp.Tests
         public const string ServerIpUrl = "http://127.0.0.1:8081";
         public const string HttpsPrefix = "https://localhost:8082";
 
-        internal static IBrowserType GetNewBrowserType()
-            => Product switch
-            {
-                WebkitProduct => null,
-                FirefoxProduct => new FirefoxBrowserType(),
-                ChromiumProduct => new ChromiumBrowserType(),
-                _ => throw new ArgumentOutOfRangeException($"product {Product} does not exist")
-            };
-
-
         public const string AboutBlank = "about:blank";
         public const string CrossProcessHttpPrefix = "http://127.0.0.1:8081";
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
@@ -62,8 +50,8 @@ namespace PlaywrightSharp.Tests
         }
 
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
-        public static readonly DeviceDescriptor IPhone = GetNewBrowserType().Devices[DeviceDescriptorName.IPhone6];
-        public static readonly DeviceDescriptor IPhoneLandscape = GetNewBrowserType().Devices[DeviceDescriptorName.IPhone6Landscape];
+        public static readonly DeviceDescriptor IPhone = PlaywrightSharp.Playwright.Devices[DeviceDescriptorName.IPhone6];
+        public static readonly DeviceDescriptor IPhoneLandscape = PlaywrightSharp.Playwright.Devices[DeviceDescriptorName.IPhone6Landscape];
         private static ILoggerFactory LoggerFactory { get; set; }
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 

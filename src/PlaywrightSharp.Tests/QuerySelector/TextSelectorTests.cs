@@ -6,12 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.QuerySelector
 {
+    /*
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>text selector</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class TextSelectorTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class TextSelectorTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public TextSelectorTests(ITestOutputHelper output) : base(output)
@@ -69,4 +68,5 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("\" \\\"yo \"", await Selectors.CreateSelectorAsync("text", await Page.QuerySelectorAsync("div")));
         }
     }
+    */
 }

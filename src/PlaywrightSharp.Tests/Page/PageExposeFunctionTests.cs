@@ -9,10 +9,9 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.exposeFunction</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageExposeFunctionTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageExposeFunctionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageExposeFunctionTests(ITestOutputHelper output) : base(output)

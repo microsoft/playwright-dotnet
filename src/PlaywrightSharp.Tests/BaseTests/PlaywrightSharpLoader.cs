@@ -14,6 +14,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static async Task SetupAsync()
         {
+            /*
             var browserFetcher = TestConstants.GetNewBrowserType().CreateBrowserFetcher();
             int percentage = 0;
             browserFetcher.DownloadProgressChanged += (sender, e) =>
@@ -26,14 +27,14 @@ namespace PlaywrightSharp.Tests.BaseTests
             };
             Console.WriteLine($"Downloading browser...");
             var downloaderTask = browserFetcher.DownloadAsync();
-
+            */
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
             HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
 
             var serverStart = Server.StartAsync();
             var httpsServerStart = HttpsServer.StartAsync();
 
-            await Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
+            await Task.WhenAll(/*downloaderTask, */serverStart, httpsServerStart);
         }
 
         internal static Task TeardownAsync() => Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());

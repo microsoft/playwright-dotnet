@@ -10,10 +10,9 @@ namespace PlaywrightSharp.Tests.Page
 {
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.addScriptTag</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageAddScriptTagTests : PlaywrightSharpPageBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
+    class PageAddScriptTagTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageAddScriptTagTests(ITestOutputHelper output) : base(output)

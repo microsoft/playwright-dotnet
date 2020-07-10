@@ -6,12 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Browser
 {
+    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
-    [Trait("Category", "chromium")]
-    [Trait("Category", "firefox")]
     [Collection(TestConstants.TestFixtureCollectionName)]
-    public class CloseTests : PlaywrightSharpBaseTest
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public CloseTests(ITestOutputHelper output) : base(output)
@@ -24,8 +23,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldTerminateNetworkWaiters()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
 
             var newPage = await remote.DefaultContext.NewPageAsync();
             var requestTask = newPage.WaitForRequestAsync(TestConstants.EmptyPage);
@@ -48,8 +47,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldBeAbleToCloseRemoteBrowser()
         {
-            using var browserApp = await Playwright.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var remote = await Playwright.ConnectAsync(browserApp.ConnectOptions);
+            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            using var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
             var closeTask = new TaskCompletionSource<bool>();
 
             browserApp.Closed += (sender, e) => closeTask.TrySetResult(true);
@@ -57,4 +56,5 @@ namespace PlaywrightSharp.Tests.Browser
             await Task.WhenAll(remote.CloseAsync(), closeTask.Task);
         }
     }
+    */
 }
