@@ -12,11 +12,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
     class SetUserAgentTests : PlaywrightSharpBrowserBaseTest
     {
+
         /// <inheritdoc/>
         public SetUserAgentTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -86,6 +87,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 page.GoToAsync(TestConstants.EmptyPage)
             );
             Assert.Equal("foobar", userAgent);
-        }
+        }*/
     }
 }

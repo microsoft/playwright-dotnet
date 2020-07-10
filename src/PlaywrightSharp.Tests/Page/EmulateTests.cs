@@ -6,6 +6,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Page
 {
+    /*
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulate</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
@@ -53,4 +54,5 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await page.EvaluateAsync<string>("result"));
         }
     }
+    */
 }
