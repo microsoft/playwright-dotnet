@@ -12,7 +12,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
     class SetUserAgentTests : PlaywrightSharpBrowserBaseTest
     {
-
         /// <inheritdoc/>
         public SetUserAgentTests(ITestOutputHelper output) : base(output)
         {

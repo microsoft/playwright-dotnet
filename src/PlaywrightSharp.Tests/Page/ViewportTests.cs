@@ -13,7 +13,6 @@ namespace PlaywrightSharp.Tests.Page
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
     class ViewportTests : PlaywrightSharpPageBaseTest
     {
-
         /// <inheritdoc/>
         public ViewportTests(ITestOutputHelper output) : base(output)
         {
