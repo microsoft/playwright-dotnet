@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public HeadfulTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should have default url when launching browser</playwright-it>
@@ -82,5 +82,6 @@ namespace PlaywrightSharp.Tests.Launcher
             // We have to interact with a page so that 'beforeunload' handlers fire.
             await page.ClickAsync("body");
         }
+        */
     }
 }

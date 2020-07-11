@@ -37,19 +37,6 @@ namespace PlaywrightSharp.Tests.Chromium
 
         ///<playwright-file>chromium/headful.spec.js</playwright-file>
         ///<playwright-describe>ChromiumHeadful</playwright-describe>
-        ///<playwright-it>background_page target type should be available</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task BackgroundPageTargetTypeShouldBeAvailable()
-        {
-            await using var browserWithExtension = await BrowserType.LaunchAsync(_extensionOptions);
-            var page = await browserWithExtension.DefaultContext.NewPageAsync();
-            await browserWithExtension.WaitForTargetAsync(target => target.Type == TargetType.BackgroundPage);
-            await page.CloseAsync();
-            await browserWithExtension.CloseAsync();
-        }
-
-        ///<playwright-file>chromium/headful.spec.js</playwright-file>
-        ///<playwright-describe>ChromiumHeadful</playwright-describe>
         ///<playwright-it>target.page() should return a background_page</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task TargetPageShouldReturnABackgroundPage()
@@ -60,30 +47,6 @@ namespace PlaywrightSharp.Tests.Chromium
 
             Assert.Equal(6, await page.EvaluateAsync<int>("() => 2 * 3"));
             Assert.Equal(42, await page.EvaluateAsync<int>("() => window.MAGIC"));
-        }
-
-        ///<playwright-file>chromium/headful.spec.js</playwright-file>
-        ///<playwright-describe>ChromiumHeadful</playwright-describe>
-        ///<playwright-it>OOPIF: should report google.com frame</playwright-it>
-        [Fact(Skip = "Ignored on Playwright")]
-        public async Task OOPIFShouldReportGoogleComFrame()
-        {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
-            var page = await browser.DefaultContext.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
-            await page.SetRequestInterceptionAsync(true);
-            page.Request += async (sender, e) => await e.Request.FulfillAsync(
-                new ResponseData { Body = "{ body: 'YO, GOOGLE.COM'}" });
-            await page.EvaluateHandleAsync(@"() => {
-                    const frame = document.createElement('iframe');
-                    frame.setAttribute('src', 'https://google.com/');
-                    document.body.appendChild(frame);
-                    return new Promise(x => frame.onload = x);
-                }");
-            await page.WaitForSelectorAsync("iframe[src=\"https://google.com/\"]");
-            string[] urls = Array.ConvertAll(page.Frames, frame => frame.Url);
-            Array.Sort(urls);
-            Assert.Equal(new[] { TestConstants.EmptyPage, "https://google.com/" }, urls);
         }
 
         ///<playwright-file>chromium/headful.spec.js</playwright-file>

@@ -58,18 +58,6 @@ namespace PlaywrightSharp.Tests.Chromium
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should be able to use the default page in the browser</playwright-it>
-        [Retry]
-        public async Task ShouldBeAbleToUseTheDefaultPageInTheBrowser()
-        {
-            // The pages will be the testing page and the original newtab page
-            var originalPage = (await Browser.DefaultContext.GetPagesAsync()).First();
-            Assert.Equal("Hello world", await originalPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
-            Assert.NotNull(await originalPage.QuerySelectorAsync("body"));
-        }
-
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should report when a new page is created and closed</playwright-it>
         [Retry]
         public async Task ShouldReportWhenANewPageIsCreatedAndClosed()

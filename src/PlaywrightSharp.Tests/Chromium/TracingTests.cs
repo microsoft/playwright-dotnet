@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.Chromium
             {
                 Path = _file
             });
-            var newPage = await Browser.DefaultContext.NewPageAsync();
+            var newPage = await Browser.NewPageAsync();
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
                 await Browser.StartTracingAsync(newPage, new TracingOptions

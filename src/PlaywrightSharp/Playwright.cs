@@ -60,7 +60,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public IBrowserType this[string browserType]
-            => browserType switch
+            => browserType?.ToLower() switch
             {
                 BrowserType.Chromium => Chromium,
                 BrowserType.Firefox => Firefox,

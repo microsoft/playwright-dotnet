@@ -41,14 +41,6 @@ namespace PlaywrightSharp
         IEnumerable<IBrowserContext> BrowserContexts { get; }
 
         /// <summary>
-        /// Returns the default browser context.
-        /// </summary>
-        /// <remarks>
-        /// The default browser context can not be closed.
-        /// </remarks>
-        IBrowserContext DefaultContext { get; }
-
-        /// <summary>
         /// Indicates that the browser is connected.
         /// </summary>
         bool IsConnected { get; }

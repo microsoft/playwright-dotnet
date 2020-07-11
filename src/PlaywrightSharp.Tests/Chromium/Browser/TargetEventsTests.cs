@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
         public TargetEventsTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>chromium/launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser target events</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -39,5 +39,6 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
             }, events);
             await browser.CloseAsync();
         }
+        */
     }
 }

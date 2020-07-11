@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend("--site-per-process").ToArray();
             await using var browser = await BrowserType.LaunchAsync(options);
-            var page = await browser.DefaultContext.NewPageAsync();
+            var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
             Assert.Equal(2, page.Frames.Length);
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = options.Args.Prepend("--site-per-process").ToArray();
             await using var browser = await BrowserType.LaunchAsync(options);
-            var page = await browser.DefaultContext.NewPageAsync();
+            var page = await browser.NewPageAsync();
             await page.SetRequestInterceptionAsync(true);
             page.Request += (sender, e) => _ = e.Request.ContinueAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");

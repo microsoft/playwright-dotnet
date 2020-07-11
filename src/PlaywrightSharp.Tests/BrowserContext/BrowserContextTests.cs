@@ -20,20 +20,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should create new incognito context</playwright-it>
-        [Retry]
-        public async Task ShouldHaveDefaultContext()
-        {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            Assert.Single(browser.BrowserContexts);
-            var defaultContext = browser.BrowserContexts.First();
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(defaultContext.CloseAsync);
-            Assert.Same(defaultContext, browser.DefaultContext);
-            Assert.Contains("cannot be closed", exception.Message);
-        }
-
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should have default context</playwright-it>
         [Retry]
         public async Task ShouldCreateNewIncognitoContext()

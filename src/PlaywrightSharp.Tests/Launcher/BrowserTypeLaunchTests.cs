@@ -7,14 +7,13 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
-    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
-    ///<playwright-describe>Playwright.launch</playwright-describe>
+    ///<playwright-describe>browserType.launch</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class LaunchTests : PlaywrightSharpBaseTest
+    public class BrowserTypeLaunchTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
-        public LaunchTests(ITestOutputHelper output) : base(output)
+        public BrowserTypeLaunchTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -25,14 +24,14 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var page = await browser.DefaultContext.NewPageAsync();
+            var page = await browser.NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
             var exception = await Assert.ThrowsAsync<TargetClosedException>(() => neverResolves);
             Assert.Contains("Protocol error", exception.Message);
 
         }
-
+        /*
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.launch</playwright-describe>
         ///<playwright-it>should reject if executable path is invalid</playwright-it>
@@ -87,6 +86,6 @@ namespace PlaywrightSharp.Tests.Launcher
             await using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
             Assert.True(browserApp.Process.Id > 0);
         }
+        */
     }
-    */
 }

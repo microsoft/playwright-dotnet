@@ -37,8 +37,6 @@ namespace PlaywrightSharp
 
         public IEnumerable<IBrowserContext> BrowserContexts { get; }
 
-        public IBrowserContext DefaultContext { get; }
-
         public bool IsConnected { get; }
 
         public Task StartTracingAsync(IPage page = null, TracingOptions options = null) => throw new NotImplementedException();

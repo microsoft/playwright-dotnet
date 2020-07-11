@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Playwright
         [Fact(Skip = "It's node.js only")]
         public async Task InitializeAsync()
         {
-            Page = await PlaywrightSharpWebLoaderFixture.HostBrowser.DefaultContext.NewPageAsync();
+            Page = await PlaywrightSharpWebLoaderFixture.HostBrowser.NewPageAsync();
             await Page.GoToAsync(TestConstants.ServerUrl + "/test/assets/playwrightweb.html");
             /*
             await Page.EvaluateAsync(

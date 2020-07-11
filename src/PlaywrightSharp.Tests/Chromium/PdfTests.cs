@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>Page.pdf</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PdfTests : PlaywrightSharpBaseTest
+    class PdfTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PdfTests(ITestOutputHelper output) : base(output)
@@ -28,18 +28,13 @@ namespace PlaywrightSharp.Tests.Chromium
         [Retry]
         public async Task ShouldBeAbleToSaveFile()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.Args = options.Args.Prepend("--site-per-process").ToArray();
-            await using var browser = await BrowserType.LaunchAsync(options);
-            var page = await browser.DefaultContext.NewPageAsync();
-
             string outputFile = Path.Combine(BaseDirectory, "output.pdf");
             var fileInfo = new FileInfo(outputFile);
             if (fileInfo.Exists)
             {
                 fileInfo.Delete();
             }
-            await page.GetPdfAsync(outputFile);
+            await Page.GetPdfAsync(outputFile);
             fileInfo = new FileInfo(outputFile);
             Assert.True(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)
