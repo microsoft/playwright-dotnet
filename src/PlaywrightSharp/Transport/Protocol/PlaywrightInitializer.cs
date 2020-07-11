@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Transport.Protocol
+namespace PlaywrightSharp.Transport.Protocol
 {
     internal class PlaywrightInitializer
     {
