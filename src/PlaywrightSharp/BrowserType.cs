@@ -52,9 +52,6 @@ namespace PlaywrightSharp
         public string Name => _initializer.Name;
 
         /// <inheritdoc />
-        public IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null) => throw new System.NotImplementedException();
-
-        /// <inheritdoc />
         public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
             => (await _channel.LaunchAsync(options).ConfigureAwait(false)).Object;
 

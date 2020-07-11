@@ -10,7 +10,7 @@ namespace PlaywrightSharp
     public interface IBrowserType
     {
         /// <summary>
-        /// Executable path based on <see cref="IBrowserFetcher"/>.
+        /// Executable path.
         /// </summary>
         string ExecutablePath { get; }
 
@@ -18,13 +18,6 @@ namespace PlaywrightSharp
         /// Returns browser name. For example: 'chromium', 'webkit' or 'firefox'.
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Creates the browser fetcher.
-        /// </summary>
-        /// <param name="options">Options.</param>
-        /// <returns>The browser fetcher.</returns>
-        IBrowserFetcher CreateBrowserFetcher(BrowserFetcherOptions options = null);
 
         /// <summary>
         /// Launches a new browser.

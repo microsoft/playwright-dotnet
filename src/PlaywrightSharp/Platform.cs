@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Platform used by a <see cref="IBrowserFetcher"/>.
+    /// Supported platforms.
     /// </summary>
     public enum Platform
     {
