@@ -73,7 +73,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="loggerFactory">Logger.</param>
         /// <param name="scheduler">Task scheduler for long running tasks.</param>
-        /// <returns>A <see cref="Task"/> that completes when the playwright server is ready to be used.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
         public static async Task<IPlaywright> CreateAsync(ILoggerFactory loggerFactory = null, TransportTaskScheduler scheduler = null)
         {
             var connection = new PlaywrightConnection(loggerFactory, scheduler);
@@ -83,6 +83,13 @@ namespace PlaywrightSharp
 
             return playwright;
         }
+
+        /// <summary>
+        /// Runs the playwright driver install command.
+        /// </summary>
+        /// <param name="loggerFactory">Logger.</param>
+        /// <returns>A <see cref="Task"/> that completes when the playwright driver ran the install command.</returns>
+        public static Task InstallAsync(ILoggerFactory loggerFactory = null) => PlaywrightConnection.InstallAsync(loggerFactory);
 
         /// <inheritdoc />
         public void Dispose()

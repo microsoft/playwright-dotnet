@@ -59,16 +59,20 @@
       </Reference>
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Servers\driver-linux" />
-      <Content Include="Servers\driver-linux">
+      <None Remove="Drivers\driver-linux" />
+      <Content Include="Drivers\driver-linux">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="Servers\driver-macos" />
-      <Content Include="Servers\driver-macos">
+      <None Remove="Drivers\driver-macos" />
+      <Content Include="Drivers\driver-macos">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="Servers\driver-win.exe" />
-      <Content Include="Servers\driver-win.exe">
+      <None Remove="Drivers\driver-win.exe" />
+      <Content Include="Drivers\driver-win.exe">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Drivers\browsers.json" />
+      <Content Include="Drivers\browsers.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
