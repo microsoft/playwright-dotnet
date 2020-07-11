@@ -7,6 +7,7 @@ namespace PlaywrightSharp.Demo
     {
         static async Task Main(string[] args)
         {
+            await Playwright.InstallAsync().ConfigureAwait(false);
             var playwright = await Playwright.CreateAsync();
             var chromium = playwright.Chromium;
             var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });

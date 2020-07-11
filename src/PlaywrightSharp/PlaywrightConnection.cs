@@ -46,6 +46,18 @@ namespace PlaywrightSharp
             GC.SuppressFinalize(this);
         }
 
+        internal static async Task InstallAsync(ILoggerFactory loggerFactory)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            using var process = GetProcess();
+            process.EnableRaisingEvents = true;
+            process.StartInfo.Arguments = "install";
+            process.Exited += (sender, e) => tcs.TrySetResult(true);
+            process.Start();
+
+            await tcs.Task.ConfigureAwait(false);
+        }
+
         internal ConnectionScope CreateScope(string guid)
         {
             var scope = new ConnectionScope(this, guid, _loggerFactory);
@@ -115,6 +127,37 @@ namespace PlaywrightSharp
             return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>(GetDefaultJsonSerializerOptions());
         }
 
+        private static Process GetProcess()
+            => new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetExecutablePath(),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    CreateNoWindow = true,
+                },
+            };
+
+        private static string GetExecutablePath()
+        {
+            // This is not the final solution.
+            string tempDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Drivers");
+            string playwrightServer = "driver-win.exe";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                playwrightServer = "driver-macos";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                playwrightServer = "driver-linux";
+            }
+
+            return Path.Combine(tempDirectory, playwrightServer);
+        }
+
         private void TransportOnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
             var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
@@ -177,37 +220,6 @@ namespace PlaywrightSharp
 
             _playwrightServerProcess?.Kill();
             _playwrightServerProcess?.Dispose();
-        }
-
-        private Process GetProcess()
-            => new Process
-            {
-                StartInfo =
-                {
-                    FileName = GetExecutablePath(),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    CreateNoWindow = true,
-                },
-            };
-
-        private string GetExecutablePath()
-        {
-            // This is not the final solution.
-            string tempDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Servers");
-            string playwrightServer = "driver-win.exe";
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                playwrightServer = "driver-macos";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                playwrightServer = "driver-linux";
-            }
-
-            return Path.Combine(tempDirectory, playwrightServer);
         }
     }
 }
