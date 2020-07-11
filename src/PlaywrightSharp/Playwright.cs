@@ -48,13 +48,13 @@ namespace PlaywrightSharp
         public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
 
         /// <inheritdoc/>
-        public IBrowserType Chromium { get; }
+        public IBrowserType Chromium => _initializer.Chromium;
 
         /// <inheritdoc/>
-        public IBrowserType Firefox { get; }
+        public IBrowserType Firefox => _initializer.Firefox;
 
         /// <inheritdoc/>
-        public IBrowserType Webkit { get; }
+        public IBrowserType Webkit => _initializer.Webkit;
 
         internal PlaywrightConnection Connection { get; set; }
 

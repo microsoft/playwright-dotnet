@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,15 +8,18 @@ namespace PlaywrightSharp.Transport
 {
     internal class StdIOTransport : IConnectionTransport, IDisposable
     {
+        private const int DefaultBufferSize = 1024;  // Byte buffer size
         private readonly Process _process;
         private readonly CancellationTokenSource _readerCancellationSource = new CancellationTokenSource();
+        private readonly List<byte> _data = new List<byte>();
+        private int? _currentMessageSize = null;
 
         internal StdIOTransport(Process process, TransportTaskScheduler scheduler = null)
         {
             _process = process;
             scheduler ??= ScheduleTransportTask;
 
-            scheduler(GetResponse, _readerCancellationSource.Token);
+            scheduler(GetResponseAsync, _readerCancellationSource.Token);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -40,15 +44,13 @@ namespace PlaywrightSharp.Transport
             ll[2] = (byte)((len >> 16) & 0xFF);
             ll[3] = (byte)((len >> 24) & 0xFF);
 
-            Console.WriteLine("Length");
-            Console.WriteLine(len);
             await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4).ConfigureAwait(false);
             await _process.StandardInput.BaseStream.WriteAsync(bytes, 0, len).ConfigureAwait(false);
             await _process.StandardInput.BaseStream.FlushAsync().ConfigureAwait(false);
         }
 
-        private static void ScheduleTransportTask(Action action, CancellationToken cancellationToken)
-            => Task.Factory.StartNew(action, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+        private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
+            => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
         private void Dispose(bool disposing)
         {
@@ -64,28 +66,47 @@ namespace PlaywrightSharp.Transport
             }
         }
 
-        private void GetResponse()
+        private async Task GetResponseAsync(CancellationToken token)
         {
             var stream = _process.StandardOutput;
+            byte[] buffer = new byte[DefaultBufferSize];
 
-            while (!_process.HasExited && stream.Peek() > 0)
+            while (!_process.HasExited && !token.IsCancellationRequested)
             {
-                byte[] buffer = new byte[4];
-                int read4 = stream.BaseStream.Read(buffer, 0, 4);
-                if (read4 == 0)
+                int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
+
+                if (!token.IsCancellationRequested)
+                {
+                    _data.AddRange(buffer.AsMemory().Slice(0, read).ToArray());
+
+                    ProcessStream(token);
+                }
+            }
+        }
+
+        private void ProcessStream(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                if (_currentMessageSize == null && _data.Count < 4)
                 {
                     break;
                 }
 
-                int len = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16) + (buffer[3] << 24);
-                buffer = new byte[len];
-                int readLen = stream.BaseStream.Read(buffer, 0, len);
-                if (len != readLen)
+                if (_currentMessageSize == null)
+                {
+                    _currentMessageSize = _data[0] + (_data[1] << 8) + (_data[2] << 16) + (_data[3] << 24);
+                    _data.RemoveRange(0, 4);
+                }
+
+                if (_data.Count < _currentMessageSize)
                 {
                     break;
                 }
 
-                string result = System.Text.Encoding.UTF8.GetString(buffer);
+                string result = System.Text.Encoding.UTF8.GetString(_data.GetRange(0, _currentMessageSize.Value).ToArray());
+                _data.RemoveRange(0, _currentMessageSize.Value);
+                _currentMessageSize = null;
                 MessageReceived?.Invoke(this, new MessageReceivedEventArgs(result));
             }
         }
