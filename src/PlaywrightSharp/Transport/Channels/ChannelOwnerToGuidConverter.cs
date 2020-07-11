@@ -6,11 +6,11 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class ChannelOwnerToGuidConverter : JsonConverter<IChannelOwner>
     {
-        private readonly Playwright _playwright;
+        private readonly PlaywrightConnection _connection;
 
-        public ChannelOwnerToGuidConverter(Playwright playwright)
+        public ChannelOwnerToGuidConverter(PlaywrightConnection connection)
         {
-            _playwright = playwright;
+            _connection = connection;
         }
 
         public override bool CanConvert(Type type) => typeof(IChannelOwner).IsAssignableFrom(type);
@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Transport.Channels
         {
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             string guid = document.RootElement.GetProperty("guid").ToString();
-            return _playwright.GetObject(guid);
+            return _connection.GetObject(guid);
         }
 
         public override void Write(Utf8JsonWriter writer, IChannelOwner value, JsonSerializerOptions options)

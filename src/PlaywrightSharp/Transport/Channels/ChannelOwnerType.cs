@@ -45,5 +45,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "route")]
         Route,
+
+        [EnumMember(Value = "playwright")]
+        Playwright,
     }
 }

@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         public ViewportTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.viewport</playwright-describe>
         ///<playwright-it>should get the proper viewport size</playwright-it>
@@ -181,6 +181,6 @@ namespace PlaywrightSharp.Tests.Page
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Equal(320, await Page.EvaluateAsync<int>("() => window.innerWidth"));
-        }
+        }*/
     }
 }

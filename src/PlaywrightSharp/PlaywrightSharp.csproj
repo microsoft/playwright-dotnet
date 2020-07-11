@@ -59,16 +59,16 @@
       </Reference>
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Servers\playwright-linux" />
-      <Content Include="Servers\playwright-linux">
+      <None Remove="Servers\driver-linux" />
+      <Content Include="Servers\driver-linux">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="Servers\playwright-macos" />
-      <Content Include="Servers\playwright-macos">
+      <None Remove="Servers\driver-macos" />
+      <Content Include="Servers\driver-macos">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="Servers\playwright-win.exe" />
-      <Content Include="Servers\playwright-win.exe">
+      <None Remove="Servers\driver-win.exe" />
+      <Content Include="Servers\driver-win.exe">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

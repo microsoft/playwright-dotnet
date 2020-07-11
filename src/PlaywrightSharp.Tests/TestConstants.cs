@@ -50,8 +50,6 @@ namespace PlaywrightSharp.Tests
         }
 
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
-        public static readonly DeviceDescriptor IPhone = PlaywrightSharp.Playwright.Devices[DeviceDescriptorName.IPhone6];
-        public static readonly DeviceDescriptor IPhoneLandscape = PlaywrightSharp.Playwright.Devices[DeviceDescriptorName.IPhone6Landscape];
         private static ILoggerFactory LoggerFactory { get; set; }
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 

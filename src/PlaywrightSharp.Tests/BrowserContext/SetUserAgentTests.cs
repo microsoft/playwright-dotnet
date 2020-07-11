@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public SetUserAgentTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -86,6 +86,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 page.GoToAsync(TestConstants.EmptyPage)
             );
             Assert.Equal("foobar", userAgent);
-        }
+        }*/
     }
 }

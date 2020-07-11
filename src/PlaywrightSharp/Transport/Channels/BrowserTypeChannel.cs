@@ -13,9 +13,6 @@ namespace PlaywrightSharp.Transport.Channels
             => Scope.SendMessageToServer<BrowserChannel>(
                 Guid,
                 "launch",
-                new Dictionary<string, object>
-                {
-                    ["options"] = options ?? new LaunchOptions(),
-                });
+                options ?? new LaunchOptions());
     }
 }

@@ -1,0 +1,213 @@
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Transport;
+using PlaywrightSharp.Transport.Channels;
+
+namespace PlaywrightSharp
+{
+    internal class PlaywrightConnection : IDisposable
+    {
+        private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
+        private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
+        private readonly ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>> _callbacks = new ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>>();
+        private readonly ConnectionScope _rootScript;
+        private readonly Process _playwrightServerProcess;
+        private readonly IConnectionTransport _transport;
+        private readonly ILoggerFactory _loggerFactory;
+        private int _lastId;
+
+        public PlaywrightConnection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
+        {
+            _rootScript = CreateScope(string.Empty);
+
+            _playwrightServerProcess = GetProcess();
+            _playwrightServerProcess.Start();
+            _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
+            _transport.MessageReceived += TransportOnMessageReceived;
+            _loggerFactory = loggerFactory;
+        }
+
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        ~PlaywrightConnection() => Dispose(false);
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        internal ConnectionScope CreateScope(string guid)
+        {
+            var scope = new ConnectionScope(this, guid, _loggerFactory);
+            _scopes.TryAdd(guid, scope);
+            return scope;
+        }
+
+        internal void RemoveScope(string guid) => _scopes.TryRemove(guid, out _);
+
+        internal void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
+
+        internal IChannelOwner GetObject(string guid)
+        {
+            _objects.TryGetValue(guid, out var result);
+            return result;
+        }
+
+        internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
+        {
+            var options = JsonExtensions.GetNewDefaultSerializerOptions();
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelToGuidConverter(this));
+
+            return options;
+        }
+
+        internal async Task<T> WaitForObjectWithKnownName<T>(string guid)
+            where T : class
+        {
+            if (_objects.TryGetValue(guid, out var channel))
+            {
+                return channel as T;
+            }
+
+            var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _waitingForObject.TryAdd(guid, tcs);
+            return await tcs.Task.ConfigureAwait(false) as T;
+        }
+
+        internal void OnObjectCreated(string guid, IChannelOwner result)
+        {
+            _objects.TryAdd(guid, result);
+            if (_waitingForObject.TryRemove(guid, out var callback))
+            {
+                callback.TrySetResult(result);
+            }
+        }
+
+        internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args)
+            where T : class
+        {
+            int id = Interlocked.Increment(ref _lastId);
+            var message = new MessageRequest
+            {
+                Id = id,
+                Guid = guid,
+                Method = method,
+                Params = args,
+            };
+
+            string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
+            Debug.WriteLine($"pw:channel:command {messageString}");
+            await _transport.SendAsync(messageString).ConfigureAwait(false);
+
+            var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _callbacks.TryAdd(id, tcs);
+            return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>(GetDefaultJsonSerializerOptions());
+        }
+
+        private void TransportOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
+
+            if (message.Id.HasValue)
+            {
+                Debug.WriteLine($"pw:channel:response {e.Message}");
+
+                if (_callbacks.TryRemove(message.Id.Value, out var callback))
+                {
+                    if (message.Error != null)
+                    {
+                        callback.TrySetException(CreateException(message.Error));
+                    }
+                    else
+                    {
+                        callback.TrySetResult(message.Result);
+                    }
+                }
+
+                return;
+            }
+
+            Debug.WriteLine($"pw:channel:event {e.Message}");
+
+            if (message.Method == "__create__")
+            {
+                _objects.TryGetValue(message.Guid, out var scopeObject);
+                var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
+                scope.CreateRemoteObject(message.Params.Type, message.Params.Guid, message.Params.Initializer);
+
+                return;
+            }
+
+            _objects.TryGetValue(message.Guid, out var obj);
+            obj?.Channel?.OnMessage(message.Method, message.Params);
+        }
+
+        private Exception CreateException(PlaywrightServerError error)
+        {
+            if (string.IsNullOrEmpty(error.Message))
+            {
+                return new PlaywrightSharpException(error.Value);
+            }
+
+            if (error.Name == "TimeoutError")
+            {
+                return new TimeoutException(error.Message);
+            }
+
+            return new PlaywrightSharpException(error.Message);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            _playwrightServerProcess?.Kill();
+            _playwrightServerProcess?.Dispose();
+        }
+
+        private Process GetProcess()
+            => new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetExecutablePath(),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    CreateNoWindow = true,
+                },
+            };
+
+        private string GetExecutablePath()
+        {
+            // This is not the final solution.
+            string tempDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Servers");
+            string playwrightServer = "driver-win.exe";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                playwrightServer = "driver-macos";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                playwrightServer = "driver-linux";
+            }
+
+            return Path.Combine(tempDirectory, playwrightServer);
+        }
+    }
+}

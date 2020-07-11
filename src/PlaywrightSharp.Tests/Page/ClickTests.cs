@@ -22,6 +22,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
+        /*
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button</playwright-it>
@@ -635,6 +636,6 @@ button.style.position = 'absolute';
             await Page.ClickAsync("button");
             Assert.Equal(2, await Page.EvaluateAsync<int>("window.clicked"));
             Assert.Equal("0px", await Page.EvaluateAsync<string>("document.querySelector('#button').style.left"));
-        }
+        }*/
     }
 }

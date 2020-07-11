@@ -24,6 +24,11 @@ namespace PlaywrightSharp
         IBrowserType Webkit { get; }
 
         /// <summary>
+        /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
+        /// </summary>
+        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
+
+        /// <summary>
         /// Gets a <see cref="IBrowserType"/>.
         /// </summary>
         /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="BrowserType"/>.
