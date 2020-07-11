@@ -11,11 +11,23 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly BrowserChannel _channel;
+        private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
+        private bool _isClosedOrClosing;
+        private bool _isConnected;
 
         public Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
         {
             _scope = scope;
             _channel = new BrowserChannel(guid, scope, this);
+
+            _channel.Closed += (sender, e) =>
+            {
+                _isConnected = false;
+                Disconnected?.Invoke(this, EventArgs.Empty);
+                _isClosedOrClosing = true;
+                _scope.Dispose();
+                _closedTcs.TrySetResult(true);
+            };
         }
 
         public event EventHandler<TargetChangedArgs> TargetChanged;
@@ -43,7 +55,16 @@ namespace PlaywrightSharp
 
         public Task<string> StopTracingAsync() => throw new NotImplementedException();
 
-        public Task CloseAsync() => throw new NotImplementedException();
+        public async Task CloseAsync()
+        {
+            if (!_isClosedOrClosing)
+            {
+                _isClosedOrClosing = true;
+                await _channel.CloseAsync();
+            }
+
+            await _closedTcs.Task;
+        }
 
         public Task DisconnectAsync() => throw new NotImplementedException();
 

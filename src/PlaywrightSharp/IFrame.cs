@@ -172,7 +172,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
+        Task<IJSHandle> EvaluateHandleAsync(string script, object args = null);
 
         /// <summary>
         /// <![CDATA[

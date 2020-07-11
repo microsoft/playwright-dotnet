@@ -11,7 +11,7 @@ using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Transport
 {
     internal class PlaywrightConnection : IDisposable
     {
@@ -30,6 +30,12 @@ namespace PlaywrightSharp
             _rootScript = CreateScope(string.Empty);
 
             _playwrightServerProcess = GetProcess();
+
+            /*
+            _playwrightServerProcess.StartInfo.FileName = "node";
+            _playwrightServerProcess.StartInfo.Arguments = "/Users/neo/Documents/Coding/microsoft/playwright/lib/rpc/server.js";
+            */
+
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += TransportOnMessageReceived;

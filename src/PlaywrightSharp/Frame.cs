@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -76,7 +80,7 @@ namespace PlaywrightSharp
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => throw new NotImplementedException();
+        public Task<IJSHandle> EvaluateHandleAsync(string script, object args = null) => EvaluateHandleAsync(false, script, args);
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => throw new NotImplementedException();
@@ -171,5 +175,120 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
+
+        internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script, object args)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                    script: script,
+                    isFunction: script.IsJavascriptFunction(),
+                    args: SerializedArgument(args),
+                    isPage: isPageCall).ConfigureAwait(false)).Object;
+
+        private EvaluateArgument SerializedArgument(object args)
+        {
+            var result = new EvaluateArgument();
+            var guids = new List<EvaluateArgumentGuidElement>();
+
+            int PushHandle(string guid)
+            {
+                guids.Add(new EvaluateArgumentGuidElement { Guid = guid });
+                return guids.Count - 1;
+            }
+
+            object value = SerializeAsCallArgument(args, value =>
+            {
+                if (value is IChannelOwner channelOwner)
+                {
+                    return new EvaluateArgumentValueElement
+                    {
+                        H = PushHandle(channelOwner.Channel.Guid),
+                    };
+                }
+
+                return new EvaluateArgumentValueElement
+                {
+                    FallThrough = value,
+                };
+            });
+
+            return new EvaluateArgument
+            {
+                Value = value,
+                Guids = guids,
+            };
+        }
+
+        private object SerializeAsCallArgument(object value, Func<object, EvaluateArgumentValueElement> jsHandleSerializer)
+            => Serialize(value, jsHandleSerializer, new List<object>());
+
+        private object Serialize(object value, Func<object, EvaluateArgumentValueElement> jsHandleSerializer, List<object> visited)
+        {
+            // This will endupt being a converter when we need to fully implement this
+            value = jsHandleSerializer(value);
+
+            if (value is EvaluateArgumentValueElement valueElement && valueElement.FallbackSet)
+            {
+                value = valueElement.FallThrough;
+            }
+            else
+            {
+                return value;
+            }
+
+            if (visited.Contains(value))
+            {
+                throw new PlaywrightSharpException("Argument is a circular structure");
+            }
+
+            if (value == null)
+            {
+                return new EvaluateArgumentValueElement { V = null };
+            }
+
+            if (value is double nan && double.IsNaN(nan))
+            {
+                return new EvaluateArgumentValueElement { V = "NaN" };
+            }
+
+            if (value is double infinity && double.IsInfinity(infinity))
+            {
+                return new EvaluateArgumentValueElement { V = "Infinity" };
+            }
+
+            if (value is double negativeInfinity && double.IsNegativeInfinity(negativeInfinity))
+            {
+                return new EvaluateArgumentValueElement { V = "Infinity" };
+            }
+
+            if (value is double negativeZero && negativeZero == -0)
+            {
+                return new EvaluateArgumentValueElement { V = "-0" };
+            }
+
+            /*
+            if (isPrimitiveValue(value))
+                return value;
+            */
+            if (value is DateTime date)
+            {
+                return new EvaluateArgumentValueElement { D = date };
+            }
+
+            if (value is IEnumerable enumerable)
+            {
+                var result = new List<object>();
+                visited.Add(value);
+
+                foreach (object item in enumerable)
+                {
+                    result.Add(Serialize(item, jsHandleSerializer, visited));
+                }
+
+                visited.Remove(value);
+
+                return new EvaluateArgumentValueElement { A = result.ToArray() };
+            }
+
+            return new EvaluateArgumentValueElement { O = value };
+        }
     }
 }

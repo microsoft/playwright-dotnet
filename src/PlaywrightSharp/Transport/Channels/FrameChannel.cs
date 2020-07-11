@@ -19,5 +19,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["url"] = url,
                     ["options"] = options ?? new GoToOptions(),
                 });
+
+        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object args, bool isPage)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evaluateExpressionHandle",
+                new Dictionary<string, object>
+                {
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["args"] = args,
+                    ["isPage"] = isPage,
+                });
     }
 }

@@ -813,7 +813,7 @@ namespace PlaywrightSharp
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args);
+        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object args = null);
 
         /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.

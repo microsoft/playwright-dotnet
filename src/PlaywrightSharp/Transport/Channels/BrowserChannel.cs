@@ -11,6 +11,8 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
+        internal event EventHandler Closed;
+
         internal Task<BrowserContextChannel> NewContextAsync(BrowserContextOptions options)
             => Scope.SendMessageToServer<BrowserContextChannel>(
                 Guid,
