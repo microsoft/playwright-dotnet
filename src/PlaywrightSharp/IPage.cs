@@ -139,7 +139,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when the page closes.
         /// </summary>
-        event EventHandler<EventArgs> Close;
+        event EventHandler<EventArgs> Closed;
 
         /// <summary>
         /// Raised when the page crashes.
@@ -460,14 +460,26 @@ namespace PlaywrightSharp
         /// Executes a script in browser context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <seealso cref="IFrame.EvaluateAsync{T}(string)"/>
+        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> EvaluateAsync<T>(string script);
+
+        /// <summary>
+        /// Executes a script in browser context.
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to script.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <seealso cref="IFrame.EvaluateAsync{T}(string, object[])"/>
+        /// <seealso cref="IFrame.EvaluateAsync{T}(string, object)"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string script, params object[] args);
+        Task<T> EvaluateAsync<T>(string script, object args);
 
         /// <summary>
         /// Adds a function which would be invoked in one of the following scenarios:
@@ -718,13 +730,24 @@ namespace PlaywrightSharp
         /// Executes a script in browser context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <seealso cref="IFrame.EvaluateAsync(string)"/>
+        /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
+        Task<JsonElement?> EvaluateAsync(string script);
+
+        /// <summary>
+        /// Executes a script in browser context.
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
-        /// <seealso cref="IFrame.EvaluateAsync(string, object[])"/>
+        /// <seealso cref="IFrame.EvaluateAsync(string, object)"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string script, params object[] args);
+        Task<JsonElement?> EvaluateAsync(string script, object args);
 
         /// <summary>
         /// Takes a screenshot of the page.

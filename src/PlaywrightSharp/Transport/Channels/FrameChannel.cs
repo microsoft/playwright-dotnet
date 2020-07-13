@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -29,6 +31,30 @@ namespace PlaywrightSharp.Transport.Channels
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<JsonElement?> EvaluateExpressionAsync(string script, bool isFunction, EvaluateArgument arg, bool isPage)
+            => Scope.SendMessageToServer<JsonElement?>(
+                Guid,
+                "evaluateExpression",
+                new Dictionary<string, object>
+                {
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForSelectorOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "waitForSelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["timeout"] = options.Timeout,
+                    ["state"] = options.State,
                     ["isPage"] = isPage,
                 });
     }

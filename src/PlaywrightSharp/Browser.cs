@@ -19,9 +19,10 @@ namespace PlaywrightSharp
         {
             _scope = scope;
             _channel = new BrowserChannel(guid, scope, this);
-
+            IsConnected = true;
             _channel.Closed += (sender, e) =>
             {
+                IsConnected = false;
                 Disconnected?.Invoke(this, EventArgs.Empty);
                 _isClosedOrClosing = true;
                 _scope.Dispose();
@@ -54,7 +55,7 @@ namespace PlaywrightSharp
         public IEnumerable<IBrowserContext> BrowserContexts { get; }
 
         /// <inheritdoc/>
-        public bool IsConnected { get; }
+        public bool IsConnected { get; private set; }
 
         /// <inheritdoc/>
         public Task StartTracingAsync(IPage page = null, TracingOptions options = null) => throw new NotImplementedException();
@@ -73,9 +74,6 @@ namespace PlaywrightSharp
 
             await _closedTcs.Task.ConfigureAwait(false);
         }
-
-        /// <inheritdoc/>
-        public Task DisconnectAsync() => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ITarget GetPageTarget(IPage page) => throw new NotImplementedException();

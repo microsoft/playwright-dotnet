@@ -6,11 +6,10 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Browser
 {
-    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.disconnect</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class DisconnectTests : PlaywrightSharpBaseTest
+    public class DisconnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public DisconnectTests(ITestOutputHelper output) : base(output)
@@ -25,16 +24,16 @@ namespace PlaywrightSharp.Tests.Browser
         {
             Server.SetRoute("/one-style.css", context => Task.Delay(10000));
 
-            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
 
-            var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
-            var page = await remote.DefaultContext.NewPageAsync();
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var page = await remote.NewPageAsync();
             var navigationTask = page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
             {
                 Timeout = 60000
             });
             await Server.WaitForRequest("/one-style.css");
-            await remote.DisconnectAsync();
+            await remote.CloseAsync();
             await Assert.ThrowsAsync<NavigationException>(() => navigationTask);
         }
 
@@ -46,14 +45,14 @@ namespace PlaywrightSharp.Tests.Browser
         {
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
 
-            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
-            var page = await remote.DefaultContext.NewPageAsync();
-            var watchdog = page.WaitForSelectorAsync("div", new WaitForSelectorOptions { Timeout = 60000 });
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var page = await remote.NewPageAsync();
+            var watchdog = page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Attached, Timeout = 60000 });
 
-            await page.WaitForSelectorAsync("body");
+            await page.WaitForSelectorAsync("body", new WaitForSelectorOptions { State = WaitForState.Attached });
 
-            await remote.DisconnectAsync();
+            await remote.CloseAsync();
             await Assert.ThrowsAsync<TargetClosedException>(() => watchdog);
         }
 
@@ -63,14 +62,29 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldThrowIfUsedAfterDisconnect()
         {
-            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
-            var page = await remote.DefaultContext.NewPageAsync();
-            await remote.DisconnectAsync();
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var page = await remote.NewPageAsync();
+            await remote.CloseAsync();
 
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.EvaluateAsync("1 + 1"));
             Assert.Contains("has been closed", exception.Message);
         }
+
+        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-describe>Browser.disconnect</playwright-describe>
+        ///<playwright-it>should emit close events on pages and contexts</playwright-it>
+        [Retry]
+        public async Task ShouldEmitCloseEventsOnPagesAndContexts()
+        {
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var context = await remote.NewContextAsync();
+            var page = await context.NewPageAsync();
+            var tcs = new TaskCompletionSource<bool>();
+            page.Closed += (sender, e) => tcs.TrySetResult(true);
+
+            await Task.WhenAll(remote.CloseAsync(), tcs.Task);
+        }
     }
-    */
 }

@@ -28,6 +28,8 @@ namespace PlaywrightSharp
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             _viewportSize = initializer.ViewportSize;
+
+            _channel.Closed += (sender, e) => Closed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
@@ -70,7 +72,7 @@ namespace PlaywrightSharp
         public event EventHandler<EventArgs> DOMContentLoaded;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler<EventArgs> Closed;
 
         /// <inheritdoc />
         public event EventHandler<ErrorEventArgs> Error;
@@ -187,7 +189,10 @@ namespace PlaywrightSharp
         public Task CloseAsync(PageCloseOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string script, params object[] args) => throw new NotImplementedException();
+        public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(script);
+
+        /// <inheritdoc />
+        public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(script, args);
 
         /// <inheritdoc />
         public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
@@ -250,7 +255,7 @@ namespace PlaywrightSharp
         public Task WaitForTimeoutAsync(int timeout) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null) => MainFrame.WaitForSelectorAsync(true, selector, options);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForSelectorEvaluateAsync(
@@ -261,7 +266,10 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => throw new NotImplementedException();
+        public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(script);
+
+        /// <inheritdoc />
+        public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(script, args);
 
         /// <inheritdoc />
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();

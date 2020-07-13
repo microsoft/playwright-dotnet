@@ -113,7 +113,6 @@ namespace PlaywrightSharp.Transport
         }
 
         internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args)
-            where T : class
         {
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
@@ -130,7 +129,20 @@ namespace PlaywrightSharp.Transport
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
-            return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>(GetDefaultJsonSerializerOptions());
+            var result = await tcs.Task.ConfigureAwait(false);
+
+            if (typeof(T) == typeof(JsonElement?))
+            {
+                return (T)(object)result;
+            }
+            else if (result == null)
+            {
+                return default;
+            }
+            else
+            {
+                return result.Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+            }
         }
 
         private static Process GetProcess()
@@ -217,6 +229,11 @@ namespace PlaywrightSharp.Transport
             if (error.Message.Contains("Target closed"))
             {
                 return new TargetClosedException(error.Message);
+            }
+
+            if (error.Message.Contains("Navigation failed because"))
+            {
+                return new NavigationException(error.Message);
             }
 
             return new PlaywrightSharpException(error.Message);

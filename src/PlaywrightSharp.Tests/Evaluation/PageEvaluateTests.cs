@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkFromInsideAnExposedFunction()
         {
             // Setup inpage callback, which calls Page.evaluate
-            await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("(a, b) => a * b", a, b));
+            await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("(a, b) => a * b", new { a, b }));
             int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await callController(9, 3);
             }");
@@ -301,7 +301,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Retry]
         public async Task ShouldAcceptUndefinedAsOneOfMultipleParameters()
         {
-            bool result = await Page.EvaluateAsync<bool>("(a, b) => Object.is (a, undefined) && Object.is (b, 'foo')", null, "foo");
+            bool result = await Page.EvaluateAsync<bool>("({a, b}) => Object.is (a, undefined) && Object.is (b, 'foo')", new { a = (object)null, b = "foo" });
             Assert.True(result);
         }
 

@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
               const frame = document.getElementById(frameId);
               frame.src = url;
               return new Promise(x => frame.onload = x);
-            }", frameId, url);
+            }", new { frameId, url });
         }
     }
 }

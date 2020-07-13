@@ -8,7 +8,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Close event.
         /// </summary>
-        /// <see cref="IPage.Close"/>
+        /// <see cref="IPage.Closed"/>
         Close,
 
         /// <summary>
