@@ -79,6 +79,9 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.Browser:
                     result = new Browser(this, guid, initializer?.ToObject<BrowserInitializer>(_connection.GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.BrowserServer:
+                    result = new BrowserServer(this, guid, initializer?.ToObject<BrowserServerInitializer>(_connection.GetDefaultJsonSerializerOptions()));
+                    break;
                 case ChannelOwnerType.BrowserType:
                     result = new BrowserType(this, guid, initializer?.ToObject<BrowserTypeInitializer>(_connection.GetDefaultJsonSerializerOptions()));
                     break;
@@ -123,6 +126,9 @@ namespace PlaywrightSharp.Transport
             _objects.TryAdd(guid, result);
             _connection.OnObjectCreated(guid, result);
         }
+
+        internal Task SendMessageToServer(string guid, string method, object args)
+            => _connection.SendMessageToServerAsync<object>(guid, method, args);
 
         internal Task<T> SendMessageToServer<T>(string guid, string method, object args)
             where T : class

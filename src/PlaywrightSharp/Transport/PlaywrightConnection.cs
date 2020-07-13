@@ -214,6 +214,11 @@ namespace PlaywrightSharp.Transport
                 return new TimeoutException(error.Message);
             }
 
+            if (error.Message.Contains("Target closed"))
+            {
+                return new TargetClosedException(error.Message);
+            }
+
             return new PlaywrightSharpException(error.Message);
         }
 

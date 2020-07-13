@@ -80,7 +80,10 @@ namespace PlaywrightSharp
         public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string script, object args = null) => EvaluateHandleAsync(false, script, args);
+        public Task<IJSHandle> EvaluateHandleAsync(string script) => EvaluateHandleAsync(false, script);
+
+        /// <inheritdoc />
+        public Task<IJSHandle> EvaluateHandleAsync(string script, object args) => EvaluateHandleAsync(false, script, args);
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => throw new NotImplementedException();
@@ -176,11 +179,18 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
 
+        internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                    script: script,
+                    isFunction: script.IsJavascriptFunction(),
+                    arg: EvaluateArgument.Undefined,
+                    isPage: isPageCall).ConfigureAwait(false)).Object;
+
         internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script, object args)
             => (await _channel.EvaluateExpressionHandleAsync(
                     script: script,
                     isFunction: script.IsJavascriptFunction(),
-                    args: SerializedArgument(args),
+                    arg: SerializedArgument(args),
                     isPage: isPageCall).ConfigureAwait(false)).Object;
 
         private EvaluateArgument SerializedArgument(object args)
@@ -241,27 +251,27 @@ namespace PlaywrightSharp
 
             if (value == null)
             {
-                return new EvaluateArgumentValueElement { V = null };
+                return new EvaluateArgumentValueElement.SpecialType { V = "null" };
             }
 
             if (value is double nan && double.IsNaN(nan))
             {
-                return new EvaluateArgumentValueElement { V = "NaN" };
+                return new EvaluateArgumentValueElement.SpecialType { V = "NaN" };
             }
 
             if (value is double infinity && double.IsInfinity(infinity))
             {
-                return new EvaluateArgumentValueElement { V = "Infinity" };
+                return new EvaluateArgumentValueElement.SpecialType { V = "Infinity" };
             }
 
             if (value is double negativeInfinity && double.IsNegativeInfinity(negativeInfinity))
             {
-                return new EvaluateArgumentValueElement { V = "Infinity" };
+                return new EvaluateArgumentValueElement.SpecialType { V = "Infinity" };
             }
 
             if (value is double negativeZero && negativeZero == -0)
             {
-                return new EvaluateArgumentValueElement { V = "-0" };
+                return new EvaluateArgumentValueElement.SpecialType { V = "-0" };
             }
 
             /*
@@ -270,7 +280,7 @@ namespace PlaywrightSharp
             */
             if (value is DateTime date)
             {
-                return new EvaluateArgumentValueElement { D = date };
+                return new EvaluateArgumentValueElement.Datetime { D = date };
             }
 
             if (value is IEnumerable enumerable)
@@ -285,10 +295,10 @@ namespace PlaywrightSharp
 
                 visited.Remove(value);
 
-                return new EvaluateArgumentValueElement { A = result.ToArray() };
+                return new EvaluateArgumentValueElement.Array { A = result.ToArray() };
             }
 
-            return new EvaluateArgumentValueElement { O = value };
+            return new EvaluateArgumentValueElement.Object { O = value };
         }
     }
 }

@@ -56,9 +56,14 @@ namespace PlaywrightSharp
             => (await _channel.LaunchAsync(options).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
+        public async Task<IBrowserServer> LaunchServerAsync(LaunchOptions options = null)
+            => (await _channel.LaunchServerAsync(options).ConfigureAwait(false)).Object;
+
+        /// <inheritdoc />
         public string[] GetDefaultArgs(BrowserArgOptions options = null) => throw new System.NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IBrowser> ConnectAsync(ConnectOptions options = null) => throw new System.NotImplementedException();
+        public async Task<IBrowser> ConnectAsync(ConnectOptions options = null)
+            => (await _channel.ConnectAsync(options).ConfigureAwait(false)).Object;
     }
 }

@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["options"] = options ?? new GoToOptions(),
                 });
 
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object args, bool isPage)
+        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg, bool isPage)
             => Scope.SendMessageToServer<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["args"] = args,
+                    ["arg"] = arg,
                     ["isPage"] = isPage,
                 });
     }

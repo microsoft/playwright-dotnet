@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class BrowserChannel : Channel<Browser>
+    internal class BrowserServerChannel : Channel<BrowserServer>
     {
-        public BrowserChannel(string guid, ConnectionScope scope, Browser owner) : base(guid, scope, owner)
+        public BrowserServerChannel(string guid, ConnectionScope scope, BrowserServer owner) : base(guid, scope, owner)
         {
         }
 
@@ -23,17 +23,8 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<BrowserContextChannel> NewContextAsync(BrowserContextOptions options)
-            => Scope.SendMessageToServer<BrowserContextChannel>(
-                Guid,
-                "newContext",
-                new Dictionary<string, object>
-                {
-                    ["options"] = options ?? new BrowserContextOptions(),
-                });
-
         internal Task CloseAsync()
-            => Scope.SendMessageToServer<BrowserContextChannel>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "close",
                 null);

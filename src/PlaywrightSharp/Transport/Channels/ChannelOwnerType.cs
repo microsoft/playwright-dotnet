@@ -48,5 +48,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "playwright")]
         Playwright,
+
+        [EnumMember(Value = "browserServer")]
+        BrowserServer,
     }
 }

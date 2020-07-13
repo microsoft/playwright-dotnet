@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace PlaywrightSharp
 {
@@ -7,10 +8,12 @@ namespace PlaywrightSharp
     {
         private object _fallThrough;
 
+        [JsonIgnore]
         public bool FallbackSet { get; set; }
 
-        public int H { get; set; }
+        public int? H { get; set; }
 
+        [JsonIgnore]
         public object FallThrough
         {
             get => _fallThrough;
@@ -21,12 +24,24 @@ namespace PlaywrightSharp
             }
         }
 
-        public object V { get; set; }
+        public class SpecialType : EvaluateArgumentValueElement
+        {
+            public object V { get; set; }
+        }
 
-        public DateTime D { get; set; }
+        public class Datetime : EvaluateArgumentValueElement
+        {
+            public DateTime? D { get; set; }
+        }
 
-        public object[] A { get; set; }
+        public class Array : EvaluateArgumentValueElement
+        {
+            public object[] A { get; set; }
+        }
 
-        public object O { get; internal set; }
+        public class Object : EvaluateArgumentValueElement
+        {
+            public object O { get; internal set; }
+        }
     }
 }

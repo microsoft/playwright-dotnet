@@ -167,12 +167,22 @@ namespace PlaywrightSharp
         /// Executes a function that returns a <see cref="IJSHandle"/>.
         /// </summary>
         /// <param name="script">Function to be evaluated in the frame context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> EvaluateHandleAsync(string script);
+
+        /// <summary>
+        /// Executes a function that returns a <see cref="IJSHandle"/>.
+        /// </summary>
+        /// <param name="script">Function to be evaluated in the frame context.</param>
         /// <param name="args">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string script, object args = null);
+        Task<IJSHandle> EvaluateHandleAsync(string script, object args);
 
         /// <summary>
         /// <![CDATA[
