@@ -31,5 +31,11 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
             }
         }
+
+        internal Task CloseAsync(PageCloseOptions options)
+            => Scope.SendMessageToServer(
+                Guid,
+                "close",
+                options);
     }
 }

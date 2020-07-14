@@ -13,7 +13,7 @@ using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport
 {
-    internal class PlaywrightConnection : IDisposable
+    internal class Connection : IDisposable
     {
         private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
         private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Transport
         private readonly ILoggerFactory _loggerFactory;
         private int _lastId;
 
-        public PlaywrightConnection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
+        public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
         {
             _rootScript = CreateScope(string.Empty);
 
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Transport
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
-        ~PlaywrightConnection() => Dispose(false);
+        ~Connection() => Dispose(false);
 
         /// <inheritdoc/>
         public void Dispose()

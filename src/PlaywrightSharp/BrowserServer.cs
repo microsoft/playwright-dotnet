@@ -44,5 +44,8 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public Task CloseAsync() => _channel.CloseAsync();
+
+        /// <inheritdoc/>
+        public Task KillAsync() => _channel.KillAsync();
     }
 }

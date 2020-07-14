@@ -28,5 +28,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the browser is closed.</returns>
         Task CloseAsync();
+
+        /// <summary>
+        /// Kills the browser process and waits for the process to exit.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the browser process is killed.</returns>
+        Task KillAsync();
     }
 }

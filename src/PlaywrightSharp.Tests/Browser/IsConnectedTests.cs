@@ -22,11 +22,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldSetTheBrowserConnectedState()
         {
-            var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions
-            {
-                WSEndpoint = browserServer.WebSocketEndpoint
-            });
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
             Assert.True(remote.IsConnected);
             await remote.CloseAsync();
             Assert.False(remote.IsConnected);
@@ -38,11 +35,8 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
-            var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions
-            {
-                WSEndpoint = browserServer.WebSocketEndpoint
-            });
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
             var page = await remote.NewPageAsync();
             var disconnectedTask = new TaskCompletionSource<bool>();
             remote.Disconnected += (sender, e) => disconnectedTask.TrySetResult(true);

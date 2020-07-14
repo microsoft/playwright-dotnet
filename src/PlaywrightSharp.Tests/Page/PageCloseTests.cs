@@ -39,9 +39,9 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldNotBeVisibleInContextPages()
         {
             var newPage = await Context.NewPageAsync();
-            Assert.Contains(newPage, await Context.GetPagesAsync());
+            Assert.Contains(newPage, Context.Pages);
             await newPage.CloseAsync();
-            Assert.DoesNotContain(newPage, await Context.GetPagesAsync());
+            Assert.DoesNotContain(newPage, Context.Pages);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>

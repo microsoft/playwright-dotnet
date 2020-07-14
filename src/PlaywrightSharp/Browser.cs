@@ -17,7 +17,7 @@ namespace PlaywrightSharp
 
         internal Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
         {
-            _scope = scope;
+            _scope = scope.CreateChild(guid);
             _channel = new BrowserChannel(guid, scope, this);
             IsConnected = true;
             _channel.Closed += (sender, e) =>

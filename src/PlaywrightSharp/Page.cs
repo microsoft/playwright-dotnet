@@ -25,6 +25,7 @@ namespace PlaywrightSharp
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly ViewportSize _viewportSize;
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
+        private readonly BrowserContext _ownedContext = null;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -250,7 +251,14 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task CloseAsync(PageCloseOptions options = null) => throw new NotImplementedException();
+        public async Task CloseAsync(PageCloseOptions options = null)
+        {
+            await _channel.CloseAsync(options).ConfigureAwait(false);
+            if (_ownedContext != null)
+            {
+                await _ownedContext.CloseAsync().ConfigureAwait(false);
+            }
+        }
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(script);
@@ -450,7 +458,7 @@ namespace PlaywrightSharp
 
         private void Channel_Closed(object sender, EventArgs e)
         {
-            BrowserContext?.Pages.Remove(this);
+            BrowserContext?.PagesList.Remove(this);
             RejectPendingOperations(false);
             Closed?.Invoke(this, EventArgs.Empty);
         }

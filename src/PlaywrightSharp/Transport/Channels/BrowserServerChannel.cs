@@ -28,5 +28,11 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "close",
                 null);
+
+        internal Task KillAsync()
+            => Scope.SendMessageToServer(
+                Guid,
+                "kill",
+                null);
     }
 }

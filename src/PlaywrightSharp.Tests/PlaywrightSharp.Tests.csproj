@@ -29,7 +29,5 @@
     <ItemGroup>
         <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Tests.CloseMe\PlaywrightSharp.Tests.CloseMe.csproj" />
-        <ProjectReference Include="..\PlaywrightSharp.Tests.DumpIO\PlaywrightSharp.Tests.DumpIO.csproj" />
     </ItemGroup>
 </Project>

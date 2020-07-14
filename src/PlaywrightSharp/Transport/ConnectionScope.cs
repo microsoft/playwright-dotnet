@@ -13,13 +13,13 @@ namespace PlaywrightSharp.Transport
 {
     internal class ConnectionScope
     {
-        private readonly PlaywrightConnection _connection;
+        private readonly Connection _connection;
         private readonly string _guid;
         private readonly ILoggerFactory _loggerFactory;
         private readonly List<ConnectionScope> _children = new List<ConnectionScope>();
         private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
 
-        public ConnectionScope(PlaywrightConnection connection, string guid, ILoggerFactory loggerFactory)
+        public ConnectionScope(Connection connection, string guid, ILoggerFactory loggerFactory)
         {
             _connection = connection;
             _guid = guid;
@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Transport
 
         internal void Dispose()
         {
-            foreach (var child in _children)
+            foreach (var child in _children.ToArray())
             {
                 child.Dispose();
             }

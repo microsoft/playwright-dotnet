@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Chromium
         public async Task BrowserPagesShouldReturnAllOfThePages()
         {
             // The pages will be the testing page and the original new tab page
-            var allPages = await Context.GetPagesAsync();
+            var allPages = Context.Pages;
             Assert.Single(allPages);
             Assert.Contains(Page, allPages);
         }
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("Hello world", await otherPage.EvaluateAsync<string>("['Hello', 'world'].join(' ')"));
             Assert.NotNull(await otherPage.QuerySelectorAsync("body"));
 
-            var allPages = await Context.GetPagesAsync();
+            var allPages = Context.Pages;
             Assert.Contains(Page, allPages);
             Assert.Contains(otherPage, allPages);
 

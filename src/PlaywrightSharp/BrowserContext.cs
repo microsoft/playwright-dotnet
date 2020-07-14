@@ -15,7 +15,7 @@ namespace PlaywrightSharp
 
         internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
-            _scope = scope;
+            _scope = scope.CreateChild(guid);
             _channel = new BrowserContextChannel(guid, scope, this);
 
             _channel.Closed += (sender, e) => Closed?.Invoke(this, EventArgs.Empty);
@@ -36,9 +36,12 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public BrowserContextOptions Options { get; }
 
+        /// <inheritdoc />
+        public IPage[] Pages => PagesList.ToArray();
+
         internal Page OwnerPage { get; set; }
 
-        internal List<Page> Pages { get; } = new List<Page>();
+        internal List<Page> PagesList { get; } = new List<Page>();
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
@@ -46,9 +49,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task CloseAsync() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<IPage[]> GetPagesAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls) => throw new NotImplementedException();

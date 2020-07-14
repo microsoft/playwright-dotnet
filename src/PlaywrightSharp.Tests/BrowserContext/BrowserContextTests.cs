@@ -65,8 +65,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var context1 = await browser.NewContextAsync();
             var context2 = await browser.NewContextAsync();
-            Assert.Empty(await context1.GetPagesAsync());
-            Assert.Empty(await context2.GetPagesAsync());
+            Assert.Empty(context1.Pages);
+            Assert.Empty(context2.Pages);
 
             // Create a page in first incognito context.
             var page1 = await context1.NewPageAsync();
@@ -76,8 +76,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 document.cookie = 'name=page1';
             }");
 
-            Assert.Single(await context1.GetPagesAsync());
-            Assert.Empty(await context2.GetPagesAsync());
+            Assert.Single(context1.Pages);
+            Assert.Empty(context2.Pages);
 
             // Create a page in second incognito context.
             var page2 = await context2.NewPageAsync();
@@ -87,10 +87,10 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 document.cookie = 'name=page2';
             }");
 
-            Assert.Single(await context1.GetPagesAsync());
-            Assert.Equal(page1, (await context1.GetPagesAsync())[0]);
-            Assert.Single(await context2.GetPagesAsync());
-            Assert.Equal(page2, (await context2.GetPagesAsync())[0]);
+            Assert.Single(context1.Pages);
+            Assert.Equal(page1, context1.Pages[0]);
+            Assert.Single(context2.Pages);
+            Assert.Equal(page2, context2.Pages[0]);
 
             // Make sure pages don't share localstorage or cookies.
             Assert.Equal("page1", await page1.EvaluateAsync<string>("() => localStorage.getItem('name')"));

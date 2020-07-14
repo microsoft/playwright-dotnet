@@ -160,7 +160,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 frame.remove();
             }");
             // 4. Connect to the popup and make sure it doesn't throw.
-            await Page.BrowserContext.GetPagesAsync();
+            //await Page.BrowserContext.GetPagesAsync();
         }
     }
 }
