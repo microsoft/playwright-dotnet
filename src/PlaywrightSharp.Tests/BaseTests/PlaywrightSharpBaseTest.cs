@@ -29,6 +29,7 @@ namespace PlaywrightSharp.Tests.BaseTests
                 dirInfo.Create();
             }
 
+            PlaywrightSharp.Playwright.InstallAsync().GetAwaiter().GetResult();
             _playwright = PlaywrightSharp.Playwright.CreateAsync().GetAwaiter().GetResult();
             BrowserType = _playwright[TestConstants.Product];
             Initialize();
