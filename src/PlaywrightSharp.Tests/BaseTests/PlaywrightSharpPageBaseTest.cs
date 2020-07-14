@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -40,13 +41,13 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
             var wrapper = new TaskCompletionSource<bool>();
 
-            void errorEvent(object sender, ErrorEventArgs e)
+            void errorEvent(object sender, EventArgs e)
             {
                 wrapper.SetResult(true);
-                Page.Error -= errorEvent;
+                Page.Crashed -= errorEvent;
             }
 
-            Page.Error += errorEvent;
+            Page.Crashed += errorEvent;
 
             return wrapper.Task;
         }

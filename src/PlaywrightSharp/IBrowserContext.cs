@@ -25,6 +25,16 @@ namespace PlaywrightSharp
     public interface IBrowserContext
     {
         /// <summary>
+        /// Emitted when Browser context gets closed.
+        /// </summary>
+        public event EventHandler<EventArgs> Closed;
+
+        /// <summary>
+        /// An array of all pages inside the browser context.
+        /// </summary>
+        IPage[] Pages { get; }
+
+        /// <summary>
         /// Options used to create the context.
         /// </summary>
         BrowserContextOptions Options { get; }
@@ -42,14 +52,6 @@ namespace PlaywrightSharp
         /// <remarks>NOTE only incognito browser contexts can be closed.</remarks>
         /// <returns>A <see cref="Task"/> that completes when the browser context is closed.</returns>
         Task CloseAsync();
-
-        /// <summary>
-        /// An array of all pages inside the browser context.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="Task"/> that completes when get browser context got all the pages, yielding the pages inside that browser context.
-        /// </returns>
-        Task<IPage[]> GetPagesAsync();
 
         /// <summary>
         /// Returns the context's cookies.

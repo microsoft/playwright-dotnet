@@ -6,11 +6,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Browser
 {
-    /*
+
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class CloseTests : PlaywrightSharpBaseTest
+    public class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public CloseTests(ITestOutputHelper output) : base(output)
@@ -23,38 +23,48 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldTerminateNetworkWaiters()
         {
-            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
 
-            var newPage = await remote.DefaultContext.NewPageAsync();
+            var newPage = await remote.NewPageAsync();
             var requestTask = newPage.WaitForRequestAsync(TestConstants.EmptyPage);
             var responseTask = newPage.WaitForResponseAsync(TestConstants.EmptyPage);
 
-            await browserApp.CloseAsync();
+            await browserServer.CloseAsync();
 
             var exception = await Assert.ThrowsAsync<TargetClosedException>(() => requestTask);
-            Assert.Contains("Target closed", exception.Message);
+            Assert.Contains("Page closed", exception.Message);
             Assert.DoesNotContain("Timeout", exception.Message);
 
             exception = await Assert.ThrowsAsync<TargetClosedException>(() => responseTask);
-            Assert.Contains("Target closed", exception.Message);
+            Assert.Contains("Page closed", exception.Message);
             Assert.DoesNotContain("Timeout", exception.Message);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
-        ///<playwright-it>should be able to close remote browser</playwright-it>
+        ///<playwright-it>should fire close event for all contexts</playwright-it>
         [Retry]
-        public async Task ShouldBeAbleToCloseRemoteBrowser()
+        public async Task ShouldFireCloseEventForAllContexts()
         {
-            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var context = await browser.NewContextAsync();
             var closeTask = new TaskCompletionSource<bool>();
 
-            browserApp.Closed += (sender, e) => closeTask.TrySetResult(true);
+            context.Closed += (sender, e) => closeTask.TrySetResult(true);
 
-            await Task.WhenAll(remote.CloseAsync(), closeTask.Task);
+            await Task.WhenAll(browser.CloseAsync(), closeTask.Task);
+        }
+
+        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-describe>Browser.close</playwright-describe>
+        ///<playwright-it>should be callable twice</playwright-it>
+        [Retry]
+        public async Task ShouldBeCallableTwice()
+        {
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await Task.WhenAll(browser.CloseAsync(), browser.CloseAsync());
+            await browser.CloseAsync();
         }
     }
-    */
 }

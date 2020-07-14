@@ -9,7 +9,7 @@ namespace PlaywrightSharp
         /// Close event.
         /// </summary>
         /// <see cref="IPage.Closed"/>
-        Close,
+        Closed,
 
         /// <summary>
         /// Load event
@@ -61,7 +61,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Error event
         /// </summary>
-        /// <see cref="IPage.Error"/>
+        /// <see cref="IPage.Crashed"/>
         Error,
 
         /// <summary>
@@ -75,5 +75,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.WorkerCreated"/>
         WorkerCreated,
+
+        /// <summary>
+        /// Page Crashed event.
+        /// </summary>
+        /// <see cref="IPage.Crashed"/>
+        Crashed,
     }
 }

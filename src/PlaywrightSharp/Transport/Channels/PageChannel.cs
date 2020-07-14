@@ -12,12 +12,22 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Closed;
 
+        internal event EventHandler Crashed;
+
+        internal event EventHandler<PageChannelRequestEventArgs> Request;
+
         internal override void OnMessage(string method, PlaywrightSharpServerParams serverParams)
         {
             switch (method)
             {
                 case "close":
                     Closed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "crash":
+                    Crashed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "request":
+                    Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
                     break;
             }
         }

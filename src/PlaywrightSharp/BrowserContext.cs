@@ -17,7 +17,12 @@ namespace PlaywrightSharp
         {
             _scope = scope;
             _channel = new BrowserContextChannel(guid, scope, this);
+
+            _channel.Closed += (sender, e) => Closed?.Invoke(this, EventArgs.Empty);
         }
+
+        /// <inheritdoc/>
+        public event EventHandler<EventArgs> Closed;
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
@@ -32,6 +37,8 @@ namespace PlaywrightSharp
         public BrowserContextOptions Options { get; }
 
         internal Page OwnerPage { get; set; }
+
+        internal List<Page> Pages { get; } = new List<Page>();
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
