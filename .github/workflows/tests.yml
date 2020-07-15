@@ -60,4 +60,3 @@ jobs:
         env:
           PRODUCT: WebkitKIT
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1
-  
