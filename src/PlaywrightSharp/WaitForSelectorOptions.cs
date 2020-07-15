@@ -15,8 +15,8 @@ namespace PlaywrightSharp
         public int Timeout { get; set; }
 
         /// <summary>
-        /// Wait for element to become visible (visible), hidden (hidden), present in dom (any) or do not wait at all (nowait). Defaults to <see cref="WaitForOption.Visible"/>.
+        /// Wait for element to become in the specified state.
         /// </summary>
-        public WaitForOption WaitFor { get; set; }
+        public WaitForState State { get; set; } = WaitForState.Visible;
     }
 }

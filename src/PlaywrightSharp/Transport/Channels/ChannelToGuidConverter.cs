@@ -6,9 +6,9 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class ChannelToGuidConverter : JsonConverter<ChannelBase>
     {
-        private readonly PlaywrightConnection _connection;
+        private readonly Connection _connection;
 
-        public ChannelToGuidConverter(PlaywrightConnection connection)
+        public ChannelToGuidConverter(Connection connection)
         {
             _connection = connection;
         }

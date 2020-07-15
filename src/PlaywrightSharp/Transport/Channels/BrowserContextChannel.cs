@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -10,6 +11,8 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
+        internal event EventHandler Closed;
+
         internal Task<PageChannel> NewPageAsync(string url)
             => Scope.SendMessageToServer<PageChannel>(
                 Guid,
@@ -18,5 +21,15 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["url"] = url,
                 });
+
+        internal override void OnMessage(string method, JsonElement? serverParams)
+        {
+            switch (method)
+            {
+                case "close":
+                    Closed?.Invoke(this, EventArgs.Empty);
+                    break;
+            }
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,5 +15,17 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "launch",
                 options ?? new LaunchOptions());
+
+        public Task<BrowserServerChannel> LaunchServerAsync(LaunchOptions options)
+            => Scope.SendMessageToServer<BrowserServerChannel>(
+                Guid,
+                "launchServer",
+                options ?? new LaunchOptions());
+
+        internal Task<BrowserChannel> ConnectAsync(ConnectOptions options)
+            => Scope.SendMessageToServer<BrowserChannel>(
+                Guid,
+                "connect",
+                options ?? new ConnectOptions());
     }
 }

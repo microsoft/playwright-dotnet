@@ -11,9 +11,9 @@ using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Transport
 {
-    internal class PlaywrightConnection : IDisposable
+    internal class Connection : IDisposable
     {
         private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
         private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
@@ -25,11 +25,12 @@ namespace PlaywrightSharp
         private readonly ILoggerFactory _loggerFactory;
         private int _lastId;
 
-        public PlaywrightConnection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
+        public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
         {
             _rootScript = CreateScope(string.Empty);
 
             _playwrightServerProcess = GetProcess();
+
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += TransportOnMessageReceived;
@@ -37,7 +38,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
-        ~PlaywrightConnection() => Dispose(false);
+        ~Connection() => Dispose(false);
 
         /// <inheritdoc/>
         public void Dispose()
@@ -107,7 +108,6 @@ namespace PlaywrightSharp
         }
 
         internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args)
-            where T : class
         {
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
@@ -124,7 +124,20 @@ namespace PlaywrightSharp
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
-            return (await tcs.Task.ConfigureAwait(false))?.ToObject<T>(GetDefaultJsonSerializerOptions());
+            var result = await tcs.Task.ConfigureAwait(false);
+
+            if (typeof(T) == typeof(JsonElement?))
+            {
+                return (T)(object)result;
+            }
+            else if (result == null)
+            {
+                return default;
+            }
+            else
+            {
+                return result.Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+            }
         }
 
         private static Process GetProcess()
@@ -187,7 +200,8 @@ namespace PlaywrightSharp
             {
                 _objects.TryGetValue(message.Guid, out var scopeObject);
                 var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
-                scope.CreateRemoteObject(message.Params.Type, message.Params.Guid, message.Params.Initializer);
+                var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
+                scope.CreateRemoteObject(createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 
                 return;
             }
@@ -206,6 +220,16 @@ namespace PlaywrightSharp
             if (error.Name == "TimeoutError")
             {
                 return new TimeoutException(error.Message);
+            }
+
+            if (error.Message.Contains("Target closed") || error.Message.Contains("The page has been closed."))
+            {
+                return new TargetClosedException(error.Message);
+            }
+
+            if (error.Message.Contains("Navigation failed because"))
+            {
+                return new NavigationException(error.Message);
             }
 
             return new PlaywrightSharpException(error.Message);

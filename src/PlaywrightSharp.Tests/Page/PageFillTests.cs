@@ -168,25 +168,6 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on hidden and invisible elements</playwright-it>
-        [Retry]
-        public async Task ShouldThrowOnHiddenAndInvisibleElements()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'none'");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.FillAsync("input", "some value", new WaitForSelectorOptions { WaitFor = WaitForOption.NoWait }));
-            Assert.Equal("Element is not visible", exception.Message);
-
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.visibility = 'hidden'");
-            exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.FillAsync("input", "some value", new WaitForSelectorOptions { WaitFor = WaitForOption.NoWait }));
-            Assert.Equal("Element is hidden", exception.Message);
-        }
-
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should be able to fill the body</playwright-it>
         [Retry]
         public async Task ShouldBeAbleToFillTheBody()

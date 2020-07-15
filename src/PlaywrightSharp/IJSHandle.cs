@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// JSHandle represents an in-page JavaScript object. JSHandles can be created with the <see cref="IPage.EvaluateHandleAsync(string, object[])"/> method.
+    /// JSHandle represents an in-page JavaScript object. JSHandles can be created with the <see cref="IPage.EvaluateHandleAsync(string, object)"/> method.
     /// </summary>
     public interface IJSHandle
     {

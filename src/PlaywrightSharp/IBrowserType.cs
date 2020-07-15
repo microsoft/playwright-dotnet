@@ -27,6 +27,13 @@ namespace PlaywrightSharp
         Task<IBrowser> LaunchAsync(LaunchOptions options = null);
 
         /// <summary>
+        /// Launches browser server that client can connect to.
+        /// </summary>
+        /// <param name="options">Launch options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
+        Task<IBrowserServer> LaunchServerAsync(LaunchOptions options);
+
+        /// <summary>
         /// The default flags that browser will be launched with.
         /// </summary>
         /// <param name="options">Set of configurable options to set on the browser.</param>

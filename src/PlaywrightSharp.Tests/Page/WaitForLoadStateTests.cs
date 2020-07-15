@@ -120,7 +120,7 @@ namespace PlaywrightSharp.Tests.Page
                 while (child.document.readyState !== 'complete' || child.document.location.href === 'about:blank')
                   await new Promise(f => setTimeout(f, 100));
             }");
-            var pages = await Context.GetPagesAsync();
+            var pages = Context.Pages;
             Assert.Equal(2, pages.Length);
 
             // order is not guaranteed

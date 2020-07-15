@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -14,10 +17,15 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IPage" />
     public class Page : IChannelOwner<Page>, IPage
     {
+        private static readonly Dictionary<PageEvent, EventInfo> _pageEventsMap = ((PageEvent[])Enum.GetValues(typeof(PageEvent)))
+            .ToDictionary(x => x, x => typeof(Page).GetEvent(x.ToString()));
+
         private readonly ConnectionScope _scope;
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly ViewportSize _viewportSize;
+        private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
+        private readonly BrowserContext _ownedContext = null;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -28,6 +36,10 @@ namespace PlaywrightSharp
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             _viewportSize = initializer.ViewportSize;
+
+            _channel.Closed += Channel_Closed;
+            _channel.Crashed += Channel_Crashed;
+            _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
         }
 
         /// <inheritdoc />
@@ -70,10 +82,10 @@ namespace PlaywrightSharp
         public event EventHandler<EventArgs> DOMContentLoaded;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler<EventArgs> Closed;
 
         /// <inheritdoc />
-        public event EventHandler<ErrorEventArgs> Error;
+        public event EventHandler<EventArgs> Crashed;
 
         /// <inheritdoc />
         public event EventHandler<PageErrorEventArgs> PageError;
@@ -106,7 +118,10 @@ namespace PlaywrightSharp
         public Frame MainFrame { get; }
 
         /// <inheritdoc />
-        public IBrowserContext BrowserContext { get; internal set; }
+        IBrowserContext IPage.BrowserContext => BrowserContext;
+
+        /// <inheritdoc cref="IPage.BrowserContext" />
+        public BrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc />
         public Viewport Viewport { get; }
@@ -163,10 +178,26 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null) => throw new NotImplementedException();
+        public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
+        {
+            var result = await WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => e.Request.Url.Equals(url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
+            return result.Request;
+        }
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null) => throw new NotImplementedException();
+        public async Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
+        {
+            var result = await WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
+            {
+                Predicate = e => regex.IsMatch(e.Request.Url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
+            return result.Request;
+        }
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args) => throw new NotImplementedException();
@@ -175,7 +206,43 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null) => throw new NotImplementedException();
+        /// <inheritdoc cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>
+        public async Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null)
+        {
+            var info = _pageEventsMap[e];
+            ValidateArgumentsTypes();
+            var eventTsc = new TaskCompletionSource<T>();
+            void PageEventHandler(object sender, T e)
+            {
+                if (options?.Predicate == null || options.Predicate(e))
+                {
+                    eventTsc.TrySetResult(e);
+                    info.RemoveEventHandler(this, (EventHandler<T>)PageEventHandler);
+                }
+            }
+
+            info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
+            var disconnectedTcs = new TaskCompletionSource<bool>();
+            _waitForCancellationTcs.Add((e, disconnectedTcs));
+            await Task.WhenAny(eventTsc.Task, disconnectedTcs.Task).WithTimeout(options?.Timeout ?? DefaultTimeout).ConfigureAwait(false);
+            if (disconnectedTcs.Task.IsCompleted)
+            {
+                await disconnectedTcs.Task.ConfigureAwait(false);
+            }
+
+            return await eventTsc.Task.ConfigureAwait(false);
+
+            void ValidateArgumentsTypes()
+            {
+                if ((info.EventHandlerType.GenericTypeArguments.Length == 0 && typeof(T) == typeof(EventArgs))
+                    || info.EventHandlerType.GenericTypeArguments[0] == typeof(T))
+                {
+                    return;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
+            }
+        }
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil) => throw new NotImplementedException();
@@ -184,10 +251,20 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task CloseAsync(PageCloseOptions options = null) => throw new NotImplementedException();
+        public async Task CloseAsync(PageCloseOptions options = null)
+        {
+            await _channel.CloseAsync(options).ConfigureAwait(false);
+            if (_ownedContext != null)
+            {
+                await _ownedContext.CloseAsync().ConfigureAwait(false);
+            }
+        }
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string script, params object[] args) => throw new NotImplementedException();
+        public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(script);
+
+        /// <inheritdoc />
+        public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(script, args);
 
         /// <inheritdoc />
         public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
@@ -250,7 +327,7 @@ namespace PlaywrightSharp
         public Task WaitForTimeoutAsync(int timeout) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null) => MainFrame.WaitForSelectorAsync(true, selector, options);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForSelectorEvaluateAsync(
@@ -261,7 +338,10 @@ namespace PlaywrightSharp
             throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string script, params object[] args) => throw new NotImplementedException();
+        public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(script);
+
+        /// <inheritdoc />
+        public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(script, args);
 
         /// <inheritdoc />
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();
@@ -291,7 +371,10 @@ namespace PlaywrightSharp
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
+        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction) => MainFrame.EvaluateHandleAsync(pageFunction);
+
+        /// <inheritdoc />
+        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object args) => MainFrame.EvaluateHandleAsync(pageFunction, args);
 
         /// <inheritdoc />
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => throw new NotImplementedException();
@@ -345,7 +428,15 @@ namespace PlaywrightSharp
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null) => throw new NotImplementedException();
+        public async Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
+        {
+            var result = await WaitForEvent(PageEvent.Response, new WaitForEventOptions<ResponseEventArgs>
+            {
+                Predicate = e => e.Response.Url.Equals(url),
+                Timeout = options?.Timeout,
+            }).ConfigureAwait(false);
+            return result.Response;
+        }
 
         /// <inheritdoc />
         public Task GetPdfAsync(string file) => throw new NotImplementedException();
@@ -364,5 +455,28 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<byte[]> GetPdfDataAsync(PdfOptions options) => throw new NotImplementedException();
+
+        private void Channel_Closed(object sender, EventArgs e)
+        {
+            BrowserContext?.PagesList.Remove(this);
+            RejectPendingOperations(false);
+            Closed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Channel_Crashed(object sender, EventArgs e)
+        {
+            RejectPendingOperations(true);
+            Crashed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RejectPendingOperations(bool isCrash)
+        {
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crashed : PageEvent.Closed)))
+            {
+                waitTcs.TrySetException(new TargetClosedException(isCrash ? "Page crashed" : "Page closed"));
+            }
+
+            _waitForCancellationTcs.Clear();
+        }
     }
 }

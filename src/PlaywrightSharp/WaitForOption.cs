@@ -1,28 +1,31 @@
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Wait for options for <see cref="WaitForSelectorOptions.WaitFor"/>.
+    /// Wait for options for <see cref="WaitForSelectorOptions.State"/>.
     /// </summary>
-    public enum WaitForOption
+    public enum WaitForState
     {
         /// <summary>
-        /// Wait for visible
+        /// Attached.
+        /// </summary>
+        Attached,
+
+        /// <summary>
+        /// Detached.
+        /// </summary>
+        Detached,
+
+        /// <summary>
+        /// Wait for visible.
         /// </summary>
         Visible,
 
         /// <summary>
-        /// Wait for hidden
+        /// Wait for hidden.
         /// </summary>
         Hidden,
-
-        /// <summary>
-        /// Wait for any
-        /// </summary>
-        Any,
-
-        /// <summary>
-        /// No wait
-        /// </summary>
-        NoWait,
     }
 }

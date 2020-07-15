@@ -37,10 +37,10 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>Browser.pages should return all of the pages</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task BrowserPagesShouldReturnAllOfThePages()
+        public void BrowserPagesShouldReturnAllOfThePages()
         {
             // The pages will be the testing page and the original new tab page
-            var allPages = await Context.GetPagesAsync();
+            var allPages = Context.Pages;
             Assert.Single(allPages);
             Assert.Contains(Page, allPages);
         }
@@ -54,18 +54,6 @@ namespace PlaywrightSharp.Tests.Chromium
             var targets = Browser.GetTargets();
             var browserTarget = targets.FirstOrDefault(target => target.Type == TargetType.Browser);
             Assert.NotNull(browserTarget);
-        }
-
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should be able to use the default page in the browser</playwright-it>
-        [Retry]
-        public async Task ShouldBeAbleToUseTheDefaultPageInTheBrowser()
-        {
-            // The pages will be the testing page and the original newtab page
-            var originalPage = (await Browser.DefaultContext.GetPagesAsync()).First();
-            Assert.Equal("Hello world", await originalPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
-            Assert.NotNull(await originalPage.QuerySelectorAsync("body"));
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -88,7 +76,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("Hello world", await otherPage.EvaluateAsync<string>("['Hello', 'world'].join(' ')"));
             Assert.NotNull(await otherPage.QuerySelectorAsync("body"));
 
-            var allPages = await Context.GetPagesAsync();
+            var allPages = Context.Pages;
             Assert.Contains(Page, allPages);
             Assert.Contains(otherPage, allPages);
 

@@ -103,22 +103,5 @@ namespace PlaywrightSharp.Tests.QuerySelector
             var element = await Page.QuerySelectorAsync("css=section >> css=div");
             Assert.NotNull(element);
         }
-
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should respect waitFor visibility</playwright-it>
-        [Retry]
-        public async Task ShouldRespectWaitForVisibility()
-        {
-            await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
-            Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Visible }));
-            Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Any }));
-            Assert.NotNull(await Page.WaitForSelectorAsync("css=section"));
-
-            await Page.SetContentAsync("<section id=\"testAttribute\" style=\"display: none\">43543</section>");
-            Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden }));
-            Assert.NotNull(await Page.WaitForSelectorAsync("css=section", new WaitForSelectorOptions { WaitFor = WaitForOption.Any }));
-            Assert.NotNull(await Page.WaitForSelectorAsync("css=section"));
-        }
     }
 }

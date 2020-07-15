@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldWaitForVisible()
         {
             bool divFound = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { WaitFor = WaitForOption.Visible })
+            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Visible })
                 .ContinueWith(_ => divFound = true);
             await Page.SetContentAsync("<div style='display: none; visibility: hidden;'>1</div>");
             Assert.False(divFound);
@@ -169,7 +169,7 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldWaitForVisibleRecursively()
         {
             bool divVisible = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div#inner", new WaitForSelectorOptions { WaitFor = WaitForOption.Visible })
+            var waitForSelector = Page.WaitForSelectorAsync("div#inner", new WaitForSelectorOptions { State = WaitForState.Visible })
                 .ContinueWith(_ => divVisible = true);
             await Page.SetContentAsync("<div style='display: none; visibility: hidden;'><div id='inner'>hi</div></div>");
             Assert.False(divVisible);
@@ -193,7 +193,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             bool divHidden = false;
             await Page.SetContentAsync("<div style='display: block;'></div>");
-            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden })
+            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Hidden })
                 .ContinueWith(_ => divHidden = true);
             await Page.WaitForSelectorAsync("div"); // do a round trip
             Assert.False(divHidden);
@@ -210,7 +210,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.SetContentAsync("<div></div>");
             bool divRemoved = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden })
+            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Hidden })
                 .ContinueWith(_ => divRemoved = true);
             await Page.WaitForSelectorAsync("div"); // do a round trip
             Assert.False(divRemoved);
@@ -225,7 +225,7 @@ namespace PlaywrightSharp.Tests.Frame
         [Retry]
         public async Task ShouldReturnNullIfWaitingToHideNonExistingElement()
         {
-            var handle = await Page.WaitForSelectorAsync("non-existing", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden });
+            var handle = await Page.WaitForSelectorAsync("non-existing", new WaitForSelectorOptions { State = WaitForState.Hidden });
             Assert.Null(handle);
         }
 
@@ -249,7 +249,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.SetContentAsync("<div></div>");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
-                => await Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { WaitFor = WaitForOption.Hidden, Timeout = 10 }));
+                => await Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Hidden, Timeout = 10 }));
 
             Assert.Contains("waiting for selector \"[hidden] div\" failed: timeout", exception.Message);
         }

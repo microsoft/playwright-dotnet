@@ -13,13 +13,13 @@ namespace PlaywrightSharp.Transport
 {
     internal class ConnectionScope
     {
-        private readonly PlaywrightConnection _connection;
+        private readonly Connection _connection;
         private readonly string _guid;
         private readonly ILoggerFactory _loggerFactory;
         private readonly List<ConnectionScope> _children = new List<ConnectionScope>();
         private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
 
-        public ConnectionScope(PlaywrightConnection connection, string guid, ILoggerFactory loggerFactory)
+        public ConnectionScope(Connection connection, string guid, ILoggerFactory loggerFactory)
         {
             _connection = connection;
             _guid = guid;
@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Transport
 
         internal void Dispose()
         {
-            foreach (var child in _children)
+            foreach (var child in _children.ToArray())
             {
                 child.Dispose();
             }
@@ -79,6 +79,9 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.Browser:
                     result = new Browser(this, guid, initializer?.ToObject<BrowserInitializer>(_connection.GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.BrowserServer:
+                    result = new BrowserServer(this, guid, initializer?.ToObject<BrowserServerInitializer>(_connection.GetDefaultJsonSerializerOptions()));
+                    break;
                 case ChannelOwnerType.BrowserType:
                     result = new BrowserType(this, guid, initializer?.ToObject<BrowserTypeInitializer>(_connection.GetDefaultJsonSerializerOptions()));
                     break;
@@ -124,8 +127,10 @@ namespace PlaywrightSharp.Transport
             _connection.OnObjectCreated(guid, result);
         }
 
+        internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args)
+            => _connection.SendMessageToServerAsync<JsonElement?>(guid, method, args);
+
         internal Task<T> SendMessageToServer<T>(string guid, string method, object args)
-            where T : class
             => _connection.SendMessageToServerAsync<T>(guid, method, args);
 
         private void RemoveObject(string guid) => _objects.TryRemove(guid, out _);

@@ -7,23 +7,39 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Browser : IChannelOwner<Browser>, IBrowser
+    /// <inheritdoc cref="IBrowser"/>
+    public class Browser : IChannelOwner<Browser>, IBrowser
     {
         private readonly ConnectionScope _scope;
         private readonly BrowserChannel _channel;
+        private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
+        private bool _isClosedOrClosing;
 
-        public Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
+        internal Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
         {
-            _scope = scope;
+            _scope = scope.CreateChild(guid);
             _channel = new BrowserChannel(guid, scope, this);
+            IsConnected = true;
+            _channel.Closed += (sender, e) =>
+            {
+                IsConnected = false;
+                _isClosedOrClosing = true;
+                Disconnected?.Invoke(this, EventArgs.Empty);
+                _scope.Dispose();
+                _closedTcs.TrySetResult(true);
+            };
         }
 
+        /// <inheritdoc/>
         public event EventHandler<TargetChangedArgs> TargetChanged;
 
+        /// <inheritdoc/>
         public event EventHandler<TargetChangedArgs> TargetCreated;
 
+        /// <inheritdoc/>
         public event EventHandler<TargetChangedArgs> TargetDestroyed;
 
+        /// <inheritdoc/>
         public event EventHandler Disconnected;
 
         /// <inheritdoc/>
@@ -35,25 +51,38 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         Channel<Browser> IChannelOwner<Browser>.Channel => _channel;
 
+        /// <inheritdoc/>
         public IEnumerable<IBrowserContext> BrowserContexts { get; }
 
-        public IBrowserContext DefaultContext { get; }
+        /// <inheritdoc/>
+        public bool IsConnected { get; private set; }
 
-        public bool IsConnected { get; }
-
+        /// <inheritdoc/>
         public Task StartTracingAsync(IPage page = null, TracingOptions options = null) => throw new NotImplementedException();
 
+        /// <inheritdoc/>
         public Task<string> StopTracingAsync() => throw new NotImplementedException();
 
-        public Task CloseAsync() => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public async Task CloseAsync()
+        {
+            if (!_isClosedOrClosing)
+            {
+                _isClosedOrClosing = true;
+                await _channel.CloseAsync().ConfigureAwait(false);
+            }
 
-        public Task DisconnectAsync() => throw new NotImplementedException();
+            await _closedTcs.Task.ConfigureAwait(false);
+        }
 
+        /// <inheritdoc/>
         public ITarget GetPageTarget(IPage page) => throw new NotImplementedException();
 
+        /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
             => (await _channel.NewContextAsync(options).ConfigureAwait(false)).Object;
 
+        /// <inheritdoc/>
         public async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
             var context = await NewContextAsync(options).ConfigureAwait(false) as BrowserContext;
@@ -63,12 +92,16 @@ namespace PlaywrightSharp
             return page;
         }
 
+        /// <inheritdoc/>
         public Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null) => throw new NotImplementedException();
 
+        /// <inheritdoc/>
         public IEnumerable<ITarget> GetTargets(IBrowserContext context = null) => throw new NotImplementedException();
 
+        /// <inheritdoc/>
         public Task<IWorker> GetServiceWorkerAsync(ITarget target) => throw new NotImplementedException();
 
+        /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
     }
 }

@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpBaseTest
     {
-        private IPlaywright _playwright;
+        private readonly IPlaywright _playwright;
         internal string BaseDirectory { get; set; }
         internal IBrowserType BrowserType { get; set; }
 

@@ -6,11 +6,10 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Browser
 {
-    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.isConnected</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class IsConnectedTests : PlaywrightSharpBaseTest
+    public class IsConnectedTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public IsConnectedTests(ITestOutputHelper output) : base(output)
@@ -23,13 +22,10 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldSetTheBrowserConnectedState()
         {
-            var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions
-            {
-                BrowserWSEndpoint = browserApp.WebSocketEndpoint
-            });
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
             Assert.True(remote.IsConnected);
-            await remote.DisconnectAsync();
+            await remote.CloseAsync();
             Assert.False(remote.IsConnected);
         }
 
@@ -39,16 +35,13 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
-            var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions
-            {
-                BrowserWSEndpoint = browserApp.WebSocketEndpoint
-            });
-            var page = await remote.DefaultContext.NewPageAsync();
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var page = await remote.NewPageAsync();
             var disconnectedTask = new TaskCompletionSource<bool>();
             remote.Disconnected += (sender, e) => disconnectedTask.TrySetResult(true);
 
-            await Task.WhenAll(browserApp.CloseAsync(), disconnectedTask.Task);
+            await Task.WhenAll(browserServer.CloseAsync(), disconnectedTask.Task);
 
             Assert.False(remote.IsConnected);
 
@@ -56,5 +49,4 @@ namespace PlaywrightSharp.Tests.Browser
             Assert.Contains("has been closed", exception.Message);
         }
     }
-    */
 }

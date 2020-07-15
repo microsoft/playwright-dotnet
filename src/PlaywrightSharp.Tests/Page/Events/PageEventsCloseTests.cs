@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
             var newPage = await newPageTsc.Task;
             var closedTsc = new TaskCompletionSource<bool>();
-            newPage.Close += (sender, e) => closedTsc.SetResult(true);
+            newPage.Closed += (sender, e) => closedTsc.SetResult(true);
             await Page.EvaluateAsync<string>("() => window['newPage'].close()");
             await closedTsc.Task;
         }
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             var newPage = await Context.NewPageAsync();
             var closedTsc = new TaskCompletionSource<bool>();
-            newPage.Close += (sender, e) => closedTsc.SetResult(true);
+            newPage.Closed += (sender, e) => closedTsc.SetResult(true);
             await newPage.CloseAsync();
             await closedTsc.Task;
         }

@@ -56,11 +56,11 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public IBrowserType Webkit => _initializer.Webkit;
 
-        internal PlaywrightConnection Connection { get; set; }
+        internal Connection Connection { get; set; }
 
         /// <inheritdoc/>
         public IBrowserType this[string browserType]
-            => browserType switch
+            => browserType?.ToLower() switch
             {
                 BrowserType.Chromium => Chromium,
                 BrowserType.Firefox => Firefox,
@@ -76,7 +76,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
         public static async Task<IPlaywright> CreateAsync(ILoggerFactory loggerFactory = null, TransportTaskScheduler scheduler = null)
         {
-            var connection = new PlaywrightConnection(loggerFactory, scheduler);
+            var connection = new Connection(loggerFactory, scheduler);
 
             var playwright = await connection.WaitForObjectWithKnownName<Playwright>("playwright").ConfigureAwait(false);
             playwright.Connection = connection;
@@ -89,7 +89,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="loggerFactory">Logger.</param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver ran the install command.</returns>
-        public static Task InstallAsync(ILoggerFactory loggerFactory = null) => PlaywrightConnection.InstallAsync(loggerFactory);
+        public static Task InstallAsync(ILoggerFactory loggerFactory = null) => Connection.InstallAsync(loggerFactory);
 
         /// <inheritdoc />
         public void Dispose()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -9,5 +10,33 @@ namespace PlaywrightSharp.Transport.Channels
         public PageChannel(string guid, ConnectionScope scope, Page owner) : base(guid, scope, owner)
         {
         }
+
+        internal event EventHandler Closed;
+
+        internal event EventHandler Crashed;
+
+        internal event EventHandler<PageChannelRequestEventArgs> Request;
+
+        internal override void OnMessage(string method, JsonElement? serverParams)
+        {
+            switch (method)
+            {
+                case "close":
+                    Closed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "crash":
+                    Crashed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "request":
+                    Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
+                    break;
+            }
+        }
+
+        internal Task CloseAsync(PageCloseOptions options)
+            => Scope.SendMessageToServer(
+                Guid,
+                "close",
+                options);
     }
 }

@@ -3,7 +3,7 @@ using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport
 {
-    internal class PlaywrightSharpServerParams
+    internal class CreateObjectInfo
     {
         public string Guid { get; set; }
 

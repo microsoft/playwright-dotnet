@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Tests
               document.body.appendChild(frame);
               await new Promise(x => frame.onload = x);
               return frame
-            }", frameId, url) as IElementHandle;
+            }", new { frameId, url }) as IElementHandle;
             return await handle.GetContentFrameAsync();
         }
 
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
               const frame = document.getElementById(frameId);
               frame.src = url;
               return new Promise(x => frame.onload = x);
-            }", frameId, url);
+            }", new { frameId, url });
         }
     }
 }

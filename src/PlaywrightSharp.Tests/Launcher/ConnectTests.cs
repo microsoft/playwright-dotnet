@@ -2,16 +2,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Launcher
 {
-    /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.connect</playwright-describe>
     [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class ConnectTests : PlaywrightSharpBaseTest
+    public class ConnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public ConnectTests(ITestOutputHelper output) : base(output)
@@ -21,29 +21,32 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.connect</playwright-describe>
         ///<playwright-it>should be able to reconnect to a browser</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Retry]
         public async Task ShouldBeAbleToReconnectToADisconnectedBrowser()
         {
-            using var browserApp = await BrowserType.LaunchBrowserAppAsync(TestConstants.GetDefaultBrowserOptions());
-            using var browser = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
-            string url = TestConstants.ServerUrl + "/frames/nested-frames.html";
-            var page = await browser.DefaultContext.NewPageAsync();
-            await page.GoToAsync(url);
+            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var context = await browser.NewContextAsync();
+            var page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.EmptyPage);
 
-            await browser.DisconnectAsync();
+            await browser.CloseAsync();
 
-            using var remote = await BrowserType.ConnectAsync(browserApp.ConnectOptions);
+            await using var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
 
-            var pages = (await remote.DefaultContext.GetPagesAsync()).ToList();
-            var restoredPage = pages.FirstOrDefault(x => x.Url == url);
-            Assert.NotNull(restoredPage);
-            var frameDump = FrameUtils.DumpFrames(restoredPage.MainFrame);
-            Assert.Equal(TestConstants.NestedFramesDumpResult, frameDump);
-            int response = await restoredPage.EvaluateAsync<int>("7 * 8");
-            Assert.Equal(56, response);
+            context = await remote.NewContextAsync();
+            page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.EmptyPage);
+            await remote.CloseAsync();
+            await browserServer.CloseAsync();
+        }
 
-            await remote.DisconnectAsync();
+        ///<playwright-file>launcher.spec.js</playwright-file>
+        ///<playwright-describe>Playwright.connect</playwright-describe>
+        ///<playwright-it>should handle exceptions during connect</playwright-it>
+        [Fact(Skip = "We don't tests hooks")]
+        public void ShouldHandleExceptionsDuringConnect()
+        {
         }
     }
-    */
 }

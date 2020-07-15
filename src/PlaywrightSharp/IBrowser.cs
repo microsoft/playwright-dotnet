@@ -30,7 +30,7 @@ namespace PlaywrightSharp
         /// Raised when the <see cref="IBrowser"/> gets disconnected from the browser instance.
         /// This might happen because one of the following:
         /// - Browser is closed or crashed
-        /// - <see cref="DisconnectAsync"/> method was called
+        /// - <see cref="CloseAsync"/> method was called
         /// </summary>
         public event EventHandler Disconnected;
 
@@ -39,14 +39,6 @@ namespace PlaywrightSharp
         /// In a newly created browser, this will return a single instance of <seealso cref="IBrowserContext"/>.
         /// </summary>
         IEnumerable<IBrowserContext> BrowserContexts { get; }
-
-        /// <summary>
-        /// Returns the default browser context.
-        /// </summary>
-        /// <remarks>
-        /// The default browser context can not be closed.
-        /// </remarks>
-        IBrowserContext DefaultContext { get; }
 
         /// <summary>
         /// Indicates that the browser is connected.
@@ -73,13 +65,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the browser is closed.</returns>
         Task CloseAsync();
-
-        /// <summary>
-        /// Disconnects Browser from the browser application, but leaves the application process running.
-        /// After calling disconnect, the Browser object is considered disposed and cannot be used anymore.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the browser was disconnected.</returns>
-        Task DisconnectAsync();
 
         /// <summary>
         /// Gets the <see cref="IPage"/> <see cref="ITarget"/>.
