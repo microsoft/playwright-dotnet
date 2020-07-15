@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -14,7 +15,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         public ConnectionScope Scope { get; }
 
-        internal virtual void OnMessage(string method, PlaywrightSharpServerParams serverParams)
+        internal virtual void OnMessage(string method, JsonElement? serverParams)
         {
         }
     }

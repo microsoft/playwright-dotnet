@@ -6,6 +6,6 @@ namespace PlaywrightSharp.Transport.Channels
     {
         public string Method { get; set; }
 
-        public PlaywrightSharpServerParams Params { get; set; }
+        public CreateObjectInfo Params { get; set; }
     }
 }

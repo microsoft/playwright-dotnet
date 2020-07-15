@@ -200,7 +200,8 @@ namespace PlaywrightSharp.Transport
             {
                 _objects.TryGetValue(message.Guid, out var scopeObject);
                 var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
-                scope.CreateRemoteObject(message.Params.Type, message.Params.Guid, message.Params.Initializer);
+                var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
+                scope.CreateRemoteObject(createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 
                 return;
             }

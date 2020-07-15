@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -16,7 +17,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<PageChannelRequestEventArgs> Request;
 
-        internal override void OnMessage(string method, PlaywrightSharpServerParams serverParams)
+        internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
             {

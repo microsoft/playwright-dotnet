@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Closed;
 
-        internal override void OnMessage(string method, PlaywrightSharpServerParams serverParams)
+        internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
             {
