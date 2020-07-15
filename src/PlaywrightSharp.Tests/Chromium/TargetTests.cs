@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>Browser.pages should return all of the pages</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task BrowserPagesShouldReturnAllOfThePages()
+        public void BrowserPagesShouldReturnAllOfThePages()
         {
             // The pages will be the testing page and the original new tab page
             var allPages = Context.Pages;

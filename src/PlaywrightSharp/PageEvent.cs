@@ -59,12 +59,6 @@ namespace PlaywrightSharp
         Response,
 
         /// <summary>
-        /// Error event
-        /// </summary>
-        /// <see cref="IPage.Crashed"/>
-        Error,
-
-        /// <summary>
         /// Page error event
         /// </summary>
         /// <see cref="IPage.PageError"/>

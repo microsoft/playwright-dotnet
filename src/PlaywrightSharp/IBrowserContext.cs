@@ -27,7 +27,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Emitted when Browser context gets closed.
         /// </summary>
-        public event EventHandler<EventArgs> Closed;
+        event EventHandler<EventArgs> Closed;
 
         /// <summary>
         /// An array of all pages inside the browser context.

@@ -11,7 +11,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when the browser is closed.
         /// </summary>
-        public event EventHandler Closed;
+        event EventHandler Closed;
 
         /// <summary>
         /// Browser process ID.
