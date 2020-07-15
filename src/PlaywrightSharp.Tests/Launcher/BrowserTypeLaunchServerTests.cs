@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -51,7 +52,7 @@ namespace PlaywrightSharp.Tests.Launcher
             browserServer.Closed += (server, e) => closedTcs.TrySetResult(true);
             _ = browserServer.KillAsync();
 
-            await Task.WhenAll(disconnectedTcs.Task, closedTcs.Task);
+            await Task.WhenAll(disconnectedTcs.Task, closedTcs.Task).WithTimeout();
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>

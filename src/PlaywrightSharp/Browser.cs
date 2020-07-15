@@ -23,8 +23,8 @@ namespace PlaywrightSharp
             _channel.Closed += (sender, e) =>
             {
                 IsConnected = false;
-                Disconnected?.Invoke(this, EventArgs.Empty);
                 _isClosedOrClosing = true;
+                Disconnected?.Invoke(this, EventArgs.Empty);
                 _scope.Dispose();
                 _closedTcs.TrySetResult(true);
             };
