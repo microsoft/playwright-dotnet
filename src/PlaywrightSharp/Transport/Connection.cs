@@ -221,7 +221,7 @@ namespace PlaywrightSharp.Transport
                 return new TimeoutException(error.Message);
             }
 
-            if (error.Message.Contains("Target closed"))
+            if (error.Message.Contains("Target closed") || error.Message.Contains("The page has been closed."))
             {
                 return new TargetClosedException(error.Message);
             }
