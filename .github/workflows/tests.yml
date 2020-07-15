@@ -58,5 +58,5 @@ jobs:
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
       - name: Run tests
         env:
-          PRODUCT: WebkitKIT
+          PRODUCT: WEBKIT
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1
