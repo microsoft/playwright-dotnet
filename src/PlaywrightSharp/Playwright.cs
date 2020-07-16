@@ -15,7 +15,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="PlaywrightSharp.IPlaywright" />
-    public sealed class Playwright : IPlaywright, IDisposable, IChannelOwner<Playwright>
+    public sealed class Playwright : IPlaywright, IChannelOwner<Playwright>
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly PlaywrightInitializer _initializer;

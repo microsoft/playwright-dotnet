@@ -25,9 +25,14 @@ namespace PlaywrightSharp
     public interface IBrowserContext
     {
         /// <summary>
-        /// Emitted when Browser context gets closed.
+        /// Raised when Browser context gets closed.
         /// </summary>
         event EventHandler<EventArgs> Closed;
+
+        /// <summary>
+        /// Raised when a new page is created in the Browser context.
+        /// </summary>
+        event EventHandler<PageEventArgs> PageCreated;
 
         /// <summary>
         /// An array of all pages inside the browser context.
@@ -38,6 +43,11 @@ namespace PlaywrightSharp
         /// Options used to create the context.
         /// </summary>
         BrowserContextOptions Options { get; }
+
+        /// <summary>
+        /// Browser owner.
+        /// </summary>
+        Browser Browser { get; }
 
         /// <summary>
         /// Creates a new page in the browser context and optionally navigates it to the specified URL.

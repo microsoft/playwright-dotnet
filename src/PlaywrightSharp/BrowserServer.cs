@@ -37,7 +37,7 @@ namespace PlaywrightSharp
         public int ProcessId => _initializer.Pid;
 
         /// <inheritdoc/>
-        public string WebSocketEndpoint => _initializer.WsEndpoint;
+        public string WSEndpoint => _initializer.WsEndpoint;
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);

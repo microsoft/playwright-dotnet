@@ -27,10 +27,10 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldWork()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var browserContext = await browser.NewContextAsync();
             Assert.Empty(browserContext.Pages);
-            Assert.NotEmpty(browserServer.WebSocketEndpoint);
+            Assert.NotEmpty(browserServer.WSEndpoint);
             var page = await browserContext.NewPageAsync();
             Assert.Equal(121, await page.EvaluateAsync<int>("11 * 11"));
             await page.CloseAsync();
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldFireDisconnectedWhenClosingTheServer()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var disconnectedTcs = new TaskCompletionSource<bool>();
             var closedTcs = new TaskCompletionSource<bool>();
             browser.Disconnected += (server, e) => disconnectedTcs.TrySetResult(true);

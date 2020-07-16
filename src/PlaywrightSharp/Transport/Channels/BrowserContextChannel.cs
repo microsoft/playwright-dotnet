@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -13,6 +14,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Closed;
 
+        internal event EventHandler<BrowserContextOnPageEventArgs> OnPage;
+
         internal Task<PageChannel> NewPageAsync(string url)
             => Scope.SendMessageToServer<PageChannel>(
                 Guid,
@@ -22,12 +25,19 @@ namespace PlaywrightSharp.Transport.Channels
                     ["url"] = url,
                 });
 
+        internal Task CloseAsync() => Scope.SendMessageToServer(Guid, "close");
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
             {
                 case "close":
                     Closed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "page":
+                    OnPage?.Invoke(
+                        this,
+                        new BrowserContextOnPageEventArgs { PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()) });
                     break;
             }
         }

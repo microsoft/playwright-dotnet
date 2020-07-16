@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// IPlaywright provides methods to interact with the playwright server.
     /// </summary>
-    public interface IPlaywright
+    public interface IPlaywright : IDisposable
     {
         /// <summary>
         /// Gets the Chromium browser type from the playwright server.

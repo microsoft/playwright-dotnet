@@ -46,6 +46,11 @@ namespace PlaywrightSharp
         bool IsConnected { get; }
 
         /// <summary>
+        /// Returns an array of all open browser contexts. In a newly created browser, this will return zero browser contexts.
+        /// </summary>
+        IBrowserContext[] Contexts { get; }
+
+        /// <summary>
         /// Starts tracing.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>

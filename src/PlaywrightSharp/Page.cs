@@ -25,7 +25,6 @@ namespace PlaywrightSharp
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly ViewportSize _viewportSize;
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
-        private readonly BrowserContext _ownedContext = null;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -153,6 +152,8 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public ICoverage Coverage { get; }
 
+        internal BrowserContext OwnedContext { get; set; }
+
         /// <inheritdoc />
         public Task<string> GetTitleAsync() => throw new NotImplementedException();
 
@@ -254,9 +255,9 @@ namespace PlaywrightSharp
         public async Task CloseAsync(PageCloseOptions options = null)
         {
             await _channel.CloseAsync(options).ConfigureAwait(false);
-            if (_ownedContext != null)
+            if (OwnedContext != null)
             {
-                await _ownedContext.CloseAsync().ConfigureAwait(false);
+                await OwnedContext.CloseAsync().ConfigureAwait(false);
             }
         }
 

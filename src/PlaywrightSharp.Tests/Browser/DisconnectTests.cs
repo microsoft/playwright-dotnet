@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Browser
 
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
 
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var page = await remote.NewPageAsync();
             var navigationTask = page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
             {
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Browser
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
 
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var page = await remote.NewPageAsync();
             var watchdog = page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Attached, Timeout = 60000 });
 
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Browser
         public async Task ShouldThrowIfUsedAfterDisconnect()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var page = await remote.NewPageAsync();
             await remote.CloseAsync();
 
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Browser
         public async Task ShouldEmitCloseEventsOnPagesAndContexts()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WebSocketEndpoint });
+            var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var context = await remote.NewContextAsync();
             var page = await context.NewPageAsync();
             var tcs = new TaskCompletionSource<bool>();

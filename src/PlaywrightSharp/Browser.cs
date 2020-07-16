@@ -58,6 +58,11 @@ namespace PlaywrightSharp
         public bool IsConnected { get; private set; }
 
         /// <inheritdoc/>
+        public IBrowserContext[] Contexts => BrowserContextsList.ToArray();
+
+        internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
+
+        /// <inheritdoc/>
         public Task StartTracingAsync(IPage page = null, TracingOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc/>
@@ -80,14 +85,19 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
-            => (await _channel.NewContextAsync(options).ConfigureAwait(false)).Object;
+        {
+            var context = (await _channel.NewContextAsync(options).ConfigureAwait(false)).Object;
+            BrowserContextsList.Add(context);
+            context.Browser = this;
+            return context;
+        }
 
         /// <inheritdoc/>
         public async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
             var context = await NewContextAsync(options).ConfigureAwait(false) as BrowserContext;
             var page = await context.NewPageAsync().ConfigureAwait(false) as Page;
-            page.BrowserContext = context;
+            page.OwnedContext = context;
             context.OwnerPage = page;
             return page;
         }
