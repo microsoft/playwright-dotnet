@@ -129,7 +129,7 @@ namespace PlaywrightSharp
             _scope.Dispose();
         }
 
-        private void Channel_OnPage(object sender, BrowserContextoOnPageEventArgs e)
+        private void Channel_OnPage(object sender, BrowserContextOnPageEventArgs e)
         {
             var page = e.PageChannel.Object;
             page.BrowserContext = this;
