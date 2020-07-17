@@ -21,7 +21,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Browser websocket endpoint which can be used as an argument to <see cref="IBrowserType.ConnectAsync(ConnectOptions)"/> to establish connection to the browser.
         /// </summary>
-        string WebSocketEndpoint { get; }
+        string WSEndpoint { get; }
 
         /// <summary>
         /// Closes the browser gracefully and makes sure the process is terminated.

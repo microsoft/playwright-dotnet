@@ -12,17 +12,43 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
+        private readonly List<Page> _crBackgroundPages = new List<Page>();
+        private bool _isClosedOrClosing;
+        private TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
 
         internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
             _scope = scope.CreateChild(guid);
             _channel = new BrowserContextChannel(guid, scope, this);
+            _channel.Closed += Channel_Closed;
+            _channel.OnPage += Channel_OnPage;
 
-            _channel.Closed += (sender, e) => Closed?.Invoke(this, EventArgs.Empty);
+            if (initializer.Pages != null)
+            {
+                foreach (var pageChannel in initializer.Pages)
+                {
+                    var page = pageChannel.Object;
+                    PagesList.Add(page);
+                    page.BrowserContext = this;
+                }
+            }
+
+            if (initializer.CrBackgroundPages != null)
+            {
+                foreach (var pageChannel in initializer.CrBackgroundPages)
+                {
+                    var page = pageChannel.Object;
+                    _crBackgroundPages.Add(page);
+                    page.BrowserContext = this;
+                }
+            }
         }
 
         /// <inheritdoc/>
         public event EventHandler<EventArgs> Closed;
+
+        /// <inheritdoc/>
+        public event EventHandler<PageEventArgs> PageCreated;
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
@@ -39,16 +65,35 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public IPage[] Pages => PagesList.ToArray();
 
+        /// <inheritdoc />
+        public Browser Browser { get; internal set; }
+
         internal Page OwnerPage { get; set; }
 
         internal List<Page> PagesList { get; } = new List<Page>();
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
-            => (await _channel.NewPageAsync(url).ConfigureAwait(false)).Object;
+        {
+            if (OwnerPage != null)
+            {
+                throw new PlaywrightSharpException("Please use Browser.NewContextAsync()");
+            }
+
+            return (await _channel.NewPageAsync(url).ConfigureAwait(false)).Object;
+        }
 
         /// <inheritdoc />
-        public Task CloseAsync() => throw new NotImplementedException();
+        public Task CloseAsync()
+        {
+            if (!_isClosedOrClosing)
+            {
+                _isClosedOrClosing = true;
+                return _channel.CloseAsync();
+            }
+
+            return _closeTcs.Task;
+        }
 
         /// <inheritdoc />
         public Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls) => throw new NotImplementedException();
@@ -70,5 +115,26 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public IEnumerable<IPage> GetExistingPages() => throw new NotImplementedException();
+
+        private void Channel_Closed(object sender, EventArgs e)
+        {
+            _isClosedOrClosing = true;
+            if (Browser != null)
+            {
+                Browser.BrowserContextsList.Remove(this);
+            }
+
+            _closeTcs.TrySetResult(true);
+            Closed?.Invoke(this, EventArgs.Empty);
+            _scope.Dispose();
+        }
+
+        private void Channel_OnPage(object sender, BrowserContextOnPageEventArgs e)
+        {
+            var page = e.PageChannel.Object;
+            page.BrowserContext = this;
+            PagesList.Add(page);
+            PageCreated?.Invoke(this, new PageEventArgs { Page = page });
+        }
     }
 }
