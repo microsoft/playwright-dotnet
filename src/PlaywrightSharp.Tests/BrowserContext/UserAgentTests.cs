@@ -9,14 +9,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class SetUserAgentTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextUserAgentTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public SetUserAgentTests(ITestOutputHelper output) : base(output)
+        public BrowserContextUserAgentTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -61,7 +60,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
-            page = await NewPageAsync(new BrowserContextOptions { UserAgent = TestConstants.IPhone.UserAgent });
+            page = await NewPageAsync(new BrowserContextOptions { UserAgent = Playwright.Devices[DeviceDescriptorName.IPhone6].UserAgent });
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
@@ -86,6 +85,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 page.GoToAsync(TestConstants.EmptyPage)
             );
             Assert.Equal("foobar", userAgent);
-        }*/
+        }
     }
 }

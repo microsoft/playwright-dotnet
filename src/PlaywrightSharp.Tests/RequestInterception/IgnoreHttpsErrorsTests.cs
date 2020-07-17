@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public async Task ShouldWorkWithRequestInterception()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
                 IgnoreHTTPSErrors = true
             });

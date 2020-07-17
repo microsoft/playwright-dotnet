@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
         {
-            var context = await Browser.NewContextAsync(options);
+            await using var context = await browser.NewContextAsync(options);
             _contexts.Add(context);
             return context;
         }

@@ -24,14 +24,18 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldWork()
         {
-            await Page.SetViewportAsync(new Viewport
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
-                Width = 500,
-                Height = 500
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
             });
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Page.EvaluateAsync("window.scrollBy(50, 100)");
-            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
+            var page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await page.EvaluateAsync("window.scrollBy(50, 100)");
+            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", screenshot));
         }
@@ -42,12 +46,16 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldTakeIntoAccountPaddingAndBorder()
         {
-            await Page.SetViewportAsync(new Viewport
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
-                Width = 500,
-                Height = 500
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
             });
-            await Page.SetContentAsync(@"
+            var page = await context.NewPageAsync();
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>div {
                     border: 2px solid blue;
@@ -57,7 +65,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 }
                 </style>
                 <div id=""d""></div>");
-            var elementHandle = await Page.QuerySelectorAsync("div#d");
+            var elementHandle = await page.QuerySelectorAsync("div#d");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-padding-border.png", screenshot));
         }
@@ -68,12 +76,16 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel()
         {
-            await Page.SetViewportAsync(new Viewport
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
-                Width = 500,
-                Height = 500
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
             });
-            await Page.SetContentAsync(@"
+            var page = await context.NewPageAsync();
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
                 div.to-screenshot {
@@ -90,7 +102,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 <div class=""to-screenshot""></div>
                 <div class=""to-screenshot""></div>
             ");
-            var elementHandles = await Page.QuerySelectorAllAsync("div.to-screenshot");
+            var elementHandles = await page.QuerySelectorAllAsync("div.to-screenshot");
             var screenshotTasks = elementHandles.Select(e => e.ScreenshotAsync()).ToArray();
             await Task.WhenAll(screenshotTasks);
 
@@ -103,12 +115,16 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldCaptureFullElementWhenLargerThanViewport()
         {
-            await Page.SetViewportAsync(new Viewport
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
-                Width = 500,
-                Height = 500
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
             });
-            await Page.SetContentAsync(@"
+            var page = await context.NewPageAsync();
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
                 div.to-screenshot {
@@ -125,10 +141,10 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 <div class=""to-screenshot""></div>
                 <div class=""to-screenshot""></div>");
 
-            var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
+            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
-            Assert.Equal(new[] { 500, 500 }, await Page.EvaluateAsync<int[]>("[window.innerWidth, window.innerHeight]"));
+            Assert.Equal(new[] { 500, 500 }, await page.EvaluateAsync<int[]>("[window.innerWidth, window.innerHeight]"));
         }
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
@@ -137,12 +153,16 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldScrollElementIntoView()
         {
-            await Page.SetViewportAsync(new Viewport
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
-                Width = 500,
-                Height = 500
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
             });
-            await Page.SetContentAsync(@"
+            var page = await context.NewPageAsync();
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>div.above {
                   border: 2px solid blue;
@@ -158,7 +178,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 </style>
                 <div class=""above""></div>
                 <div class=""to-screenshot""></div>");
-            var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
+            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-scrolled-into-view.png", screenshot));
         }
@@ -169,12 +189,16 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldWorkWithARotatedElement()
         {
-            await Page.SetViewportAsync(new Viewport
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
             {
-                Width = 500,
-                Height = 500
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
             });
-            await Page.SetContentAsync(@"
+            var page = await context.NewPageAsync();
+            await page.SetContentAsync(@"
                 <div style='position: absolute;
                 top: 100px;
                 left: 100px;
@@ -183,7 +207,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 background: green;
                 transform: rotateZ(200deg); '>&nbsp;</div>
             ");
-            var elementHandle = await Page.QuerySelectorAsync("div");
+            var elementHandle = await page.QuerySelectorAsync("div");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-rotate.png", screenshot));
         }
@@ -236,6 +260,98 @@ namespace PlaywrightSharp.Tests.ElementHandle
             var elementHandle = await Page.QuerySelectorAsync("div");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-fractional-offset.png", screenshot));
+        }
+
+        ///<playwright-file>screenshot.spec.js</playwright-file>
+        ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
+        ///<playwright-it>should take fullPage screenshots when default viewport is null</playwright-it>
+        [Retry]
+        public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
+        {
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions
+            {
+                Viewport = null
+            });
+
+            await page.GoToAsync(TestConstants.EmptyPage + "/grid.html");
+
+            var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
+            {
+                FullPage = true
+            });
+
+            Assert.NotEmpty(screenshot);
+            var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            Assert.Equal(sizeBefore, sizeAfter);
+        }
+
+
+        ///<playwright-file>screenshot.spec.js</playwright-file>
+        ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
+        ///<playwright-it>should restore default viewport after fullPage screenshot</playwright-it>
+        [Retry]
+        public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
+        {
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Width = 456,
+                    Height = 789
+                }
+            });
+
+            Assert.Equal(456, page.Viewport.Width);
+            Assert.Equal(789, page.Viewport.Height);
+            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
+
+            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
+            {
+                FullPage = true
+            });
+
+            Assert.NotEmpty(screenshot);
+            Assert.Equal(456, page.Viewport.Width);
+            Assert.Equal(789, page.Viewport.Height);
+            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>should take element screenshot when default viewport is null and restore back</playwright-it>
+        [Retry]
+        public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
+        {
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var page = await NewPageAsync(browser, new BrowserContextOptions { Viewport = null });
+            await page.SetContentAsync(@"
+                <div style=""height: 14px"">oooo</div>
+                <style>
+                div.to-screenshot {
+                    border: 1px solid blue;
+                    width: 600px;
+                    height: 600px;
+                    margin-left: 50px;
+                }
+                ::-webkit-scrollbar{
+                    display: none;
+                }
+                </style>
+                <div class=""to-screenshot""></div>
+                <div class=""to-screenshot""></div>
+                <div class=""to-screenshot""></div>
+            ");
+            var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
+            byte[] screenshot = await elementHandle.ScreenshotAsync();
+            Assert.NotEmpty(screenshot);
+            var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
+            Assert.Equal(sizeBefore, sizeAfter);
         }
     }
 }

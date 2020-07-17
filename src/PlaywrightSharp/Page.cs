@@ -123,7 +123,7 @@ namespace PlaywrightSharp
         public BrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc />
-        public Viewport Viewport { get; }
+        public ViewportSize Viewport { get; }
 
         /// <inheritdoc />
         public IAccessibility Accessibility { get; }
@@ -391,9 +391,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task TripleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task SetViewportAsync(Viewport viewport) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IResponse> GoBackAsync(NavigationOptions options = null) => throw new NotImplementedException();

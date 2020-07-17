@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Browser
         public async Task ShouldFireCloseEventForAllContexts()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var context = await browser.NewContextAsync();
+            await using var context = await browser.NewContextAsync();
             var closeTask = new TaskCompletionSource<bool>();
 
             context.Closed += (sender, e) => closeTask.TrySetResult(true);

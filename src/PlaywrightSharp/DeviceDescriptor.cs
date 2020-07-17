@@ -21,6 +21,6 @@ namespace PlaywrightSharp
         /// ViewPort.
         /// </summary>
         /// <value>The viewport.</value>
-        public Viewport ViewPort { get; set; }
+        public ViewportSize ViewPort { get; set; }
     }
 }

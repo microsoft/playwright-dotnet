@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class JavaScriptEnabledTests : PlaywrightSharpBrowserBaseTest
+    public class JavaScriptEnabledTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public JavaScriptEnabledTests(ITestOutputHelper output) : base(output)

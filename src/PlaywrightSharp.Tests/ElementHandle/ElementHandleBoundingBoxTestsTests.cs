@@ -24,9 +24,17 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldWork()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
+            });
+            var page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.GetBoundingBoxAsync();
             Assert.Equal(new Rect(x: 100, y: 50, width: 50, height: 50), box);
         }
@@ -37,9 +45,17 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldHandleNestedFrames()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
-            var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
+            });
+            var page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
+            var nestedFrame = page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
             var box = await elementHandle.GetBoundingBoxAsync();
             Assert.Equal(new Rect(x: 24, y: 224, width: 268, height: 18), box);
@@ -62,10 +78,18 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldForceALayout()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
-            await Page.SetContentAsync("<div style=\"width: 100px; height: 100px\">hello</div>");
-            var elementHandle = await Page.QuerySelectorAsync("div");
-            await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
+            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Width = 500,
+                    Height = 500,
+                },
+            });
+            var page = await context.NewPageAsync();
+            await page.SetContentAsync("<div style=\"width: 100px; height: 100px\">hello</div>");
+            var elementHandle = await page.QuerySelectorAsync("div");
+            await page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
             var box = await elementHandle.GetBoundingBoxAsync();
             Assert.Equal(new Rect(x: 8, y: 8, width: 100, height: 200), box);
         }

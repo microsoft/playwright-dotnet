@@ -13,8 +13,8 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
         private readonly List<Page> _crBackgroundPages = new List<Page>();
+        private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
         private bool _isClosedOrClosing;
-        private TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
 
         internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
@@ -115,6 +115,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public IEnumerable<IPage> GetExistingPages() => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
         private void Channel_Closed(object sender, EventArgs e)
         {

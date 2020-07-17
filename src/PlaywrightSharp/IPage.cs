@@ -184,7 +184,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Page Viewport.
         /// </summary>
-        Viewport Viewport { get; }
+        ViewportSize Viewport { get; }
 
         /// <summary>
         /// Gets the accessibility.
@@ -889,29 +889,6 @@ namespace PlaywrightSharp
         Task TripleClickAsync(string selector, ClickOptions options = null);
 
         /// <summary>
-        /// Sets the viewport.
-        /// In the case of multiple pages in a single browser, each page can have its own viewport size.
-        /// <see cref="SetViewportAsync(PlaywrightSharp.Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
-        /// </summary>
-        /// <example>
-        /// <![CDATA[
-        /// using(var page = await context.NewPageAsync())
-        /// {
-        ///     await page.SetViewPortAsync(new Viewport
-        ///     {
-        ///         Width = 640,
-        ///         Height = 480,
-        ///         DeviceScaleFactor = 1
-        ///     });
-        ///     await page.GoToAsync('https://www.example.com');
-        /// }
-        /// ]]>
-        /// </example>
-        /// <param name="viewport">Viewport.</param>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SetViewportAsync(Viewport viewport);
-
-        /// <summary>
         /// Navigate to the previous page in history.
         /// </summary>
         /// <param name="options">Navigation parameters.</param>
@@ -961,6 +938,20 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task.</returns>
         Task ExposeFunctionAsync(string name, Action playwrightFunction);
+
+        /// <summary>
+        /// Adds a function called <c>name</c> on the page's <c>window</c> object.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightFunction"/> completes.
+        /// </summary>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <typeparam name="T">The parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeFunctionAsync(string, Action)"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeFunctionAsync<T>(string name, Action<T> playwrightFunction);
 
         /// <summary>
         /// Adds a function called <c>name</c> on the page's <c>window</c> object.
@@ -1066,7 +1057,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task GetPdfAsync(string file);
+        Task GetPdfAsync(string file);
 
         /// <summary>
         ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1077,7 +1068,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task GetPdfAsync(string file, PdfOptions options);
+        Task GetPdfAsync(string file, PdfOptions options);
 
         /// <summary>
         /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1086,7 +1077,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<Stream> GetPdfStreamAsync();
+        Task<Stream> GetPdfStreamAsync();
 
         /// <summary>
         /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1096,7 +1087,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<Stream> GetPdfStreamAsync(PdfOptions options);
+        Task<Stream> GetPdfStreamAsync(PdfOptions options);
 
         /// <summary>
         /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1105,7 +1096,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<byte[]> GetPdfDataAsync();
+        Task<byte[]> GetPdfDataAsync();
 
         /// <summary>
         /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1115,6 +1106,16 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<byte[]> GetPdfDataAsync(PdfOptions options);
+        Task<byte[]> GetPdfDataAsync(PdfOptions options);
+
+        /// <summary>
+        /// Adds a script which would be evaluated in one of the following scenarios:
+        /// * Whenever a page is created in the browser context or is navigated.
+        /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
+        /// </summary>
+        /// <param name="function">Script to be evaluated in all pages in the browser context or script path.</param>
+        /// <param name="args">Optional argument to pass to script .</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task AddInitScriptAsync(string function, object args = null);
     }
 }

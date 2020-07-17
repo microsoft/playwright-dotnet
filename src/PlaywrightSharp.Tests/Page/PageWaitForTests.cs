@@ -88,25 +88,15 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
-        ///<playwright-it>should work with multiline body</playwright-it>
+        ///<playwright-it>should wait for predicate with arugments</playwright-it>
         [Retry]
-        public Task ShouldWaitForPredicate()
-            => Task.WhenAll(
-                Page.WaitForFunctionAsync("() => window.innerWidth < 100"),
-                Page.SetViewportAsync(new Viewport { Width = 10, Height = 10 })
-        );
+        public async Task ShouldWaitForPredicateWithArguments()
+            => await Page.WaitForFunctionAsync("({arg1, arg2}) => arg1 + arg2 == 3", new { arg1 = 1, arg2 = 2 });
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should throw when unknown type</playwright-it>
         [Fact(Skip = "We don't this test")]
         public void ShouldThrowWhenUnknownType() { }
-
-        ///<playwright-file>waittask.spec.js</playwright-file>
-        ///<playwright-describe>PageWaitFor</playwright-describe>
-        ///<playwright-it>should wait for predicate with arguments</playwright-it>
-        [Retry]
-        public async Task ShouldWaitForPredicateWithArguments()
-            => await Page.WaitForFunctionAsync("(arg1, arg2) => arg1 !== arg2", new WaitForSelectorOptions(), 1, 2);
     }
 }

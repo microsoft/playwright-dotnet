@@ -10,7 +10,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
         /// </summary>
-        public Viewport Viewport { get; set; }
+        public ViewportSize Viewport { get; set; }
 
         /// <summary>
         /// Specific user agent to use in this context.
@@ -46,6 +46,18 @@ namespace PlaywrightSharp
         /// A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/> for more details.
         /// </summary>
         public Dictionary<string, ContextPermission[]> Permissions { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the meta viewport tag is taken into account.
+        /// </summary>
+        /// <value>Whether the meta viewport tag is taken into account. Defaults to <c>false</c>.</value>
+        public bool? IsMobile { get; set; }
+
+        /// <summary>
+        /// Gets or sets the device scale factor.
+        /// </summary>
+        /// <value>Specify device scale factor (can be thought of as dpr).</value>
+        public double DeviceScaleFactor { get; set; } = 1;
 
         /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.

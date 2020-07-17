@@ -546,7 +546,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Retry]
         public async Task ShouldThrowIfInterceptionIsNotEnabled()
         {
-            var context = await Browser.NewContextAsync();
+            await using var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
             Exception exception = null;
             page.Request += async (sender, e) =>
