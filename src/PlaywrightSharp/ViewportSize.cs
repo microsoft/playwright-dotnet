@@ -2,20 +2,25 @@ using System;
 
 namespace PlaywrightSharp
 {
-    internal class ViewportSize : IEquatable<ViewportSize>
+    /// <summary>
+    /// View port data.
+    /// </summary>
+    public class ViewportSize : IEquatable<ViewportSize>
     {
+        /// <summary>
+        /// Gets or sets the width.
+        /// </summary>
         public int Width { get; set; }
 
         /// <summary>
         /// Gets or sets the height.
         /// </summary>
-        /// <value>The page height in pixels.</value>
         public int Height { get; set; }
 
         /// <summary>
-        /// Clones the <see cref="Viewport"/>.
+        /// Clones the <see cref="ViewportSize"/>.
         /// </summary>
-        /// <returns>A copy of the current <see cref="Viewport"/>.</returns>
+        /// <returns>A copy of the current <see cref="ViewportSize"/>.</returns>
         public ViewportSize Clone() => (ViewportSize)MemberwiseClone();
 
         /// <inheritdoc cref="IEquatable{T}.Equals(T)"/>
@@ -25,7 +30,7 @@ namespace PlaywrightSharp
             Height == other.Height;
 
         /// <inheritdoc cref="object.Equals(object)"/>
-        public override bool Equals(object obj) => Equals(obj as Viewport);
+        public override bool Equals(object obj) => Equals(obj as ViewportSize);
 
 #if NETSTANDARD2_1
         /// <inheritdoc cref="object.GetHashCode()"/>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -17,6 +18,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<PageChannelRequestEventArgs> Request;
 
+        internal event EventHandler<PageChannelPopupEventArgs> Popup;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
@@ -26,6 +29,12 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "crash":
                     Crashed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "popup":
+                    Popup?.Invoke(this, new PageChannelPopupEventArgs
+                    {
+                        Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                    });
                     break;
                 case "request":
                     Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });

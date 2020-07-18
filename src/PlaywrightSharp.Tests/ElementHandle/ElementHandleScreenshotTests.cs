@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         public ElementHandleScreenshotTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.screenshot</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -237,5 +237,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
             byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-fractional-offset.png", screenshot));
         }
+        */
     }
 }

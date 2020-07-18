@@ -184,7 +184,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Page Viewport.
         /// </summary>
-        Viewport Viewport { get; }
+        ViewportSize Viewport { get; }
 
         /// <summary>
         /// Gets the accessibility.
@@ -887,29 +887,6 @@ namespace PlaywrightSharp
         /// <param name="options">click options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully triple clicked.</returns>
         Task TripleClickAsync(string selector, ClickOptions options = null);
-
-        /// <summary>
-        /// Sets the viewport.
-        /// In the case of multiple pages in a single browser, each page can have its own viewport size.
-        /// <see cref="SetViewportAsync(PlaywrightSharp.Viewport)"/> will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport before navigating to the page.
-        /// </summary>
-        /// <example>
-        /// <![CDATA[
-        /// using(var page = await context.NewPageAsync())
-        /// {
-        ///     await page.SetViewPortAsync(new Viewport
-        ///     {
-        ///         Width = 640,
-        ///         Height = 480,
-        ///         DeviceScaleFactor = 1
-        ///     });
-        ///     await page.GoToAsync('https://www.example.com');
-        /// }
-        /// ]]>
-        /// </example>
-        /// <param name="viewport">Viewport.</param>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SetViewportAsync(Viewport viewport);
 
         /// <summary>
         /// Navigate to the previous page in history.

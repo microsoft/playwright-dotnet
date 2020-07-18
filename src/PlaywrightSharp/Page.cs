@@ -23,8 +23,8 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new List<Frame>();
-        private readonly ViewportSize _viewportSize;
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
+        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -34,10 +34,11 @@ namespace PlaywrightSharp
             MainFrame = initializer.MainFrame.Object;
             MainFrame.Page = this;
             _frames.Add(MainFrame);
-            _viewportSize = initializer.ViewportSize;
+            Viewport = initializer.ViewportSize;
 
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
+            _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
             _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
         }
 
@@ -123,7 +124,7 @@ namespace PlaywrightSharp
         public BrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc />
-        public Viewport Viewport { get; }
+        public ViewportSize Viewport { get; private set; }
 
         /// <inheritdoc />
         public IAccessibility Accessibility { get; }
@@ -140,11 +141,19 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public IKeyboard Keyboard { get; }
 
-        /// <inheritdoc />
-        public int DefaultTimeout { get; set; }
+        /// <inheritdoc/>
+        public int DefaultTimeout
+        {
+            get => _timeoutSettings.Timeout;
+            set => _timeoutSettings.SetDefaultTimeout(value);
+        }
 
-        /// <inheritdoc />
-        public int DefaultNavigationTimeout { get; set; }
+        /// <inheritdoc/>
+        public int DefaultNavigationTimeout
+        {
+            get => _timeoutSettings.NavigationTimeout;
+            set => _timeoutSettings.SetDefaultNavigationTimeout(value);
+        }
 
         /// <inheritdoc />
         public IWorker[] Workers { get; }
@@ -391,9 +400,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task TripleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task SetViewportAsync(Viewport viewport) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IResponse> GoBackAsync(NavigationOptions options = null) => throw new NotImplementedException();

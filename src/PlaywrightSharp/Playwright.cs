@@ -33,6 +33,11 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Playwright() => Dispose(false);
 
+        /// <summary>
+        /// Default timeout.
+        /// </summary>
+        public static int DefaultTimeout => 30_000;
+
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
 

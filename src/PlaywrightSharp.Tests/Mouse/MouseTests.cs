@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Mouse
         public MouseTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should click the document</playwright-it>
@@ -190,5 +190,6 @@ namespace PlaywrightSharp.Tests.Mouse
             Assert.Equal(30, result.GetProperty("x").GetInt32());
             Assert.Equal(40, result.GetProperty("y").GetInt32());
         }
+        */
     }
 }

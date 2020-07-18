@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -10,11 +13,16 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : IChannelOwner<BrowserContext>, IBrowserContext
     {
+        private static readonly Dictionary<ContextEvent, EventInfo> _contextEventsMap = ((ContextEvent[])Enum.GetValues(typeof(ContextEvent)))
+            .ToDictionary(x => x, x => typeof(BrowserContext).GetEvent(x.ToString()));
+
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
         private readonly List<Page> _crBackgroundPages = new List<Page>();
+        private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
+        private readonly List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
+        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
         private bool _isClosedOrClosing;
-        private TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
 
         internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
@@ -68,6 +76,17 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Browser Browser { get; internal set; }
 
+        /// <inheritdoc />
+        public int DefaultTimeout
+        {
+            get => _timeoutSettings.Timeout;
+            set
+            {
+                _timeoutSettings.SetDefaultTimeout(value);
+                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
+            }
+        }
+
         internal Page OwnerPage { get; set; }
 
         internal List<Page> PagesList { get; } = new List<Page>();
@@ -116,6 +135,47 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public IEnumerable<IPage> GetExistingPages() => throw new NotImplementedException();
 
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+
+        /// <inheritdoc/>
+        public async Task<T> WaitForEvent<T>(ContextEvent e, WaitForEventOptions<T> options = null)
+        {
+            var info = _contextEventsMap[e];
+            ValidateArgumentsTypes();
+            var eventTsc = new TaskCompletionSource<T>();
+            void ContextEventHandler(object sender, T e)
+            {
+                if (options?.Predicate == null || options.Predicate(e))
+                {
+                    eventTsc.TrySetResult(e);
+                    info.RemoveEventHandler(this, (EventHandler<T>)ContextEventHandler);
+                }
+            }
+
+            info.AddEventHandler(this, (EventHandler<T>)ContextEventHandler);
+            var disconnectedTcs = new TaskCompletionSource<bool>();
+            _waitForCancellationTcs.Add((e, disconnectedTcs));
+            await Task.WhenAny(eventTsc.Task, disconnectedTcs.Task).WithTimeout(options?.Timeout ?? DefaultTimeout).ConfigureAwait(false);
+            if (disconnectedTcs.Task.IsCompleted)
+            {
+                await disconnectedTcs.Task.ConfigureAwait(false);
+            }
+
+            return await eventTsc.Task.ConfigureAwait(false);
+
+            void ValidateArgumentsTypes()
+            {
+                if ((info.EventHandlerType.GenericTypeArguments.Length == 0 && typeof(T) == typeof(EventArgs))
+                    || info.EventHandlerType.GenericTypeArguments[0] == typeof(T))
+                {
+                    return;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
+            }
+        }
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             _isClosedOrClosing = true;
@@ -125,6 +185,7 @@ namespace PlaywrightSharp
             }
 
             _closeTcs.TrySetResult(true);
+            RejectPendingOperations();
             Closed?.Invoke(this, EventArgs.Empty);
             _scope.Dispose();
         }
@@ -135,6 +196,16 @@ namespace PlaywrightSharp
             page.BrowserContext = this;
             PagesList.Add(page);
             PageCreated?.Invoke(this, new PageEventArgs { Page = page });
+        }
+
+        private void RejectPendingOperations()
+        {
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.contextEvent != ContextEvent.Closed))
+            {
+                waitTcs.TrySetException(new TargetClosedException("Context closed"));
+            }
+
+            _waitForCancellationTcs.Clear();
         }
     }
 }
