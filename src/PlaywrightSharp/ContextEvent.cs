@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Context events. See <see cref="IBrowserContext.WaitForEvent{T}(ContextEvent, WaitForEventOptions{T})"/>.
