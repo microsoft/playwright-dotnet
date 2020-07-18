@@ -328,9 +328,43 @@ namespace PlaywrightSharp
         /// * Whenever a page is created in the browser context or is navigated.
         /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
         /// </summary>
-        /// <param name="function">Script to be evaluated in all pages in the browser context or script path.</param>
+        /// <param name="script">Script to be evaluated in all pages in the browser context or script path.</param>
         /// <param name="args">Optional argument to pass to script .</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(string function, object args = null);
+        Task AddInitScriptAsync(string script, object args = null);
+
+        /// <summary>
+        /// Routing provides the capability to modify network requests that are made by any page in the browser context.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="url">A glob pattern to match while routing.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(string url, Action<Route, IRequest> handler);
+
+        /// <summary>
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="url">A glob pattern used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task SetHttpCredentials(Credentials credentials);
+
+        /// <summary>
+        /// Set offline mode for the context.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineModeAsync(bool enabled);
     }
 }

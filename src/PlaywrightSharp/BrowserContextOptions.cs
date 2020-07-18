@@ -50,14 +50,22 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets or sets whether the meta viewport tag is taken into account.
         /// </summary>
-        /// <value>Whether the meta viewport tag is taken into account. Defaults to <c>false</c>.</value>
         public bool? IsMobile { get; set; }
+
+        /// <summary>
+        /// Whether to emulate network being offline. Defaults to `false`.
+        /// </summary>
+        public bool? Offline { get; set; }
 
         /// <summary>
         /// Gets or sets the device scale factor.
         /// </summary>
-        /// <value>Specify device scale factor (can be thought of as dpr).</value>
         public double DeviceScaleFactor { get; set; } = 1;
+
+        /// <summary>
+        /// Credentials for HTTP authentication.
+        /// </summary>
+        public Credentials HttpCredentials { get; set; }
 
         /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.

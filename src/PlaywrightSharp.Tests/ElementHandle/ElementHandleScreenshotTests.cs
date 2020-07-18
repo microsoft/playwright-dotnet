@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldWork()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldTakeIntoAccountPaddingAndBorder()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldCaptureFullElementWhenLargerThanViewport()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldScrollElementIntoView()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -189,7 +189,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldWorkWithARotatedElement()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {

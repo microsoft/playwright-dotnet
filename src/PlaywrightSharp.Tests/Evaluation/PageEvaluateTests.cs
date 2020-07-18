@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkFromInsideAnExposedFunction()
         {
             // Setup inpage callback, which calls Page.evaluate
-            await Page.ExposeBindingAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("(a, b) => a * b", new { a, b }));
+            await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("(a, b) => a * b", new { a, b }));
             int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await callController(9, 3);
             }");

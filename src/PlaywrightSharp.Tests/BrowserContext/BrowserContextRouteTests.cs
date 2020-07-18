@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -24,60 +27,120 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldIntercept()
         {
-            var context = await Browser.NewContextAsync();
-            await context.ExposeFunctionAsync("add", (int a, int b) => a + b);
+            bool intercepted = false;
+
+            await using var context = await Browser.NewContextAsync();
+            await context.RouteAsync("**/empty.html", (route, _) =>
+            {
+                intercepted = true;
+
+                Assert.Contains("empty.html", route.Request.Url);
+                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
+                Assert.Equal(HttpMethod.Get, route.Request.Method);
+                Assert.Null(route.Request.PostData);
+                Assert.True(route.Request.IsNavigationRequest);
+                Assert.Equal(ResourceType.Document, route.Request.ResourceType);
+                Assert.Same(Page.MainFrame, route.Request.Frame);
+                Assert.Equal("about:blank", Page.MainFrame.Url);
+
+                route.ContinueAsync();
+            });
+
             var page = await context.NewPageAsync();
-
-            await page.ExposeFunctionAsync("mul", (int a, int b) => a * b);
-            await context.ExposeFunctionAsync("sub", (int a, int b) => a - b);
-
-            var result = await Page.EvaluateAsync<JsonElement>(@"async function() {
-                return { mul: await mul(9, 4), add: await add(9, 4), sub: await sub(9, 4) };
-            }");
-            Assert.Equal(36, result.GetProperty("mul").GetInt32());
-            Assert.Equal(13, result.GetProperty("add").GetInt32());
-            Assert.Equal(5, result.GetProperty("sub").GetInt32());
+            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.True(response.Ok);
+            Assert.True(intercepted);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.route</playwright-describe>
-        ///<playwright-it>should throw for duplicate registrations</playwright-it>
+        ///<playwright-it>should unroute</playwright-it>
         [Retry]
-        public async Task ShouldThrowForDuplicateRegistrations()
+        public async Task ShouldUnroute()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.ExposeFunctionAsync("foo", () => { });
-            await context.ExposeFunctionAsync("bar", () => { });
-
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => context.ExposeFunctionAsync("foo", () => { }));
-            Assert.Equal("Function \"foo\" has been already registered", exception.Message);
-
             var page = await context.NewPageAsync();
-            exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.ExposeFunctionAsync("foo", () => { }));
-            Assert.Equal("Function \"foo\" has been already registered", exception.Message);
+            var intercepted = new List<int>();
 
-            await context.ExposeFunctionAsync("baz", () => { });
-            exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => context.ExposeFunctionAsync("baz", () => { }));
-            Assert.Equal("Function \"baz\" has been already registered", exception.Message);
+            Action<Route, IRequest> handler1 = (route, _) =>
+            {
+                intercepted.Add(1);
+                route.ContinueAsync();
+            };
+
+            await context.RouteAsync("**/empty.html", handler1);
+            await context.RouteAsync("**/empty.html", (route, _) =>
+            {
+                intercepted.Add(2);
+                route.ContinueAsync();
+            });
+
+            await context.RouteAsync("**/empty.html", (route, _) =>
+            {
+                intercepted.Add(3);
+                route.ContinueAsync();
+            });
+
+            await context.RouteAsync("**/*", (route, _) =>
+            {
+                intercepted.Add(4);
+                route.ContinueAsync();
+            });
+
+            await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal(new List<int>() { 1 }, intercepted);
+
+            await context.UnrouteAsync("**/empty.html", handler1);
+            await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal(new List<int>() { 2 }, intercepted);
+
+            await context.UnrouteAsync("**/empty.html");
+            await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal(new List<int>() { 4 }, intercepted);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.route</playwright-describe>
-        ///<playwright-it>should be callable from-inside addInitScript</playwright-it>
+        ///<playwright-it>should yield to page.route</playwright-it>
         [Retry]
-        public async Task ShouldBeCallableFromInsideAddInitScript()
+        public async Task ShouldYieldToPageRoute()
         {
-            var args = new List<object>();
             await using var context = await Browser.NewContextAsync();
-            await context.ExposeFunctionAsync("woof", (object arg) => { args.Add(arg); });
+            await context.RouteAsync("**/empty.html", (route, _) =>
+            {
+                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "context" });
+            });
 
-            await context.AddInitScriptAsync("() => woof('context');");
             var page = await context.NewPageAsync();
-            await page.AddInitScriptAsync("() => woof('page');");
+            await page.RouteAsync("**/empty.html", (route, _) =>
+            {
+                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "page" });
+            });
 
-            args.Clear();
-            await page.ReloadAsync();
-            Assert.Equal(new List<object> { "context", "page" }, args);
+            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal("page", await response.GetTextAsync());
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext.route</playwright-describe>
+        ///<playwright-it>should fall back to context.route</playwright-it>
+        [Retry]
+        public async Task ShouldFallBackToContextRoute()
+        {
+            await using var context = await Browser.NewContextAsync();
+            await context.RouteAsync("**/empty.html", (route, _) =>
+            {
+                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "context" });
+            });
+
+            var page = await context.NewPageAsync();
+            await page.RouteAsync("**/non-empty.html", (route, _) =>
+            {
+                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "page" });
+            });
+
+            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal("context", await response.GetTextAsync());
         }
     }
 }

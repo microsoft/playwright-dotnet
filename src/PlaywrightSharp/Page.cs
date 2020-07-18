@@ -363,9 +363,6 @@ namespace PlaywrightSharp
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => throw new NotImplementedException();
 
         /// <inheritdoc />
@@ -403,9 +400,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task ExposeFunctionAsync(string name, Action playwrightFunction) => throw new NotImplementedException();
@@ -453,6 +447,30 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<byte[]> GetPdfDataAsync(PdfOptions options) => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T>(string name, Action<T> playwrightFunction)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task AddInitScriptAsync(string script, object args = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task RouteAsync(string url, Action<Route, IRequest> handler)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task UnrouteAsync(string url, Action<Route, IRequest> handler = null)
+        {
+            throw new NotImplementedException();
+        }
 
         private void Channel_Closed(object sender, EventArgs e)
         {

@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
             await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
-            await using var context = await browser.NewContextAsync();
+            var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 
@@ -39,6 +39,8 @@ namespace PlaywrightSharp.Tests.Launcher
             await page.GoToAsync(TestConstants.EmptyPage);
             await remote.CloseAsync();
             await browserServer.CloseAsync();
+
+            await context.CloseAsync();
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>

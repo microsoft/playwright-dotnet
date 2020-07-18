@@ -177,7 +177,7 @@ namespace PlaywrightSharp.Tests.Mouse
         [Retry]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize { Width = 360, Height = 640 },
                 IsMobile = true

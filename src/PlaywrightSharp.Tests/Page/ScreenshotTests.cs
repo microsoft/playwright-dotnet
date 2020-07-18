@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldWork()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldClipRect()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldClipElementsToTheViewport()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldThrowOnClipOutsideTheViewport()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -134,7 +134,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldRunInParallel()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldTakeFullPageScreenshots()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -193,7 +193,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldRestoreViewportAfterFullPageScreenshot()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -271,7 +271,7 @@ namespace PlaywrightSharp.Tests.Page
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldAllowTransparency()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -295,7 +295,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldRenderWhiteBackgroundOnJpegFile()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -339,7 +339,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldReturnBase64()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -360,7 +360,7 @@ namespace PlaywrightSharp.Tests.Page
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithAMobileViewport()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -382,7 +382,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldWorkForCanvas()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -403,7 +403,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldWorkForTranslateZ()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -424,7 +424,7 @@ namespace PlaywrightSharp.Tests.Page
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkForWebgl()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -445,7 +445,7 @@ namespace PlaywrightSharp.Tests.Page
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWhileNavigating()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {

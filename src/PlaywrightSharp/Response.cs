@@ -61,6 +61,6 @@ namespace PlaywrightSharp
         public Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<byte[]> GetBufferAsync() => throw new NotImplementedException();
+        public Task<byte[]> GetBodyAsync() => throw new NotImplementedException();
     }
 }

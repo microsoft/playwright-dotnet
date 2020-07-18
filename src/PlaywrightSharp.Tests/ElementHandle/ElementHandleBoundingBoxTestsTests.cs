@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldWork()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldHandleNestedFrames()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldForceALayout()
         {
-            await using var context = await browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = new ViewportSize
                 {

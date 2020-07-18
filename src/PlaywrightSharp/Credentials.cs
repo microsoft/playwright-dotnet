@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options to be used in <see cref="IPage.AuthenticateAsync(Credentials)"/>.
+    /// Options to be used in <see cref="IBrowserContext.SetHttpCredentials(Credentials)"/>.
     /// </summary>
     public class Credentials
     {
