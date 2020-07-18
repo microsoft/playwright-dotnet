@@ -323,10 +323,11 @@ namespace PlaywrightSharp
                 return new EvaluateArgumentValueElement.SpecialType { V = "-0" };
             }
 
-            /*
-            if (isPrimitiveValue(value))
+            if (IsPrimitiveValue(value.GetType()))
+            {
                 return value;
-            */
+            }
+
             if (value is DateTime date)
             {
                 return new EvaluateArgumentValueElement.Datetime { D = date };
@@ -349,5 +350,14 @@ namespace PlaywrightSharp
 
             return new EvaluateArgumentValueElement.Object { O = value };
         }
+
+        private bool IsPrimitiveValue(Type type)
+            => type == typeof(string) ||
+            type == typeof(decimal) ||
+            type == typeof(double) ||
+            type == typeof(bool) ||
+            type == typeof(decimal?) ||
+            type == typeof(double?) ||
+            type == typeof(bool?);
     }
 }

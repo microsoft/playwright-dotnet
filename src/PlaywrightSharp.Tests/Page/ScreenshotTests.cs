@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         public ScreenshotTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -395,5 +395,6 @@ namespace PlaywrightSharp.Tests.Page
                 }
             }
         }
+        */
     }
 }

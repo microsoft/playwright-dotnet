@@ -22,7 +22,7 @@ namespace PlaywrightSharp
     /// ]]>
     /// </code>
     /// </example>
-    public interface IBrowserContext
+    public interface IBrowserContext : IAsyncDisposable
     {
         /// <summary>
         /// Raised when Browser context gets closed.
@@ -33,6 +33,11 @@ namespace PlaywrightSharp
         /// Raised when a new page is created in the Browser context.
         /// </summary>
         event EventHandler<PageEventArgs> PageCreated;
+
+        /// <summary>
+        /// This setting will change the default maximum time for all the methods accepting timeout option.
+        /// </summary>
+        public int DefaultTimeout { get; set; }
 
         /// <summary>
         /// An array of all pages inside the browser context.
@@ -113,5 +118,14 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A list of pages.</returns>
         IEnumerable<IPage> GetExistingPages();
+
+        /// <summary>
+        /// Waits for event to fire and passes its value into the predicate function.
+        /// </summary>
+        /// <param name="e">Event to wait for.</param>
+        /// <param name="options">Extra options.</param>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
+        Task<T> WaitForEvent<T>(ContextEvent e, WaitForEventOptions<T> options = null);
     }
 }

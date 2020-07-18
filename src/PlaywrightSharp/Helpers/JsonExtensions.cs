@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Helpers
             => new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = true,
+                IgnoreNullValues = false,
                 Converters =
                 {
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),

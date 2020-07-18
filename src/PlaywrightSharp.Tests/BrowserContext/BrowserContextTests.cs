@@ -9,9 +9,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 {
     ///<playwright-file>browsercontext.spec.js</playwright-file>
     ///<playwright-describe>BrowserContext</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class BrowserContextTests : PlaywrightSharpBaseTest
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+    public class BrowserContextTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
         public BrowserContextTests(ITestOutputHelper output) : base(output)
@@ -20,17 +19,18 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should have default context</playwright-it>
+        ///<playwright-it>should create new context</playwright-it>
         [Retry]
-        public async Task ShouldCreateNewIncognitoContext()
+        public async Task ShouldCreateNewContext()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            Assert.Empty(browser.BrowserContexts);
+            await using var context = await browser.NewContextAsync();
             Assert.Single(browser.BrowserContexts);
-            var context = await browser.NewContextAsync();
-            Assert.Equal(2, browser.BrowserContexts.Count());
             Assert.Contains(context, browser.BrowserContexts);
+            Assert.Contains(context, browser.Contexts);
             await context.CloseAsync();
-            Assert.Single(browser.BrowserContexts);
+            Assert.Empty(browser.BrowserContexts);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -39,8 +39,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Retry]
         public async Task WindowOpenShouldUseParentTabContext()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var context = await browser.NewContextAsync();
+            await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTargetCompletion = new TaskCompletionSource<IPage>();
@@ -100,7 +99,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             // Cleanup contexts.
             await Task.WhenAll(context1.CloseAsync(), context2.CloseAsync());
-            Assert.Single(browser.BrowserContexts);
+            Assert.Empty(browser.BrowserContexts);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -109,78 +108,17 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Retry]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var page = await NewPageAsync(browser, new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = new Viewport
+                Viewport = new ViewportSize
                 {
                     Width = 456,
                     Height = 789
                 }
             });
 
-            Assert.Equal(456, page.Viewport.Width);
-            Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
-        }
-
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should take fullPage screenshots when default viewport is null</playwright-it>
-        [Retry]
-        public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
-        {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var page = await NewPageAsync(browser, new BrowserContextOptions
-            {
-                Viewport = null
-            });
-
-            await page.GoToAsync(TestConstants.EmptyPage + "/grid.html");
-
-            var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
-            {
-                FullPage = true
-            });
-
-            Assert.NotEmpty(screenshot);
-            var sizeAfter = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            Assert.Equal(sizeBefore, sizeAfter);
-        }
-
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should restore default viewport after fullPage screenshot</playwright-it>
-        [Retry]
-        public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
-        {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var page = await NewPageAsync(browser, new BrowserContextOptions
-            {
-                Viewport = new Viewport
-                {
-                    Width = 456,
-                    Height = 789
-                }
-            });
-
-            Assert.Equal(456, page.Viewport.Width);
-            Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
-
-            byte[] screenshot = await page.ScreenshotAsync(new ScreenshotOptions
-            {
-                FullPage = true
-            });
-
-            Assert.NotEmpty(screenshot);
-            Assert.Equal(456, page.Viewport.Width);
-            Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
+            var page = await context.NewPageAsync();
+            await VerifyViewportAsync(page, 456, 789);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -189,59 +127,104 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Retry]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
-            var viewport = new Viewport
+            var viewport = new ViewportSize
             {
                 Width = 456,
                 Height = 789
             };
 
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var context = await browser.NewContextAsync(new BrowserContextOptions
-            {
-                Viewport = viewport
-            });
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Viewport = viewport });
 
             viewport.Width = 567;
 
             var page = await context.NewPageAsync();
 
-            Assert.Equal(456, page.Viewport.Width);
-            Assert.Equal(789, page.Viewport.Height);
-            Assert.Equal(456, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(789, await page.EvaluateAsync<int>("window.innerHeight"));
+            await VerifyViewportAsync(page, 456, 789);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should take element screenshot when default viewport is null and restore back</playwright-it>
+        ///<playwright-it>should respect deviceScaleFactor</playwright-it>
         [Retry]
-        public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
+        public async Task ShouldRespectDeviceScaleFactor()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var page = await NewPageAsync(browser, new BrowserContextOptions { Viewport = null });
-            await page.SetContentAsync(@"
-                <div style=""height: 14px"">oooo</div>
-                <style>
-                div.to-screenshot {
-                    border: 1px solid blue;
-                    width: 600px;
-                    height: 600px;
-                    margin-left: 50px;
-                }
-                ::-webkit-scrollbar{
-                    display: none;
-                }
-                </style>
-                <div class=""to-screenshot""></div>
-                <div class=""to-screenshot""></div>
-                <div class=""to-screenshot""></div>
-            ");
-            var sizeBefore = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
-            byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.NotEmpty(screenshot);
-            var sizeAfter = await page.EvaluateAsync<Viewport>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            Assert.Equal(sizeBefore, sizeAfter);
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            {
+                DeviceScaleFactor = 3
+            });
+
+            var page = await context.NewPageAsync();
+            Assert.Equal(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>should not allow deviceScaleFactor with null viewport</playwright-it>
+        [Retry]
+        public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport()
+        {
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = null,
+                DeviceScaleFactor = 3,
+            }));
+            Assert.Equal("\"deviceScaleFactor\" option is not supported with null \"viewport\"", exception.Message);
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>should not allow isMobile with null viewport</playwright-it>
+        [Retry]
+        public async Task ShouldNotAllowIsMobileWithNullViewport()
+        {
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = null,
+                IsMobile = true,
+            }));
+            Assert.Equal("\"isMobile\" option is not supported with null \"viewport\"", exception.Message);
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>close() should work for empty context</playwright-it>
+        [Retry]
+        public async Task CloseShouldWorkForEmptyContext()
+        {
+            var context = await Browser.NewContextAsync();
+            await context.CloseAsync();
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>close() should abort waitForEvent</playwright-it>
+        [Retry]
+        public async Task CloseShouldAbortWaitForEvent()
+        {
+            var context = await Browser.NewContextAsync();
+            var waitTask = context.WaitForEvent<PageEventArgs>(ContextEvent.PageCreated);
+            await context.CloseAsync();
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => waitTask);
+            Assert.Equal("Context closed", exception.Message);
+        }
+
+        ///<playwright-file>browsercontext.spec.js</playwright-file>
+        ///<playwright-describe>BrowserContext</playwright-describe>
+        ///<playwright-it>close() should be callable twice</playwright-it>
+        [Retry]
+        public async Task CloseShouldBeCallableTwice()
+        {
+            var context = await Browser.NewContextAsync();
+            await Task.WhenAll(context.CloseAsync(), context.CloseAsync());
+            await context.CloseAsync();
+        }
+
+        private static async Task VerifyViewportAsync(IPage page, int width, int height)
+        {
+            Assert.Equal(width, (int)page.Viewport.Width);
+            Assert.Equal(height, (int)page.Viewport.Height);
+            Assert.Equal(width, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
         }
     }
 }

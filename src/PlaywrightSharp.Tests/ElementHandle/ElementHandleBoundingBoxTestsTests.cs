@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         public ElementHandleBoundingBoxTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -88,5 +88,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 }", element);
             Assert.Equal(webBoundingBox, pwBoundingBox);
         }
+        */
     }
 }

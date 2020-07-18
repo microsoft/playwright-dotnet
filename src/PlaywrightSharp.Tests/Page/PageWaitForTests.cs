@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         public PageWaitForTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>PageWaitFor</playwright-describe>
         ///<playwright-it>should wait for selector</playwright-it>
@@ -108,5 +108,6 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldWaitForPredicateWithArguments()
             => await Page.WaitForFunctionAsync("(arg1, arg2) => arg1 !== arg2", new WaitForSelectorOptions(), 1, 2);
+        */
     }
 }
