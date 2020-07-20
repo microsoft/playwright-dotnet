@@ -59,7 +59,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public async Task<IResponse> GoToAsync(string url, GoToOptions options = null)
-            => (await _channel.GoToAsync(url, options).ConfigureAwait(false)).Object;
+            => (await _channel.GoToAsync(url, options).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil) => throw new NotImplementedException();
