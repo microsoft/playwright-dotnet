@@ -31,7 +31,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Frame> IChannelOwner<Frame>.Channel => _channel;
+        IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
         /// <inheritdoc />
         public IFrame[] ChildFrames { get; }
@@ -190,7 +190,7 @@ namespace PlaywrightSharp
             => (await _channel.WaitForSelector(
                 selector: selector,
                 options: options ?? new WaitForSelectorOptions(),
-                isPage: isPageCall).ConfigureAwait(false)).Object as ElementHandle;
+                isPage: isPageCall).ConfigureAwait(false)).Object;
 
         internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script)
             => (await _channel.EvaluateExpressionHandleAsync(

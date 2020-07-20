@@ -65,7 +65,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<BrowserContext> IChannelOwner<BrowserContext>.Channel => _channel;
+        IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => _channel;
 
         /// <inheritdoc />
         public BrowserContextOptions Options { get; }

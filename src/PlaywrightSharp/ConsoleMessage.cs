@@ -28,7 +28,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
+        IChannel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
 
         /// <summary>
         /// Gets the ConsoleMessage type.

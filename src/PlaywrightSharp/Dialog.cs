@@ -23,6 +23,6 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
+        IChannel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
     }
 }

@@ -27,7 +27,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
+        IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();

@@ -28,7 +28,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Response> IChannelOwner<Response>.Channel => _channel;
+        IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />
         public HttpStatusCode Status { get; }

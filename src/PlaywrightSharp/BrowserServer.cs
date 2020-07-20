@@ -31,7 +31,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<BrowserServer> IChannelOwner<BrowserServer>.Channel => _channel;
+        IChannel<BrowserServer> IChannelOwner<BrowserServer>.Channel => _channel;
 
         /// <inheritdoc/>
         public int ProcessId => _initializer.Pid;

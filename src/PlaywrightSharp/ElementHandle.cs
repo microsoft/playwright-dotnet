@@ -9,14 +9,25 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IElementHandle" />
-    public class ElementHandle : JSHandle, IElementHandle
+    public class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
     {
+        private readonly ConnectionScope _scope;
         private readonly ElementHandleChannel _channel;
 
         internal ElementHandle(ConnectionScope scope, string guid, ElementHandleInitializer initializer) : base(scope, guid, initializer)
         {
+            _scope = scope;
             _channel = new ElementHandleChannel(guid, scope, this);
         }
+
+        /// <inheritdoc/>
+        ConnectionScope IChannelOwner.Scope => _scope;
+
+        /// <inheritdoc/>
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        /// <inheritdoc/>
+        IChannel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 
         /// <inheritdoc />
         public Task PressAsync(string key, PressOptions options = null) => throw new NotImplementedException();

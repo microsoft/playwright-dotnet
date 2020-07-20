@@ -26,6 +26,6 @@ namespace PlaywrightSharp.Transport.Channels
         /// <summary>
         /// Channel.
         /// </summary>
-        new Channel<T> Channel { get; }
+        new IChannel<T> Channel { get; }
     }
 }

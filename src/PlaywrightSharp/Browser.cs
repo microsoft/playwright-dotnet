@@ -49,7 +49,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Browser> IChannelOwner<Browser>.Channel => _channel;
+        IChannel<Browser> IChannelOwner<Browser>.Channel => _channel;
 
         /// <inheritdoc/>
         public IEnumerable<IBrowserContext> BrowserContexts => BrowserContextsList.ToArray();

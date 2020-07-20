@@ -43,7 +43,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
+        IChannel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
         /// <inheritdoc />
         public string ExecutablePath => _initializer.ExecutablePath;
