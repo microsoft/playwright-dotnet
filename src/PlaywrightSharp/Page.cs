@@ -387,7 +387,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object args) => MainFrame.EvaluateHandleAsync(pageFunction, args);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => throw new NotImplementedException();
+        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => MainFrame.AddScriptTagAsync(true, options);
 
         /// <inheritdoc />
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => throw new NotImplementedException();

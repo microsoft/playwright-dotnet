@@ -71,7 +71,7 @@ namespace PlaywrightSharp
         public Task<string> GetContentAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => throw new NotImplementedException();
+        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => AddScriptTagAsync(false, options);
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string script) => EvaluateAsync<T>(false, script);
@@ -186,6 +186,11 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
 
+        internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, AddTagOptions options)
+            => (await _channel.AddScriptTagAsync(
+                options: options,
+                isPage: isPageCall).ConfigureAwait(false)).Object;
+
         internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorOptions options)
             => (await _channel.WaitForSelector(
                 selector: selector,
@@ -207,40 +212,61 @@ namespace PlaywrightSharp
                 isPage: isPageCall).ConfigureAwait(false)).Object;
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script)
-        {
-            var result = await _channel.EvaluateExpressionAsync(
+            => ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined,
-                isPage: isPageCall).ConfigureAwait(false);
-
-            return result.HasValue ? result.Value.ToObject<T>() : default;
-        }
+                isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script, object args)
-        {
-            var result = await _channel.EvaluateExpressionAsync(
+            => ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: SerializedArgument(args),
-                isPage: isPageCall).ConfigureAwait(false);
+                isPage: isPageCall).ConfigureAwait(false));
 
-            return result.HasValue ? result.Value.ToObject<T>() : default;
-        }
-
-        internal Task<JsonElement?> EvaluateAsync(bool isPageCall, string script)
-            => _channel.EvaluateExpressionAsync(
+        internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script)
+            => ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined,
-                isPage: isPageCall);
+                isPage: isPageCall).ConfigureAwait(false));
 
-        internal Task<JsonElement?> EvaluateAsync(bool isPageCall, string script, object args)
-            => _channel.EvaluateExpressionAsync(
+        internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script, object args)
+            => ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: SerializedArgument(args),
-                isPage: isPageCall);
+                isPage: isPageCall).ConfigureAwait(false));
+
+        private static bool IsPrimitiveValue(Type type)
+            => type == typeof(string) ||
+            type == typeof(decimal) ||
+            type == typeof(double) ||
+            type == typeof(bool) ||
+            type == typeof(decimal?) ||
+            type == typeof(double?) ||
+            type == typeof(bool?);
+
+        private static T ParseEvaluateResult<T>(JsonElement? result)
+        {
+            if (!result.HasValue)
+            {
+                return default;
+            }
+
+            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var value) && value.ToString() == "undefined")
+            {
+                return default;
+            }
+
+            if (typeof(T) == typeof(JsonElement?))
+            {
+                return (T)(object)result;
+            }
+
+            return result.Value.ToObject<T>();
+        }
 
         private EvaluateArgument SerializedArgument(object args)
         {
@@ -350,14 +376,5 @@ namespace PlaywrightSharp
 
             return new EvaluateArgumentValueElement.Object { O = value };
         }
-
-        private bool IsPrimitiveValue(Type type)
-            => type == typeof(string) ||
-            type == typeof(decimal) ||
-            type == typeof(double) ||
-            type == typeof(bool) ||
-            type == typeof(decimal?) ||
-            type == typeof(double?) ||
-            type == typeof(bool?);
     }
 }

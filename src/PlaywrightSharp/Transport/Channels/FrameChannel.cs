@@ -57,5 +57,18 @@ namespace PlaywrightSharp.Transport.Channels
                     ["state"] = options.State,
                     ["isPage"] = isPage,
                 });
+
+        internal Task<ElementHandleChannel> AddScriptTagAsync(AddTagOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "addScriptTag",
+                new Dictionary<string, object>
+                {
+                    ["url"] = options.Url,
+                    ["path"] = options.Path,
+                    ["content"] = options.Content,
+                    ["type"] = options.Type,
+                    ["isPage"] = isPage,
+                });
     }
 }
