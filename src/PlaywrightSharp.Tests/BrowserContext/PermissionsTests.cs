@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldIsolatePermissionsBetweenBrowserContexts()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var otherContext = await NewContextAsync();
+            await using var otherContext = await Browser.NewContextAsync();
             var otherPage = await otherContext.NewPageAsync();
             await otherPage.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));

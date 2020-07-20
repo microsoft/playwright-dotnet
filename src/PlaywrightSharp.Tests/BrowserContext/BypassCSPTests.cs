@@ -17,6 +17,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
+        /*
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP meta tag</playwright-it>
@@ -120,5 +121,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }).ContinueWith(_ => Task.CompletedTask);
             Assert.Equal(42, await frame.EvaluateAsync<int?>("() => window.__injected"));
         }
+        */
     }
 }

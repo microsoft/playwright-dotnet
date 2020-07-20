@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public TimezoneTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -60,5 +60,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 () => NewPageAsync(new BrowserContextOptions { TimezoneId = "Baz/Qux" }));
             Assert.Contains("Invalid timezone ID: Baz/Qux", exception.Message);
         }
+        */
     }
 }

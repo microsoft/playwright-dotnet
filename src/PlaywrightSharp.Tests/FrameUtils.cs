@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests
     {
         public static async Task<IFrame> AttachFrameAsync(IPage page, string frameId, string url)
         {
-            var handle = await page.EvaluateHandleAsync(@" async (frameId, url) => {
+            var handle = await page.EvaluateHandleAsync(@" async ({frameId, url}) => {
               const frame = document.createElement('iframe');
               frame.src = url;
               frame.id = frameId;

@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// </summary>
     public class PlaywrightSharpBaseTest
     {
-        private readonly IPlaywright _playwright;
+        internal IPlaywright Playwright { get; set; }
         internal string BaseDirectory { get; set; }
         internal IBrowserType BrowserType { get; set; }
 
@@ -29,8 +29,8 @@ namespace PlaywrightSharp.Tests.BaseTests
                 dirInfo.Create();
             }
 
-            _playwright = PlaywrightSharp.Playwright.CreateAsync().GetAwaiter().GetResult();
-            BrowserType = _playwright[TestConstants.Product];
+            Playwright = PlaywrightSharp.Playwright.CreateAsync().GetAwaiter().GetResult();
+            BrowserType = Playwright[TestConstants.Product];
             Initialize();
         }
 
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal async Task<IPage> NewPageAsync(IBrowser browser, BrowserContextOptions options = null)
         {
-            var context = await browser.NewContextAsync(options);
+            await using var context = await browser.NewContextAsync(options);
             return await context.NewPageAsync();
         }
     }

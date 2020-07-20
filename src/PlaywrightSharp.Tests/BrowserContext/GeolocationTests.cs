@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var geolocation = new GeolocationOption { Latitude = 10, Longitude = 10 };
             BrowserContextOptions options = new BrowserContextOptions { Geolocation = geolocation };
-            var context = await NewContextAsync(options);
+            await using var context = await Browser.NewContextAsync(options);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Context.SetGeolocationAsync(new GeolocationOption
             {
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 }
             };
 
-            var context = await NewContextAsync(options);
+            await using var context = await Browser.NewContextAsync(options);
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 

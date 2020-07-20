@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PlaywrightSharp.Transport.Protocol
 {
     internal class PlaywrightInitializer
@@ -7,5 +9,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public BrowserType Webkit { get; set; }
 
         public BrowserType Firefox { get; set; }
+
+        public Dictionary<string, DeviceDescriptor> DeviceDescriptors { get; set; }
     }
 }

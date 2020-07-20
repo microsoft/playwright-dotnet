@@ -190,7 +190,7 @@ namespace PlaywrightSharp
             => (await _channel.WaitForSelector(
                 selector: selector,
                 options: options ?? new WaitForSelectorOptions(),
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+                isPage: isPageCall).ConfigureAwait(false)).Object as ElementHandle;
 
         internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script)
             => (await _channel.EvaluateExpressionHandleAsync(

@@ -1,6 +1,6 @@
 namespace PlaywrightSharp.Transport.Protocol
 {
-    internal class ElementHandleInitializer
+    internal class ElementHandleInitializer : JSHandleInitializer
     {
     }
 }

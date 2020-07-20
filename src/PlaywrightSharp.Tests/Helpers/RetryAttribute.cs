@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Tests.Helpers
         public RetryAttribute(int maxRetries = 3)
         {
             MaxRetries = maxRetries;
+            Timeout = 30_000;
         }
 
         /// <summary>

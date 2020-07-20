@@ -20,6 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
+        /*
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -59,5 +60,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.Equal(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
         }
+        */
     }
 }

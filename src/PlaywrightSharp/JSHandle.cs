@@ -14,7 +14,7 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly JSHandleChannel _channel;
 
-        internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer toObject)
+        internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer initializer)
         {
             _scope = scope;
             _channel = new JSHandleChannel(guid, scope, this);

@@ -18,6 +18,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
+        /*
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({javaScriptEnabled})</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -47,5 +48,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await NewPageAsync(new BrowserContextOptions { JavaScriptEnabled = false });
             await page.GoToAsync(TestConstants.EmptyPage);
         }
+        */
     }
 }

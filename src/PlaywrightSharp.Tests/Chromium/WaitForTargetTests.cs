@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWaitForTarget()
         {
-            var context = await NewContextAsync();
+            await using var context = await Browser.NewContextAsync();
             var targetPromise = Browser.WaitForTargetAsync((target) => target.BrowserContext == context && target.Url == TestConstants.EmptyPage);
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldTimeoutWaitingForNonExistentTarget()
         {
-            var context = await NewContextAsync();
+            await using var context = await Browser.NewContextAsync();
             await Assert.ThrowsAsync<TimeoutException>(()
                 => Browser.WaitForTargetAsync((target) => target.BrowserContext == context && target.Url == TestConstants.EmptyPage, new WaitForOptions { Timeout = 1 }));
             await context.CloseAsync();
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldFireTargetEvents()
         {
-            var context = await NewContextAsync();
+            await using var context = await Browser.NewContextAsync();
             var events = new List<string>();
             Browser.TargetCreated += (sender, e) => events.Add("CREATED: " + e.Target.Url);
             Browser.TargetChanged += (sender, e) => events.Add("CHANGED: " + e.Target.Url);

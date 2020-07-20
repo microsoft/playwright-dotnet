@@ -50,7 +50,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
         /// </summary>
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
+        public IReadOnlyDictionary<string, DeviceDescriptor> Devices => _initializer.DeviceDescriptors;
 
         /// <inheritdoc/>
         public IBrowserType Chromium => _initializer.Chromium;
