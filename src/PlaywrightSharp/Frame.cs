@@ -31,7 +31,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Frame> IChannelOwner<Frame>.Channel => _channel;
+        IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
         /// <inheritdoc />
         public IFrame[] ChildFrames { get; }

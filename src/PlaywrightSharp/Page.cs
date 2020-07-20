@@ -106,7 +106,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Page> IChannelOwner<Page>.Channel => _channel;
+        IChannel<Page> IChannelOwner<Page>.Channel => _channel;
 
         /// <inheritdoc />
         public bool IsClosed { get; }

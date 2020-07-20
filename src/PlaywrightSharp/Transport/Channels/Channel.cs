@@ -2,7 +2,7 @@ using System;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class Channel<T> : ChannelBase
+    internal class Channel<T> : ChannelBase, IChannel<T>
         where T : IChannelOwner<T>
     {
         public Channel(string guid, ConnectionScope scope, T owner) : base(guid, scope)
@@ -10,6 +10,6 @@ namespace PlaywrightSharp.Transport.Channels
             Object = owner;
         }
 
-        public T Object { get; set; }
+        public virtual T Object { get; set; }
     }
 }

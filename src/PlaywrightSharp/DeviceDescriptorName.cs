@@ -1,353 +1,355 @@
+using System.Runtime.Serialization;
+
 namespace PlaywrightSharp
 {
     /// <summary>
     /// Device descriptor name.
     /// </summary>
-    public enum DeviceDescriptorName
+    public static class DeviceDescriptorName
     {
         /// <summary>
-        /// Blackberry PlayBook
+        /// Blackberry PlayBook.
         /// </summary>
-        BlackberryPlayBook,
+        public const string BlackberryPlayBook = "Blackberry PlayBook";
 
         /// <summary>
-        /// Blackberry PlayBook landscape
+        /// Blackberry PlayBook landscape.
         /// </summary>
-        BlackberryPlayBookLandscape,
+        public const string BlackberryPlayBookLandscape = "Blackberry PlayBook landscape";
 
         /// <summary>
-        /// BlackBerry Z30
+        /// BlackBerry Z30.
         /// </summary>
-        BlackBerryZ30,
+        public const string BlackBerryZ30 = "BlackBerry Z30";
 
         /// <summary>
-        /// BlackBerry Z30 landscape
+        /// BlackBerry Z30 landscape.
         /// </summary>
-        BlackBerryZ30Landscape,
+        public const string BlackBerryZ30Landscape = "BlackBerry Z30 landscape";
 
         /// <summary>
-        /// Galaxy Note 3
+        /// Galaxy Note 3.
         /// </summary>
-        GalaxyNote3,
+        public const string GalaxyNote3 = "Galaxy Note 3";
 
         /// <summary>
-        /// Galaxy Note 3 landscape
+        /// Galaxy Note 3 landscape.
         /// </summary>
-        GalaxyNote3Landscape,
+        public const string GalaxyNote3Landscape = "Galaxy Note 3 landscape";
 
         /// <summary>
-        /// Galaxy Note II
+        /// Galaxy Note II.
         /// </summary>
-        GalaxyNoteII,
+        public const string GalaxyNoteII = "Galaxy Note II";
 
         /// <summary>
-        /// Galaxy Note II landscape
+        /// Galaxy Note II landscape.
         /// </summary>
-        GalaxyNoteIILandscape,
+        public const string GalaxyNoteIILandscape = "Galaxy Note II landscape";
 
         /// <summary>
-        /// Galaxy S III
+        /// Galaxy S III.
         /// </summary>
-        GalaxySIII,
+        public const string GalaxySIII = "Galaxy S III";
 
         /// <summary>
-        /// Galaxy S III landscape
+        /// Galaxy S III landscape.
         /// </summary>
-        GalaxySIIILandscape,
+        public const string GalaxySIIILandscape = "Galaxy S III landscape";
 
         /// <summary>
-        /// Galaxy S5
+        /// Galaxy S5.
         /// </summary>
-        GalaxyS5,
+        public const string GalaxyS5 = "Galaxy S5";
 
         /// <summary>
-        /// Galaxy S5 landscape
+        /// Galaxy S5 landscape.
         /// </summary>
-        GalaxyS5Landscape,
+        public const string GalaxyS5Landscape = "Galaxy S5 landscape";
 
         /// <summary>
-        /// iPad
+        /// iPad.
         /// </summary>
-        IPad,
+        public const string IPad = "iPad";
 
         /// <summary>
-        /// iPad landscape
+        /// iPad landscape.
         /// </summary>
-        IPadLandscape,
+        public const string IPadLandscape = "iPad landscape";
 
         /// <summary>
-        /// iPad Mini
+        /// iPad Mini.
         /// </summary>
-        IPadMini,
+        public const string IPadMini = "iPad Mini";
 
         /// <summary>
-        /// iPad Mini landscape
+        /// iPad Mini landscape.
         /// </summary>
-        IPadMiniLandscape,
+        public const string IPadMiniLandscape = "iPad Mini landscape";
 
         /// <summary>
-        /// iPad Pro
+        /// iPad Pro.
         /// </summary>
-        IPadPro,
+        public const string IPadPro = "iPad Pro";
 
         /// <summary>
-        /// iPad Pro landscape
+        /// iPad Pro landscape.
         /// </summary>
-        IPadProLandscape,
+        public const string IPadProLandscape = "iPad Pro landscape";
 
         /// <summary>
-        /// iPhone 4
+        /// iPhone 4.
         /// </summary>
-        IPhone4,
+        public const string IPhone4 = "iPhone 4";
 
         /// <summary>
-        /// iPhone 4 landscape
+        /// iPhone 4 landscape.
         /// </summary>
-        IPhone4Landscape,
+        public const string IPhone4Landscape = "iPhone 4 landscape";
 
         /// <summary>
-        /// iPhone 5
+        /// iPhone 5.
         /// </summary>
-        IPhone5,
+        public const string IPhone5 = "iPhone 5";
 
         /// <summary>
-        /// iPhone 5 landscape
+        /// iPhone 5 landscape.
         /// </summary>
-        IPhone5Landscape,
+        public const string IPhone5Landscape = "iPhone 5 landscape";
 
         /// <summary>
-        /// iPhone 6
+        /// iPhone 6.
         /// </summary>
-        IPhone6,
+        public const string IPhone6 = "iPhone 6";
 
         /// <summary>
-        /// iPhone 6 landscape
+        /// iPhone 6 landscape.
         /// </summary>
-        IPhone6Landscape,
+        public const string IPhone6Landscape = "iPhone 6 landscape";
 
         /// <summary>
-        /// iPhone 6 Plus
+        /// iPhone 6 Plus.
         /// </summary>
-        IPhone6Plus,
+        public const string IPhone6Plus = "iPhone 6 Plus";
 
         /// <summary>
-        /// iPhone 6 Plus landscape
+        /// iPhone 6 Plus landscape.
         /// </summary>
-        IPhone6PlusLandscape,
+        public const string IPhone6PlusLandscape = "iPhone 6 Plus landscape";
 
         /// <summary>
-        /// iPhone 7
+        /// iPhone 7.
         /// </summary>
-        IPhone7,
+        public const string IPhone7 = "iPhone 7";
 
         /// <summary>
-        /// iPhone 7 landscape
+        /// iPhone 7 landscape.
         /// </summary>
-        IPhone7Landscape,
+        public const string IPhone7Landscape = "iPhone 7 landscape";
 
         /// <summary>
-        /// iPhone 7 Plus
+        /// iPhone 7 Plus.
         /// </summary>
-        IPhone7Plus,
+        public const string IPhone7Plus = "iPhone 7 Plus";
 
         /// <summary>
-        /// iPhone 7 Plus landscape
+        /// iPhone 7 Plus landscape.
         /// </summary>
-        IPhone7PlusLandscape,
+        public const string IPhone7PlusLandscape = "iPhone 7 Plus landscape";
 
         /// <summary>
-        /// iPhone 8
+        /// iPhone 8.
         /// </summary>
-        IPhone8,
+        public const string IPhone8 = "iPhone 8";
 
         /// <summary>
-        /// iPhone 8 landscape
+        /// iPhone 8 landscape.
         /// </summary>
-        IPhone8Landscape,
+        public const string IPhone8Landscape = "iPhone 8 landscape";
 
         /// <summary>
-        /// iPhone 8 Plus
+        /// iPhone 8 Plus.
         /// </summary>
-        IPhone8Plus,
+        public const string IPhone8Plus = "iPhone 8 Plus";
 
         /// <summary>
-        /// iPhone 8 Plus landscape
+        /// iPhone 8 Plus landscape.
         /// </summary>
-        IPhone8PlusLandscape,
+        public const string IPhone8PlusLandscape = "iPhone 8 Plus landscape";
 
         /// <summary>
-        /// iPhone SE
+        /// iPhone SE.
         /// </summary>
-        IPhoneSE,
+        public const string IPhoneSE = "iPhone SE";
 
         /// <summary>
-        /// iPhone SE landscape
+        /// iPhone SE landscape.
         /// </summary>
-        IPhoneSELandscape,
+        public const string IPhoneSELandscape = "iPhone SE landscape";
 
         /// <summary>
-        /// iPhone X
+        /// iPhone X.
         /// </summary>
-        IPhoneX,
+        public const string IPhoneX = "iPhone X";
 
         /// <summary>
-        /// iPhone X landscape
+        /// iPhone X landscape.
         /// </summary>
-        IPhoneXLandscape,
+        public const string IPhoneXLandscape = "iPhone X landscape";
 
         /// <summary>
-        /// JioPhone 2
+        /// JioPhone 2.
         /// </summary>
-        JioPhone2,
+        public const string JioPhone2 = "JioPhone 2";
 
         /// <summary>
-        /// JioPhone 2 landscape
+        /// JioPhone 2 landscape.
         /// </summary>
-        JioPhone2Landscape,
+        public const string JioPhone2Landscape = "JioPhone 2 landscape";
 
         /// <summary>
-        /// Kindle Fire HDX
+        /// Kindle Fire HDX.
         /// </summary>
-        KindleFireHDX,
+        public const string KindleFireHDX = "Kindle Fire HDX";
 
         /// <summary>
-        /// Kindle Fire HDX landscape
+        /// Kindle Fire HDX landscape.
         /// </summary>
-        KindleFireHDXLandscape,
+        public const string KindleFireHDXLandscape = "Kindle Fire HDX landscape";
 
         /// <summary>
-        /// LG Optimus L70
+        /// LG Optimus L70.
         /// </summary>
-        LGOptimusL70,
+        public const string LGOptimusL70 = "LG Optimus L70";
 
         /// <summary>
-        /// LG Optimus L70 landscape
+        /// LG Optimus L70 landscape.
         /// </summary>
-        LGOptimusL70Landscape,
+        public const string LGOptimusL70Landscape = "LG Optimus L70 landscape";
 
         /// <summary>
-        /// Microsoft Lumia 550
+        /// Microsoft Lumia 550.
         /// </summary>
-        MicrosoftLumia550,
+        public const string MicrosoftLumia550 = "Microsoft Lumia 550";
 
         /// <summary>
-        /// Microsoft Lumia 950
+        /// Microsoft Lumia 950.
         /// </summary>
-        MicrosoftLumia950,
+        public const string MicrosoftLumia950 = "Microsoft Lumia 950";
 
         /// <summary>
-        /// Microsoft Lumia 950 landscape
+        /// Microsoft Lumia 950 landscape.
         /// </summary>
-        MicrosoftLumia950Landscape,
+        public const string MicrosoftLumia950Landscape = "Microsoft Lumia 950 landscape";
 
         /// <summary>
-        /// Nexus 10
+        /// Nexus 10.
         /// </summary>
-        Nexus10,
+        public const string Nexus10 = "Nexus 10";
 
         /// <summary>
-        /// Nexus 10 landscape
+        /// Nexus 10 landscape.
         /// </summary>
-        Nexus10Landscape,
+        public const string Nexus10Landscape = "Nexus 10 landscape";
 
         /// <summary>
-        /// Nexus 4
+        /// Nexus 4.
         /// </summary>
-        Nexus4,
+        public const string Nexus4 = "Nexus 4";
 
         /// <summary>
-        /// Nexus 4 landscape
+        /// Nexus 4 landscape.
         /// </summary>
-        Nexus4Landscape,
+        public const string Nexus4Landscape = "Nexus 4 landscape";
 
         /// <summary>
-        /// Nexus 5
+        /// Nexus 5.
         /// </summary>
-        Nexus5,
+        public const string Nexus5 = "Nexus 5";
 
         /// <summary>
-        /// Nexus 5 landscape
+        /// Nexus 5 landscape.
         /// </summary>
-        Nexus5Landscape,
+        public const string Nexus5Landscape = "Nexus 5 landscape";
 
         /// <summary>
-        /// Nexus 5X
+        /// Nexus 5X.
         /// </summary>
-        Nexus5X,
+        public const string Nexus5X = "Nexus 5X";
 
         /// <summary>
-        /// Nexus 5X landscape
+        /// Nexus 5X landscape.
         /// </summary>
-        Nexus5XLandscape,
+        public const string Nexus5XLandscape = "Nexus 5X landscape";
 
         /// <summary>
-        /// Nexus 6
+        /// Nexus 6.
         /// </summary>
-        Nexus6,
+        public const string Nexus6 = "Nexus 6";
 
         /// <summary>
-        /// Nexus 6 landscape
+        /// Nexus 6 landscape.
         /// </summary>
-        Nexus6Landscape,
+        public const string Nexus6Landscape = "Nexus 6 landscape";
 
         /// <summary>
-        /// Nexus 6P
+        /// Nexus 6P.
         /// </summary>
-        Nexus6P,
+        public const string Nexus6P = "Nexus 6P";
 
         /// <summary>
-        /// Nexus 6P landscape
+        /// Nexus 6P landscape.
         /// </summary>
-        Nexus6PLandscape,
+        public const string Nexus6PLandscape = "Nexus 6P landscape";
 
         /// <summary>
-        /// Nexus 7
+        /// Nexus 7.
         /// </summary>
-        Nexus7,
+        public const string Nexus7 = "Nexus 7";
 
         /// <summary>
-        /// Nexus 7 landscape
+        /// Nexus 7 landscape.
         /// </summary>
-        Nexus7Landscape,
+        public const string Nexus7Landscape = "Nexus 7 landscape";
 
         /// <summary>
-        /// Nokia Lumia 520
+        /// Nokia Lumia 520.
         /// </summary>
-        NokiaLumia520,
+        public const string NokiaLumia520 = "Nokia Lumia 520";
 
         /// <summary>
-        /// Nokia Lumia 520 landscape
+        /// Nokia Lumia 520 landscape.
         /// </summary>
-        NokiaLumia520Landscape,
+        public const string NokiaLumia520Landscape = "Nokia Lumia 520 landscape";
 
         /// <summary>
-        /// Nokia N9
+        /// Nokia N9.
         /// </summary>
-        NokiaN9,
+        public const string NokiaN9 = "Nokia N9";
 
         /// <summary>
-        /// Nokia N9 landscape
+        /// Nokia N9 landscape.
         /// </summary>
-        NokiaN9Landscape,
+        public const string NokiaN9Landscape = "Nokia N9 landscape";
 
         /// <summary>
-        /// Pixel 2
+        /// Pixel 2.
         /// </summary>
-        Pixel2,
+        public const string Pixel2 = "Pixel 2";
 
         /// <summary>
-        /// Pixel 2 landscape
+        /// Pixel 2 landscape.
         /// </summary>
-        Pixel2Landscape,
+        public const string Pixel2Landscape = "Pixel 2 landscape";
 
         /// <summary>
-        /// Pixel 2 XL
+        /// Pixel 2 XL.
         /// </summary>
-        Pixel2XL,
+        public const string Pixel2XL = "Pixel 2 XL";
 
         /// <summary>
-        /// Pixel 2 XL landscape
+        /// Pixel 2 XL landscape.
         /// </summary>
-        Pixel2XLLandscape,
+        public const string Pixel2XLLandscape = "Pixel 2 XL landscape";
     }
 }

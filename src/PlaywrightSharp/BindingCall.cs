@@ -23,6 +23,6 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
+        IChannel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
     }
 }

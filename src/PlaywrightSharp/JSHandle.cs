@@ -14,7 +14,7 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly JSHandleChannel _channel;
 
-        internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer toObject)
+        internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer initializer)
         {
             _scope = scope;
             _channel = new JSHandleChannel(guid, scope, this);
@@ -27,7 +27,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
+        IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();

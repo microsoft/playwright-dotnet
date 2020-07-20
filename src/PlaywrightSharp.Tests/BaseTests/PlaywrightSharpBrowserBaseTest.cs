@@ -20,19 +20,6 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
         }
 
-        internal async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
-        {
-            var context = await Browser.NewContextAsync(options);
-            _contexts.Add(context);
-            return context;
-        }
-
-        internal async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
-        {
-            var context = await NewContextAsync(options);
-            return await context.NewPageAsync();
-        }
-
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public virtual Task InitializeAsync() => Task.CompletedTask;
 

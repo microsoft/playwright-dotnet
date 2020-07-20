@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            Context = await NewContextAsync();
+            Context = await Browser.NewContextAsync();
             Page = await Context.NewPageAsync();
         }
 
@@ -29,6 +29,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         public override async Task DisposeAsync()
         {
             await base.DisposeAsync();
+            await Context.DisposeAsync();
             Context = null;
             Page = null;
         }

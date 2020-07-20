@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Retry]
         public async Task ShouldIsolateWhenClearing()
         {
-            var anotherContext = await NewContextAsync();
+            await using var anotherContext = await Browser.NewContextAsync();
             await Context.SetCookiesAsync(new SetNetworkCookieParam
             {
                 Name = "page1cookie",

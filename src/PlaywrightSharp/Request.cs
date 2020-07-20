@@ -27,7 +27,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Request> IChannelOwner<Request>.Channel => _channel;
+        IChannel<Request> IChannelOwner<Request>.Channel => _channel;
 
         /// <inheritdoc />
         public string Url { get; }

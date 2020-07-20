@@ -9,12 +9,12 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IElementHandle" />
-    public class ElementHandle : IChannelOwner<ElementHandle>, IElementHandle
+    public class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
     {
         private readonly ConnectionScope _scope;
         private readonly ElementHandleChannel _channel;
 
-        internal ElementHandle(ConnectionScope scope, string guid, ElementHandleInitializer initializer)
+        internal ElementHandle(ConnectionScope scope, string guid, ElementHandleInitializer initializer) : base(scope, guid, initializer)
         {
             _scope = scope;
             _channel = new ElementHandleChannel(guid, scope, this);
@@ -27,25 +27,7 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
-
-        /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<T> GetJsonValueAsync<T>() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<IJSHandle> GetPropertyAsync(string propertyName) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task DisposeAsync() => throw new NotImplementedException();
+        IChannel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 
         /// <inheritdoc />
         public Task PressAsync(string key, PressOptions options = null) => throw new NotImplementedException();
@@ -60,7 +42,7 @@ namespace PlaywrightSharp
         public Task FillAsync(string text) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IFrame> GetContentFrameAsync() => throw new NotImplementedException();
+        public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public Task HoverAsync(PointerActionOptions options = null) => throw new NotImplementedException();

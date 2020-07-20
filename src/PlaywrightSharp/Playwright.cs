@@ -45,12 +45,12 @@ namespace PlaywrightSharp
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
-        Channel<Playwright> IChannelOwner<Playwright>.Channel => _channel;
+        IChannel<Playwright> IChannelOwner<Playwright>.Channel => _channel;
 
         /// <summary>
         /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
         /// </summary>
-        public IReadOnlyDictionary<DeviceDescriptorName, DeviceDescriptor> Devices { get; }
+        public IReadOnlyDictionary<string, DeviceDescriptor> Devices => _initializer.DeviceDescriptors;
 
         /// <inheritdoc/>
         public IBrowserType Chromium => _initializer.Chromium;
