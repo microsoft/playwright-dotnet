@@ -142,9 +142,11 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction)
-        {
-            throw new NotImplementedException();
-        }
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightFunction)
@@ -165,6 +167,34 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightFunction)
             => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync(string name, Action playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _) => playwrightFunction());
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T>(string name, Action<T> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T t) => playwrightFunction(t));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _) => playwrightFunction());
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T t) => playwrightFunction(t));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => playwrightFunction(t1, t2));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => playwrightFunction(t1, t2, t3));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc/>
         public async Task<T> WaitForEvent<T>(ContextEvent e, WaitForEventOptions<T> options = null)
@@ -203,6 +233,14 @@ namespace PlaywrightSharp
                 throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
             }
         }
+
+        /// <inheritdoc />
+        public Task AddInitScriptAsync(string script)
+            => _channel.AddInitScriptAsync($"({script})()");
+
+        /// <inheritdoc />
+        public Task AddInitScriptAsync(string script, object args = null)
+            => _channel.AddInitScriptAsync(script);
 
         private void Channel_Closed(object sender, EventArgs e)
         {

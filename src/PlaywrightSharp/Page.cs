@@ -40,6 +40,7 @@ namespace PlaywrightSharp
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
             _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
+            _channel.BindingCall += Channel_BindingCall;
         }
 
         /// <inheritdoc />
@@ -410,7 +411,8 @@ namespace PlaywrightSharp
         public Task<IResponse> GoForwardAsync(NavigationOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> ReloadAsync(NavigationOptions options = null) => throw new NotImplementedException();
+        public async Task<IResponse> ReloadAsync(NavigationOptions options = null)
+            => (await _channel.ReloadAsync(options).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
@@ -418,23 +420,61 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
-        /// <inheritdoc />
-        public Task ExposeFunctionAsync(string name, Action playwrightFunction) => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc />
-        public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction) => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc />
-        public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction) => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc />
-        public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction) => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc />
-        public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction) => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
-        /// <inheritdoc />
-        public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction) => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync(string name, Action playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _) => playwrightFunction());
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T>(string name, Action<T> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T t) => playwrightFunction(t));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _) => playwrightFunction());
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T t) => playwrightFunction(t));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => playwrightFunction(t1, t2));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => playwrightFunction(t1, t2, t3));
+
+        /// <inheritdoc/>
+        public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
@@ -465,6 +505,14 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<byte[]> GetPdfDataAsync(PdfOptions options) => throw new NotImplementedException();
 
+        /// <inheritdoc />
+        public Task AddInitScriptAsync(string script)
+            => _channel.AddInitScriptAsync($"({script})()");
+
+        /// <inheritdoc />
+        public Task AddInitScriptAsync(string script, object args = null)
+            => _channel.AddInitScriptAsync(script);
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             BrowserContext?.PagesList.Remove(this);
@@ -478,6 +526,14 @@ namespace PlaywrightSharp
             Crashed?.Invoke(this, EventArgs.Empty);
         }
 
+        private void Channel_BindingCall(object sender, BrowserContextBindingCallEventArgs e)
+        {
+            if (Bindings.TryGetValue(e.BidingCallChannel.Object.Name, out var binding))
+            {
+                _ = e.BidingCallChannel.Object.CallAsync(binding);
+            }
+        }
+
         private void RejectPendingOperations(bool isCrash)
         {
             foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crashed : PageEvent.Closed)))
@@ -486,6 +542,18 @@ namespace PlaywrightSharp
             }
 
             _waitForCancellationTcs.Clear();
+        }
+
+        private Task ExposeBindingAsync(string name, Delegate playwrightFunction)
+        {
+            if (Bindings.ContainsKey(name))
+            {
+                throw new PlaywrightSharpException($"Function \"{name}\" has been already registered");
+            }
+
+            Bindings.Add(name, playwrightFunction);
+
+            return _channel.ExposeBindingAsync(name);
         }
     }
 }

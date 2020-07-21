@@ -20,25 +20,42 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<PageChannelPopupEventArgs> Popup;
 
+        internal event EventHandler<BrowserContextBindingCallEventArgs> BindingCall;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
-            switch (method)
+            try
             {
-                case "close":
-                    Closed?.Invoke(this, EventArgs.Empty);
-                    break;
-                case "crash":
-                    Crashed?.Invoke(this, EventArgs.Empty);
-                    break;
-                case "popup":
-                    Popup?.Invoke(this, new PageChannelPopupEventArgs
-                    {
-                        Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                    });
-                    break;
-                case "request":
-                    Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
-                    break;
+                switch (method)
+                {
+                    case "close":
+                        Closed?.Invoke(this, EventArgs.Empty);
+                        break;
+                    case "crash":
+                        Crashed?.Invoke(this, EventArgs.Empty);
+                        break;
+                    case "bindingCall":
+                        BindingCall?.Invoke(
+                            this,
+                            new BrowserContextBindingCallEventArgs
+                            {
+                                BidingCallChannel = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            });
+                        break;
+                    case "popup":
+                        Popup?.Invoke(this, new PageChannelPopupEventArgs
+                        {
+                            Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        });
+                        break;
+                    case "request":
+                        Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
 
@@ -47,5 +64,29 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "close",
                 options);
+
+        internal Task ExposeBindingAsync(string name)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "exposeBinding",
+                new Dictionary<string, object>
+                {
+                    ["name"] = name,
+                });
+
+        internal Task AddInitScriptAsync(string script)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "addInitScript",
+                new Dictionary<string, object>
+                {
+                    ["source"] = script,
+                });
+
+        internal Task<ResponseChannel> ReloadAsync(NavigationOptions options)
+            => Scope.SendMessageToServer<ResponseChannel>(
+                Guid,
+                "reload",
+                options ?? new NavigationOptions());
     }
 }

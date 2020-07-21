@@ -103,7 +103,7 @@ namespace PlaywrightSharp.Tests.Page
 
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
-            await Page.WaitForLoadStateAsync(new NavigationOptions { WaitUntil = new[] { WaitUntilNavigation.DOMContentLoaded } });
+            await Page.WaitForLoadStateAsync(new NavigationOptions { WaitUntil = WaitUntilNavigation.DOMContentLoaded });
             responseTask.TrySetResult(true);
             await navigationTask;
         }
