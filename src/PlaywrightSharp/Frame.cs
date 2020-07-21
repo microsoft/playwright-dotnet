@@ -265,6 +265,11 @@ namespace PlaywrightSharp
                 return (T)(object)result;
             }
 
+            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("o", out JsonElement obj))
+            {
+                return obj.ToObject<T>();
+            }
+
             return result.Value.ToObject<T>();
         }
 

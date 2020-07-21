@@ -47,6 +47,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["name"] = name,
                 });
 
+        internal Task AddInitScriptAsync(string script)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "addInitScript",
+                new Dictionary<string, object>
+                {
+                    ["source"] = script,
+                });
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             try

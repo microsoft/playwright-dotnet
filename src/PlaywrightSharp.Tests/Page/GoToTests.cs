@@ -367,7 +367,7 @@ namespace PlaywrightSharp.Tests.Page
             }
             Page.Load += OnLoad;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = new[] { WaitUntilNavigation.Load } });
+            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = WaitUntilNavigation.Load });
             Assert.True(loaded);
         }
 
