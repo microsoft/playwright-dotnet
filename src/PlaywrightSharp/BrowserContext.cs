@@ -22,14 +22,16 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
         private readonly List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
+        private readonly Dictionary<string, Delegate> _bindings = new Dictionary<string, Delegate>();
         private bool _isClosedOrClosing;
 
         internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
         {
             _scope = scope.CreateChild(guid);
             _channel = new BrowserContextChannel(guid, scope, this);
-            _channel.Closed += Channel_Closed;
-            _channel.OnPage += Channel_OnPage;
+            _channel.Close += Channel_Closed;
+            _channel.Page += Channel_OnPage;
+            _channel.BindingCall += Channel_BindingCall;
 
             if (initializer.Pages != null)
             {
@@ -139,6 +141,32 @@ namespace PlaywrightSharp
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
         /// <inheritdoc/>
+        public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
+        public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+
+        /// <inheritdoc/>
         public async Task<T> WaitForEvent<T>(ContextEvent e, WaitForEventOptions<T> options = null)
         {
             var info = _contextEventsMap[e];
@@ -198,6 +226,14 @@ namespace PlaywrightSharp
             PageCreated?.Invoke(this, new PageEventArgs { Page = page });
         }
 
+        private void Channel_BindingCall(object sender, BrowserContextBindingCallEventArgs e)
+        {
+            if (_bindings.TryGetValue(e.BidingCallChannel.Object.Name, out var binding))
+            {
+                _ = e.BidingCallChannel.Object.CallAsync(binding);
+            }
+        }
+
         private void RejectPendingOperations()
         {
             foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.contextEvent != ContextEvent.Closed))
@@ -206,6 +242,26 @@ namespace PlaywrightSharp
             }
 
             _waitForCancellationTcs.Clear();
+        }
+
+        private Task ExposeBindingAsync(string name, Delegate playwrightFunction)
+        {
+            foreach (var page in PagesList)
+            {
+                if (page.Bindings.ContainsKey(name))
+                {
+                    throw new PlaywrightSharpException($"Function \"{name}\" has been already registered in one of the pages");
+                }
+            }
+
+            if (_bindings.ContainsKey(name))
+            {
+                throw new PlaywrightSharpException($"Function \"{name}\" has been already registered");
+            }
+
+            _bindings.Add(name, playwrightFunction);
+
+            return _channel.ExposeBindingAsync(name);
         }
     }
 }
