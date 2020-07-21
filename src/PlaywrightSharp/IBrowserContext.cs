@@ -360,5 +360,22 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction);
+
+        /// <summary>
+        /// Routing provides the capability to modify network requests that are made by any page in the browser context.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="url">A glob pattern to match while routing.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(string url, Action<Route, IRequest> handler);
+
+        /// <summary>
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="url">A glob pattern used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
     }
 }

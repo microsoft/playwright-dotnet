@@ -25,6 +25,7 @@ namespace PlaywrightSharp
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
+        private List<RouteSetting> _routes = new List<RouteSetting>();
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -41,6 +42,7 @@ namespace PlaywrightSharp
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
             _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
             _channel.BindingCall += Channel_BindingCall;
+            _channel.Route += Channel_Route;
         }
 
         /// <inheritdoc />
@@ -513,6 +515,38 @@ namespace PlaywrightSharp
         public Task AddInitScriptAsync(string script, object args = null)
             => _channel.AddInitScriptAsync(script);
 
+        /// <inheritdoc />
+        public Task RouteAsync(string url, Action<Route, IRequest> handler)
+        {
+            _routes.Add(new RouteSetting
+            {
+                Url = url,
+                Handler = handler,
+            });
+
+            if (_routes.Count == 1)
+            {
+                return _channel.SetNetworkInterceptionEnabledAsync(true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task UnrouteAsync(string url, Action<Route, IRequest> handler = null)
+        {
+            var newRoutesList = new List<RouteSetting>();
+            newRoutesList.AddRange(_routes.Where(r => r.Url != url || (handler != null && r.Handler != handler)));
+            _routes = newRoutesList;
+
+            if (_routes.Count == 0)
+            {
+                return _channel.SetNetworkInterceptionEnabledAsync(false);
+            }
+
+            return Task.CompletedTask;
+        }
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             BrowserContext?.PagesList.Remove(this);
@@ -526,12 +560,26 @@ namespace PlaywrightSharp
             Crashed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void Channel_BindingCall(object sender, BrowserContextBindingCallEventArgs e)
+        private void Channel_BindingCall(object sender, BindingCallEventArgs e)
         {
-            if (Bindings.TryGetValue(e.BidingCallChannel.Object.Name, out var binding))
+            if (Bindings.TryGetValue(e.BidingCall.Name, out var binding))
             {
-                _ = e.BidingCallChannel.Object.CallAsync(binding);
+                _ = e.BidingCall.CallAsync(binding);
             }
+        }
+
+        private void Channel_Route(object sender, RouteEventArgs e)
+        {
+            foreach (var route in _routes)
+            {
+                if (e.Request.Url.UrlMatches(route.Url))
+                {
+                    route.Handler(e.Route, e.Request);
+                    return;
+                }
+            }
+
+            _ = e.Route.ContinueAsync();
         }
 
         private void RejectPendingOperations(bool isCrash)

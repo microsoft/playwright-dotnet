@@ -20,7 +20,9 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<PageChannelPopupEventArgs> Popup;
 
-        internal event EventHandler<BrowserContextBindingCallEventArgs> BindingCall;
+        internal event EventHandler<BindingCallEventArgs> BindingCall;
+
+        internal event EventHandler<RouteEventArgs> Route;
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -37,9 +39,18 @@ namespace PlaywrightSharp.Transport.Channels
                     case "bindingCall":
                         BindingCall?.Invoke(
                             this,
-                            new BrowserContextBindingCallEventArgs
+                            new BindingCallEventArgs
                             {
-                                BidingCallChannel = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                                BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            });
+                        break;
+                    case "route":
+                        Route?.Invoke(
+                            this,
+                            new RouteEventArgs
+                            {
+                                Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                                Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                             });
                         break;
                     case "popup":
@@ -88,5 +99,14 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "reload",
                 options ?? new NavigationOptions());
+
+        internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setNetworkInterceptionEnabled",
+                new Dictionary<string, object>
+                {
+                    ["enabled"] = enabled,
+                });
     }
 }

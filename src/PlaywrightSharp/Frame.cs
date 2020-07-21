@@ -17,11 +17,13 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly FrameChannel _channel;
+        private readonly FrameInitializer _initializer;
 
         internal Frame(ConnectionScope scope, string guid, FrameInitializer initializer)
         {
             _scope = scope;
             _channel = new FrameChannel(guid, scope, this);
+            _initializer = initializer;
         }
 
         /// <inheritdoc/>
@@ -37,10 +39,10 @@ namespace PlaywrightSharp
         public IFrame[] ChildFrames { get; }
 
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name => _initializer.Name;
 
         /// <inheritdoc />
-        public string Url { get; }
+        public string Url => _initializer.Url;
 
         /// <inheritdoc />
         public IFrame ParentFrame { get; }

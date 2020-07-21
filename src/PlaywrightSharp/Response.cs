@@ -14,11 +14,13 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly ResponseChannel _channel;
+        private readonly ResponseInitializer _initializer;
 
         internal Response(ConnectionScope scope, string guid, ResponseInitializer initializer)
         {
             _scope = scope;
             _channel = new ResponseChannel(guid, scope, this);
+            _initializer = initializer;
         }
 
         /// <inheritdoc/>
@@ -31,7 +33,7 @@ namespace PlaywrightSharp
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />
-        public HttpStatusCode Status { get; }
+        public HttpStatusCode Status => _initializer.Status;
 
         /// <inheritdoc />
         public string StatusText { get; }
@@ -46,7 +48,7 @@ namespace PlaywrightSharp
         public IDictionary<string, string> Headers { get; }
 
         /// <inheritdoc />
-        public bool Ok { get; }
+        public bool Ok => Status == HttpStatusCode.OK;
 
         /// <inheritdoc />
         public IRequest Request { get; }

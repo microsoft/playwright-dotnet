@@ -13,11 +13,13 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly RequestChannel _channel;
+        private readonly RequestInitializer _initializer;
 
         internal Request(ConnectionScope scope, string guid, RequestInitializer initializer)
         {
             _scope = scope;
             _channel = new RequestChannel(guid, scope, this);
+            _initializer = initializer;
         }
 
         /// <inheritdoc/>
@@ -30,22 +32,22 @@ namespace PlaywrightSharp
         IChannel<Request> IChannelOwner<Request>.Channel => _channel;
 
         /// <inheritdoc />
-        public string Url { get; }
+        public string Url => _initializer.Url;
 
         /// <inheritdoc />
-        public HttpMethod Method { get; }
+        public HttpMethod Method => _initializer.Method;
 
         /// <inheritdoc />
-        public IDictionary<string, string> Headers { get; }
+        public IDictionary<string, string> Headers => _initializer.Headers;
 
         /// <inheritdoc />
-        public string PostData { get; }
+        public string PostData => _initializer.PostData;
 
         /// <inheritdoc />
-        public IFrame Frame { get; }
+        public IFrame Frame => _initializer.Frame;
 
         /// <inheritdoc />
-        public bool IsNavigationRequest { get; }
+        public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
         /// <inheritdoc />
         public ResourceType ResourceType { get; }

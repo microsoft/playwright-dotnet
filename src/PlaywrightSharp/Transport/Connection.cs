@@ -81,6 +81,7 @@ namespace PlaywrightSharp.Transport
             var options = JsonExtensions.GetNewDefaultSerializerOptions();
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));
+            options.Converters.Add(new HttpMethodConverter(this));
 
             return options;
         }
