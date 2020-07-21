@@ -163,6 +163,8 @@ namespace PlaywrightSharp
 
         internal BrowserContext OwnedContext { get; set; }
 
+        internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
+
         /// <inheritdoc />
         public Task<string> GetTitleAsync() => throw new NotImplementedException();
 

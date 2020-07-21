@@ -12,9 +12,11 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal event EventHandler Closed;
+        internal event EventHandler Close;
 
-        internal event EventHandler<BrowserContextOnPageEventArgs> OnPage;
+        internal event EventHandler<BrowserContextOnPageEventArgs> Page;
+
+        internal event EventHandler<BrowserContextBindingCallEventArgs> BindingCall;
 
         internal Task<PageChannel> NewPageAsync(string url)
             => Scope.SendMessageToServer<PageChannel>(
@@ -36,18 +38,45 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
+        internal Task ExposeBindingAsync(string name)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "exposeBinding",
+                new Dictionary<string, object>
+                {
+                    ["name"] = name,
+                });
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
-            switch (method)
+            try
             {
-                case "close":
-                    Closed?.Invoke(this, EventArgs.Empty);
-                    break;
-                case "page":
-                    OnPage?.Invoke(
-                        this,
-                        new BrowserContextOnPageEventArgs { PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()) });
-                    break;
+                switch (method)
+                {
+                    case "close":
+                        Close?.Invoke(this, EventArgs.Empty);
+                        break;
+                    case "bindingCall":
+                        BindingCall?.Invoke(
+                            this,
+                            new BrowserContextBindingCallEventArgs
+                            {
+                                BidingCallChannel = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            });
+                        break;
+                    case "page":
+                        Page?.Invoke(
+                            this,
+                            new BrowserContextOnPageEventArgs
+                            {
+                                PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            });
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
     }
