@@ -7,11 +7,8 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class HttpMethodConverter : JsonConverter<HttpMethod>
     {
-        private readonly Connection _connection;
-
-        public HttpMethodConverter(Connection connection)
+        public HttpMethodConverter()
         {
-            _connection = connection;
         }
 
         public override bool CanConvert(Type type) => typeof(HttpMethod) == type;

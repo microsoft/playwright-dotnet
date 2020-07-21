@@ -579,7 +579,7 @@ namespace PlaywrightSharp
                 }
             }
 
-            _ = e.Route.ContinueAsync();
+            BrowserContext.OnRoute(e.Route, e.Request);
         }
 
         private void RejectPendingOperations(bool isCrash)

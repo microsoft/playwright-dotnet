@@ -14,22 +14,12 @@ namespace PlaywrightSharp.Transport.Channels
                 "abort",
                 errorCode);
 
-        /// <summary>
-        /// Fulfills route's request with given response.
-        /// </summary>
-        /// <param name="response">Response that will fulfill this route's request.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message was sent.</returns>
-        public Task FulfillAsync(RouteFilfillResponse response)
+        public Task FulfillAsync(NormalizedFulfillResponse response)
             => Scope.SendMessageToServer(
                 Guid,
                 "fulfill",
                 response);
 
-        /// <summary>
-        /// Continues route's request with optional overrides.
-        /// </summary>
-        /// <param name="overrides">Optional request overrides.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message was sent.</returns>
         public Task ContinueAsync(RouteContinueOverrides overrides = null)
             => Scope.SendMessageToServer(
                 Guid,

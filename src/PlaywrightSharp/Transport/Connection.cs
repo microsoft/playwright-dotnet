@@ -31,6 +31,9 @@ namespace PlaywrightSharp.Transport
 
             _playwrightServerProcess = GetProcess();
 
+            _playwrightServerProcess.StartInfo.FileName = "node";
+            _playwrightServerProcess.StartInfo.Arguments = "/Users/neo/Documents/Coding/microsoft/playwright/lib/rpc/server.js";
+
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += TransportOnMessageReceived;
@@ -81,7 +84,7 @@ namespace PlaywrightSharp.Transport
             var options = JsonExtensions.GetNewDefaultSerializerOptions();
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));
-            options.Converters.Add(new HttpMethodConverter(this));
+            options.Converters.Add(new HttpMethodConverter());
 
             return options;
         }

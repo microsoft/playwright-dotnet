@@ -277,6 +277,20 @@ namespace PlaywrightSharp
             return Task.CompletedTask;
         }
 
+        internal void OnRoute(Route route, Request request)
+        {
+            foreach (var item in _routes)
+            {
+                if (request.Url.UrlMatches(item.Url))
+                {
+                    item.Handler(route, request);
+                    return;
+                }
+            }
+
+            _ = route.ContinueAsync();
+        }
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             _isClosedOrClosing = true;
@@ -307,19 +321,7 @@ namespace PlaywrightSharp
             }
         }
 
-        private void Channel_Route(object sender, RouteEventArgs e)
-        {
-            foreach (var route in _routes)
-            {
-                if (e.Request.Url.UrlMatches(route.Url))
-                {
-                    route.Handler(e.Route, e.Request);
-                    return;
-                }
-            }
-
-            _ = e.Route.ContinueAsync();
-        }
+        private void Channel_Route(object sender, RouteEventArgs e) => OnRoute(e.Route, e.Request);
 
         private void RejectPendingOperations()
         {
