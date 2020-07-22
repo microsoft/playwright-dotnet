@@ -55,17 +55,35 @@ namespace PlaywrightSharp.Tests.Helpers
                 // contain run status) until we know we've decided to accept the final result;
                 var delayedMessageBus = new DelayedMessageBus(messageBus);
 
-                var summary = await base.RunAsync(
-                    diagnosticMessageSink,
-                    delayedMessageBus,
-                    constructorArguments,
-                    aggregator,
-                    cancellationTokenSource).WithTimeout(30_000);
-
-                if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
+                try
                 {
+                    var summary = await base.RunAsync(
+                        diagnosticMessageSink,
+                        delayedMessageBus,
+                        constructorArguments,
+                        aggregator,
+                        cancellationTokenSource).WithTimeout(30_000);
+
+                    if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
+                    {
+                        delayedMessageBus.Dispose(); // Sends all the delayed messages
+                        return summary;
+                    }
+                }
+                catch (TimeoutException ex)
+                {
+                    var runSummary = new RunSummary { Total = 1, Failed = 1 };
+                    aggregator.Add(ex);
+
+                    if (!delayedMessageBus.QueueMessage(new TestCleanupFailure(
+                        new XunitTest(this, DisplayName),
+                        aggregator.ToException()!)))
+                    {
+                        cancellationTokenSource.Cancel();
+                    }
                     delayedMessageBus.Dispose(); // Sends all the delayed messages
-                    return summary;
+
+                    return runSummary;
                 }
 
                 diagnosticMessageSink.OnMessage(
