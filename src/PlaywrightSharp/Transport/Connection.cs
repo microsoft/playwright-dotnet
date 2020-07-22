@@ -31,9 +31,6 @@ namespace PlaywrightSharp.Transport
 
             _playwrightServerProcess = GetProcess();
 
-            _playwrightServerProcess.StartInfo.FileName = "node";
-            _playwrightServerProcess.StartInfo.Arguments = "/Users/neo/Documents/Coding/microsoft/playwright/lib/rpc/server.js";
-
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
