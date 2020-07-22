@@ -54,6 +54,8 @@ namespace PlaywrightSharp.Transport
         {
             var tcs = new TaskCompletionSource<bool>();
             using var process = GetProcess();
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardInput = false;
             process.EnableRaisingEvents = true;
             process.StartInfo.Arguments = "install";
             process.Exited += (sender, e) => tcs.TrySetResult(true);
