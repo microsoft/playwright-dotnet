@@ -277,6 +277,9 @@ namespace PlaywrightSharp
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
+        public Task SetHttpCredentialsAsync(Credentials credentials) => _channel.SetHttpCredentialsAsync(credentials);
+
         internal void OnRoute(Route route, Request request)
         {
             foreach (var item in _routes)

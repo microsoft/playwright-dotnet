@@ -67,6 +67,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
+        internal Task SetHttpCredentialsAsync(Credentials credentials)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setHTTPCredentials",
+                new Dictionary<string, object>
+                {
+                    ["httpCredentials"] = credentials,
+                });
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             try
