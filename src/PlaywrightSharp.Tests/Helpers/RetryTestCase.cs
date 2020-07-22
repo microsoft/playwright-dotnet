@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Tests.Helpers
 {
