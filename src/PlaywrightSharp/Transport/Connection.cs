@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Transport
 
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
-            _transport.MessageReceived += TransportOnMessageReceived;
+            _transport.MessageReceived += Transport_MessageReceived;
             _loggerFactory = loggerFactory;
         }
 
@@ -175,7 +175,7 @@ namespace PlaywrightSharp.Transport
             return Path.Combine(tempDirectory, playwrightServer);
         }
 
-        private void TransportOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
             var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
 
@@ -200,18 +200,35 @@ namespace PlaywrightSharp.Transport
 
             Debug.WriteLine($"pw:channel:event {e.Message}");
 
-            if (message.Method == "__create__")
+            try
             {
-                _objects.TryGetValue(message.Guid, out var scopeObject);
-                var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
-                var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
-                scope.CreateRemoteObject(createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
+                if (message.Method == "__create__")
+                {
+                    _objects.TryGetValue(message.Guid, out var scopeObject);
+                    var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
+                    var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
+                    scope.CreateRemoteObject(createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 
-                return;
+                    return;
+                }
+
+                _objects.TryGetValue(message.Guid, out var obj);
+                obj?.Channel?.OnMessage(message.Method, message.Params);
+            }
+            catch (Exception ex)
+            {
+                CloseAsync(ex.ToString());
+            }
+        }
+
+        private void CloseAsync(string reason)
+        {
+            foreach (var callback in _callbacks)
+            {
+                callback.Value.TrySetException(new TargetClosedException(reason));
             }
 
-            _objects.TryGetValue(message.Guid, out var obj);
-            obj?.Channel?.OnMessage(message.Method, message.Params);
+            Dispose();
         }
 
         private Exception CreateException(PlaywrightServerError error)
