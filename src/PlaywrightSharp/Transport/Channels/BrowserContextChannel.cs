@@ -69,43 +69,36 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
-            try
+            switch (method)
             {
-                switch (method)
-                {
-                    case "close":
-                        Close?.Invoke(this, EventArgs.Empty);
-                        break;
-                    case "bindingCall":
-                        BindingCall?.Invoke(
-                            this,
-                            new BindingCallEventArgs
-                            {
-                                BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            });
-                        break;
-                    case "route":
-                        Route?.Invoke(
-                            this,
-                            new RouteEventArgs
-                            {
-                                Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                                Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            });
-                        break;
-                    case "page":
-                        Page?.Invoke(
-                            this,
-                            new BrowserContextOnPageEventArgs
-                            {
-                                PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
-                            });
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex);
+                case "close":
+                    Close?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "bindingCall":
+                    BindingCall?.Invoke(
+                        this,
+                        new BindingCallEventArgs
+                        {
+                            BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        });
+                    break;
+                case "route":
+                    Route?.Invoke(
+                        this,
+                        new RouteEventArgs
+                        {
+                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        });
+                    break;
+                case "page":
+                    Page?.Invoke(
+                        this,
+                        new BrowserContextOnPageEventArgs
+                        {
+                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                        });
+                    break;
             }
         }
     }
