@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Tests.Helpers
 {
@@ -59,7 +60,7 @@ namespace PlaywrightSharp.Tests.Helpers
                     delayedMessageBus,
                     constructorArguments,
                     aggregator,
-                    cancellationTokenSource);
+                    cancellationTokenSource).WithTimeout(30_000);
 
                 if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
                 {
