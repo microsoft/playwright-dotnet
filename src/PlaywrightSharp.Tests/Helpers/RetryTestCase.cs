@@ -72,18 +72,21 @@ namespace PlaywrightSharp.Tests.Helpers
                 }
                 catch (TimeoutException ex)
                 {
-                    var runSummary = new RunSummary { Total = 1, Failed = 1 };
-                    aggregator.Add(ex);
-
-                    if (!delayedMessageBus.QueueMessage(new TestCleanupFailure(
-                        new XunitTest(this, DisplayName),
-                        aggregator.ToException()!)))
+                    if (++runCount >= _maxRetries)
                     {
-                        cancellationTokenSource.Cancel();
-                    }
-                    delayedMessageBus.Dispose(); // Sends all the delayed messages
+                        var runSummary = new RunSummary { Total = 1, Failed = 1 };
+                        aggregator.Add(ex);
 
-                    return runSummary;
+                        if (!delayedMessageBus.QueueMessage(new TestCleanupFailure(
+                            new XunitTest(this, DisplayName),
+                            aggregator.ToException()!)))
+                        {
+                            cancellationTokenSource.Cancel();
+                        }
+                        delayedMessageBus.Dispose(); // Sends all the delayed messages
+
+                        return runSummary;
+                    }
                 }
 
                 diagnosticMessageSink.OnMessage(
