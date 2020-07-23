@@ -169,7 +169,7 @@ namespace PlaywrightSharp
         internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
 
         /// <inheritdoc />
-        public Task<string> GetTitleAsync() => throw new NotImplementedException();
+        public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc />
         public Task<IPage> GetOpenerAsync() => throw new NotImplementedException();
@@ -375,9 +375,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => throw new NotImplementedException();

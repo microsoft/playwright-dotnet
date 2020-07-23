@@ -377,5 +377,15 @@ namespace PlaywrightSharp
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
         Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task SetHttpCredentialsAsync(Credentials credentials);
     }
 }

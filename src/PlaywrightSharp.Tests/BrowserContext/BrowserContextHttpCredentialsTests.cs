@@ -33,9 +33,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        ///<playwright-it>should work with setHTTPCredentials</playwright-it>
         [Retry]
-        public async Task ShouldWork()
+        public async Task ShouldWorkWithSetHTTPCredentials()
         {
             Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync();

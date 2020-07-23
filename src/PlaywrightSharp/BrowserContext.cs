@@ -246,6 +246,10 @@ namespace PlaywrightSharp
             => _channel.AddInitScriptAsync(script);
 
         /// <inheritdoc />
+        public Task SetHttpCredentialsAsync(Credentials credentials)
+            => _channel.SetHttpCredentialsAsync(credentials);
+
+        /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
         {
             _routes.Add(new RouteSetting
