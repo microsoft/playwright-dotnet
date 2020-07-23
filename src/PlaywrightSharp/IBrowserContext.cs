@@ -362,6 +362,16 @@ namespace PlaywrightSharp
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction);
 
         /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task SetHttpCredentialsAsync(Credentials credentials);
+
+        /// <summary>
         /// Routing provides the capability to modify network requests that are made by any page in the browser context.
         /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
         /// </summary>
@@ -379,13 +389,10 @@ namespace PlaywrightSharp
         Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
 
         /// <summary>
-        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// Set offline mode for the context.
         /// </summary>
-        /// <param name="credentials">The credentials.</param>
-        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
-        /// <remarks>
-        /// To disable authentication, pass <c>null</c>.
-        /// </remarks>
-        Task SetHttpCredentialsAsync(Credentials credentials);
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineAsync(bool enabled);
     }
 }
