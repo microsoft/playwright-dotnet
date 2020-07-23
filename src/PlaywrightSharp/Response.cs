@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
@@ -14,11 +15,13 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly ResponseChannel _channel;
+        private readonly ResponseInitializer _initializer;
 
         internal Response(ConnectionScope scope, string guid, ResponseInitializer initializer)
         {
             _scope = scope;
             _channel = new ResponseChannel(guid, scope, this);
+            _initializer = initializer;
         }
 
         /// <inheritdoc/>
@@ -31,7 +34,7 @@ namespace PlaywrightSharp
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />
-        public HttpStatusCode Status { get; }
+        public HttpStatusCode Status => _initializer.Status;
 
         /// <inheritdoc />
         public string StatusText { get; }
@@ -46,13 +49,17 @@ namespace PlaywrightSharp
         public IDictionary<string, string> Headers { get; }
 
         /// <inheritdoc />
-        public bool Ok { get; }
+        public bool Ok => Status == HttpStatusCode.OK;
 
         /// <inheritdoc />
         public IRequest Request { get; }
 
         /// <inheritdoc />
-        public Task<string> GetTextAsync() => throw new NotImplementedException();
+        public async Task<string> GetTextAsync()
+        {
+            byte[] content = await GetBodyAsync().ConfigureAwait(false);
+            return Encoding.UTF8.GetString(content);
+        }
 
         /// <inheritdoc />
         public Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default) => throw new NotImplementedException();
@@ -61,6 +68,6 @@ namespace PlaywrightSharp
         public Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<byte[]> GetBufferAsync() => throw new NotImplementedException();
+        public async Task<byte[]> GetBodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
     }
 }

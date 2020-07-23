@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 namespace PlaywrightSharp.Transport.Channels
 {
     internal class ResponseChannel : Channel<Response>
@@ -5,5 +8,7 @@ namespace PlaywrightSharp.Transport.Channels
         public ResponseChannel(string guid, ConnectionScope scope, Response owner) : base(guid, scope, owner)
         {
         }
+
+        internal Task<string> GetBodyAsync() => Scope.SendMessageToServer<string>(Guid, "body", null);
     }
 }

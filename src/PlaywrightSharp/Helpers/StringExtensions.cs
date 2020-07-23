@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Esprima;
 using Esprima.Ast;
 
@@ -11,6 +12,8 @@ namespace PlaywrightSharp.Helpers
     /// </summary>
     public static class StringExtensions
     {
+        private static readonly char[] _escapeGlobChars = new[] { '/', '$', '^', '+', '.', '(', ')', '=', '!', '|' };
+
         /// <summary>
         /// Quotes the specified <see cref="string"/>.
         /// </summary>
@@ -116,6 +119,82 @@ namespace PlaywrightSharp.Helpers
 
                 return false;
             }
+        }
+
+        internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
+
+        private static Regex GlobToRegex(string glob)
+        {
+            List<string> tokens = new List<string> { "^" };
+            bool inGroup = false;
+
+            for (int i = 0; i < glob.Length; ++i)
+            {
+                char c = glob[i];
+                if (_escapeGlobChars.Contains(c))
+                {
+                    tokens.Add("\\" + c);
+                    continue;
+                }
+
+                if (c == '*')
+                {
+                    char? beforeDeep = i == 0 ? (char?)null : glob[i - 1];
+                    int starCount = 1;
+
+                    while (i < glob.Length - 1 && glob[i + 1] == '*')
+                    {
+                        starCount++;
+                        i++;
+                    }
+
+                    char? afterDeep = i >= glob.Length - 1 ? (char?)null : glob[i + 1];
+                    bool isDeep = starCount > 1 &&
+                        (beforeDeep == '/' || beforeDeep == null) &&
+                        (afterDeep == '/' || afterDeep == null);
+                    if (isDeep)
+                    {
+                        tokens.Add("((?:[^/]*(?:\\/|$))*)");
+                        i++;
+                    }
+                    else
+                    {
+                        tokens.Add("([^/]*)");
+                    }
+
+                    continue;
+                }
+
+                switch (c)
+                {
+                    case '?':
+                        tokens.Add(".");
+                        break;
+                    case '{':
+                        inGroup = true;
+                        tokens.Add("(");
+                        break;
+                    case '}':
+                        inGroup = false;
+                        tokens.Add(")");
+                        break;
+                    case ',':
+                        if (inGroup)
+                        {
+                            tokens.Add("|");
+                            break;
+                        }
+
+                        tokens.Add("\\" + c);
+                        break;
+                    default:
+                        tokens.Add(c.ToString());
+                        break;
+                }
+            }
+
+            tokens.Add("$");
+            return new Regex(string.Concat(tokens.ToArray()));
         }
 
         private static bool IsQuoted(this string value)

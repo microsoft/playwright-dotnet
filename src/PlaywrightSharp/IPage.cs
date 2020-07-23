@@ -1233,5 +1233,22 @@ namespace PlaywrightSharp
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
         public Task<byte[]> GetPdfDataAsync(PdfOptions options);
+
+        /// <summary>
+        /// Routing provides the capability to modify network requests that are made by a page.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="url">A glob pattern to match while routing.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(string url, Action<Route, IRequest> handler);
+
+        /// <summary>
+        /// Removes a route created with <see cref="IPage.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="url">A glob pattern used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
     }
 }

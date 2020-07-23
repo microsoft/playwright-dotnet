@@ -70,6 +70,6 @@ namespace PlaywrightSharp
         /// Returns a <see cref="Task"/> which resolves to a buffer with response body.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the response is returned by the server, yielding a <see cref="byte"/> array.</returns>
-        Task<byte[]> GetBufferAsync();
+        Task<byte[]> GetBodyAsync();
     }
 }
