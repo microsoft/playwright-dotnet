@@ -108,5 +108,7 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["enabled"] = enabled,
                 });
+
+        internal Task<PageChannel> GetOpenerAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "opener", null);
     }
 }

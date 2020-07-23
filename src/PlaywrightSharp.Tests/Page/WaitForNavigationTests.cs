@@ -53,16 +53,16 @@ namespace PlaywrightSharp.Tests.Page
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             var domContentLoadedTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions
             {
-                WaitUntil = WaitUntilNavigation.DOMContentLoaded
+                LifeCycleEvent = LifeCycleEventNavigation.DOMContentLoaded
             });
 
             bool bothFired = false;
             var bothFiredTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions
             {
-                WaitUntil = new[]
+                LifeCycleEvent = new[]
                 {
-                    WaitUntilNavigation.Load,
-                    WaitUntilNavigation.DOMContentLoaded
+                    LifeCycleEventNavigation.Load,
+                    LifeCycleEventNavigation.DOMContentLoaded
                 }
             }).ContinueWith(_ => bothFired = true);
 

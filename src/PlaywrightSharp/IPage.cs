@@ -212,19 +212,14 @@ namespace PlaywrightSharp
         IKeyboard Keyboard { get; }
 
         /// <summary>
-        /// This setting will change the default maximum times for the following methods:
-        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(WaitUntilNavigation)"/>.
+        /// This setting will change the default maximum time for all the methods accepting timeout option.
         /// </summary>
-        int DefaultTimeout { get; set; }
+        public int DefaultTimeout { get; set; }
 
         /// <summary>
-        /// This setting will change the default maximum time for the following methods:
-        /// - <see cref="SetContentAsync(string, NavigationOptions)"/>
-        /// - <see cref="WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>
-        /// **NOTE** <see cref="DefaultNavigationTimeout"/> takes priority over <seealso cref="DefaultTimeout"/>.
+        /// Maximum navigation time in milliseconds.
         /// </summary>
-        int DefaultNavigationTimeout { get; set; }
+        public int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
         /// Gets all workers in the page.
@@ -265,9 +260,11 @@ namespace PlaywrightSharp
         /// The navigation can be in progress when it is called.
         /// If navigation is already at a required state, completes immediately.
         /// </summary>
-        /// <param name="options">Extra options.</param>
+        /// <param name="lifeCycleEvent">Load state to wait for. Defaults to <see cref="LifecycleEvent.Load"/>. If the state has been already reached while loading current document, the method resolves immediately.</param>
+        /// <param name="timeout">Maximum waiting time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>, <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/> or <see cref="IPage.DefaultTimeout"/> properties.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
-        Task WaitForLoadStateAsync(NavigationOptions options = null);
+        Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent = LifecycleEvent.Load, int? timeout = null);
 
         /// <summary>
         /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
@@ -339,7 +336,7 @@ namespace PlaywrightSharp
         /// This resolves when the page navigates to a new URL or reloads.
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
-        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <param name="lifeCycleEvent">When to consider navigation succeeded.</param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
@@ -347,7 +344,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
         /// </remarks>
-        Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
+        Task<IResponse> WaitForNavigationAsync(LifecycleEvent lifeCycleEvent);
 
         /// <summary>
         /// Waits for a request.
@@ -429,23 +426,23 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. </param>
-        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <param name="lifeCycleEvent">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.</param>
         /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil);
+        Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] lifeCycleEvent);
 
         /// <summary>
         /// Navigates to an url.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <param name="lifeCycleEvent">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.</param>
         /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil);
+        Task<IResponse> GoToAsync(string url, params LifecycleEvent[] lifeCycleEvent);
 
         /// <summary>
         /// Closes the page.
@@ -778,10 +775,10 @@ namespace PlaywrightSharp
         /// Sets the HTML markup to the page.
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
-        /// <param name="waitUntil">When to consider navigation succeeded.</param>
+        /// <param name="lifeCycleEvent">When to consider navigation succeeded.</param>
         /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes.</returns>
         /// <seealso cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
-        Task SetContentAsync(string html, WaitUntilNavigation waitUntil);
+        Task SetContentAsync(string html, LifecycleEvent lifeCycleEvent);
 
         /// <summary>
         /// Gets the full HTML contents of the page, including the doctype.

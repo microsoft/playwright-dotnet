@@ -16,8 +16,8 @@ namespace PlaywrightSharp
         public int? Timeout { get; set; }
 
         /// <summary>
-        /// When to consider navigation succeeded, defaults to <see cref="WaitUntilNavigation.Load"/>. Given an array of <see cref="WaitUntilNavigation"/>, navigation is considered to be successful after all events have been fired.
+        /// When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.
         /// </summary>
-        public WaitUntilNavigation? WaitUntil { get; set; } = WaitUntilNavigation.Load;
+        public LifecycleEvent? WaitUntil { get; set; } = LifecycleEvent.Load;
     }
 }

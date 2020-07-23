@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.Page
 
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(new NavigationOptions { Timeout = 1 }));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(timeout: 1));
             Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
             responseTask.TrySetResult(true);
             await navigationTask;
@@ -103,7 +103,7 @@ namespace PlaywrightSharp.Tests.Page
 
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
-            await Page.WaitForLoadStateAsync(new NavigationOptions { WaitUntil = WaitUntilNavigation.DOMContentLoaded });
+            await Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
             responseTask.TrySetResult(true);
             await navigationTask;
         }

@@ -64,10 +64,10 @@ namespace PlaywrightSharp
             => (await _channel.GoToAsync(url, options).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, NavigationOptions options = null) => throw new NotImplementedException();
+        public Task SetContentAsync(string html, NavigationOptions options = null) => SetContentAsync(false, html, options);
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => throw new NotImplementedException();
@@ -111,7 +111,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> QuerySelectorAsync(string selector) => throw new NotImplementedException();
+        public Task<IElementHandle> QuerySelectorAsync(string selector) => QuerySelectorAsync(false, selector);
 
         /// <inheritdoc />
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector) => throw new NotImplementedException();
@@ -123,7 +123,7 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task ClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
+        public Task ClickAsync(string selector, ClickOptions options = null) => ClickAsync(false, selector, options);
 
         /// <inheritdoc />
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
@@ -141,7 +141,7 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task FocusAsync(string selector, WaitForSelectorOptions options) => throw new NotImplementedException();
@@ -188,10 +188,26 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
 
+        /// <inheritdoc />
+        public Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent, int? timeout = null)
+            => WaitForLoadStateAsync(false, lifeCycleEvent, timeout);
+
+        internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent lifeCycleEvent, int? timeout = null)
+            => _channel.WaitForLoadStateAsync(lifeCycleEvent, timeout, isPageCall);
+
         internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, AddTagOptions options)
             => (await _channel.AddScriptTagAsync(
                 options: options,
                 isPage: isPageCall).ConfigureAwait(false)).Object;
+
+        internal Task ClickAsync(bool isPageCall, string selector, ClickOptions options)
+            => _channel.ClickAsync(selector, options, isPageCall);
+
+        internal Task SetContentAsync(bool isPageCall, string html, NavigationOptions options)
+            => _channel.SetcontentAsync(html, options, isPageCall);
+
+        internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
+            => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false)).Object;
 
         internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorOptions options)
             => (await _channel.WaitForSelector(

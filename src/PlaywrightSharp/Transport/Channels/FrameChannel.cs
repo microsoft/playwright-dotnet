@@ -72,5 +72,54 @@ namespace PlaywrightSharp.Transport.Channels
                     ["type"] = options.Type,
                     ["isPage"] = isPage,
                 });
+
+        internal Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "waitForLoadState",
+                new Dictionary<string, object>
+                {
+                    ["state"] = lifeCycleEvent,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task SetcontentAsync(string html, NavigationOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "waitForLoadState",
+                new Dictionary<string, object>
+                {
+                    ["html"] = html,
+                    ["waitUntil"] = options?.WaitUntil,
+                    ["timeout"] = options?.Timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task ClickAsync(string selector, ClickOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "click",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["delay"] = options?.Delay,
+                    ["button"] = options?.Button,
+                    ["clickCount"] = options?.ClickCount,
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "$",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["isPage"] = isPage,
+                });
     }
 }

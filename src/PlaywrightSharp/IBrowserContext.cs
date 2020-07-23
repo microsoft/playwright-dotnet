@@ -40,6 +40,11 @@ namespace PlaywrightSharp
         public int DefaultTimeout { get; set; }
 
         /// <summary>
+        /// Maximum navigation time in milliseconds.
+        /// </summary>
+        public int DefaultNavigationTimeout { get; set; }
+
+        /// <summary>
         /// An array of all pages inside the browser context.
         /// </summary>
         IPage[] Pages { get; }
