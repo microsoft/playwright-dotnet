@@ -31,9 +31,6 @@ namespace PlaywrightSharp.Transport
 
             _playwrightServerProcess = GetProcess();
 
-            _playwrightServerProcess.StartInfo.FileName = "node";
-            _playwrightServerProcess.StartInfo.Arguments = "/Users/neo/Documents/Coding/microsoft/playwright/lib/rpc/server.js";
-
             _playwrightServerProcess.Start();
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
@@ -54,6 +51,8 @@ namespace PlaywrightSharp.Transport
         {
             var tcs = new TaskCompletionSource<bool>();
             using var process = GetProcess();
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardInput = false;
             process.EnableRaisingEvents = true;
             process.StartInfo.Arguments = "install";
             process.Exited += (sender, e) => tcs.TrySetResult(true);

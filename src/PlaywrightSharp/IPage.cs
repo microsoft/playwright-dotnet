@@ -797,6 +797,16 @@ namespace PlaywrightSharp
         Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
 
         /// <summary>
+        /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
+        /// <remarks>
+        /// To disable authentication, pass <c>null</c>.
+        /// </remarks>
+        Task AuthenticateAsync(Credentials credentials);
+
+        /// <summary>
         /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>

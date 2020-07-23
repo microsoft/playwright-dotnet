@@ -46,8 +46,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task<string> GetTitleAsync() => Scope.SendMessageToServer<string>(Guid, "title", null);
-
         internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForSelectorOptions options, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,

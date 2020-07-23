@@ -387,5 +387,6 @@ namespace PlaywrightSharp
         /// To disable authentication, pass <c>null</c>.
         /// </remarks>
         Task SetHttpCredentialsAsync(Credentials credentials);
+
     }
 }
