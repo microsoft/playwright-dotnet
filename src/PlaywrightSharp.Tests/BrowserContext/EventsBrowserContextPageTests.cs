@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
-using PlaywrightSharp.Helpers;
-using System.Collections.Generic;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Input;
-using PlaywrightSharp.Tests.Helpers;
 
 namespace PlaywrightSharp.Tests.BrowserContext
 {
