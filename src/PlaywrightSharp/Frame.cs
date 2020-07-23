@@ -57,7 +57,7 @@ namespace PlaywrightSharp
         public string Id { get; set; }
 
         /// <inheritdoc />
-        public Task<string> GetTitleAsync() => throw new NotImplementedException();
+        public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />
         public async Task<IResponse> GoToAsync(string url, GoToOptions options = null)

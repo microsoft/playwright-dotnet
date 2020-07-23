@@ -250,6 +250,10 @@ namespace PlaywrightSharp
             => _channel.SetHttpCredentialsAsync(credentials);
 
         /// <inheritdoc />
+        public Task SetOfflineAsync(bool enabled)
+            => _channel.SetOfflineAsync(enabled);
+
+        /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
         {
             _routes.Add(new RouteSetting
