@@ -70,5 +70,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["type"] = options.Type,
                     ["isPage"] = isPage,
                 });
+
+        internal Task<string> GetTitleAsync() => Scope.SendMessageToServer<string>(Guid, "title", null);
     }
 }
