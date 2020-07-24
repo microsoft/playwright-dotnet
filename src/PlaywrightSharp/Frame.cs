@@ -24,6 +24,8 @@ namespace PlaywrightSharp
             _scope = scope;
             _channel = new FrameChannel(guid, scope, this);
             _initializer = initializer;
+            Url = _initializer.Url;
+            Name = _initializer.Name;
         }
 
         /// <inheritdoc/>
@@ -39,10 +41,10 @@ namespace PlaywrightSharp
         public IFrame[] ChildFrames { get; }
 
         /// <inheritdoc />
-        public string Name => _initializer.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
-        public string Url => _initializer.Url;
+        public string Url { get; internal set; }
 
         /// <inheritdoc />
         public IFrame ParentFrame { get; }

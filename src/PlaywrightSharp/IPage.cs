@@ -1170,7 +1170,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task GetPdfAsync(string file);
+        Task GetPdfAsync(string file);
 
         /// <summary>
         ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1181,7 +1181,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task GetPdfAsync(string file, PdfOptions options);
+        Task GetPdfAsync(string file, PdfOptions options);
 
         /// <summary>
         /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1190,7 +1190,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<Stream> GetPdfStreamAsync();
+        Task<Stream> GetPdfStreamAsync();
 
         /// <summary>
         /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1200,7 +1200,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<Stream> GetPdfStreamAsync(PdfOptions options);
+        Task<Stream> GetPdfStreamAsync(PdfOptions options);
 
         /// <summary>
         /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1209,7 +1209,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<byte[]> GetPdfDataAsync();
+        Task<byte[]> GetPdfDataAsync();
 
         /// <summary>
         /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
@@ -1219,7 +1219,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        public Task<byte[]> GetPdfDataAsync(PdfOptions options);
+        Task<byte[]> GetPdfDataAsync(PdfOptions options);
 
         /// <summary>
         /// Routing provides the capability to modify network requests that are made by a page.

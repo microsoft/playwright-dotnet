@@ -103,7 +103,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             Assert.Contains(TestConstants.CrossProcessUrl, otherPage.Url);
             Assert.Equal("Hello world", await otherPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
-            Assert.NotNull(await otherPage.QuerySelectorAsync("body'"));
+            Assert.NotNull(await otherPage.QuerySelectorAsync("body"));
+
 
             var allPages = context.Pages;
             Assert.Contains(page, allPages);
@@ -148,14 +149,18 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            Server.SetRedirect("/one-style.css", "/injectedstyle.css");
+            Server.SetRoute("/one-style.css", context =>
+            {
+                context.Response.Redirect("/one-style.css");
+                return Task.CompletedTask;
+            });
 
             // Open a new page. Use window.open to connect to the page later.
             var pageCreatedTask = context.WaitForEvent<PageEventArgs>(ContextEvent.PageCreated);
             await Task.WhenAll(
                 pageCreatedTask,
-                page.EvaluateAsync("url => window.open(url), server.PREFIX + '/one-style.html'"),
-                Server.WaitForRequest("/one-style.css'"));
+                page.EvaluateAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
+                Server.WaitForRequest("/one-style.css"));
 
             var newPage = pageCreatedTask.Result.Page;
 
@@ -175,7 +180,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var (popupEvent, _) = await TaskUtils.WhenAll(
               context.WaitForEvent<PageEventArgs>(ContextEvent.PageCreated),
-              page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html"));
+              page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html")).WithTimeout();
 
             var popup = popupEvent.Page;
             Assert.Equal(TestConstants.ServerUrl + "/popup/popup.html", popup.Url);
@@ -195,7 +200,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             context.PageCreated += (sender, e) =>
             {
                 events.Add("CREATED: " + e.Page.Url);
-                e.Page.Closed += (sender, closeArgs) => events.Add("DESTROYED: " + e.Page.Url);
+                e.Page.Closed += (sender, closeArgs) => events.Add("DESTROYED: " + ((IPage)sender).Url);
             };
 
             var page = await context.NewPageAsync();

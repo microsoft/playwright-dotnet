@@ -43,6 +43,7 @@ namespace PlaywrightSharp
             _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
+            _channel.FameNavigated += Channel_FameNavigated;
         }
 
         /// <inheritdoc />
@@ -172,7 +173,7 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc />
-        public async Task<IPage> GetOpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false)).Object;
+        public async Task<IPage> GetOpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task SetCacheEnabledAsync(bool enabled = true) => throw new NotImplementedException();
@@ -374,7 +375,7 @@ namespace PlaywrightSharp
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(false, selector);
+        public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
 
         /// <inheritdoc />
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector) => throw new NotImplementedException();
@@ -576,6 +577,13 @@ namespace PlaywrightSharp
             }
 
             BrowserContext.OnRoute(e.Route, e.Request);
+        }
+
+        private void Channel_FameNavigated(object sender, FameNavigatedEventArgs e)
+        {
+            e.Frame.Object.Url = e.Url;
+            e.Frame.Object.Name = e.Name;
+            FrameNavigated?.Invoke(this, new FrameEventArgs(e.Frame.Object));
         }
 
         private void RejectPendingOperations(bool isCrash)

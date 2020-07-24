@@ -18,6 +18,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.
         /// </summary>
-        public LifecycleEvent? WaitUntil { get; set; } = LifecycleEvent.Load;
+        public LifecycleEvent WaitUntil { get; set; } = LifecycleEvent.Load;
     }
 }

@@ -12,7 +12,7 @@ namespace PlaywrightSharp
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.
         /// </summary>
-        public int Timeout { get; set; }
+        public int? Timeout { get; set; }
 
         /// <summary>
         /// Wait for element to become in the specified state.

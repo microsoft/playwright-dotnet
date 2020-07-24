@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -79,22 +80,30 @@ namespace PlaywrightSharp.Transport.Channels
                 "waitForLoadState",
                 new Dictionary<string, object>
                 {
-                    ["state"] = lifeCycleEvent,
+                    ["state"] = lifeCycleEvent.ToValueString(),
                     ["timeout"] = timeout,
                     ["isPage"] = isPage,
                 });
 
         internal Task SetcontentAsync(string html, NavigationOptions options, bool isPage)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["html"] = html,
+                ["timeout"] = options?.Timeout,
+                ["isPage"] = isPage,
+            };
+
+            if (options != null)
+            {
+                args["waitUntil"] = options.WaitUntil;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
-                "waitForLoadState",
-                new Dictionary<string, object>
-                {
-                    ["html"] = html,
-                    ["waitUntil"] = options?.WaitUntil,
-                    ["timeout"] = options?.Timeout,
-                    ["isPage"] = isPage,
-                });
+                "setContent",
+                args);
+        }
 
         internal Task ClickAsync(string selector, ClickOptions options, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
@@ -109,13 +118,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["force"] = options?.Force,
                     ["timeout"] = options?.Timeout,
                     ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["modifiers"] = options.Modifiers.Select(m => m.ToValueString()),
                     ["isPage"] = isPage,
                 });
 
         internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
-                "$",
+                "querySelector",
                 new Dictionary<string, object>
                 {
                     ["selector"] = selector,
