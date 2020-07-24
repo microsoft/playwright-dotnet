@@ -43,6 +43,7 @@ namespace PlaywrightSharp
             _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
+            _channel.FameNavigated += Channel_FameNavigated;
         }
 
         /// <inheritdoc />
@@ -136,7 +137,7 @@ namespace PlaywrightSharp
         public IMouse Mouse { get; }
 
         /// <inheritdoc />
-        public string Url { get; }
+        public string Url => MainFrame.Url;
 
         /// <inheritdoc />
         public IFrame[] Frames { get; }
@@ -172,10 +173,7 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc />
-        public Task<IPage> GetOpenerAsync() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task WaitForLoadStateAsync(NavigationOptions options = null) => throw new NotImplementedException();
+        public async Task<IPage> GetOpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task SetCacheEnabledAsync(bool enabled = true) => throw new NotImplementedException();
@@ -190,7 +188,7 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -260,10 +258,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, int timeout, params WaitUntilNavigation[] waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] lifeCycleEvent) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, params WaitUntilNavigation[] waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, params LifecycleEvent[] lifeCycleEvent) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public async Task CloseAsync(PageCloseOptions options = null)
@@ -365,10 +363,10 @@ namespace PlaywrightSharp
         public Task<string> ScreenshotBase64Async(ScreenshotOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, NavigationOptions options = null) => throw new NotImplementedException();
+        public Task SetContentAsync(string html, NavigationOptions options = null) => MainFrame.SetContentAsync(true, html, options);
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, WaitUntilNavigation waitUntil) => throw new NotImplementedException();
+        public Task SetContentAsync(string html, LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => throw new NotImplementedException();
@@ -377,7 +375,7 @@ namespace PlaywrightSharp
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> QuerySelectorAsync(string selector) => throw new NotImplementedException();
+        public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
 
         /// <inheritdoc />
         public Task<IElementHandle[]> QuerySelectorAllAsync(string selector) => throw new NotImplementedException();
@@ -395,7 +393,7 @@ namespace PlaywrightSharp
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task ClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
+        public Task ClickAsync(string selector, ClickOptions options = null) => MainFrame.ClickAsync(true, selector, options);
 
         /// <inheritdoc />
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
@@ -505,12 +503,10 @@ namespace PlaywrightSharp
         public Task<byte[]> GetPdfDataAsync(PdfOptions options) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script)
-            => _channel.AddInitScriptAsync($"({script})()");
+        public Task AddInitScriptAsync(string script) => _channel.AddInitScriptAsync($"({script})()");
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script, object args = null)
-            => _channel.AddInitScriptAsync(script);
+        public Task AddInitScriptAsync(string script, object args = null) => _channel.AddInitScriptAsync(script);
 
         /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
@@ -543,6 +539,10 @@ namespace PlaywrightSharp
 
             return Task.CompletedTask;
         }
+
+        /// <inheritdoc />
+        public Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent, int? timeout = null)
+            => MainFrame.WaitForLoadStateAsync(true, lifeCycleEvent, timeout);
 
         private void Channel_Closed(object sender, EventArgs e)
         {
@@ -577,6 +577,13 @@ namespace PlaywrightSharp
             }
 
             BrowserContext.OnRoute(e.Route, e.Request);
+        }
+
+        private void Channel_FameNavigated(object sender, FameNavigatedEventArgs e)
+        {
+            e.Frame.Object.Url = e.Url;
+            e.Frame.Object.Name = e.Name;
+            FrameNavigated?.Invoke(this, new FrameEventArgs(e.Frame.Object));
         }
 
         private void RejectPendingOperations(bool isCrash)

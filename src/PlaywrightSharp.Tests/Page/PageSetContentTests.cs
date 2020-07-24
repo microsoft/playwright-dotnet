@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldWorkWithDomcontentloaded()
         {
-            await Page.SetContentAsync("<div>hello</div>", WaitUntilNavigation.DOMContentLoaded);
+            await Page.SetContentAsync("<div>hello</div>", LifecycleEvent.DOMContentLoaded);
             string result = await Page.GetContentAsync();
             Assert.Equal(_expectedOutput, result);
         }

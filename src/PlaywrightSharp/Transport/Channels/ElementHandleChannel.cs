@@ -7,6 +7,7 @@ namespace PlaywrightSharp.Transport.Channels
     {
         public ElementHandleChannel(string guid, ConnectionScope scope, ElementHandle owner) : base(guid, scope, owner)
         {
+            Object = owner;
         }
 
         public new ElementHandle Object { get; set; }

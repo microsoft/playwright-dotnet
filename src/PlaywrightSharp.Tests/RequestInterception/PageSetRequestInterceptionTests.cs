@@ -601,7 +601,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             // For some reason, Firefox issues load event with one outstanding request.
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
             {
-                WaitUntil = TestConstants.IsFirefox ? WaitUntilNavigation.Networkidle0 : WaitUntilNavigation.Load
+                WaitUntil = TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load
             });
             var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -627,7 +627,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             // For some reason, Firefox issues load event with one outstanding request.
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
             {
-                WaitUntil = TestConstants.IsFirefox ? WaitUntilNavigation.Networkidle0 : WaitUntilNavigation.Load
+                WaitUntil = TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load
             });
             var request = await Page.WaitForRequestAsync(TestConstants.ServerUrl + "/one-style.css");
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
