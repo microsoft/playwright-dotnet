@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage, lifeCycleEvent: new[]
+            var response = await Page.GoToAsync(TestConstants.EmptyPage, waitUntil: new[]
             {
                 LifecycleEvent.DOMContentLoaded
             });

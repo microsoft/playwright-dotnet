@@ -359,7 +359,7 @@ namespace PlaywrightSharp
         /// This resolves when the frame navigates to a new URL or reloads.
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
-        /// <param name="lifeCycleEvent">When to consider navigation succeeded.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
@@ -367,7 +367,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
         /// </remarks>
-        Task<IResponse> WaitForNavigationAsync(LifecycleEvent lifeCycleEvent);
+        Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.
@@ -525,10 +525,10 @@ namespace PlaywrightSharp
         /// The navigation can be in progress when it is called.
         /// If navigation is already at a required state, completes immediately.
         /// </summary>
-        /// <param name="lifeCycleEvent">Load state to wait for. If the state has been already reached while loading current document, the method resolves immediately.</param>
+        /// <param name="waitUntil">Load state to wait for. If the state has been already reached while loading current document, the method resolves immediately.</param>
         /// <param name="timeout">Maximum waiting time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>, <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/> or <see cref="IPage.DefaultTimeout"/> properties.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
-        Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent = LifecycleEvent.Load, int? timeout = null);
+        Task WaitForLoadStateAsync(LifecycleEvent waitUntil = LifecycleEvent.Load, int? timeout = null);
     }
 }

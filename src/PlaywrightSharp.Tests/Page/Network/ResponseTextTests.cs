@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should wait until response completes</playwright-it>
         [Retry]
-        public async Task ShouldLifeCycleEventResponseCompletes()
+        public async Task ShouldWaitUntilResponseCompletes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             // Setup server to trap request.

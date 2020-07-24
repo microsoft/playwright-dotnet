@@ -143,7 +143,7 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task FocusAsync(string selector, WaitForSelectorOptions options) => throw new NotImplementedException();
@@ -191,11 +191,11 @@ namespace PlaywrightSharp
         public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent, int? timeout = null)
-            => WaitForLoadStateAsync(false, lifeCycleEvent, timeout);
+        public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
+            => WaitForLoadStateAsync(false, waitUntil, timeout);
 
-        internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent lifeCycleEvent, int? timeout = null)
-            => _channel.WaitForLoadStateAsync(lifeCycleEvent, timeout, isPageCall);
+        internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent waitUntil, int? timeout = null)
+            => _channel.WaitForLoadStateAsync(waitUntil, timeout, isPageCall);
 
         internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, AddTagOptions options)
             => (await _channel.AddScriptTagAsync(

@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await NewPageAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
             await page.GoToAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", new GoToOptions
             {
-                LifeCycleEvent = new[] { LifeCycleEventNavigation.Load }
+                WaitUntil = new[] { LifeCycleEventNavigation.Load }
             });
             Assert.Equal(2, page.Frames.Length);
             Assert.Equal(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));

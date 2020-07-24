@@ -188,7 +188,7 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -258,10 +258,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] lifeCycleEvent) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, params LifecycleEvent[] lifeCycleEvent) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, params LifecycleEvent[] waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public async Task CloseAsync(PageCloseOptions options = null)
@@ -541,8 +541,8 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent, int? timeout = null)
-            => MainFrame.WaitForLoadStateAsync(true, lifeCycleEvent, timeout);
+        public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
+            => MainFrame.WaitForLoadStateAsync(true, waitUntil, timeout);
 
         private void Channel_Closed(object sender, EventArgs e)
         {

@@ -260,11 +260,11 @@ namespace PlaywrightSharp
         /// The navigation can be in progress when it is called.
         /// If navigation is already at a required state, completes immediately.
         /// </summary>
-        /// <param name="waitUntil">Load state to wait for. Defaults to <see cref="LifecycleEvent.Load"/>. If the state has been already reached while loading current document, the method resolves immediately.</param>
+        /// <param name="lifeCycleEvent">Load state to wait for. Defaults to <see cref="LifecycleEvent.Load"/>. If the state has been already reached while loading current document, the method resolves immediately.</param>
         /// <param name="timeout">Maximum waiting time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>, <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/> or <see cref="IPage.DefaultTimeout"/> properties.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
-        Task WaitForLoadStateAsync(LifecycleEvent waitUntil = LifecycleEvent.Load, int? timeout = null);
+        Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent = LifecycleEvent.Load, int? timeout = null);
 
         /// <summary>
         /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
