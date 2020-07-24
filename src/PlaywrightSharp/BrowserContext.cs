@@ -238,16 +238,16 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script)
-            => _channel.AddInitScriptAsync($"({script})()");
+        public Task AddInitScriptAsync(string script) => _channel.AddInitScriptAsync($"({script})()");
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script, object args = null)
-            => _channel.AddInitScriptAsync(script);
+        public Task AddInitScriptAsync(string script, object args = null) => _channel.AddInitScriptAsync(script);
 
         /// <inheritdoc />
-        public Task SetHttpCredentialsAsync(Credentials credentials)
-            => _channel.SetHttpCredentialsAsync(credentials);
+        public Task SetHttpCredentialsAsync(Credentials credentials) => _channel.SetHttpCredentialsAsync(credentials);
+
+        /// <inheritdoc />
+        public Task SetOfflineAsync(bool enabled) => _channel.SetOfflineAsync(enabled);
 
         /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)

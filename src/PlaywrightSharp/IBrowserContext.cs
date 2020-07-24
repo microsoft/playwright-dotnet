@@ -387,5 +387,12 @@ namespace PlaywrightSharp
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
         Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Set offline mode for the context.
+        /// </summary>
+        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineAsync(bool enabled);
     }
 }

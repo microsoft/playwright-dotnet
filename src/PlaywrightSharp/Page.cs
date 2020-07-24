@@ -377,9 +377,6 @@ namespace PlaywrightSharp
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task AuthenticateAsync(Credentials credentials) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => throw new NotImplementedException();
 
         /// <inheritdoc />

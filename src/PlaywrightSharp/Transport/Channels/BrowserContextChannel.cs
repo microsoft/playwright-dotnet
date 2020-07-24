@@ -76,6 +76,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["httpCredentials"] = credentials,
                 });
 
+        internal Task SetOfflineAsync(bool offline)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setOffline",
+                new Dictionary<string, object>
+                {
+                    ["offline"] = offline,
+                });
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
