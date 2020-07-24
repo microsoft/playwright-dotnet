@@ -74,13 +74,13 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task WaitForLoadStateAsync(LifecycleEvent lifeCycleEvent, int? timeout, bool isPage)
+        internal Task WaitForLoadStateAsync(LifecycleEvent state, int? timeout, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "waitForLoadState",
                 new Dictionary<string, object>
                 {
-                    ["state"] = lifeCycleEvent.ToValueString(),
+                    ["state"] = state.ToValueString(),
                     ["timeout"] = timeout,
                     ["isPage"] = isPage,
                 });

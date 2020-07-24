@@ -66,7 +66,7 @@ namespace PlaywrightSharp
             => (await _channel.GoToAsync(url, options).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task SetContentAsync(string html, NavigationOptions options = null) => SetContentAsync(false, html, options);

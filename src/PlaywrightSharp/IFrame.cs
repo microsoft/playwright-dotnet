@@ -91,7 +91,7 @@ namespace PlaywrightSharp
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <param name="lifeCycleEvent">When to consider navigation succeeded.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
@@ -111,7 +111,7 @@ namespace PlaywrightSharp
         /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// </remarks>
-        Task<IResponse> GoToAsync(string url, LifecycleEvent lifeCycleEvent);
+        Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil);
 
         /// <summary>
         /// Sets the HTML markup to the frame.

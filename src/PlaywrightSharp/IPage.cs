@@ -426,12 +426,12 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. </param>
-        /// <param name="lifeCycleEvent">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.</param>
         /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] lifeCycleEvent);
+        Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] waitUntil);
 
         /// <summary>
         /// Navigates to an url.
@@ -775,10 +775,10 @@ namespace PlaywrightSharp
         /// Sets the HTML markup to the page.
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
-        /// <param name="lifeCycleEvent">When to consider navigation succeeded.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded.</param>
         /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes.</returns>
         /// <seealso cref="IFrame.SetContentAsync(string, NavigationOptions)"/>
-        Task SetContentAsync(string html, LifecycleEvent lifeCycleEvent);
+        Task SetContentAsync(string html, LifecycleEvent waitUntil);
 
         /// <summary>
         /// Gets the full HTML contents of the page, including the doctype.
