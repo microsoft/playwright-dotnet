@@ -133,7 +133,7 @@ namespace PlaywrightSharp
         /// What kind of popup is currently being shown for a node.
         /// </summary>
         [JsonPropertyName("haspopup")]
-        public string HasPopup { get; set; }
+        public bool HasPopup { get; set; }
 
         /// <summary>
         /// Whether and in what way this node's value is invalid.
