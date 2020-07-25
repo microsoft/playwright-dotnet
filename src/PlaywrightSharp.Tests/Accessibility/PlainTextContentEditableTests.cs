@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>plaintext contenteditable</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PlainTextContentEditableTests : PlaywrightSharpPageBaseTest
+    public class PlainTextContentEditableTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PlainTextContentEditableTests(ITestOutputHelper output) : base(output)
@@ -119,7 +118,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "checkbox",
                     Name = "my favorite checkbox",
-                    Checked = CheckedState.True
+                    Checked = true
                 },
                 (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
@@ -143,7 +142,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "checkbox",
                     Name = "this is the inner content yo",
-                    Checked = CheckedState.True
+                    Checked = true
                 };
             }
             else
@@ -152,7 +151,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "checkbox",
                     Name = "this is the inner content yo",
-                    Checked = CheckedState.True
+                    Checked = true
                 };
             }
 

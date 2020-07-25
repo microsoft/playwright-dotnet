@@ -47,6 +47,58 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task<JSHandleChannel> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg, bool isPage)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evalOnSelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, EvaluateArgument arg, bool isPage)
+            => Scope.SendMessageToServer<JsonElement?>(
+                Guid,
+                "evalOnSelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<JSHandleChannel> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg, bool isPage)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evalOnSelectorAll",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, EvaluateArgument arg, bool isPage)
+            => Scope.SendMessageToServer<JsonElement?>(
+                Guid,
+                "evalOnSelectorAll",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                    ["isPage"] = isPage,
+                });
+
         internal Task<string> GetTitleAsync() => Scope.SendMessageToServer<string>(Guid, "title", null);
 
         internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForSelectorOptions options, bool isPage)

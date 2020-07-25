@@ -23,6 +23,10 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         public override void Write(Utf8JsonWriter writer, ChannelBase value, JsonSerializerOptions options)
-            => writer.WriteStringValue(value.Guid);
+        {
+            writer.WriteStartObject();
+            writer.WriteString("guid", value.Guid);
+            writer.WriteEndObject();
+        }
     }
 }

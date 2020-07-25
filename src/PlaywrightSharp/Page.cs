@@ -36,7 +36,7 @@ namespace PlaywrightSharp
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             Viewport = initializer.ViewportSize;
-
+            Accessibility = new Accesibility(_channel);
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
@@ -283,16 +283,28 @@ namespace PlaywrightSharp
         public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task QuerySelectorEvaluateAsync(string selector, string script, params object[] args) => throw new NotImplementedException();
+        public Task QuerySelectorEvaluateAsync(string selector, string script) => MainFrame.QuerySelectorEvaluateAsync(true, selector, script);
 
         /// <inheritdoc />
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, params object[] args) => throw new NotImplementedException();
+        public Task QuerySelectorEvaluateAsync(string selector, string script, object args) => MainFrame.QuerySelectorEvaluateAsync(true, selector, script, args);
 
         /// <inheritdoc />
-        public Task QuerySelectorAllEvaluateAsync(string selector, string script, params object[] args) => throw new NotImplementedException();
+        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorEvaluateAsync<T>(true, selector, script);
 
         /// <inheritdoc />
-        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, params object[] args) => throw new NotImplementedException();
+        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, object args) => MainFrame.QuerySelectorEvaluateAsync<T>(true, selector, script, args);
+
+        /// <inheritdoc />
+        public Task QuerySelectorAllEvaluateAsync(string selector, string script, object args) => MainFrame.QuerySelectorAllEvaluateAsync(true, selector, script, args);
+
+        /// <inheritdoc />
+        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, object args) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script, args);
+
+        /// <inheritdoc />
+        public Task QuerySelectorAllEvaluateAsync(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync(true, selector, script);
+
+        /// <inheritdoc />
+        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script);
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => throw new NotImplementedException();

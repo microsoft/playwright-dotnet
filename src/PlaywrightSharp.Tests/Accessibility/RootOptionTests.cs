@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>root option</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class RootOptionTests : PlaywrightSharpPageBaseTest
+    public class RootOptionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public RootOptionTests(ITestOutputHelper output) : base(output)
@@ -134,8 +133,8 @@ namespace PlaywrightSharp.Tests.Accessibility
                 InterestingOnly = false
             });
             Assert.Equal("textbox", snapshot.Role);
-            Assert.Contains("hello", snapshot.Value);
-            Assert.Contains("world", snapshot.Value);
+            Assert.Contains("hello", snapshot.Value.ToString());
+            Assert.Contains("world", snapshot.Value.ToString());
             Assert.NotEmpty(snapshot.Children);
         }
     }

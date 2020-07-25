@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.Accessibility
     ///<playwright-file>accessibility.spec.js</playwright-file>
     ///<playwright-describe>Accessibility</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class AccessibilityTests : PlaywrightSharpPageBaseTest
+    public class AccessibilityTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public AccessibilityTests(ITestOutputHelper output) : base(output)
@@ -205,7 +204,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>should work with regular text</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipLinux: true, skipWindows: true)]
+        [Retry]
         public async Task ShouldWorkWithRegularRext()
         {
             await Page.SetContentAsync("<div>Hello World</div>");
@@ -275,7 +274,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         ///<playwright-file>accessibility.spec.js</playwright-file>
         ///<playwright-describe>Accessibility</playwright-describe>
         ///<playwright-it>filtering children of leaf nodes</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true, skipLinux: true)]
+        [Retry]
         public async Task FilteringChildrenOfLeafNodes()
         {
             await Page.SetContentAsync(@"
