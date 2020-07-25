@@ -29,6 +29,8 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         IChannel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 
+        internal IChannel<ElementHandle> ElementChannel => _channel;
+
         /// <inheritdoc />
         public Task PressAsync(string key, PressOptions options = null) => throw new NotImplementedException();
 

@@ -115,5 +115,15 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<PageChannel> GetOpenerAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "opener", null);
+
+        internal Task<SerializedAXNode> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "accessibilitySnapshot",
+                new Dictionary<string, object>
+                {
+                    ["interestingOnly"] = interestingOnly ?? true,
+                    ["root"] = root,
+                });
     }
 }

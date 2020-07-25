@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace PlaywrightSharp
 {
@@ -26,7 +27,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// The current value of the node.
         /// </summary>
-        public string Value { get; set; }
+        public object Value { get; set; }
 
         /// <summary>
         /// An additional human readable description of the node.
@@ -36,11 +37,13 @@ namespace PlaywrightSharp
         /// <summary>
         /// Keyboard shortcuts associated with this node.
         /// </summary>
+        [JsonPropertyName("keyshortcuts")]
         public string KeyShortcuts { get; set; }
 
         /// <summary>
         /// A human readable alternative to the role.
         /// </summary>
+        [JsonPropertyName("roledescription")]
         public string RoleDescription { get; set; }
 
         /// <summary>
@@ -96,7 +99,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether the checkbox is checked, or "mixed".
         /// </summary>
-        public CheckedState Checked { get; set; }
+        public bool Checked { get; set; }
 
         /// <summary>
         /// Whether the toggle button is checked, or "mixed".
@@ -111,21 +114,25 @@ namespace PlaywrightSharp
         /// <summary>
         /// The minimum value in a node.
         /// </summary>
+        [JsonPropertyName("valuemin")]
         public int ValueMin { get; set; }
 
         /// <summary>
         /// The maximum value in a node.
         /// </summary>
+        [JsonPropertyName("valuemax")]
         public int ValueMax { get; set; }
 
         /// <summary>
         /// What kind of autocomplete is supported by a control.
         /// </summary>
+        [JsonPropertyName("autocomplete")]
         public string AutoComplete { get; set; }
 
         /// <summary>
         /// What kind of popup is currently being shown for a node.
         /// </summary>
+        [JsonPropertyName("haspopup")]
         public string HasPopup { get; set; }
 
         /// <summary>
@@ -149,7 +156,7 @@ namespace PlaywrightSharp
                 (ReferenceEquals(this, other) || (
                     Role == other.Role &&
                     Name == other.Name &&
-                    Value == other.Value &&
+                    Value?.ToString() == other.Value?.ToString() &&
                     Description == other.Description &&
                     KeyShortcuts == other.KeyShortcuts &&
                     RoleDescription == other.RoleDescription &&
