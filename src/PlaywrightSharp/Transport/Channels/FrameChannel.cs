@@ -165,12 +165,12 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["selector"] = selector,
                     ["delay"] = options?.Delay,
-                    ["button"] = options?.Button,
-                    ["clickCount"] = options?.ClickCount,
+                    ["button"] = options?.Button ?? Input.MouseButton.Left,
+                    ["clickCount"] = options?.ClickCount ?? 1,
                     ["force"] = options?.Force,
                     ["timeout"] = options?.Timeout,
                     ["noWaitAfter"] = options?.NoWaitAfter,
-                    ["modifiers"] = options.Modifiers.Select(m => m.ToValueString()),
+                    ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                     ["isPage"] = isPage,
                 });
 
@@ -181,6 +181,29 @@ namespace PlaywrightSharp.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["selector"] = selector,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task FillAsync(string selector, string value, NavigatingActionWaitOptions options, bool isPage)
+            => Scope.SendMessageToServer(
+                Guid,
+                "fill",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["value"] = value,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["timeout"] = options?.Timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<ResponseChannel> WaitForNavigationAsync(WaitForNavigationOptions options, bool isPage)
+            => Scope.SendMessageToServer<ResponseChannel>(
+                Guid,
+                "waitForNavigation",
+                new Dictionary<string, object>
+                {
+                    ["waitUntil"] = options.WaitUntil.ToValueString(),
                     ["isPage"] = isPage,
                 });
     }

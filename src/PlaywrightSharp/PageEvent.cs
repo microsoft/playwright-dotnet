@@ -75,5 +75,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.Crashed"/>
         Crashed,
+
+        /// <summary>
+        /// Frame navigated event.
+        /// </summary>
+        /// <see cref="IPage.FrameNavigated"/>
+        FrameNavigated,
     }
 }

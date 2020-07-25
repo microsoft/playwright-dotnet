@@ -44,6 +44,8 @@ namespace PlaywrightSharp
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
             _channel.FameNavigated += Channel_FameNavigated;
+            _channel.FameAttached += Channel_FameAttached;
+            _channel.FameDetached += Channel_FameDetached;
         }
 
         /// <inheritdoc />
@@ -140,7 +142,7 @@ namespace PlaywrightSharp
         public string Url => MainFrame.Url;
 
         /// <inheritdoc />
-        public IFrame[] Frames { get; }
+        public IFrame[] Frames => _frames.ToArray();
 
         /// <inheritdoc />
         public IKeyboard Keyboard { get; }
@@ -185,10 +187,10 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(url, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(false, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => MainFrame.WaitForNavigationAsync(false, waitUntil);
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -307,7 +309,7 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script);
 
         /// <inheritdoc />
-        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => MainFrame.FillAsync(true, selector, text, options);
 
         /// <inheritdoc />
         public Task TypeAsync(string selector, string text, TypeOptions options = null) => throw new NotImplementedException();
@@ -591,11 +593,29 @@ namespace PlaywrightSharp
             BrowserContext.OnRoute(e.Route, e.Request);
         }
 
-        private void Channel_FameNavigated(object sender, FameNavigatedEventArgs e)
+        private void Channel_FameNavigated(object sender, FrameNavigatedEventArgs e)
         {
             e.Frame.Object.Url = e.Url;
             e.Frame.Object.Name = e.Name;
             FrameNavigated?.Invoke(this, new FrameEventArgs(e.Frame.Object));
+        }
+
+        private void Channel_FameDetached(object sender, FrameEventArgs e)
+        {
+            var frame = e.Frame as Frame;
+            _frames.Remove(frame);
+            frame.Detached = true;
+            frame.ParentFrame?.ChildFramesList?.Remove(frame);
+            FrameDetached?.Invoke(this, e);
+        }
+
+        private void Channel_FameAttached(object sender, FrameEventArgs e)
+        {
+            var frame = e.Frame as Frame;
+            frame.Page = this;
+            _frames.Add(frame);
+            frame.ParentFrame?.ChildFramesList?.Add(frame);
+            FrameAttached?.Invoke(this, e);
         }
 
         private void RejectPendingOperations(bool isCrash)
