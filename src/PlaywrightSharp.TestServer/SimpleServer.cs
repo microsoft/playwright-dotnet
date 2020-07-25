@@ -2,7 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,13 +40,34 @@ namespace PlaywrightSharp.TestServer
                     .SetBasePath(context.HostingEnvironment.ContentRootPath)
                     .AddEnvironmentVariables()
                 )
-                .Configure(app => app.Use((context, next) =>
+                .Configure(app => app
+#if NETCOREAPP
+                    .UseWebSockets()
+#endif
+                    .Use(async (context, next) =>
                     {
+                        if (context.Request.Path == "/ws")
+                        {
+                            if (context.WebSockets.IsWebSocketRequest)
+                            {
+                                var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                                await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
+                            }
+                            else
+                            {
+                                context.Response.StatusCode = 400;
+                            }
+                            return;
+                        }
+                        else
+                        {
+                            await next();
+                        }
                         if (_auths.TryGetValue(context.Request.Path, out var auth) && !Authenticate(auth.username, auth.password, context))
                         {
                             context.Response.Headers.Add("WWW-Authenticate", "Basic realm=\"Secure Area\"");
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            return context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied");
+                            await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied");
                         }
                         if (_subscribers.TryGetValue(context.Request.Path, out var subscriber))
                         {
@@ -56,7 +79,7 @@ namespace PlaywrightSharp.TestServer
                         }
                         if (_routes.TryGetValue(context.Request.Path + context.Request.QueryString, out var handler))
                         {
-                            return handler(context);
+                            await handler(context);
                         }
 
                         if (
@@ -64,10 +87,9 @@ namespace PlaywrightSharp.TestServer
                             !string.IsNullOrEmpty(context.Request.Headers["if-modified-since"]))
                         {
                             context.Response.StatusCode = StatusCodes.Status304NotModified;
-                            return Task.CompletedTask;
                         }
 
-                        return next();
+                        await next();
                     })
                     .UseMiddleware<SimpleCompressionMiddleware>(this)
                     .UseStaticFiles(new StaticFileOptions
