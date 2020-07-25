@@ -5,7 +5,7 @@ using System.Threading;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/> and <see cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/>.
+    /// Options for <see cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions)"/> and <see cref="IFrame.WaitForNavigationAsync(WaitForNavigationOptions)"/>.
     /// </summary>
     public class WaitForNavigationOptions : NavigationOptions
     {

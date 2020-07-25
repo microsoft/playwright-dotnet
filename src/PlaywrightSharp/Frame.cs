@@ -38,7 +38,7 @@ namespace PlaywrightSharp
         IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
         /// <inheritdoc />
-        public IFrame[] ChildFrames { get; }
+        public IFrame[] ChildFrames => ChildFramesList.ToArray();
 
         /// <inheritdoc />
         public string Name { get; internal set; }
@@ -47,16 +47,21 @@ namespace PlaywrightSharp
         public string Url { get; internal set; }
 
         /// <inheritdoc />
-        public IFrame ParentFrame { get; }
+        IFrame IFrame.ParentFrame => ParentFrame;
+
+        /// <inheritdoc cref="IFrame.ParentFrame" />
+        public Frame ParentFrame { get; }
 
         /// <inheritdoc />
         public IPage Page { get; internal set; }
 
         /// <inheritdoc />
-        public bool Detached { get; }
+        public bool Detached { get; internal set; }
 
         /// <inheritdoc />
         public string Id { get; set; }
+
+        internal List<Frame> ChildFramesList { get; } = new List<Frame>();
 
         /// <inheritdoc />
         public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
@@ -96,7 +101,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string script, object args) => EvaluateHandleAsync(false, script, args);
 
         /// <inheritdoc />
-        public Task FillAsync(string selector, string text, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => FillAsync(false, selector, text, options);
 
         /// <inheritdoc />
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
@@ -152,10 +157,10 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script) => QuerySelectorEvaluateAsync<T>(false, selector, script);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => WaitForNavigationAsync(false, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => WaitForNavigationAsync(false, waitUntil);
 
         /// <inheritdoc />
         public Task FocusAsync(string selector, WaitForSelectorOptions options) => throw new NotImplementedException();
@@ -205,6 +210,17 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
             => WaitForLoadStateAsync(false, waitUntil, timeout);
+
+        internal async Task<IResponse> WaitForNavigationAsync(bool isPageCall, WaitForNavigationOptions options)
+            => (await _channel.WaitForNavigationAsync(
+                options: options ?? new WaitForNavigationOptions(),
+                isPage: isPageCall).ConfigureAwait(false)).Object;
+
+        internal Task<IResponse> WaitForNavigationAsync(bool isPageCall, LifecycleEvent waitUntil)
+            => WaitForNavigationAsync(isPageCall, new WaitForNavigationOptions { WaitUntil = waitUntil });
+
+        internal Task FillAsync(bool isPageCall, string selector, string text, NavigatingActionWaitOptions options)
+            => _channel.FillAsync(selector, text, options ?? new NavigatingActionWaitOptions(), isPageCall);
 
         internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent waitUntil, int? timeout = null)
             => _channel.WaitForLoadStateAsync(waitUntil, timeout, isPageCall);

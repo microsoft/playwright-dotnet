@@ -2,7 +2,7 @@ using System;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class FameNavigatedEventArgs : EventArgs
+    internal class FrameNavigatedEventArgs : EventArgs
     {
         public FrameChannel Frame { get; set; }
 

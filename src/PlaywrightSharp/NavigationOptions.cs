@@ -3,7 +3,7 @@ using System.Threading;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Navigation options used by <see cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions, CancellationToken)"/> and <see cref="IPage.SetContentAsync(string, NavigationOptions)"/>.
+    /// Navigation options used by <see cref="IPage.WaitForNavigationAsync(WaitForNavigationOptions)"/> and <see cref="IPage.SetContentAsync(string, NavigationOptions)"/>.
     /// </summary>
     public class NavigationOptions
     {

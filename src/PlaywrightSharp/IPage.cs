@@ -313,7 +313,6 @@ namespace PlaywrightSharp
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
         /// <param name="options">navigation options.</param>
-        /// <param name="token">Cancellation token.</param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
@@ -330,7 +329,7 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null, CancellationToken token = default);
+        Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null);
 
         /// <summary>
         /// This resolves when the page navigates to a new URL or reloads.
@@ -605,7 +604,7 @@ namespace PlaywrightSharp
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="options">Optional waiting parameters.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
-        Task FillAsync(string selector, string text, WaitForSelectorOptions options = null);
+        Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null);
 
         /// <summary>
         /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.

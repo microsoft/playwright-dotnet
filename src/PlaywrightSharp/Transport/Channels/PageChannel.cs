@@ -24,7 +24,11 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
-        internal event EventHandler<FameNavigatedEventArgs> FameNavigated;
+        internal event EventHandler<FrameNavigatedEventArgs> FameNavigated;
+
+        internal event EventHandler<FrameEventArgs> FameAttached;
+
+        internal event EventHandler<FrameEventArgs> FameDetached;
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -61,8 +65,14 @@ namespace PlaywrightSharp.Transport.Channels
                             Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
                         break;
+                    case "frameAttached":
+                        FameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        break;
+                    case "frameDetached":
+                        FameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        break;
                     case "frameNavigated":
-                        FameNavigated?.Invoke(this, serverParams?.ToObject<FameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                        FameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                         break;
                     case "request":
                         Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
