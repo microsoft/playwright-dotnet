@@ -111,7 +111,7 @@ namespace PlaywrightSharp
         /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
         /// </remarks>
-        Task<IResponse> GoToAsync(string url, WaitUntilNavigation waitUntil);
+        Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil);
 
         /// <summary>
         /// Sets the HTML markup to the frame.
@@ -367,7 +367,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
         /// </remarks>
-        Task<IResponse> WaitForNavigationAsync(WaitUntilNavigation waitUntil);
+        Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.
@@ -519,5 +519,16 @@ namespace PlaywrightSharp
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<string[]> SelectAsync(string selector, params IElementHandle[] values);
+
+        /// <summary>
+        /// Completes when the page reaches a required load state, load by default.
+        /// The navigation can be in progress when it is called.
+        /// If navigation is already at a required state, completes immediately.
+        /// </summary>
+        /// <param name="waitUntil">Load state to wait for. If the state has been already reached while loading current document, the method resolves immediately.</param>
+        /// <param name="timeout">Maximum waiting time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>, <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/> or <see cref="IPage.DefaultTimeout"/> properties.</param>
+        /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
+        Task WaitForLoadStateAsync(LifecycleEvent waitUntil = LifecycleEvent.Load, int? timeout = null);
     }
 }

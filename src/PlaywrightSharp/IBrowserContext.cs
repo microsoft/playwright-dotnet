@@ -37,7 +37,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// This setting will change the default maximum time for all the methods accepting timeout option.
         /// </summary>
-        public int DefaultTimeout { get; set; }
+        int DefaultTimeout { get; set; }
+
+        /// <summary>
+        /// Maximum navigation time in milliseconds.
+        /// </summary>
+        int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
         /// An array of all pages inside the browser context.

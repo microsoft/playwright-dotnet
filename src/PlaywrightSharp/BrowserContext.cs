@@ -92,6 +92,13 @@ namespace PlaywrightSharp
             }
         }
 
+        /// <inheritdoc />
+        public int DefaultNavigationTimeout
+        {
+            get => _timeoutSettings.NavigationTimeout;
+            set => _timeoutSettings.SetDefaultNavigationTimeout(value);
+        }
+
         internal Page OwnerPage { get; set; }
 
         internal List<Page> PagesList { get; } = new List<Page>();

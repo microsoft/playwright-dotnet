@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -70,6 +71,64 @@ namespace PlaywrightSharp.Transport.Channels
                     ["path"] = options.Path,
                     ["content"] = options.Content,
                     ["type"] = options.Type,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task WaitForLoadStateAsync(LifecycleEvent state, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "waitForLoadState",
+                new Dictionary<string, object>
+                {
+                    ["state"] = state.ToValueString(),
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task SetcontentAsync(string html, NavigationOptions options, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["html"] = html,
+                ["timeout"] = options?.Timeout,
+                ["isPage"] = isPage,
+            };
+
+            if (options != null)
+            {
+                args["waitUntil"] = options.WaitUntil;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "setContent",
+                args);
+        }
+
+        internal Task ClickAsync(string selector, ClickOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "click",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["delay"] = options?.Delay,
+                    ["button"] = options?.Button,
+                    ["clickCount"] = options?.ClickCount,
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["modifiers"] = options.Modifiers.Select(m => m.ToValueString()),
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "querySelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
                     ["isPage"] = isPage,
                 });
     }

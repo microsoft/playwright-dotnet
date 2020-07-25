@@ -197,7 +197,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage, waitUntil: new[]
             {
-                WaitUntilNavigation.DOMContentLoaded
+                LifecycleEvent.DOMContentLoaded
             });
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
@@ -367,7 +367,7 @@ namespace PlaywrightSharp.Tests.Page
             }
             Page.Load += OnLoad;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = WaitUntilNavigation.Load });
+            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = LifecycleEvent.Load });
             Assert.True(loaded);
         }
 
@@ -571,7 +571,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             Server.SetRoute("/one-style.css", context => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.css");
-            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? WaitUntilNavigation.Networkidle0 : WaitUntilNavigation.Load);
+            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load);
             await request;
             await Page.GoToAsync(TestConstants.EmptyPage);
 

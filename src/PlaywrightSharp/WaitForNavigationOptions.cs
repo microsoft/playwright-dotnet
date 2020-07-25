@@ -19,7 +19,7 @@ namespace PlaywrightSharp
         internal WaitForNavigationOptions(NavigationOptions options = null)
         {
             Timeout = options?.Timeout;
-            WaitUntil = options?.WaitUntil;
+            WaitUntil = options?.WaitUntil ?? LifecycleEvent.Load;
         }
 
         /// <summary>
