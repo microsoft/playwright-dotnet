@@ -8,19 +8,21 @@ namespace PlaywrightSharp
         /// <summary>
         /// Device name.
         /// </summary>
-        /// <value>The name.</value>
         public string Name { get; set; }
 
         /// <summary>
         /// User Agent.
         /// </summary>
-        /// <value>The user agent.</value>
         public string UserAgent { get; set; }
 
         /// <summary>
         /// ViewPort.
         /// </summary>
-        /// <value>The viewport.</value>
         public ViewportSize ViewPort { get; set; }
+
+        /// <summary>
+        /// Has touch.
+        /// </summary>
+        public bool HasTouch { get; set; }
     }
 }

@@ -167,6 +167,19 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
+        /// Specifies if viewport supports touch events. Defaults to false.
+        /// </summary>
+        public bool? HasTouch
+        {
+            get
+            {
+                _values.TryGetValue("hasTouch", out object result);
+                return result as bool?;
+            }
+            set => _values["hasTouch"] = value;
+        }
+
+        /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.
         /// </summary>
         /// <returns>A copy of the current <see cref="BrowserContextOptions"/>.</returns>

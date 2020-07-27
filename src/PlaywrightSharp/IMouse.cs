@@ -35,15 +35,6 @@ namespace PlaywrightSharp
         Task DoubleClickAsync(double x, double y, ClickOptions options = null);
 
         /// <summary>
-        /// Shortcut for <see cref="MoveAsync(double, double, MoveOptions)"/>, <see cref="DownAsync(ClickOptions)"/>, <see cref="UpAsync(ClickOptions)"/>, <see cref="DownAsync(ClickOptions)"/>, <see cref="UpAsync(ClickOptions)"/>, <see cref="DownAsync(ClickOptions)"/> and <see cref="UpAsync(ClickOptions)"/>.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        /// <param name="options">Extra options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task TripleClickAsync(double x, double y, ClickOptions options = null);
-
-        /// <summary>
         /// Dispatches a <c>mousedown</c> event.
         /// </summary>
         /// <param name="options">Extra options.</param>

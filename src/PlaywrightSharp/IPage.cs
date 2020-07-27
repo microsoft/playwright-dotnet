@@ -841,6 +841,15 @@ namespace PlaywrightSharp
         Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
 
         /// <summary>
+        /// In the case of multiple pages in a single browser, each page can have its own viewport size.
+        /// However, <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> allows to set viewport size (and more) for all pages in the context at once.
+        /// <see cref="IPage.SetViewportSize(ViewportSize)"/> will resize the page.A lot of websites don't expect phones to change size, so you should set the viewport size before navigating to the page.
+        /// </summary>
+        /// <param name="viewport">Viewport to set.</param>
+        /// <returns>A <see cref="Task"/> that completes when the viewport is set.</returns>
+        Task SetViewportSizeAsync(ViewportSize viewport);
+
+        /// <summary>
         /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
@@ -913,14 +922,6 @@ namespace PlaywrightSharp
         /// <param name="options">click options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully double clicked.</returns>
         Task DoubleClickAsync(string selector, ClickOptions options = null);
-
-        /// <summary>
-        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to triple click in the center of the element.
-        /// </summary>
-        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
-        /// <param name="options">click options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully triple clicked.</returns>
-        Task TripleClickAsync(string selector, ClickOptions options = null);
 
         /// <summary>
         /// Navigate to the previous page in history.

@@ -71,9 +71,6 @@ namespace PlaywrightSharp
         public Task DoubleClickAsync(ClickOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task TripleClickAsync(ClickOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task SetInputFilesAsync(params string[] filePath) => throw new NotImplementedException();
 
         /// <inheritdoc />

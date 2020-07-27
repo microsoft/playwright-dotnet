@@ -14,15 +14,13 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>click.spec.js</playwright-file>
     ///<playwright-describe>Page.click</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ClickTests : PlaywrightSharpPageBaseTest
+    public class ClickTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ClickTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        /*
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button</playwright-it>
@@ -81,18 +79,25 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should avoid side effects after timeout</playwright-it>
+        [Fact(Skip = "Ignore USES_HOOKS")]
+        public void ShouldAvoidSideEffectsAfterTimeout()
+        {
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not throw UnhandledPromiseRejection when page closes</playwright-it>
         [Retry]
         public async Task ShouldGracefullyFailWhenPageCloses()
         {
-            var context = await NewContextAsync();
+            await using var context = await Browser.NewContextAsync();
             var newPage = await context.NewPageAsync();
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Task.WhenAll(
                 newPage.CloseAsync(),
                 newPage.Mouse.ClickAsync(1, 2)
              ));
         }
-
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button after navigation </playwright-it>
@@ -125,7 +130,8 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldClickWithDisabledJavascript()
         {
-            var page = await NewPageAsync(new BrowserContextOptions { JavaScriptEnabled = false });
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { JavaScriptEnabled = false });
+            var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/wrappedlink.html");
             await Task.WhenAll(
                 page.ClickAsync("a"),
@@ -163,7 +169,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             const string text = "This is the text that we are going to try to select. Let's see how it goes.";
             await Page.FillAsync("textarea", text);
-            await Page.TripleClickAsync("textarea");
+            await Page.ClickAsync("textarea", new ClickOptions { ClickCount = 3 });
             Assert.Equal(text, await Page.EvaluateAsync<string>(@"() => {
                 const textarea = document.querySelector('textarea');
                 return textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
@@ -215,64 +221,114 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor hidden when already hidden</playwright-it>
+        ///<playwright-it>should not wait with force</playwright-it>
         [Retry]
-        public async Task ShouldWaitForHiddenWhenAlreadyHidden()
+        public async Task ShouldNotWaitWithForce()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.ClickAsync("button", new ClickOptions { WaitFor = WaitForOption.Hidden }));
+                => Page.ClickAsync("button", new ClickOptions { Force = true }));
 
-            Assert.Equal("Node is either not visible or not an HTMLElement", exception.Message);
+            Assert.Equal("Element is not visible", exception.Message);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor hidden</playwright-it>
+        ///<playwright-it>should waitFor display:none to be gone</playwright-it>
         [Retry]
-        public async Task ShouldWaitForHidden()
+        public async Task ShouldWaitForDisplayNoneToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            var clickTask = Page.ClickAsync("button", new ClickOptions { WaitFor = WaitForOption.Hidden });
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
+            var clickTask = Page.ClickAsync("button", new ClickOptions { Timeout = 0 });
 
-            for (int i = 0; i < 5; i++)
-            {
-                await Page.EvaluateAsync("1");
-            }
+            await GiveItAChanceToClick(Page);
+
             Assert.False(clickTask.IsCompleted);
-
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
-
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => clickTask);
-
-            Assert.Equal("Node is either not visible or not an HTMLElement", exception.Message);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
-        }
-
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor visible</playwright-it>
-        [Retry]
-        public async Task ShouldWaitForVisible()
-        {
-            bool done = false;
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
-
-            var clicked = Page.ClickAsync("button").ContinueWith(_ => done = true);
-
-            for (int i = 0; i < 5; i++)
-            {
-                await Page.EvaluateAsync("1");
-            }
-            Assert.False(done);
 
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'block'");
-            await clicked;
-            Assert.True(done);
+            await clickTask.WithTimeout();
+
+            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should waitFor visibility:hidden to be gone</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForVisibilityhiddenToBeGone()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.visibility = 'hidden'");
+            var clickTask = Page.ClickAsync("button", new ClickOptions { Timeout = 0 });
+
+            await GiveItAChanceToClick(Page);
+
+            Assert.False(clickTask.IsCompleted);
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
+
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.visibility = 'visible'");
+            await clickTask.WithTimeout();
+
+            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should timeout waiting for display:none to be gone</playwright-it>
+        [Retry]
+        public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
+            var clickTask = Page.ClickAsync("button", new ClickOptions { Timeout = 5000 });
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+                => Page.ClickAsync("button", new ClickOptions { Timeout = 5000 }));
+
+            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
+            Assert.Contains("element is not visible - waiting", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should timeout waiting for visbility:hidden to be gone</playwright-it>
+        [Retry]
+        public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.visibility = 'hidden'");
+            var clickTask = Page.ClickAsync("button", new ClickOptions { Timeout = 5000 });
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+                => Page.ClickAsync("button", new ClickOptions { Timeout = 5000 }));
+
+            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
+            Assert.Contains("element is not visible - waiting", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should waitFor visible when parent is hidden</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForVisibleWhenParentIsHidden()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.parentElement.style.display = 'none'");
+            var clickTask = Page.ClickAsync("button", new ClickOptions { Timeout = 0 });
+
+            await GiveItAChanceToClick(Page);
+
+            Assert.False(clickTask.IsCompleted);
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
+
+            await Page.QuerySelectorEvaluateAsync("button", "b => b.parentElement.style.display = 'block'");
+            await clickTask.WithTimeout();
+
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
@@ -332,27 +388,20 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should fail to click a missing button</playwright-it>
-        [Retry]
-        public async Task ShouldFailToClickAMissingButton()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            var exception = await Assert.ThrowsAsync<SelectorException>(()
-                => Page.ClickAsync("button.does-not-exist", new ClickOptions { WaitFor = WaitForOption.NoWait }));
-            Assert.Equal("No node found for selector", exception.Message);
-            Assert.Equal("button.does-not-exist", exception.Selector);
-        }
-
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not hang with touch-enabled viewports</playwright-it>
         [Retry]
         public async Task ShouldNotHangWithTouchEnabledViewports()
         {
-            await Page.SetViewportAsync(TestConstants.IPhone.ViewPort);
-            await Page.Mouse.DownAsync();
-            await Page.Mouse.MoveAsync(100, 10);
-            await Page.Mouse.UpAsync();
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = Playwright.Devices[DeviceDescriptorName.IPhone6].ViewPort,
+                HasTouch = Playwright.Devices[DeviceDescriptorName.IPhone6].HasTouch,
+            });
+
+            var page = await context.NewPageAsync();
+            await page.Mouse.DownAsync();
+            await page.Mouse.MoveAsync(100, 10);
+            await page.Mouse.UpAsync();
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -457,11 +506,11 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button with fixed position inside an iframe</playwright-it>
-        [Fact(Skip = "See test in playwright")]
+        [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.SetViewportAsync(new Viewport
+            await Page.SetViewportSizeAsync(new ViewportSize
             {
                 Width = 500,
                 Height = 500
@@ -480,11 +529,21 @@ button.style.position = 'absolute';
         [Retry]
         public async Task ShouldClickTheButtonWithDeviceScaleFactorSet()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 400, Height = 400, DeviceScaleFactor = 5 });
-            Assert.Equal(5, await Page.EvaluateAsync<int>("window.devicePixelRatio"));
-            await Page.SetContentAsync("<div style=\"width:100px;height:100px\">spacer</div>");
-            await FrameUtils.AttachFrameAsync(Page, "button-test", TestConstants.ServerUrl + "/input/button.html");
-            var frame = Page.FirstChildFrame();
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Width = 400,
+                    Height = 400,
+                },
+                DeviceScaleFactor = 5,
+            });
+
+            var page = await context.NewPageAsync();
+            Assert.Equal(5, await page.EvaluateAsync<int>("window.devicePixelRatio"));
+            await page.SetContentAsync("<div style=\"width:100px;height:100px\">spacer</div>");
+            await FrameUtils.AttachFrameAsync(page, "button-test", TestConstants.ServerUrl + "/input/button.html");
+            var frame = page.FirstChildFrame();
             var button = await frame.QuerySelectorAsync("button");
             await button.ClickAsync();
             Assert.Equal("Clicked", await frame.EvaluateAsync<string>("window.result"));
@@ -498,7 +557,7 @@ button.style.position = 'absolute';
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 20, Y = 10 } });
+            await Page.ClickAsync("button", new ClickOptions { Position = new Point { X = 20, Y = 10 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 20 + 8 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -507,14 +566,14 @@ button.style.position = 'absolute';
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button with em border with relative point</playwright-it>
+        ///<playwright-it>should click the button with em border with offset</playwright-it>
         [Retry]
-        public async Task ShouldClickTheButtonWithEmBorderWithRelativePoint()
+        public async Task ShouldClickTheButtonWithEmBorderWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '2em'");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.fontSize = '12px'");
-            await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 20, Y = 10 } });
+            await Page.ClickAsync("button", new ClickOptions { Position = new Point { X = 20, Y = 10 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 20 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -523,14 +582,14 @@ button.style.position = 'absolute';
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click a very large button with relative point</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
-        public async Task ShouldClickAVeryLargeButtonWithRelativePoint()
+        ///<playwright-it>should click a very large button with offset</playwright-it>
+        [Retry]
+        public async Task ShouldClickAVeryLargeButtonWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.QuerySelectorEvaluateAsync("button", "button => button.style.height = button.style.width = '2000px'");
-            await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 1900, Y = 1910 } });
+            await Page.ClickAsync("button", new ClickOptions { Position = new Point { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -539,9 +598,9 @@ button.style.position = 'absolute';
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click a button in scrolling container with relative point</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
-        public async Task ShouldClickAButtonInScrollingContainerWithRelativePoint()
+        ///<playwright-it>should click a button in scrolling container with offset</playwright-it>
+        [Retry]
+        public async Task ShouldClickAButtonInScrollingContainerWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", @"button => {
@@ -553,13 +612,320 @@ button.style.position = 'absolute';
                 container.appendChild(button);
                 button.style.height = '2000px';
                 button.style.width = '2000px';
+                button.style.borderWidth = '8px';
             }");
 
-            await Page.ClickAsync("button", new ClickOptions { RelativePoint = new Point { X = 1900, Y = 1910 } });
+            await Page.ClickAsync("button", new ClickOptions { Position = new Point { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
-            Assert.Equal(1900, await Page.EvaluateAsync<int>("offsetX"));
-            Assert.Equal(1910, await Page.EvaluateAsync<int>("offsetY"));
+            Assert.Equal(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
+            Assert.Equal(TestConstants.IsWebKit ? 1910 + 8 : 1910, await Page.EvaluateAsync<int>("offsetY"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should click the button with offset with page scale</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldClickTheButtonWithOffsetWithPageScale()
+        {
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Width = 400,
+                    Height = 400,
+                },
+                IsMobile = true,
+            });
+
+            var page = await context.NewPageAsync();
+
+            await page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await page.QuerySelectorEvaluateAsync("button", @"button => {
+                button.style.borderWidth = '8px';
+                document.body.style.margin = '0';
+            }");
+
+            await Page.ClickAsync("button", new ClickOptions { Position = new Point { X = 20, Y = 10 } });
+            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
+
+            var point = TestConstants.Product switch
+            {
+                TestConstants.ChromiumProduct => new Point(27, 18),
+                TestConstants.WebkitProduct => new Point(29, 19),
+                _ => new Point(28, 18),
+            };
+
+            Assert.Equal(point.X, await Page.EvaluateAsync<int>("pageX"));
+            Assert.Equal(point.Y, await Page.EvaluateAsync<int>("pageY"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for stable position</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForStablePosition()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+                button.style.transition = 'margin 500ms linear 0s';
+                button.style.marginLeft = '200px';
+                button.style.borderWidth = '0';
+                button.style.width = '200px';
+                button.style.height = '20px';
+                // Set display to 'block'- otherwise Firefox layouts with non-even
+                // values on Linux.
+                button.style.display = 'block';
+                document.body.style.margin = '0';
+            }");
+
+            await Page.ClickAsync("button");
+            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
+            Assert.Equal(300, await Page.EvaluateAsync<int>("pageX"));
+            Assert.Equal(10, await Page.EvaluateAsync<int>("pageY"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should timeout waiting for stable position</playwright-it>
+        [Retry]
+        public async Task ShouldTimeoutWaitingForStablePosition()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+                button.style.transition = 'margin 5s linear 0s';
+                button.style.marginLeft = '200px';
+            }");
+
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+                => Page.ClickAsync("button", new ClickOptions { Timeout = 5000 }));
+
+            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
+            Assert.Contains("element is not visible - waiting", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for becoming hit target</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForBecomingHitTarget()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+                button.style.borderWidth = '0';
+                button.style.width = '200px';
+                button.style.height = '20px';
+                document.body.style.margin = '0';
+                document.body.style.position = 'relative';
+                const flyOver = document.createElement('div');
+                flyOver.className = 'flyover';
+                flyOver.style.position = 'absolute';
+                flyOver.style.width = '400px';
+                flyOver.style.height = '20px';
+                flyOver.style.left = '-200px';
+                flyOver.style.top = '0';
+                flyOver.style.background = 'red';
+                document.body.appendChild(flyOver);
+            }");
+
+            var clickTask = Page.ClickAsync("button");
+            Assert.False(clickTask.IsCompleted);
+
+            await Page.QuerySelectorEvaluateAsync(".flyover", "flyOver => flyOver.style.left = '0'");
+            await GiveItAChanceToClick(Page);
+            Assert.False(clickTask.IsCompleted);
+
+            await Page.QuerySelectorEvaluateAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
+            await clickTask.WithTimeout();
+            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should timeout waiting for hit target</playwright-it>
+        [Retry]
+        public async Task ShouldTimeoutWaitingForHitTarget()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+                button.style.borderWidth = '0';
+                button.style.width = '200px';
+                button.style.height = '20px';
+                document.body.style.margin = '0';
+                document.body.style.position = 'relative';
+                const flyOver = document.createElement('div');
+                flyOver.className = 'flyover';
+                flyOver.style.position = 'absolute';
+                flyOver.style.width = '400px';
+                flyOver.style.height = '20px';
+                flyOver.style.left = '-200px';
+                flyOver.style.top = '0';
+                flyOver.style.background = 'red';
+                document.body.appendChild(flyOver);
+            }");
+
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+                => Page.ClickAsync("button", new ClickOptions { Timeout = 5000 }));
+
+            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
+            Assert.Contains("element is not visible - waiting", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should fail when obscured and not waiting for hit target</playwright-it>
+        [Retry]
+        public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+                document.body.style.position = 'relative';
+                const blocker = document.createElement('div');
+                blocker.style.position = 'absolute';
+                blocker.style.width = '400px';
+                blocker.style.height = '20px';
+                blocker.style.left = '0';
+                blocker.style.top = '0';
+                document.body.appendChild(blocker);
+            }");
+
+            await Page.ClickAsync("button", new ClickOptions { Force = false });
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for button to be enabled</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForButtonToBeEnabled()
+        {
+            await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
+            var clickTask = Page.ClickAsync("text=Click target");
+            await GiveItAChanceToClick(Page);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.False(clickTask.IsCompleted);
+            await Page.EvaluateAsync("() => document.querySlector('button').removeAttribute('disabled')");
+            await clickTask.WithTimeout();
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should timeout waiting for button to be enabled</playwright-it>
+        [Retry]
+        public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
+        {
+            await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
+            var clickTask = Page.ClickAsync("text=Click target", new ClickOptions { Timeout = 3000 });
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => clickTask);
+
+            Assert.Contains("Timeout 3000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("element is disabled - waiting", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for input to be enabled</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForInputToBeEnabled()
+        {
+            await Page.SetContentAsync("<input onclick=\"javascript: window.__CLICKED = true;\" disabled>");
+            var clickTask = Page.ClickAsync("input");
+            await GiveItAChanceToClick(Page);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.False(clickTask.IsCompleted);
+            await Page.EvaluateAsync("() => document.querySlector('input').removeAttribute('disabled')");
+            await clickTask.WithTimeout();
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for select to be enabled</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForSelectToBeEnabled()
+        {
+            await Page.SetContentAsync("<select onclick=\"javascript: window.__CLICKED = true;\" disabled><option selected>Hello</option></select>");
+            var clickTask = Page.ClickAsync("select");
+            await GiveItAChanceToClick(Page);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.False(clickTask.IsCompleted);
+            await Page.EvaluateAsync("() => document.querySlector('select').removeAttribute('disabled')");
+            await clickTask.WithTimeout();
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should click disabled div</playwright-it>
+        [Retry]
+        public async Task ShouldClickDisabledDiv()
+        {
+            await Page.SetContentAsync("<div onclick=\"javascript: window.__CLICKED = true;\" disabled>Click target</div>");
+            await Page.ClickAsync("text=Click target");
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should climb dom for inner label with pointer-events:none</playwright-it>
+        [Retry]
+        public async Task ShouldClimbDomForInnerLabelWithPointerEventsNone()
+        {
+            await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\"><label style=\"pointer-events:none\">Click target</label></button>");
+            await Page.ClickAsync("text=Click target");
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should climb up to [role=button]</playwright-it>
+        [Retry]
+        public async Task ShouldClimbUpToRoleButton()
+        {
+            await Page.SetContentAsync("<div role=button onclick=\"javascript: window.__CLICKED = true;\"><div style=\"pointer-events:none\"><span><div>Click target</div></span></div>");
+            await Page.ClickAsync("text=Click target");
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for BUTTON to be clickable when it has pointer-events:none</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForButtonToBeClickableWhenItHasPointerEventsNone()
+        {
+            await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></button>");
+            var clickTask = Page.ClickAsync("text=Click target");
+            await GiveItAChanceToClick(Page);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.False(clickTask.IsCompleted);
+            await Page.EvaluateAsync("() => document.querySlector('button').removeProperty('pointer-events')");
+            await clickTask.WithTimeout();
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should wait for LABEL to be clickable when it has pointer-events:none</playwright-it>
+        [Retry]
+        public async Task ShouldWaitForLabelToBeClickableWhenItHasPointerEventsNone()
+        {
+            await Page.SetContentAsync("<label onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></label>");
+            var clickTask = Page.ClickAsync("text=Click target");
+
+            for (int i = 0; i < 5; ++i)
+            {
+                Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            }
+
+            Assert.False(clickTask.IsCompleted);
+            await Page.EvaluateAsync("() => document.querySlector('label').removeProperty('pointer-events')");
+            await clickTask.WithTimeout();
+            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -591,7 +957,7 @@ button.style.position = 'absolute';
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click an offscreen element when scroll-behavior is smooth</playwright-it>
-        [SkipBrowserAndPlatformFact(skipChromium: true)]
+        [Retry]
         public async Task ShouldClickAnOffscreenElementWhenScrollBehaviorIsSmooth()
         {
             await Page.SetContentAsync(@$"
@@ -605,8 +971,200 @@ button.style.position = 'absolute';
 
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should report nice error when element is detached and force-clicked</playwright-it>
+        [Retry]
+        public async Task ShouldReportNiceErrorWhenElementIsDetachedAndForceClicked()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/animating-button.html");
+            await Page.EvaluateAsync("() => addButton()");
+            var handle = await Page.QuerySelectorAsync("button");
+            await Page.EvaluateAsync("() => stopButton(true)");
+            var clickTask = handle.ClickAsync(new ClickOptions { Force = true });
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => clickTask);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.Contains("Element is not attached to the DOM", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should fail when element detaches after animation</playwright-it>
+        [Retry]
+        public async Task ShouldFailWhenElementDetachesAfterAnimation()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/animating-button.html");
+            await Page.EvaluateAsync("() => addButton()");
+            var handle = await Page.QuerySelectorAsync("button");
+            var clickTask = handle.ClickAsync();
+            await Page.EvaluateAsync("() => stopButton(true)");
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => clickTask);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.Contains("Element is not attached to the DOM", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should retry when element detaches after animation</playwright-it>
+        [Retry]
+        public async Task ShouldRetryWhenElementDetachesAfterAnimation()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/animating-button.html");
+            await Page.EvaluateAsync("() => addButton()");
+            var clickTask = Page.ClickAsync("button");
+            Assert.False(clickTask.IsCompleted);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            await Page.EvaluateAsync("() => stopButton(true)");
+            await Page.EvaluateAsync("() => addButton()");
+            Assert.False(clickTask.IsCompleted);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            await Page.EvaluateAsync("() => stopButton(true)");
+            await Page.EvaluateAsync("() => addButton()");
+            Assert.False(clickTask.IsCompleted);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            await Page.EvaluateAsync("() => stopButton(false)");
+            await clickTask;
+            Assert.True(await Page.EvaluateAsync<bool?>("window.clicked"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should retry when element is animating from outside the viewport</playwright-it>
+        [Retry]
+        public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewport()
+        {
+            await Page.SetContentAsync($@"
+                <style>
+                  @keyframes move {{
+                    from {{ left: -300px; }}
+                    to {{ left: 0; }}
+                  }}
+                  button {{
+                    position: absolute;
+                    left: -300px;
+                    top: 0;
+                    bottom: 0;
+                    width: 200px;
+                  }}
+                  button.animated {{
+                    animation: 1s linear 1s move forwards;
+                  }}
+                  </style>
+                  <div style=""position: relative; width: 300px; height: 300px;"">
+                     <button onclick =""window.clicked=true""></button>
+                  </div>");
+
+            var handle = await Page.QuerySelectorAsync("button");
+            var clickTask = handle.ClickAsync();
+            await handle.EvaluateAsync("button => button.className = 'animated'");
+            await clickTask;
+            Assert.True(await Page.EvaluateAsync<bool?>("window.clicked"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should retry when element is animating from outside the viewport with force</playwright-it>
+        [Retry]
+        public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewportWithForce()
+        {
+            await Page.SetContentAsync($@"
+                <style>
+                  @keyframes move {{
+                    from {{ left: -300px; }}
+                    to {{ left: 0; }}
+                  }}
+                  button {{
+                    position: absolute;
+                    left: -300px;
+                    top: 0;
+                    bottom: 0;
+                    width: 200px;
+                  }}
+                  button.animated {{
+                    animation: 1s linear 1s move forwards;
+                  }}
+                  </style>
+                  <div style=""position: relative; width: 300px; height: 300px;"">
+                     <button onclick =""window.clicked=true""></button>
+                  </div>");
+
+            var handle = await Page.QuerySelectorAsync("button");
+            var clickTask = handle.ClickAsync(new ClickOptions { Force = true });
+            await handle.EvaluateAsync("button => button.className = 'animated'");
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => clickTask);
+            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.Contains("Element is outside of the viewport", exception.Message);
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should fail when element jumps during hit testing</playwright-it>
+        [Fact(Skip = " Skip USES_HOOKS")]
+        public void ShouldFailWhenElementJumpsDuringHitTesting()
+        {
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should dispatch microtasks in order</playwright-it>
+        [Retry]
+        public async Task ShouldDispatchMicrotasksInOrder()
+        {
+            await Page.SetContentAsync($@"
+                <button id=button>Click me</button>
+                <script>
+                let mutationCount = 0;
+                const observer = new MutationObserver((mutationsList, observer) => {{
+                    for(let mutation of mutationsList)
+                    ++mutationCount;
+                }});
+                observer.observe(document.body, {{ attributes: true, childList: true, subtree: true }});
+                button.addEventListener('mousedown', () => {{
+                    mutationCount = 0;
+                    document.body.appendChild(document.createElement('div'));
+                }});
+                button.addEventListener('mouseup', () => {{
+                    window.result = mutationCount;
+                }});
+                </script>");
+
+            await Page.ClickAsync("button");
+            Assert.Equal(1, await Page.EvaluateAsync<int>("window.result"));
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should retarget when element is recycled during hit testing</playwright-it>
+        [Fact(Skip = " Skip USES_HOOKS")]
+        public void ShouldRetargetWhenElementIsRecycledDuringHitTesting()
+        {
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should report that selector does not match anymore</playwright-it>
+        [Fact(Skip = " Skip USES_HOOKS")]
+        public void ShouldReportThatSelectorDoesNotMatchAnymore()
+        {
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should retarget when element is recycled before enabled check</playwright-it>
+        [Fact(Skip = " Skip USES_HOOKS")]
+        public void ShouldRetargetWhenElementIsRecycledBeforeEnabledCheck()
+        {
+        }
+
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
+        ///<playwright-it>should not retarget the handle when element is recycled</playwright-it>
+        [Fact(Skip = " Skip USES_HOOKS")]
+        public void ShouldNotRetargetTheHandleWhenElementIsRecycled()
+        {
+        }
+        ///<playwright-file>click.spec.js</playwright-file>
+        ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click on an animated button</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [Retry]
         public async Task ShouldClickOnAnAnimatedButton()
         {
             int buttonSize = 50;
@@ -636,6 +1194,14 @@ button.style.position = 'absolute';
             await Page.ClickAsync("button");
             Assert.Equal(2, await Page.EvaluateAsync<int>("window.clicked"));
             Assert.Equal("0px", await Page.EvaluateAsync<string>("document.querySelector('#button').style.left"));
-        }*/
+        }
+
+        private async Task GiveItAChanceToClick(IPage page)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                await page.EvaluateAsync("() => new Promise(f => requestAnimationFrame(() => requestAnimationFrame(f)))");
+            }
+        }
     }
 }

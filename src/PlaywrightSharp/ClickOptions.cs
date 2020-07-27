@@ -26,7 +26,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.
         /// </summary>
-        public Point? RelativePoint { get; set; }
+        public Point? Position { get; set; }
 
         /// <summary>
         /// Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.
@@ -49,7 +49,7 @@ namespace PlaywrightSharp
             Delay = Delay,
             ClickCount = clickCount,
             Button = Button,
-            RelativePoint = RelativePoint,
+            Position = Position,
             Modifiers = Modifiers,
         };
     }

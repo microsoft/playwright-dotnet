@@ -142,9 +142,6 @@ namespace PlaywrightSharp
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task TripleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task QuerySelectorEvaluateAsync(string selector, string script, object args) => QuerySelectorEvaluateAsync(false, selector, script, args);
 
         /// <inheritdoc />

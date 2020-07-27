@@ -413,9 +413,6 @@ namespace PlaywrightSharp
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task TripleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task<IResponse> GoBackAsync(NavigationOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
