@@ -53,7 +53,7 @@ namespace PlaywrightSharp.TestServer
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                                 await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
                             }
-                            else
+                            else if (!context.Response.HasStarted)
                             {
                                 context.Response.StatusCode = 400;
                             }
@@ -66,7 +66,11 @@ namespace PlaywrightSharp.TestServer
                         if (_auths.TryGetValue(context.Request.Path, out var auth) && !Authenticate(auth.username, auth.password, context))
                         {
                             context.Response.Headers.Add("WWW-Authenticate", "Basic realm=\"Secure Area\"");
-                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                            if (!context.Response.HasStarted)
+                            {
+                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            }
                             await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied");
                         }
                         if (_subscribers.TryGetValue(context.Request.Path, out var subscriber))
@@ -84,7 +88,8 @@ namespace PlaywrightSharp.TestServer
 
                         if (
                             context.Request.Path.ToString().Contains("/cached/") &&
-                            !string.IsNullOrEmpty(context.Request.Headers["if-modified-since"]))
+                            !string.IsNullOrEmpty(context.Request.Headers["if-modified-since"]) &&
+                            !context.Response.HasStarted)
                         {
                             context.Response.StatusCode = StatusCodes.Status304NotModified;
                         }

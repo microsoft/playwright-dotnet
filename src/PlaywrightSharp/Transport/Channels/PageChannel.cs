@@ -24,11 +24,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
-        internal event EventHandler<FrameNavigatedEventArgs> FameNavigated;
+        internal event EventHandler<FrameNavigatedEventArgs> FrameNavigated;
 
-        internal event EventHandler<FrameEventArgs> FameAttached;
+        internal event EventHandler<FrameEventArgs> FrameAttached;
 
-        internal event EventHandler<FrameEventArgs> FameDetached;
+        internal event EventHandler<FrameEventArgs> FrameDetached;
+
+        internal event EventHandler<DialogEventArgs> Dialog;
+
+        internal event EventHandler<ConsoleEventArgs> Console;
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -66,13 +70,19 @@ namespace PlaywrightSharp.Transport.Channels
                         });
                         break;
                     case "frameAttached":
-                        FameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                         break;
                     case "frameDetached":
-                        FameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                         break;
                     case "frameNavigated":
-                        FameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                        FrameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                        break;
+                    case "dialog":
+                        Dialog?.Invoke(this, new DialogEventArgs(serverParams?.ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        break;
+                    case "console":
+                        Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
                         break;
                     case "request":
                         Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
@@ -134,6 +144,15 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["interestingOnly"] = interestingOnly ?? true,
                     ["root"] = root,
+                });
+
+        internal Task SetViewportSizeAsync(ViewportSize viewport)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "setViewportSize",
+                new Dictionary<string, object>
+                {
+                    ["viewportSize"] = viewport,
                 });
     }
 }

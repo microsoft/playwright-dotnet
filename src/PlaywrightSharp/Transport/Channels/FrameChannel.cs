@@ -170,6 +170,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["force"] = options?.Force,
                     ["timeout"] = options?.Timeout,
                     ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["position"] = options?.Position,
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                     ["isPage"] = isPage,
                 });

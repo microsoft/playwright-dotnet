@@ -34,6 +34,9 @@ namespace PlaywrightSharp.Transport
             GC.SuppressFinalize(this);
         }
 
+        /// <inheritdoc/>
+        public void Close() => _readerCancellationSource.Cancel();
+
         public async Task SendAsync(string message)
         {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message.ToCharArray());
@@ -71,7 +74,7 @@ namespace PlaywrightSharp.Transport
             var stream = _process.StandardOutput;
             byte[] buffer = new byte[DefaultBufferSize];
 
-            while (!_process.HasExited && !token.IsCancellationRequested)
+            while (!token.IsCancellationRequested && !_process.HasExited)
             {
                 int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
 

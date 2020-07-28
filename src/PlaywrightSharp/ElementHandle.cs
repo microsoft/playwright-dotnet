@@ -65,10 +65,10 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task ClickAsync(ClickOptions options = null) => throw new NotImplementedException();
+        public Task ClickAsync(ClickOptions options = null) => _channel.ClickAsync(options ?? new ClickOptions());
 
         /// <inheritdoc />
-        public Task DoubleClickAsync(ClickOptions options = null) => throw new NotImplementedException();
+        public Task DoubleClickAsync(ClickOptions options = null) => _channel.DoubleClickAsync(options ?? new ClickOptions());
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(params string[] filePath) => throw new NotImplementedException();

@@ -843,7 +843,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.
         /// However, <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> allows to set viewport size (and more) for all pages in the context at once.
-        /// <see cref="IPage.SetViewportSize(ViewportSize)"/> will resize the page.A lot of websites don't expect phones to change size, so you should set the viewport size before navigating to the page.
+        /// <see cref="IPage.SetViewportSizeAsync(ViewportSize)"/> will resize the page.A lot of websites don't expect phones to change size, so you should set the viewport size before navigating to the page.
         /// </summary>
         /// <param name="viewport">Viewport to set.</param>
         /// <returns>A <see cref="Task"/> that completes when the viewport is set.</returns>
@@ -906,6 +906,26 @@ namespace PlaywrightSharp
         /// <param name="options">add style tag options.</param>
         /// <returns>A <see cref="Task"/> that completes when the stylesheet's onload fires or when the CSS content was injected into frame, yieling the added <see cref="IElementHandle"/>.</returns>
         Task<IElementHandle> AddStyleTagAsync(AddTagOptions options);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to check. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
+        Task CheckAsync(string selector, CheckOptions options = null);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to unchecked. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
+        Task UncheckAsync(string selector, CheckOptions options = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to click in the center of the element.

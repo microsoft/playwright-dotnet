@@ -26,6 +26,7 @@ namespace PlaywrightSharp
             _initializer = initializer;
             Url = _initializer.Url;
             Name = _initializer.Name;
+            ParentFrame = _initializer.ParentFrame;
         }
 
         /// <inheritdoc/>
@@ -253,39 +254,39 @@ namespace PlaywrightSharp
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false)).Object;
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script)
-            => ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined,
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script)
-            => ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined,
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script, object args)
-            => ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script, object args)
-            => ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<T> QuerySelectorEvaluateAsync<T>(bool isPageCall, string selector, string script)
-            => ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
@@ -293,7 +294,7 @@ namespace PlaywrightSharp
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<JsonElement?> QuerySelectorEvaluateAsync(bool isPageCall, string selector, string script)
-            => ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
@@ -301,23 +302,23 @@ namespace PlaywrightSharp
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<JsonElement?> QuerySelectorEvaluateAsync(bool isPageCall, string selector, string script, object args)
-            => ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<T> QuerySelectorEvaluateAsync<T>(bool isPageCall, string selector, string script, object args)
-            => ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<T> QuerySelectorAllEvaluateAsync<T>(bool isPageCall, string selector, string script)
-            => ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
@@ -325,7 +326,7 @@ namespace PlaywrightSharp
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<JsonElement?> QuerySelectorAllEvaluateAsync(bool isPageCall, string selector, string script)
-            => ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
@@ -333,162 +334,19 @@ namespace PlaywrightSharp
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<JsonElement?> QuerySelectorAllEvaluateAsync(bool isPageCall, string selector, string script, object args)
-            => ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<T> QuerySelectorAllEvaluateAsync<T>(bool isPageCall, string selector, string script, object args)
-            => ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
-
-        private static bool IsPrimitiveValue(Type type)
-            => type == typeof(string) ||
-            type == typeof(decimal) ||
-            type == typeof(double) ||
-            type == typeof(bool) ||
-            type == typeof(decimal?) ||
-            type == typeof(double?) ||
-            type == typeof(bool?);
-
-        private static T ParseEvaluateResult<T>(JsonElement? result)
-        {
-            if (!result.HasValue)
-            {
-                return default;
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var value) && value.ToString() == "undefined")
-            {
-                return default;
-            }
-
-            if (typeof(T) == typeof(JsonElement?))
-            {
-                return (T)(object)result;
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("o", out JsonElement obj))
-            {
-                return obj.ToObject<T>();
-            }
-
-            return result.Value.ToObject<T>();
-        }
-
-        private EvaluateArgument SerializedArgument(object args)
-        {
-            var result = new EvaluateArgument();
-            var guids = new List<EvaluateArgumentGuidElement>();
-
-            int PushHandle(string guid)
-            {
-                guids.Add(new EvaluateArgumentGuidElement { Guid = guid });
-                return guids.Count - 1;
-            }
-
-            object value = SerializeAsCallArgument(args, value =>
-            {
-                if (value is IChannelOwner channelOwner)
-                {
-                    return new EvaluateArgumentValueElement
-                    {
-                        H = PushHandle(channelOwner.Channel.Guid),
-                    };
-                }
-
-                return new EvaluateArgumentValueElement
-                {
-                    FallThrough = value,
-                };
-            });
-
-            return new EvaluateArgument
-            {
-                Value = value,
-                Guids = guids,
-            };
-        }
-
-        private object SerializeAsCallArgument(object value, Func<object, EvaluateArgumentValueElement> jsHandleSerializer)
-            => Serialize(value, jsHandleSerializer, new List<object>());
-
-        private object Serialize(object value, Func<object, EvaluateArgumentValueElement> jsHandleSerializer, List<object> visited)
-        {
-            // This will endupt being a converter when we need to fully implement this
-            value = jsHandleSerializer(value);
-
-            if (value is EvaluateArgumentValueElement valueElement && valueElement.FallbackSet)
-            {
-                value = valueElement.FallThrough;
-            }
-            else
-            {
-                return value;
-            }
-
-            if (visited.Contains(value))
-            {
-                throw new PlaywrightSharpException("Argument is a circular structure");
-            }
-
-            if (value == null)
-            {
-                return new EvaluateArgumentValueElement.SpecialType { V = "null" };
-            }
-
-            if (value is double nan && double.IsNaN(nan))
-            {
-                return new EvaluateArgumentValueElement.SpecialType { V = "NaN" };
-            }
-
-            if (value is double infinity && double.IsInfinity(infinity))
-            {
-                return new EvaluateArgumentValueElement.SpecialType { V = "Infinity" };
-            }
-
-            if (value is double negativeInfinity && double.IsNegativeInfinity(negativeInfinity))
-            {
-                return new EvaluateArgumentValueElement.SpecialType { V = "Infinity" };
-            }
-
-            if (value is double negativeZero && negativeZero == -0)
-            {
-                return new EvaluateArgumentValueElement.SpecialType { V = "-0" };
-            }
-
-            if (IsPrimitiveValue(value.GetType()))
-            {
-                return value;
-            }
-
-            if (value is DateTime date)
-            {
-                return new EvaluateArgumentValueElement.Datetime { D = date };
-            }
-
-            if (value is IEnumerable enumerable)
-            {
-                var result = new List<object>();
-                visited.Add(value);
-
-                foreach (object item in enumerable)
-                {
-                    result.Add(Serialize(item, jsHandleSerializer, visited));
-                }
-
-                visited.Remove(value);
-
-                return new EvaluateArgumentValueElement.Array { A = result.ToArray() };
-            }
-
-            return new EvaluateArgumentValueElement.Object { O = value };
-        }
     }
 }

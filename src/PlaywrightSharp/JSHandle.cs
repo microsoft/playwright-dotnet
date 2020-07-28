@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -30,10 +31,32 @@ namespace PlaywrightSharp
         IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string pageFunction, params object[] args) => throw new NotImplementedException();
+        public async Task<T> EvaluateAsync<T>(string script)
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
+        public async Task<JsonElement?> EvaluateAsync(string script)
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: EvaluateArgument.Undefined).ConfigureAwait(false));
+
+        /// <inheritdoc />
+        public async Task<JsonElement?> EvaluateAsync(string script, object args)
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
+
+        /// <inheritdoc />
+        public async Task<T> EvaluateAsync<T>(string script, object args)
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
 
         /// <inheritdoc />
         public Task<T> GetJsonValueAsync<T>() => throw new NotImplementedException();

@@ -12,13 +12,15 @@ namespace PlaywrightSharp
     /// </summary>
     public class ConsoleMessage : IChannelOwner<ConsoleMessage>
     {
-        private ConnectionScope _scope;
-        private ConsoleMessageChannel _channel;
+        private readonly ConnectionScope _scope;
+        private readonly ConsoleMessageChannel _channel;
+        private readonly ConsoleMessageInitializer _initializer;
 
         internal ConsoleMessage(ConnectionScope scope, string guid, ConsoleMessageInitializer initializer)
         {
             _scope = scope;
             _channel = new ConsoleMessageChannel(guid, scope, this);
+            _initializer = initializer;
         }
 
         /// <inheritdoc/>
@@ -34,23 +36,23 @@ namespace PlaywrightSharp
         /// Gets the ConsoleMessage type.
         /// </summary>
         /// <value>ConsoleMessageType.</value>
-        public ConsoleType Type { get; }
+        public ConsoleType Type => _initializer.Type;
 
         /// <summary>
         /// Gets the arguments.
         /// </summary>
         /// <value>The arguments.</value>
-        public IEnumerable<IJSHandle> Args { get; }
+        public IEnumerable<IJSHandle> Args => _initializer.Args.Select(a => a.Object);
 
         /// <summary>
         /// Gets the location.
         /// </summary>
-        public ConsoleMessageLocation Location { get; }
+        public ConsoleMessageLocation Location => _initializer.Location;
 
         /// <summary>
         /// Gets the console text.
         /// </summary>
         /// <value>The text.</value>
-        internal string Text { get; }
+        internal string Text => _initializer.Text;
     }
 }

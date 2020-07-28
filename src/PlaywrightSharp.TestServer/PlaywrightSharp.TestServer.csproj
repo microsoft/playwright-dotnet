@@ -4,6 +4,7 @@
         <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
         <OutputType>Library</OutputType>
         <LangVersion>8</LangVersion>
+        <ReleaseVersion>0.0.0</ReleaseVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
