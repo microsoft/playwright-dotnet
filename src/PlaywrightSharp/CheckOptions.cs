@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// Chéck options. See <see cref="IPage.CheckAsync(string, CheckOptions)"/>.

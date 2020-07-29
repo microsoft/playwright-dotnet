@@ -42,7 +42,7 @@ namespace PlaywrightSharp
         /// Gets the arguments.
         /// </summary>
         /// <value>The arguments.</value>
-        public IEnumerable<IJSHandle> Args => _initializer.Args.Select(a => a.Object);
+        public IEnumerable<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object);
 
         /// <summary>
         /// Gets the location.

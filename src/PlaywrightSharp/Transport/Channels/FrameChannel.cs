@@ -207,5 +207,31 @@ namespace PlaywrightSharp.Transport.Channels
                     ["waitUntil"] = options.WaitUntil.ToValueString(),
                     ["isPage"] = isPage,
                 });
+
+        internal Task CheckAsync(string selector, CheckOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "check",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task UncheckAsync(string selector, CheckOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "uncheck",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["isPage"] = isPage,
+                });
     }
 }

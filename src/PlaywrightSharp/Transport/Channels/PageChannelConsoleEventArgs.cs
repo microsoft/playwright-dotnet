@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Transport.Channels
+namespace PlaywrightSharp.Transport.Channels
 {
     internal class PageChannelConsoleEventArgs
     {

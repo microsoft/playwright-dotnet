@@ -113,7 +113,7 @@ namespace PlaywrightSharp.Tests.Page
                 checkbox.addEventListener('click', () => checkbox.setAttribute('aria-checked', 'true'));
                 </script>");
             await Page.CheckAsync("div");
-            Assert.True(await Page.EvaluateAsync<bool?>("checkbox.getAttribute('aria-checked')"));
+            Assert.Equal("true", await Page.EvaluateAsync<string>("checkbox.getAttribute('aria-checked')"));
         }
     }
 }

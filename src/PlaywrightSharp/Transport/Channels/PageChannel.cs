@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -153,6 +154,68 @@ namespace PlaywrightSharp.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["viewportSize"] = viewport,
+                });
+
+        internal Task KeyboardDownAsync(string key)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "keyboardDown",
+                new Dictionary<string, object>
+                {
+                    ["key"] = key,
+                });
+
+        internal Task KeyboardUpAsync(string key)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "keyboardUp",
+                new Dictionary<string, object>
+                {
+                    ["key"] = key,
+                });
+
+        internal Task MouseDownAsync(MouseButton button, int clickCount)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseDown",
+                new Dictionary<string, object>
+                {
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
+                });
+
+        internal Task MouseMoveAsync(double x, double y, int? steps)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseMove",
+                new Dictionary<string, object>
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    ["steps"] = steps,
+                });
+
+        internal Task MouseUpAsync(MouseButton button, int clickCount)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseUp",
+                new Dictionary<string, object>
+                {
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
+                });
+
+        internal Task MouseClickAsync(double x, double y, int delay, MouseButton button, int clickCount)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseClick",
+                new Dictionary<string, object>
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    ["delay"] = delay,
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
                 });
     }
 }

@@ -286,7 +286,6 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
-            var clickTask = Page.ClickAsync("button", new ClickOptions { Timeout = 5000 });
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new ClickOptions { Timeout = 5000 }));
 
@@ -351,7 +350,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClickOnCheckboxInputAndToggle()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/checkbox.html");
-            Assert.Null(await Page.EvaluateAsync("result.check"));
+            Assert.Null(await Page.EvaluateAsync<bool?>("result.check"));
             await Page.ClickAsync("input#agree");
             Assert.True(await Page.EvaluateAsync<bool>("result.check"));
             Assert.Equal(new[] {
@@ -449,7 +448,7 @@ namespace PlaywrightSharp.Tests.Page
                 const button = document.querySelector('button');
                 button.textContent = 'Some really long text that will go offscreen';
 
-button.style.position = 'absolute';
+                button.style.position = 'absolute';
                 button.style.left = '368px';
             }");
             await Page.ClickAsync("button");
@@ -647,8 +646,8 @@ button.style.position = 'absolute';
                 document.body.style.margin = '0';
             }");
 
-            await Page.ClickAsync("button", new ClickOptions { Position = new Point { X = 20, Y = 10 } });
-            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
+            await page.ClickAsync("button", new ClickOptions { Position = new Point { X = 20, Y = 10 } });
+            Assert.Equal("Clicked", await page.EvaluateAsync<string>("window.result"));
 
             var point = TestConstants.Product switch
             {
@@ -657,8 +656,8 @@ button.style.position = 'absolute';
                 _ => new Point(28, 18),
             };
 
-            Assert.Equal(point.X, await Page.EvaluateAsync<int>("pageX"));
-            Assert.Equal(point.Y, await Page.EvaluateAsync<int>("pageY"));
+            Assert.Equal(point.X, Convert.ToInt32(await page.EvaluateAsync<decimal>("pageX")));
+            Assert.Equal(point.Y, Convert.ToInt32(await page.EvaluateAsync<decimal>("pageY")));
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -783,6 +782,7 @@ button.style.position = 'absolute';
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            var button = await Page.QuerySelectorAsync("button");
             await Page.QuerySelectorEvaluateAsync("button", @"button => {
                 document.body.style.position = 'relative';
                 const blocker = document.createElement('div');
@@ -794,7 +794,7 @@ button.style.position = 'absolute';
                 document.body.appendChild(blocker);
             }");
 
-            await Page.ClickAsync("button", new ClickOptions { Force = false });
+            await button.ClickAsync(new ClickOptions { Force = true });
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 

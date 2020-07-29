@@ -10,7 +10,7 @@ namespace PlaywrightSharp
     public interface IElementHandle : IJSHandle
     {
         /// <summary>
-        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string, DownOptions)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
+        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
         /// </summary>
         /// <param name="key">Name of key to press, such as <c>ArrowLeft</c>. See <see cref="KeyDefinitions"/> for a list of all key names.</param>
         /// <param name="options">press options.</param>

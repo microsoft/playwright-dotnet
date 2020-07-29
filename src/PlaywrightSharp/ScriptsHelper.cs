@@ -30,11 +30,6 @@ namespace PlaywrightSharp
                 return default;
             }
 
-            if (typeof(T) == typeof(JsonElement?))
-            {
-                return (T)(object)result;
-            }
-
             if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("o", out var obj))
             {
                 return obj.ToObject<T>();
@@ -43,6 +38,16 @@ namespace PlaywrightSharp
             if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)
             {
                 return default;
+            }
+
+            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("a", out var array) && array.ValueKind == JsonValueKind.Array)
+            {
+                return array.ToObject<T>();
+            }
+
+            if (typeof(T) == typeof(JsonElement?))
+            {
+                return (T)(object)result;
             }
 
             return result.Value.ToObject<T>();

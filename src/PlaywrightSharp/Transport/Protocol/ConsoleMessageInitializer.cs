@@ -7,7 +7,7 @@ namespace PlaywrightSharp.Transport.Protocol
     {
         public ConsoleType Type { get; set; }
 
-        public IEnumerable<JSHandleChannel> Args { get; set; }
+        public IEnumerable<ChannelBase> Args { get; set; }
 
         public ConsoleMessageLocation Location { get; set; }
 

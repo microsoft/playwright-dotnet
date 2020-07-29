@@ -140,6 +140,12 @@ namespace PlaywrightSharp
         public Task ClickAsync(string selector, ClickOptions options = null) => ClickAsync(false, selector, options);
 
         /// <inheritdoc />
+        public Task CheckAsync(string selector, CheckOptions options = null) => CheckAsync(false, selector, options);
+
+        /// <inheritdoc />
+        public Task UncheckAsync(string selector, CheckOptions options = null) => UncheckAsync(false, selector, options);
+
+        /// <inheritdoc />
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
@@ -212,7 +218,7 @@ namespace PlaywrightSharp
         internal async Task<IResponse> WaitForNavigationAsync(bool isPageCall, WaitForNavigationOptions options)
             => (await _channel.WaitForNavigationAsync(
                 options: options ?? new WaitForNavigationOptions(),
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+                isPage: isPageCall).ConfigureAwait(false))?.Object;
 
         internal Task<IResponse> WaitForNavigationAsync(bool isPageCall, LifecycleEvent waitUntil)
             => WaitForNavigationAsync(isPageCall, new WaitForNavigationOptions { WaitUntil = waitUntil });
@@ -230,6 +236,12 @@ namespace PlaywrightSharp
 
         internal Task ClickAsync(bool isPageCall, string selector, ClickOptions options)
             => _channel.ClickAsync(selector, options, isPageCall);
+
+        internal Task CheckAsync(bool isPageCall, string selector, CheckOptions options)
+            => _channel.CheckAsync(selector, options, isPageCall);
+
+        internal Task UncheckAsync(bool isPageCall, string selector, CheckOptions options)
+            => _channel.UncheckAsync(selector, options, isPageCall);
 
         internal Task SetContentAsync(bool isPageCall, string html, NavigationOptions options)
             => _channel.SetcontentAsync(html, options, isPageCall);
