@@ -577,7 +577,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 20 : 20, await Page.EvaluateAsync<int>("offsetX"));
-            Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 20 : 10, await Page.EvaluateAsync<int>("offsetY"));
+            Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 10 : 10, await Page.EvaluateAsync<int>("offsetY"));
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
