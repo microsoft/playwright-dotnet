@@ -58,5 +58,30 @@ namespace PlaywrightSharp
         /// Gets or sets the cookies SameSite value.
         /// </summary>
         public SameSite SameSite { get; set; }
+
+        /// <summary>
+        /// Converts a <see cref="NetworkCookie"/> to a <see cref="SetNetworkCookieParam"/>.
+        /// </summary>
+        /// <param name="cookie">Cookie to convert.</param>
+        public static implicit operator SetNetworkCookieParam(NetworkCookie cookie)
+            => cookie == null
+            ? null
+            : new SetNetworkCookieParam
+            {
+                Name = cookie.Name,
+                Value = cookie.Value,
+                Domain = cookie.Domain,
+                Path = cookie.Path,
+                Expires = cookie.Expires,
+                HttpOnly = cookie.HttpOnly,
+                Secure = cookie.Secure,
+                SameSite = cookie.SameSite,
+            };
+
+        /// <summary>
+        /// Converts a <see cref="NetworkCookie"/> to a <see cref="SetNetworkCookieParam"/>.
+        /// </summary>
+        /// <returns>A <see cref="SetNetworkCookieParam"/> with the matching properties set.</returns>
+        public SetNetworkCookieParam ToSetNetworkCookieParam() => this;
     }
 }

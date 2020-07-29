@@ -3,7 +3,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Cookie set data.
     /// </summary>
-    /// <seealso cref="IBrowserContext.SetCookiesAsync(SetNetworkCookieParam[])"/>
+    /// <seealso cref="IBrowserContext.AddCookiesAsync(SetNetworkCookieParam[])"/>
     /// <seealso cref="IBrowserContext.GetCookiesAsync(string[])"/>
     public class SetNetworkCookieParam
     {
