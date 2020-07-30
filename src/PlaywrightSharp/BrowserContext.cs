@@ -127,16 +127,16 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls) => throw new NotImplementedException();
+        public Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls) => _channel.GetCookiesAsync(urls);
 
         /// <inheritdoc />
-        public Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies) => throw new NotImplementedException();
+        public Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies) => AddCookiesAsync(cookies.ToArray());
 
         /// <inheritdoc />
-        public Task AddCookiesAsync(params SetNetworkCookieParam[] cookies) => throw new NotImplementedException();
+        public Task AddCookiesAsync(params SetNetworkCookieParam[] cookies) => _channel.AddCookiesAsync(cookies);
 
         /// <inheritdoc />
-        public Task ClearCookiesAsync() => throw new NotImplementedException();
+        public Task ClearCookiesAsync() => _channel.ClearCookiesAsync();
 
         /// <inheritdoc />
         public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions) => throw new NotImplementedException();

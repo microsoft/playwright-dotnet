@@ -56,18 +56,19 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldGetANonSessionCookie()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            var date = new DateTime(2038, 1, 1);
             Assert.Equal("username=John Doe", await Page.EvaluateAsync<string>(@"timestamp => {
                 const date = new Date(timestamp);
                   document.cookie = `username=John Doe;expires=${date.toUTCString()}`;
                   return document.cookie;
-            }", new DateTime(2038, 1, 1)));
+            }", date));
 
             var cookie = (await Page.BrowserContext.GetCookiesAsync()).FirstOrDefault();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
             Assert.Equal("/", cookie.Path);
-            Assert.Equal(-1, cookie.Expires);
+            Assert.Equal(new DateTimeOffset(date).ToUnixTimeSeconds(), cookie.Expires);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
             Assert.Equal(SameSite.None, cookie.SameSite);
