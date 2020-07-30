@@ -247,7 +247,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(
                 new[]
                 {
-                    "multiple1=123456",
+                    "multiple-1=123456",
                     "multiple-2=bar"
                 },
                 await Page.EvaluateAsync<string[]>(@"() => {
@@ -338,7 +338,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             await Page.GoToAsync(TestConstants.AboutBlank);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async ()
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
                 => await Context.AddCookiesAsync(
                     new SetNetworkCookieParam
                     {
