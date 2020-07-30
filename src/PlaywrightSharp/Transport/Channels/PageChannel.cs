@@ -121,10 +121,22 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<ResponseChannel> ReloadAsync(NavigationOptions options)
-            => Scope.SendMessageToServer<ResponseChannel>(
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = options?.Timeout,
+            };
+
+            if (options != null)
+            {
+                args["waitUntil"] = options.WaitUntil;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "reload",
-                options ?? new NavigationOptions());
+                args);
+        }
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
             => Scope.SendMessageToServer<PageChannel>(
