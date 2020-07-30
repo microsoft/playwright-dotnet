@@ -213,14 +213,22 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<ResponseChannel> WaitForNavigationAsync(WaitForNavigationOptions options, bool isPage)
-            => Scope.SendMessageToServer<ResponseChannel>(
+        {
+            var param = new Dictionary<string, object>
+            {
+                ["isPage"] = isPage,
+            };
+
+            if (options?.WaitUntil != null)
+            {
+                param["waitUntil"] = options.WaitUntil?.ToValueString();
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "waitForNavigation",
-                new Dictionary<string, object>
-                {
-                    ["waitUntil"] = options.WaitUntil?.ToValueString(),
-                    ["isPage"] = isPage,
-                });
+                param);
+        }
 
         internal Task CheckAsync(string selector, CheckOptions options, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
