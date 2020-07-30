@@ -50,8 +50,9 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var cookies = await Context.GetCookiesAsync();
             await Context.ClearCookiesAsync();
             Assert.Empty(await Context.GetCookiesAsync());
-            await Context.AddCookiesAsync(cookies.Cast<SetNetworkCookieParam>());
-            Assert.Equal(cookies, await Context.GetCookiesAsync());
+            await Context.AddCookiesAsync(cookies.Select(c => (SetNetworkCookieParam)c));
+            var newCookies = await Context.GetCookiesAsync();
+            Assert.Equal(cookies, newCookies);
         }
 
         /// <playwright-file>cookies.spec.js</playwright-file>
@@ -63,7 +64,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             string cookie = string.Empty;
             Server.SetRoute("/empty.html", context =>
             {
-                cookie = context.Request.Cookies.ToString();
+                cookie = string.Join(";", context.Request.Cookies.Select(c => $"{c.Key}={c.Value}"));
                 return Task.CompletedTask;
             });
 
@@ -173,7 +174,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             string cookie = string.Empty;
             Server.SetRoute("/empty.html", context =>
             {
-                cookie = context.Request.Cookies.ToString();
+                cookie = string.Join(";", context.Request.Cookies.Select(c => $"{c.Key}={c.Value}"));
                 return Task.CompletedTask;
             });
 
@@ -186,7 +187,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var page = await Context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
-            Assert.Equal("cookie=value", cookie);
+            Assert.Equal("sendcookie=value", cookie);
 
             var context = await Browser.NewContextAsync();
             page = await context.NewPageAsync();
@@ -362,7 +363,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GoToAsync("data:,Hello%2C%20World!");
-            var exception = await Assert.ThrowsAnyAsync<ArgumentException>(async ()
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async ()
                 => await Context.AddCookiesAsync(
                     new SetNetworkCookieParam
                     {
@@ -476,7 +477,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                   iframe.onload = fulfill;
                   iframe.src = src;
                   return promise;
-                }", TestConstants.ServerUrl + "/grid.html");
+                }", TestConstants.CrossProcessUrl + "/grid.html");
 
             await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await Page.WaitForTimeoutAsync(2000);
