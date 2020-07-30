@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Helpers
                 IgnoreNullValues = false,
                 Converters =
                 {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                    new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
                 },
             };
     }
