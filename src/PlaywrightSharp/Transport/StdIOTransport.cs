@@ -34,19 +34,25 @@ namespace PlaywrightSharp.Transport
             GC.SuppressFinalize(this);
         }
 
+        /// <inheritdoc/>
+        public void Close() => _readerCancellationSource.Cancel();
+
         public async Task SendAsync(string message)
         {
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message.ToCharArray());
-            int len = bytes.Length;
-            byte[] ll = new byte[4];
-            ll[0] = (byte)(len & 0xFF);
-            ll[1] = (byte)((len >> 8) & 0xFF);
-            ll[2] = (byte)((len >> 16) & 0xFF);
-            ll[3] = (byte)((len >> 24) & 0xFF);
+            if (!_readerCancellationSource.IsCancellationRequested)
+            {
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message.ToCharArray());
+                int len = bytes.Length;
+                byte[] ll = new byte[4];
+                ll[0] = (byte)(len & 0xFF);
+                ll[1] = (byte)((len >> 8) & 0xFF);
+                ll[2] = (byte)((len >> 16) & 0xFF);
+                ll[3] = (byte)((len >> 24) & 0xFF);
 
-            await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4).ConfigureAwait(false);
-            await _process.StandardInput.BaseStream.WriteAsync(bytes, 0, len).ConfigureAwait(false);
-            await _process.StandardInput.BaseStream.FlushAsync().ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(bytes, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
+            }
         }
 
         private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
@@ -71,7 +77,7 @@ namespace PlaywrightSharp.Transport
             var stream = _process.StandardOutput;
             byte[] buffer = new byte[DefaultBufferSize];
 
-            while (!_process.HasExited && !token.IsCancellationRequested)
+            while (!token.IsCancellationRequested && !_process.HasExited)
             {
                 int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
 

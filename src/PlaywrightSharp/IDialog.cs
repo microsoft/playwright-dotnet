@@ -23,19 +23,19 @@ namespace PlaywrightSharp
         /// Dialog's type, can be one of alert, beforeunload, confirm or prompt.
         /// </summary>
         /// <value>The type of the dialog.</value>
-        DialogType DialogType { get; set; }
+        DialogType DialogType { get; }
 
         /// <summary>
         /// If dialog is prompt, returns default prompt value. Otherwise, returns empty string.
         /// </summary>
         /// <value>The default value.</value>
-        string DefaultValue { get; set; }
+        string DefaultValue { get; }
 
         /// <summary>
         /// A message displayed in the dialog.
         /// </summary>
         /// <value>The message.</value>
-        string Message { get; set; }
+        string Message { get; }
 
         /// <summary>
         /// Accept the Dialog.

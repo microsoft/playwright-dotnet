@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -24,11 +25,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
-        internal event EventHandler<FrameNavigatedEventArgs> FameNavigated;
+        internal event EventHandler<FrameNavigatedEventArgs> FrameNavigated;
 
-        internal event EventHandler<FrameEventArgs> FameAttached;
+        internal event EventHandler<FrameEventArgs> FrameAttached;
 
-        internal event EventHandler<FrameEventArgs> FameDetached;
+        internal event EventHandler<FrameEventArgs> FrameDetached;
+
+        internal event EventHandler<DialogEventArgs> Dialog;
+
+        internal event EventHandler<ConsoleEventArgs> Console;
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -66,13 +71,19 @@ namespace PlaywrightSharp.Transport.Channels
                         });
                         break;
                     case "frameAttached":
-                        FameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                         break;
                     case "frameDetached":
-                        FameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                         break;
                     case "frameNavigated":
-                        FameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                        FrameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                        break;
+                    case "dialog":
+                        Dialog?.Invoke(this, new DialogEventArgs(serverParams?.ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                        break;
+                    case "console":
+                        Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
                         break;
                     case "request":
                         Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
@@ -110,10 +121,22 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<ResponseChannel> ReloadAsync(NavigationOptions options)
-            => Scope.SendMessageToServer<ResponseChannel>(
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = options?.Timeout,
+            };
+
+            if (options != null)
+            {
+                args["waitUntil"] = options.WaitUntil;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "reload",
-                options ?? new NavigationOptions());
+                args);
+        }
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
             => Scope.SendMessageToServer<PageChannel>(
@@ -134,6 +157,77 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["interestingOnly"] = interestingOnly ?? true,
                     ["root"] = root,
+                });
+
+        internal Task SetViewportSizeAsync(ViewportSize viewport)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "setViewportSize",
+                new Dictionary<string, object>
+                {
+                    ["viewportSize"] = viewport,
+                });
+
+        internal Task KeyboardDownAsync(string key)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "keyboardDown",
+                new Dictionary<string, object>
+                {
+                    ["key"] = key,
+                });
+
+        internal Task KeyboardUpAsync(string key)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "keyboardUp",
+                new Dictionary<string, object>
+                {
+                    ["key"] = key,
+                });
+
+        internal Task MouseDownAsync(MouseButton button, int clickCount)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseDown",
+                new Dictionary<string, object>
+                {
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
+                });
+
+        internal Task MouseMoveAsync(double x, double y, int? steps)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseMove",
+                new Dictionary<string, object>
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    ["steps"] = steps,
+                });
+
+        internal Task MouseUpAsync(MouseButton button, int clickCount)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseUp",
+                new Dictionary<string, object>
+                {
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
+                });
+
+        internal Task MouseClickAsync(double x, double y, int delay, MouseButton button, int clickCount)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "mouseClick",
+                new Dictionary<string, object>
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    ["delay"] = delay,
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
                 });
     }
 }

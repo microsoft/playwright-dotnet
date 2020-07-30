@@ -5,5 +5,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public string Name { get; set; }
 
         public string Url { get; set; }
+
+        public Frame ParentFrame { get; set; }
     }
 }

@@ -263,6 +263,7 @@ namespace PlaywrightSharp.Transport
                 return;
             }
 
+            _transport.Close();
             _playwrightServerProcess?.Kill();
             _playwrightServerProcess?.Dispose();
         }

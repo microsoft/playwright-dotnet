@@ -329,14 +329,6 @@ namespace PlaywrightSharp
         Task DoubleClickAsync(string selector, ClickOptions options = null);
 
         /// <summary>
-        /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to triple click in the center of the element.
-        /// </summary>
-        /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
-        /// <param name="options">click options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully triple clicked.</returns>
-        Task TripleClickAsync(string selector, ClickOptions options = null);
-
-        /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
@@ -577,5 +569,25 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>, <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/> or <see cref="IPage.DefaultTimeout"/> properties.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
         Task WaitForLoadStateAsync(LifecycleEvent waitUntil = LifecycleEvent.Load, int? timeout = null);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to check. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
+        Task CheckAsync(string selector, CheckOptions options = null);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to unchecked. If there are multiple elements satisfying the selector, the first will be clicked.</param>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
+        Task UncheckAsync(string selector, CheckOptions options = null);
     }
 }
