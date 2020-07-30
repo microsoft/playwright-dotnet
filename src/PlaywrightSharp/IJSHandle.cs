@@ -13,6 +13,29 @@ namespace PlaywrightSharp
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
         /// </summary>
         /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <typeparam name="T">Type to parse the result to.</typeparam>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// <see cref="IJSHandle"/> instances can be passed as arguments.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script.</returns>
+        Task<T> EvaluateAsync<T>(string pageFunction);
+
+        /// <summary>
+        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
+        /// </summary>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// <see cref="IJSHandle"/> instances can be passed as arguments.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script.</returns>
+        Task<JsonElement?> EvaluateAsync(string pageFunction);
+
+        /// <summary>
+        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
+        /// </summary>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to script.</param>
         /// <typeparam name="T">Type to parse the result to.</typeparam>
         /// <remarks>
@@ -20,7 +43,7 @@ namespace PlaywrightSharp
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script.</returns>
-        Task<T> EvaluateAsync<T>(string pageFunction, params object[] args);
+        Task<T> EvaluateAsync<T>(string pageFunction, object args);
 
         /// <summary>
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
@@ -32,7 +55,7 @@ namespace PlaywrightSharp
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yieling the return value of that script.</returns>
-        Task<JsonElement?> EvaluateAsync(string pageFunction, params object[] args);
+        Task<JsonElement?> EvaluateAsync(string pageFunction, object args);
 
         /// <summary>
         /// Returns a JSON representation of the object.

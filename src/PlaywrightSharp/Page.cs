@@ -37,15 +37,19 @@ namespace PlaywrightSharp
             _frames.Add(MainFrame);
             Viewport = initializer.ViewportSize;
             Accessibility = new Accesibility(_channel);
+            Keyboard = new Keyboard(_channel);
+            Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
             _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
-            _channel.FameNavigated += Channel_FameNavigated;
-            _channel.FameAttached += Channel_FameAttached;
-            _channel.FameDetached += Channel_FameDetached;
+            _channel.FrameNavigated += Channel_FrameNavigated;
+            _channel.FrameAttached += Channel_FrameAttached;
+            _channel.FrameDetached += Channel_FrameDetached;
+            _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
+            _channel.Console += (sender, e) => Console?.Invoke(this, e);
         }
 
         /// <inheritdoc />
@@ -184,7 +188,7 @@ namespace PlaywrightSharp
         public Task EmulateMediaAsync(EmulateMedia options) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(url, options);
+        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(false, options);
@@ -413,9 +417,6 @@ namespace PlaywrightSharp
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task TripleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task<IResponse> GoBackAsync(NavigationOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
@@ -558,6 +559,19 @@ namespace PlaywrightSharp
         public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
             => MainFrame.WaitForLoadStateAsync(true, waitUntil, timeout);
 
+        /// <inheritdoc />
+        public Task SetViewportSizeAsync(ViewportSize viewport)
+        {
+            Viewport = viewport;
+            return _channel.SetViewportSizeAsync(viewport);
+        }
+
+        /// <inheritdoc />
+        public Task CheckAsync(string selector, CheckOptions options = null) => MainFrame.CheckAsync(true, selector, options);
+
+        /// <inheritdoc />
+        public Task UncheckAsync(string selector, CheckOptions options = null) => MainFrame.UncheckAsync(true, selector, options);
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             BrowserContext?.PagesList.Remove(this);
@@ -593,14 +607,14 @@ namespace PlaywrightSharp
             BrowserContext.OnRoute(e.Route, e.Request);
         }
 
-        private void Channel_FameNavigated(object sender, FrameNavigatedEventArgs e)
+        private void Channel_FrameNavigated(object sender, FrameNavigatedEventArgs e)
         {
             e.Frame.Object.Url = e.Url;
             e.Frame.Object.Name = e.Name;
             FrameNavigated?.Invoke(this, new FrameEventArgs(e.Frame.Object));
         }
 
-        private void Channel_FameDetached(object sender, FrameEventArgs e)
+        private void Channel_FrameDetached(object sender, FrameEventArgs e)
         {
             var frame = e.Frame as Frame;
             _frames.Remove(frame);
@@ -609,7 +623,7 @@ namespace PlaywrightSharp
             FrameDetached?.Invoke(this, e);
         }
 
-        private void Channel_FameAttached(object sender, FrameEventArgs e)
+        private void Channel_FrameAttached(object sender, FrameEventArgs e)
         {
             var frame = e.Frame as Frame;
             frame.Page = this;

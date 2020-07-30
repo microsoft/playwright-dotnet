@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -28,6 +30,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Warning.
         /// </summary>
+        [EnumMember(Value = "warn")]
         Warning,
 
         /// <summary>
@@ -104,5 +107,11 @@ namespace PlaywrightSharp
         /// TimeStamp.
         /// </summary>
         TimeStamp,
+
+        /// <summary>
+        /// Console Message.
+        /// </summary>
+        [EnumMember(Value = "consoleMessage")]
+        ConsoleMessage,
     }
 }

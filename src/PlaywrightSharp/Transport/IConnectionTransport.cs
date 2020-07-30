@@ -19,5 +19,10 @@ namespace PlaywrightSharp.Transport
         /// <returns>The task.</returns>
         /// <param name="message">Message to send.</param>
         Task SendAsync(string message);
+
+        /// <summary>
+        /// Closes the connection.
+        /// </summary>
+        void Close();
     }
 }

@@ -10,7 +10,7 @@ namespace PlaywrightSharp
     public interface IElementHandle : IJSHandle
     {
         /// <summary>
-        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string, DownOptions)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
+        /// Focuses the element, and then uses <see cref="IKeyboard.DownAsync(string)"/> and <see cref="IKeyboard.UpAsync(string)"/>.
         /// </summary>
         /// <param name="key">Name of key to press, such as <c>ArrowLeft</c>. See <see cref="KeyDefinitions"/> for a list of all key names.</param>
         /// <param name="options">press options.</param>
@@ -126,13 +126,6 @@ namespace PlaywrightSharp
         /// <param name="options">click options.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully double clicked.</returns>
         Task DoubleClickAsync(ClickOptions options = null);
-
-        /// <summary>
-        /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to triple click in the center of the element.
-        /// </summary>
-        /// <param name="options">click options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the element is successfully  triple clicked.</returns>
-        Task TripleClickAsync(ClickOptions options = null);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.

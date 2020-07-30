@@ -13,8 +13,21 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<ResponseChannel> GoToAsync(string url, GoToOptions options)
-            => Scope.SendMessageToServer<ResponseChannel>(
+        internal Task<ResponseChannel> GoToAsync(string url, GoToOptions options, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["referrer"] = options?.Referer,
+                ["timeout"] = options?.Timeout,
+                ["isPage"] = isPage,
+            };
+
+            if (options?.WaitUntil != null)
+            {
+                args["waitUntil"] = options.WaitUntil;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "goto",
                 new Dictionary<string, object>
@@ -22,6 +35,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["url"] = url,
                     ["options"] = options ?? new GoToOptions(),
                 });
+        }
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg, bool isPage)
             => Scope.SendMessageToServer<JSHandleChannel>(
@@ -170,6 +184,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["force"] = options?.Force,
                     ["timeout"] = options?.Timeout,
                     ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["position"] = options?.Position,
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                     ["isPage"] = isPage,
                 });
@@ -198,12 +213,46 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<ResponseChannel> WaitForNavigationAsync(WaitForNavigationOptions options, bool isPage)
-            => Scope.SendMessageToServer<ResponseChannel>(
+        {
+            var param = new Dictionary<string, object>
+            {
+                ["isPage"] = isPage,
+            };
+
+            if (options?.WaitUntil != null)
+            {
+                param["waitUntil"] = options.WaitUntil?.ToValueString();
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "waitForNavigation",
+                param);
+        }
+
+        internal Task CheckAsync(string selector, CheckOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "check",
                 new Dictionary<string, object>
                 {
-                    ["waitUntil"] = options.WaitUntil.ToValueString(),
+                    ["selector"] = selector,
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task UncheckAsync(string selector, CheckOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "uncheck",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
                     ["isPage"] = isPage,
                 });
     }
