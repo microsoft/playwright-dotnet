@@ -136,7 +136,8 @@ namespace PlaywrightSharp.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["cookies"] = cookies,
-                });
+                },
+                true);
 
         internal Task ClearCookiesAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
     }

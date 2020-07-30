@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
+using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp.Transport
 {
@@ -78,9 +79,9 @@ namespace PlaywrightSharp.Transport
             return result;
         }
 
-        internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
+        internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
         {
-            var options = JsonExtensions.GetNewDefaultSerializerOptions();
+            var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));
             options.Converters.Add(new HttpMethodConverter());
@@ -110,7 +111,7 @@ namespace PlaywrightSharp.Transport
             }
         }
 
-        internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args)
+        internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args, bool ignoreNullValues = false)
         {
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
@@ -121,7 +122,7 @@ namespace PlaywrightSharp.Transport
                 Params = args,
             };
 
-            string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
+            string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions(ignoreNullValues));
             Debug.WriteLine($"pw:channel:command {messageString}");
             await _transport.SendAsync(messageString).ConfigureAwait(false);
 
