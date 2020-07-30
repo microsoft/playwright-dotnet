@@ -81,6 +81,7 @@ namespace PlaywrightSharp.TestServer
                         if (_routes.TryGetValue(context.Request.Path + context.Request.QueryString, out var handler))
                         {
                             await handler(context);
+                            return;
                         }
 
                         if (
