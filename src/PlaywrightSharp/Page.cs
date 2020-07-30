@@ -188,7 +188,7 @@ namespace PlaywrightSharp
         public Task EmulateMediaAsync(EmulateMedia options) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(url, options);
+        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(false, options);

@@ -68,8 +68,7 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />
-        public async Task<IResponse> GoToAsync(string url, GoToOptions options = null)
-            => (await _channel.GoToAsync(url, options).ConfigureAwait(false))?.Object;
+        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => GoToAsync(false, url, options);
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => throw new NotImplementedException();
@@ -360,5 +359,8 @@ namespace PlaywrightSharp
                 isFunction: script.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
+
+        internal async Task<IResponse> GoToAsync(bool isPage, string url, GoToOptions options = null)
+            => (await _channel.GoToAsync(url, options, isPage).ConfigureAwait(false))?.Object;
     }
 }

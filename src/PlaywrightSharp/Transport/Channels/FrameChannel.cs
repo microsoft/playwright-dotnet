@@ -13,8 +13,21 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<ResponseChannel> GoToAsync(string url, GoToOptions options)
-            => Scope.SendMessageToServer<ResponseChannel>(
+        internal Task<ResponseChannel> GoToAsync(string url, GoToOptions options, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["referrer"] = options?.Referer,
+                ["timeout"] = options?.Timeout,
+                ["isPage"] = isPage,
+            };
+
+            if (options?.WaitUntil != null)
+            {
+                args["waitUntil"] = options.WaitUntil;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "goto",
                 new Dictionary<string, object>
@@ -22,6 +35,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["url"] = url,
                     ["options"] = options ?? new GoToOptions(),
                 });
+        }
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg, bool isPage)
             => Scope.SendMessageToServer<JSHandleChannel>(
