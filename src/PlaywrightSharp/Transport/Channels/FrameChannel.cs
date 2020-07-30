@@ -204,7 +204,7 @@ namespace PlaywrightSharp.Transport.Channels
                 "waitForNavigation",
                 new Dictionary<string, object>
                 {
-                    ["waitUntil"] = options.WaitUntil.ToValueString(),
+                    ["waitUntil"] = options.WaitUntil?.ToValueString(),
                     ["isPage"] = isPage,
                 });
 

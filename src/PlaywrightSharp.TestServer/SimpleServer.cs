@@ -59,10 +59,7 @@ namespace PlaywrightSharp.TestServer
                             }
                             return;
                         }
-                        else
-                        {
-                            await next();
-                        }
+
                         if (_auths.TryGetValue(context.Request.Path, out var auth) && !Authenticate(auth.username, auth.password, context))
                         {
                             context.Response.Headers.Add("WWW-Authenticate", "Basic realm=\"Secure Area\"");

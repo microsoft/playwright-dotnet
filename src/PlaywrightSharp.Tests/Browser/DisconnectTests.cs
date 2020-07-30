@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Browser
         [Retry]
         public async Task ShouldRejectNavigationWhenBrowserCloses()
         {
-            Server.SetRoute("/one-style.css", context => Task.CompletedTask);
+            Server.SetRoute("/one-style.css", context => Task.Delay(10000));
 
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
 
