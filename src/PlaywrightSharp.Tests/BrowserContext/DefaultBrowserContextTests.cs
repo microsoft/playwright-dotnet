@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ContextSetCookiesAsyncShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.BrowserContext.SetCookiesAsync(new SetNetworkCookieParam
+            await Page.BrowserContext.AddCookiesAsync(new SetNetworkCookieParam
             {
                 Url = TestConstants.EmptyPage,
                 Name = "username",
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
 
-            await Page.BrowserContext.SetCookiesAsync(
+            await Page.BrowserContext.AddCookiesAsync(
                 new SetNetworkCookieParam
                 {
                     Url = TestConstants.EmptyPage,

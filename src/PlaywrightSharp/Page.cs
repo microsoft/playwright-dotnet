@@ -355,7 +355,7 @@ namespace PlaywrightSharp
         public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task WaitForTimeoutAsync(int timeout) => throw new NotImplementedException();
+        public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc />
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null) => MainFrame.WaitForSelectorAsync(true, selector, options);

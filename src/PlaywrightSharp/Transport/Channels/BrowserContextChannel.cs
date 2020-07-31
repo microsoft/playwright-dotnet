@@ -20,6 +20,41 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
+        internal override void OnMessage(string method, JsonElement? serverParams)
+        {
+            switch (method)
+            {
+                case "close":
+                    Close?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "bindingCall":
+                    BindingCall?.Invoke(
+                        this,
+                        new BindingCallEventArgs
+                        {
+                            BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        });
+                    break;
+                case "route":
+                    Route?.Invoke(
+                        this,
+                        new RouteEventArgs
+                        {
+                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        });
+                    break;
+                case "page":
+                    Page?.Invoke(
+                        this,
+                        new BrowserContextOnPageEventArgs
+                        {
+                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                        });
+                    break;
+            }
+        }
+
         internal Task<PageChannel> NewPageAsync(string url)
             => Scope.SendMessageToServer<PageChannel>(
                 Guid,
@@ -85,39 +120,25 @@ namespace PlaywrightSharp.Transport.Channels
                     ["offline"] = offline,
                 });
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
-        {
-            switch (method)
-            {
-                case "close":
-                    Close?.Invoke(this, EventArgs.Empty);
-                    break;
-                case "bindingCall":
-                    BindingCall?.Invoke(
-                        this,
-                        new BindingCallEventArgs
-                        {
-                            BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                        });
-                    break;
-                case "route":
-                    Route?.Invoke(
-                        this,
-                        new RouteEventArgs
-                        {
-                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                        });
-                    break;
-                case "page":
-                    Page?.Invoke(
-                        this,
-                        new BrowserContextOnPageEventArgs
-                        {
-                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
-                        });
-                    break;
-            }
-        }
+        internal Task<IEnumerable<NetworkCookie>> GetCookiesAsync(string[] urls)
+            => Scope.SendMessageToServer<IEnumerable<NetworkCookie>>(
+                Guid,
+                "cookies",
+                new Dictionary<string, object>
+                {
+                    ["urls"] = urls,
+                });
+
+        internal Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "addCookies",
+                new Dictionary<string, object>
+                {
+                    ["cookies"] = cookies,
+                },
+                true);
+
+        internal Task ClearCookiesAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
     }
 }
