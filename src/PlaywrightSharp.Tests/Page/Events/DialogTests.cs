@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>dialog.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Dialog</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class DialogTests : PlaywrightSharpPageBaseTest
+    public class DialogTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public DialogTests(ITestOutputHelper output) : base(output)
@@ -25,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
             Page.Dialog += async (sender, e) =>
             {
-                Assert.Equal(DialogType.Alert, e.Dialog.DialogType);
+                Assert.Equal(DialogType.Alert, e.Dialog.Type);
                 Assert.Equal(string.Empty, e.Dialog.DefaultValue);
                 Assert.Equal("yo", e.Dialog.Message);
 
@@ -43,7 +42,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
             Page.Dialog += async (sender, e) =>
             {
-                Assert.Equal(DialogType.Prompt, e.Dialog.DialogType);
+                Assert.Equal(DialogType.Prompt, e.Dialog.Type);
                 Assert.Equal("yes.", e.Dialog.DefaultValue);
                 Assert.Equal("question?", e.Dialog.Message);
 
@@ -97,6 +96,36 @@ namespace PlaywrightSharp.Tests.Page.Events
 
             bool result = await Page.EvaluateAsync<bool>("prompt('boolean?')");
             Assert.False(result);
+        }
+
+        ///<playwright-file>dialog.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
+        ///<playwright-it>should log prompt actions</playwright-it>
+        [Fact(Skip = "FAIL CHANNEL")]
+        public async Task ShouldLogPromptActions()
+        {
+            Page.Dialog += async (sender, e) =>
+            {
+                await e.Dialog.DismissAsync();
+            };
+
+            bool result = await Page.EvaluateAsync<bool>("prompt('boolean?')");
+            Assert.False(result);
+        }
+
+        ///<playwright-file>dialog.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
+        ///<playwright-it>should be able to close context with open alert</playwright-it>
+        [Retry]
+        public async Task ShouldBeAbleToCloseContextWithOpenAlert()
+        {
+            var context = await Browser.NewContextAsync();
+            var page = await context.NewPageAsync();
+            var alertTask = page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+
+            await page.EvaluateAsync("() => setTimeout(() => alert('hello'), 0)");
+            await alertTask;
+            await context.CloseAsync();
         }
     }
 }
