@@ -33,10 +33,7 @@ namespace PlaywrightSharp.Transport.Channels
             var args = (options ?? new LaunchPersistentOptions()).ToChannelDictionary();
             args["userDataDir"] = userDataDir;
 
-            return Scope.SendMessageToServer<BrowserContextChannel>(
-                Guid,
-                "launchPersistentContext",
-                args);
+            return Scope.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args);
         }
     }
 }
