@@ -60,6 +60,10 @@ namespace PlaywrightSharp
             => (await _channel.LaunchServerAsync(options).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
+        public async Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
+            => (await _channel.LaunchPersistenContextAsync(userDataDir, options).ConfigureAwait(false)).Object;
+
+        /// <inheritdoc />
         public string[] GetDefaultArgs(BrowserArgOptions options = null) => throw new System.NotImplementedException();
 
         /// <inheritdoc />

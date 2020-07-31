@@ -5,7 +5,7 @@ namespace PlaywrightSharp.Transport.Protocol
 {
     internal class ConsoleMessageInitializer
     {
-        public ConsoleType Type { get; set; }
+        public string Type { get; set; }
 
         public IEnumerable<ChannelBase> Args { get; set; }
 

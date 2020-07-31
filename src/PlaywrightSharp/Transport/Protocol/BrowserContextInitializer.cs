@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using PlaywrightSharp.Transport.Channels;
+using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp.Transport.Protocol
 {
     internal class BrowserContextInitializer
     {
-        public IEnumerable<PageChannel> Pages { get; set; }
+        public IEnumerable<ChannelBase> Pages { get; set; }
 
-        public IEnumerable<PageChannel> CrBackgroundPages { get; set; }
+        public IEnumerable<ChannelBase> CrBackgroundPages { get; set; }
     }
 }

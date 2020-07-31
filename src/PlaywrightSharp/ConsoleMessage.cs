@@ -36,7 +36,7 @@ namespace PlaywrightSharp
         /// Gets the ConsoleMessage type.
         /// </summary>
         /// <value>ConsoleMessageType.</value>
-        public ConsoleType Type => _initializer.Type;
+        public string Type => _initializer.Type;
 
         /// <summary>
         /// Gets the arguments.

@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage)
             );
 
-            Assert.Same(context, popupTarget.BrowserContext);
+            Assert.Same(context, popupTarget.Context);
             await context.CloseAsync();
         }
 
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             });
 
             var page = await context.NewPageAsync();
-            await VerifyViewportAsync(page, 456, 789);
+            await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var page = await context.NewPageAsync();
 
-            await VerifyViewportAsync(page, 456, 789);
+            await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -217,14 +217,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var context = await Browser.NewContextAsync();
             await Task.WhenAll(context.CloseAsync(), context.CloseAsync());
             await context.CloseAsync();
-        }
-
-        private static async Task VerifyViewportAsync(IPage page, int width, int height)
-        {
-            Assert.Equal(width, (int)page.Viewport.Width);
-            Assert.Equal(height, (int)page.Viewport.Height);
-            Assert.Equal(width, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
         }
     }
 }
