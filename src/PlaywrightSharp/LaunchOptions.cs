@@ -52,5 +52,35 @@ namespace PlaywrightSharp
         /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
         /// </summary>
         public IDictionary<string, string> Env { get; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
+        /// </summary>
+        /// <param name="options">Option to convert.</param>
+        public static implicit operator LaunchPersistentOptions(LaunchOptions options)
+            => options == null
+            ? null
+            : new LaunchPersistentOptions
+            {
+                Headless = options.Headless,
+                Args = options.Args,
+                UserDataDir = options.UserDataDir,
+                Devtools = options.Devtools,
+                ExecutablePath = options.ExecutablePath,
+                IgnoreHTTPSErrors = options.IgnoreHTTPSErrors,
+                Timeout = options.Timeout,
+                DumpIO = options.DumpIO,
+                SlowMo = options.SlowMo,
+                LogProcess = options.LogProcess,
+                IgnoreDefaultArgs = options.IgnoreDefaultArgs,
+                IgnoredDefaultArgs = options.IgnoredDefaultArgs,
+                Env = options.Env,
+            };
+
+        /// <summary>
+        /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
+        /// </summary>
+        /// <returns>A <see cref="LaunchPersistentOptions"/> with the same information as the <see cref="LaunchOptions"/>.</returns>
+        public LaunchPersistentOptions ToLaunchPersistentOptions() => this;
     }
 }

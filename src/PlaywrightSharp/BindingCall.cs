@@ -43,7 +43,7 @@ namespace PlaywrightSharp
 
                 object result = binding.DynamicInvoke(args.Prepend(new BindingSource
                 {
-                    Context = _initializer.Frame.Page.BrowserContext,
+                    Context = _initializer.Frame.Page.Context,
                     Page = _initializer.Frame.Page,
                     Frame = _initializer.Frame,
                 }).ToArray());

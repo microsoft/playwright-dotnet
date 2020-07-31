@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public PageEventsConsoleTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -162,5 +162,6 @@ namespace PlaywrightSharp.Tests.Page.Events
             // 4. Connect to the popup and make sure it doesn't throw.
             //await Page.BrowserContext.GetPagesAsync();
         }
+        */
     }
 }

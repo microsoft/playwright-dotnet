@@ -128,9 +128,9 @@ namespace PlaywrightSharp
         public Frame MainFrame { get; }
 
         /// <inheritdoc />
-        IBrowserContext IPage.BrowserContext => BrowserContext;
+        IBrowserContext IPage.Context => BrowserContext;
 
-        /// <inheritdoc cref="IPage.BrowserContext" />
+        /// <inheritdoc cref="IPage.Context" />
         public BrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc />

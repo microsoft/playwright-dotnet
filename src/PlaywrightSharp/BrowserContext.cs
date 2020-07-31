@@ -40,7 +40,7 @@ namespace PlaywrightSharp
             {
                 foreach (var pageChannel in initializer.Pages)
                 {
-                    var page = pageChannel.Object;
+                    var page = ((PageChannel)pageChannel).Object;
                     PagesList.Add(page);
                     page.BrowserContext = this;
                 }
@@ -50,7 +50,7 @@ namespace PlaywrightSharp
             {
                 foreach (var pageChannel in initializer.CrBackgroundPages)
                 {
-                    var page = pageChannel.Object;
+                    var page = ((PageChannel)pageChannel).Object;
                     _crBackgroundPages.Add(page);
                     page.BrowserContext = this;
                 }

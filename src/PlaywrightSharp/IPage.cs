@@ -185,7 +185,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Get the browser context that the page belongs to.
         /// </summary>
-        IBrowserContext BrowserContext { get; }
+        IBrowserContext Context { get; }
 
         /// <summary>
         /// Page Viewport.
