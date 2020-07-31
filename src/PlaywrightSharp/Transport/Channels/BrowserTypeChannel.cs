@@ -27,5 +27,16 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "connect",
                 options ?? new ConnectOptions());
+
+        internal Task<BrowserContextChannel> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
+        {
+            var args = (options ?? new LaunchPersistentOptions()).ToChannelDictionary();
+            args["userDataDir"] = userDataDir;
+
+            return Scope.SendMessageToServer<BrowserContextChannel>(
+                Guid,
+                "launchPersistent",
+                args);
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace PlaywrightSharp.Tests
@@ -78,5 +79,13 @@ namespace PlaywrightSharp.Tests
         }
 
         internal static string GetWebServerFile(string path) => Path.Combine(FindParentDirectory("PlaywrightSharp.TestServer"), "wwwroot", path);
+
+        internal static async Task VerifyViewportAsync(IPage page, int width, int height)
+        {
+            Assert.Equal(width, (int)page.Viewport.Width);
+            Assert.Equal(height, (int)page.Viewport.Height);
+            Assert.Equal(width, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
+        }
     }
 }

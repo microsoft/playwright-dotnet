@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("() => document.cookie = 'username=John Doe'");
 
-            var cookie = (await Page.BrowserContext.GetCookiesAsync()).FirstOrDefault();
+            var cookie = (await Page.Context.GetCookiesAsync()).FirstOrDefault();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);

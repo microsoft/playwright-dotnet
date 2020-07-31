@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Browser
         {
             await using var browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             var page = await browser.NewPageAsync();
-            var ex = await Assert.ThrowsAsync<PlaywrightSharpException>(() => page.BrowserContext.NewPageAsync());
+            var ex = await Assert.ThrowsAsync<PlaywrightSharpException>(() => page.Context.NewPageAsync());
             await page.CloseAsync();
             Assert.Contains("Please use Browser.NewContextAsync()", ex.Message);
         }

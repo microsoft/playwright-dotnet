@@ -1,13 +1,183 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> options.
+    /// Options for <seealso cref="IBrowserType.LaunchPersistenContextAsync(string, LaunchPersistentOptions)"/>.
     /// </summary>
-    public class BrowserContextOptions
+    public class LaunchPersistentOptions
     {
+        /// <summary>
+        /// Whether to run browser in headless mode. Defaults to true unless the devtools option is true.
+        /// </summary>
+        public bool? Headless
+        {
+            get
+            {
+                Values.TryGetValue("headless", out object result);
+                return result as bool?;
+            }
+            set => Values["headless"] = value;
+        }
+
+        /// <summary>
+        /// Additional arguments to pass to the browser instance.
+        /// </summary>
+        public string[] Args
+        {
+            get
+            {
+                Values.TryGetValue("args", out object result);
+                return result as string[];
+            }
+            set => Values["args"] = value;
+        }
+
+        /// <summary>
+        /// Path to a User Data Directory.
+        /// </summary>
+        public string UserDataDir
+        {
+            get
+            {
+                Values.TryGetValue("userDataDir", out object result);
+                return result as string;
+            }
+            set => Values["userDataDir"] = value;
+        }
+
+        /// <summary>
+        /// Whether to auto-open DevTools panel for each tab. If this option is true, the headless option will be set false.
+        /// </summary>
+        public bool? Devtools
+        {
+            get
+            {
+                Values.TryGetValue("devtools", out object result);
+                return result as bool?;
+            }
+            set => Values["devtools"] = value;
+        }
+
+        /// <summary>
+        /// Path to a browser executable to run instead of the bundled one.
+        /// </summary>
+        public string ExecutablePath
+        {
+            get
+            {
+                Values.TryGetValue("executablePath", out object result);
+                return result as string;
+            }
+            set => Values["executablePath"] = value;
+        }
+
+        /// <summary>
+        /// Whether to ignore HTTPS errors during navigation. Defaults to false.
+        /// </summary>
+        public bool? IgnoreHTTPSErrors
+        {
+            get
+            {
+                Values.TryGetValue("ignoreHTTPSErrors", out object result);
+                return result as bool?;
+            }
+            set => Values["ignoreHTTPSErrors"] = value;
+        }
+
+        /// <summary>
+        /// Maximum time in milliseconds to wait for the browser instance to start.
+        /// </summary>
+        public int? Timeout
+        {
+            get
+            {
+                Values.TryGetValue("timeout", out object result);
+                return result as int?;
+            }
+            set => Values["timeout"] = value;
+        }
+
+        /// <summary>
+        ///  Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.
+        /// </summary>
+        public bool? DumpIO
+        {
+            get
+            {
+                Values.TryGetValue("dumpIO", out object result);
+                return result as bool?;
+            }
+            set => Values["dumpIO"] = value;
+        }
+
+        /// <summary>
+        /// Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.
+        /// </summary>
+        public int? SlowMo
+        {
+            get
+            {
+                Values.TryGetValue("slowmo", out object result);
+                return result as int?;
+            }
+            set => Values["slowmo"] = value;
+        }
+
+        /// <summary>
+        /// Logs process counts after launching the browser and after exiting.
+        /// </summary>
+        public bool? LogProcess
+        {
+            get
+            {
+                Values.TryGetValue("logProcess", out object result);
+                return result as bool?;
+            }
+            set => Values["logProcess"] = value;
+        }
+
+        /// <summary>
+        /// If <c>true</c>, then do not use <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
+        /// Dangerous option; use with care. Defaults to <c>false</c>.
+        /// </summary>
+        public bool? IgnoreDefaultArgs
+        {
+            get
+            {
+                Values.TryGetValue("ignoreDefaultArgs", out object result);
+                return result as bool?;
+            }
+            set => Values["ignoreDefaultArgs"] = value;
+        }
+
+        /// <summary>
+        /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
+        /// </summary>
+        public string[] IgnoredDefaultArgs
+        {
+            get
+            {
+                Values.TryGetValue("ignoredDefaultArgs", out object result);
+                return result as string[];
+            }
+            set => Values["ignoredDefaultArgs"] = value;
+        }
+
+        /// <summary>
+        /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
+        /// </summary>
+        public IDictionary<string, string> Env
+        {
+            get
+            {
+                Values.TryGetValue("env", out object result);
+                return result as Dictionary<string, string>;
+            }
+            set => Values["env"] = value;
+        }
+
         /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
         /// </summary>
@@ -58,19 +228,6 @@ namespace PlaywrightSharp
                 return result as bool?;
             }
             set => Values["javaScriptEnabled"] = value;
-        }
-
-        /// <summary>
-        /// Whether to ignore HTTPS errors during navigation. Defaults to false.
-        /// </summary>
-        public bool? IgnoreHTTPSErrors
-        {
-            get
-            {
-                Values.TryGetValue("ignoreHTTPSErrors", out object result);
-                return result as bool?;
-            }
-            set => Values["ignoreHTTPSErrors"] = value;
         }
 
         /// <summary>

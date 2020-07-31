@@ -19,6 +19,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
+        /*
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -115,6 +116,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
             }))");
             Assert.Equal(options.Geolocation, geolocation);
-        }
+        }*/
     }
 }
