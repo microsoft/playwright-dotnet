@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Transport.Channels
 
             return Scope.SendMessageToServer<BrowserContextChannel>(
                 Guid,
-                "launchPersistent",
+                "launchPersistentContext",
                 args);
         }
     }

@@ -200,7 +200,7 @@ namespace PlaywrightSharp
                 Values.TryGetValue("colorScheme", out object result);
                 return result as ColorScheme?;
             }
-            set => Values["acceptDownloads"] = value;
+            set => Values["colorScheme"] = value;
         }
 
         /// <summary>

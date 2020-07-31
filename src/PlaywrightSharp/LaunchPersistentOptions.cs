@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace PlaywrightSharp
@@ -387,6 +387,35 @@ namespace PlaywrightSharp
         }
 
         internal Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Adds all the values set int <paramref name="right"/> into <paramref name="left"/>.
+        /// </summary>
+        /// <param name="left"><see cref="LaunchPersistentOptions"/> to hidratate.</param>
+        /// <param name="right"><see cref="BrowserContextOptions"/> to get the values from.</param>
+        /// <returns><paramref name="left"/> with the values of <paramref name="right"/>.</returns>
+        public static LaunchPersistentOptions operator +(LaunchPersistentOptions left, BrowserContextOptions right)
+        {
+            if (left == null || right == null)
+            {
+                return null;
+            }
+
+            foreach (var kv in right.Values)
+            {
+                left.Values[kv.Key] = kv.Value;
+            }
+
+            return left;
+        }
+
+        /// <summary>
+        /// Adds all the values set int <paramref name="right"/> into <paramref name="left"/>.
+        /// </summary>
+        /// <param name="left"><see cref="LaunchPersistentOptions"/> to hidratate.</param>
+        /// <param name="right"><see cref="BrowserContextOptions"/> to get the values from.</param>
+        /// <returns><paramref name="left"/> with the values of <paramref name="right"/>.</returns>
+        public static LaunchPersistentOptions Add(LaunchPersistentOptions left, BrowserContextOptions right) => left + right;
 
         /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.
