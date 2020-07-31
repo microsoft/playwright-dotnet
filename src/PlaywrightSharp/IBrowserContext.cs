@@ -108,7 +108,14 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="cookies">Cookies to set.</param>
         /// <returns>A <see cref="Task"/> that completes when the cookies are set.</returns>
-        Task SetCookiesAsync(params SetNetworkCookieParam[] cookies);
+        Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies);
+
+        /// <summary>
+        /// Clears all of the current cookies and then sets the cookies for the context.
+        /// </summary>
+        /// <param name="cookies">Cookies to set.</param>
+        /// <returns>A <see cref="Task"/> that completes when the cookies are set.</returns>
+        Task AddCookiesAsync(params SetNetworkCookieParam[] cookies);
 
         /// <summary>
         /// Clears the context's cookies.

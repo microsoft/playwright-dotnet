@@ -29,11 +29,11 @@ namespace PlaywrightSharp.Helpers
             return document.RootElement.ToObject<T>(options ?? DefaultJsonSerializerOptions);
         }
 
-        public static JsonSerializerOptions GetNewDefaultSerializerOptions()
+        public static JsonSerializerOptions GetNewDefaultSerializerOptions(bool ignoreNullValues = false)
             => new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = false,
+                IgnoreNullValues = ignoreNullValues,
                 Converters =
                 {
                     new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),

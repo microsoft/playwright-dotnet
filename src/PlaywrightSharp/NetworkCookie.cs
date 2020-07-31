@@ -1,10 +1,13 @@
+using System;
+using System.Collections.Generic;
+
 namespace PlaywrightSharp
 {
     /// <summary>
     /// Cookie data.
     /// </summary>
     /// <seealso cref="IBrowserContext.GetCookiesAsync(string[])"/>
-    public class NetworkCookie
+    public class NetworkCookie : IEquatable<NetworkCookie>
     {
         /// <summary>
         /// Gets or sets the name.
@@ -58,5 +61,57 @@ namespace PlaywrightSharp
         /// Gets or sets the cookies SameSite value.
         /// </summary>
         public SameSite SameSite { get; set; }
+
+        /// <summary>
+        /// Converts a <see cref="NetworkCookie"/> to a <see cref="SetNetworkCookieParam"/>.
+        /// </summary>
+        /// <param name="cookie">Cookie to convert.</param>
+        public static implicit operator SetNetworkCookieParam(NetworkCookie cookie)
+            => cookie == null
+            ? null
+            : new SetNetworkCookieParam
+            {
+                Name = cookie.Name,
+                Value = cookie.Value,
+                Domain = cookie.Domain,
+                Path = cookie.Path,
+                Expires = cookie.Expires,
+                HttpOnly = cookie.HttpOnly,
+                Secure = cookie.Secure,
+                SameSite = cookie.SameSite,
+            };
+
+        /// <summary>
+        /// Converts a <see cref="NetworkCookie"/> to a <see cref="SetNetworkCookieParam"/>.
+        /// </summary>
+        /// <returns>A <see cref="SetNetworkCookieParam"/> with the matching properties set.</returns>
+        public SetNetworkCookieParam ToSetNetworkCookieParam() => this;
+
+        /// <inheritdoc cref="IEquatable{T}"/>
+        public bool Equals(NetworkCookie cookie)
+            => cookie != null &&
+                Name == cookie.Name &&
+                Value == cookie.Value &&
+                Domain == cookie.Domain &&
+                Path == cookie.Path &&
+                Expires == cookie.Expires &&
+                HttpOnly == cookie.HttpOnly &&
+                Secure == cookie.Secure &&
+                SameSite == cookie.SameSite;
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) => Equals(obj as NetworkCookie);
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+            => 412870874 +
+                EqualityComparer<string>.Default.GetHashCode(Name) +
+                EqualityComparer<string>.Default.GetHashCode(Value) +
+                EqualityComparer<string>.Default.GetHashCode(Domain) +
+                EqualityComparer<string>.Default.GetHashCode(Path) +
+                EqualityComparer<double>.Default.GetHashCode(Expires) +
+                EqualityComparer<bool>.Default.GetHashCode(HttpOnly) +
+                EqualityComparer<bool>.Default.GetHashCode(Secure) +
+                EqualityComparer<SameSite>.Default.GetHashCode(SameSite);
     }
 }

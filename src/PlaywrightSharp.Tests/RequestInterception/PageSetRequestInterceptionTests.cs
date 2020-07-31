@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
             // Setup cookie.
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.SetCookiesAsync(new SetNetworkCookieParam
+            await Context.AddCookiesAsync(new SetNetworkCookieParam
             {
                 Url = TestConstants.EmptyPage,
                 Name = "foo",
