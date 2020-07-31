@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -116,7 +117,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>dialog.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Dialog</playwright-describe>
         ///<playwright-it>should be able to close context with open alert</playwright-it>
-        [Retry]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBeAbleToCloseContextWithOpenAlert()
         {
             var context = await Browser.NewContextAsync();
