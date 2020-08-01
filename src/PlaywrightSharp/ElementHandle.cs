@@ -44,7 +44,7 @@ namespace PlaywrightSharp
         public Task FillAsync(string text) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false)).Object;
+        public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task HoverAsync(PointerActionOptions options = null) => throw new NotImplementedException();
