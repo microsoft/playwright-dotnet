@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.Helpers
                         delayedMessageBus,
                         constructorArguments,
                         aggregator,
-                        cancellationTokenSource).WithTimeout(30_000);
+                        cancellationTokenSource).WithTimeout(30_000_000);
 
                     if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
                     {
