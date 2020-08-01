@@ -48,5 +48,16 @@ namespace PlaywrightSharp.Transport.Channels
                     ["position"] = options?.Position,
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 });
+
+        internal Task DispatchEventAsync(string type, object eventInit, int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "dispatchEvent",
+                new Dictionary<string, object>
+                {
+                    ["type"] = type,
+                    ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                });
     }
 }

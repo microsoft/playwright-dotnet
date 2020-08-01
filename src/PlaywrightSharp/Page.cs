@@ -572,6 +572,10 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task UncheckAsync(string selector, CheckOptions options = null) => MainFrame.UncheckAsync(true, selector, options);
 
+        /// <inheritdoc />
+        public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)
+             => MainFrame.DispatchEventAsync(true, selector, type, eventInit, timeout);
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             BrowserContext?.PagesList.Remove(this);
