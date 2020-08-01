@@ -59,5 +59,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["eventInit"] = eventInit,
                     ["timeout"] = timeout,
                 });
+
+        internal Task SelectTextAsync(int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "selectText",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
     }
 }
