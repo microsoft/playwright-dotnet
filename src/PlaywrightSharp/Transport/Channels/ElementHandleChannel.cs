@@ -50,5 +50,16 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<Rect> GetBoundingBoxAsync() => Scope.SendMessageToServer<Rect>(Guid, "boundingBox", null);
+
+        internal Task DispatchEventAsync(string type, object eventInit, int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "dispatchEvent",
+                new Dictionary<string, object>
+                {
+                    ["type"] = type,
+                    ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                });
     }
 }

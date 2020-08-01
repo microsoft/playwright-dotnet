@@ -111,5 +111,12 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(SelectOption value) => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null)
+            => _channel.DispatchEventAsync(
+                type,
+                eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
+                timeout);
     }
 }

@@ -214,6 +214,18 @@ namespace PlaywrightSharp
         public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
             => WaitForLoadStateAsync(false, waitUntil, timeout);
 
+        /// <inheritdoc />
+        public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)
+            => DispatchEventAsync(false, selector, type, eventInit, timeout);
+
+        internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, int? timeout = null)
+            => _channel.DispatchEventAsync(
+                    selector,
+                    type,
+                    eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
+                    timeout,
+                    isPageCall);
+
         internal async Task<IResponse> WaitForNavigationAsync(bool isPageCall, WaitForNavigationOptions options)
             => (await _channel.WaitForNavigationAsync(
                 options: options ?? new WaitForNavigationOptions(),
