@@ -17,6 +17,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<FrameChannel> GetContentFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "contentFrame", null);
 
+        internal Task<FrameChannel> GetOwnerFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "ownerFrame", null);
+
         internal Task ClickAsync(ClickOptions options)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
