@@ -59,5 +59,16 @@ namespace PlaywrightSharp.Transport.Channels
                     ["noWaitAfter"] = options?.NoWaitAfter,
                     ["timeout"] = options?.Timeout,
                 });
+
+        internal Task DispatchEventAsync(string type, object eventInit, int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "dispatchEvent",
+                new Dictionary<string, object>
+                {
+                    ["type"] = type,
+                    ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                });
     }
 }

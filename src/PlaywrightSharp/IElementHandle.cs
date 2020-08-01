@@ -21,6 +21,17 @@ namespace PlaywrightSharp
         Task PressAsync(string key, PressOptions options = null);
 
         /// <summary>
+        /// Under the hood, it creates an instance of an event based on the given type, initializes it with eventInit properties and dispatches it on the element.
+        /// Events are composed, cancelable and bubble by default.
+        /// </summary>
+        /// <param name="type">DOM event type: "click", "dragstart", etc.</param>
+        /// <param name="eventInit">Event-specific initialization properties.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the event was dispatched.</returns>
+        Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null);
+
+        /// <summary>
         /// Focuses the element, and sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
         /// </summary>
         /// <param name="text">A text to type into a focused element.</param>

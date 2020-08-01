@@ -255,5 +255,18 @@ namespace PlaywrightSharp.Transport.Channels
                     ["noWaitAfter"] = options?.NoWaitAfter,
                     ["isPage"] = isPage,
                 });
+
+        internal Task DispatchEventAsync(string selector, string type, object eventInit, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "dispatchEvent",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["type"] = type,
+                    ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
     }
 }
