@@ -1305,5 +1305,17 @@ namespace PlaywrightSharp
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
         Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Under the hood, it creates an instance of an event based on the given type, initializes it with eventInit properties and dispatches it on the element.
+        /// Events are composed, cancelable and bubble by default.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to use. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="type">DOM event type: "click", "dragstart", etc.</param>
+        /// <param name="eventInit">Event-specific initialization properties.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the event was dispatched.</returns>
+        Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null);
     }
 }
