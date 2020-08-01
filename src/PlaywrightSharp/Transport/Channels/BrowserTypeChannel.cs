@@ -14,13 +14,13 @@ namespace PlaywrightSharp.Transport.Channels
             => Scope.SendMessageToServer<BrowserChannel>(
                 Guid,
                 "launch",
-                options ?? new LaunchOptions());
+                (options ?? new LaunchOptions()).ToChannelDictionary());
 
         public Task<BrowserServerChannel> LaunchServerAsync(LaunchOptions options)
             => Scope.SendMessageToServer<BrowserServerChannel>(
                 Guid,
                 "launchServer",
-                options ?? new LaunchOptions());
+                (options ?? new LaunchOptions()).ToChannelDictionary());
 
         internal Task<BrowserChannel> ConnectAsync(ConnectOptions options)
             => Scope.SendMessageToServer<BrowserChannel>(

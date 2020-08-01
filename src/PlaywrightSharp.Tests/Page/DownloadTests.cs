@@ -22,14 +22,14 @@ namespace PlaywrightSharp.Tests.Page
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
                 context.Response.Headers["Content-Disposition"] = "attachment";
-                return context.Response.WriteAsync("Hello World");
+                return context.Response.WriteAsync("Hello world");
             });
 
             Server.SetRoute("/downloadWithFilename", context =>
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
                 context.Response.Headers["Content-Disposition"] = "attachment; filename=file.txt";
-                return context.Response.WriteAsync("Hello World");
+                return context.Response.WriteAsync("Hello world");
             });
         }
 
@@ -85,10 +85,11 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/download", context =>
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
-                return context.Response.WriteAsync("Hello World");
+                return context.Response.WriteAsync("Hello world");
             });
 
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
+            await page.GoToAsync(TestConstants.EmptyPage);
             await page.SetContentAsync($"<a download=\"file.txt\" href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
@@ -156,7 +157,7 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/download", context =>
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
-                return context.Response.WriteAsync("Hello World");
+                return context.Response.WriteAsync("Hello world");
             });
 
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
