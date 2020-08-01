@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -10,21 +12,20 @@ namespace PlaywrightSharp.Tests.ElementHandle
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ElementHandleBoundingBoxTests : PlaywrightSharpPageBaseTest
+    public class ElementHandleBoundingBoxTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleBoundingBoxTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Retry]
         public async Task ShouldWork()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
+            await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.GetBoundingBoxAsync();
@@ -37,7 +38,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldHandleNestedFrames()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
+            await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
@@ -62,7 +63,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         [Retry]
         public async Task ShouldForceALayout()
         {
-            await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
+            await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
             await Page.SetContentAsync("<div style=\"width: 100px; height: 100px\">hello</div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
@@ -88,6 +89,72 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 }", element);
             Assert.Equal(webBoundingBox, pwBoundingBox);
         }
-        */
+
+        ///<playwright-file>elementhandle.spec.js</playwright-file>
+        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
+        ///<playwright-it>should work with page scale</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldWorkWithPageScale()
+        {
+            var context = await Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize
+                {
+                    Height = 400,
+                    Width = 400,
+                },
+                IsMobile = true,
+            });
+            var page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            var button = await page.QuerySelectorAsync("button");
+
+            await button.EvaluateAsync(@"button => {
+                document.body.style.margin = '0';
+                  button.style.borderWidth = '0';
+                  button.style.width = '200px';
+                  button.style.height = '20px';
+                  button.style.marginLeft = '17px';
+                  button.style.marginTop = '23px';
+            }");
+
+            var box = await button.GetBoundingBoxAsync();
+            Assert.Equal(17 * 100, Math.Round(box.X * 100));
+            Assert.Equal(23 * 100, Math.Round(box.Y * 100));
+            Assert.Equal(200 * 100, Math.Round(box.Width * 100));
+            Assert.Equal(20 * 100, Math.Round(box.Height * 100));
+        }
+
+        ///<playwright-file>elementhandle.spec.js</playwright-file>
+        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
+        ///<playwright-it>should work when inline box child is outside of viewport</playwright-it>
+        [Retry]
+        public async Task ShouldWorkWhenInlineBoxChildIsOutsideOfViewport()
+        {
+            await Page.SetContentAsync(@"
+                <style>
+                i {
+                    position: absolute;
+                    top: -1000px;
+                }
+                body {
+                    margin: 0;
+                    font-size: 12px;
+                }
+                </style>
+                <span><i>woof</i><b>doggo</b></span>");
+
+            var handle = await Page.QuerySelectorAsync("span");
+            var box = await handle.GetBoundingBoxAsync();
+            var webBoundingBox = await Page.EvaluateAsync<Rect>(@"e => {
+                    const rect = e.getBoundingClientRect();
+                    return { x: rect.x, y: rect.y, width: rect.width, height: rect.height};
+                }", handle);
+
+            Assert.Equal(Math.Round(webBoundingBox.X * 100), Math.Round(box.X * 100));
+            Assert.Equal(Math.Round(webBoundingBox.Y * 100), Math.Round(box.Y * 100));
+            Assert.Equal(Math.Round(webBoundingBox.Width * 100), Math.Round(box.Width * 100));
+            Assert.Equal(Math.Round(webBoundingBox.Height * 100), Math.Round(box.Height * 100));
+        }
     }
 }

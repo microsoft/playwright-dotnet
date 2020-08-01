@@ -48,5 +48,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["position"] = options?.Position,
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 });
+
+        internal Task<Rect> GetBoundingBoxAsync() => Scope.SendMessageToServer<Rect>(Guid, "boundingBox", null);
     }
 }

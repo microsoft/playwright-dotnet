@@ -56,7 +56,7 @@ namespace PlaywrightSharp
         public Task<IFrame> GetOwnerFrameAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<Rect> GetBoundingBoxAsync() => throw new NotImplementedException();
+        public Task<Rect> GetBoundingBoxAsync() => _channel.GetBoundingBoxAsync();
 
         /// <inheritdoc />
         public Task<double> GetVisibleRatioAsync() => throw new NotImplementedException();
