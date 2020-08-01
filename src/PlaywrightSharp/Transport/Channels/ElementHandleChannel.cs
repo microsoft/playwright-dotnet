@@ -48,5 +48,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["position"] = options?.Position,
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 });
+
+        internal Task ScrollIntoViewIfNeededAsync(int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "scrollIntoViewIfNeeded",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
     }
 }

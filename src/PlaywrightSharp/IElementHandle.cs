@@ -76,9 +76,10 @@ namespace PlaywrightSharp
         /// <summary>
         /// Tries to scroll element into view, unless it is completely visible as defined by <see href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"/>'s <b>ratio</b>.
         /// </summary>
-        /// <seealso cref="IElementHandle.GetVisibleRatioAsync"/>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully scrolled into view.</returns>
-        Task ScrollIntoViewIfNeededAsync();
+        Task ScrollIntoViewIfNeededAsync(int? timeout = null);
 
         /// <summary>
         /// Returns the frame containing the given element.
@@ -91,15 +92,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the <see cref="Rect"/> is resolved, yielding element's <see cref="Rect"/>.</returns>
         Task<Rect> GetBoundingBoxAsync();
-
-        /// <summary>
-        /// Gets the element's visible ratio.
-        /// </summary>
-        /// <remarks>
-        /// Positive ratio means that some part of the element is visible in the current viewport. Ratio equal to one means that element is completely visible.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the visible ratio is retrieved successfully, yielding element's visible ratio.</returns>
-        Task<double> GetVisibleRatioAsync();
 
         /// <summary>
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
