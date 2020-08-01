@@ -2,7 +2,7 @@ namespace PlaywrightSharp.Transport.Protocol
 {
     internal class DialogInitializer
     {
-        public DialogType DialogType { get; set; }
+        public DialogType Type { get; set; }
 
         public string DefaultValue { get; set; }
 

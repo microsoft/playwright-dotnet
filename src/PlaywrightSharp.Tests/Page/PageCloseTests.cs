@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page
             await newPage.ClickAsync("body");
             var pageClosingTask = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
             var dialog = await newPage.WaitForEvent<DialogEventArgs>(PageEvent.Dialog).ContinueWith(task => task.Result.Dialog);
-            Assert.Equal(DialogType.BeforeUnload, dialog.DialogType);
+            Assert.Equal(DialogType.BeforeUnload, dialog.Type);
             Assert.Empty(dialog.DefaultValue);
             if (TestConstants.IsChromium)
             {

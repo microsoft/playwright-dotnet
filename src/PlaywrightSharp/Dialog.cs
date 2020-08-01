@@ -20,7 +20,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public DialogType DialogType => _initializer.DialogType;
+        public DialogType Type => _initializer.Type;
 
         /// <inheritdoc/>
         public string DefaultValue => _initializer.DefaultValue;
