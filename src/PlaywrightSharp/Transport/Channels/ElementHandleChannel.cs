@@ -17,8 +17,10 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<FrameChannel> GetContentFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "contentFrame", null);
 
+        internal Task HoverAsync(PointerActionOptions options) => Scope.SendMessageToServer(Guid, "hover", options);
+
         internal Task ClickAsync(ClickOptions options)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "click",
                 new Dictionary<string, object>
@@ -34,7 +36,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task DoubleClickAsync(ClickOptions options)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "dblclick",
                 new Dictionary<string, object>
