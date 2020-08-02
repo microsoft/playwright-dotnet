@@ -21,6 +21,14 @@ namespace PlaywrightSharp
         Task PressAsync(string key, PressOptions options = null);
 
         /// <summary>
+        /// This method waits for actionability checks, then focuses the element and selects all its text content.
+        /// </summary>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the text is selected or timeout.</returns>
+        Task SelectTextAsync(int? timeout = null);
+
+        /// <summary>
         /// Under the hood, it creates an instance of an event based on the given type, initializes it with eventInit properties and dispatches it on the element.
         /// Events are composed, cancelable and bubble by default.
         /// </summary>

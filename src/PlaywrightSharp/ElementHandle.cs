@@ -119,5 +119,8 @@ namespace PlaywrightSharp
                 type,
                 eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
                 timeout);
+
+        /// <inheritdoc />
+        public Task SelectTextAsync(int? timeout = null) => _channel.SelectTextAsync(timeout);
     }
 }
