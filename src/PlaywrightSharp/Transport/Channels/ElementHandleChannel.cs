@@ -51,6 +51,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 });
 
+        internal Task FillAsync(string value, NavigatingActionWaitOptions options)
+            => Scope.SendMessageToServer(
+                Guid,
+                "fill",
+                new Dictionary<string, object>
+                {
+                    ["value"] = value,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["timeout"] = options?.Timeout,
+                });
+
         internal Task DispatchEventAsync(string type, object eventInit, int? timeout)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,

@@ -68,8 +68,9 @@ namespace PlaywrightSharp
         /// If element is not a text `&lt;input&gt;`, `&lt;textarea&gt;` or `[contenteditable]` element, the method throws an error.
         /// </summary>
         /// <param name="text">Value to set for the `&lt;input&gt;`, `&lt;textarea&gt;` or `[contenteditable]` element.</param>
+        /// <param name="options">Options.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
-        Task FillAsync(string text);
+        Task FillAsync(string text, NavigatingActionWaitOptions options = null);
 
         /// <summary>
         /// Content frame for element handles referencing iframe nodes, or null otherwise.

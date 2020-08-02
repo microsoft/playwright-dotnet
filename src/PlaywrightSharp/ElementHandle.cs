@@ -41,7 +41,8 @@ namespace PlaywrightSharp
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task FillAsync(string text) => throw new NotImplementedException();
+        public Task FillAsync(string text, NavigatingActionWaitOptions options = null)
+            => _channel.FillAsync(text, options ?? new NavigatingActionWaitOptions());
 
         /// <inheritdoc />
         public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
