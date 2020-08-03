@@ -95,6 +95,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
+        internal Task SelectOptionAsync(object values, NavigatingActionWaitOptions options)
+            => Scope.SendMessageToServer(
+                Guid,
+                "selectOption",
+                new Dictionary<string, object>
+                {
+                    ["values"] = values,
+                    ["noWaitAfter"] = options.NoWaitAfter,
+                    ["timeout"] = options.Timeout,
+                });
+
         internal Task CheckAsync(CheckOptions options)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
