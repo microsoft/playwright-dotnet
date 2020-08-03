@@ -67,10 +67,10 @@ namespace PlaywrightSharp.Tests.ElementHandle
         public async Task InnerTextShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
-            var handle = await Page.QuerySelectorAsync("#outer");
+            var handle = await Page.QuerySelectorAsync("#inner");
 
             Assert.Equal("Text, more text", await handle.GetInnerTextAsync());
-            Assert.Equal("Text, more text", await Page.GetInnerTextAsync("#outer"));
+            Assert.Equal("Text, more text", await Page.GetInnerTextAsync("#inner"));
         }
 
         ///<playwright-file>elementhandle.spec.js</playwright-file>
