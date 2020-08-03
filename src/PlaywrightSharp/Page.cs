@@ -50,6 +50,7 @@ namespace PlaywrightSharp
             _channel.FrameDetached += Channel_FrameDetached;
             _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
             _channel.Console += (sender, e) => Console?.Invoke(this, e);
+            _channel.Download += (sender, e) => Download?.Invoke(this, e);
         }
 
         /// <inheritdoc />
@@ -108,6 +109,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public event EventHandler<WebsocketEventArgs> Websocket;
+
+        /// <inheritdoc />
+        public event EventHandler<DownloadEventArgs> Download;
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;

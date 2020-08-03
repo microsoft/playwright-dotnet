@@ -115,6 +115,67 @@ namespace PlaywrightSharp
         Task FillAsync(string text, NavigatingActionWaitOptions options = null);
 
         /// <summary>
+        ///  Options to select. If the select has the multiple attribute, all matching options are selected, otherwise only the first option matching one of the passed options is selected.
+        ///  String values are equivalent to {value:'string'}.
+        ///  Option is considered matching if all specified properties match.
+        ///    value Matches by option.value.
+        ///    label Matches by option.label.
+        ///    index Matches by the index.
+        /// </summary>
+        /// <param name="value">Option to select.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task SelectOptionAsync(string value, NavigatingActionWaitOptions options = null);
+
+        /// <summary>
+        ///  Options to select. If the select has the multiple attribute, all matching options are selected, otherwise only the first option matching one of the passed options is selected.
+        /// </summary>
+        /// <param name="values">Options to select.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task SelectOptionAsync(string[] values, NavigatingActionWaitOptions options = null);
+
+        /// <summary>
+        ///  Options to select. If the select has the multiple attribute, all matching options are selected, otherwise only the first option matching one of the passed options is selected.
+        /// </summary>
+        /// <param name="element">Element to select.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task SelectOptionAsync(ElementHandle element, NavigatingActionWaitOptions options = null);
+
+        /// <summary>
+        ///  Options to select. If the select has the multiple attribute, all matching options are selected, otherwise only the first option matching one of the passed options is selected.
+        /// </summary>
+        /// <param name="elements">Elements to select.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task SelectOptionAsync(ElementHandle[] elements, NavigatingActionWaitOptions options = null);
+
+        /// <summary>
+        ///  Options to select. If the select has the multiple attribute, all matching options are selected, otherwise only the first option matching one of the passed options is selected.
+        /// </summary>
+        /// <param name="selectOption">Option to select.
+        /// Option is considered matching if all specified properties match.
+        ///     value Matches by option.value.
+        ///     label Matches by option.label.
+        ///     index Matches by the index.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task SelectOptionAsync(SelectOption selectOption, NavigatingActionWaitOptions options = null);
+
+        /// <summary>
+        ///  Options to select. If the select has the multiple attribute, all matching options are selected, otherwise only the first option matching one of the passed options is selected.
+        /// </summary>
+        /// <param name="selectOptions">Options to select.
+        /// Option is considered matching if all specified properties match.
+        ///     value Matches by option.value.
+        ///     label Matches by option.label.
+        ///     index Matches by the index.</param>
+        /// <param name="options">Options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task SelectOptionAsync(SelectOption[] selectOptions, NavigatingActionWaitOptions options = null);
+
+        /// <summary>
         /// Content frame for element handles referencing iframe nodes, or null otherwise.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the frame is resolved, yielding element's parent <see cref="IFrame" />.</returns>
@@ -320,5 +381,23 @@ namespace PlaywrightSharp
         /// <param name="value">Value to select.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<string[]> SelectAsync(SelectOption value);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
+        Task CheckAsync(CheckOptions options = null);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
+        Task UncheckAsync(CheckOptions options = null);
     }
 }

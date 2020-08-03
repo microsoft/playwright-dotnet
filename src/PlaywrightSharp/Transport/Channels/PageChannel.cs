@@ -35,6 +35,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<ConsoleEventArgs> Console;
 
+        internal event EventHandler<DownloadEventArgs> Download;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
@@ -85,6 +87,9 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "request":
                     Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
+                    break;
+                case "download":
+                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.ToObject<DownloadChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
             }
         }

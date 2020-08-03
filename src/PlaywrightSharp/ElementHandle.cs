@@ -56,10 +56,10 @@ namespace PlaywrightSharp
         public Task ScrollIntoViewIfNeededAsync(int? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
         /// <inheritdoc />
-        public Task<IFrame> GetOwnerFrameAsync() => throw new NotImplementedException();
+        public async Task<IFrame> GetOwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public Task<Rect> GetBoundingBoxAsync() => throw new NotImplementedException();
+        public Task<Rect> GetBoundingBoxAsync() => _channel.GetBoundingBoxAsync();
 
         /// <inheritdoc />
         public async Task<IJSHandle> EvaluateHandleAsync(string script)
@@ -103,7 +103,7 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string pageFunction, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task FocusAsync() => throw new NotImplementedException();
+        public Task FocusAsync() => _channel.FocusAsync();
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string[] values) => throw new NotImplementedException();
@@ -144,5 +144,37 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SelectTextAsync(int? timeout = null) => _channel.SelectTextAsync(timeout);
+
+        /// <inheritdoc />
+        public Task SelectOptionAsync(string value, NavigatingActionWaitOptions options = null)
+            => _channel.SelectOptionAsync(value, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task SelectOptionAsync(string[] values, NavigatingActionWaitOptions options = null)
+            => _channel.SelectOptionAsync(values, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task SelectOptionAsync(ElementHandle element, NavigatingActionWaitOptions options = null)
+            => _channel.SelectOptionAsync(element, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task SelectOptionAsync(ElementHandle[] elements, NavigatingActionWaitOptions options = null)
+            => _channel.SelectOptionAsync(elements, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task SelectOptionAsync(SelectOption selectOption, NavigatingActionWaitOptions options = null)
+            => _channel.SelectOptionAsync(selectOption, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task SelectOptionAsync(SelectOption[] selectOptions, NavigatingActionWaitOptions options = null)
+            => _channel.SelectOptionAsync(selectOptions, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task CheckAsync(CheckOptions options)
+            => _channel.CheckAsync(options);
+
+        /// <inheritdoc />
+        public Task UncheckAsync(CheckOptions options)
+            => _channel.UncheckAsync(options);
     }
 }
