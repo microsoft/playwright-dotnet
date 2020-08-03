@@ -81,5 +81,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.FrameNavigated"/>
         FrameNavigated,
+
+        /// <summary>
+        /// Download event.
+        /// </summary>
+        /// <see cref="IPage.Download"/>
+        Download,
     }
 }

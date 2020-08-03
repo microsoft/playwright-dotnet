@@ -165,7 +165,7 @@ namespace PlaywrightSharp.TestServer
 
         public void EnableGzip(string path) => GzipRoutes.Add(path);
 
-        public void SetRoute(string path, RequestDelegate handler) => _routes.Add(path, handler);
+        public void SetRoute(string path, RequestDelegate handler) => _routes[path] = handler;
 
         public void SetRedirect(string from, string to) => SetRoute(from, context =>
         {

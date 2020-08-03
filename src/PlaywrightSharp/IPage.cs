@@ -152,19 +152,25 @@ namespace PlaywrightSharp
         event EventHandler<PageErrorEventArgs> PageError;
 
         /// <summary>
-        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is spawned by the page.
+        /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is spawned by the page.
         /// </summary>
         event EventHandler<WorkerEventArgs> WorkerCreated;
 
         /// <summary>
-        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
+        /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
         /// </summary>
         event EventHandler<WorkerEventArgs> WorkerDestroyed;
 
         /// <summary>
-        /// Emitted when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
+        /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
         /// </summary>
         event EventHandler<WebsocketEventArgs> Websocket;
+
+        /// <summary>
+        /// Emitted when attachment download started.
+        /// User can access basic file operations on downloaded content via the passed Download instance.
+        /// </summary>
+        event EventHandler<DownloadEventArgs> Download;
 
         /// <summary>
         /// Get an indication that the page has been closed.
