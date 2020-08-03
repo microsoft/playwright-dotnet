@@ -18,9 +18,11 @@ namespace PlaywrightSharp.Transport.Channels
         internal Task<FrameChannel> GetContentFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "contentFrame", null);
 
         internal Task<FrameChannel> GetOwnerFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "ownerFrame", null);
+        
+        internal Task HoverAsync(PointerActionOptions options) => Scope.SendMessageToServer(Guid, "hover", options);
 
         internal Task ClickAsync(ClickOptions options)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "click",
                 new Dictionary<string, object>
@@ -36,7 +38,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task DoubleClickAsync(ClickOptions options)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "dblclick",
                 new Dictionary<string, object>
@@ -49,6 +51,46 @@ namespace PlaywrightSharp.Transport.Channels
                     ["noWaitAfter"] = options?.NoWaitAfter,
                     ["position"] = options?.Position,
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                });
+
+        internal Task ScrollIntoViewIfNeededAsync(int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "scrollIntoViewIfNeeded",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
+        internal Task FillAsync(string value, NavigatingActionWaitOptions options)
+            => Scope.SendMessageToServer(
+                Guid,
+                "fill",
+                new Dictionary<string, object>
+                {
+                    ["value"] = value,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["timeout"] = options?.Timeout,
+                });
+
+        internal Task DispatchEventAsync(string type, object eventInit, int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "dispatchEvent",
+                new Dictionary<string, object>
+                {
+                    ["type"] = type,
+                    ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                });
+
+        internal Task SelectTextAsync(int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "selectText",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
                 });
     }
 }

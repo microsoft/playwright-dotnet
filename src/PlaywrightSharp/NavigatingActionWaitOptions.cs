@@ -1,7 +1,10 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// <see cref="IPage.FillAsync(string, string, NavigatingActionWaitOptions)"/>, <see cref="IFrame.FillAsync(string, string, NavigatingActionWaitOptions)"/>.
+    /// See:
+    ///  * <see cref="IPage.FillAsync(string, string, NavigatingActionWaitOptions)"/>.
+    ///  * <see cref="IFrame.FillAsync(string, string, NavigatingActionWaitOptions)"/>.
+    ///  * <see cref="IElementHandle.FillAsync(string, NavigatingActionWaitOptions)"/>.
     /// </summary>
     public class NavigatingActionWaitOptions
     {
