@@ -90,7 +90,7 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string pageFunction, params object[] args) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task FocusAsync() => throw new NotImplementedException();
+        public Task FocusAsync() => _channel.FocusAsync();
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string[] values) => throw new NotImplementedException();

@@ -21,6 +21,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task HoverAsync(PointerActionOptions options) => Scope.SendMessageToServer(Guid, "hover", options);
 
+        internal Task FocusAsync() => Scope.SendMessageToServer(Guid, "focus", null);
+
         internal Task ClickAsync(ClickOptions options)
             => Scope.SendMessageToServer(
                 Guid,
