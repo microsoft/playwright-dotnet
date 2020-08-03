@@ -580,6 +580,22 @@ namespace PlaywrightSharp
         public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)
              => MainFrame.DispatchEventAsync(true, selector, type, eventInit, timeout);
 
+        /// <inheritdoc />
+        public Task<string> GetAttributeAsync(string selector, string name, int? timeout = null)
+             => MainFrame.GetAttributeAsync(true, selector, name, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetInnerHtmlAsync(string name, int? timeout = null)
+             => MainFrame.GetInnerHtmlAsync(true, name, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetInnerTextAsync(string name, int? timeout = null)
+             => MainFrame.GetInnerTextAsync(true, name, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetTextContentAsync(string name, int? timeout = null)
+             => MainFrame.GetTextContentAsync(true, name, timeout);
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             BrowserContext?.PagesList.Remove(this);

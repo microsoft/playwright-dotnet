@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 
@@ -13,7 +14,19 @@ namespace PlaywrightSharp.Transport.Channels
             Object = owner;
         }
 
+        internal event EventHandler<PreviewUpdatedEventArgs> PreviewUpdated;
+
         public new ElementHandle Object { get; set; }
+
+        internal override void OnMessage(string method, JsonElement? serverParams)
+        {
+            switch (method)
+            {
+                case "previewUpdated":
+                    PreviewUpdated?.Invoke(this, new PreviewUpdatedEventArgs { Preview = serverParams.Value.ToString() });
+                    break;
+            }
+        }
 
         internal Task<FrameChannel> GetContentFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "contentFrame", null);
 
@@ -85,6 +98,54 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["type"] = type,
                     ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                });
+
+        internal Task<string> GetAttributeAsync(string name, int? timeout)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "getAttribute",
+                new Dictionary<string, object>
+                {
+                    ["name"] = name,
+                    ["timeout"] = timeout,
+                });
+
+        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evaluateExpressionHandle",
+                new Dictionary<string, object>
+                {
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                });
+
+        internal Task<string> GetInnerHtmlAsync(int? timeout)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "innerHTML",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
+        internal Task<string> GetInnerTextAsync(int? timeout)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "innerText",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
+        internal Task<string> GetTextContentAsync(int? timeout)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "textContent",
+                new Dictionary<string, object>
+                {
                     ["timeout"] = timeout,
                 });
 

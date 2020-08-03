@@ -14,11 +14,14 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly JSHandleChannel _channel;
+        private readonly JSHandleInitializer _initializer;
 
         internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer initializer)
         {
             _scope = scope;
             _channel = new JSHandleChannel(guid, scope, this);
+            _initializer = initializer;
+            Preview = _initializer.Preview;
         }
 
         /// <inheritdoc/>
@@ -29,6 +32,8 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
+
+        internal string Preview { get; set; }
 
         /// <inheritdoc />
         public async Task<T> EvaluateAsync<T>(string script)
@@ -69,5 +74,8 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task DisposeAsync() => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public override string ToString() => Preview;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,6 +39,39 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the event was dispatched.</returns>
         Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null);
+
+        /// <summary>
+        /// Returns element attribute value.
+        /// </summary>
+        /// <param name="name">Attribute name to get the value for.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the value or the attribute.</returns>
+        Task<string> GetAttributeAsync(string name, int? timeout = null);
+
+        /// <summary>
+        /// Resolves to the element.innerHTML.
+        /// </summary>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the innerHTML of the element.</returns>
+        Task<string> GetInnerHtmlAsync(int? timeout = null);
+
+        /// <summary>
+        /// Resolves to the element.innerText.
+        /// </summary>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the innerText of the element.</returns>
+        Task<string> GetInnerTextAsync(int? timeout = null);
+
+        /// <summary>
+        /// Resolves to the element.textContent.
+        /// </summary>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the textContent of the element.</returns>
+        Task<string> GetTextContentAsync(int? timeout = null);
 
         /// <summary>
         /// Focuses the element, and sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
@@ -178,13 +212,24 @@ namespace PlaywrightSharp
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// <see cref="IJSHandle"/> instances can be passed as arguments.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
+        Task<IJSHandle> EvaluateHandleAsync(string script);
+
+        /// <summary>
+        /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
+        /// </summary>
+        /// <param name="script">Script to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args);
+        Task<IJSHandle> EvaluateHandleAsync(string script, object args);
 
         /// <summary>
         /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
