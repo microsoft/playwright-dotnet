@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -9,8 +10,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
     ///<playwright-file>elementhandle.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.ownerFrame</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ElementHandleOwnerFrameTests : PlaywrightSharpPageBaseTest
+    public class ElementHandleOwnerFrameTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleOwnerFrameTests(ITestOutputHelper output) : base(output)
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.ownerFrame</playwright-describe>
         ///<playwright-it>should work for adopted elements</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -120,11 +120,12 @@ namespace PlaywrightSharp.Tests.ElementHandle
                     return div;
                 }");
             Assert.Equal(Page.MainFrame, await divHandle.GetOwnerFrameAsync());
+            await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
             await Page.EvaluateAsync(@"() => {
                     var div = document.querySelector('div');
                     window.__popup.document.body.appendChild(div);
                 }");
-            Assert.Equal(Page.MainFrame, await divHandle.GetOwnerFrameAsync());
+            Assert.Same(popup.Page.MainFrame, await divHandle.GetOwnerFrameAsync());
         }
     }
 }
