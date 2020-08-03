@@ -55,6 +55,8 @@ namespace PlaywrightSharp.Transport.Channels
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 });
 
+        internal Task<Rect> GetBoundingBoxAsync() => Scope.SendMessageToServer<Rect>(Guid, "boundingBox", null);
+
         internal Task ScrollIntoViewIfNeededAsync(int? timeout)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,

@@ -57,7 +57,7 @@ namespace PlaywrightSharp
         public async Task<IFrame> GetOwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public Task<Rect> GetBoundingBoxAsync() => throw new NotImplementedException();
+        public Task<Rect> GetBoundingBoxAsync() => _channel.GetBoundingBoxAsync();
 
         /// <inheritdoc />
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => throw new NotImplementedException();
