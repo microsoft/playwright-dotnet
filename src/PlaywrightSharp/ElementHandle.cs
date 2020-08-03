@@ -54,7 +54,7 @@ namespace PlaywrightSharp
         public Task ScrollIntoViewIfNeededAsync(int? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
         /// <inheritdoc />
-        public Task<IFrame> GetOwnerFrameAsync() => throw new NotImplementedException();
+        public async Task<IFrame> GetOwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public Task<Rect> GetBoundingBoxAsync() => throw new NotImplementedException();
