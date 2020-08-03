@@ -119,5 +119,13 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SelectTextAsync(int? timeout = null) => _channel.SelectTextAsync(timeout);
+
+        /// <inheritdoc />
+        public Task CheckAsync(CheckOptions options)
+            => _channel.CheckAsync(options);
+
+        /// <inheritdoc />
+        public Task UncheckAsync(CheckOptions options)
+            => _channel.UncheckAsync(options);
     }
 }

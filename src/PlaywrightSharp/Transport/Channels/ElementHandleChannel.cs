@@ -90,5 +90,27 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["timeout"] = timeout,
                 });
+
+        internal Task CheckAsync(CheckOptions options)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "check",
+                new Dictionary<string, object>
+                {
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                });
+
+        internal Task UncheckAsync(CheckOptions options)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "uncheck",
+                new Dictionary<string, object>
+                {
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                });
     }
 }
