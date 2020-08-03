@@ -51,6 +51,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 });
 
+        internal Task ScrollIntoViewIfNeededAsync(int? timeout)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "scrollIntoViewIfNeeded",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
         internal Task FillAsync(string value, NavigatingActionWaitOptions options)
             => Scope.SendMessageToServer(
                 Guid,

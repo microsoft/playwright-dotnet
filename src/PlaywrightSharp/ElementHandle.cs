@@ -51,16 +51,13 @@ namespace PlaywrightSharp
         public Task HoverAsync(PointerActionOptions options = null) => _channel.HoverAsync(options ?? new PointerActionOptions());
 
         /// <inheritdoc />
-        public Task ScrollIntoViewIfNeededAsync() => throw new NotImplementedException();
+        public Task ScrollIntoViewIfNeededAsync(int? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
         /// <inheritdoc />
         public Task<IFrame> GetOwnerFrameAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<Rect> GetBoundingBoxAsync() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<double> GetVisibleRatioAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => throw new NotImplementedException();
