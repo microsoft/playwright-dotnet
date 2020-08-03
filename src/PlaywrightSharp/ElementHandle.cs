@@ -54,7 +54,7 @@ namespace PlaywrightSharp
         public Task ScrollIntoViewIfNeededAsync(int? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
         /// <inheritdoc />
-        public Task<IFrame> GetOwnerFrameAsync() => throw new NotImplementedException();
+        public async Task<IFrame> GetOwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public Task<Rect> GetBoundingBoxAsync() => throw new NotImplementedException();
@@ -143,5 +143,13 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task SelectOptionAsync(SelectOption[] selectOptions, NavigatingActionWaitOptions options = null)
             => _channel.SelectOptionAsync(selectOptions, options ?? new NavigatingActionWaitOptions());
+
+        /// <inheritdoc />
+        public Task CheckAsync(CheckOptions options)
+            => _channel.CheckAsync(options);
+
+        /// <inheritdoc />
+        public Task UncheckAsync(CheckOptions options)
+            => _channel.UncheckAsync(options);
     }
 }

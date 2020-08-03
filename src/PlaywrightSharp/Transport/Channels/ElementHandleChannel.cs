@@ -17,6 +17,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<FrameChannel> GetContentFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "contentFrame", null);
 
+        internal Task<FrameChannel> GetOwnerFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "ownerFrame", null);
+
         internal Task HoverAsync(PointerActionOptions options) => Scope.SendMessageToServer(Guid, "hover", options);
 
         internal Task ClickAsync(ClickOptions options)
@@ -100,6 +102,28 @@ namespace PlaywrightSharp.Transport.Channels
                     ["values"] = values,
                     ["noWaitAfter"] = options.NoWaitAfter,
                     ["timeout"] = options.Timeout,
+                });
+
+        internal Task CheckAsync(CheckOptions options)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "check",
+                new Dictionary<string, object>
+                {
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
+                });
+
+        internal Task UncheckAsync(CheckOptions options)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "uncheck",
+                new Dictionary<string, object>
+                {
+                    ["force"] = options?.Force,
+                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = options?.NoWaitAfter,
                 });
     }
 }
