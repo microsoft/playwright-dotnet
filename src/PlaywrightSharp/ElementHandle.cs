@@ -41,13 +41,14 @@ namespace PlaywrightSharp
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task FillAsync(string text) => throw new NotImplementedException();
+        public Task FillAsync(string text, NavigatingActionWaitOptions options = null)
+            => _channel.FillAsync(text, options ?? new NavigatingActionWaitOptions());
 
         /// <inheritdoc />
-        public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false)).Object;
+        public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task HoverAsync(PointerActionOptions options = null) => throw new NotImplementedException();
+        public Task HoverAsync(PointerActionOptions options = null) => _channel.HoverAsync(options ?? new PointerActionOptions());
 
         /// <inheritdoc />
         public Task ScrollIntoViewIfNeededAsync(int? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
@@ -108,5 +109,15 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(SelectOption value) => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null)
+            => _channel.DispatchEventAsync(
+                type,
+                eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
+                timeout);
+
+        /// <inheritdoc />
+        public Task SelectTextAsync(int? timeout = null) => _channel.SelectTextAsync(timeout);
     }
 }
