@@ -125,8 +125,6 @@ namespace PlaywrightSharp
             set => Values["env"] = value;
         }
 
-        internal Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
-
         /// <summary>
         /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
         /// </summary>
@@ -152,7 +150,5 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="LaunchPersistentOptions"/> with the same information as the <see cref="LaunchOptions"/>.</returns>
         public LaunchPersistentOptions ToLaunchPersistentOptions() => this;
-
-        internal Dictionary<string, object> ToChannelDictionary() => Values;
     }
 }
