@@ -257,7 +257,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task DispatchEventAsync(string selector, string type, object eventInit, int? timeout, bool isPage)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "dispatchEvent",
                 new Dictionary<string, object>
@@ -265,6 +265,51 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                     ["type"] = type,
                     ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<string> GetAttributeAsync(string selector, string name, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "getAttribute",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["name"] = name,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<string> GetInnerHtmlAsync(string selector, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "innerHTML",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<string> GetInnerTextAsync(string selector, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "innerText",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task<string> GetTextContentAsync(string selector, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "textContent",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
                     ["timeout"] = timeout,
                     ["isPage"] = isPage,
                 });

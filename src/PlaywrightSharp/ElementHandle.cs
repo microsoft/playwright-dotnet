@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -18,6 +19,7 @@ namespace PlaywrightSharp
         {
             _scope = scope;
             _channel = new ElementHandleChannel(guid, scope, this);
+            _channel.PreviewUpdated += (sender, e) => Preview = e.Preview;
         }
 
         /// <inheritdoc/>
@@ -62,7 +64,18 @@ namespace PlaywrightSharp
         public Task<double> GetVisibleRatioAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string script, params object[] args) => throw new NotImplementedException();
+        public async Task<IJSHandle> EvaluateHandleAsync(string script)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: EvaluateArgument.Undefined).ConfigureAwait(false)).Object;
+
+        /// <inheritdoc />
+        public async Task<IJSHandle> EvaluateHandleAsync(string script, object args)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public Task ClickAsync(ClickOptions options = null) => _channel.ClickAsync(options ?? new ClickOptions());
@@ -118,5 +131,17 @@ namespace PlaywrightSharp
                 type,
                 eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
                 timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetAttributeAsync(string name, int? timeout = null) => _channel.GetAttributeAsync(name, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetInnerHtmlAsync(int? timeout = null) => _channel.GetInnerHtmlAsync(timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetInnerTextAsync(int? timeout = null) => _channel.GetInnerTextAsync(timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetTextContentAsync(int? timeout = null) => _channel.GetTextContentAsync(timeout);
     }
 }

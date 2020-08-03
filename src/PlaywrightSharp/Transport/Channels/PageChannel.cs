@@ -37,62 +37,55 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
-            try
+            switch (method)
             {
-                switch (method)
-                {
-                    case "close":
-                        Closed?.Invoke(this, EventArgs.Empty);
-                        break;
-                    case "crash":
-                        Crashed?.Invoke(this, EventArgs.Empty);
-                        break;
-                    case "bindingCall":
-                        BindingCall?.Invoke(
-                            this,
-                            new BindingCallEventArgs
-                            {
-                                BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            });
-                        break;
-                    case "route":
-                        Route?.Invoke(
-                            this,
-                            new RouteEventArgs
-                            {
-                                Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                                Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            });
-                        break;
-                    case "popup":
-                        Popup?.Invoke(this, new PageChannelPopupEventArgs
+                case "close":
+                    Closed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "crash":
+                    Crashed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "bindingCall":
+                    BindingCall?.Invoke(
+                        this,
+                        new BindingCallEventArgs
                         {
-                            Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
-                        break;
-                    case "frameAttached":
-                        FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
-                        break;
-                    case "frameDetached":
-                        FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
-                        break;
-                    case "frameNavigated":
-                        FrameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
-                        break;
-                    case "dialog":
-                        Dialog?.Invoke(this, new DialogEventArgs(serverParams?.ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
-                        break;
-                    case "console":
-                        Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
-                        break;
-                    case "request":
-                        Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex);
+                    break;
+                case "route":
+                    Route?.Invoke(
+                        this,
+                        new RouteEventArgs
+                        {
+                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        });
+                    break;
+                case "popup":
+                    Popup?.Invoke(this, new PageChannelPopupEventArgs
+                    {
+                        Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                    });
+                    break;
+                case "frameAttached":
+                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    break;
+                case "frameDetached":
+                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    break;
+                case "frameNavigated":
+                    FrameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    break;
+                case "dialog":
+                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    break;
+                case "console":
+                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
+                    break;
+                case "request":
+                    Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
+                    break;
             }
         }
 

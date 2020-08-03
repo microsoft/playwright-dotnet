@@ -218,6 +218,34 @@ namespace PlaywrightSharp
         public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)
             => DispatchEventAsync(false, selector, type, eventInit, timeout);
 
+        /// <inheritdoc />
+        public Task<string> GetAttributeAsync(string selector, string name, int? timeout = null)
+            => GetAttributeAsync(false, selector, name, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetInnerHtmlAsync(string selector, int? timeout = null)
+            => GetInnerHtmlAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetInnerTextAsync(string selector, int? timeout = null)
+            => GetInnerTextAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<string> GetTextContentAsync(string selector, int? timeout = null)
+            => GetTextContentAsync(false, selector, timeout);
+
+        internal Task<string> GetAttributeAsync(bool isPageCall, string selector, string name, int? timeout = null)
+            => _channel.GetAttributeAsync(selector, name, timeout, isPageCall);
+
+        internal Task<string> GetInnerHtmlAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.GetInnerHtmlAsync(selector, timeout, isPageCall);
+
+        internal Task<string> GetInnerTextAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.GetInnerTextAsync(selector, timeout, isPageCall);
+
+        internal Task<string> GetTextContentAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.GetTextContentAsync(selector, timeout, isPageCall);
+
         internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, int? timeout = null)
             => _channel.DispatchEventAsync(
                     selector,
