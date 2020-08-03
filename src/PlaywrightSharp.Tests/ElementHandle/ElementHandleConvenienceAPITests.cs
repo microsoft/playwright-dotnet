@@ -125,7 +125,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>getAttribute should be atomic</playwright-it>
