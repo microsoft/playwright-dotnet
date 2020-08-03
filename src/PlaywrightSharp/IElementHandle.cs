@@ -275,5 +275,23 @@ namespace PlaywrightSharp
         /// <param name="value">Value to select.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<string[]> SelectAsync(SelectOption value);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
+        Task CheckAsync(CheckOptions options = null);
+
+        /// <summary>
+        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
+        /// If the element is detached during the actionability checks, the action is retried.
+        /// </summary>
+        /// <param name="options">Check options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
+        Task UncheckAsync(CheckOptions options = null);
     }
 }
