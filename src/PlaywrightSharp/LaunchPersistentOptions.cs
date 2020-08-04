@@ -22,6 +22,19 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
+        /// If specified, accepted downloads are downloaded into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.
+        /// </summary>
+        public string DownloadsPath
+        {
+            get
+            {
+                Values.TryGetValue("downloadsPath", out object result);
+                return result as string;
+            }
+            set => Values["downloadsPath"] = value;
+        }
+
+        /// <summary>
         /// Whether to ignore HTTPS errors during navigation. Defaults to false.
         /// </summary>
         public bool? IgnoreHTTPSErrors
