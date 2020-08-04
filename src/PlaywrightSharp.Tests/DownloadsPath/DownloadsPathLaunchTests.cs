@@ -20,7 +20,6 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         /// <inheritdoc/>
         public DownloadsPathLaunchTests(ITestOutputHelper output) : base(output)
         {
-
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
