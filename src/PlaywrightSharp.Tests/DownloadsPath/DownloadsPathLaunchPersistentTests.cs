@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.DownloadsPath
 {
-    ///<playwright-file>download.spec.js</playwright-file>
+    ///<playwright-file>downloadspath.spec.js</playwright-file>
     ///<playwright-describe>browserType.launchPersistent({acceptDownloads})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadsPathLaunchPersistentTests : PlaywrightSharpBaseTest, IAsyncLifetime
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
         }
 
-        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launchPersistent({acceptDownloads})</playwright-describe>
         ///<playwright-it>should accept downloads</playwright-it>
         [Retry]
@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.True(new FileInfo(path).Exists);
         }
 
-        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launchPersist   qent({acceptDownloads})</playwright-describe>
         ///<playwright-it>should not delete downloads when the context closes</playwright-it>
         [Retry]

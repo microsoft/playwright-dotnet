@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.DownloadsPath
 {
-    ///<playwright-file>download.spec.js</playwright-file>
+    ///<playwright-file>downloadspath.spec.js</playwright-file>
     ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadsPathLaunchTests : PlaywrightSharpBaseTest, IAsyncLifetime
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
         }
 
-        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
         ///<playwright-it>should keep downloadsPath folder</playwright-it>
         [Retry]
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.True(new DirectoryInfo(_tmp.Path).Exists);
         }
 
-        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
         ///<playwright-it>should delete downloads when context closes</playwright-it>
         [Retry]
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.False(new FileInfo(path).Exists);
         }
 
-        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
         ///<playwright-it>should report downloads in downloadsPath folder</playwright-it>
         [Retry]
