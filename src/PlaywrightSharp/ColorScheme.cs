@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IPage.EmulateMediaAsync(EmulateMedia)"/>.
+    /// Options for <see cref="IPage.EmulateMediaAsync(MediaType?, ColorScheme?)"/>.
     /// </summary>
     public enum ColorScheme
     {
