@@ -96,8 +96,8 @@ namespace PlaywrightSharp.Tests.Emulation
 
                 var popup = popupTask.Result.Page;
 
-                Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
-                Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
+                Assert.True(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+                Assert.False(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             }
 
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests.Emulation
             await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.CrossProcessHttpPrefix + "/empty.html");
             var frame = page.Frames[1];
 
-            Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+            Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
     }
 }
