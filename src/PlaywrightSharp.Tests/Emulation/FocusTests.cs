@@ -68,7 +68,6 @@ namespace PlaywrightSharp.Tests.Emulation
                 Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"),
                 page2.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"));
 
-
             await Task.WhenAll(
                 Page.FocusAsync("input"),
                 page2.FocusAsync("input"));
@@ -79,7 +78,6 @@ namespace PlaywrightSharp.Tests.Emulation
             await Task.WhenAll(
                 Page.Keyboard.TypeAsync(text),
                 page2.Keyboard.TypeAsync(text2));
-
 
             var results = await TaskUtils.WhenAll(
                 Page.EvaluateAsync<string>("result"),
@@ -106,11 +104,9 @@ namespace PlaywrightSharp.Tests.Emulation
                 Page.FocusAsync("body"),
                 page2.FocusAsync("body"));
 
-
             await Task.WhenAll(
                 Page.Mouse.ClickAsync(1, 1),
                 page2.Mouse.ClickAsync(1, 1));
-
 
             var counters = await TaskUtils.WhenAll(
                 Page.EvaluateAsync<int>("window.clickCount"),
@@ -132,11 +128,9 @@ namespace PlaywrightSharp.Tests.Emulation
                 Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"),
                 page2.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"));
 
-
             await Task.WhenAll(
                 Page.FocusAsync("input"),
                 page2.FocusAsync("textArea"));
-
 
             var results = await TaskUtils.WhenAll(
                 Page.EvaluateAsync<string>("document.activeElement.tagName"),
