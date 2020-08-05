@@ -42,7 +42,7 @@ namespace PlaywrightSharp
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
-            _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
+            _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.Request));
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
             _channel.FrameNavigated += Channel_FrameNavigated;

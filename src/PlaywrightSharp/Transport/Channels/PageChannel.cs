@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Transport.Channels
                     Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
                     break;
                 case "request":
-                    Request?.Invoke(this, new PageChannelRequestEventArgs { RequestChannel = null });
+                    Request?.Invoke(this, new PageChannelRequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "download":
                     Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.ToObject<DownloadChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
