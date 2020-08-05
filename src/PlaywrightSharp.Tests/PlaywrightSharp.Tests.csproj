@@ -30,4 +30,12 @@
         <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="xunit.runner.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="xunit.runner.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 </Project>

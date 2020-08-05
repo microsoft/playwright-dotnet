@@ -217,7 +217,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             string userAgent = string.Empty;
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", r => userAgent = r.Headers["user-agent"]),
                 page.GoToAsync(TestConstants.EmptyPage));
 
@@ -475,7 +475,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             string fooHeader = string.Empty;
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", r => fooHeader = r.Headers["foo"]),
                 page.GoToAsync(TestConstants.EmptyPage));
 

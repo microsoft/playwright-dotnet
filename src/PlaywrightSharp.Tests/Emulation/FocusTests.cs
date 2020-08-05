@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Emulation
             await Page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
@@ -64,18 +64,18 @@ namespace PlaywrightSharp.Tests.Emulation
         {
             var page2 = await Page.Context.NewPageAsync();
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"),
                 page2.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"));
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.FocusAsync("input"),
                 page2.FocusAsync("input"));
 
             string text = "first";
             string text2 = "second";
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.Keyboard.TypeAsync(text),
                 page2.Keyboard.TypeAsync(text2));
 
@@ -98,13 +98,13 @@ namespace PlaywrightSharp.Tests.Emulation
               document.onclick = () => window.clickCount  = (window.clickCount || 0) + 1;
             }";
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.EvaluateAsync(clickCounter),
                 page2.EvaluateAsync(clickCounter),
                 Page.FocusAsync("body"),
                 page2.FocusAsync("body"));
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.Mouse.ClickAsync(1, 1),
                 page2.Mouse.ClickAsync(1, 1));
 
@@ -124,11 +124,11 @@ namespace PlaywrightSharp.Tests.Emulation
         {
             var page2 = await Page.Context.NewPageAsync();
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"),
                 page2.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"));
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.FocusAsync("input"),
                 page2.FocusAsync("textArea"));
 
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.Emulation
               element.onfocus = element.onblur = (e) => self._events.push(e.type);
             }";
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 frame1.EvaluateAsync(logger),
                 frame2.EvaluateAsync(logger));
 

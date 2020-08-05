@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Launcher
             browserServer.Closed += (server, e) => closedTcs.TrySetResult(true);
             _ = browserServer.KillAsync();
 
-            await Task.WhenAll(disconnectedTcs.Task, closedTcs.Task).WithTimeout();
+            await TaskUtils.WhenAll(disconnectedTcs.Task, closedTcs.Task).WithTimeout();
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests.Launcher
                 closedTcs.TrySetResult(true);
             };
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 browserServer.KillAsync().ContinueWith(t => order.Add("killed")),
                 closedTcs.Task);
 
@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var tcs = new TaskCompletionSource<bool>();
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
             browserServer.Closed += (sender, e) => tcs.TrySetResult(true);
-            await Task.WhenAll(tcs.Task, browserServer.CloseAsync());
+            await TaskUtils.WhenAll(tcs.Task, browserServer.CloseAsync());
         }
     }
 }

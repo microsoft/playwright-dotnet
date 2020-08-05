@@ -444,7 +444,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldThrowANiceErrorAfterANavigation()
         {
             var exceptionTask = Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => new Promise(f => window.__resolve = f)"));
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.WaitForNavigationAsync(),
                 Page.EvaluateAsync(@"() => {
                     window.location.reload();

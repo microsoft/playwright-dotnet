@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Browser
 
             context.Closed += (sender, e) => closeTask.TrySetResult(true);
 
-            await Task.WhenAll(browser.CloseAsync(), closeTask.Task);
+            await TaskUtils.WhenAll(browser.CloseAsync(), closeTask.Task);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Browser
         public async Task ShouldBeCallableTwice()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            await Task.WhenAll(browser.CloseAsync(), browser.CloseAsync());
+            await TaskUtils.WhenAll(browser.CloseAsync(), browser.CloseAsync());
             await browser.CloseAsync();
         }
     }

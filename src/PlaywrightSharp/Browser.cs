@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -112,6 +113,6 @@ namespace PlaywrightSharp
         public Task<IWorker> GetServiceWorkerAsync(ITarget target) => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+        public async ValueTask DisposeAsync() => await CloseAsync().WithTimeout().ConfigureAwait(false);
     }
 }

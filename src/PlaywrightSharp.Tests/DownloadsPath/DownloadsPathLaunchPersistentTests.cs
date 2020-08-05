@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
             var downloadTask = _page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 _page.ClickAsync("a"));
 
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
             var downloadTask = _page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 _page.ClickAsync("a"));
 

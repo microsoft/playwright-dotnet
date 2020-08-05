@@ -22,9 +22,9 @@ namespace PlaywrightSharp.Tests.BaseTests
             var serverStart = Server.StartAsync();
             var httpsServerStart = HttpsServer.StartAsync();
 
-            await Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
+            await TaskUtils.WhenAll(downloaderTask, serverStart, httpsServerStart);
         }
 
-        internal static Task TeardownAsync() => Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
+        internal static Task TeardownAsync() => TaskUtils.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
     }
 }

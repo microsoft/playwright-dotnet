@@ -123,7 +123,7 @@ namespace PlaywrightSharp
                 return _channel.CloseAsync();
             }
 
-            return _closeTcs.Task;
+            return _closeTcs.Task.WithTimeout();
         }
 
         /// <inheritdoc />

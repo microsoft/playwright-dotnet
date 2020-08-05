@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             ");
             var elementHandles = await Page.QuerySelectorAllAsync("div.to-screenshot");
             var screenshotTasks = elementHandles.Select(e => e.ScreenshotAsync()).ToArray();
-            await Task.WhenAll(screenshotTasks);
+            await TaskUtils.WhenAll(screenshotTasks);
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshotTasks.ElementAt(2).Result));
         }

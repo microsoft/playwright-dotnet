@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task PageWorkers()
         {
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.WaitForEvent<WorkerEventArgs>(PageEvent.WorkerCreated),
                 Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html"));
             var worker = Page.Workers[0];
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests.Page
 
             await worker.Worker.EvaluateAsync("url => fetch(url).then(response => response.text()).then(console.log)", url);
 
-            await Task.WhenAll(requestTask, responseTask);
+            await TaskUtils.WhenAll(requestTask, responseTask);
 
             Assert.Equal(url, requestTask.Result.Url);
             Assert.Equal(requestTask.Result.Response, responseTask.Result);
@@ -193,7 +193,7 @@ namespace PlaywrightSharp.Tests.Page
                 fetch(""${url}"").then(response => response.text()).then(console.log);
               `], { type: 'application/javascript'})))", url);
 
-            await Task.WhenAll(requestTask, responseTask);
+            await TaskUtils.WhenAll(requestTask, responseTask);
 
             Assert.Equal(url, requestTask.Result.Url);
             Assert.Equal(requestTask.Result.Response, responseTask.Result);

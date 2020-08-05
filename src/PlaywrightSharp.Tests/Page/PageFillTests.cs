@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.Page
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'none'");
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.FillAsync("input", "some value"),
                 Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'block'")
             );

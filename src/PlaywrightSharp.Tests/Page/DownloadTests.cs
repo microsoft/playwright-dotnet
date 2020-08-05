@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/downloadWithFilename\">download</a>");
             var downloadTask = Page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 Page.ClickAsync("a"));
 
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 page.ClickAsync("a"));
 
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a download=\"file.txt\" href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 page.ClickAsync("a"));
 
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 page.ClickAsync("a", new ClickOptions { Modifiers = new[] { Modifier.Alt } }));
 
@@ -185,7 +185,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a target=_blank href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 page.ClickAsync("a"));
 
@@ -206,7 +206,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a target=_blank href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 page.ClickAsync("a"));
 
@@ -229,7 +229,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a target=_blank href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 downloadTask,
                 page.ClickAsync("a"));
 
@@ -250,13 +250,13 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var download1Task = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 download1Task,
                 page.ClickAsync("a"));
 
             var download2Task = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 download2Task,
                 page.ClickAsync("a"));
 
@@ -280,13 +280,13 @@ namespace PlaywrightSharp.Tests.Page
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var download1Task = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 download1Task,
                 page.ClickAsync("a"));
 
             var download2Task = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 download2Task,
                 page.ClickAsync("a"));
 

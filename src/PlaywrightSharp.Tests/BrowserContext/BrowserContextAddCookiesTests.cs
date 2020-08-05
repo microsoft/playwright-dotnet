@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             await using var context2 = await Browser.NewContextAsync();
             var (page1, page2) = await TaskUtils.WhenAll(Context.NewPageAsync(), context2.NewPageAsync());
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 page1.GoToAsync(TestConstants.EmptyPage),
                 page2.GoToAsync(TestConstants.EmptyPage));
 

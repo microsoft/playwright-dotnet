@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 Page.Console -= EventHandler;
             }
             Page.Console += EventHandler;
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"),
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
             );
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 Page.Console -= EventHandler;
             }
             Page.Console += EventHandler;
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.EvaluateAsync("() => console.error(window)"),
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
             );

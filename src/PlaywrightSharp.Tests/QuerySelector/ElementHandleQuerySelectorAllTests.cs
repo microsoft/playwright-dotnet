@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             var elements = await html.QuerySelectorAllAsync("div");
             Assert.Equal(2, elements.Length);
             var tasks = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
-            Assert.Equal(new[] { "A", "B" }, await Task.WhenAll(tasks));
+            Assert.Equal(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>

@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Browser
             var disconnectedTask = new TaskCompletionSource<bool>();
             remote.Disconnected += (sender, e) => disconnectedTask.TrySetResult(true);
 
-            await Task.WhenAll(browserServer.CloseAsync(), disconnectedTask.Task);
+            await TaskUtils.WhenAll(browserServer.CloseAsync(), disconnectedTask.Task);
 
             Assert.False(remote.IsConnected);
 

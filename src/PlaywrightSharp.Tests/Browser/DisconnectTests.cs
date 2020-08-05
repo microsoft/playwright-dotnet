@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests.Browser
             var tcs = new TaskCompletionSource<bool>();
             page.Closed += (sender, e) => tcs.TrySetResult(true);
 
-            await Task.WhenAll(remote.CloseAsync(), tcs.Task);
+            await TaskUtils.WhenAll(remote.CloseAsync(), tcs.Task);
         }
     }
 }

@@ -36,21 +36,21 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldBeIsolatedBetweenFrames()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1R", TestConstants.EmptyPage);
             Assert.Equal(2, Page.Frames.Length);
             var frames = Page.Frames;
             Assert.NotSame(frames[0], frames[1]);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 frames[0].EvaluateAsync("() => window.a = 1"),
                 frames[1].EvaluateAsync("() => window.a = 2")
             );
-            int[] results = await Task.WhenAll(
+            var results = await TaskUtils.WhenAll(
                 frames[0].EvaluateAsync<int>("() => window.a"),
-                frames[1].EvaluateAsync<int>("() => window.a")
-            );
-            Assert.Equal(1, results[0]);
-            Assert.Equal(2, results[1]);
+                frames[1].EvaluateAsync<int>("() => window.a"));
+
+            Assert.Equal(1, results.Item1);
+            Assert.Equal(2, results.Item2);
         }
     }
 }

@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.WaitForFunctionAsync("() => window.__FOO === 'hit'", new WaitForFunctionOptions
                 {
                     Polling = WaitForFunctionPollingOption.Raf

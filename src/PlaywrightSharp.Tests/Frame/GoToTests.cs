@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Frame
                 new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame3", TestConstants.EmptyPage)}
             };
 
-            await Task.WhenAll(matchingData.Select(m => m.FrameTask));
+            await TaskUtils.WhenAll(matchingData.Select(m => m.FrameTask));
 
             // Navigate all frames to the same URL.
             var requestHandler = new RequestDelegate(async (context) =>
