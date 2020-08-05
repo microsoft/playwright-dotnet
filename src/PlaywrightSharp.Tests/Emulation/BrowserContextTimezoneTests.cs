@@ -23,8 +23,10 @@ namespace PlaywrightSharp.Tests.Emulation
         [Retry]
         public async Task ShouldWork()
         {
+            await using var browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+
             const string func = "() => new Date(1479579154987).toString()";
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "America/Jamaica" }))
+            await using (var context = await browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "America/Jamaica" }))
             {
                 var page = await context.NewPageAsync();
                 string result = await page.EvaluateAsync<string>(func);
@@ -33,7 +35,7 @@ namespace PlaywrightSharp.Tests.Emulation
                     result);
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Pacific/Honolulu" }))
+            await using (var context = await browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Pacific/Honolulu" }))
             {
                 var page = await context.NewPageAsync();
                 Assert.Equal(
@@ -41,7 +43,7 @@ namespace PlaywrightSharp.Tests.Emulation
                     await page.EvaluateAsync<string>(func));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "America/Buenos_Aires" }))
+            await using (var context = await browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "America/Buenos_Aires" }))
             {
                 var page = await context.NewPageAsync();
                 Assert.Equal(
@@ -49,7 +51,7 @@ namespace PlaywrightSharp.Tests.Emulation
                     await page.EvaluateAsync<string>(func));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Europe/Berlin" }))
+            await using (var context = await browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Europe/Berlin" }))
             {
                 var page = await context.NewPageAsync();
                 Assert.Equal(
