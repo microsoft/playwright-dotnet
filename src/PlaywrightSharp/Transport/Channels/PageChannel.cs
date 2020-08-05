@@ -175,6 +175,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["key"] = key,
                 });
 
+        internal Task EmulateMediaAsync(Dictionary<string, object> args)
+            => Scope.SendMessageToServer<SerializedAXNode>(Guid, "emulateMedia", args);
+
         internal Task KeyboardUpAsync(string key)
             => Scope.SendMessageToServer<SerializedAXNode>(
                 Guid,

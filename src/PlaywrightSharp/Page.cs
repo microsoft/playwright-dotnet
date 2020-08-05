@@ -189,7 +189,24 @@ namespace PlaywrightSharp
         public Task SetCacheEnabledAsync(bool enabled = true) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task EmulateMediaAsync(EmulateMedia options) => throw new NotImplementedException();
+        public Task EmulateMediaAsync()
+            => _channel.EmulateMediaAsync(new Dictionary<string, object>());
+
+        /// <inheritdoc />
+        public Task EmulateMediaAsync(MediaType? media)
+            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["media"] = media });
+
+        /// <inheritdoc />
+        public Task EmulateMediaAsync(ColorScheme? colorScheme)
+            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["colorScheme"] = colorScheme });
+
+        /// <inheritdoc />
+        public Task EmulateMediaAsync(MediaType? media, ColorScheme? colorScheme)
+            => _channel.EmulateMediaAsync(new Dictionary<string, object>
+            {
+                ["media"] = media,
+                ["colorScheme"] = colorScheme,
+            });
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);

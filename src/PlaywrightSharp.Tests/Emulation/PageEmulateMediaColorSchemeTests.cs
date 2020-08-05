@@ -5,16 +5,15 @@ using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Page
+namespace PlaywrightSharp.Tests.Emulation
 {
     ///<playwright-file>emulation.spec.js</playwright-file>
     ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class EmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
+    public class PageEmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public EmulateMediaColorSchemeTests(ITestOutputHelper output) : base(output)
+        public PageEmulateMediaColorSchemeTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -24,24 +23,31 @@ namespace PlaywrightSharp.Tests.Page
         [Retry]
         public async Task ShouldWork()
         {
-            await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = ColorScheme.Light });
+            await Page.EmulateMediaAsync(ColorScheme.Light);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: no-preference)').matches"));
 
-            await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = ColorScheme.Dark });
+            await Page.EmulateMediaAsync(ColorScheme.Dark);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: no-preference)').matches"));
+        }
 
-            if (!TestConstants.IsWebKit)
-            {
-                await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = ColorScheme.NoPreference });
+        ///<playwright-file>emulation.spec.js</playwright-file>
+        ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
+        ///<playwright-it>should default to light</playwright-it>
+        [Retry]
+        public async Task ShouldDefaultToLight()
+        {
+            Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-                Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
-                Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
-                Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: no-preference)').matches"));
-            }
+            await Page.EmulateMediaAsync(ColorScheme.Dark);
+            Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
+
+            await Page.EmulateMediaAsync(colorScheme: null);
+            Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
 
         ///<playwright-file>emulation.spec.js</playwright-file>
@@ -56,12 +62,12 @@ namespace PlaywrightSharp.Tests.Page
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkDuringNavigation()
         {
-            await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = ColorScheme.Light });
+            await Page.EmulateMediaAsync(ColorScheme.Light);
             var navigated = Page.GoToAsync(TestConstants.EmptyPage);
 
             for (int i = 0; i < 9; i++)
             {
-                await Page.EmulateMediaAsync(new EmulateMedia { ColorScheme = i % 2 == 0 ? ColorScheme.Dark : ColorScheme.Light });
+                await Page.EmulateMediaAsync(i % 2 == 0 ? ColorScheme.Dark : ColorScheme.Light);
                 await Task.Delay(1);
             }
             await navigated;
