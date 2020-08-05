@@ -284,10 +284,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(script);
+        public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(true, script);
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(script, args);
+        public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(true, script, args);
 
         /// <inheritdoc />
         public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args) => throw new NotImplementedException();

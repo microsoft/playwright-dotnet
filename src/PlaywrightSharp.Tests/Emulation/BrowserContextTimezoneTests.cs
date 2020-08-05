@@ -27,9 +27,10 @@ namespace PlaywrightSharp.Tests.Emulation
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "America/Jamaica" }))
             {
                 var page = await context.NewPageAsync();
+                string result = await page.EvaluateAsync<string>(func);
                 Assert.Equal(
                     "Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)",
-                    await page.EvaluateAsync<string>(func));
+                    result);
             }
 
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Pacific/Honolulu" }))
