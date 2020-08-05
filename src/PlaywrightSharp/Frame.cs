@@ -166,7 +166,7 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => WaitForNavigationAsync(false, waitUntil);
 
         /// <inheritdoc />
-        public Task FocusAsync(string selector, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task FocusAsync(string selector, int? timeout = null) => FocusAsync(false, selector, timeout);
 
         /// <inheritdoc />
         public Task HoverAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
@@ -233,6 +233,9 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<string> GetTextContentAsync(string selector, int? timeout = null)
             => GetTextContentAsync(false, selector, timeout);
+
+        internal Task FocusAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.FocusAsync(selector, timeout, isPageCall);
 
         internal Task<string> GetAttributeAsync(bool isPageCall, string selector, string name, int? timeout = null)
             => _channel.GetAttributeAsync(selector, name, timeout, isPageCall);

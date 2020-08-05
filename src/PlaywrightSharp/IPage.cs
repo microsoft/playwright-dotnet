@@ -634,9 +634,10 @@ namespace PlaywrightSharp
         /// Fetches an element with <paramref name="selector"/> and focuses it.
         /// </summary>
         /// <param name="selector">A selector to search for element to focus. If there are multiple elements satisfying the selector, the first will be focused.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the the element matching <paramref name="selector"/> is successfully focused.</returns>
-        Task FocusAsync(string selector, WaitForSelectorOptions options = null);
+        Task FocusAsync(string selector, int? timeout = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to hover over the center of the element.
