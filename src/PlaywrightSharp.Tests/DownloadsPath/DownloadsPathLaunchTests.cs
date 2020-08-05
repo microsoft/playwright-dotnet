@@ -88,6 +88,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             await page.CloseAsync();
         }
 
+        /// <inheritdoc/>
         public async Task InitializeAsync()
         {
             Server.SetRoute("/download", context =>
@@ -104,6 +105,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             _browser = await Playwright[TestConstants.Product].LaunchAsync(options);
         }
 
+        /// <inheritdoc/>
         public async Task DisposeAsync()
         {
             _tmp?.Dispose();
