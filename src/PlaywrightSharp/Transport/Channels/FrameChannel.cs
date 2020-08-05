@@ -292,6 +292,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task FocusAsync(string selector, int? timeout, bool isPage)
+            => Scope.SendMessageToServer(
+                Guid,
+                "focus",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
         internal Task<string> GetInnerTextAsync(string selector, int? timeout, bool isPage)
             => Scope.SendMessageToServer<string>(
                 Guid,
