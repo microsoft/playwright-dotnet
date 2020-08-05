@@ -323,7 +323,7 @@ namespace PlaywrightSharp
         public Task TypeAsync(string selector, string text, TypeOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task FocusAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task FocusAsync(string selector, int? timeout = null) => MainFrame.FocusAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task HoverAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
