@@ -54,19 +54,39 @@ namespace PlaywrightSharp.Tests.Helpers
                 // This is really the only tricky bit: we need to capture and delay messages (since those will
                 // contain run status) until we know we've decided to accept the final result;
                 var delayedMessageBus = new DelayedMessageBus(messageBus);
-                diagnosticMessageSink.OnMessage(new DiagnosticMessage("Running '{0}' ", DisplayName));
 
-                var summary = await base.RunAsync(
-                    diagnosticMessageSink,
-                    delayedMessageBus,
-                    constructorArguments,
-                    aggregator,
-                    cancellationTokenSource).WithTimeout(30_000);
-
-                if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
+                try
                 {
-                    delayedMessageBus.Dispose(); // Sends all the delayed messages
-                    return summary;
+                    var summary = await base.RunAsync(
+                        diagnosticMessageSink,
+                        delayedMessageBus,
+                        constructorArguments,
+                        aggregator,
+                        cancellationTokenSource).WithTimeout(30_000);
+
+                    if (aggregator.HasExceptions || summary.Failed == 0 || ++runCount >= _maxRetries)
+                    {
+                        delayedMessageBus.Dispose(); // Sends all the delayed messages
+                        return summary;
+                    }
+                }
+                catch (TimeoutException ex)
+                {
+                    if (++runCount >= _maxRetries)
+                    {
+                        var runSummary = new RunSummary { Total = 1, Failed = 1 };
+                        aggregator.Add(ex);
+
+                        if (!delayedMessageBus.QueueMessage(new TestCleanupFailure(
+                            new XunitTest(this, DisplayName),
+                            aggregator.ToException()!)))
+                        {
+                            cancellationTokenSource.Cancel();
+                        }
+                        delayedMessageBus.Dispose(); // Sends all the delayed messages
+
+                        return runSummary;
+                    }
                 }
 
                 diagnosticMessageSink.OnMessage(
