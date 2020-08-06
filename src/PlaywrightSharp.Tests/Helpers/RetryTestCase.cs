@@ -56,7 +56,6 @@ namespace PlaywrightSharp.Tests.Helpers
                 var delayedMessageBus = new DelayedMessageBus(messageBus);
                 diagnosticMessageSink.OnMessage(new DiagnosticMessage("Running '{0}' ", DisplayName));
 
-
                 var summary = await base.RunAsync(
                     diagnosticMessageSink,
                     delayedMessageBus,
