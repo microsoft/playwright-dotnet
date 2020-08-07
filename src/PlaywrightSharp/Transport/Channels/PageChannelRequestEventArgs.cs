@@ -4,6 +4,6 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class PageChannelRequestEventArgs : EventArgs
     {
-        public RequestChannel RequestChannel { get; set; }
+        public Request Request { get; set; }
     }
 }

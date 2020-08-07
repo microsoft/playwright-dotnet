@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.True(new FileInfo(path).Exists);
         }
 
-        /// <inheritdoc/>
+        /// <inheritsdoc/>
         public async Task InitializeAsync()
         {
             Server.SetRoute("/download", context =>
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             await _page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
         }
 
-        /// <inheritdoc/>
+        /// <inheritsdoc/>
         public async Task DisposeAsync()
         {
             _downloadsPath?.Dispose();

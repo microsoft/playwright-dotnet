@@ -282,9 +282,30 @@ namespace PlaywrightSharp
         /// <summary>
         /// Setup media emulation.
         /// </summary>
-        /// <param name="options">Extra options.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task EmulateMediaAsync(EmulateMedia options);
+        Task EmulateMediaAsync();
+
+        /// <summary>
+        /// Setup media emulation.
+        /// </summary>
+        /// <param name="media">Changes the CSS media type of the page. Passing null disables CSS media emulation.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task EmulateMediaAsync(MediaType? media);
+
+        /// <summary>
+        /// Setup media emulation.
+        /// </summary>
+        /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task EmulateMediaAsync(ColorScheme? colorScheme);
+
+        /// <summary>
+        /// Setup media emulation.
+        /// </summary>
+        /// <param name="media">Changes the CSS media type of the page. Passing null disables CSS media emulation.</param>
+        /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task EmulateMediaAsync(MediaType? media, ColorScheme? colorScheme);
 
         /// <summary>
         /// Navigates to an URL.
@@ -1220,7 +1241,7 @@ namespace PlaywrightSharp
         Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null);
 
         /// <summary>
-        /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <param name="file">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
@@ -1230,7 +1251,7 @@ namespace PlaywrightSharp
         Task GetPdfAsync(string file);
 
         /// <summary>
-        ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <param name="file">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
         /// <param name="options">pdf options.</param>
@@ -1241,7 +1262,7 @@ namespace PlaywrightSharp
         Task GetPdfAsync(string file, PdfOptions options);
 
         /// <summary>
-        /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
         /// <remarks>
@@ -1250,7 +1271,7 @@ namespace PlaywrightSharp
         Task<Stream> GetPdfStreamAsync();
 
         /// <summary>
-        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <param name="options">pdf options.</param>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
@@ -1260,7 +1281,7 @@ namespace PlaywrightSharp
         Task<Stream> GetPdfStreamAsync(PdfOptions options);
 
         /// <summary>
-        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
         /// <remarks>
@@ -1269,7 +1290,7 @@ namespace PlaywrightSharp
         Task<byte[]> GetPdfDataAsync();
 
         /// <summary>
-        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(EmulateMedia)"/> with <see cref="MediaType.Screen"/>.
+        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <param name="options">pdf options.</param>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
