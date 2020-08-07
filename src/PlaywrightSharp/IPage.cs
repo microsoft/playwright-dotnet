@@ -482,25 +482,6 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(string script, object args);
 
         /// <summary>
-        /// Adds a function which would be invoked in one of the following scenarios:
-        /// - whenever the page is navigated
-        /// - whenever the child frame is attached or navigated. In this case, the function is invoked in the context of the newly attached frame.
-        /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to <c>pageFunction</c>.</param>
-        /// <remarks>
-        /// The function is invoked after the document was created but before any of its scripts were run. This is useful to amend JavaScript environment, e.g. to seed <c>Math.random</c>.
-        /// </remarks>
-        /// <example>
-        /// An example of overriding the navigator.languages property before the page loads:
-        /// <code>
-        /// await page.EvaluateOnNewDocumentAsync("() => window.__example = true");
-        /// </code>
-        /// </example>
-        /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved.</returns>
-        Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args);
-
-        /// <summary>
         /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
@@ -994,18 +975,19 @@ namespace PlaywrightSharp
         /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
         /// </summary>
         /// <param name="script">Script to be evaluated in all pages in the browser context or script path.</param>
+        /// <param name="args">Optional argument to pass to script .</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(string script);
+        Task AddInitScriptAsync(string script, params object[] args);
 
         /// <summary>
         /// Adds a script which would be evaluated in one of the following scenarios:
         /// * Whenever a page is created in the browser context or is navigated.
         /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
         /// </summary>
-        /// <param name="script">Script to be evaluated in all pages in the browser context or script path.</param>
+        /// <param name="options">Options.</param>
         /// <param name="args">Optional argument to pass to script .</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(string script, object args = null);
+        Task AddInitScriptAsync(AddInitScriptOptions options, params object[] args);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.

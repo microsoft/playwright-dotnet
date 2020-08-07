@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Frame
         [Retry]
         public async Task ShouldWorkWhenResolvedRightBeforeExecutionContextDisposal()
         {
-            await Page.EvaluateOnNewDocumentAsync("() => window.__RELOADED = true");
+            await Page.AddInitScriptAsync("() => window.__RELOADED = true");
             await Page.WaitForFunctionAsync(@"() =>
             {
                 if (!window.__RELOADED)

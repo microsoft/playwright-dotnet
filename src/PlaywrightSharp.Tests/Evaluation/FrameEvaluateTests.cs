@@ -7,11 +7,10 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Evaluation
 {
-    /*
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class FrameEvaluateTests : PlaywrightSharpPageBaseTest
+    public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public FrameEvaluateTests(ITestOutputHelper output) : base(output)
@@ -48,27 +47,17 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should dispose context on navigation</playwright-it>
-        [Retry]
-        public async Task ShouldDisposeContextOnNavigation()
+        [Fact(Skip = "Ignore USES_HOOKS")]
+        public void ShouldDisposeContextOnNavigation()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Assert.Equal(2, Page.Frames.Length);
-            Assert.Equal(4, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(2, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should dispose context on cross-origin navigation</playwright-it>
-        [Retry]
-        public async Task ShouldDisposeContextOnCrossOriginNavigation()
+        [Fact(Skip = "Ignore USES_HOOKS")]
+        public void ShouldDisposeContextOnCrossOriginNavigation()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Assert.Equal(2, Page.Frames.Length);
-            Assert.Equal(4, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
-            await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
-            Assert.Equal(2, ((PlaywrightSharp.Page)Page).Delegate.ContextIdToContext.Count);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -87,11 +76,9 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should allow cross-frame js handles</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [Retry]
         public async Task ShouldAllowCrossFrameJsHandles()
         {
-            // TODO: this should be possible because frames script each other, but
-            // protocol implementations do not support this.
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var handle = await Page.EvaluateHandleAsync(@"() => {
                 const iframe = document.querySelector('iframe');
@@ -100,10 +87,10 @@ namespace PlaywrightSharp.Tests.Evaluation
                 return foo;
             }");
             var childFrame = Page.MainFrame.ChildFrames[0];
-            object childResult = await childFrame.EvaluateAsync<object>("() => window.__foo");
-            Assert.Equal(new { bar = "baz" }, childResult);
-            string result = await childFrame.EvaluateAsync<string>("foo => foo.bar", handle);
-            Assert.Equal("baz", result);
+            dynamic childResult = await childFrame.EvaluateAsync<object>("() => window.__foo");
+            Assert.Equal("baz", childResult.bar);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
+            Assert.Equal("JSHandles can be evaluated only in the context they were created!", exception.Message);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -121,7 +108,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should not allow cross-frame element handles when frames do not script each other</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Retry]
         public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -130,22 +117,5 @@ namespace PlaywrightSharp.Tests.Evaluation
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
             Assert.Contains("Unable to adopt element handle from a different document", exception.Message);
         }
-
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should return non-empty Node.constructor.name in utility context</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
-        public async Task ShouldReturnNonEmptyNodeConstructorNameInUtilityContext()
-        {
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            var frame = Page.Frames[1];
-            // TODO We might want cast frame to a FrameBase when implementing this instead of exposing an internal class as an interface.
-            var context = await ((PlaywrightSharp.Frame)frame).GetUtilityContextAsync();
-            var elementHandle = await context.EvaluateHandleAsync("() => window.top.document.querySelector('#frame1')");
-            string constructorName = await context.EvaluateAsync<string>("node => node.constructor.name", elementHandle);
-            Assert.Equal("HTMLIFrameElement", constructorName);
-        }
     }
-    */
 }

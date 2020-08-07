@@ -290,9 +290,6 @@ namespace PlaywrightSharp
         public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(script, args);
 
         /// <inheritdoc />
-        public Task EvaluateOnNewDocumentAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task QuerySelectorEvaluateAsync(string selector, string script) => MainFrame.QuerySelectorEvaluateAsync(true, selector, script);
 
         /// <inheritdoc />
@@ -522,10 +519,12 @@ namespace PlaywrightSharp
         public Task<byte[]> GetPdfDataAsync(PdfOptions options) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script) => _channel.AddInitScriptAsync($"({script})()");
+        public Task AddInitScriptAsync(string script, params object[] args)
+            => _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, args));
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script, object args = null) => _channel.AddInitScriptAsync(script);
+        public Task AddInitScriptAsync(AddInitScriptOptions options, params object[] args)
+            => AddInitScriptAsync(ScriptsHelper.EvaluationScript(options?.Content, options?.Path), args);
 
         /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)

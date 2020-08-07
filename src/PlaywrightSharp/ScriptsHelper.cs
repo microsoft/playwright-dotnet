@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
+using System.Linq;
 using System.Text.Json;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
@@ -18,6 +20,23 @@ namespace PlaywrightSharp
             type == typeof(decimal?) ||
             type == typeof(double?) ||
             type == typeof(bool?);
+
+        internal static string SerializeScriptCall(string script, object[] args)
+        {
+            args ??= Array.Empty<object>();
+
+            if (script.IsJavascriptFunction())
+            {
+                return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.GetNewDefaultSerializerOptions())))})";
+            }
+
+            if (args.Length > 0)
+            {
+                throw new PlaywrightSharpException("Cannot evaluate a string with arguments");
+            }
+
+            return script;
+        }
 
         internal static T ParseEvaluateResult<T>(JsonElement? result)
         {
@@ -40,6 +59,11 @@ namespace PlaywrightSharp
 
             if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var value))
             {
+                if (value.ValueKind == JsonValueKind.Null)
+                {
+                    return default;
+                }
+
                 return value.ToString() switch
                 {
                     "undefined" => default,
@@ -196,6 +220,27 @@ namespace PlaywrightSharp
             }
 
             return new EvaluateArgumentValueElement.Object { O = value };
+        }
+
+        internal static string EvaluationScript(string content, string path, bool addSourceUrl = true)
+        {
+            if (!string.IsNullOrEmpty(content))
+            {
+                return content;
+            }
+            else if (!string.IsNullOrEmpty(path))
+            {
+                string contents = File.ReadAllText(path);
+
+                if (addSourceUrl)
+                {
+                    contents += "//# sourceURL=" + path.Replace(" ", string.Empty);
+                }
+
+                return contents;
+            }
+
+            throw new ArgumentException("Either path or content property must be present");
         }
 
         private static object ReadObject(JsonElement jsonElement)

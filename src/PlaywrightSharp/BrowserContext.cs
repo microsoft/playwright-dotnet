@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
@@ -248,10 +249,12 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script) => _channel.AddInitScriptAsync($"({script})()");
+        public Task AddInitScriptAsync(string script, params object[] args)
+            => _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, args));
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script, object args = null) => _channel.AddInitScriptAsync(script);
+        public Task AddInitScriptAsync(AddInitScriptOptions options, params object[] args)
+            => AddInitScriptAsync(ScriptsHelper.EvaluationScript(options?.Content, options?.Path), args);
 
         /// <inheritdoc />
         public Task SetHttpCredentialsAsync(Credentials credentials) => _channel.SetHttpCredentialsAsync(credentials);
