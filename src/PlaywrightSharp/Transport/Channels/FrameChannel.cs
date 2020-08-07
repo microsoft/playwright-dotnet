@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -37,8 +38,31 @@ namespace PlaywrightSharp.Transport.Channels
                 });
         }
 
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg, bool isPage)
-            => Scope.SendMessageToServer<JSHandleChannel>(
+        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(
+            string script,
+            bool isFunction,
+            object arg,
+            bool isPage,
+            bool serializeArgument = false)
+        {
+            JsonSerializerOptions serializerOptions;
+
+            if (serializeArgument)
+            {
+                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                arg = new EvaluateArgument
+                {
+                    Guids = new List<EvaluateArgumentGuidElement>(),
+                    Value = arg,
+                };
+                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
+            }
+            else
+            {
+                serializerOptions = Scope.Connection.GetDefaultJsonSerializerOptions(false);
+            }
+
+            return Scope.SendMessageToServer<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
                 new Dictionary<string, object>
@@ -47,10 +71,35 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
                     ["isPage"] = isPage,
-                });
+                },
+                serializerOptions: serializerOptions);
+        }
 
-        internal Task<JsonElement?> EvaluateExpressionAsync(string script, bool isFunction, EvaluateArgument arg, bool isPage)
-            => Scope.SendMessageToServer<JsonElement?>(
+        internal Task<JsonElement?> EvaluateExpressionAsync(
+            string script,
+            bool isFunction,
+            object arg,
+            bool isPage,
+            bool serializeArgument = false)
+        {
+            JsonSerializerOptions serializerOptions;
+
+            if (serializeArgument)
+            {
+                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                arg = new EvaluateArgument
+                {
+                    Guids = new List<EvaluateArgumentGuidElement>(),
+                    Value = arg,
+                };
+                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
+            }
+            else
+            {
+                serializerOptions = Scope.Connection.GetDefaultJsonSerializerOptions(false);
+            }
+
+            return Scope.SendMessageToServer<JsonElement?>(
                 Guid,
                 "evaluateExpression",
                 new Dictionary<string, object>
@@ -59,7 +108,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
                     ["isPage"] = isPage,
-                });
+                },
+                serializerOptions: serializerOptions);
+        }
 
         internal Task<JSHandleChannel> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg, bool isPage)
             => Scope.SendMessageToServer<JSHandleChannel>(

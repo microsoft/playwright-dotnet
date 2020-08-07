@@ -39,7 +39,7 @@ namespace PlaywrightSharp
             {
                 const string taskResultPropertyName = "Result";
                 var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).Skip(1).ToArray();
-                object[] args = _initializer.Args.Select((arg, i) => arg.ToObject(methodParams[0], _scope.Connection.GetDefaultJsonSerializerOptions())).ToArray();
+                object[] args = _initializer.Args.Select((arg, _) => arg.ToObject(methodParams[0], _scope.Connection.GetDefaultJsonSerializerOptions())).ToArray();
 
                 object result = binding.DynamicInvoke(args.Prepend(new BindingSource
                 {
