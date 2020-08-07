@@ -42,7 +42,7 @@ namespace PlaywrightSharp
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
-            _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.RequestChannel.Object));
+            _channel.Request += (sender, e) => Request?.Invoke(this, new RequestEventArgs(e.Request));
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
             _channel.FrameNavigated += Channel_FrameNavigated;
@@ -189,7 +189,24 @@ namespace PlaywrightSharp
         public Task SetCacheEnabledAsync(bool enabled = true) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task EmulateMediaAsync(EmulateMedia options) => throw new NotImplementedException();
+        public Task EmulateMediaAsync()
+            => _channel.EmulateMediaAsync(new Dictionary<string, object>());
+
+        /// <inheritdoc />
+        public Task EmulateMediaAsync(MediaType? media)
+            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["media"] = media });
+
+        /// <inheritdoc />
+        public Task EmulateMediaAsync(ColorScheme? colorScheme)
+            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["colorScheme"] = colorScheme });
+
+        /// <inheritdoc />
+        public Task EmulateMediaAsync(MediaType? media, ColorScheme? colorScheme)
+            => _channel.EmulateMediaAsync(new Dictionary<string, object>
+            {
+                ["media"] = media,
+                ["colorScheme"] = colorScheme,
+            });
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);
@@ -284,10 +301,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(script);
+        public Task<T> EvaluateAsync<T>(string script) => MainFrame.EvaluateAsync<T>(true, script);
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(script, args);
+        public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(true, script, args);
 
         /// <inheritdoc />
         public Task QuerySelectorEvaluateAsync(string selector, string script) => MainFrame.QuerySelectorEvaluateAsync(true, selector, script);
