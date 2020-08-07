@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// <see cref="IPage.AddInitScriptAsync(AddInitScriptOptions, object[])"/> and <see cref="IPage.AddInitScriptAsync(AddInitScriptOptions, object[])"/>.
