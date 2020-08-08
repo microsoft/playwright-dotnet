@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.disconnect</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DisconnectTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests.Browser
             var tcs = new TaskCompletionSource<bool>();
             page.Closed += (sender, e) => tcs.TrySetResult(true);
 
-            await Task.WhenAll(remote.CloseAsync(), tcs.Task);
+            await TaskUtils.WhenAll(remote.CloseAsync(), tcs.Task);
         }
     }
 }

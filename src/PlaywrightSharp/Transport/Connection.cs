@@ -24,6 +24,7 @@ namespace PlaywrightSharp.Transport
         private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger<Connection> _logger;
         private int _lastId;
 
         public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
@@ -36,6 +37,7 @@ namespace PlaywrightSharp.Transport
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
             _loggerFactory = loggerFactory;
+            _logger = _loggerFactory?.CreateLogger<Connection>();
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -48,7 +50,7 @@ namespace PlaywrightSharp.Transport
             GC.SuppressFinalize(this);
         }
 
-        internal static async Task InstallAsync(ILoggerFactory loggerFactory)
+        internal static async Task InstallAsync()
         {
             var tcs = new TaskCompletionSource<bool>();
             using var process = GetProcess();
@@ -129,6 +131,8 @@ namespace PlaywrightSharp.Transport
 
             string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
             Debug.WriteLine($"pw:channel:command {messageString}");
+            _logger?.LogInformation($"pw:channel:command {messageString}");
+
             await _transport.SendAsync(messageString).ConfigureAwait(false);
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -187,6 +191,7 @@ namespace PlaywrightSharp.Transport
             if (message.Id.HasValue)
             {
                 Debug.WriteLine($"pw:channel:response {e.Message}");
+                _logger?.LogInformation($"pw:channel:response {e.Message}");
 
                 if (_callbacks.TryRemove(message.Id.Value, out var callback))
                 {
@@ -204,6 +209,7 @@ namespace PlaywrightSharp.Transport
             }
 
             Debug.WriteLine($"pw:channel:event {e.Message}");
+            _logger?.LogInformation($"pw:channel:event {e.Message}");
 
             try
             {

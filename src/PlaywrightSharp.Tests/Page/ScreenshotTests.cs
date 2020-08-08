@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests.Page
                 }));
             }
 
-            await Task.WhenAll(tasks);
+            await TaskUtils.WhenAll(tasks);
             Assert.True(ScreenshotHelper.PixelMatch("grid-cell-1.png", tasks[0].Result));
         }
 
@@ -196,7 +196,7 @@ namespace PlaywrightSharp.Tests.Page
                 pageTasks.Add(Func());
             }
 
-            await Task.WhenAll(pageTasks);
+            await TaskUtils.WhenAll(pageTasks);
 
             var screenshotTasks = new List<Task<byte[]>>();
             for (int i = 0; i < n; i++)
@@ -213,7 +213,7 @@ namespace PlaywrightSharp.Tests.Page
                 }));
             }
 
-            await Task.WhenAll(screenshotTasks);
+            await TaskUtils.WhenAll(screenshotTasks);
 
             for (int i = 0; i < n; i++)
             {
@@ -226,7 +226,7 @@ namespace PlaywrightSharp.Tests.Page
                 closeTasks.Add(pageTasks[i].Result.CloseAsync());
             }
 
-            await Task.WhenAll(closeTasks);
+            await TaskUtils.WhenAll(closeTasks);
         }
 
         ///<playwright-file>screenshot.spec.js</playwright-file>

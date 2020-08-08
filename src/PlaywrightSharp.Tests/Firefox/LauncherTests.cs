@@ -9,11 +9,11 @@ namespace PlaywrightSharp.Tests.Firefox
 {
     ///<playwright-file>firefox/launcher.spec.js</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
-    public class WebSocketOptionsTests : PlaywrightSharpBaseTest
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
+    public class LauncherTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
-        public WebSocketOptionsTests(ITestOutputHelper output) : base(output)
+        public LauncherTests(ITestOutputHelper output) : base(output)
         {
         }
 

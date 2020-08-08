@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var waitForNavigationResult = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 waitForNavigationResult,
                 Page.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
             );
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a href='#foobar'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             );
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync($"<a href='{TestConstants.HttpsPrefix}/empty.html'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             ));
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.Page
               </script>
             ");
             var navigationTask = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             );
@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Tests.Page
               </script>
             ");
             var navigationTask = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             );
@@ -170,14 +170,14 @@ namespace PlaywrightSharp.Tests.Page
             ");
             Assert.Equal(TestConstants.ServerUrl + "/second.html", Page.Url);
             var navigationTask = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a#back")
             );
             Assert.Null(await navigationTask);
             Assert.Equal(TestConstants.ServerUrl + "/first.html", Page.Url);
             navigationTask = Page.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a#forward")
             );
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests.Page
             }
 
             await frameNavigatedTaskSource.Task;
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 frame.EvaluateAsync("() => window.stop()"),
                 navigationTask
             );

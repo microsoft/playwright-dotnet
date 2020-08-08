@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Frame
             var frame = Page.FirstChildFrame();
             var waitForNavigationResult = frame.WaitForNavigationAsync();
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 waitForNavigationResult,
                 frame.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
             );
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Frame
             var frame = Page.FirstChildFrame();
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
             var waitForNavigationResult = frame.WaitForNavigationAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html"),
                 frame.EvaluateAsync($"() => window.location = '{TestConstants.EmptyPage}'"));
 

@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         private async Task SetupBrowserAsync()
         {
-            Playwright = await PlaywrightSharp.Playwright.CreateAsync();
+            Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
         }
     }
 }

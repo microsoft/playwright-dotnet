@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Emulation
             var page = await context.NewPageAsync();
             var requestTask = Server.WaitForRequest("/empty.html", c => acceptLanguage = c.Headers["accept-language"]);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 requestTask,
                 page.GoToAsync(TestConstants.EmptyPage));
 
@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Tests.Emulation
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
 
@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Tests.Emulation
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
 
@@ -174,11 +174,11 @@ namespace PlaywrightSharp.Tests.Emulation
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
         }
@@ -196,12 +196,12 @@ namespace PlaywrightSharp.Tests.Emulation
             {
                 tasks.Add(context1.NewPageAsync());
             }
-            await Task.WhenAll(tasks);
+            await TaskUtils.WhenAll(tasks);
 
             await using var context2 = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });
             var page2 = await context2.NewPageAsync();
 
-            string[] numbers = await Task.WhenAll(context1.Pages.Select(p => p.EvaluateAsync<string>("() => (1000000.50).toLocaleString()")));
+            string[] numbers = await TaskUtils.WhenAll(context1.Pages.Select(p => p.EvaluateAsync<string>("() => (1000000.50).toLocaleString()")));
 
             foreach (string number in numbers)
             {

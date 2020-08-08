@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var otherPageTask = Browser.WaitForTargetAsync(t => t.Url == TestConstants.CrossProcessUrl + "/empty.html")
                 .ContinueWith(t => t.Result.GetPageAsync());
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 otherPageTask,
                 Page.EvaluateHandleAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html")
                 );
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await otherPage.CloseAsync();
             Assert.Equal(otherPage, await closePageTaskCompletion.Task);
 
-            allPages = await Task.WhenAll(Browser.GetTargets(Context).Select(target => target.GetPageAsync()));
+            allPages = await TaskUtils.WhenAll(Browser.GetTargets(Context).Select(target => target.GetPageAsync()));
             Assert.Contains(Page, allPages);
             Assert.DoesNotContain(otherPage, allPages);
         }
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var serverResponse = (HttpResponse)null;
             Server.SetRoute("/one-style.css", context => { serverResponse = context.Response; return serverResponseEnd.Task; });
             // Open a new page. Use window.open to connect to the page later.
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
               Page.EvaluateHandleAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
               Server.WaitForRequest("/one-style.css")
             );

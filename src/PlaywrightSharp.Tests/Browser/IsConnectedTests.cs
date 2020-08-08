@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.isConnected</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class IsConnectedTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Browser
             var disconnectedTask = new TaskCompletionSource<bool>();
             remote.Disconnected += (sender, e) => disconnectedTask.TrySetResult(true);
 
-            await Task.WhenAll(browserServer.CloseAsync(), disconnectedTask.Task);
+            await TaskUtils.WhenAll(browserServer.CloseAsync(), disconnectedTask.Task);
 
             Assert.False(remote.IsConnected);
 

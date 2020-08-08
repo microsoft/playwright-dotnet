@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Xunit;
-using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
@@ -19,7 +16,6 @@ namespace PlaywrightSharp.Tests
             ChromiumProduct :
             Environment.GetEnvironmentVariable("PRODUCT");
 
-        public const string TestFixtureCollectionName = "PlaywrightSharpLoaderFixture collection";
         public const string TestFixtureBrowserCollectionName = "PlaywrightSharpBrowserLoaderFixture collection";
         public const int Port = 8081;
         public const int HttpsPort = Port + 1;
@@ -49,9 +45,9 @@ namespace PlaywrightSharp.Tests
         }
 
         public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
-        private static ILoggerFactory LoggerFactory { get; set; }
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
+        internal static ILoggerFactory LoggerFactory { get; set; } = LoggerFactory = new LoggerFactory();
         internal static readonly bool IsWebKit = Product.Equals(WebkitProduct);
         internal static readonly bool IsFirefox = Product.Equals(FirefoxProduct);
         internal static readonly bool IsChromium = Product.Equals(ChromiumProduct);
@@ -66,13 +62,5 @@ namespace PlaywrightSharp.Tests
             "        http://localhost:<PORT>/frames/frame.html (dos)",
             "    http://localhost:<PORT>/frames/frame.html (aframe)"
         };
-
-        public static void SetupLogging(ITestOutputHelper output)
-        {
-            if (Debugger.IsAttached && LoggerFactory == null)
-            {
-                LoggerFactory = new LoggerFactory(new[] { new XunitLoggerProvider(output) });
-            }
-        }
     }
 }

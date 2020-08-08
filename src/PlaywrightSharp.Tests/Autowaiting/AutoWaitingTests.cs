@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             });
 
             await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             });
 
             await Page.SetContentAsync($"<a href=\"{TestConstants.CrossProcessHttpPrefix}/empty.html\">empty.html</a>");
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
                     <input type=""submit"" value=""Submit"">
                 </form>");
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.ClickAsync("input[type=submit]").ContinueWith(t => messages.Add("click")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -111,7 +111,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
                     <input type=""submit"" value=""Submit"">
                 </form>");
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.ClickAsync("input[type=submit]").ContinueWith(t => messages.Add("click")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
                 return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
             });
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.EvaluateAsync($"window.location.href = '{TestConstants.EmptyPage}'").ContinueWith(t => messages.Add("evaluate")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -180,7 +180,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
                 return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
             });
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.EvaluateAsync($"window.location.reload();").ContinueWith(t => messages.Add("evaluate")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
 
             var frame = Page.Frames.FirstOrDefault(f => f.Name == "target");
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),
                 Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
@@ -245,7 +245,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
             var clickLoaded = new TaskCompletionSource<bool>();
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => Page.WaitForLoadStateAsync(LifecycleEvent.Load).ContinueWith(t =>
                 {
                     messages.Add("clickload");

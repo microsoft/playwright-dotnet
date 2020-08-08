@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await using var context = await Browser.NewContextAsync();
             var newPage = await context.NewPageAsync();
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Task.WhenAll(
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
                 newPage.CloseAsync(),
                 newPage.Mouse.ClickAsync(1, 2)
              ));
@@ -134,7 +134,7 @@ namespace PlaywrightSharp.Tests.Page
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/wrappedlink.html");
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 page.ClickAsync("a"),
                 page.WaitForNavigationAsync()
             );

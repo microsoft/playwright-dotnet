@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("name=page2", await page2.EvaluateAsync<string>("() => document.cookie"));
 
             // Cleanup contexts.
-            await Task.WhenAll(context1.CloseAsync(), context2.CloseAsync());
+            await TaskUtils.WhenAll(context1.CloseAsync(), context2.CloseAsync());
             Assert.Empty(browser.BrowserContexts);
         }
 
@@ -215,7 +215,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task CloseShouldBeCallableTwice()
         {
             var context = await Browser.NewContextAsync();
-            await Task.WhenAll(context.CloseAsync(), context.CloseAsync());
+            await TaskUtils.WhenAll(context.CloseAsync(), context.CloseAsync());
             await context.CloseAsync();
         }
     }

@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Tests.Chromium.Browser
 {
     ///<playwright-file>chromium/launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser target events</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
     class TargetEventsTests : PlaywrightSharpBaseTest
     {

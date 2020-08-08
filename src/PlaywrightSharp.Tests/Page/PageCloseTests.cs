@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => TaskUtils.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => Task.WhenAll(
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => TaskUtils.WhenAll(
                 newPage.WaitForRequestAsync(TestConstants.EmptyPage),
                 newPage.WaitForResponseAsync(TestConstants.EmptyPage),
                 newPage.CloseAsync()

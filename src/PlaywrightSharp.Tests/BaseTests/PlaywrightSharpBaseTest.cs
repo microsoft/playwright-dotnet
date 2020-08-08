@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
 using Xunit.Abstractions;
 
@@ -8,19 +10,19 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// <summary>
     /// This base tests setup logging and http servers
     /// </summary>
-    public class PlaywrightSharpBaseTest
+    public class PlaywrightSharpBaseTest : IDisposable
     {
-        internal IPlaywright Playwright { get; set; }
+        private readonly XunitLoggerProvider _loggerProvider;
+
+        internal IPlaywright Playwright => PlaywrightSharpDriverLoaderFixture.Playwright;
         internal string BaseDirectory { get; set; }
-        internal IBrowserType BrowserType { get; set; }
+        internal IBrowserType BrowserType => Playwright[TestConstants.Product];
 
         internal SimpleServer Server => PlaywrightSharpLoader.Server;
         internal SimpleServer HttpsServer => PlaywrightSharpLoader.HttpsServer;
 
         internal PlaywrightSharpBaseTest(ITestOutputHelper output)
         {
-            TestConstants.SetupLogging(output);
-
             BaseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "workspace");
             var dirInfo = new DirectoryInfo(BaseDirectory);
 
@@ -29,9 +31,11 @@ namespace PlaywrightSharp.Tests.BaseTests
                 dirInfo.Create();
             }
 
-            Playwright = PlaywrightSharp.Playwright.CreateAsync().GetAwaiter().GetResult();
-            BrowserType = Playwright[TestConstants.Product];
             Initialize();
+
+            _loggerProvider = new XunitLoggerProvider(output);
+            TestConstants.LoggerFactory.AddProvider(_loggerProvider);
+            output.WriteLine($"Running {GetType().FullName}");
         }
 
         internal void Initialize()
@@ -40,30 +44,16 @@ namespace PlaywrightSharp.Tests.BaseTests
             HttpsServer.Reset();
         }
 
-        /*
-        internal static Task<T> WaitEventAsync<T>(ChromiumSession emitter) where T : IChromiumEvent
-        {
-            var completion = new TaskCompletionSource<T>();
-            void handler(object sender, IChromiumEvent e)
-            {
-                if (e is T)
-                {
-                    emitter.MessageReceived -= handler;
-                    completion.SetResult((T)e);
-                }
-
-                return;
-            }
-
-            emitter.MessageReceived += handler;
-            return completion.Task;
-        }
-        */
-
         internal async Task<IPage> NewPageAsync(IBrowser browser, BrowserContextOptions options = null)
         {
             await using var context = await browser.NewContextAsync(options);
             return await context.NewPageAsync();
+        }
+
+        /// <inheritdoc/>
+        public virtual void Dispose()
+        {
+            _loggerProvider.Dispose();
         }
     }
 }

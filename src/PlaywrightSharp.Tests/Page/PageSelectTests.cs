@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.QuerySelectorEvaluateAsync("select", "select => select.addEventListener('input', () => window.location = '/empty.html')");
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.SelectAsync("select", "blue"),
                 Page.WaitForNavigationAsync()
             );

@@ -41,16 +41,17 @@ namespace PlaywrightSharp.Tests.Frame
             var frames = Page.Frames;
             Assert.NotSame(frames[0], frames[1]);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 frames[0].EvaluateAsync("() => window.a = 1"),
                 frames[1].EvaluateAsync("() => window.a = 2")
             );
-            int[] results = await Task.WhenAll(
+
+            var (result1, result2) = await TaskUtils.WhenAll(
                 frames[0].EvaluateAsync<int>("() => window.a"),
                 frames[1].EvaluateAsync<int>("() => window.a")
             );
-            Assert.Equal(1, results[0]);
-            Assert.Equal(2, results[1]);
+            Assert.Equal(1, result1);
+            Assert.Equal(2, result2);
         }
     }
 }

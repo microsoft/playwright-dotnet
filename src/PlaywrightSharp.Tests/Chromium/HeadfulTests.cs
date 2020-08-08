@@ -10,9 +10,9 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/headful.spec.js</playwright-file>
     ///<playwright-describe>ChromiumHeadful</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class HeadfulTests : PlaywrightSharpBrowserBaseTest, IDisposable
+    class HeadfulTests : PlaywrightSharpBrowserBaseTest
     {
         readonly LaunchOptions _extensionOptions;
 
@@ -28,11 +28,6 @@ namespace PlaywrightSharp.Tests.Chromium
                 $"--disable-extensions-except={extensionPath}",
                 $"--load-extension={extensionPath}"
             };
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
         }
 
         ///<playwright-file>chromium/headful.spec.js</playwright-file>
@@ -59,7 +54,7 @@ namespace PlaywrightSharp.Tests.Chromium
             headfulOptions.Devtools = true;
             await using var browser = await BrowserType.LaunchAsync(headfulOptions);
             var context = await browser.NewContextAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 context.NewPageAsync(),
                 browser.WaitForTargetAsync(target => target.Url.Contains("devtools://")));
         }
