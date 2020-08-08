@@ -65,6 +65,10 @@ namespace PlaywrightSharp
         internal List<Frame> ChildFramesList { get; } = new List<Frame>();
 
         /// <inheritdoc />
+        public async Task<IElementHandle> GetFrameElementAsync()
+            => (await _channel.GetFrameElementAsync().ConfigureAwait(false)).Object;
+
+        /// <inheritdoc />
         public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />

@@ -55,6 +55,13 @@ namespace PlaywrightSharp
         IPage Page { get; }
 
         /// <summary>
+        /// This is an inverse of <see cref="IElementHandle.GetContentFrameAsync"/>. Note that returned handle actually belongs to the parent frame.
+        /// This method throws an error if the frame has been detached before frameElement() returns.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the element is resolved, yielding the corresponding <see cref="IElementHandle"/>.</returns>
+        Task<IElementHandle> GetFrameElementAsync();
+
+        /// <summary>
         /// Returns page's title.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the action completed, yielding the frame's title.</returns>
