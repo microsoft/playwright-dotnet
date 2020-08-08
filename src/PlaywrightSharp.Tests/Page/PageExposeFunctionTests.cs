@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.Page
             {
                 called = true;
             });
-            await Page.EvaluateOnNewDocumentAsync("() => woof()");
+            await Page.AddInitScriptAsync("() => woof()");
             await Page.ReloadAsync();
             Assert.True(called);
         }

@@ -140,6 +140,19 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
+        /// Firefox user preferences. Learn more about the Firefox user preferences at about:config.
+        /// </summary>
+        public IDictionary<string, object> FirefoxUserPrefs
+        {
+            get
+            {
+                Values.TryGetValue("firefoxUserPrefs", out object result);
+                return result as Dictionary<string, object>;
+            }
+            set => Values["firefoxUserPrefs"] = value;
+        }
+
+        /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
         /// </summary>
         public ViewportSize Viewport

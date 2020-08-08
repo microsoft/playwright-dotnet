@@ -308,8 +308,9 @@ namespace PlaywrightSharp
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+                arg: args,
+                isPage: isPageCall,
+                serializeArgument: true).ConfigureAwait(false)).Object;
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
@@ -329,15 +330,17 @@ namespace PlaywrightSharp
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
-                isPage: isPageCall).ConfigureAwait(false));
+                arg: args,
+                isPage: isPageCall,
+                serializeArgument: true).ConfigureAwait(false));
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script, object args)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
-                isPage: isPageCall).ConfigureAwait(false));
+                arg: args,
+                isPage: isPageCall,
+                serializeArgument: true).ConfigureAwait(false));
 
         internal async Task<T> QuerySelectorEvaluateAsync<T>(bool isPageCall, string selector, string script)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(

@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Dynamic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -13,8 +17,7 @@ namespace PlaywrightSharp.Tests.Evaluation
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluate</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageEvaluateTests : PlaywrightSharpPageBaseTest
+    public class PageEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEvaluateTests(ITestOutputHelper output) : base(output)
@@ -47,8 +50,8 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Retry]
         public async Task ShouldTransferNegative0()
         {
-            int result = await Page.EvaluateAsync<int>("a => a", -0);
-            Assert.Equal(-0, result);
+            double result = await Page.EvaluateAsync<double>("a => a", -0d);
+            Assert.True(result.IsNegativeZero());
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -73,6 +76,67 @@ namespace PlaywrightSharp.Tests.Evaluation
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should roundtrip unserializable values</playwright-it>
+        [Retry]
+        public async Task ShouldRoundtripUnserializableValues()
+        {
+            dynamic value = new
+            {
+                infinity = double.PositiveInfinity,
+                nInfinity = double.NegativeInfinity,
+                nZero = -0d,
+                nan = double.NaN,
+            };
+
+            dynamic result = await Page.EvaluateAsync<dynamic>("value => value", value);
+            Assert.Equal(value.infinity, result.infinity);
+            Assert.Equal(value.nInfinity, result.nInfinity);
+            Assert.Equal(value.nZero, result.nZero);
+            Assert.Equal(value.nan, result.nan);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should roundtrip promise to value</playwright-it>
+        [Retry]
+        public async Task ShouldRoundtripPromiseToValue()
+        {
+            object result = await Page.EvaluateAsync<object>("value => Promise.resolve(value)", null);
+            Assert.Null(result);
+
+            double infitinity = await Page.EvaluateAsync<double>("value => Promise.resolve(value)", double.PositiveInfinity);
+            Assert.Equal(double.PositiveInfinity, infitinity);
+
+            double ninfitinity = await Page.EvaluateAsync<double>("value => Promise.resolve(value)", double.NegativeInfinity);
+            Assert.Equal(double.NegativeInfinity, ninfitinity);
+
+            double nzero = await Page.EvaluateAsync<double>("value => Promise.resolve(value)", -0d);
+            Assert.Equal(-0, nzero);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should roundtrip promise to unserializable values</playwright-it>
+        [Retry]
+        public async Task ShouldRoundtripPromiseToUnserializableValues()
+        {
+            dynamic value = new
+            {
+                infinity = double.PositiveInfinity,
+                nInfinity = double.NegativeInfinity,
+                nZero = -0d,
+                nan = double.NaN,
+            };
+
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>("value => Promise.resolve(value)", value);
+            Assert.Equal(value.infinity, result.infinity);
+            Assert.Equal(value.nInfinity, result.nInfinity);
+            Assert.Equal(value.nZero, result.nZero);
+            Assert.Equal(value.nan, result.nan);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should transfer arrays</playwright-it>
         [Retry]
         public async Task ShouldTransferArrays()
@@ -89,6 +153,16 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
             bool result = await Page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
             Assert.True(result);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should transfer maps as empty objects</playwright-it>
+        [Retry]
+        public async Task ShouldTransferMapsAsEmptyObjects()
+        {
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x), {x: new Map([[1, 2]])}");
+            Assert.Empty(TypeDescriptor.GetProperties(result));
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -117,15 +191,17 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Retry]
         public async Task ShouldReturnUndefinedForObjectsWithSymbols()
         {
-            Assert.Null(await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"));
+            Assert.Equal(new object[] { null }, await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"));
             Assert.Equal("{}", (await Page.EvaluateAsync<JsonElement>(@"() => {
                 var a = { };
                 a[Symbol('foo4')] = 42;
                 return a;
             }")).ToJson());
-            Assert.Null(await Page.EvaluateAsync<object>(@"() => {
+            dynamic element = await Page.EvaluateAsync<ExpandoObject>(@"() => {
                 return { foo: [{ a: Symbol('foo4') }] };
-            }"));
+            }");
+
+            Assert.Null(element.foo[0].a);
         }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
@@ -207,7 +283,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkFromInsideAnExposedFunction()
         {
             // Setup inpage callback, which calls Page.evaluate
-            await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("(a, b) => a * b", new { a, b }));
+            await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("({a, b}) => a * b", new { a, b }));
             int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await callController(9, 3);
             }");
@@ -270,10 +346,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-it>should return -0</playwright-it>
         [Retry]
         public async Task ShouldReturnNegative0()
-        {
-            int result = await Page.EvaluateAsync<int>("() => -0");
-            Assert.Equal(-0, result);
-        }
+            => Assert.True((await Page.EvaluateAsync<double>("() => -0")).IsNegativeZero());
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
@@ -297,11 +370,69 @@ namespace PlaywrightSharp.Tests.Evaluation
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should work with overwritten Promise</playwright-it>
+        [Retry]
+        public async Task ShouldWorkWithOverwrittenPromise()
+        {
+            await Page.EvaluateAsync(@"const originalPromise = window.Promise;
+              class Promise2 {
+                static all(...arg) {
+                  return wrap(originalPromise.all(...arg));
+                }
+                static race(...arg) {
+                  return wrap(originalPromise.race(...arg));
+                }
+                static resolve(...arg) {
+                  return wrap(originalPromise.resolve(...arg));
+                }
+                constructor(f, r) {
+                  this._promise = new originalPromise(f, r);
+                }
+                then(f, r) {
+                  return wrap(this._promise.then(f, r));
+                }
+                catch(f) {
+                  return wrap(this._promise.catch(f));
+                }
+                finally(f) {
+                  return wrap(this._promise.finally(f));
+                }
+              };
+              const wrap = p => {
+                const result = new Promise2(() => {}, () => {});
+                result._promise = p;
+                return result;
+              };
+              window.Promise = Promise2;
+              window.__Promise2 = Promise2;");
+
+            Assert.True(await Page.EvaluateAsync<bool>(@"() => {
+              const p = Promise.all([Promise.race([]), new Promise(() => {}).then(() => {})]);
+              return p instanceof window.__Promise2;
+            }"));
+            Assert.Equal(42, await Page.EvaluateAsync<int>("() => Promise.resolve(42)"));
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should throw when passed more than one parameter</playwright-it>
+        [Fact(Skip = "Not relevant for C#, js specific")]
+        public void ShouldThrowWhenPassedMoreThanOneParameter()
+        {
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should accept "undefined" as one of multiple parameters</playwright-it>
         [Retry]
         public async Task ShouldAcceptUndefinedAsOneOfMultipleParameters()
         {
-            bool result = await Page.EvaluateAsync<bool>("({a, b}) => Object.is (a, undefined) && Object.is (b, 'foo')", new { a = (object)null, b = "foo" });
+            //C# will send nulls
+            bool result = await Page.EvaluateAsync<bool>(@"({a, b}) => {
+                console.log(a);
+                console.log(b);
+                return Object.is (a, null) && Object.is (b, 'foo')
+            }", new { a = (object)null, b = "foo" });
             Assert.True(result);
         }
 
@@ -318,21 +449,27 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-it>should properly serialize undefined fields</playwright-it>
         [Retry]
         public async Task ShouldProperlySerializeUndefinedFields()
-            => Assert.Empty(await Page.EvaluateAsync<Dictionary<string, object>>("() => ({a: undefined})"));
+        {
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>("() => ({a: undefined})");
+            Assert.Null(result.a);
+        }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should properly serialize null arguments</playwright-it>
+        ///<playwright-it>should properly serialize null arguments</playwright-it>x
         [Retry]
         public async Task ShouldProperlySerializeNullArguments()
-            => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", new object[] { null }));
+                => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should properly serialize null fields</playwright-it>
         [Retry]
         public async Task ShouldProperlySerializeNullFields()
-            => Assert.Equal(JsonValueKind.Null, (await Page.EvaluateAsync<JsonElement>("() => ({ a: null})")).GetProperty("a").ValueKind);
+        {
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>("() => ({ a: null})");
+            Assert.Null(result.a);
+        }
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
@@ -471,6 +608,32 @@ namespace PlaywrightSharp.Tests.Evaluation
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not throw an error when evaluation does a synchronous navigation and returns an object</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsAnObject()
+        {
+            var result = await Page.EvaluateAsync<JsonElement>(@"() => {
+                window.location.reload();
+                return {a: 42};
+            }");
+            Assert.Equal(42, result.GetProperty("a").GetInt32());
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not throw an error when evaluation does a synchronous navigation and returns an undefined</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsUndefined()
+        {
+            var result = await Page.EvaluateAsync<JsonElement?>(@"() => {
+                window.location.reload();
+                return undefined;
+            }");
+            Assert.Null(result);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
@@ -500,6 +663,171 @@ namespace PlaywrightSharp.Tests.Evaluation
             await Page.EvaluateAsync<object>("() => { window.JSON.stringify = null; window.JSON = null; }");
             var result = await Page.EvaluateAsync<JsonElement>("() => ({ abc: 123})");
             Assert.Equal(123, result.GetProperty("abc").GetInt32());
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should await promise from popup</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ShouldAwaitPromiseFromPopup()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            int result = await Page.EvaluateAsync<int>(@"() => {
+                const win = window.open('about:blank');
+                return new win.Promise(f => f(42));
+            }");
+            Assert.Equal(42, result);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should work with new Function() and CSP</playwright-it>
+        [Retry]
+        public async Task ShouldWorkWithNewFunctionAndCSP()
+        {
+            Server.SetCSP("/empty.html", "script-src" + TestConstants.ServerUrl);
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            Assert.True(await Page.EvaluateAsync<bool>("() => new Function('return true')()"));
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should work with non-strict expressions</playwright-it>
+        [Retry]
+        public async Task ShouldWorkWithNonStrictExpressions()
+        {
+            Assert.Equal(3.14m, await Page.EvaluateAsync<decimal>(@"() => {
+              y = 3.14;
+              return y;
+            }"));
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should respect use strict expression</playwright-it>
+        [Retry]
+        public async Task ShouldRespectUseStrictExpression()
+        {
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => {
+                ""use strict"";
+                variableY = 3.14;
+               return variableY;
+            }"));
+            Assert.Contains("variableY", exception.Message);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not leak utility script</playwright-it>
+        [Retry]
+        public async Task ShouldNotLeakUtilityScript()
+        {
+            Assert.True(await Page.EvaluateAsync<bool>(@"() => this === window"));
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not leak handles</playwright-it>
+        [Retry]
+        public async Task ShouldNotLeakHandles()
+        {
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => handles.length"));
+            Assert.Contains("handles", exception.Message);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should work with CSP</playwright-it>
+        [Retry]
+        public async Task ShouldWorkWithCSP()
+        {
+            Server.SetCSP("/empty.html", "script-src 'self'");
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            Assert.Equal(4, await Page.EvaluateAsync<int>("() => 2 + 2"));
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should evaluate exception</playwright-it>
+        [Retry]
+        public async Task ShouldEvaluateException()
+        {
+            string exception = await Page.EvaluateAsync<string>(@"() => {
+                return (function functionOnStack() {
+                    return new Error('error message');
+                })();
+            }");
+            Assert.Contains("Error: error message", exception);
+            Assert.Contains("functionOnStack", exception);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should evaluate exception</playwright-it>
+        [Retry]
+        public async Task ShouldEvaluateException2()
+        {
+            string exception = await Page.EvaluateAsync<string>(@"() => new Error('error message')");
+            Assert.Contains("Error: error message", exception);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should evaluate date</playwright-it>
+        [Retry]
+        public async Task ShouldEvaluateDate()
+        {
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>(@"() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
+            Assert.Equal(new DateTime(2020, 05, 27, 1, 31, 38, 506), result.date);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should roundtrip date</playwright-it>
+        [Retry]
+        public async Task ShouldRoundtripDate()
+        {
+            var date = new DateTime(2020, 05, 27, 1, 31, 38, 506, DateTimeKind.Utc);
+            var result = await Page.EvaluateAsync<DateTime>(@"date => date", date);
+            Assert.Equal(date, result);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should roundtrip regex</playwright-it>
+        [Fact(Skip = "Regex is not native as in javascript")]
+        public void ShouldRoundtripRegex()
+        {
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should jsonValue() date</playwright-it>
+        [Retry]
+        public async Task ShouldJsonValueDate()
+        {
+            var resultHandle = await Page.EvaluateHandleAsync(@"() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
+            dynamic result = await resultHandle.GetJsonValueAsync<ExpandoObject>();
+            Assert.Equal(new DateTime(2020, 05, 27, 1, 31, 38, 506), result.date);
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not use toJSON when evaluating</playwright-it>
+        [Fact(Skip = "Skip for now")]
+        public void ShouldNotUseToJSONWhenEvaluating()
+        {
+        }
+
+        ///<playwright-file>evaluation.spec.js</playwright-file>
+        ///<playwright-describe>Page.evaluate</playwright-describe>
+        ///<playwright-it>should not use toJSON in jsonValue</playwright-it>
+        [Fact(Skip = "Skip for now")]
+        public void ShouldNotUseToJSONInJsonValue()
+        {
         }
     }
 }

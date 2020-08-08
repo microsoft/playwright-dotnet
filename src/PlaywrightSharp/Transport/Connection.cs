@@ -113,7 +113,12 @@ namespace PlaywrightSharp.Transport
             }
         }
 
-        internal async Task<T> SendMessageToServerAsync<T>(string guid, string method, object args, bool ignoreNullValues = false)
+        internal async Task<T> SendMessageToServerAsync<T>(
+            string guid,
+            string method,
+            object args,
+            bool ignoreNullValues = false,
+            JsonSerializerOptions options = null)
         {
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
@@ -124,7 +129,7 @@ namespace PlaywrightSharp.Transport
                 Params = args,
             };
 
-            string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions(ignoreNullValues));
+            string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
             Debug.WriteLine($"pw:channel:command {messageString}");
             _logger?.LogInformation($"pw:channel:command {messageString}");
 

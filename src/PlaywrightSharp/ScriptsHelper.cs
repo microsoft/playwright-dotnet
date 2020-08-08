@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
 using System.Text.Json;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
@@ -18,21 +21,73 @@ namespace PlaywrightSharp
             type == typeof(double?) ||
             type == typeof(bool?);
 
+        internal static string SerializeScriptCall(string script, object[] args)
+        {
+            args ??= Array.Empty<object>();
+
+            if (script.IsJavascriptFunction())
+            {
+                return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.GetNewDefaultSerializerOptions())))})";
+            }
+
+            if (args.Length > 0)
+            {
+                throw new PlaywrightSharpException("Cannot evaluate a string with arguments");
+            }
+
+            return script;
+        }
+
         internal static T ParseEvaluateResult<T>(JsonElement? result)
         {
-            if (!result.HasValue)
+            object parsed = ParseEvaluateResult(result, typeof(T));
+
+            if (parsed == null)
             {
                 return default;
             }
 
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var value) && value.ToString() == "undefined")
+            return (T)parsed;
+        }
+
+        internal static object ParseEvaluateResult(JsonElement? result, Type t)
+        {
+            if (!result.HasValue)
             {
-                return default;
+                return null;
+            }
+
+            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var value))
+            {
+                if (value.ValueKind == JsonValueKind.Null)
+                {
+                    return default;
+                }
+
+                return value.ToString() switch
+                {
+                    "undefined" => default,
+                    "Infinity" => double.PositiveInfinity,
+                    "-Infinity" => double.NegativeInfinity,
+                    "-0" => -0d,
+                    "NaN" => double.NaN,
+                    _ => value.ToObject(t),
+                };
+            }
+
+            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("d", out var date))
+            {
+                return date.ToObject<DateTime>();
             }
 
             if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("o", out var obj))
             {
-                return obj.ToObject<T>();
+                if (t == typeof(ExpandoObject) || t == typeof(object))
+                {
+                    return ReadObject(obj);
+                }
+
+                return obj.ToObject(t);
             }
 
             if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)
@@ -42,15 +97,20 @@ namespace PlaywrightSharp
 
             if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("a", out var array) && array.ValueKind == JsonValueKind.Array)
             {
-                return array.ToObject<T>();
+                if (t == typeof(ExpandoObject) || t == typeof(object))
+                {
+                    return ReadList(array);
+                }
+
+                return array.ToObject(t);
             }
 
-            if (typeof(T) == typeof(JsonElement?))
+            if (t == typeof(JsonElement?))
             {
-                return (T)(object)result;
+                return result;
             }
 
-            return result.Value.ToObject<T>();
+            return result.Value.ToObject(t);
         }
 
         internal static EvaluateArgument SerializedArgument(object args)
@@ -160,6 +220,60 @@ namespace PlaywrightSharp
             }
 
             return new EvaluateArgumentValueElement.Object { O = value };
+        }
+
+        internal static string EvaluationScript(string content, string path, bool addSourceUrl = true)
+        {
+            if (!string.IsNullOrEmpty(content))
+            {
+                return content;
+            }
+            else if (!string.IsNullOrEmpty(path))
+            {
+                string contents = File.ReadAllText(path);
+
+                if (addSourceUrl)
+                {
+                    contents += "//# sourceURL=" + path.Replace(" ", string.Empty);
+                }
+
+                return contents;
+            }
+
+            throw new ArgumentException("Either path or content property must be present");
+        }
+
+        private static object ReadObject(JsonElement jsonElement)
+        {
+            IDictionary<string, object> expandoObject = new ExpandoObject();
+            foreach (var obj in jsonElement.EnumerateObject())
+            {
+                expandoObject[obj.Name] = ParseEvaluateResult(obj.Value, ValueKindToType(obj.Value));
+            }
+
+            return expandoObject;
+        }
+
+        private static Type ValueKindToType(JsonElement element)
+            => element.ValueKind switch
+            {
+                JsonValueKind.Array => typeof(Array),
+                JsonValueKind.String => typeof(string),
+                JsonValueKind.Number => decimal.Truncate(element.ToObject<decimal>()) != element.ToObject<decimal>() ? typeof(decimal) : typeof(int),
+                JsonValueKind.True => typeof(bool),
+                JsonValueKind.False => typeof(bool),
+                _ => typeof(object),
+            };
+
+        private static object ReadList(JsonElement jsonElement)
+        {
+            IList<object> list = new List<object>();
+            foreach (var item in jsonElement.EnumerateArray())
+            {
+                list.Add(ParseEvaluateResult(item, ValueKindToType(item)));
+            }
+
+            return list.Count == 0 ? null : list;
         }
     }
 }
