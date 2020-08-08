@@ -11,8 +11,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame Management</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class FrameManagementTests : PlaywrightSharpPageBaseTest
+    public class FrameManagementTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public FrameManagementTests(ITestOutputHelper output) : base(output)
@@ -46,7 +45,11 @@ namespace PlaywrightSharp.Tests.Frame
             // validate framenavigated events
             var navigatedFrames = new List<IFrame>();
             Page.FrameNavigated += (sender, e) => navigatedFrames.Add(e.Frame);
-            await FrameUtils.NavigateFrameAsync(Page, "frame1", "./empty.html");
+            await Page.EvaluateAsync(@"() => {
+                const frame = document.getElementById('frame1');
+                frame.src = './empty.html';
+                return new Promise(x => frame.onload = x);
+            }");
             Assert.Single(navigatedFrames);
             Assert.Equal(TestConstants.EmptyPage, navigatedFrames[0].Url);
 
@@ -65,16 +68,10 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldSendFrameNavigatedWhenNavigatingOnAnchorURLs()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var framenavigated = new TaskCompletionSource<bool>();
-            void WaitFrameNavigated(object sender, EventArgs e)
-            {
-                framenavigated.TrySetResult(true);
-                Page.FrameNavigated -= WaitFrameNavigated;
-            }
-            Page.FrameNavigated += WaitFrameNavigated;
+
             await Task.WhenAll(
                 Page.GoToAsync(TestConstants.EmptyPage + "#foo"),
-                framenavigated.Task
+                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated)
             );
             Assert.Equal(TestConstants.EmptyPage + "#foo", Page.Url);
         }
@@ -217,20 +214,13 @@ namespace PlaywrightSharp.Tests.Frame
                 window.frame.remove();
             }");
             Assert.True(frame1.Detached);
-            var frameAttached = new TaskCompletionSource<IFrame>();
-            void WaitFrameAttached(object sender, FrameEventArgs e)
-            {
-                frameAttached.TrySetResult(e.Frame);
-                Page.FrameAttached -= WaitFrameAttached;
-            }
-            Page.FrameAttached += WaitFrameAttached;
 
             var (frame2, _) = await TaskUtils.WhenAll(
-              frameAttached.Task,
+              Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated),
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
 
-            Assert.False(frame2.Detached);
+            Assert.False(frame2.Frame.Detached);
             Assert.NotSame(frame1, frame2);
         }
     }
