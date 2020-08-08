@@ -164,6 +164,8 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task<ElementHandleChannel> GetFrameElementAsync() => Scope.SendMessageToServer<ElementHandleChannel>(Guid, "frameElement", null);
+
         internal Task<string> GetTitleAsync() => Scope.SendMessageToServer<string>(Guid, "title", null);
 
         internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForSelectorOptions options, bool isPage)
