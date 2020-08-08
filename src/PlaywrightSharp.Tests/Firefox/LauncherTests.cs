@@ -1,0 +1,41 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
+using PlaywrightSharp.Tests.BaseTests;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace PlaywrightSharp.Tests.Firefox
+{
+    ///<playwright-file>firefox/launcher.spec.js</playwright-file>
+    ///<playwright-describe>launcher</playwright-describe>
+    [Collection(TestConstants.TestFixtureCollectionName)]
+    public class WebSocketOptionsTests : PlaywrightSharpBaseTest
+    {
+        /// <inheritdoc/>
+        public WebSocketOptionsTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
+        ///<playwright-file>firefox/launcher.spec.js</playwright-file>
+        ///<playwright-describe>launcher</playwright-describe>
+        ///<playwright-it>should pass firefox user preferences</playwright-it>
+        [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
+        public async Task ShouldPassFirefoxUserPreferences()
+        {
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.FirefoxUserPrefs = new Dictionary<string, object>
+            {
+                ["network.proxy.type"] = 1,
+                ["network.proxy.http"] = "127.0.0.1",
+                ["network.proxy.http_port"] = 333,
+            };
+
+            await using var browser = await BrowserType.LaunchAsync(options);
+            var page = await browser.NewPageAsync();
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://example.com"));
+
+            Assert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
+        }
+    }
+}
