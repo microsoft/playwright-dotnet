@@ -14,15 +14,10 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>Chromium.createCDPSession</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class SessionTests : PlaywrightSharpPageBaseTest, IDisposable
+    class SessionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public SessionTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
         {
         }
 

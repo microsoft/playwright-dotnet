@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>ChromiumHeadful</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class HeadfulTests : PlaywrightSharpBrowserBaseTest, IDisposable
+    class HeadfulTests : PlaywrightSharpBrowserBaseTest
     {
         readonly LaunchOptions _extensionOptions;
 
@@ -28,11 +28,6 @@ namespace PlaywrightSharp.Tests.Chromium
                 $"--disable-extensions-except={extensionPath}",
                 $"--load-extension={extensionPath}"
             };
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
         }
 
         ///<playwright-file>chromium/headful.spec.js</playwright-file>

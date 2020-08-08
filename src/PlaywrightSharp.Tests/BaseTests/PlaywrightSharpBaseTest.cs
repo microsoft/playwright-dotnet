@@ -50,7 +50,8 @@ namespace PlaywrightSharp.Tests.BaseTests
             return await context.NewPageAsync();
         }
 
-        public void Dispose()
+        /// <inheritdoc/>
+        public virtual void Dispose()
         {
             _loggerProvider.Dispose();
         }
