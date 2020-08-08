@@ -70,7 +70,6 @@ namespace PlaywrightSharp.Tests.Frame
                 iframe.contentDocument.body.appendChild(div);
             }");
 
-
             Assert.Equal("about:blank", Page.Frames[1].Url);
             Assert.Equal("about:blank", await Page.Frames[1].EvaluateAsync<string>("() => window.location.href"));
             Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
