@@ -402,7 +402,8 @@ namespace PlaywrightSharp
         public Task SetContentAsync(string html, NavigationOptions options = null) => MainFrame.SetContentAsync(true, html, options);
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, LifecycleEvent lifeCycleEvent) => throw new NotImplementedException();
+        public Task SetContentAsync(string html, LifecycleEvent waitUntil)
+            => MainFrame.SetContentAsync(true, html, new NavigationOptions { WaitUntil = waitUntil });
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => throw new NotImplementedException();
