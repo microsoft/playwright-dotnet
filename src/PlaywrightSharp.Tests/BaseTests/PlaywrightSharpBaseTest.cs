@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.BaseTests
 
             _loggerProvider = new XunitLoggerProvider(output);
             TestConstants.LoggerFactory.AddProvider(_loggerProvider);
-
+            output.WriteLine($"Running {GetType().FullName}");
         }
 
         internal void Initialize()
