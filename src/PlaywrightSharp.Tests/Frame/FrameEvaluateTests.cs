@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -9,8 +10,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>frame.spec.js</playwright-file>
     ///<playwright-describe>Frame.evaluate</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class FrameEvaluateTests : PlaywrightSharpPageBaseTest
+    public class FrameEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public FrameEvaluateTests(ITestOutputHelper output) : base(output)
@@ -51,6 +51,50 @@ namespace PlaywrightSharp.Tests.Frame
             );
             Assert.Equal(1, results[0]);
             Assert.Equal(2, results[1]);
+        }
+
+        ///<playwright-file>frame.spec.js</playwright-file>
+        ///<playwright-describe>Frame.evaluate</playwright-describe>
+        ///<playwright-it>should work in iframes that failed initial navigation</playwright-it>
+        [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
+        public async Task ShouldWorkIniframesThatFailedInitialNavigation()
+        {
+            await Page.SetContentAsync(
+                @"<meta http-equiv=""Content-Security-Policy"" content=""script-src 'none';"">
+                 <iframe src='javascript:""""'></iframe>",
+                LifecycleEvent.DOMContentLoaded);
+
+            await Page.EvaluateAsync(@"() => {
+                const iframe = document.querySelector('iframe');
+                const div = iframe.contentDocument.createElement('div');
+                iframe.contentDocument.body.appendChild(div);
+            }");
+
+
+            Assert.Equal("about:blank", Page.Frames[1].Url);
+            Assert.Equal("about:blank", await Page.Frames[1].EvaluateAsync<string>("() => window.location.href"));
+            Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
+        }
+
+        ///<playwright-file>frame.spec.js</playwright-file>
+        ///<playwright-describe>Frame.evaluate</playwright-describe>
+        ///<playwright-it>should work in iframes that failed initial navigation</playwright-it>
+        [SkipBrowserAndPlatformFact(skipChromium: true)]
+        public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            await Page.EvaluateAsync(@"() => {
+                const iframe = document.createElement('iframe');
+                iframe.src = 'javascript:""""';
+                document.body.appendChild(iframe);
+                iframe.contentDocument.open();
+                iframe.contentDocument.write('<div>hello</div>');
+                iframe.contentDocument.close();
+            }");
+
+            Assert.Equal(TestConstants.EmptyPage, await Page.Frames[1].EvaluateAsync<string>("() => window.location.href"));
+            Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
         }
     }
 }
