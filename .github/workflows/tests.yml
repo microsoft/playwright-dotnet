@@ -27,9 +27,9 @@ jobs:
           PRODUCT: CHROMIUM
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger:"LogFileName=TestResults.xml;verbosity=detailed"
       - name: Upload test results
-        uses: actions/upload-artifact@v2
         if: always()
-        path: "TestResults.xml"
+        uses: actions/upload-artifact@v2
+        path: TestResults.xml
   firefox-mac:
     name: Firefox on MacOS
     runs-on: macOS-latest
@@ -48,9 +48,9 @@ jobs:
           PRODUCT: FIREFOX
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger:"LogFileName=TestResults.xml;verbosity=detailed"
       - name: Upload test results
-        uses: actions/upload-artifact@v2
         if: always()
-        path: "TestResults.xml"
+        uses: actions/upload-artifact@v2
+        path: TestResults.xml
   webkit-mac:
     name: Webkit on MacOS
     runs-on: macOS-latest
@@ -69,6 +69,6 @@ jobs:
           PRODUCT: WEBKIT
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger:"LogFileName=TestResults.xml;verbosity=detailed"
       - name: Upload test results
-        uses: actions/upload-artifact@v2
         if: always()
-        path: "TestResults.xml"
+        uses: actions/upload-artifact@v2
+        path: TestResults.xml
