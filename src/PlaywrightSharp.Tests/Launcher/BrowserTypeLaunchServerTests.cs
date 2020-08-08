@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>browserType.launchServer</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserTypeLaunchServerTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>

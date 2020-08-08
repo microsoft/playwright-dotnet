@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Tests.Browser
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.isConnected</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class IsConnectedTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>

@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests.Launcher
     /*
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Playwright.launch({userDataDir})</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class UserDataDirTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>

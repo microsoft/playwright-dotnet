@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Tests.Chromium
 {
     ///<playwright-file>chromium/headful.spec.js</playwright-file>
     ///<playwright-describe>ChromiumHeadful</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
     class HeadfulTests : PlaywrightSharpBrowserBaseTest, IDisposable
     {

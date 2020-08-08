@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Tests.Browser
 
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Browser.close</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class CloseTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>

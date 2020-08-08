@@ -6,7 +6,7 @@ namespace PlaywrightSharp.Tests.Launcher
 {
     ///<playwright-file>launcher.spec.js</playwright-file>
     ///<playwright-describe>Top-level requires</playwright-describe>
-    [Collection(TestConstants.TestFixtureCollectionName)]
+    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class TopLevelRequiresTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
