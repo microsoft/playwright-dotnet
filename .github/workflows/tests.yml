@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResult.xml
+          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
         if: always()
   firefox-mac:
     name: Firefox on MacOS
@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResult.xml
+          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
         if: always()
   webkit-mac:
     name: Webkit on MacOS
@@ -76,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResult.xml
+          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
         if: always()
