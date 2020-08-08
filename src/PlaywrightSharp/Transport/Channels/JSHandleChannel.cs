@@ -20,5 +20,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
                 });
+
+        internal Task<JsonElement> GetJsonValue() => Scope.SendMessageToServer<JsonElement>(Guid, "jsonValue", null);
+
+        internal Task DisposeAsync() => Scope.SendMessageToServer(Guid, "dispose", null);
     }
 }

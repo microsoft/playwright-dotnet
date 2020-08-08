@@ -131,8 +131,13 @@ namespace PlaywrightSharp.Transport
         internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args = null)
             => Connection.SendMessageToServerAsync<JsonElement?>(guid, method, args);
 
-        internal Task<T> SendMessageToServer<T>(string guid, string method, object args, bool ignoreNullValues = false)
-            => Connection.SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues);
+        internal Task<T> SendMessageToServer<T>(
+            string guid,
+            string method,
+            object args,
+            bool ignoreNullValues = false,
+            JsonSerializerOptions serializerOptions = null)
+            => Connection.SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues, serializerOptions);
 
         private void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
 

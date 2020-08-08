@@ -64,7 +64,7 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public Task<T> GetJsonValueAsync<T>() => throw new NotImplementedException();
+        public async Task<T> GetJsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.GetJsonValue().ConfigureAwait(false));
 
         /// <inheritdoc />
         public Task<IJSHandle> GetPropertyAsync(string propertyName) => throw new NotImplementedException();
@@ -73,7 +73,7 @@ namespace PlaywrightSharp
         public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync() => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task DisposeAsync() => throw new NotImplementedException();
+        public Task DisposeAsync() => _channel.DisposeAsync();
 
         /// <inheritdoc />
         public override string ToString() => Preview;
