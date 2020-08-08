@@ -24,6 +24,6 @@ namespace PlaywrightSharp.Tests.BaseTests
         public virtual Task InitializeAsync() => Task.CompletedTask;
 
         /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        public virtual Task DisposeAsync() => TaskUtils.WhenAll(_contexts.ConvertAll(context => context.CloseAsync()));
+        public virtual Task DisposeAsync() => Task.WhenAll(_contexts.ConvertAll(context => context.CloseAsync()));
     }
 }
