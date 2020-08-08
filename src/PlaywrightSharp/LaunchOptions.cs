@@ -139,6 +139,19 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
+        /// Firefox user preferences. Learn more about the Firefox user preferences at about:config.
+        /// </summary>
+        public IDictionary<string, object> FirefoxUserPrefs
+        {
+            get
+            {
+                Values.TryGetValue("firefoxUserPrefs", out object result);
+                return result as Dictionary<string, object>;
+            }
+            set => Values["firefoxUserPrefs"] = value;
+        }
+
+        /// <summary>
         /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
         /// </summary>
         /// <param name="options">Option to convert.</param>
