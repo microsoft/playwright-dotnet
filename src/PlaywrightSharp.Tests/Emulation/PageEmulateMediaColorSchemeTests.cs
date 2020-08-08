@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Emulation
                 await page.GoToAsync(TestConstants.EmptyPage);
                 var popupTask = page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
 
-                await Task.WhenAll(
+                await TaskUtils.WhenAll(
                     popupTask,
                     page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.Emulation
                 await page.GoToAsync(TestConstants.EmptyPage);
                 var popupTask = page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
 
-                await Task.WhenAll(
+                await TaskUtils.WhenAll(
                     popupTask,
                     page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 

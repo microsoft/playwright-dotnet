@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 request => request.HttpContext.Features.Get<ITlsHandshakeFeature>().Protocol);
             var responseTask = page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 requestTask,
                 responseTask);
 

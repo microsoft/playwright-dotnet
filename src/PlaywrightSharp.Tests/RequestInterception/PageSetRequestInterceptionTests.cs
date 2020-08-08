@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 <form action='/rredirect' method='post'>
                     <input type=""hidden"" id=""foo"" name=""foo"" value=""FOOBAR"">
                 </form>");
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.QuerySelectorEvaluateAsync("form", "form => form.submit()"),
                 Page.WaitForNavigationAsync()
             );
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             };
 
             var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 originRequestHeader,
                 Page.GoToAsync(TestConstants.EmptyPage)
             );
@@ -284,7 +284,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetRequestInterceptionAsync(true);
             Page.Request += async (sender, e) => await e.Request.ContinueAsync();
             var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 requestTask,
                 Page.GoToAsync(TestConstants.ServerUrl + "/grid.html")
             );

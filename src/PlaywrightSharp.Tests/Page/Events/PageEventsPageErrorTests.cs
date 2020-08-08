@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Page
                 Page.PageError -= EventHandler;
             }
             Page.PageError += EventHandler;
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.GoToAsync(TestConstants.ServerUrl + "/error.html"),
                 Page.WaitForEvent<PageErrorEventArgs>(PageEvent.PageError)
             );

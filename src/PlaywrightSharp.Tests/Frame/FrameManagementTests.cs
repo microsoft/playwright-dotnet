@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.Frame
                 Page.FrameNavigated -= WaitFrameNavigated;
             }
             Page.FrameNavigated += WaitFrameNavigated;
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.GoToAsync(TestConstants.EmptyPage + "#foo"),
                 framenavigated.Task
             );

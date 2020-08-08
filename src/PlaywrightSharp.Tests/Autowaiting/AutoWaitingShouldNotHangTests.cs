@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
                 Page.EvaluateAsync("() => window._popup = window.open(window.location.href)"));
         }

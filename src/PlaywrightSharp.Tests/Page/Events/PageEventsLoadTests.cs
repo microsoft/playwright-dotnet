@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         [Retry]
         public async Task ShouldFireWhenExpected()
         {
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Page.GoToAsync("about:blank"),
                 Page.WaitForEvent<EventArgs>(PageEvent.Load)
             );

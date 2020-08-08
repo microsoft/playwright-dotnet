@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldWorkWithNoopener()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>("() => window.open('about:blank', null, 'noopener')")
             );
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.ClickAsync("a")
             );
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.QuerySelectorEvaluateAsync("a", "a => a.click()")
             );
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.ClickAsync("a")
             );
@@ -137,7 +137,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 popupTask,
                 Page.ClickAsync("a")
             );

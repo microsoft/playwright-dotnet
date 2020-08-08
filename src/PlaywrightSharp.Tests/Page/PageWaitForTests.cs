@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-it>should work with multiline body</playwright-it>
         [Retry]
         public Task ShouldWaitForPredicate()
-            => Task.WhenAll(
+            => TaskUtils.WhenAll(
                 Page.WaitForFunctionAsync("() => window.innerWidth < 100"),
                 Page.SetViewportAsync(new Viewport { Width = 10, Height = 10 })
         );

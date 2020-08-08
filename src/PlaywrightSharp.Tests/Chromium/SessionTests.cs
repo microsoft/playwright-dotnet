@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             var client = await ((ChromiumTarget)Browser.GetPageTarget(Page)).CreateCDPSessionAsync();
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
               client.SendAsync(new RuntimeEnableRequest()),
               client.SendAsync(new RuntimeEvaluateRequest { Expression = "window.foo = 'bar'" })
             );
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await Page.Coverage.StopJSCoverageAsync();
             // generate a script in page and wait for the event.
             var eventTask = WaitEventAsync<DebuggerScriptParsedChromiumEvent>(client);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 eventTask,
                 Page.EvaluateAsync("//# sourceURL=foo.js")
             );

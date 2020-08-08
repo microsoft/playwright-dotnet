@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Chromium
             headfulOptions.Devtools = true;
             await using var browser = await BrowserType.LaunchAsync(headfulOptions);
             var context = await browser.NewContextAsync();
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 context.NewPageAsync(),
                 browser.WaitForTargetAsync(target => target.Url.Contains("devtools://")));
         }

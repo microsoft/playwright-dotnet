@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/cached/one-style.html");
             var nonCachedRequestTask = Server.WaitForRequest("/cached/one-style.html", request => request.Headers["if-modified-since"]);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 nonCachedRequestTask,
                 Page.ReloadAsync()
             );

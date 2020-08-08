@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Frame
             await Page.EvaluateAsync("delete window.MutationObserver");
             var waitForSelector = Page.WaitForSelectorAsync(".zombo");
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 waitForSelector,
                 Page.SetContentAsync("<div class='zombo'>anything</div>"));
 

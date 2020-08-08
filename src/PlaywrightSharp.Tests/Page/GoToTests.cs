@@ -497,7 +497,7 @@ namespace PlaywrightSharp.Tests.Page
             string referer1 = null;
             string referer2 = null;
 
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
                 Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
                 Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
@@ -548,7 +548,7 @@ namespace PlaywrightSharp.Tests.Page
 
             var reqTask1 = Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]);
             var reqTask2 = Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 reqTask1,
                 reqTask2,
                 Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions

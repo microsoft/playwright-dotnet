@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             };
             await Page.GoToAsync(TestConstants.EmptyPage);
             var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 requestTask,
                 Page.EvaluateAsync("() => fetch('/sleep.zzz')")
             );

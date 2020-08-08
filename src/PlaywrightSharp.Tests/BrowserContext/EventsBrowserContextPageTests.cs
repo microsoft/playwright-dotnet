@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             // Open a new page. Use window.open to connect to the page later.
             var pageCreatedTask = context.WaitForEvent<PageEventArgs>(ContextEvent.PageCreated);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
                 pageCreatedTask,
                 page.EvaluateAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
                 Server.WaitForRequest("/one-style.css"));
@@ -228,7 +228,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
             var popupEventTask = context.WaitForEvent<PageEventArgs>(ContextEvent.PageCreated);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
               popupEventTask,
               page.ClickAsync("a", new ClickOptions { Modifiers = new[] { Modifier.Shift } }));
 
@@ -249,7 +249,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
             var popupEventTask = context.WaitForEvent<PageEventArgs>(ContextEvent.PageCreated);
-            await Task.WhenAll(
+            await TaskUtils.WhenAll(
               popupEventTask,
               page.ClickAsync("a", new ClickOptions { Modifiers = new[] { TestConstants.IsMacOSX ? Modifier.Meta : Modifier.Control } }));
 
