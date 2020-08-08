@@ -20,7 +20,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="MicrosoftExtensions.Logging.Xunit" Version="1.0.0" />
         <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />

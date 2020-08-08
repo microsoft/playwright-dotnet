@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Xunit;
-using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
@@ -65,8 +62,5 @@ namespace PlaywrightSharp.Tests
             "        http://localhost:<PORT>/frames/frame.html (dos)",
             "    http://localhost:<PORT>/frames/frame.html (aframe)"
         };
-
-        public static void SetupLogging(ITestOutputHelper output)
-            => LoggerFactory.AddProvider(new XunitLoggerProvider(output));
     }
 }

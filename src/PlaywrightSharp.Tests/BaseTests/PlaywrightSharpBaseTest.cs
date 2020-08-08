@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
 using Xunit.Abstractions;
 
@@ -8,8 +10,10 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// <summary>
     /// This base tests setup logging and http servers
     /// </summary>
-    public class PlaywrightSharpBaseTest
+    public class PlaywrightSharpBaseTest : IDisposable
     {
+        private readonly XunitLoggerProvider _loggerProvider;
+
         internal IPlaywright Playwright => PlaywrightSharpDriverLoaderFixture.Playwright;
         internal string BaseDirectory { get; set; }
         internal IBrowserType BrowserType => Playwright[TestConstants.Product];
@@ -19,8 +23,6 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal PlaywrightSharpBaseTest(ITestOutputHelper output)
         {
-            TestConstants.SetupLogging(output);
-
             BaseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "workspace");
             var dirInfo = new DirectoryInfo(BaseDirectory);
 
@@ -30,6 +32,10 @@ namespace PlaywrightSharp.Tests.BaseTests
             }
 
             Initialize();
+
+            _loggerProvider = new XunitLoggerProvider(output);
+            TestConstants.LoggerFactory.AddProvider(_loggerProvider);
+
         }
 
         internal void Initialize()
@@ -42,6 +48,11 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
             await using var context = await browser.NewContextAsync(options);
             return await context.NewPageAsync();
+        }
+
+        public void Dispose()
+        {
+            _loggerProvider.Dispose();
         }
     }
 }
