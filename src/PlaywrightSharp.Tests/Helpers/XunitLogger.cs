@@ -18,7 +18,11 @@ namespace PlaywrightSharp.Tests.Helpers
         {
             if (_enabled)
             {
-                _output.WriteLine(state.ToString());
+                try
+                {
+                    _output.WriteLine(state.ToString());
+                }
+                catch { }
             }
         }
 
