@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>focus.spec.js</playwright-file>
         ///<playwright-describe>Page.focus</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<div id=d1 tabIndex=0></div>");
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>focus.spec.js</playwright-file>
         ///<playwright-describe>Page.focus</playwright-describe>
         ///<playwright-it>should emit focus event</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEmitFocusEvent()
         {
             await Page.SetContentAsync("<div id=d1 tabIndex=0></div>");
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>focus.spec.js</playwright-file>
         ///<playwright-describe>Page.focus</playwright-describe>
         ///<playwright-it>should emit blur event</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEmitBlurEvent()
         {
             await Page.SetContentAsync("<div id=d1 tabIndex=0>DIV1</div><div id=d2 tabIndex=0>DIV2</div>");

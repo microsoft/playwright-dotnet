@@ -93,6 +93,18 @@ namespace PlaywrightSharp.Tests.Keyboard
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>ElementHandle.press should support |text| option</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        public async Task ElementHandlePressShouldSupportTextOption()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            var textarea = await Page.QuerySelectorAsync("textarea");
+            //await textarea.PressAsync("a", new PressOptions { Text = "ё" });
+            Assert.Equal("ё", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should send a character with sendCharacter</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendACharacterWithSendCharacter()
