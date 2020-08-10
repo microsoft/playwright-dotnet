@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when clicking anchor</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await cross-process navigation when clicking anchor</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await form-get on click</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitFormGetOnClick()
         {
             var messages = new List<string>();
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await form-post on click</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitFormPostOnClick()
         {
             var messages = new List<string>();
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when assigning location</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitNavigationWhenAssigningLocation()
         {
             var messages = new List<string>();
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when assigning location twice</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
         {
             var messages = new List<string>();
@@ -168,7 +168,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when evaluating reload</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitNavigationWhenEvaluatingReload()
         {
             var messages = new List<string>();
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigating specified target</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldAwaitNavigatingSpecifiedTarget()
         {
             var messages = new List<string>();
@@ -218,7 +218,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should work with noWaitAfter: true</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
             var messages = new List<string>();
@@ -231,7 +231,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should work with waitForLoadState(load)</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithWaitForLoadStateLoad()
         {
             var messages = new List<string>();
@@ -260,7 +260,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should work with goto following click</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithGotoFollowingClick()
         {
             var messages = new List<string>();
