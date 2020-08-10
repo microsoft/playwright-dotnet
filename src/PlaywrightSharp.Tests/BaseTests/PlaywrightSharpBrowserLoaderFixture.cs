@@ -19,7 +19,6 @@ namespace PlaywrightSharp.Tests.BaseTests
         /// <inheritdoc/>
         public Task DisposeAsync() => ShutDownAsync();
 
-
         private static async Task LaunchBrowserAsync()
         {
             Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
