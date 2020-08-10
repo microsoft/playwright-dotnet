@@ -89,16 +89,11 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not throw UnhandledPromiseRejection when page closes</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldGracefullyFailWhenPageCloses()
+        [Fact(Skip = "We don't need to test this race condition")]
+        public void ShouldGracefullyFailWhenPageCloses()
         {
-            await using var context = await Browser.NewContextAsync();
-            var newPage = await context.NewPageAsync();
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
-                newPage.CloseAsync(),
-                newPage.Mouse.ClickAsync(1, 2)
-             ));
         }
+
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button after navigation </playwright-it>

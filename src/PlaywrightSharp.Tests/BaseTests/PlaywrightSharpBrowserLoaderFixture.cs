@@ -13,12 +13,14 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static IBrowser Browser { get; private set; }
 
+        /// <inheritdoc/>
         public async Task InitializeAsync()
         {
             Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
             Browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
         }
 
+        /// <inheritdoc/>
         public async Task DisposeAsync()
         {
             await Browser.CloseAsync();

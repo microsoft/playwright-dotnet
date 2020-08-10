@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should not affect screenshots</playwright-it>
-        [Fact(Skip = "We need screenshot features firts")]
+        [Fact(Skip = "We need screenshot features first")]
         public void ShouldNotAffectScreenshots()
         {
         }
