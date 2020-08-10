@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should work in iframes that failed initial navigation</playwright-it>
-        [SkipBrowserAndPlatformFact(skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
