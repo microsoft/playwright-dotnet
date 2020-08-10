@@ -3,5 +3,4 @@
   "diagnosticMessages": true,
   "parallelizeAssembly": false,
   "maxParallelThreads": 1,
-  "longRunningTestSeconds": 30
 }
