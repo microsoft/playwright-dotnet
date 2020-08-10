@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when clicking anchor</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await cross-process navigation when clicking anchor</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await form-get on click</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitFormGetOnClick()
         {
             var messages = new List<string>();
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await form-post on click</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitFormPostOnClick()
         {
             var messages = new List<string>();
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when assigning location</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigationWhenAssigningLocation()
         {
             var messages = new List<string>();
@@ -168,7 +168,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when evaluating reload</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigationWhenEvaluatingReload()
         {
             var messages = new List<string>();
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigating specified target</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigatingSpecifiedTarget()
         {
             var messages = new List<string>();
@@ -231,7 +231,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should work with waitForLoadState(load)</playwright-it>
-        [Fact(Skip = "Too noisy")]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldWorkWithWaitForLoadStateLoad()
         {
             var messages = new List<string>();
