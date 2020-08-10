@@ -1,9 +1,9 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using Xunit;
 using Xunit.Abstractions;
-using PlaywrightSharp.Helpers;
-using System;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
