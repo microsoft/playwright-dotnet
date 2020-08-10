@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>should throw when invalid longitude</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldThrowWhenInvalidLongitude()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>should isolate contexts</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldIsolateContexts()
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>should use context options</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldUseContextOptions()
         {
             var options = new BrowserContextOptions
@@ -162,7 +162,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>watchPosition should be notified</playwright-it>
-        [Retry]
+        [Fact]
         public async Task WatchPositionShouldBeNotified()
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>geolocation.spec.js</playwright-file>
         ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
         ///<playwright-it>should use context options for popup</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldUseContextOptionsForPopup()
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);

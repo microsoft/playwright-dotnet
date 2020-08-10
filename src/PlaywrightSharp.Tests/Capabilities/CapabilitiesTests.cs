@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Capabilities
         ///<playwright-file>capabilities.spec.js</playwright-file>
         ///<playwright-describe>Capabilities</playwright-describe>
         ///<playwright-it>should respect CSP</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRespectCSP()
         {
             Server.SetRoute("/empty.html", context =>

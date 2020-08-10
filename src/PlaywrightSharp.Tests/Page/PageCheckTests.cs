@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should check the box</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldCheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should not check the checked box</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldNotCheckTheCheckedBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should uncheck the box</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldUncheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should check the box by label</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldCheckTheBoxByLabel()
         {
             await Page.SetContentAsync("<label for='checkbox'><input id='checkbox' type='checkbox'></input></label>");
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should check the box outside label</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldCheckTheBoxOutsideLabel()
         {
             await Page.SetContentAsync("<label for='checkbox'>Text</label><div><input id='checkbox' type='checkbox'></input></div>");
@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should check the box inside label w/o id</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldCheckTheBoxInsideLabelWoId()
         {
             await Page.SetContentAsync("<label>Text<span><input id='checkbox' type='checkbox'></input></span></label>");
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should check radio</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldCheckRadio()
         {
             await Page.SetContentAsync(@"
@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.check</playwright-describe>
         ///<playwright-it>should check the box by aria role</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldCheckTheBoxByAriaRole()
         {
             await Page.SetContentAsync(@"

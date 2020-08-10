@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should terminate network waiters</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldTerminateNetworkWaiters()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should fire close event for all contexts</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFireCloseEventForAllContexts()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should be callable twice</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldBeCallableTwice()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());

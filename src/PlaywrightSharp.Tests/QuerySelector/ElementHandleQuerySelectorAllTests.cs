@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$$</playwright-describe>
         ///<playwright-it>should query existing elements</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldQueryExistingElements()
         {
             await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.$$</playwright-describe>
         ///<playwright-it>should return empty array for non-existing elements</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReturnEmptyArrayForNonExistingElements()
         {
             await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");

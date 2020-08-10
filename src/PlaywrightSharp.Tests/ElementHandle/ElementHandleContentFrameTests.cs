@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
         ///<playwright-it>should work for cross-process iframes</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkForCrossProcessIframes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
         ///<playwright-it>should work for cross-frame evaluations</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkForCrossFrameEvaluations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
         ///<playwright-it>should return null for non-iframes</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReturnNullForNonIframes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
         ///<playwright-it>should return null for document.documentElement</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReturnNullForDocumentDocumentElement()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         //<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
         ///<playwright-it>should stay disabled when toggling request interception on/off</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldStayDisabledWhenTogglingRequestInterceptionOnOff()
         {
             await Page.SetCacheEnabledAsync(false);

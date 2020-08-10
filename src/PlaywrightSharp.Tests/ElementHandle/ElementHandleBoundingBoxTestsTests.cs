@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should handle nested frames</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldHandleNestedFrames()
         {
             await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should return null for invisible elements</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReturnNullForInvisibleElements()
         {
             await Page.SetContentAsync("<div style=\"display:none\">hi</div>");
@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should force a layout</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldForceALayout()
         {
             await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work with SVG nodes</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithSVGNodes()
         {
             await Page.SetContentAsync(@"
@@ -128,7 +128,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
         ///<playwright-it>should work when inline box child is outside of viewport</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWhenInlineBoxChildIsOutsideOfViewport()
         {
             await Page.SetContentAsync(@"

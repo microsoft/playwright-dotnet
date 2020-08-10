@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should fill textarea</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillTextarea()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should fill input</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillInput()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should throw on non-text inputs</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldThrowOnNonTextInputs()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should fill different input types</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillDifferentInputTypes()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should fill contenteditable</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillContenteditable()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should fill elements with existing value and selection</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillElementsWithExistingValueAndSelection()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should throw when element is not an &lt;input&gt;, &lt;textarea&gt; or [contenteditable]</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldThrowWhenElementIsNotAnInputOrTextareaOrContenteditable()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -133,7 +133,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should wait for visible visibilty</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWaitForVisibleVisibilty()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -152,7 +152,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should throw on disabled and readonly elements</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldThrowOnDisabledAndReadonlyElements()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -169,7 +169,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should be able to fill the body</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldBeAbleToFillTheBody()
         {
             await Page.SetContentAsync("<body contentEditable=\"true\"></body>");
@@ -180,7 +180,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should be able to fill when focus is in the wrong frame</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldBeAbleToFillWhenFocusIsInTheWrongFrame()
         {
             await Page.SetContentAsync("<div contentEditable=\"true\"></div><iframe></iframe>");

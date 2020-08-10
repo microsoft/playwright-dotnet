@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with noopener</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithNoopener()
         {
             var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);

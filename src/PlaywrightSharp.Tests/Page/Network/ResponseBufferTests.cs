@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.buffer</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.buffer</playwright-describe>
         ///<playwright-it>should work with compression</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithCompression()
         {
             Server.EnableGzip("/pptr.png");

@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report downloads with acceptDownloads: false</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReportDownloadsWithAcceptDownloadsFalse()
         {
             await Page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/downloadWithFilename\">download</a>");
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report downloads with acceptDownloads: true</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReportDownloadsWithAcceptDownloadsTrue()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report non-navigation downloads</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReportNonNavigationDownloads()
         {
             Server.SetRoute("/download", context =>
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report download path within page.on('download', ?) handler for Files</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForFiles()
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report download path within page.on('download', ?) handler for Blobs</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForBlobs()
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
@@ -178,7 +178,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report new window downloads</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReportNewWindowDownloads()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -199,7 +199,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should delete file</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldDeleteFile()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should expose stream</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldExposeStream()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -243,7 +243,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should delete downloads on context destruction</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldDeleteDownloadsOnContextDestruction()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -272,7 +272,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should delete downloads on browser gone</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldDeleteDownloadsOnBrowserGone()
         {
             var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());

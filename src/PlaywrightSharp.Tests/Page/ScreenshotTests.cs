@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             await Page.SetViewportAsync(new Viewport
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should clip rect</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldClipRect()
         {
             await Page.SetViewportAsync(new Viewport
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should clip elements to the viewport</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldClipElementsToTheViewport()
         {
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should throw on clip outside the viewport</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldThrowOnClipOutsideTheViewport()
         {
             await Page.SetViewportAsync(new Viewport { Width = 500, Height = 500 });
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should run in parallel</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRunInParallel()
         {
             await Page.SetViewportAsync(new Viewport
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should take fullPage screenshots</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldTakeFullPageScreenshots()
         {
             await Page.SetViewportAsync(new Viewport
@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should restore viewport after fullPage screenshot</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRestoreViewportAfterFullPageScreenshot()
         {
             await Page.SetViewportAsync(new Viewport
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should run in parallel in multiple pages</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRunInParallelInMultiplePages()
         {
             int n = 2;
@@ -252,7 +252,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should render white background on jpeg file</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRenderWhiteBackgroundOnJpegFile()
         {
             await Page.SetViewportAsync(new Viewport { Width = 100, Height = 100 });
@@ -268,7 +268,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should work with odd clip size on Retina displays</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithOddClipSizeOnRetinaDisplays()
         {
             byte[] screenshot = await Page.ScreenshotAsync(new ScreenshotOptions
@@ -288,7 +288,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should return base64</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldReturnBase64()
         {
             await Page.SetViewportAsync(new Viewport
@@ -323,7 +323,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should work for canvas</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkForCanvas()
         {
             await Page.SetViewportAsync(new Viewport
@@ -340,7 +340,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>screenshot.spec.js</playwright-file>
         ///<playwright-describe>Page.screenshot</playwright-describe>
         ///<playwright-it>should work for translateZ</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkForTranslateZ()
         {
             await Page.SetViewportAsync(new Viewport

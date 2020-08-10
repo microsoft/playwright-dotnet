@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.fill</playwright-describe>
         ///<playwright-it>should fill input</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillInput()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.fill</playwright-describe>
         ///<playwright-it>should fill input when Node is removed</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFillInputWhenNodeIsRemoved()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");

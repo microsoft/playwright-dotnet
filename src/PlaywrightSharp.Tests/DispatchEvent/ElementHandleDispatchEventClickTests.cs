@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click event</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldDispatchClickEvent()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");

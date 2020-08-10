@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>query</playwright-it>
-        [Retry]
+        [Fact]
         public async Task Query()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>create</playwright-it>
-        [Retry]
+        [Fact]
         public async Task Create()
         {
             await Page.SetContentAsync("<div>yo</div><div>\"ya</div><div>ye ye</div>");

@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with predicate</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(
@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should respect default timeout</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.DefaultTimeout = 1;
@@ -81,7 +81,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with no timeout</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with url match</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWorkWithUrlMatch()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

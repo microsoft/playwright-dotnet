@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.DOMContentLoaded</playwright-describe>
         ///<playwright-it>should fire when expected</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldFireWhenExpected()
         {
             _ = Page.GoToAsync("about:blank");

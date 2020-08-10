@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldWork()
         {
             var context = await Browser.NewContextAsync();
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
         ///<playwright-it>should throw for duplicate registrations</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await using var context = await Browser.NewContextAsync();
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
         ///<playwright-it>should be callable from-inside addInitScript</playwright-it>
-        [Retry]
+        [Fact]
         public async Task ShouldBeCallableFromInsideAddInitScript()
         {
             var args = new List<object>();
