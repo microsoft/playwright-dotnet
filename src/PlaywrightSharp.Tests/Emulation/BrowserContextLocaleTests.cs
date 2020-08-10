@@ -186,7 +186,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
         ///<playwright-it>should be isolated between contexts</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBeIsolatedBetweenContexts()
         {
             await using var context1 = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "en-US" });
