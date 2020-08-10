@@ -34,7 +34,7 @@ namespace PlaywrightSharp
         internal IChannel<ElementHandle> ElementChannel => _channel;
 
         /// <inheritdoc />
-        public Task PressAsync(string key, PressOptions options = null) => throw new NotImplementedException();
+        public Task PressAsync(string key, int delay = 0) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task TypeAsync(string text, int delay = 0) => throw new NotImplementedException();

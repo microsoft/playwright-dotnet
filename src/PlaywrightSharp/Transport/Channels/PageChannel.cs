@@ -197,6 +197,16 @@ namespace PlaywrightSharp.Transport.Channels
                     ["delay"] = delay,
                 });
 
+        internal Task PressAsync(string key, int delay)
+            => Scope.SendMessageToServer<SerializedAXNode>(
+                Guid,
+                "keyboardPress",
+                new Dictionary<string, object>
+                {
+                    ["key"] = key,
+                    ["delay"] = delay,
+                });
+
         internal Task MouseDownAsync(MouseButton button, int clickCount)
             => Scope.SendMessageToServer<SerializedAXNode>(
                 Guid,

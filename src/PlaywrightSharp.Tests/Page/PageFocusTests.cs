@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Page
 
             await Page.FocusAsync("#i1");
             await Page.Keyboard.TypeAsync("First");
-            await Page.Keyboard.TypeAsync("Tab");
+            await Page.Keyboard.PressAsync("Tab");
             await Page.Keyboard.TypeAsync("Last");
 
             Assert.True(focused);
