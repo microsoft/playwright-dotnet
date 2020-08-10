@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>selectors.register</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             string createTagSelector = @"() => ({
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>selectors.register</playwright-describe>
         ///<playwright-it>should update</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldUpdate()
         {
             await Page.SetContentAsync("<div><dummy id=d1></dummy></div><span><dummy id=d2></dummy></span>");

@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.disconnect</playwright-describe>
         ///<playwright-it>should reject navigation when browser closes</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRejectNavigationWhenBrowserCloses()
         {
             Server.SetRoute("/one-style.css", context => Task.Delay(10000));
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.disconnect</playwright-describe>
         ///<playwright-it>should reject waitForSelector when browser closes</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRejectWaitForSelectorWhenBrowserCloses()
         {
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.disconnect</playwright-describe>
         ///<playwright-it>should throw if used after disconnect</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowIfUsedAfterDisconnect()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.disconnect</playwright-describe>
         ///<playwright-it>should emit close events on pages and contexts</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEmitCloseEventsOnPagesAndContexts()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());

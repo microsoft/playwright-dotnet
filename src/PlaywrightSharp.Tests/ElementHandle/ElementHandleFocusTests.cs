@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.focus</playwright-describe>
         ///<playwright-it>should focus a button</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFocusAButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");

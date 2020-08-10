@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.getProperties</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.getProperties</playwright-describe>
         ///<playwright-it>should return empty map for non-objects</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnEmptyMapForNonObjects()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 123");
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.getProperties</playwright-describe>
         ///<playwright-it>should return even non-own properties</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnEvenNonOwnProperties()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {

@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.statusText</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             Server.SetRoute("/cool", (context) =>

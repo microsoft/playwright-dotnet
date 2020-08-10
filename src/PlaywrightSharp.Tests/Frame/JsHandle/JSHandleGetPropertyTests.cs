@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.getProperty</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({

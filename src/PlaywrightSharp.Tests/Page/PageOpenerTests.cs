@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.opener</playwright-describe>
         ///<playwright-it>should provide access to the opener page</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.opener</playwright-describe>
         ///<playwright-it>should return null if parent page has been closed</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(

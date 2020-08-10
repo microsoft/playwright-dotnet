@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>Page.Workers</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task PageWorkers()
         {
             await TaskUtils.WhenAll(
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should emit created and destroyed events</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report console logs</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should have JSHandles for console logs</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
             var consoleTcs = new TaskCompletionSource<ConsoleMessage>();
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should evaluate</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEvaluate()
         {
             var workerCreatedTask = Page.WaitForEvent<WorkerEventArgs>(PageEvent.WorkerCreated);
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report errors</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should clear upon navigation</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClearUponNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should clear upon cross-process navigation</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -156,7 +156,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report network activity</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportNetworkActivity()
         {
             var (worker, _) = await TaskUtils.WhenAll(

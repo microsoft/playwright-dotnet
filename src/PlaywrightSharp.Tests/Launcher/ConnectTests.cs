@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.connect</playwright-describe>
         ///<playwright-it>should be able to reconnect to a browser</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToReconnectToADisconnectedBrowser()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());

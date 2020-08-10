@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
         ///<playwright-it>should support some fancy xpath</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportSomeFancyXpath()
         {
             await Page.SetContentAsync("<p>red herring</p><p>hello  world  </p>");
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
         ///<playwright-it>should run in specified frame</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRunInSpecifiedFrame()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
         ///<playwright-it>should throw when frame is detached</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowWhenFrameIsDetached()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
         ///<playwright-it>should return the element handle</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnTheElementHandle()
         {
             var waitForXPath = Page.WaitForSelectorAsync("//*[@class=\"zombo\"]");
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
         ///<playwright-it>should allow you to select an element with single slash</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAllowYouToSelectAnElementWithSingleSlash()
         {
             await Page.SetContentAsync("<div>some text</div>");

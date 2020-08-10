@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulate</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             var page = await NewPageAsync(new BrowserContextOptions
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulate</playwright-describe>
         ///<playwright-it>should support clicking</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportClicking()
         {
             var page = await NewPageAsync(new BrowserContextOptions

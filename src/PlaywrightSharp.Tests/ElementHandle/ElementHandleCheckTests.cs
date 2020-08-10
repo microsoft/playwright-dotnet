@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.check</playwright-describe>
         ///<playwright-it>should check the box</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.check</playwright-describe>
         ///<playwright-it>should uncheck the box</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldUncheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");

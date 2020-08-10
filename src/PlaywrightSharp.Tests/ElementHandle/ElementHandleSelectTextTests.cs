@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.selectText</playwright-describe>
         ///<playwright-it>should select textarea</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSelectTextarea()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.selectText</playwright-describe>
         ///<playwright-it>should select input</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSelectInput()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.selectText</playwright-describe>
         ///<playwright-it>should select plain div</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSelectPlainDiv()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.selectText</playwright-describe>
         ///<playwright-it>should timeout waiting for invisible element</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWaitingForInvisibleElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.selectText</playwright-describe>
         ///<playwright-it>should wait for visible</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForVisible()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");

@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should reject all promises when page is closed</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should not be visible in context.pages</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotBeVisibleInContextPages()
         {
             var newPage = await Context.NewPageAsync();
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should run beforeunload if asked for</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {
             var newPage = await Context.NewPageAsync();
@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should *not* run beforeunload by default</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotRunBeforeunloadByDefault()
         {
             var newPage = await Context.NewPageAsync();
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should set the page close state</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetThePageCloseState()
         {
             var newPage = await Context.NewPageAsync();

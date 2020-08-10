@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click svg</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickSvg()
         {
             await Page.SetContentAsync($@"
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click svg</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonIfWindowNodeIsRemoved()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click on a span with an inline element inside</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickOnASpanWithAnInlineElementInside()
         {
             await Page.SetContentAsync($@"
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not throw UnhandledPromiseRejection when page closes</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldGracefullyFailWhenPageCloses()
         {
             await using var context = await Browser.NewContextAsync();
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button after navigation </playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonAfterNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button after a cross origin navigation </playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -128,7 +128,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click with disabled javascript</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickWithDisabledJavascript()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { JavaScriptEnabled = false });
@@ -144,7 +144,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click when one of inline box children is outside of viewport</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickWhenOneOfInlineBoxChildrenIsOutsideOfViewport()
         {
             await Page.SetContentAsync($@"
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should select the text by triple clicking</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSelectTheTextByTripleClicking()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -180,7 +180,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click offscreen buttons</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickOffscreenButtons()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
@@ -212,7 +212,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should waitFor visible when already visible</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForVisibleWhenAlreadyVisible()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -223,7 +223,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not wait with force</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotWaitWithForce()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -239,7 +239,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should waitFor display:none to be gone</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForDisplayNoneToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -260,7 +260,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should waitFor visibility:hidden to be gone</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForVisibilityhiddenToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -281,7 +281,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should timeout waiting for display:none to be gone</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -297,7 +297,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should timeout waiting for visbility:hidden to be gone</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -314,7 +314,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should waitFor visible when parent is hidden</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForVisibleWhenParentIsHidden()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -335,7 +335,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click wrapped links</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickWrappedLinks()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/wrappedlink.html");
@@ -346,7 +346,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click on checkbox input and toggle</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickOnCheckboxInputAndToggle()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/checkbox.html");
@@ -370,7 +370,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click on checkbox label and toggle</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickOnCheckboxLabelAndToggle()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/checkbox.html");
@@ -389,7 +389,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not hang with touch-enabled viewports</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotHangWithTouchEnabledViewports()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -407,7 +407,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should scroll and click the button</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldScrollAndClickTheButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
@@ -420,7 +420,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should double click the button</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -440,7 +440,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click a partially obscured button</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickAPartiallyObscuredButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -458,7 +458,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click a rotated button</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickARotatedButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/rotatedButton.html");
@@ -469,7 +469,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should fire contextmenu event on right click</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFireContextmenuEventOnRightClick()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
@@ -480,7 +480,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click links which cause navigation</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickLinksWhichCauseNavigation()
         {
             await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
@@ -491,7 +491,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button inside an iframe</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonInsideAnIframe()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -526,7 +526,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button with deviceScaleFactor set</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonWithDeviceScaleFactorSet()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -552,7 +552,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button with px border with relative point</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonWithPxBorderWithRelativePoint()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -567,7 +567,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button with em border with offset</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonWithEmBorderWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -583,7 +583,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click a very large button with offset</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickAVeryLargeButtonWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -599,7 +599,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click a button in scrolling container with offset</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickAButtonInScrollingContainerWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -663,7 +663,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for stable position</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -688,7 +688,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should timeout waiting for stable position</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWaitingForStablePosition()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -708,7 +708,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for becoming hit target</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForBecomingHitTarget()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -744,7 +744,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should timeout waiting for hit target</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -778,7 +778,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should fail when obscured and not waiting for hit target</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -801,7 +801,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for button to be enabled</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForButtonToBeEnabled()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
@@ -817,7 +817,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should timeout waiting for button to be enabled</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
@@ -833,7 +833,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for input to be enabled</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForInputToBeEnabled()
         {
             await Page.SetContentAsync("<input onclick=\"javascript: window.__CLICKED = true;\" disabled>");
@@ -849,7 +849,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for select to be enabled</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForSelectToBeEnabled()
         {
             await Page.SetContentAsync("<select onclick=\"javascript: window.__CLICKED = true;\" disabled><option selected>Hello</option></select>");
@@ -865,7 +865,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click disabled div</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickDisabledDiv()
         {
             await Page.SetContentAsync("<div onclick=\"javascript: window.__CLICKED = true;\" disabled>Click target</div>");
@@ -876,7 +876,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should climb dom for inner label with pointer-events:none</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClimbDomForInnerLabelWithPointerEventsNone()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\"><label style=\"pointer-events:none\">Click target</label></button>");
@@ -887,7 +887,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should climb up to [role=button]</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClimbUpToRoleButton()
         {
             await Page.SetContentAsync("<div role=button onclick=\"javascript: window.__CLICKED = true;\"><div style=\"pointer-events:none\"><span><div>Click target</div></span></div>");
@@ -898,7 +898,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for BUTTON to be clickable when it has pointer-events:none</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForButtonToBeClickableWhenItHasPointerEventsNone()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></button>");
@@ -914,7 +914,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should wait for LABEL to be clickable when it has pointer-events:none</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForLabelToBeClickableWhenItHasPointerEventsNone()
         {
             await Page.SetContentAsync("<label onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></label>");
@@ -934,7 +934,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should update modifiers correctly</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -960,7 +960,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click an offscreen element when scroll-behavior is smooth</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickAnOffscreenElementWhenScrollBehaviorIsSmooth()
         {
             await Page.SetContentAsync(@$"
@@ -975,7 +975,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should report nice error when element is detached and force-clicked</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportNiceErrorWhenElementIsDetachedAndForceClicked()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/animating-button.html");
@@ -991,7 +991,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should fail when element detaches after animation</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWhenElementDetachesAfterAnimation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/animating-button.html");
@@ -1007,7 +1007,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should retry when element detaches after animation</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRetryWhenElementDetachesAfterAnimation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/animating-button.html");
@@ -1031,7 +1031,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should retry when element is animating from outside the viewport</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewport()
         {
             await Page.SetContentAsync($@"
@@ -1065,7 +1065,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should retry when element is animating from outside the viewport with force</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewportWithForce()
         {
             await Page.SetContentAsync($@"
@@ -1108,7 +1108,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should dispatch microtasks in order</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchMicrotasksInOrder()
         {
             await Page.SetContentAsync($@"
@@ -1168,7 +1168,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not retarget when element changes on hover</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotRetargetWhenElementChangesOnHover()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/react.html");
@@ -1184,7 +1184,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should not retarget when element is recycled on hover</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotRetargetWhenElementIsRecycledOnHover()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/react.html");
@@ -1203,7 +1203,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should click the button when window.innerWidth is corrupted</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickTheButtonWhenWindowInnerWidthIsCorrupted()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -1216,7 +1216,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should timeout when click opens alert</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWhenClickOpensAlert()
         {
             var dialogTask = Page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);

@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.clearCookies</playwright-describe>
         /// <playwright-it>should clear cookies</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClearCookes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.clearCookies</playwright-describe>
         /// <playwright-it>should isolate cookies when clearing</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolateWhenClearing()
         {
             await using var anotherContext = await Browser.NewContextAsync();

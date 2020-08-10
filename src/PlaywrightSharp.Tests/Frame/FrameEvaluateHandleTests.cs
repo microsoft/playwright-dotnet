@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluateHandle</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.isConnected</playwright-describe>
         ///<playwright-it>should set the browser connected state</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetTheBrowserConnectedState()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.isConnected</playwright-describe>
         ///<playwright-it>should throw when used after isConnected returns false</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());

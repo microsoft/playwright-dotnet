@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goBack</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goBack</playwright-describe>
         ///<playwright-it>should work with HistoryAPI</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithHistoryAPI()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

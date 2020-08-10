@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({viewport})</playwright-describe>
         ///<playwright-it>should get the proper default viewport size</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public Task ShouldGetTheProperDefaultViewPortSize()
             => TestUtils.VerifyViewportAsync(Page, 1280, 720);
 
@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({viewport})</playwright-describe>
         ///<playwright-it>should set the proper viewport size</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetTheProperViewportSize()
         {
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({viewport})</playwright-describe>
         ///<playwright-it>should emulate device width</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEmulateDeviceWidth()
         {
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({viewport})</playwright-describe>
         ///<playwright-it>should emulate device height</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEmulateDeviceHeight()
         {
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({viewport})</playwright-describe>
         ///<playwright-it>should not have touch by default</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotHaveTouchByDefault()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({viewport})</playwright-describe>
         ///<playwright-it>should support touch with null viewport</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportTouchWithNullViewport()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Viewport = null, HasTouch = true });

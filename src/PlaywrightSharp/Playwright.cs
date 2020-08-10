@@ -17,6 +17,11 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="PlaywrightSharp.IPlaywright" />
     public sealed class Playwright : IPlaywright, IChannelOwner<Playwright>
     {
+        /// <summary>
+        /// Default timeout.
+        /// </summary>
+        public const int DefaultTimeout = 30_000;
+
         private readonly ILoggerFactory _loggerFactory;
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
@@ -32,11 +37,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Playwright() => Dispose(false);
-
-        /// <summary>
-        /// Default timeout.
-        /// </summary>
-        public static int DefaultTimeout => 30_000;
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;

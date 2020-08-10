@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should create new context</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCreateNewContext()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>window.open should use parent tab context</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task WindowOpenShouldUseParentTabContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should isolate localStorage and cookies</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should propagate default viewport to the page</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should make a copy of default viewport</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
             var viewport = new ViewportSize
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should respect deviceScaleFactor</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -160,7 +160,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should not allow deviceScaleFactor with null viewport</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
@@ -174,7 +174,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>should not allow isMobile with null viewport</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotAllowIsMobileWithNullViewport()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>close() should work for empty context</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task CloseShouldWorkForEmptyContext()
         {
             var context = await Browser.NewContextAsync();
@@ -198,7 +198,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>close() should abort waitForEvent</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task CloseShouldAbortWaitForEvent()
         {
             var context = await Browser.NewContextAsync();
@@ -211,7 +211,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext</playwright-describe>
         ///<playwright-it>close() should be callable twice</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task CloseShouldBeCallableTwice()
         {
             var context = await Browser.NewContextAsync();

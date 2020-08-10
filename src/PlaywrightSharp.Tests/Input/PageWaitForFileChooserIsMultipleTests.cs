@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser isMultiple</playwright-describe>
         ///<playwright-it>should work for single file pick</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkForSingleFilePick()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser isMultiple</playwright-describe>
         ///<playwright-it>should work for "multiple"</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkForMultiple()
         {
             await Page.SetContentAsync("<input multiple type=file>");
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser isMultiple</playwright-describe>
         ///<playwright-it>should work for "webkitdirectory"</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkForWebkitdirectory()
         {
             await Page.SetContentAsync("<input multiple webkitdirectory type=file>");

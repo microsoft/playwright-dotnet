@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle convenience API</playwright-describe>
         ///<playwright-it>should have a nice preview</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveANicePreview()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle convenience API</playwright-describe>
         ///<playwright-it>getAttribute should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task GetAttributeShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle convenience API</playwright-describe>
         ///<playwright-it>innerHTML should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task InnerHTMLShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle convenience API</playwright-describe>
         ///<playwright-it>innerText should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task InnerTextShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle convenience API</playwright-describe>
         ///<playwright-it>'innerText should throw</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle convenience API</playwright-describe>
         ///<playwright-it>textContent should work</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task TextContentShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");

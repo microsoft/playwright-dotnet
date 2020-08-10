@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.route</playwright-describe>
         ///<playwright-it>should intercept</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIntercept()
         {
             bool intercepted = false;
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.route</playwright-describe>
         ///<playwright-it>should unroute</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldUnroute()
         {
             await using var context = await Browser.NewContextAsync();
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.route</playwright-describe>
         ///<playwright-it>should yield to page.route</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldYieldToPageRoute()
         {
             await using var context = await Browser.NewContextAsync();
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.route</playwright-describe>
         ///<playwright-it>should fall back to context.route</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFallBackToContextRoute()
         {
             await using var context = await Browser.NewContextAsync();

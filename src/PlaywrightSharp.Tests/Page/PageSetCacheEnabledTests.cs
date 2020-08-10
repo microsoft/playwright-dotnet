@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
         ///<playwright-it>should enable or disable the cache based on the state passed</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEnableOrDisableTheCacheBasedOnTheStatePassed()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/cached/one-style.html");

@@ -25,6 +25,8 @@ namespace PlaywrightSharp.Tests.Attributes
             bool skipWindows = false,
             bool skipLinux = false)
         {
+            Timeout = PlaywrightSharp.Playwright.DefaultTimeout;
+
             if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPlatform(skipOSX, skipWindows, skipLinux))
             {
                 Skip = "Skipped by browser/platform";

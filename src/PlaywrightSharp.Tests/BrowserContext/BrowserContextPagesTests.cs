@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.pages()</playwright-describe>
         ///<playwright-it>should return all of the pages</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.pages()</playwright-describe>
         ///<playwright-it>should close all belonging pages once closing context</playwright-it>
-        [Fact]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
         {
             await using var context = await Browser.NewContextAsync();
