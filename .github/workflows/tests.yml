@@ -25,13 +25,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
-      - name: Test results
-        uses: actions/upload-artifact@v1
-        with:
-          name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
-        if: always()
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "console;verbosity=detailed"
   firefox-mac:
     name: Firefox on MacOS
     runs-on: macOS-latest
@@ -48,13 +42,7 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: FIREFOX
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
-      - name: Test results
-        uses: actions/upload-artifact@v1
-        with:
-          name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
-        if: always()
+          run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "console;verbosity=detailed"
   webkit-mac:
     name: Webkit on MacOS
     runs-on: macOS-latest
@@ -71,10 +59,4 @@ jobs:
       - name: Run tests
         env:
           PRODUCT: WEBKIT
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
-      - name: Test results
-        uses: actions/upload-artifact@v1
-        with:
-          name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
-        if: always()
+          run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "console;verbosity=detailed"

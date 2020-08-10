@@ -2,8 +2,10 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using PlaywrightSharp;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
+using PlaywrightSharp.Transport.Channels;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.BaseTests
@@ -15,7 +17,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     {
         private readonly XunitLoggerProvider _loggerProvider;
 
-        internal IPlaywright Playwright => PlaywrightSharpDriverLoaderFixture.Playwright;
+        internal IPlaywright Playwright => PlaywrightSharpBrowserLoaderFixture.Playwright;
         internal string BaseDirectory { get; set; }
         internal IBrowserType BrowserType => Playwright[TestConstants.Product];
 
@@ -37,11 +39,16 @@ namespace PlaywrightSharp.Tests.BaseTests
             _loggerProvider = new XunitLoggerProvider(output);
             TestConstants.LoggerFactory.AddProvider(_loggerProvider);
 
+            output.WriteLine($"Running {GetDisplayName(output)}");
+            output.WriteLine($"Using Browser: {((ChannelBase)((IChannelOwner<PlaywrightSharp.Browser>)PlaywrightSharpBrowserLoaderFixture.Browser).Channel).Guid}");
+        }
+
+        private static string GetDisplayName(ITestOutputHelper output)
+        {
             var type = output.GetType();
             var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
             var test = (ITest)testMember.GetValue(output);
-
-            output.WriteLine($"Running {test.DisplayName}");
+            return test.DisplayName;
         }
 
         internal void Initialize()
