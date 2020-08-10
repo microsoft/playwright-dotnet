@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-it>should respect timeout</playwright-it>
         [Retry]
         public Task ShouldRespectTimeout() => Assert.ThrowsAsync<TimeoutException>(()
-            => Page.WaitForEvent(PageEvent.FileChooser, new WaitForEventOptions<FileChooserEventArgs> { Timeout = 1 }));
+            => Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser, timeout: 1));
 
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests.Input
         {
             Page.DefaultTimeout = 0;
             await Assert.ThrowsAsync<TimeoutException>(()
-                => Page.WaitForEvent(PageEvent.FileChooser, new WaitForEventOptions<FileChooserEventArgs> { Timeout = 1 }));
+                => Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser, timeout: 1));
         }
 
         ///<playwright-file>input.spec.js</playwright-file>
@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests.Input
         public async Task ShouldWorkWithNoTimeout()
         {
             var (chooser, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.FileChooser, new WaitForEventOptions<FileChooserEventArgs> { Timeout = 0 }),
+                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser, timeout: 0),
                 Page.EvaluateAsync(@"() => setTimeout(() => {
                     var el = document.createElement('input');
                     el.type = 'file';

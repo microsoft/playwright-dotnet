@@ -425,7 +425,9 @@ namespace PlaywrightSharp
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for.</param>
-        /// <param name="options">Extra options.</param>
+        /// <param name="predicate">Receives the event data and resolves when the waiting should resolve.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <example>
         /// <code>
@@ -445,7 +447,7 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEvent<T>(PageEvent e, WaitForEventOptions<T> options = null);
+        Task<T> WaitForEvent<T>(PageEvent e, Func<T, bool> predicate = null, int? timeout = null);
 
         /// <summary>
         /// Navigates to an url.
