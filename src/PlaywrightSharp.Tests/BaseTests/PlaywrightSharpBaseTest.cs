@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
@@ -35,7 +36,12 @@ namespace PlaywrightSharp.Tests.BaseTests
 
             _loggerProvider = new XunitLoggerProvider(output);
             TestConstants.LoggerFactory.AddProvider(_loggerProvider);
-            output.WriteLine($"Running {GetType().FullName}");
+
+            var type = output.GetType();
+            var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
+            var test = (ITest)testMember.GetValue(output);
+
+            output.WriteLine($"Running {test.DisplayName}");
         }
 
         internal void Initialize()
