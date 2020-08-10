@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch</playwright-describe>
         ///<playwright-it>should reject all promises when browser is closed</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch</playwright-describe>
         ///<playwright-it>should throw if userDataDir option is passed</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowIfUserDataDirOptionIsPassed()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch</playwright-describe>
         ///<playwright-it>should reject if executable path is invalid</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
             var options = TestConstants.GetDefaultBrowserOptions();

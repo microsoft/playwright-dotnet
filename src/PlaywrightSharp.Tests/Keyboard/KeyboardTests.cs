@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should type into a textarea</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTypeIntoATextarea()
         {
             await Page.EvaluateAsync<string>(@"() => {
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should press the metaKey</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPressTheMetaKey1()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should move with the arrow keys</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldMoveWithTheArrowKeys()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should send a character with ElementHandle.press</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendACharacterWithElementHandlePress()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should send a character with sendCharacter</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendACharacterWithSendCharacter()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should report multiple modifiers</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportMultipleModifiers()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should send proper codes while typing</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendProperCodesWhileTyping()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
@@ -182,7 +182,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should send proper codes while typing with shift</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendProperCodesWhileTypingWithShift()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should not type canceled events</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotTypeCanceledEvents()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should specify repeat property</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSpecifyRepeatProperty()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -246,7 +246,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should type all kinds of characters</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTypeAllKindsOfCharacters()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -259,7 +259,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should specify location</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSpecifyLocation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -284,7 +284,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should throw on unknown keys</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowOnUnknownKeys()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.Keyboard.PressAsync("NotARealKey"));
@@ -300,7 +300,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should type emoji</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTypeEmoji()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
@@ -311,7 +311,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should type emoji into an iframe</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTypeEmojiIntoAnIframe()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -365,7 +365,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should press the meta key</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPressTheMetaKey2()
         {
             await Page.EvaluateAsync<string>(@"() => {
@@ -411,7 +411,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should work after a cross origin navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/empty.html");

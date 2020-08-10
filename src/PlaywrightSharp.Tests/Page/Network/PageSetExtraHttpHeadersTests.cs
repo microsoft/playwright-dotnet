@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>

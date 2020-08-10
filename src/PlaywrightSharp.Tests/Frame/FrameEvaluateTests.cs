@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should throw for detached frames</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowForDetachedFrames()
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should be isolated between frames</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeIsolatedBetweenFrames()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.evaluate</playwright-describe>
         ///<playwright-it>should work in iframes that failed initial navigation</playwright-it>
-        [SkipBrowserAndPlatformFact(skipChromium: true)]
+        [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

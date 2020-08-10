@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({locale})</playwright-describe>
         ///<playwright-it>should affect accept-language header</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({locale})</playwright-describe>
         ///<playwright-it>should affect navigator.language</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAffectNavigatorLanguage()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({locale})</playwright-describe>
         ///<playwright-it>should format number</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFormatNumber()
         {
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({locale})</playwright-describe>
         ///<playwright-it>should format date</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFormatDate()
         {
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({locale})</playwright-describe>
         ///<playwright-it>should format number in popups</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFormatNumberInPopups()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({locale})</playwright-describe>
         ///<playwright-it>should affect navigator.language in popups</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAffectNavigatorLanguageInPopups()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
         ///<playwright-it>should work for multiple pages sharing same process</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkForMultiplePagesSharingSameProcess()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });
@@ -186,7 +186,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
         ///<playwright-it>should be isolated between contexts</playwright-it>
-        [Retry]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldBeIsolatedBetweenContexts()
         {
             await using var context1 = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "en-US" });

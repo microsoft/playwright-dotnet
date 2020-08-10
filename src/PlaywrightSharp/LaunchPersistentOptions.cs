@@ -231,7 +231,7 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
-        /// A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/> for more details.
+        /// A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/> for more details.
         /// </summary>
         public ContextPermission[] Permissions
         {

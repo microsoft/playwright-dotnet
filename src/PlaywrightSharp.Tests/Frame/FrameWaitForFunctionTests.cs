@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should work when resolved right before execution context disposal</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWhenResolvedRightBeforeExecutionContextDisposal()
         {
             await Page.AddInitScriptAsync("() => window.__RELOADED = true");
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should poll on interval</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPollOnInterval()
         {
             int polling = 100;
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should poll on mutation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPollOnMutation()
         {
             bool success = false;
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should poll on raf</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPollOnRaf()
         {
             var watchdog = Page.WaitForFunctionAsync("() => window.__FOO === 'hit'",
@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should throw negative polling interval</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowNegativePollingInterval()
         {
             var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(()
@@ -128,21 +128,21 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should return the success value as a JSHandle</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnTheSuccessValueAsAJSHandle()
             => Assert.Equal(5, await (await Page.WaitForFunctionAsync("() => 5")).GetJsonValueAsync<int>());
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should return the window as a success value</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnTheWindowAsASuccessValue()
             => Assert.NotNull(await Page.WaitForFunctionAsync("() => window"));
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should accept ElementHandle arguments</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAcceptElementHandleArguments()
         {
             await Page.SetContentAsync("<div></div>");
@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should respect default timeout</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.DefaultTimeout = 1;
@@ -183,7 +183,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should disable timeout when its set to 0</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
             var watchdog = Page.WaitForFunctionAsync(@"() => {
@@ -198,7 +198,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should survive cross-process navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSurviveCrossProcessNavigation()
         {
             bool fooFound = false;
@@ -218,7 +218,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should survive navigations</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSurviveNavigations()
         {
             var watchdog = Page.WaitForFunctionAsync("() => window.__done");

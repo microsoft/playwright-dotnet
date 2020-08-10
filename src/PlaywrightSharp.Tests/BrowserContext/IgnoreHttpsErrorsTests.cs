@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             var page = await NewPageAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with mixed content</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithMixedContent()
         {
             HttpsServer.SetRoute("/mixedcontent.html", async (context) =>

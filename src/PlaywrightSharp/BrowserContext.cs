@@ -140,10 +140,13 @@ namespace PlaywrightSharp
         public Task ClearCookiesAsync() => _channel.ClearCookiesAsync();
 
         /// <inheritdoc />
-        public Task SetPermissionsAsync(string origin, params ContextPermission[] permissions) => throw new NotImplementedException();
+        public Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null) => _channel.GrantPermissionsAsync(permissions, origin);
 
         /// <inheritdoc />
-        public Task SetGeolocationAsync(GeolocationOption geolocation) => throw new NotImplementedException();
+        public Task GrantPermissionsAsync(ContextPermission permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
+
+        /// <inheritdoc />
+        public Task SetGeolocationAsync(GeolocationOption geolocation) => _channel.SetGeolocationAsync(geolocation);
 
         /// <inheritdoc />
         public Task ClearPermissionsAsync() => throw new NotImplementedException();
@@ -211,14 +214,14 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc/>
-        public async Task<T> WaitForEvent<T>(ContextEvent e, WaitForEventOptions<T> options = null)
+        public async Task<T> WaitForEvent<T>(ContextEvent e, Func<T, bool> predicate = null, int? timeout = null)
         {
             var info = _contextEventsMap[e];
             ValidateArgumentsTypes();
             var eventTsc = new TaskCompletionSource<T>();
             void ContextEventHandler(object sender, T e)
             {
-                if (options?.Predicate == null || options.Predicate(e))
+                if (predicate == null || predicate(e))
                 {
                     eventTsc.TrySetResult(e);
                     info.RemoveEventHandler(this, (EventHandler<T>)ContextEventHandler);
@@ -228,7 +231,7 @@ namespace PlaywrightSharp
             info.AddEventHandler(this, (EventHandler<T>)ContextEventHandler);
             var disconnectedTcs = new TaskCompletionSource<bool>();
             _waitForCancellationTcs.Add((e, disconnectedTcs));
-            await Task.WhenAny(eventTsc.Task, disconnectedTcs.Task).WithTimeout(options?.Timeout ?? DefaultTimeout).ConfigureAwait(false);
+            await Task.WhenAny(eventTsc.Task, disconnectedTcs.Task).WithTimeout(timeout ?? DefaultTimeout).ConfigureAwait(false);
             if (disconnectedTcs.Task.IsCompleted)
             {
                 await disconnectedTcs.Task.ConfigureAwait(false);

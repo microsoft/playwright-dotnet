@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should roundtrip cookie</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRoundtripCookie()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should send cookie header</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendCookieHeader()
         {
             string cookie = string.Empty;
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should isolate cookies in browser contexts</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolateCookiesInBrowserContexts()
         {
             await using var anotherContext = await Browser.NewContextAsync();
@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should isolate session cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolateSessionCookies()
         {
             Server.SetRoute("/setcookie.html", context =>
@@ -140,7 +140,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should isolate persistent cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolatePersistentCookies()
         {
             Server.SetRoute("/setcookie.html", context =>
@@ -168,7 +168,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should isolate send cookie header</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolateSendCookieHeader()
         {
             string cookie = string.Empty;
@@ -198,7 +198,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should isolate cookies between launches</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIsolateCookiesBetweenLaunches()
         {
             await using (var browser1 = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
@@ -225,7 +225,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should set multiple cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetMultipleCookies()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -261,7 +261,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should have |expires| set to |-1| for session cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveExpiresSetToMinus1ForSessionCookies()
         {
             await Context.AddCookiesAsync(new SetNetworkCookieParam
@@ -279,7 +279,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should set cookie with reasonable defaults</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetCookieWithReasonableDefaults()
         {
             await Context.AddCookiesAsync(new SetNetworkCookieParam
@@ -303,7 +303,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should set a cookie with a path</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetACookieWithAPath()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
@@ -334,7 +334,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should not set a cookie with blank page URL</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotSetACookieWithBlankPageURL()
         {
             await Page.GoToAsync(TestConstants.AboutBlank);
@@ -359,7 +359,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should not set a cookie on a data URL page</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GoToAsync("data:,Hello%2C%20World!");
@@ -378,7 +378,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should default to setting secure cookie for HTTPS websites</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDefaultToSettingSecureCookieForHttpsWebsites()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -397,7 +397,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should be able to set unsecure cookie for HTTP website</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToSetUnsecureCookieForHttpWebSite()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -416,7 +416,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should set a cookie on a different domain</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetACookieOnADifferentDomain()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
@@ -436,7 +436,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should set cookies for a frame</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSetCookiesForAFrame()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -464,7 +464,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>cookies.spec.js</playwright-file>
         /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
         /// <playwright-it>should(not) block third party cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

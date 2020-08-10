@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click event</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickEvent()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click event properties</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickEventProperties()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click svg</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickSvg()
         {
             await Page.SetContentAsync(@"
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click on a span with an inline element inside</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickOnASpanWithAnInlineElementInside()
         {
             await Page.SetContentAsync(@"
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click after navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickAfterNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click after a cross origin navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should not fail when element is blocked on hover</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotFailWhenElementIsBlockedOnHover()
         {
             await Page.SetContentAsync(@"
@@ -128,7 +128,7 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click when node is added in shadow dom</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickWhenNodeIsAddedInShadowDom()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

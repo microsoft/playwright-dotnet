@@ -139,6 +139,27 @@ namespace PlaywrightSharp.Transport.Channels
                 },
                 true);
 
+        internal Task GrantPermissionsAsync(ContextPermission[] permissions, string origin)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "grantPermissions",
+                new Dictionary<string, object>
+                {
+                    ["permissions"] = permissions,
+                    ["origin"] = origin,
+                },
+                true);
+
+        internal Task SetGeolocationAsync(GeolocationOption geolocation)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setGeolocation",
+                new Dictionary<string, object>
+                {
+                    ["geolocation"] = geolocation,
+                },
+                true);
+
         internal Task ClearCookiesAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
     }
 }

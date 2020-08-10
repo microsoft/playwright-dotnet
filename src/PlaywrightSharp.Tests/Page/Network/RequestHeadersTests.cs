@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.headers</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);

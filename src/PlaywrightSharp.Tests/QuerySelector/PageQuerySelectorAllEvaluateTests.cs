@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$eval</playwright-describe>
         ///<playwright-it>should work with css selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$eval</playwright-describe>
         ///<playwright-it>should work with zs selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithZsSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$eval</playwright-describe>
         ///<playwright-it>should work with xpath selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithXpathSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$eval</playwright-describe>
         ///<playwright-it>should auto-detect css selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$eval</playwright-describe>
         ///<playwright-it>should support >> syntax</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<div><span>hello</span></div><div>beautiful</div><div><span>wo</span><span>rld!</span></div><span>Not this one</span>");
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$$eval</playwright-describe>
         ///<playwright-it>should enter shadow roots with >> syntax</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEnterShadowRootsWithDoubleGreaterThanSyntax()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");

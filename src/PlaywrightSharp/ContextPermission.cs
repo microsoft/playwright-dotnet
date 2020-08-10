@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <see cref="IBrowserContext.SetPermissionsAsync(string, ContextPermission[])"/>.
+    /// Options for <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/>.
     /// </summary>
     public enum ContextPermission
     {

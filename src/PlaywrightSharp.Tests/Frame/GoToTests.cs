@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should navigate subframes</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should reject when frame detaches</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should return matching responses</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
             // Disable cache: otherwise, chromium will cache similar requests.

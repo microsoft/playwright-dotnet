@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>context.cookies() should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ContextCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>context.addCookies() should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ContextAddCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>context.clearCookies() should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ContextClearCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should(not) block third party cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -167,7 +167,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support viewport option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportViewportOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support deviceScaleFactor option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support userAgent option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -230,7 +230,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support bypassCSP option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -249,7 +249,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support javascriptEnabled option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -276,7 +276,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support httpCredentials option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -299,7 +299,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support offline option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -324,7 +324,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support hasTouch option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -365,7 +365,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support colorScheme option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -383,7 +383,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support timezoneId option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -400,7 +400,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support locale option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -417,7 +417,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support geolocation and permissions options</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -444,7 +444,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support ignoreHTTPSErrors option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -462,7 +462,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support extraHTTPHeaders option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -488,7 +488,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should accept userDataDir</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAcceptUserDataDir()
         {
             var (tmp, context, _) = await LaunchAsync();
@@ -502,7 +502,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should restore state from userDataDir</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRestoreStateFromUserDataDir()
         {
             using var userDataDir = new TempDirectory();
@@ -575,7 +575,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should have default URL when launching browser</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveDefaultURLWhenLaunchingBrowser()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -629,7 +629,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should fire close event for a persistent context</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
             var (tmp, context, page) = await LaunchAsync();

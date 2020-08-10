@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 
 namespace PlaywrightSharp.Tests.Attributes
@@ -7,7 +6,7 @@ namespace PlaywrightSharp.Tests.Attributes
     /// <summary>
     /// Skip browsers and/or platforms
     /// </summary>
-    public class SkipBrowserAndPlatformFact : RetryAttribute
+    public class SkipBrowserAndPlatformFact : FactAttribute
     {
         /// <summary>
         /// Creates a new <seealso cref="SkipBrowserAndPlatformFact"/>
@@ -26,6 +25,8 @@ namespace PlaywrightSharp.Tests.Attributes
             bool skipWindows = false,
             bool skipLinux = false)
         {
+            Timeout = PlaywrightSharp.Playwright.DefaultTimeout;
+
             if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPlatform(skipOSX, skipWindows, skipLinux))
             {
                 Skip = "Skipped by browser/platform";

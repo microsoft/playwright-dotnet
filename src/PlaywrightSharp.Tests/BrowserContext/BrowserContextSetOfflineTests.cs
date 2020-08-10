@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext.setOffline</playwright-describe>
         ///<playwright-it>should work with initial option</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithInitialOption()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Offline = true });
