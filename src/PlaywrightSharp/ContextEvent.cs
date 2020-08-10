@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Context events. See <see cref="IBrowserContext.WaitForEvent{T}(ContextEvent, WaitForEventOptions{T})"/>.
+    /// Context events. See <see cref="IBrowserContext.WaitForEvent{T}(ContextEvent, System.Func{T, bool}, int?)"/>.
     /// </summary>
     public enum ContextEvent
     {

@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Enums for <see cref="IPage.WaitForEvent{T}(PageEvent, WaitForEventOptions{T})"/>.
+    /// Enums for <see cref="IPage.WaitForEvent{T}(PageEvent, System.Func{T, bool}, int?)"/>.
     /// </summary>
     public enum PageEvent
     {

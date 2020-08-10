@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should intercept</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIntercept()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work when POST is redirected with 302</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWhenPostIsRedirectedWith302()
         {
             Server.SetRedirect("/rredirect", "/empty.html");
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work when header manipulation headers with redirect</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWhenHeaderManipulationHeadersWithRedirect()
         {
             Server.SetRedirect("/rrredirect", "/empty.html");
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should be able to remove headers</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToRemoveHeaders()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should contain referer header</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldContainRefererHeader()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -126,7 +126,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should properly return navigation response when URL has cookies</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldProperlyReturnNavigationResponseWhenURLHasCookies()
         {
             // Setup cookie.
@@ -148,7 +148,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should stop intercepting</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldStopIntercepting()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should show custom HTTP headers</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldShowCustomHTTPHeaders()
         {
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
@@ -186,7 +186,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with redirect inside sync XHR</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithRedirectInsideSyncXHR()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with custom referer headers</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["Referer"] = TestConstants.EmptyPage });
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should be abortable</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbortable()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -248,7 +248,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should be abortable with custom error codes</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbortableWithCustomErrorCodes()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -277,7 +277,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should send referer</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendReferer()
         {
             await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
@@ -294,7 +294,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should fail navigation when aborting main resource</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailNavigationWhenAbortingMainResource()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -318,7 +318,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with redirects</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithRedirects()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -353,7 +353,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with redirects for subresources</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithRedirectsForSubresources()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -384,7 +384,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with equal requests</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithEqualRequests()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -418,7 +418,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should navigate to dataURL and not fire dataURL requests</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -437,7 +437,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should be able to fetch dataURL and not fire dataURL requests</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToFetchDataURLAndNotFireDataURLRequests()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -477,7 +477,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with encoded server</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithEncodedServer()
         {
             // The requestWillBeSent will report encoded URL, whereas interception will
@@ -491,7 +491,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with badly encoded server</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithBadlyEncodedServer()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -504,7 +504,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should work with encoded server - 2</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithEncodedServer2()
         {
             // The requestWillBeSent will report URL as-is, whereas interception will
@@ -525,7 +525,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should not throw "Invalid Interception Id" if the request was cancelled</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotThrowInvalidInterceptionIdIfTheRequestWasCancelled()
         {
             await Page.SetContentAsync("<iframe></iframe>");
@@ -543,7 +543,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should throw if interception is not enabled</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowIfInterceptionIsNotEnabled()
         {
             var context = await Browser.NewContextAsync();
@@ -564,7 +564,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should intercept main resource during cross-process navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldInterceptMainResourceDuringCrossProcessNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -587,7 +587,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should not throw when continued after navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotThrowWhenContinuedAfterNavigation()
         {
             await Page.SetRequestInterceptionAsync(true);
@@ -613,7 +613,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should not throw when continued after cross-process navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotThrowWhenContinuedAfterCrossProcessNavigation()
         {
             await Page.SetRequestInterceptionAsync(true);

@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should evaluate before anything else on the page</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
         {
             await Page.AddInitScriptAsync(@"function(){
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with a path</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithAPath()
         {
             await Page.AddInitScriptAsync(new AddInitScriptOptions
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with a path</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithContents()
         {
             await Page.AddInitScriptAsync(new AddInitScriptOptions { Content = @"function(){
@@ -62,14 +62,14 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should throw without path and content</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public Task ShouldThrowWithoutPathAndContent()
             => Assert.ThrowsAnyAsync<ArgumentException>(() => Page.AddInitScriptAsync(new AddInitScriptOptions { }));
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with browser context scripts</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithBrowserContextScripts()
         {
             await using var context = await Browser.NewContextAsync();
@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with browser context scripts with path</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
             await using var context = await Browser.NewContextAsync();
@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with browser context scripts for already created pages</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsForAlreadyCreatedPages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should support multiple scripts</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportMultipleScripts()
         {
             await Page.AddInitScriptAsync(@"function(){
@@ -144,7 +144,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work with CSP</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
         ///<playwright-it>should work after a cross origin navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.CrossProcessUrl);

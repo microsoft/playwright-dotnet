@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -41,14 +41,11 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with predicate</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
-            {
-                Predicate = e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png"
-            });
+            var task = Page.WaitForEvent<RequestEventArgs>(PageEvent.Request, e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (requestEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
@@ -63,35 +60,28 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
-                {
-                    Predicate = _ => false,
-                    Timeout = 1
-                }));
+                () => Page.WaitForEvent<RequestEventArgs>(PageEvent.Request, _ => false, 1));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should respect default timeout</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.DefaultTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEvent(PageEvent.Request, new WaitForEventOptions<RequestEventArgs>
-                {
-                    Predicate = _ => false
-                }));
+                () => Page.WaitForEvent<RequestEventArgs>(PageEvent.Request, _ => false));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with no timeout</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -110,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForRequest</playwright-describe>
         ///<playwright-it>should work with url match</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithUrlMatch()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

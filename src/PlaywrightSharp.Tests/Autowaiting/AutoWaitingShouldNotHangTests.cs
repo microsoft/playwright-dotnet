@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>clicking on links which do not commit navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ClickingOnLinksWhichDoNotCommitNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>calling window.stop async</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task CallingWindowStopAsync()
         {
             Server.SetRoute("/empty.html", context => Task.CompletedTask);
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>calling window.stop</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task CallingWindowStop()
         {
             Server.SetRoute("/empty.html", context => Task.CompletedTask);
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>assigning location to about:blank</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task AssigningLocationToAboutBlank()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>assigning location to about:blank after non-about:blank</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task AssigningLocationToAboutBlankAfterNonAboutBlank()
         {
             Server.SetRoute("/empty.html", context => Task.CompletedTask);
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>calling window.open and window.close</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task CallingWindowOpenAndWindowClose()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
         ///<playwright-it>opening a popup</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task OpeningAPopup()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

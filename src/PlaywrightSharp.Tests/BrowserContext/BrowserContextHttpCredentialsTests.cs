@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
         ///<playwright-it>sshould fail without credentials</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWithoutCredentials()
         {
             Server.SetAuth("/empty.html", "user", "pass");
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
         ///<playwright-it>should work with setHTTPCredentials</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithSetHTTPCredentials()
         {
             Server.SetAuth("/empty.html", "user", "pass");
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
         ///<playwright-it>should work with correct credentials</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithCorrectCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
         ///<playwright-it>should fail if wrong credentials</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailIfWrongCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
         ///<playwright-it>should return resource body</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnResourceBody()
         {
             Server.SetAuth("/playground.html", "user", "pass");

@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.$wait</playwright-describe>
         ///<playwright-it>should accept arguments</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAcceptArguments()
         {
             await Page.SetContentAsync("<div></div>");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.$wait</playwright-describe>
         ///<playwright-it>should query selector constantly</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldQuerySelectorConstantly()
         {
             await Page.SetContentAsync("<div></div>");
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.$wait</playwright-describe>
         ///<playwright-it>should be able to wait for removal</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToWaitForRemoval()
         {
             await Page.SetContentAsync("<div></div>");

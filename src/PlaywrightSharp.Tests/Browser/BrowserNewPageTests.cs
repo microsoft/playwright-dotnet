@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>browser.spec.js</playwright-file>
         ///<playwright-describe>Browser.newPage</playwright-describe>
         ///<playwright-it>should create new page</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCreateNewPage()
         {
             await using var browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests.Browser
         ///<playwright-file>browser.spec.js</playwright-file>
         ///<playwright-describe>Browser.newPage</playwright-describe>
         ///<playwright-it>should throw upon second create new page</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
             await using var browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());

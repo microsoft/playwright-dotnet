@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,7 +10,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     /// <summary>
     /// Based on <see cref="PlaywrightSharpBrowserBaseTest"/>, this calss creates a new <see cref="IBrowserContext"/>
     /// </summary>
-    public class PlaywrightSharpBrowserContextBaseTest : PlaywrightSharpBrowserBaseTest
+    public class PlaywrightSharpBrowserContextBaseTest : PlaywrightSharpBrowserBaseTest, IAsyncLifetime
     {
         internal PlaywrightSharpBrowserContextBaseTest(ITestOutputHelper output) : base(output)
         {
@@ -17,10 +19,20 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal IBrowserContext Context { get; set; }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        public override async Task InitializeAsync()
+        public virtual Task DisposeAsync() => Context.CloseAsync();
+
+        /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
+        public virtual async Task InitializeAsync()
         {
-            await base.InitializeAsync();
-            Context = await Browser.NewContextAsync();
+            try
+            {
+                Context = await Browser.NewContextAsync().WithTimeout();
+            }
+            catch (TimeoutException)
+            {
+                await PlaywrightSharpBrowserLoaderFixture.RestartAsync();
+                Context = await Browser.NewContextAsync().WithTimeout();
+            }
         }
     }
 }

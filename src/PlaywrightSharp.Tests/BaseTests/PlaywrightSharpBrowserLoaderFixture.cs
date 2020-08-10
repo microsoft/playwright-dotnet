@@ -1,32 +1,40 @@
 using System;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace PlaywrightSharp.Tests.BaseTests
 {
     /// <summary>
-    /// This [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]class setup a single browser instance for tests.
+    /// This class setup a single browser instance for tests.
     /// </summary>
-    public class PlaywrightSharpBrowserLoaderFixture : PlaywrightSharpDriverLoaderFixture
+    public class PlaywrightSharpBrowserLoaderFixture : IAsyncLifetime
     {
+        internal static IPlaywright Playwright { get; private set; }
+
         internal static IBrowser Browser { get; private set; }
 
-        /// <inheritdoc />
-        public PlaywrightSharpBrowserLoaderFixture()
-        {
-            SetupBrowserAsync().GetAwaiter().GetResult();
-        }
+        /// <inheritdoc/>
+        public Task InitializeAsync() => LaunchBrowserAsync();
 
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            Browser = null;
+        /// <inheritdoc/>
+        public Task DisposeAsync() => ShutDownAsync();
 
-            base.Dispose();
-        }
-
-        private async Task SetupBrowserAsync()
+        private static async Task LaunchBrowserAsync()
         {
+            Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
             Browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+        }
+
+        internal static async Task ShutDownAsync()
+        {
+            await Browser.CloseAsync();
+            Playwright.Dispose();
+        }
+
+        internal static async Task RestartAsync()
+        {
+            await Browser.CloseAsync();
+            await LaunchBrowserAsync();
         }
     }
 }

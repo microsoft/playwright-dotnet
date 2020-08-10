@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should query existing element with css selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldQueryExistingElementWithCssSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should query existing element with zs selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldQueryExistingElementWithZsSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should query existing element with xpath selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldQueryExistingElementWithXpathSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should return null for non-existing element</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnNullForNonExistingElement()
         {
             var element = await Page.QuerySelectorAsync("non-existing-element");
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should auto-detect xpath selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAutoDetectXpathSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should auto-detect text selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAutoDetectTextSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should auto-detect css selector</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
         ///<playwright-it>should support >> syntax</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<section><div>test</div></section>");

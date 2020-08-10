@@ -127,10 +127,18 @@ namespace PlaywrightSharp
         /// <summary>
         /// Grants permissions to an URL.
         /// </summary>
-        /// <param name="origin">The origin to grant permissions to, e.g. "https://example.com".</param>
         /// <param name="permissions">An array of permissions to grant.</param>
+        /// <param name="origin">The origin to grant permissions to, e.g. "https://example.com".</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task SetPermissionsAsync(string origin, params ContextPermission[] permissions);
+        Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null);
+
+        /// <summary>
+        /// Grants permissions to an URL.
+        /// </summary>
+        /// <param name="permission">Permission to grant.</param>
+        /// <param name="origin">The origin to grant permissions to, e.g. "https://example.com".</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task GrantPermissionsAsync(ContextPermission permission, string origin = null);
 
         /// <summary>
         /// Sets the page's geolocation.
@@ -155,10 +163,12 @@ namespace PlaywrightSharp
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for.</param>
-        /// <param name="options">Extra options.</param>
+        /// <param name="predicate">Receives the event data and resolves when the waiting should resolve.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEvent<T>(ContextEvent e, WaitForEventOptions<T> options = null);
+        Task<T> WaitForEvent<T>(ContextEvent e, Func<T, bool> predicate = null, int? timeout = null);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.

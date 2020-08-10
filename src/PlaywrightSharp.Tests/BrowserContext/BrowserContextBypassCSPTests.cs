@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP meta tag</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBypassCSPMetatag()
         {
             // Make sure CSP prohibits addScriptTag.
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP header</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBypassCSPHeader()
         {
             // Make sure CSP prohibits addScriptTag.
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass after cross-process navigation</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBypassAfterCrossProcessNavigation()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { BypassCSP = true });
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
         ///<playwright-it>should bypass CSP in iframes as well</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBypassCSPInIframesAsWell()
         {
             await using (var context = await Browser.NewContextAsync())

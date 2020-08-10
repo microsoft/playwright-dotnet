@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launchPersistent({acceptDownloads})</playwright-describe>
         ///<playwright-it>should accept downloads</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAcceptDownloads()
         {
             var downloadTask = _page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launchPersist   qent({acceptDownloads})</playwright-describe>
         ///<playwright-it>should not delete downloads when the context closes</playwright-it>
-        [Retry]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotDeleteDownloadsWhenTheContextCloses()
         {
             var downloadTask = _page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
