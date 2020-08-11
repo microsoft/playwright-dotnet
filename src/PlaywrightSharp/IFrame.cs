@@ -239,20 +239,52 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector of an element to wait for.</param>
         /// <param name="script">Function to execute when the selector is found.</param>
-        /// <param name="options">Optional waiting parameters.</param>
         /// <param name="args">Arguments to be passed.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="WaitForFunctionPollingOption.Raf"/>.</param>
+        /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        Task<IJSHandle> WaitForSelectorEvaluateAsync(string selector, string script, WaitForFunctionOptions options = null, params object[] args);
+        Task<IJSHandle> WaitForSelectorEvaluateAsync(
+            string selector,
+            string script,
+            object args,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
         /// <param name="pageFunction">Function to be evaluated in browser context.</param>
-        /// <param name="options">Wait options.</param>
-        /// <param name="args">Arguments to pass to <c>script</c>.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="WaitForFunctionPollingOption.Raf"/>.</param>
+        /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args);
+        Task<IJSHandle> WaitForFunctionAsync(
+            string pageFunction,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="args">Arguments to pass to <c>script</c>.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="WaitForFunctionPollingOption.Raf"/>.</param>
+        /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(
+            string pageFunction,
+            object args,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null);
 
         /// <summary>
         /// Queries frame for the selector. If there's no such element within the frame, the method will resolve to <c>null</c>.
@@ -437,7 +469,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
         /// <param name="text">A text to type into a focused element.</param>
-        /// <param name="options">Type options.</param>
+        /// <param name="delay">Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to 0.</param>
         /// <remarks>
         /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, int)"/>.
         /// </remarks>
@@ -448,7 +480,7 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
-        Task TypeAsync(string selector, string text, TypeOptions options = null);
+        Task TypeAsync(string selector, string text, int delay = 0);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.

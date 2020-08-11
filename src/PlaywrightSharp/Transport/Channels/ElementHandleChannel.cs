@@ -199,5 +199,25 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = options?.Timeout,
                     ["noWaitAfter"] = options?.NoWaitAfter,
                 });
+
+        internal Task TypeAsync(string text, int delay)
+            => Scope.SendMessageToServer(
+                Guid,
+                "type",
+                new Dictionary<string, object>
+                {
+                    ["text"] = text,
+                    ["delay"] = delay,
+                });
+
+        internal Task PressAsync(string key, int delay)
+            => Scope.SendMessageToServer(
+                Guid,
+                "press",
+                new Dictionary<string, object>
+                {
+                    ["key"] = key,
+                    ["delay"] = delay,
+                });
     }
 }

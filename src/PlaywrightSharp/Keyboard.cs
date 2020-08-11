@@ -19,16 +19,13 @@ namespace PlaywrightSharp
 
         public Task PressAsync(string key, int delay = 0) => _channel.PressAsync(key, delay);
 
-        public Task SendCharactersAsync(string text)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task TypeAsync(string text, int delay = 0) => _channel.TypeAsync(text, delay);
 
         Task<Modifier[]> IKeyboard.EnsureModifiersAsync(Modifier[] modifiers)
         {
             throw new System.NotImplementedException();
         }
+
+        public Task InsertTextAsync(string text) => _channel.InsertTextAsync(text);
     }
 }

@@ -116,11 +116,27 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForSelectorEvaluateAsync(
             string selector,
             string script,
-            WaitForFunctionOptions options = null,
-            params object[] args) => throw new NotImplementedException();
+            object args,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args) => throw new NotImplementedException();
+        public Task<IJSHandle> WaitForFunctionAsync(
+            string pageFunction,
+            object args,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null)
+            => WaitForFunctionAsync(false, pageFunction, args, timeout, polling, pollingInterval);
+
+        /// <inheritdoc />
+        public Task<IJSHandle> WaitForFunctionAsync(
+            string pageFunction,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null)
+            => WaitForFunctionAsync(false, pageFunction, timeout, polling, pollingInterval);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => QuerySelectorAsync(false, selector);
@@ -189,7 +205,7 @@ namespace PlaywrightSharp
         public Task HoverAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task TypeAsync(string selector, string text, TypeOptions options = null) => throw new NotImplementedException();
+        public Task TypeAsync(string selector, string text, int delay = 0) => TypeAsync(false, selector, text, delay);
 
         /// <inheritdoc />
         public Task WaitForLoadStateAsync(NavigationOptions options = null) => throw new NotImplementedException();
@@ -254,6 +270,9 @@ namespace PlaywrightSharp
         internal Task FocusAsync(bool isPageCall, string selector, int? timeout = null)
             => _channel.FocusAsync(selector, timeout, isPageCall);
 
+        internal Task TypeAsync(bool isPageCall, string selector, string text, int delay)
+            => _channel.TypeAsync(selector, text, delay, isPageCall);
+
         internal Task<string> GetAttributeAsync(bool isPageCall, string selector, string name, int? timeout = null)
             => _channel.GetAttributeAsync(selector, name, timeout, isPageCall);
 
@@ -313,6 +332,26 @@ namespace PlaywrightSharp
 
         internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
             => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false)).Object;
+
+        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
+             => (await _channel.WaitForFunctionAsync(
+                expression: expression,
+                isFunction: expression.IsJavascriptFunction(),
+                arg: EvaluateArgument.Undefined,
+                isPage: isPageCall,
+                timeout: timeout,
+                polling: polling ?? WaitForFunctionPollingOption.Raf,
+                pollingInterval: pollingInterval).ConfigureAwait(false)).Object;
+
+        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, object args, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
+             => (await _channel.WaitForFunctionAsync(
+                expression: expression,
+                isFunction: expression.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(args),
+                isPage: isPageCall,
+                timeout: timeout,
+                polling: polling ?? WaitForFunctionPollingOption.Raf,
+                pollingInterval: pollingInterval).ConfigureAwait(false)).Object;
 
         internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorOptions options)
             => (await _channel.WaitForSelector(
