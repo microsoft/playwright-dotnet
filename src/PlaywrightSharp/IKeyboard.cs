@@ -50,17 +50,17 @@ namespace PlaywrightSharp
         Task PressAsync(string key, int delay = 0);
 
         /// <summary>
-        /// Dispatches a <c>keypress</c> and <c>input</c> event. This does not send a <c>keydown</c> or <c>keyup</c> event.
-        /// </summary>
-        /// <param name="text">Character to send into the page.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SendCharactersAsync(string text);
-
-        /// <summary>
         /// Ensure click modifiers.
         /// </summary>
         /// <param name="modifiers"><see cref="Modifier"/> to check.</param>
         /// <returns>A <see cref="Task"/> that completes when the modifiers are ensure, yeilding the applied modifiers.</returns>
         internal Task<Modifier[]> EnsureModifiersAsync(Modifier[] modifiers);
+
+        /// <summary>
+        /// Dispatches only input event, does not emit the keydown, keyup or keypress events.
+        /// </summary>
+        /// <param name="text">Sets input to the specified text value.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+        Task InsertTextAsync(string text);
     }
 }

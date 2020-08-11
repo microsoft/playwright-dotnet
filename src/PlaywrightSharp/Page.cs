@@ -238,10 +238,21 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, WaitForFunctionOptions options = null, params object[] args) => throw new NotImplementedException();
+        public Task<IJSHandle> WaitForFunctionAsync(
+            string pageFunction,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null)
+            => MainFrame.WaitForFunctionAsync(true, pageFunction, timeout, polling, pollingInterval);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, params object[] args) => throw new NotImplementedException();
+        public Task<IJSHandle> WaitForFunctionAsync(
+            string pageFunction,
+            object args,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null)
+            => MainFrame.WaitForFunctionAsync(true, pageFunction, args, timeout, polling, pollingInterval);
 
         /// <inheritdoc />
         public async Task<T> WaitForEvent<T>(PageEvent e, Func<T, bool> predicate = null, int? timeout = null)
@@ -331,7 +342,7 @@ namespace PlaywrightSharp
         public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => MainFrame.FillAsync(true, selector, text, options);
 
         /// <inheritdoc />
-        public Task TypeAsync(string selector, string text, TypeOptions options = null) => throw new NotImplementedException();
+        public Task TypeAsync(string selector, string text, int delay = 0) => MainFrame.TypeAsync(true, selector, text, delay);
 
         /// <inheritdoc />
         public Task FocusAsync(string selector, int? timeout = null) => MainFrame.FocusAsync(true, selector, timeout);
@@ -379,9 +390,10 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForSelectorEvaluateAsync(
             string selector,
             string script,
-            WaitForFunctionOptions options = null,
-            params object[] args) =>
-            throw new NotImplementedException();
+            object args,
+            int? timeout = null,
+            WaitForFunctionPollingOption? polling = null,
+            int? pollingInterval = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(script);

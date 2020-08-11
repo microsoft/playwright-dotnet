@@ -75,6 +75,49 @@ namespace PlaywrightSharp.Transport.Channels
                 serializerOptions: serializerOptions);
         }
 
+        internal Task<JSHandleChannel> WaitForFunctionAsync(
+            string expression,
+            bool isFunction,
+            object arg,
+            bool isPage,
+            int? timeout,
+            WaitForFunctionPollingOption? polling,
+            int? pollingInterval,
+            bool serializeArgument = false)
+        {
+            JsonSerializerOptions serializerOptions;
+
+            if (serializeArgument)
+            {
+                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                arg = new EvaluateArgument
+                {
+                    Guids = new List<EvaluateArgumentGuidElement>(),
+                    Value = arg,
+                };
+                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
+            }
+            else
+            {
+                serializerOptions = Scope.Connection.GetDefaultJsonSerializerOptions(false);
+            }
+
+            return Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "waitForFunction",
+                new Dictionary<string, object>
+                {
+                    ["expression"] = expression,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                    ["timeout"] = timeout,
+                    ["polling"] = polling,
+                    ["pollingInterval"] = pollingInterval,
+                    ["isPage"] = isPage,
+                },
+                serializerOptions: serializerOptions);
+        }
+
         internal Task<JsonElement?> EvaluateExpressionAsync(
             string script,
             bool isFunction,
@@ -342,6 +385,18 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["selector"] = selector,
                     ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task TypeAsync(string selector, string text, int? delay, bool isPage)
+            => Scope.SendMessageToServer(
+                Guid,
+                "type",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["text"] = text,
+                    ["delay"] = delay,
                     ["isPage"] = isPage,
                 });
 

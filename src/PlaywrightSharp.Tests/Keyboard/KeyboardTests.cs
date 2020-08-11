@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Dynamic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,8 +12,7 @@ namespace PlaywrightSharp.Tests.Keyboard
     ///<playwright-file>keyboard.spec.js</playwright-file>
     ///<playwright-describe>Keyboard</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class KeyboardTests : PlaywrightSharpPageBaseTest
+    public class KeyboardTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public KeyboardTests(ITestOutputHelper output) : base(output)
@@ -93,35 +92,45 @@ namespace PlaywrightSharp.Tests.Keyboard
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
-        ///<playwright-it>ElementHandle.press should support |text| option</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
-        public async Task ElementHandlePressShouldSupportTextOption()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            var textarea = await Page.QuerySelectorAsync("textarea");
-            //await textarea.PressAsync("a", new PressOptions { Text = "ё" });
-            Assert.Equal("ё", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
-        }
-
-        ///<playwright-file>keyboard.spec.js</playwright-file>
-        ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should send a character with sendCharacter</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendACharacterWithSendCharacter()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FocusAsync("textarea");
-            await Page.Keyboard.SendCharactersAsync("嗨");
+            await Page.Keyboard.InsertTextAsync("嗨");
             Assert.Equal("嗨", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
             await Page.EvaluateAsync<string>("() => window.addEventListener('keydown', e => e.preventDefault(), true)");
-            await Page.Keyboard.SendCharactersAsync("a");
+            await Page.Keyboard.InsertTextAsync("a");
             Assert.Equal("嗨a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>insertText should only emit input event</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task InsertTextShouldOnlyEmitInputEvent()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.FocusAsync("textarea");
+
+            var events = await Page.EvaluateHandleAsync(@"() => {
+                const events = [];
+                document.addEventListener('keydown', e => events.push(e.type));
+                document.addEventListener('keyup', e => events.push(e.type));
+                document.addEventListener('keypress', e => events.push(e.type));
+                document.addEventListener('input', e => events.push(e.type));
+                return events;
+            }");
+
+            await Page.Keyboard.InsertTextAsync("hello world");
+            Assert.Equal(new[] { "input" }, await events.GetJsonValueAsync<string[]>());
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should report shiftKey</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipOSX: true)]
         public async Task ShouldReportShiftKey()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
@@ -233,26 +242,136 @@ namespace PlaywrightSharp.Tests.Keyboard
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
         ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should press plus</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldPressPlus()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.Keyboard.PressAsync("+");
+            Assert.Equal(
+                string.Join(
+                    "\n",
+                    new[]
+                    {
+                        "Keydown: + Equal 187 []", // 192 is ` keyCode
+                        "Keypress: + Equal 43 43 []", // 126 is ~ charCode
+                        "Keyup: + Equal 187 []"
+                    }),
+                await Page.EvaluateAsync<string>("() => getResult()"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should press shift plus</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldPressShiftPlus()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.Keyboard.PressAsync("Shift++");
+            Assert.Equal(
+                string.Join(
+                    "\n",
+                    new[]
+                    {
+                        "Keydown: Shift ShiftLeft 16 [Shift]",
+                        "Keydown: + Equal 187 [Shift]", // 192 is ` keyCode
+                        "Keypress: + Equal 43 43 [Shift]", // 126 is ~ charCode
+                        "Keyup: + Equal 187 [Shift]",
+                        "Keyup: Shift ShiftLeft 16 []"
+                    }),
+                await Page.EvaluateAsync<string>("() => getResult()"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should support plus-separated modifiers</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSupportPlusSeparatedModifiers()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.Keyboard.PressAsync("Shift+~");
+            Assert.Equal(
+                string.Join(
+                    "\n",
+                    new[]
+                    {
+                        "Keydown: Shift ShiftLeft 16 [Shift]",
+                        "Keydown: ~ Backquote 192 [Shift]", // 192 is ` keyCode
+                        "Keypress: ~ Backquote 126 126 [Shift]", // 126 is ~ charCode
+                        "Keyup: ~ Backquote 192 [Shift]",
+                        "Keyup: Shift ShiftLeft 16 []"
+                    }),
+                await Page.EvaluateAsync<string>("() => getResult()"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should support multiple plus-separated modifiers</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSupportMultiplePlusSeparatedModifiers()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.Keyboard.PressAsync("Control+Shift+~");
+            Assert.Equal(
+                string.Join(
+                    "\n",
+                    new[]
+                    {
+                        "Keydown: Control ControlLeft 17 [Control]",
+                        "Keydown: Shift ShiftLeft 16 [Control Shift]",
+                        "Keydown: ~ Backquote 192 [Control Shift]", // 192 is ` keyCode
+                        "Keyup: ~ Backquote 192 [Control Shift]",
+                        "Keyup: Shift ShiftLeft 16 [Control]",
+                        "Keyup: Control ControlLeft 17 []"
+                    }),
+                await Page.EvaluateAsync<string>("() => getResult()"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should shift raw codes</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldShiftRawCodes()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.Keyboard.PressAsync("Shift+Digit3");
+            Assert.Equal(
+                string.Join(
+                    "\n",
+                    new[]
+                    {
+                        "Keydown: Shift ShiftLeft 16 [Shift]",
+                        "Keydown: # Digit3 51 [Shift]", // 51 is # keyCode
+                        "Keypress: # Digit3 35 35 [Shift]", // 35 is # charCode
+                        "Keyup: # Digit3 51 [Shift]",
+                        "Keyup: Shift ShiftLeft 16 []"
+                    }),
+                await Page.EvaluateAsync<string>("() => getResult()"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
         ///<playwright-it>should specify repeat property</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSpecifyRepeatProperty()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FocusAsync("textarea");
+            var lastEvent = await CaptureLastKeydownAsync(Page);
             await Page.EvaluateAsync("() => document.querySelector('textarea').addEventListener('keydown', e => window.lastEvent = e, true)");
             await Page.Keyboard.DownAsync("a");
-            Assert.False(await Page.EvaluateAsync<bool>("() => window.lastEvent.repeat"));
+            Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
             await Page.Keyboard.PressAsync("a");
-            Assert.True(await Page.EvaluateAsync<bool>("() => window.lastEvent.repeat"));
+            Assert.True(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
 
             await Page.Keyboard.DownAsync("b");
-            Assert.False(await Page.EvaluateAsync<bool>("() => window.lastEvent.repeat"));
+            Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
             await Page.Keyboard.DownAsync("b");
-            Assert.True(await Page.EvaluateAsync<bool>("() => window.lastEvent.repeat"));
+            Assert.True(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
 
             await Page.Keyboard.UpAsync("a");
             await Page.Keyboard.DownAsync("a");
-            Assert.False(await Page.EvaluateAsync<bool>("() => window.lastEvent.repeat"));
+            Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -275,22 +394,48 @@ namespace PlaywrightSharp.Tests.Keyboard
         public async Task ShouldSpecifyLocation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.EvaluateAsync<string>(@"() => {
-                window.addEventListener('keydown', event => window.keyLocation = event.location, true);
-            }");
+            var lastEventHandle = await CaptureLastKeydownAsync(Page);
             var textarea = await Page.QuerySelectorAsync("textarea");
 
             await textarea.PressAsync("Digit5");
-            Assert.Equal(0, await Page.EvaluateAsync<int>("keyLocation"));
+            Assert.Equal(0, await lastEventHandle.EvaluateAsync<int>("e => e.location"));
 
             await textarea.PressAsync("ControlLeft");
-            Assert.Equal(1, await Page.EvaluateAsync<int>("keyLocation"));
+            Assert.Equal(1, await lastEventHandle.EvaluateAsync<int>("e => e.location"));
 
             await textarea.PressAsync("ControlRight");
-            Assert.Equal(2, await Page.EvaluateAsync<int>("keyLocation"));
+            Assert.Equal(2, await lastEventHandle.EvaluateAsync<int>("e => e.location"));
 
             await textarea.PressAsync("NumpadSubtract");
-            Assert.Equal(3, await Page.EvaluateAsync<int>("keyLocation"));
+            Assert.Equal(3, await lastEventHandle.EvaluateAsync<int>("e => e.location"));
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should press Enter</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldPressEnter()
+        {
+            await Page.SetContentAsync("<textarea></textarea>");
+            await Page.FocusAsync("textarea");
+            var lastEventHandle = await CaptureLastKeydownAsync(Page);
+
+            await TestEnterKeyAsync("Enter", "Enter", "Enter");
+            await TestEnterKeyAsync("NumpadEnter", "Enter", "NumpadEnter");
+            await TestEnterKeyAsync("\n", "Enter", "Enter");
+            await TestEnterKeyAsync("\r", "Enter", "Enter");
+
+            async Task TestEnterKeyAsync(string key, string expectedKey, string expectedCode)
+            {
+                await Page.Keyboard.PressAsync(key);
+                dynamic lastEvent = await lastEventHandle.GetJsonValueAsync<ExpandoObject>();
+                Assert.Equal(expectedKey, lastEvent.key);
+                Assert.Equal(expectedCode, lastEvent.code);
+
+                string value = await Page.QuerySelectorEvaluateAsync<string>("textarea", "t => t.value");
+                Assert.Equal("\n", value);
+                await Page.QuerySelectorEvaluateAsync("textarea", "t => t.value = ''");
+            }
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -380,17 +525,12 @@ namespace PlaywrightSharp.Tests.Keyboard
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPressTheMetaKey2()
         {
-            await Page.EvaluateAsync<string>(@"() => {
-                window.result = null;
-                document.addEventListener('keydown', event => {
-                    window.result = [event.key, event.code, event.metaKey];
-                });
-            }");
+            var lastEventHandle = await CaptureLastKeydownAsync(Page);
             await Page.Keyboard.PressAsync("Meta");
-            object[] result = await Page.EvaluateAsync<object[]>("result");
-            string key = result[0].ToString();
-            string code = result[1].ToString();
-            bool metaKey = ((JsonElement)result[2]).GetBoolean();
+            dynamic result = await lastEventHandle.GetJsonValueAsync<ExpandoObject>();
+            string key = result.key;
+            string code = result.code;
+            bool metaKey = result.metaKey;
 
             if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
             {
@@ -428,11 +568,71 @@ namespace PlaywrightSharp.Tests.Keyboard
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
-            await Page.EvaluateAsync<string>(@"() => {
-                document.addEventListener('keydown', event => window.lastKey = event);
-            }");
+            var lastEventHandle = await CaptureLastKeydownAsync(Page);
             await Page.Keyboard.PressAsync("a");
-            Assert.Equal("a", await Page.EvaluateAsync<string>("lastKey.key"));
+            dynamic result = await lastEventHandle.GetJsonValueAsync<ExpandoObject>();
+            Assert.Equal("a", result.key);
         }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should expose keyIdentifier in webkit</playwright-it>
+        [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
+        public async Task ShouldExposeKeyIdentifierInWebkit()
+        {
+            var lastEventHandle = await CaptureLastKeydownAsync(Page);
+            var keyMap = new Dictionary<string, string>
+            {
+                ["ArrowUp"] = "Up",
+                ["ArrowDown"] = "Down",
+                ["ArrowLeft"] = "Left",
+                ["ArrowRight"] = "Right",
+                ["Backspace"] = "U+0008",
+                ["Tab"] = "U+0009",
+                ["Delete"] = "U+007F",
+                ["a"] = "U+0041",
+                ["b"] = "U+0042",
+                ["F12"] = "F12",
+            };
+
+            foreach (var kv in keyMap)
+            {
+                await Page.Keyboard.PressAsync(kv.Key);
+                Assert.Equal(kv.Value, await lastEventHandle.EvaluateAsync<string>("e => e.keyIdentifier"));
+            }
+        }
+
+        ///<playwright-file>keyboard.spec.js</playwright-file>
+        ///<playwright-describe>Keyboard</playwright-describe>
+        ///<playwright-it>should scroll with PageDown</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldScrollWithPageDown()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.ClickAsync("body");
+            await Page.Keyboard.PressAsync("PageDown");
+            await Page.WaitForFunctionAsync("() => scrollY > 0");
+        }
+
+        private Task<IJSHandle> CaptureLastKeydownAsync(IPage page)
+            => page.EvaluateHandleAsync(@"() => {
+                const lastEvent = {
+                  repeat: false,
+                  location: -1,
+                  code: '',
+                  key: '',
+                  metaKey: false,
+                  keyIdentifier: 'unsupported'
+                };
+                document.addEventListener('keydown', e => {
+                  lastEvent.repeat = e.repeat;
+                  lastEvent.location = e.location;
+                  lastEvent.key = e.key;
+                  lastEvent.code = e.code;
+                  lastEvent.metaKey = e.metaKey;
+                  lastEvent.keyIdentifier = 'keyIdentifier' in e && e.keyIdentifier;
+                }, true);
+                return lastEvent;
+            }");
     }
 }
