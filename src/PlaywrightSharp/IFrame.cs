@@ -1,5 +1,5 @@
+using System.IO;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -481,6 +481,50 @@ namespace PlaywrightSharp
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
         Task TypeAsync(string selector, string text, int delay = 0);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="file">The file path.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(string selector, string file);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="files">File paths.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(string selector, string[] files);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="file">The file payload.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(string selector, FilePayload file);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
+        /// <param name="files">File payloads.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(string selector, FilePayload[] files);
 
         /// <summary>
         /// Completes when the page reaches a required load state, load by default.

@@ -246,14 +246,44 @@ namespace PlaywrightSharp
         Task DoubleClickAsync(ClickOptions options = null);
 
         /// <summary>
-        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="filePath"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
-        /// <param name="filePath">The file paths or files.</param>
+        /// <param name="file">The file path.</param>
         /// <remarks>
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(params string[] filePath);
+        Task SetInputFilesAsync(string file);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="files">File paths.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(string[] files);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="file">The file payload.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(FilePayload file);
+
+        /// <summary>
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// </summary>
+        /// <param name="files">File payloads.</param>
+        /// <remarks>
+        /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
+        Task SetInputFilesAsync(FilePayload[] files);
 
         /// <summary>
         /// The method runs <c>document.querySelector</c> within the element. If no element matches the selector, the return value resolve to <c>null</c>.

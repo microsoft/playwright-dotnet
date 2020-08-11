@@ -1,7 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,8 +9,7 @@ namespace PlaywrightSharp.Tests.Input
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>input</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class InputTests : PlaywrightSharpPageBaseTest
+    public class InputTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public InputTests(ITestOutputHelper output) : base(output)

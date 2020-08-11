@@ -181,7 +181,7 @@ namespace PlaywrightSharp.Tests.Input
                 return picker.files.length;
             }"));
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
-                .ContinueWith(task => task.Result.Element.SetInputFilesAsync());
+                .ContinueWith(task => task.Result.Element.SetInputFilesAsync(new string[] { }));
             Assert.Equal(0, await Page.QuerySelectorEvaluateAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
@@ -200,10 +200,11 @@ namespace PlaywrightSharp.Tests.Input
                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
                Page.ClickAsync("input")
             );
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => fileChooser.Element.SetInputFilesAsync(
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => fileChooser.Element.SetInputFilesAsync(new string[]
+            {
                 TestUtils.GetWebServerFile(TestConstants.FileToUpload),
-                TestUtils.GetWebServerFile("pptr.png"))
-            );
+                TestUtils.GetWebServerFile("pptr.png"),
+            }));
         }
     }
 }

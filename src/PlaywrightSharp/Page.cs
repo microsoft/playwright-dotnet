@@ -342,6 +342,18 @@ namespace PlaywrightSharp
         public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => MainFrame.FillAsync(true, selector, text, options);
 
         /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, string file) => SetInputFilesAsync(selector, new[] { file });
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, string[] files) => MainFrame.SetInputFilesAsync(true, selector, files);
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, FilePayload file) => SetInputFilesAsync(selector, new[] { file });
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, FilePayload[] files) => MainFrame.SetInputFilesAsync(true, selector, files);
+
+        /// <inheritdoc />
         public Task TypeAsync(string selector, string text, int delay = 0) => MainFrame.TypeAsync(true, selector, text, delay);
 
         /// <inheritdoc />
