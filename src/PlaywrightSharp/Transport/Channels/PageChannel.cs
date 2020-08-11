@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetViewportSizeAsync(ViewportSize viewport)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "setViewportSize",
                 new Dictionary<string, object>
@@ -167,7 +167,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task KeyboardDownAsync(string key)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "keyboardDown",
                 new Dictionary<string, object>
@@ -176,10 +176,10 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task EmulateMediaAsync(Dictionary<string, object> args)
-            => Scope.SendMessageToServer<SerializedAXNode>(Guid, "emulateMedia", args);
+            => Scope.SendMessageToServer(Guid, "emulateMedia", args);
 
         internal Task KeyboardUpAsync(string key)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "keyboardUp",
                 new Dictionary<string, object>
@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task TypeAsync(string text, int delay)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "keyboardType",
                 new Dictionary<string, object>
@@ -198,7 +198,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task PressAsync(string key, int delay)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "keyboardPress",
                 new Dictionary<string, object>
@@ -207,8 +207,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["delay"] = delay,
                 });
 
+        internal Task InsertTextAsync(string text)
+            => Scope.SendMessageToServer(
+                Guid,
+                "keyboardInsertText",
+                new Dictionary<string, object>
+                {
+                    ["text"] = text,
+                });
+
         internal Task MouseDownAsync(MouseButton button, int clickCount)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "mouseDown",
                 new Dictionary<string, object>
@@ -218,7 +227,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseMoveAsync(double x, double y, int? steps)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "mouseMove",
                 new Dictionary<string, object>
@@ -229,7 +238,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseUpAsync(MouseButton button, int clickCount)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "mouseUp",
                 new Dictionary<string, object>
@@ -239,7 +248,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseClickAsync(double x, double y, int delay, MouseButton button, int clickCount)
-            => Scope.SendMessageToServer<SerializedAXNode>(
+            => Scope.SendMessageToServer(
                 Guid,
                 "mouseClick",
                 new Dictionary<string, object>

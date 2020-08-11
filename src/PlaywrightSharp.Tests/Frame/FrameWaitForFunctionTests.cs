@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Frame
         public FrameWaitForFunctionTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForFunction</playwright-describe>
         ///<playwright-it>should accept a string</playwright-it>
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.Frame
                     return false;
                 }
                 return Date.now() - window.__startTime;
-            }", new WaitForFunctionOptions { PollingInterval = polling });
+            }", polling: polling);
             int value = (await timeDelta.GetJsonValueAsync<int>());
 
             Assert.True(value >= polling);
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             bool success = false;
             var watchdog = Page.WaitForFunctionAsync("() => window.__FOO === 'hit'",
-                new WaitForFunctionOptions { Polling = WaitForFunctionPollingOption.Mutation })
+                polling: WaitForFunctionPollingOption.Mutation)
                 .ContinueWith(_ => success = true);
             await Page.EvaluateAsync("window.__FOO = 'hit'");
             Assert.False(success);
@@ -227,5 +227,6 @@ namespace PlaywrightSharp.Tests.Frame
             await Page.EvaluateAsync("() => window.__done = true");
             await watchdog;
         }
+        */
     }
 }
