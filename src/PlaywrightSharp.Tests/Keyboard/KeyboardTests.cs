@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
-            await textarea.PressAsync("a", new PressOptions { Text = "ё" });
+            //await textarea.PressAsync("a", new PressOptions { Text = "ё" });
             Assert.Equal("ё", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 

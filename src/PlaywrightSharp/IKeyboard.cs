@@ -41,13 +41,13 @@ namespace PlaywrightSharp
         /// Shortcut for <see cref="DownAsync(string)"/> and <see cref="UpAsync(string)"/>.
         /// </summary>
         /// <param name="key">Name of key to press, such as <c>ArrowLeft</c>. <see cref="KeyDefinitions"/> for a list of all key names.</param>
-        /// <param name="options">press options.</param>
+        /// <param name="delay">Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to 0.</param>
         /// <remarks>
         /// If <paramref name="key"/> is a single character and no modifier keys besides <c>Shift</c> are being held down, a <c>keypress</c>/<c>input</c> event will also generated. The <see cref="DownOptions.Text"/> option can be specified to force an input event to be generated.
-        /// Modifier keys DO effect <see cref="IElementHandle.PressAsync(string, PressOptions)"/>. Holding down <c>Shift</c> will type the text in upper case.
+        /// Modifier keys DO effect <see cref="IElementHandle.PressAsync(string, int)"/>. Holding down <c>Shift</c> will type the text in upper case.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task PressAsync(string key, PressOptions options = null);
+        Task PressAsync(string key, int delay = 0);
 
         /// <summary>
         /// Dispatches a <c>keypress</c> and <c>input</c> event. This does not send a <c>keydown</c> or <c>keyup</c> event.

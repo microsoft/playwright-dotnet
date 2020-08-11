@@ -17,10 +17,7 @@ namespace PlaywrightSharp
 
         public Task UpAsync(string key) => _channel.KeyboardUpAsync(key);
 
-        public Task PressAsync(string key, PressOptions options = null)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task PressAsync(string key, int delay = 0) => _channel.PressAsync(key, delay);
 
         public Task SendCharactersAsync(string text)
         {

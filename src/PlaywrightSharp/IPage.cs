@@ -623,7 +623,7 @@ namespace PlaywrightSharp
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="options">Type options.</param>
         /// <remarks>
-        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, PressOptions)"/>.
+        /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, int)"/>.
         /// </remarks>
         /// <example>
         /// <code>

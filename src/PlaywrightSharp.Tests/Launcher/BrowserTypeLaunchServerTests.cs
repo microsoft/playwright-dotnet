@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Launcher
             browserServer.Closed += (server, e) => closedTcs.TrySetResult(true);
             _ = browserServer.KillAsync();
 
-            await TaskUtils.WhenAll(disconnectedTcs.Task, closedTcs.Task).WithTimeout();
+            await TaskUtils.WhenAll(disconnectedTcs.Task, closedTcs.Task);
         }
 
         ///<playwright-file>launcher.spec.js</playwright-file>

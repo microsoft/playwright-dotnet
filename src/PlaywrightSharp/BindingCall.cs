@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -39,14 +40,22 @@ namespace PlaywrightSharp
             {
                 const string taskResultPropertyName = "Result";
                 var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).Skip(1).ToArray();
-                object[] args = _initializer.Args.Select((arg, _) => arg.ToObject(methodParams[0], _scope.Connection.GetDefaultJsonSerializerOptions())).ToArray();
-
-                object result = binding.DynamicInvoke(args.Prepend(new BindingSource
+                var args = new List<object>
                 {
-                    Context = _initializer.Frame.Page.Context,
-                    Page = _initializer.Frame.Page,
-                    Frame = _initializer.Frame,
-                }).ToArray());
+                    new BindingSource
+                    {
+                        Context = _initializer.Frame.Page.Context,
+                        Page = _initializer.Frame.Page,
+                        Frame = _initializer.Frame,
+                    },
+                };
+
+                for (int i = 0; i < methodParams.Length; i++)
+                {
+                    args.Add(_initializer.Args[i].ToObject(methodParams[i], _scope.Connection.GetDefaultJsonSerializerOptions()));
+                }
+
+                object result = binding.DynamicInvoke(args.ToArray());
 
                 if (result is Task taskResult)
                 {
