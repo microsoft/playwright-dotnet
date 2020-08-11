@@ -367,6 +367,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task SetInputFilesAsync(string selector, FilePayload[] files, bool isPage)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "setInputFiles",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["files"] = files,
+                    ["isPage"] = isPage,
+                });
+
         internal Task<string> GetTextContentAsync(string selector, int? timeout, bool isPage)
             => Scope.SendMessageToServer<string>(
                 Guid,

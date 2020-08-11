@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -82,7 +83,16 @@ namespace PlaywrightSharp
         public Task DoubleClickAsync(ClickOptions options = null) => _channel.DoubleClickAsync(options ?? new ClickOptions());
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(params string[] filePath) => throw new NotImplementedException();
+        public Task SetInputFilesAsync(string file) => SetInputFilesAsync(new[] { file });
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string[] files) => _channel.SetInputFilesAsync(files.Select(f => f.ToFilePayload()).ToArray());
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(FilePayload file) => SetInputFilesAsync(new[] { file });
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(FilePayload[] files) => _channel.SetInputFilesAsync(files);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => throw new NotImplementedException();

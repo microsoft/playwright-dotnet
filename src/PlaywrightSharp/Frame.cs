@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -173,6 +174,18 @@ namespace PlaywrightSharp
         public Task FocusAsync(string selector, int? timeout = null) => FocusAsync(false, selector, timeout);
 
         /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, string file) => SetInputFilesAsync(selector, new[] { file });
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, string[] files) => SetInputFilesAsync(false, selector, files);
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, FilePayload file) => SetInputFilesAsync(selector, new[] { file });
+
+        /// <inheritdoc />
+        public Task SetInputFilesAsync(string selector, FilePayload[] files) => SetInputFilesAsync(false, selector, files);
+
+        /// <inheritdoc />
         public Task HoverAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
@@ -279,6 +292,12 @@ namespace PlaywrightSharp
             => (await _channel.AddScriptTagAsync(
                 options: options,
                 isPage: isPageCall).ConfigureAwait(false)).Object;
+
+        internal Task SetInputFilesAsync(bool isPageCall, string selector, string[] files)
+            => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToFilePayload()).ToArray(), isPageCall);
+
+        internal Task SetInputFilesAsync(bool isPageCall, string selector, FilePayload[] files)
+            => _channel.SetInputFilesAsync(selector, files, isPageCall);
 
         internal Task ClickAsync(bool isPageCall, string selector, ClickOptions options)
             => _channel.ClickAsync(selector, options, isPageCall);

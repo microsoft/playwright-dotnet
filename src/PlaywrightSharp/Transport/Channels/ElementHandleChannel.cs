@@ -101,6 +101,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
+        internal Task SetInputFilesAsync(FilePayload[] files)
+            => Scope.SendMessageToServer<string>(
+                Guid,
+                "setInputFiles",
+                new Dictionary<string, object>
+                {
+                    ["files"] = files,
+                });
+
         internal Task<string> GetAttributeAsync(string name, int? timeout)
             => Scope.SendMessageToServer<string>(
                 Guid,
