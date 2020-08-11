@@ -54,7 +54,11 @@ namespace PlaywrightSharp
             _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
             _channel.Console += (sender, e) => Console?.Invoke(this, e);
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
-            _channel.FileChooser += (sender, e) => _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
+            _channel.FileChooser += (sender, e) =>
+            {
+                _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
+                FileChooser -= _fileChooserEventHandler;
+            };
         }
 
         /// <inheritdoc />
