@@ -25,7 +25,10 @@ namespace PlaywrightSharp
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
+        private readonly object _fileChooserEventLock = new object();
+
         private List<RouteSetting> _routes = new List<RouteSetting>();
+        private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -51,6 +54,7 @@ namespace PlaywrightSharp
             _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
             _channel.Console += (sender, e) => Console?.Invoke(this, e);
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
+            _channel.FileChooser += (sender, e) => _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
         }
 
         /// <inheritdoc />
@@ -84,7 +88,26 @@ namespace PlaywrightSharp
         public event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <inheritdoc />
-        public event EventHandler<FileChooserEventArgs> FileChooser;
+        public event EventHandler<FileChooserEventArgs> FileChooser
+        {
+            add
+            {
+                lock (_fileChooserEventLock)
+                {
+                    _fileChooserEventHandler += value;
+                    _ = _channel.SetFileChooserInterceptedNoReplyAsync(true);
+                }
+            }
+
+            remove
+            {
+                lock (_fileChooserEventLock)
+                {
+                    _fileChooserEventHandler -= value;
+                    _ = _channel.SetFileChooserInterceptedNoReplyAsync(false);
+                }
+            }
+        }
 
         /// <inheritdoc />
         public event EventHandler<EventArgs> Load;

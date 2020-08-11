@@ -15,7 +15,7 @@ namespace PlaywrightSharp
         public FileChooserEventArgs(IElementHandle element, bool multiple)
         {
             Element = element;
-            Multiple = multiple;
+            IsMultiple = multiple;
         }
 
         /// <summary>
@@ -27,6 +27,6 @@ namespace PlaywrightSharp
         /// Whether file chooser allow for multiple file selection.
         /// </summary>
         /// <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#attr-multiple"/>
-        public bool Multiple { get; set; }
+        public bool IsMultiple { get; set; }
     }
 }
