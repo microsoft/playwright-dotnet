@@ -29,6 +29,8 @@ namespace PlaywrightSharp.Transport
 
         public event EventHandler<TransportClosedEventArgs> TransportClosed;
 
+        public bool IsClosed { get; private set; }
+
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -39,8 +41,12 @@ namespace PlaywrightSharp.Transport
         /// <inheritdoc/>
         public void Close(string closeReason)
         {
-            TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
-            _readerCancellationSource.Cancel();
+            if (!IsClosed)
+            {
+                IsClosed = true;
+                TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
+                _readerCancellationSource.Cancel();
+            }
         }
 
         public async Task SendAsync(string message)

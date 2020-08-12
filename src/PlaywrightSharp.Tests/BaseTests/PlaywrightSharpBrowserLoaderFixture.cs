@@ -27,8 +27,16 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static async Task ShutDownAsync()
         {
-            await Browser.CloseAsync();
-            Playwright.Dispose();
+            try
+            {
+                await Browser.CloseAsync();
+                Playwright.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("Shutdown failed", ex);
+            }
         }
 
         internal static async Task RestartAsync()

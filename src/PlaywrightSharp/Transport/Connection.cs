@@ -240,14 +240,14 @@ namespace PlaywrightSharp.Transport
         {
             if (!IsClosed)
             {
-                IsClosed = true;
                 foreach (var callback in _callbacks)
                 {
                     callback.Value.TrySetException(new TargetClosedException(reason));
                 }
-            }
 
-            Dispose();
+                Dispose();
+                IsClosed = true;
+            }
         }
 
         private Exception CreateException(PlaywrightServerError error)
@@ -283,8 +283,15 @@ namespace PlaywrightSharp.Transport
             }
 
             _transport.Close("Connection closed");
-            _playwrightServerProcess?.Kill();
-            _playwrightServerProcess?.Dispose();
+
+            try
+            {
+                _playwrightServerProcess?.Kill();
+                _playwrightServerProcess?.Dispose();
+            }
+            catch
+            {
+            }
         }
     }
 }
