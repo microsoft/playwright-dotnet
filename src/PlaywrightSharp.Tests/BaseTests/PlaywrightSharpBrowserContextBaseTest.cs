@@ -19,12 +19,15 @@ namespace PlaywrightSharp.Tests.BaseTests
         internal IBrowserContext Context { get; set; }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        public virtual Task DisposeAsync() => Context.CloseAsync();
+        public virtual async Task DisposeAsync()
+        {
+            await Context.CloseAsync();
+        }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public virtual async Task InitializeAsync()
         {
-            Context = await Browser.NewContextAsync().WithTimeout(5_000);
+            Context = await Browser.NewContextAsync();
         }
     }
 }

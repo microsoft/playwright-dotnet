@@ -25,6 +25,7 @@ namespace PlaywrightSharp.Transport
         private readonly IConnectionTransport _transport;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<Connection> _logger;
+        private readonly TaskQueue _queue = new TaskQueue();
         private int _lastId;
 
         public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
@@ -130,19 +131,23 @@ namespace PlaywrightSharp.Transport
             }
 
             int id = Interlocked.Increment(ref _lastId);
-            var message = new MessageRequest
+
+            await _queue.Enqueue(() =>
             {
-                Id = id,
-                Guid = guid,
-                Method = method,
-                Params = args,
-            };
+                var message = new MessageRequest
+                {
+                    Id = id,
+                    Guid = guid,
+                    Method = method,
+                    Params = args,
+                };
 
-            string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
-            Debug.WriteLine($"pw:channel:command {messageString}");
-            _logger?.LogInformation($"pw:channel:command {messageString}");
+                string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
+                Debug.WriteLine($"pw:channel:command {messageString}");
+                _logger?.LogInformation($"pw:channel:command {messageString}");
 
-            await _transport.SendAsync(messageString).ConfigureAwait(false);
+                return _transport.SendAsync(messageString);
+            }).ConfigureAwait(false);
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
@@ -287,6 +292,7 @@ namespace PlaywrightSharp.Transport
                 return;
             }
 
+            _queue.Dispose();
             _transport.Close("Connection closed");
 
             try
