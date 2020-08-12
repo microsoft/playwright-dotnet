@@ -34,14 +34,18 @@ namespace PlaywrightSharp.Transport
             _playwrightServerProcess = GetProcess();
 
             _playwrightServerProcess.Start();
+            _playwrightServerProcess.Exited += (sender, e) => CloseAsync("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
+            _transport.TransportClosed += (sender, e) => CloseAsync(e.CloseReason);
             _loggerFactory = loggerFactory;
             _logger = _loggerFactory?.CreateLogger<Connection>();
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Connection() => Dispose(false);
+
+        public bool IsClosed { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -234,9 +238,13 @@ namespace PlaywrightSharp.Transport
 
         private void CloseAsync(string reason)
         {
-            foreach (var callback in _callbacks)
+            if (!IsClosed)
             {
-                callback.Value.TrySetException(new TargetClosedException(reason));
+                IsClosed = true;
+                foreach (var callback in _callbacks)
+                {
+                    callback.Value.TrySetException(new TargetClosedException(reason));
+                }
             }
 
             Dispose();
@@ -274,7 +282,7 @@ namespace PlaywrightSharp.Transport
                 return;
             }
 
-            _transport.Close();
+            _transport.Close("Connection closed");
             _playwrightServerProcess?.Kill();
             _playwrightServerProcess?.Dispose();
         }
