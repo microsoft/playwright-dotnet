@@ -23,8 +23,10 @@ namespace PlaywrightSharp.Tests.Input
         public async Task ShouldWorkForSingleFilePick()
         {
             await Page.SetContentAsync("<input type=file>");
+            var waitTask = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser);
+
             var fileChooser = await TaskUtils.WhenAll(
-               Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
+               waitTask,
                Page.ClickAsync("input")
             );
             Assert.False(fileChooser.IsMultiple);

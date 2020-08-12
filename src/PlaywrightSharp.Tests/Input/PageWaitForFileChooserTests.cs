@@ -96,8 +96,7 @@ namespace PlaywrightSharp.Tests.Input
         public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
             Page.DefaultTimeout = 0;
-            await Assert.ThrowsAsync<TimeoutException>(()
-                => Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser, timeout: 1));
+            await Assert.ThrowsAsync<TimeoutException>(() => Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser, timeout: 1));
         }
 
         ///<playwright-file>input.spec.js</playwright-file>
