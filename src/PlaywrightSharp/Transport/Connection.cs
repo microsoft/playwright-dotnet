@@ -124,6 +124,11 @@ namespace PlaywrightSharp.Transport
             bool ignoreNullValues = false,
             JsonSerializerOptions options = null)
         {
+            if (IsClosed)
+            {
+                throw new PlaywrightSharpException("Connection closed");
+            }
+
             int id = Interlocked.Increment(ref _lastId);
             var message = new MessageRequest
             {
