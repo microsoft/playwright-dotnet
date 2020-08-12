@@ -239,10 +239,10 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(false, options);
+        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(true, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => MainFrame.WaitForNavigationAsync(false, waitUntil);
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => MainFrame.WaitForNavigationAsync(true, waitUntil);
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -435,10 +435,10 @@ namespace PlaywrightSharp
             int? pollingInterval = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(script);
+        public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(true, script);
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(script, args);
+        public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(true, script, args);
 
         /// <inheritdoc />
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();
