@@ -137,7 +137,7 @@ namespace PlaywrightSharp.Transport
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
-            var result = await tcs.Task.ConfigureAwait(false);
+            var result = await tcs.Task.WithTimeout(Playwright.DefaultTimeout).ConfigureAwait(false);
 
             if (typeof(T) == typeof(JsonElement?))
             {
