@@ -120,16 +120,9 @@ namespace PlaywrightSharp.Tests.Input
         ///<playwright-file>input.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForFileChooser</playwright-describe>
         ///<playwright-it>should return the same file chooser when there are many watchdogs simultaneously</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously()
+        [Fact(Skip = "We are not going to support this yet")]
+        public void ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously()
         {
-            await Page.SetContentAsync("<input type=file>");
-            var (fileChooser1, fileChooser2) = await TaskUtils.WhenAll(
-                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
-                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
-                Page.QuerySelectorEvaluateAsync("input", "input => input.click()")
-            );
-            Assert.Equal(fileChooser1, fileChooser2);
         }
 
         ///<playwright-file>input.spec.js</playwright-file>

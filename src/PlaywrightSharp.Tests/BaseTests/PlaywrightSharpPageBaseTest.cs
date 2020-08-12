@@ -23,13 +23,6 @@ namespace PlaywrightSharp.Tests.BaseTests
             Page = await Context.NewPageAsync();
         }
 
-        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
-        public override async Task DisposeAsync()
-        {
-            await Page.CloseAsync();
-            await base.DisposeAsync();
-        }
-
         /// <summary>
         /// Wait for an error event.
         /// </summary>
