@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Input
     ///<playwright-file>input.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForFileChooser isMultiple</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageWaitForFileChooserIsMultipleTests : PlaywrightSharpPageBaseTest
+    public class PageWaitForFileChooserIsMultipleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageWaitForFileChooserIsMultipleTests(ITestOutputHelper output) : base(output)
@@ -24,11 +23,13 @@ namespace PlaywrightSharp.Tests.Input
         public async Task ShouldWorkForSingleFilePick()
         {
             await Page.SetContentAsync("<input type=file>");
+            var waitTask = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser);
+
             var fileChooser = await TaskUtils.WhenAll(
-               Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
+               waitTask,
                Page.ClickAsync("input")
             );
-            Assert.False(fileChooser.Multiple);
+            Assert.False(fileChooser.IsMultiple);
         }
 
         ///<playwright-file>input.spec.js</playwright-file>
@@ -42,7 +43,7 @@ namespace PlaywrightSharp.Tests.Input
                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
                Page.ClickAsync("input")
             );
-            Assert.True(fileChooser.Multiple);
+            Assert.True(fileChooser.IsMultiple);
         }
 
         ///<playwright-file>input.spec.js</playwright-file>
@@ -56,7 +57,7 @@ namespace PlaywrightSharp.Tests.Input
                Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
                Page.ClickAsync("input")
             );
-            Assert.True(fileChooser.Multiple);
+            Assert.True(fileChooser.IsMultiple);
         }
     }
 }

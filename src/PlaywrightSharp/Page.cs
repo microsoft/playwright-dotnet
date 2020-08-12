@@ -27,7 +27,11 @@ namespace PlaywrightSharp
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
+        private readonly object _fileChooserEventLock = new object();
+
         private List<RouteSetting> _routes = new List<RouteSetting>();
+        private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
+        private bool _fileChooserIntercepted;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -53,6 +57,10 @@ namespace PlaywrightSharp
             _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
             _channel.Console += (sender, e) => Console?.Invoke(this, e);
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
+            _channel.FileChooser += (sender, e) =>
+            {
+                _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
+            };
         }
 
         /// <inheritdoc />
@@ -86,7 +94,32 @@ namespace PlaywrightSharp
         public event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <inheritdoc />
-        public event EventHandler<FileChooserEventArgs> FileChooser;
+        public event EventHandler<FileChooserEventArgs> FileChooser
+        {
+            add
+            {
+                lock (_fileChooserEventLock)
+                {
+                    _fileChooserEventHandler += value;
+                    _fileChooserIntercepted = true;
+                    _ = _channel.SetFileChooserInterceptedNoReplyAsync(true);
+                }
+            }
+
+            remove
+            {
+                lock (_fileChooserEventLock)
+                {
+                    _fileChooserEventHandler -= value;
+
+                    if (_fileChooserIntercepted)
+                    {
+                        _fileChooserIntercepted = false;
+                        _ = _channel.SetFileChooserInterceptedNoReplyAsync(false);
+                    }
+                }
+            }
+        }
 
         /// <inheritdoc />
         public event EventHandler<EventArgs> Load;
@@ -214,10 +247,10 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(false, options);
+        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(true, options);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => MainFrame.WaitForNavigationAsync(false, waitUntil);
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => MainFrame.WaitForNavigationAsync(true, waitUntil);
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -266,8 +299,8 @@ namespace PlaywrightSharp
             {
                 if (predicate == null || predicate(e))
                 {
-                    eventTsc.TrySetResult(e);
                     info.RemoveEventHandler(this, (EventHandler<T>)PageEventHandler);
+                    eventTsc.TrySetResult(e);
                 }
             }
 
@@ -415,10 +448,10 @@ namespace PlaywrightSharp
             int? pollingInterval = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(script);
+        public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(true, script);
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(script, args);
+        public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(true, script, args);
 
         /// <inheritdoc />
         public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();

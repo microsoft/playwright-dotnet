@@ -27,6 +27,10 @@ namespace PlaywrightSharp.Transport
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
+        public event EventHandler<TransportClosedEventArgs> TransportClosed;
+
+        public bool IsClosed { get; private set; }
+
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -35,23 +39,38 @@ namespace PlaywrightSharp.Transport
         }
 
         /// <inheritdoc/>
-        public void Close() => _readerCancellationSource.Cancel();
+        public void Close(string closeReason)
+        {
+            if (!IsClosed)
+            {
+                IsClosed = true;
+                TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
+                _readerCancellationSource.Cancel();
+            }
+        }
 
         public async Task SendAsync(string message)
         {
-            if (!_readerCancellationSource.IsCancellationRequested)
+            try
             {
-                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message.ToCharArray());
-                int len = bytes.Length;
-                byte[] ll = new byte[4];
-                ll[0] = (byte)(len & 0xFF);
-                ll[1] = (byte)((len >> 8) & 0xFF);
-                ll[2] = (byte)((len >> 16) & 0xFF);
-                ll[3] = (byte)((len >> 24) & 0xFF);
+                if (!_readerCancellationSource.IsCancellationRequested)
+                {
+                    byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message.ToCharArray());
+                    int len = bytes.Length;
+                    byte[] ll = new byte[4];
+                    ll[0] = (byte)(len & 0xFF);
+                    ll[1] = (byte)((len >> 8) & 0xFF);
+                    ll[2] = (byte)((len >> 16) & 0xFF);
+                    ll[3] = (byte)((len >> 24) & 0xFF);
 
-                await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
-                await _process.StandardInput.BaseStream.WriteAsync(bytes, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
-                await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
+                    await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
+                    await _process.StandardInput.BaseStream.WriteAsync(bytes, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
+                    await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Close(ex.ToString());
             }
         }
 
@@ -74,19 +93,26 @@ namespace PlaywrightSharp.Transport
 
         private async Task GetResponseAsync(CancellationToken token)
         {
-            var stream = _process.StandardOutput;
-            byte[] buffer = new byte[DefaultBufferSize];
-
-            while (!token.IsCancellationRequested && !_process.HasExited)
+            try
             {
-                int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
+                var stream = _process.StandardOutput;
+                byte[] buffer = new byte[DefaultBufferSize];
 
-                if (!token.IsCancellationRequested)
+                while (!token.IsCancellationRequested && !_process.HasExited)
                 {
-                    _data.AddRange(buffer.AsMemory().Slice(0, read).ToArray());
+                    int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
 
-                    ProcessStream(token);
+                    if (!token.IsCancellationRequested)
+                    {
+                        _data.AddRange(buffer.AsMemory().Slice(0, read).ToArray());
+
+                        ProcessStream(token);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Close(ex.ToString());
             }
         }
 

@@ -14,6 +14,11 @@ namespace PlaywrightSharp.Transport
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         /// <summary>
+        /// Occurs when the transport is closed.
+        /// </summary>
+        event EventHandler<TransportClosedEventArgs> TransportClosed;
+
+        /// <summary>
         /// Sends a message using the transport.
         /// </summary>
         /// <returns>The task.</returns>
@@ -23,6 +28,7 @@ namespace PlaywrightSharp.Transport
         /// <summary>
         /// Closes the connection.
         /// </summary>
-        void Close();
+        /// <param name="closeReason">Close reason.</param>
+        void Close(string closeReason);
     }
 }

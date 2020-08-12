@@ -25,6 +25,7 @@ namespace PlaywrightSharp.Transport
         private readonly IConnectionTransport _transport;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<Connection> _logger;
+        private readonly TaskQueue _queue = new TaskQueue();
         private int _lastId;
 
         public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
@@ -34,14 +35,18 @@ namespace PlaywrightSharp.Transport
             _playwrightServerProcess = GetProcess();
 
             _playwrightServerProcess.Start();
+            _playwrightServerProcess.Exited += (sender, e) => CloseAsync("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
+            _transport.TransportClosed += (sender, e) => CloseAsync(e.CloseReason);
             _loggerFactory = loggerFactory;
             _logger = _loggerFactory?.CreateLogger<Connection>();
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Connection() => Dispose(false);
+
+        public bool IsClosed { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -120,24 +125,33 @@ namespace PlaywrightSharp.Transport
             bool ignoreNullValues = false,
             JsonSerializerOptions options = null)
         {
-            int id = Interlocked.Increment(ref _lastId);
-            var message = new MessageRequest
+            if (IsClosed)
             {
-                Id = id,
-                Guid = guid,
-                Method = method,
-                Params = args,
-            };
+                throw new PlaywrightSharpException("Connection closed");
+            }
 
-            string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
-            Debug.WriteLine($"pw:channel:command {messageString}");
-            _logger?.LogInformation($"pw:channel:command {messageString}");
+            int id = Interlocked.Increment(ref _lastId);
 
-            await _transport.SendAsync(messageString).ConfigureAwait(false);
+            await _queue.Enqueue(() =>
+            {
+                var message = new MessageRequest
+                {
+                    Id = id,
+                    Guid = guid,
+                    Method = method,
+                    Params = args,
+                };
+
+                string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
+                Debug.WriteLine($"pw:channel:command {messageString}");
+                _logger?.LogInformation($"pw:channel:command {messageString}");
+
+                return _transport.SendAsync(messageString);
+            }).ConfigureAwait(false);
 
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _callbacks.TryAdd(id, tcs);
-            var result = await tcs.Task.ConfigureAwait(false);
+            var result = await tcs.Task.WithTimeout(Playwright.DefaultTimeout).ConfigureAwait(false);
 
             if (typeof(T) == typeof(JsonElement?))
             {
@@ -234,12 +248,16 @@ namespace PlaywrightSharp.Transport
 
         private void CloseAsync(string reason)
         {
-            foreach (var callback in _callbacks)
+            if (!IsClosed)
             {
-                callback.Value.TrySetException(new TargetClosedException(reason));
-            }
+                foreach (var callback in _callbacks)
+                {
+                    callback.Value.TrySetException(new TargetClosedException(reason));
+                }
 
-            Dispose();
+                Dispose();
+                IsClosed = true;
+            }
         }
 
         private Exception CreateException(PlaywrightServerError error)
@@ -274,9 +292,17 @@ namespace PlaywrightSharp.Transport
                 return;
             }
 
-            _transport.Close();
-            _playwrightServerProcess?.Kill();
-            _playwrightServerProcess?.Dispose();
+            _queue.Dispose();
+            _transport.Close("Connection closed");
+
+            try
+            {
+                _playwrightServerProcess?.Kill();
+                _playwrightServerProcess?.Dispose();
+            }
+            catch
+            {
+            }
         }
     }
 }

@@ -37,6 +37,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<DownloadEventArgs> Download;
 
+        internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
@@ -70,6 +72,9 @@ namespace PlaywrightSharp.Transport.Channels
                         Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                     });
                     break;
+                case "fileChooser":
+                    FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    break;
                 case "frameAttached":
                     FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
@@ -93,6 +98,15 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
             }
         }
+
+        internal Task SetFileChooserInterceptedNoReplyAsync(bool intercepted)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setFileChooserInterceptedNoReply",
+                new Dictionary<string, object>
+                {
+                    ["intercepted"] = intercepted,
+                });
 
         internal Task CloseAsync(PageCloseOptions options)
             => Scope.SendMessageToServer(
