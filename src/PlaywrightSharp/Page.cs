@@ -29,6 +29,7 @@ namespace PlaywrightSharp
 
         private List<RouteSetting> _routes = new List<RouteSetting>();
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
+        private bool _fileChooserIntercepted;
 
         internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
         {
@@ -57,6 +58,7 @@ namespace PlaywrightSharp
             _channel.FileChooser += (sender, e) =>
             {
                 _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
+                FileChooser -= _fileChooserEventHandler;
             };
         }
 
@@ -98,6 +100,7 @@ namespace PlaywrightSharp
                 lock (_fileChooserEventLock)
                 {
                     _fileChooserEventHandler += value;
+                    _fileChooserIntercepted = true;
                     _ = _channel.SetFileChooserInterceptedNoReplyAsync(true);
                 }
             }
@@ -107,7 +110,12 @@ namespace PlaywrightSharp
                 lock (_fileChooserEventLock)
                 {
                     _fileChooserEventHandler -= value;
-                    _ = _channel.SetFileChooserInterceptedNoReplyAsync(false);
+
+                    if (_fileChooserIntercepted)
+                    {
+                        _fileChooserIntercepted = false;
+                        _ = _channel.SetFileChooserInterceptedNoReplyAsync(false);
+                    }
                 }
             }
         }
@@ -290,8 +298,8 @@ namespace PlaywrightSharp
             {
                 if (predicate == null || predicate(e))
                 {
-                    eventTsc.TrySetResult(e);
                     info.RemoveEventHandler(this, (EventHandler<T>)PageEventHandler);
+                    eventTsc.TrySetResult(e);
                 }
             }
 
