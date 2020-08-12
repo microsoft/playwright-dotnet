@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp
 {
@@ -706,9 +708,18 @@ namespace PlaywrightSharp
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="Mouse"/> to hover over the center of the element.
         /// </summary>
         /// <param name="selector">A selector to search for element to hover. If there are multiple elements satisfying the selector, the first will be hovered.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="position">A point to hover relative to the top-left corner of element padding box. If not specified, hovers over some visible point of the element.</param>
+        /// <param name="modifiers">Modifier keys to press. Ensures that only these modifiers are pressed during the hover, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</param>
+        /// <param name="force">Whether to bypass the actionability checks. Defaults to false.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully hovered.</returns>
-        Task HoverAsync(string selector, WaitForSelectorOptions options = null);
+        Task HoverAsync(
+            string selector,
+            Point? position = null,
+            Modifier[] modifiers = null,
+            bool force = false,
+            int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all, unselecting all the selected elements.

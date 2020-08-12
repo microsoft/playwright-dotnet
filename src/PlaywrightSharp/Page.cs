@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -360,7 +362,12 @@ namespace PlaywrightSharp
         public Task FocusAsync(string selector, int? timeout = null) => MainFrame.FocusAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task HoverAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task HoverAsync(
+            string selector,
+            Point? position = null,
+            Modifier[] modifiers = null,
+            bool force = false,
+            int? timeout = null) => MainFrame.HoverAsync(true, selector, position, modifiers, force, timeout);
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();

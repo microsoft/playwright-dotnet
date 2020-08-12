@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Transport.Converters
         public override void Write(Utf8JsonWriter writer, EvaluateArgument value, JsonSerializerOptions options)
         {
             var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
-            serializerOptions.Converters.Add(new EvaluateArgumentValueConverter(value));
+            serializerOptions.Converters.Add(new EvaluateArgumentValueConverter<object>(value));
 
             writer.WriteStartObject();
             writer.WritePropertyName("value");

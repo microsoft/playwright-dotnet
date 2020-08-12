@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -361,6 +363,20 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                     ["type"] = type,
                     ["eventInit"] = eventInit,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
+        internal Task HoverAsync(string selector, Point? position, Modifier[] modifiers, bool force, int? timeout, bool isPage)
+            => Scope.SendMessageToServer(
+                Guid,
+                "hover",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["position"] = position,
+                    ["modifiers"] = modifiers,
+                    ["force"] = force,
                     ["timeout"] = timeout,
                     ["isPage"] = isPage,
                 });
