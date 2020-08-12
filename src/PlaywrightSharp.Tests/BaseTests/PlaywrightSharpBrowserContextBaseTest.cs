@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public virtual async Task InitializeAsync()
         {
-            Context = await Browser.NewContextAsync().WithTimeout();
+            Context = await Browser.NewContextAsync().WithTimeout(5_000);
         }
     }
 }
