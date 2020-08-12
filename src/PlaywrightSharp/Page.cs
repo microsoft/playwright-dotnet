@@ -57,7 +57,6 @@ namespace PlaywrightSharp
             _channel.FileChooser += (sender, e) =>
             {
                 _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
-                FileChooser -= _fileChooserEventHandler;
             };
         }
 
