@@ -23,7 +23,7 @@ namespace PlaywrightSharp
 
         public Task DownAsync(MouseButton button = MouseButton.Left, int clickCount = 1) => _channel.MouseDownAsync(button, clickCount);
 
-        public Task MoveAsync(double x, double y, int? steps = null) => _channel.MouseMoveAsync(x, y, steps);
+        public Task MoveAsync(double x, double y, int? steps = 1) => _channel.MouseMoveAsync(x, y, steps);
 
         public Task UpAsync(MouseButton button = MouseButton.Left, int clickCount = 1) => _channel.MouseUpAsync(button, clickCount);
 

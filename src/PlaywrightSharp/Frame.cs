@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -202,7 +204,12 @@ namespace PlaywrightSharp
         public Task SetInputFilesAsync(string selector, FilePayload[] files) => SetInputFilesAsync(false, selector, files);
 
         /// <inheritdoc />
-        public Task HoverAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task HoverAsync(
+            string selector,
+            Point? position = null,
+            Modifier[] modifiers = null,
+            bool force = false,
+            int? timeout = null) => HoverAsync(false, selector, position, modifiers, force, timeout);
 
         /// <inheritdoc />
         public Task TypeAsync(string selector, string text, int delay = 0) => TypeAsync(false, selector, text, delay);
@@ -284,6 +291,9 @@ namespace PlaywrightSharp
 
         internal Task<string> GetTextContentAsync(bool isPageCall, string selector, int? timeout = null)
             => _channel.GetTextContentAsync(selector, timeout, isPageCall);
+
+        internal Task HoverAsync(bool isPageCall, string selector, Point? position, Modifier[] modifiers, bool force, int? timeout)
+            => _channel.HoverAsync(selector, position, modifiers, force, timeout, isPageCall);
 
         internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, int? timeout = null)
             => _channel.DispatchEventAsync(

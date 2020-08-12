@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -11,18 +12,17 @@ namespace PlaywrightSharp.Tests.Mouse
     ///<playwright-file>mouse.spec.js</playwright-file>
     ///<playwright-describe>Mouse</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class MouseTests : PlaywrightSharpPageBaseTest
+    public class MouseTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public MouseTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should click the document</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWindows: true)]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Tests.Mouse
                     window.result.push([event.clientX, event.clientY]);
                 });
             }");
-            await Page.Mouse.MoveAsync(200, 300, new MoveOptions { Steps = 5 });
+            await Page.Mouse.MoveAsync(200, 300, steps: 5);
             Assert.Equal(
                 new[]
                 {
@@ -174,22 +174,27 @@ namespace PlaywrightSharp.Tests.Mouse
         ///<playwright-file>mouse.spec.js</playwright-file>
         ///<playwright-describe>Mouse</playwright-describe>
         ///<playwright-it>should work with mobile viewports and cross process navigations</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.SetViewportAsync(new Viewport { Width = 360, Height = 640, IsMobile = true });
-            await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/mobile.html");
-            await Page.EvaluateAsync(@"() => {
+            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = new ViewportSize { Width = 360, Height = 640 },
+                IsMobile = true,
+            });
+            var page = await context.NewPageAsync();
+            await page.GoToAsync(TestConstants.EmptyPage);
+
+            await page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/mobile.html");
+            await page.EvaluateAsync(@"() => {
                 document.addEventListener('click', event => {
                     window.result = { x: event.clientX, y: event.clientY };
                 });
             }");
-            await Page.Mouse.ClickAsync(30, 40);
-            var result = await Page.EvaluateAsync<JsonElement>("result");
+            await page.Mouse.ClickAsync(30, 40);
+            var result = await page.EvaluateAsync<JsonElement>("result");
             Assert.Equal(30, result.GetProperty("x").GetInt32());
             Assert.Equal(40, result.GetProperty("y").GetInt32());
         }
-        */
     }
 }

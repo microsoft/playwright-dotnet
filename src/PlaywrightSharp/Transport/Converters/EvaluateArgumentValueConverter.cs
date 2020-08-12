@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using PlaywrightSharp.Helpers;
@@ -8,9 +10,13 @@ using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport.Converters
 {
-    internal class EvaluateArgumentValueConverter : JsonConverter<object>
+    internal class EvaluateArgumentValueConverter<T> : JsonConverter<T>
     {
         private readonly EvaluateArgument _parentObject;
+
+        public EvaluateArgumentValueConverter()
+        {
+        }
 
         internal EvaluateArgumentValueConverter(EvaluateArgument parentObject)
         {
@@ -19,12 +25,15 @@ namespace PlaywrightSharp.Transport.Converters
 
         public override bool CanConvert(Type type) => true;
 
-        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            using JsonDocument document = JsonDocument.ParseValue(ref reader);
+            var result = document.RootElement;
+
+            return (T)ParseEvaluateResult(result, typeof(T), options);
         }
 
-        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             if (value == null)
             {
@@ -156,5 +165,131 @@ namespace PlaywrightSharp.Transport.Converters
             type == typeof(decimal?) ||
             type == typeof(double?) ||
             type == typeof(bool?);
+
+        private static object ParseEvaluateResult(JsonElement result, Type t, JsonSerializerOptions options)
+        {
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("v", out var value))
+            {
+                if (value.ValueKind == JsonValueKind.Null)
+                {
+                    return GetDefaultValue(t);
+                }
+
+                return value.ToString() switch
+                {
+                    "undefined" => GetDefaultValue(t),
+                    "Infinity" => double.PositiveInfinity,
+                    "-Infinity" => double.NegativeInfinity,
+                    "-0" => -0d,
+                    "NaN" => double.NaN,
+                    _ => value.ToObject(t),
+                };
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("d", out var date))
+            {
+                return date.ToObject<DateTime>();
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
+            {
+                if (t == typeof(ExpandoObject) || t == typeof(object))
+                {
+                    return ReadObject(obj, options);
+                }
+
+                return obj.ToObject(t);
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)
+            {
+                return GetDefaultValue(t);
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("a", out var array) && array.ValueKind == JsonValueKind.Array)
+            {
+                if (t == typeof(ExpandoObject) || t == typeof(object))
+                {
+                    return ReadList(array, options);
+                }
+
+                return array.ToObject(t, options);
+            }
+
+            if (t == typeof(JsonElement?))
+            {
+                return result;
+            }
+
+            if (result.ValueKind == JsonValueKind.Array)
+            {
+                var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                serializerOptions.Converters.Add(GetNewConverter(t.GetElementType()));
+
+                var resultArray = new ArrayList();
+                foreach (var item in result.EnumerateArray())
+                {
+                    resultArray.Add(ParseEvaluateResult(item, t.GetElementType(), serializerOptions));
+                }
+
+                var destinationArray = Array.CreateInstance(t.GetElementType(), resultArray.Count);
+                Array.Copy(resultArray.ToArray(), destinationArray, resultArray.Count);
+
+                return destinationArray;
+            }
+
+            return result.ToObject(t);
+        }
+
+        private static object GetDefaultValue(Type t)
+        {
+            if (t.IsValueType)
+            {
+                return Activator.CreateInstance(t);
+            }
+
+            return null;
+        }
+
+        private static JsonConverter GetNewConverter(Type type)
+        {
+            var converter = typeof(EvaluateArgumentValueConverter<>);
+            Type[] typeArgs = { type };
+            var makeme = converter.MakeGenericType(typeArgs);
+            return (JsonConverter)Activator.CreateInstance(makeme);
+        }
+
+        private static Type ValueKindToType(JsonElement element)
+            => element.ValueKind switch
+            {
+                JsonValueKind.Array => typeof(Array),
+                JsonValueKind.String => typeof(string),
+                JsonValueKind.Number => decimal.Truncate(element.ToObject<decimal>()) != element.ToObject<decimal>() ? typeof(decimal) : typeof(int),
+                JsonValueKind.True => typeof(bool),
+                JsonValueKind.False => typeof(bool),
+                _ => typeof(object),
+            };
+
+        private static object ReadList(JsonElement jsonElement, JsonSerializerOptions options)
+        {
+            IList<object> list = new List<object>();
+            foreach (var item in jsonElement.EnumerateArray())
+            {
+                list.Add(ParseEvaluateResult(item, ValueKindToType(item), options));
+            }
+
+            return list.Count == 0 ? null : list;
+        }
+
+        private static object ReadObject(JsonElement jsonElement, JsonSerializerOptions options)
+        {
+            IDictionary<string, object> expandoObject = new ExpandoObject();
+            foreach (var obj in jsonElement.EnumerateObject())
+            {
+                expandoObject[obj.Name] = ParseEvaluateResult(obj.Value, ValueKindToType(obj.Value), options);
+            }
+
+            return expandoObject;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
+using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp
 {
@@ -40,77 +41,10 @@ namespace PlaywrightSharp
 
         internal static T ParseEvaluateResult<T>(JsonElement? result)
         {
-            object parsed = ParseEvaluateResult(result, typeof(T));
+            var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+            serializerOptions.Converters.Add(new EvaluateArgumentValueConverter<T>(null));
 
-            if (parsed == null)
-            {
-                return default;
-            }
-
-            return (T)parsed;
-        }
-
-        internal static object ParseEvaluateResult(JsonElement? result, Type t)
-        {
-            if (!result.HasValue)
-            {
-                return null;
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var value))
-            {
-                if (value.ValueKind == JsonValueKind.Null)
-                {
-                    return default;
-                }
-
-                return value.ToString() switch
-                {
-                    "undefined" => default,
-                    "Infinity" => double.PositiveInfinity,
-                    "-Infinity" => double.NegativeInfinity,
-                    "-0" => -0d,
-                    "NaN" => double.NaN,
-                    _ => value.ToObject(t),
-                };
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("d", out var date))
-            {
-                return date.ToObject<DateTime>();
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("o", out var obj))
-            {
-                if (t == typeof(ExpandoObject) || t == typeof(object))
-                {
-                    return ReadObject(obj);
-                }
-
-                return obj.ToObject(t);
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)
-            {
-                return default;
-            }
-
-            if (result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty("a", out var array) && array.ValueKind == JsonValueKind.Array)
-            {
-                if (t == typeof(ExpandoObject) || t == typeof(object))
-                {
-                    return ReadList(array);
-                }
-
-                return array.ToObject(t);
-            }
-
-            if (t == typeof(JsonElement?))
-            {
-                return result;
-            }
-
-            return result.Value.ToObject(t);
+            return result == null ? default : result.Value.ToObject<T>(serializerOptions);
         }
 
         internal static EvaluateArgument SerializedArgument(object args)
@@ -241,39 +175,6 @@ namespace PlaywrightSharp
             }
 
             throw new ArgumentException("Either path or content property must be present");
-        }
-
-        private static object ReadObject(JsonElement jsonElement)
-        {
-            IDictionary<string, object> expandoObject = new ExpandoObject();
-            foreach (var obj in jsonElement.EnumerateObject())
-            {
-                expandoObject[obj.Name] = ParseEvaluateResult(obj.Value, ValueKindToType(obj.Value));
-            }
-
-            return expandoObject;
-        }
-
-        private static Type ValueKindToType(JsonElement element)
-            => element.ValueKind switch
-            {
-                JsonValueKind.Array => typeof(Array),
-                JsonValueKind.String => typeof(string),
-                JsonValueKind.Number => decimal.Truncate(element.ToObject<decimal>()) != element.ToObject<decimal>() ? typeof(decimal) : typeof(int),
-                JsonValueKind.True => typeof(bool),
-                JsonValueKind.False => typeof(bool),
-                _ => typeof(object),
-            };
-
-        private static object ReadList(JsonElement jsonElement)
-        {
-            IList<object> list = new List<object>();
-            foreach (var item in jsonElement.EnumerateArray())
-            {
-                list.Add(ParseEvaluateResult(item, ValueKindToType(item)));
-            }
-
-            return list.Count == 0 ? null : list;
         }
     }
 }

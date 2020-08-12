@@ -15,7 +15,7 @@ namespace PlaywrightSharp
         /// <param name="y">Y coordinate.</param>
         /// <param name="steps">Sends intermediate mousemove events.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task MoveAsync(double x, double y, int? steps = null);
+        Task MoveAsync(double x, double y, int? steps = 1);
 
         /// <summary>
         /// Shortcut for <see cref="MoveAsync(double, double, int?)"/>, <see cref="DownAsync(MouseButton, int)"/> and <see cref="UpAsync(MouseButton, int)"/>.
