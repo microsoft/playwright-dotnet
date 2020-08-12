@@ -402,7 +402,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>click.spec.js</playwright-file>
         ///<playwright-describe>Page.click</playwright-describe>
         ///<playwright-it>should scroll and click the button</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Flacky")]
         public async Task ShouldScrollAndClickTheButton()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
