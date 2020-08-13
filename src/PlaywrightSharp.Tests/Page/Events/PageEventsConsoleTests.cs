@@ -2,9 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,14 +11,13 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Console</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
+    public class PageEventsConsoleTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEventsConsoleTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -35,14 +32,28 @@ namespace PlaywrightSharp.Tests.Page.Events
             }
             Page.Console += EventHandler;
             await TaskUtils.WhenAll(
-                Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"),
-                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
-            );
+                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console),
+                Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
+
             Assert.Equal("hello 5 JSHandle@object", message.Text);
-            Assert.Equal(ConsoleType.Log, message.Type);
+            Assert.Equal("log", message.Type);
             Assert.Equal("hello", await message.Args.ElementAt(0).GetJsonValueAsync<string>());
             Assert.Equal(5, await message.Args.ElementAt(1).GetJsonValueAsync<int>());
             Assert.Equal("bar", (await message.Args.ElementAt(2).GetJsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.Events.Console</playwright-describe>
+        ///<playwright-it>should emit same log twice</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldEmitSameLogTwice()
+        {
+            var messages = new List<string>();
+
+            Page.Console += (object sender, ConsoleEventArgs e) => messages.Add(e.Message.Text);
+            await Page.EvaluateAsync("() => { for (let i = 0; i < 2; ++i ) console.log('hello'); } ");
+
+            Assert.Equal(new[] { "hello", "hello" }, messages.ToArray());
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -64,7 +75,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 console.error('calling console.error');
                 console.log(Promise.resolve('should not wait until resolved!'));
             }");
-            Assert.Equal(new[] { ConsoleType.TimeEnd, ConsoleType.Trace, ConsoleType.Dir, ConsoleType.Warning, ConsoleType.Error, ConsoleType.Log }, messages.Select(msg => msg.Type));
+            Assert.Equal(new[] { "timeEnd", "trace", "dir", "warning", "error", "log" }, messages.Select(msg => msg.Type));
             Assert.Contains("calling console.time", messages[0].Text);
             Assert.Equal(new[]
             {
@@ -108,7 +119,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
             );
             Assert.Contains("Access-Control-Allow-Origin", messageEvent.Message.Text);
-            Assert.Equal(ConsoleType.Error, messageEvent.Message.Type);
+            Assert.Equal("error", messageEvent.Message.Type);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -123,7 +134,7 @@ namespace PlaywrightSharp.Tests.Page.Events
                 Page.GoToAsync(TestConstants.ServerUrl + "/consolelog.html")
             );
             Assert.Equal("yellow", messageEvent.Message.Text);
-            Assert.Equal(ConsoleType.Log, messageEvent.Message.Type);
+            Assert.Equal("log", messageEvent.Message.Type);
             var location = messageEvent.Message.Location;
             // Engines have different column notion.
             location.ColumnNumber = null;
@@ -137,31 +148,29 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Console</playwright-describe>
         ///<playwright-it>should not throw when there are console messages in detached iframes</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.EvaluateAsync(@"async () =>
-            {
-                // 1. Create a popup that Playwright is not connected to.
-                var win = window.open(window.location.href, 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0');
-                while (window.document.readyState !== 'complete')
+            var (popup, _) = await TaskUtils.WhenAll(
+                Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
+                Page.EvaluateAsync<bool>(@"async () =>
                 {
-                    await new Promise(f => setTimeout(f, 100));
-                }
-                // 2. In this popup, create an iframe that console.logs a message.
-                win.document.body.innerHTML = `<iframe src='/consolelog.html'></iframe>`;
-                var frame = win.document.querySelector('iframe');
-                while (frame.contentDocument.readyState !== 'complete')
-                {
-                    await new Promise(f => setTimeout(f, 100));
-                }
-                // 3. After that, remove the iframe.
-                frame.remove();
-            }");
+                    // 1. Create a popup that Playwright is not connected to.
+                    const win = window.open('');
+                    window._popup = win;
+                    if (window.document.readyState !== 'complete')
+                      await new Promise(f => window.addEventListener('load', f));
+                    // 2. In this popup, create an iframe that console.logs a message.
+                    win.document.body.innerHTML = `<iframe src='/consolelog.html'></iframe>`;
+                    const frame = win.document.querySelector('iframe');
+                    if (!frame.contentDocument || frame.contentDocument.readyState !== 'complete')
+                      await new Promise(f => frame.addEventListener('load', f));
+                    // 3. After that, remove the iframe.
+                    frame.remove();
+                }"));
             // 4. Connect to the popup and make sure it doesn't throw.
-            //await Page.BrowserContext.GetPagesAsync();
+            Assert.Equal(2, await popup.Page.EvaluateAsync<int>("1 + 1"));
         }
-        */
     }
 }
