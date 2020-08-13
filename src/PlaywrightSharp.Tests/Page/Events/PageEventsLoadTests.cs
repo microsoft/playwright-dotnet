@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.Page.Events
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.Events.Load</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageEventsLoadTests : PlaywrightSharpPageBaseTest
+    public class PageEventsLoadTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageEventsLoadTests(ITestOutputHelper output) : base(output)
@@ -25,8 +24,8 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldFireWhenExpected()
         {
             await TaskUtils.WhenAll(
-                Page.GoToAsync("about:blank"),
-                Page.WaitForEvent<EventArgs>(PageEvent.Load)
+                Page.WaitForEvent<EventArgs>(PageEvent.Load),
+                Page.GoToAsync("about:blank")
             );
         }
     }
