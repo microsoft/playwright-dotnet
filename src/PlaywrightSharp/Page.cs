@@ -158,7 +158,7 @@ namespace PlaywrightSharp
         IChannel<Page> IChannelOwner<Page>.Channel => _channel;
 
         /// <inheritdoc />
-        public bool IsClosed { get; }
+        public bool IsClosed { get; private set; }
 
         /// <inheritdoc />
         IFrame IPage.MainFrame => MainFrame;
@@ -675,6 +675,7 @@ namespace PlaywrightSharp
 
         private void Channel_Closed(object sender, EventArgs e)
         {
+            IsClosed = true;
             BrowserContext?.PagesList.Remove(this);
             RejectPendingOperations(false);
             Closed?.Invoke(this, EventArgs.Empty);
