@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
@@ -11,8 +12,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class JSHandleJsonValueTests : PlaywrightSharpPageBaseTest
+    public class JSHandleJsonValueTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSHandleJsonValueTests(ITestOutputHelper output) : base(output)
@@ -32,13 +32,13 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
 
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
-        ///<playwright-it>should not work with dates</playwright-it>
+        ///<playwright-it>should work with dates</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldNotWorkWithDates()
+        public async Task ShouldWorkWithDates()
         {
             var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
-            object json = await dateHandle.GetJsonValueAsync<object>();
-            Assert.Equal("{}", json.ToJson());
+            var json = await dateHandle.GetJsonValueAsync<DateTime>();
+            Assert.Equal(2017, json.Year);
         }
 
         ///<playwright-file>jshandle.spec.js</playwright-file>
@@ -49,29 +49,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
-            if (TestConstants.IsWebKit)
-            {
-                Assert.Contains("Object has too long reference chain", exception.Message);
-            }
-            else if (TestConstants.IsChromium)
-            {
-                Assert.Contains("Object reference chain is too long", exception.Message);
-            }
-            else if (TestConstants.IsFirefox)
-            {
-                Assert.Contains("Object is not serializable", exception.Message);
-            }
-        }
-
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
-        ///<playwright-it>should work with tricky values</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldWorkWithTrickyValues()
-        {
-            var aHandle = await Page.EvaluateHandleAsync("() => ({ a: 1})");
-            var json = await aHandle.GetJsonValueAsync<JsonElement>();
-            Assert.Equal(1, json.GetProperty("a").GetInt32());
+            Assert.Contains("Argument is a circular structure", exception.Message);
         }
     }
 }
