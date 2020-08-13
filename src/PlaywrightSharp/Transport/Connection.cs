@@ -131,6 +131,8 @@ namespace PlaywrightSharp.Transport
             }
 
             int id = Interlocked.Increment(ref _lastId);
+            var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _callbacks.TryAdd(id, tcs);
 
             await _queue.Enqueue(() =>
             {
@@ -149,8 +151,6 @@ namespace PlaywrightSharp.Transport
                 return _transport.SendAsync(messageString);
             }).ConfigureAwait(false);
 
-            var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _callbacks.TryAdd(id, tcs);
             var result = await tcs.Task.WithTimeout(Playwright.DefaultTimeout).ConfigureAwait(false);
 
             if (typeof(T) == typeof(JsonElement?))

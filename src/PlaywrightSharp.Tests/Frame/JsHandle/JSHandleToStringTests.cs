@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
     ///<playwright-file>jshandle.spec.js</playwright-file>
     ///<playwright-describe>JSHandle.toString</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class JSHandleToStringTests : PlaywrightSharpPageBaseTest
+    public class JSHandleToStringTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSHandleToStringTests(ITestOutputHelper output) : base(output)
@@ -24,9 +23,9 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldWorkForPrimitives()
         {
             var numberHandle = await Page.EvaluateHandleAsync("() => 2");
-            Assert.Equal("JSHandle:2", numberHandle.ToString());
+            Assert.Equal("JSHandle@2", numberHandle.ToString());
             var stringHandle = await Page.EvaluateHandleAsync("() => 'a'");
-            Assert.Equal("JSHandle:a", stringHandle.ToString());
+            Assert.Equal("JSHandle@a", stringHandle.ToString());
         }
 
         ///<playwright-file>jshandle.spec.js</playwright-file>
@@ -58,15 +57,15 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         public async Task ShouldWorkWithDifferentSubtypes()
         {
             Assert.Equal("JSHandle@function", (await Page.EvaluateHandleAsync("(function(){})")).ToString());
-            Assert.Equal("JSHandle:12", (await Page.EvaluateHandleAsync("12")).ToString());
-            Assert.Equal("JSHandle:True", (await Page.EvaluateHandleAsync("true")).ToString());
-            Assert.Equal("JSHandle:undefined", (await Page.EvaluateHandleAsync("undefined")).ToString());
-            Assert.Equal("JSHandle:foo", (await Page.EvaluateHandleAsync("\"foo\"")).ToString());
+            Assert.Equal("JSHandle@12", (await Page.EvaluateHandleAsync("12")).ToString());
+            Assert.Equal("JSHandle@true", (await Page.EvaluateHandleAsync("true")).ToString());
+            Assert.Equal("JSHandle@undefined", (await Page.EvaluateHandleAsync("undefined")).ToString());
+            Assert.Equal("JSHandle@foo", (await Page.EvaluateHandleAsync("\"foo\"")).ToString());
             Assert.Equal("JSHandle@symbol", (await Page.EvaluateHandleAsync("Symbol()")).ToString());
             Assert.Equal("JSHandle@map", (await Page.EvaluateHandleAsync("new Map()")).ToString());
             Assert.Equal("JSHandle@set", (await Page.EvaluateHandleAsync("new Set()")).ToString());
             Assert.Equal("JSHandle@array", (await Page.EvaluateHandleAsync("[]")).ToString());
-            Assert.Equal("JSHandle:null", (await Page.EvaluateHandleAsync("null")).ToString());
+            Assert.Equal("JSHandle@null", (await Page.EvaluateHandleAsync("null")).ToString());
             Assert.Equal("JSHandle@regexp", (await Page.EvaluateHandleAsync("/foo/")).ToString());
             Assert.Equal("JSHandle@node", (await Page.EvaluateHandleAsync("document.body")).ToString());
             Assert.Equal("JSHandle@date", (await Page.EvaluateHandleAsync("new Date()")).ToString());
