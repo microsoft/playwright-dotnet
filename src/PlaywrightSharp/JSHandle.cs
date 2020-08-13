@@ -70,7 +70,18 @@ namespace PlaywrightSharp
         public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await _channel.GetPropertyAsync(propertyName).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync() => throw new NotImplementedException();
+        public async Task<IDictionary<string, IJSHandle>> GetPropertiesAsync()
+        {
+            var result = new Dictionary<string, IJSHandle>();
+            var channelResult = await _channel.GetPropertiesAsync().ConfigureAwait(false);
+
+            foreach (var kv in channelResult)
+            {
+                result[kv.Name] = kv.Value.Object;
+            }
+
+            return result;
+        }
 
         /// <inheritdoc />
         public Task DisposeAsync() => _channel.DisposeAsync();

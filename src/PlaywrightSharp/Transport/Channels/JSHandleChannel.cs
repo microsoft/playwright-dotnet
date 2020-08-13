@@ -34,5 +34,15 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["name"] = propertyName,
                 });
+
+        internal Task<List<JSElementProperty>> GetPropertiesAsync()
+            => Scope.SendMessageToServer<List<JSElementProperty>>(Guid, "getPropertyList", null);
+
+        internal class JSElementProperty
+        {
+            public string Name { get; set; }
+
+            public JSHandleChannel Value { get; set; }
+        }
     }
 }
