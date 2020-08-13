@@ -67,7 +67,7 @@ namespace PlaywrightSharp
         public async Task<T> GetJsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.GetJsonValue().ConfigureAwait(false));
 
         /// <inheritdoc />
-        public Task<IJSHandle> GetPropertyAsync(string propertyName) => throw new NotImplementedException();
+        public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await _channel.GetPropertyAsync(propertyName).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task<IDictionary<string, IJSHandle>> GetPropertiesAsync() => throw new NotImplementedException();
