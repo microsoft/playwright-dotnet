@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,8 +8,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.close</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageCloseTests : PlaywrightSharpPageBaseTest
+    public class PageCloseTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageCloseTests(ITestOutputHelper output) : base(output)
@@ -105,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.close</playwright-describe>
         ///<playwright-it>should terminate network waiters</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
@@ -117,9 +114,23 @@ namespace PlaywrightSharp.Tests.Page
             for (int i = 0; i < 2; i++)
             {
                 string message = exception.Message;
-                Assert.Contains("Target closed", message);
+                Assert.Contains("Page closed", message);
                 Assert.DoesNotContain("Timeout", message);
             }
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.close</playwright-describe>
+        ///<playwright-it>should be callable twice</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeCallableTwice()
+        {
+            var newPage = await Context.NewPageAsync();
+            await TaskUtils.WhenAll(
+                newPage.CloseAsync(),
+                newPage.CloseAsync());
+
+            await newPage.CloseAsync();
         }
     }
 }
