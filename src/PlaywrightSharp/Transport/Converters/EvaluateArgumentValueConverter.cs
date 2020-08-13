@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Transport.Converters
     internal class EvaluateArgumentValueConverter<T> : JsonConverter<T>
     {
         private readonly EvaluateArgument _parentObject;
+        private readonly List<object> _visited = new List<object>();
 
         public EvaluateArgumentValueConverter()
         {
@@ -35,6 +36,11 @@ namespace PlaywrightSharp.Transport.Converters
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
+            if (_visited.Contains(value))
+            {
+                throw new JsonException("Argument is a circular structure");
+            }
+
             if (value == null)
             {
                 writer.WriteStartObject();
@@ -134,6 +140,7 @@ namespace PlaywrightSharp.Transport.Converters
             writer.WritePropertyName("o");
             writer.WriteStartObject();
 
+            _visited.Add(value);
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
                 object obj = propertyDescriptor.GetValue(value);
@@ -150,6 +157,8 @@ namespace PlaywrightSharp.Transport.Converters
                     JsonSerializer.Serialize(writer, obj, options);
                 }
             }
+
+            _visited.Remove(value);
 
             writer.WriteEndObject();
             writer.WriteEndObject();
