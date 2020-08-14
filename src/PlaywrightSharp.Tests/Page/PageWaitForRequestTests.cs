@@ -11,8 +11,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForRequest</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageWaitForRequestTests : PlaywrightSharpPageBaseTest
+    public class PageWaitForRequestTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageWaitForRequestTests(ITestOutputHelper output) : base(output)
@@ -112,6 +111,14 @@ namespace PlaywrightSharp.Tests.Page
                 }")
             );
             Assert.Equal(TestConstants.ServerUrl + "/digits/1.png", request.Url);
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.waitForRequest</playwright-describe>
+        ///<playwright-it>should work with url match regular expression from a different context</playwright-it>
+        [Fact(Skip = "We dont't need to test this")]
+        public void ShouldWorkWithUrlMatchRegularExpressionFromADifferentContext()
+        {
         }
     }
 }
