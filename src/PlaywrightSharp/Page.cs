@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -58,6 +57,7 @@ namespace PlaywrightSharp
             _channel.Console += (sender, e) => Console?.Invoke(this, e);
             _channel.DOMContentLoaded += (sender, e) => DOMContentLoaded?.Invoke(this, e);
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
+            _channel.Load += (sender, e) => Load?.Invoke(this, e);
             _channel.FileChooser += (sender, e) =>
             {
                 _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));

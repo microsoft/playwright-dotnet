@@ -41,6 +41,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
+        internal event EventHandler<EventArgs> Load;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
@@ -53,6 +55,9 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "domcontentloaded":
                     DOMContentLoaded?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "load":
+                    Load?.Invoke(this, EventArgs.Empty);
                     break;
                 case "bindingCall":
                     BindingCall?.Invoke(
