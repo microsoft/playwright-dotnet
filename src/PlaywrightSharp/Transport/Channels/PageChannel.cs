@@ -17,6 +17,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Crashed;
 
+        internal event EventHandler DOMContentLoaded;
+
         internal event EventHandler<PageChannelRequestEventArgs> Request;
 
         internal event EventHandler<PageChannelPopupEventArgs> Popup;
@@ -50,6 +52,9 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "crash":
                     Crashed?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "domcontentloaded":
+                    DOMContentLoaded?.Invoke(this, EventArgs.Empty);
                     break;
                 case "load":
                     Load?.Invoke(this, EventArgs.Empty);
