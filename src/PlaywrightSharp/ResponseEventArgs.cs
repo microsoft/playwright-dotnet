@@ -7,12 +7,10 @@ namespace PlaywrightSharp
     /// </summary>
     public class ResponseEventArgs : EventArgs
     {
-        internal ResponseEventArgs(IResponse response) => Response = response;
-
         /// <summary>
         /// Gets the response.
         /// </summary>
         /// <value>The response.</value>
-        public IResponse Response { get; }
+        public IResponse Response { get; set; }
     }
 }

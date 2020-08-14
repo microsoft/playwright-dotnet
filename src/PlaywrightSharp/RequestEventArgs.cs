@@ -10,12 +10,10 @@ namespace PlaywrightSharp
     /// <seealso cref="IPage.RequestFinished"/>
     public class RequestEventArgs : EventArgs
     {
-        internal RequestEventArgs(IRequest request) => Request = request;
-
         /// <summary>
         /// Gets the request.
         /// </summary>
         /// <value>The request.</value>
-        public IRequest Request { get; }
+        public IRequest Request { get; set; }
     }
 }
