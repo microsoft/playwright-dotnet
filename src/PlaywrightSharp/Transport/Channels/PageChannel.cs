@@ -39,6 +39,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<DownloadEventArgs> Download;
 
+        internal event EventHandler<PageErrorEventArgs> PageError;
+
         internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
         internal event EventHandler<EventArgs> Load;
@@ -81,6 +83,9 @@ namespace PlaywrightSharp.Transport.Channels
                     {
                         Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                     });
+                    break;
+                case "pageError":
+                    PageError?.Invoke(this, serverParams?.GetProperty("error").ToObject<PageErrorEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "fileChooser":
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));

@@ -7,15 +7,30 @@ namespace PlaywrightSharp
     /// </summary>
     public class PageErrorEventArgs : EventArgs
     {
+        private string _message;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PageErrorEventArgs"/> class.
+        /// Error name.
         /// </summary>
-        /// <param name="message">Message.</param>
-        public PageErrorEventArgs(string message) => Message = message;
+        public string Name { get; set; }
 
         /// <summary>
         /// Error Message.
         /// </summary>
-        public string Message { get; set; }
+        public string Message
+        {
+            get => _message ?? Value;
+            set => _message = value;
+        }
+
+        /// <summary>
+        /// Error Value.
+        /// </summary>
+        public string Value { get; set; }
+
+        /// <summary>
+        /// Error stack.
+        /// </summary>
+        public string Stack { get; set; }
     }
 }
