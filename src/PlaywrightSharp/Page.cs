@@ -56,6 +56,7 @@ namespace PlaywrightSharp
             _channel.FrameDetached += Channel_FrameDetached;
             _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
             _channel.Console += (sender, e) => Console?.Invoke(this, e);
+            _channel.DOMContentLoaded += (sender, e) => DOMContentLoaded?.Invoke(this, e);
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
             _channel.Load += (sender, e) => Load?.Invoke(this, e);
             _channel.FileChooser += (sender, e) =>
