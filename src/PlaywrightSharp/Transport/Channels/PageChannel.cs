@@ -17,7 +17,9 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Crashed;
 
-        internal event EventHandler<PageChannelRequestEventArgs> Request;
+        internal event EventHandler<RequestEventArgs> Request;
+
+        internal event EventHandler<ResponseEventArgs> Response;
 
         internal event EventHandler<PageChannelPopupEventArgs> Popup;
 
@@ -96,7 +98,10 @@ namespace PlaywrightSharp.Transport.Channels
                     Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
                     break;
                 case "request":
-                    Request?.Invoke(this, new PageChannelRequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    break;
+                case "response":
+                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.ToObject<ResponseChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "download":
                     Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.ToObject<DownloadChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });

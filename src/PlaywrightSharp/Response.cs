@@ -37,22 +37,22 @@ namespace PlaywrightSharp
         public HttpStatusCode Status => _initializer.Status;
 
         /// <inheritdoc />
-        public string StatusText { get; }
+        public string StatusText => _initializer.StatusText;
 
         /// <inheritdoc />
-        public IFrame Frame { get; }
+        public IFrame Frame => _initializer.Frame.Object;
 
         /// <inheritdoc />
-        public string Url { get; }
+        public string Url => _initializer.Url;
 
         /// <inheritdoc />
-        public IDictionary<string, string> Headers { get; }
+        public IDictionary<string, string> Headers => _initializer.Headers;
 
         /// <inheritdoc />
         public bool Ok => Status == HttpStatusCode.OK;
 
         /// <inheritdoc />
-        public IRequest Request { get; }
+        public IRequest Request => _initializer.Request.Object;
 
         /// <inheritdoc />
         public async Task<string> GetTextAsync()
