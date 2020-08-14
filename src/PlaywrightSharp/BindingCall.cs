@@ -70,6 +70,10 @@ namespace PlaywrightSharp
 
                 _channel.ResolveAsync(result);
             }
+            catch (TargetInvocationException ex)
+            {
+                _channel.RejectAsync(ex.InnerException);
+            }
             catch (Exception ex)
             {
                 _channel.RejectAsync(ex);

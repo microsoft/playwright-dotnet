@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.exposeFunction</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageExposeFunctionTests : PlaywrightSharpPageBaseTest
+    public class PageExposeFunctionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageExposeFunctionTests(ITestOutputHelper output) : base(output)
@@ -65,9 +64,9 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.exposeFunction</playwright-describe>
-        ///<playwright-it>should be callable from-inside evaluateOnNewDocument</playwright-it>
+        ///<playwright-it>should be callable from-inside addInitScript</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldBeCallableFromInsideEvaluateOnNewDocument()
+        public async Task ShouldBeCallableFromInsideAddInitScript()
         {
             bool called = false;
             await Page.ExposeFunctionAsync("woof", () =>
