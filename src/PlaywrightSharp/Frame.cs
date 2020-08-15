@@ -221,6 +221,9 @@ namespace PlaywrightSharp
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => AddStyleTagAsync(false, options);
 
         /// <inheritdoc />
+        public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null) => PressAsync(false, selector, text, delay, noWaitAfter, timeout);
+
+        /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -296,6 +299,9 @@ namespace PlaywrightSharp
 
         internal Task HoverAsync(bool isPageCall, string selector, Point? position, Modifier[] modifiers, bool force, int? timeout)
             => _channel.HoverAsync(selector, position, modifiers, force, timeout, isPageCall);
+
+        internal Task<string[]> PressAsync(bool isPageCall, string selector, string text, int delay, bool? noWaitAfter, int? timeout)
+            => _channel.PressAsync(selector, text, delay, noWaitAfter, timeout, isPageCall);
 
         internal Task<string[]> SelectOptionAsync(bool isPageCall, string selector, object values, bool? noWaitAfter, int? timeout)
             => _channel.SelectOptionAsync(selector, values, noWaitAfter, timeout, isPageCall);
