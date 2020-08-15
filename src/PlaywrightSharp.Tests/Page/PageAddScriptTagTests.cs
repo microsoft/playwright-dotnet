@@ -11,8 +11,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.addScriptTag</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageAddScriptTagTests : PlaywrightSharpPageBaseTest
+    public class PageAddScriptTagTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageAddScriptTagTests(ITestOutputHelper output) : base(output)
@@ -99,7 +98,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.addScriptTag</playwright-describe>
         ///<playwright-it>should include sourceURL when path is provided</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -140,6 +139,18 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
                 Page.AddScriptTagAsync(new AddTagOptions { Url = TestConstants.CrossProcessUrl + "/injectedfile.js" }));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.addScriptTag</playwright-describe>
+        ///<playwright-it>should throw a nice error when the request fails</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldThrowANiceErrorWhenTheEequestFails()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            string url = TestConstants.ServerUrl + "/this_does_not_exists.js";
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(new AddTagOptions { Url = url }));
+            Assert.Contains(url, exception.Message);
         }
     }
 }
