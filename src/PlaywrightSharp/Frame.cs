@@ -84,7 +84,7 @@ namespace PlaywrightSharp
         public Task SetContentAsync(string html, NavigationOptions options = null) => SetContentAsync(false, html, options);
 
         /// <inheritdoc />
-        public Task<string> GetContentAsync() => throw new NotImplementedException();
+        public Task<string> GetContentAsync() => GetContentAsync(false);
 
         /// <inheritdoc />
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => AddScriptTagAsync(false, options);
@@ -273,6 +273,8 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<string> GetTextContentAsync(string selector, int? timeout = null)
             => GetTextContentAsync(false, selector, timeout);
+
+        internal Task<string> GetContentAsync(bool isPageCall) => _channel.GetContentAsync(isPageCall);
 
         internal Task FocusAsync(bool isPageCall, string selector, int? timeout = null)
             => _channel.FocusAsync(selector, timeout, isPageCall);

@@ -470,7 +470,7 @@ namespace PlaywrightSharp
             => MainFrame.SetContentAsync(true, html, new NavigationOptions { WaitUntil = waitUntil });
 
         /// <inheritdoc />
-        public Task<string> GetContentAsync() => throw new NotImplementedException();
+        public Task<string> GetContentAsync() => MainFrame.GetContentAsync(true);
 
         /// <inheritdoc />
         public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
