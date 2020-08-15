@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>page.spec.js</playwr"ight-file>
+        ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should fill different input types</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
