@@ -11,8 +11,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.setContent</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageSetContentTests : PlaywrightSharpPageBaseTest
+    public class PageSetContentTests : PlaywrightSharpPageBaseTest
     {
         const string _expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
 
@@ -41,36 +40,6 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<div>hello</div>", LifecycleEvent.DOMContentLoaded);
             string result = await Page.GetContentAsync();
             Assert.Equal(_expectedOutput, result);
-        }
-
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should not confuse with previous navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldNotConfuseWithPreviousNavigation()
-        {
-            string imgPath = "/img.png";
-            var imgResponse = new TaskCompletionSource<bool>();
-            Server.SetRoute(imgPath, context => imgResponse.Task);
-            bool loaded = false;
-            // get the global object to make sure that the main execution context is alive and well.
-            await Page.EvaluateAsync("() => this");
-            // Trigger navigation which might resolve next setContent call.
-            var evalPromise = Page.EvaluateAsync("url => window.location.href = url", TestConstants.EmptyPage);
-            var contentPromise = Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\" ></img>").ContinueWith(_ => loaded = true);
-            await Server.WaitForRequest(imgPath);
-
-            Assert.False(loaded);
-            for (int i = 0; i < 5; i++)
-            {
-                await Page.EvaluateAsync("1");  // Roundtrips to give setContent a chance to resolve.
-            }
-
-            Assert.False(loaded);
-
-            imgResponse.SetResult(true);
-            await contentPromise;
-            await evalPromise;
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -121,9 +90,11 @@ namespace PlaywrightSharp.Tests.Page
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
-            await Assert.ThrowsAsync<TimeoutException>(() =>
+            var exception = await Assert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new NavigationOptions { Timeout = 1 })
             );
+
+            Assert.Contains("Timeout 1ms exceeded during page.setContent", exception.Message);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
