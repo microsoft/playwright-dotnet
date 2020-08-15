@@ -218,7 +218,7 @@ namespace PlaywrightSharp
         public Task WaitForLoadStateAsync(NavigationOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => throw new NotImplementedException();
+        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => AddStyleTagAsync(false, options);
 
         /// <inheritdoc />
         public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
@@ -321,6 +321,11 @@ namespace PlaywrightSharp
 
         internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, AddTagOptions options)
             => (await _channel.AddScriptTagAsync(
+                options: options,
+                isPage: isPageCall).ConfigureAwait(false)).Object;
+
+        internal async Task<IElementHandle> AddStyleTagAsync(bool isPageCall, AddTagOptions options)
+            => (await _channel.AddStyleTagAsync(
                 options: options,
                 isPage: isPageCall).ConfigureAwait(false)).Object;
 
