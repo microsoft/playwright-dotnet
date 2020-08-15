@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should throw on incorrect datetime-local</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectDateTimeLocal()
         {
             await Page.SetContentAsync("<input type=datetime-local>");
