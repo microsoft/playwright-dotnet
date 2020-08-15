@@ -44,9 +44,9 @@ namespace PlaywrightSharp
                 {
                     new BindingSource
                     {
-                        Context = _initializer.Frame.Page.Context,
-                        Page = _initializer.Frame.Page,
-                        Frame = _initializer.Frame,
+                        Context = _initializer?.Frame?.Page?.Context,
+                        Page = _initializer?.Frame?.Page,
+                        Frame = _initializer?.Frame,
                     },
                 };
 
