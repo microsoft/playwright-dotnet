@@ -116,24 +116,6 @@ namespace PlaywrightSharp
         public Task FocusAsync() => _channel.FocusAsync();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string[] values) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<string[]> SelectAsync(IElementHandle[] values) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<string[]> SelectAsync(SelectOption[] values) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<string[]> SelectAsync(string value) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<string[]> SelectAsync(IElementHandle value) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<string[]> SelectAsync(SelectOption value) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null)
             => _channel.DispatchEventAsync(
                 type,
@@ -156,28 +138,41 @@ namespace PlaywrightSharp
         public Task SelectTextAsync(int? timeout = null) => _channel.SelectTextAsync(timeout);
 
         /// <inheritdoc />
-        public Task SelectOptionAsync(string value, NavigatingActionWaitOptions options = null)
-            => _channel.SelectOptionAsync(value, options ?? new NavigatingActionWaitOptions());
+        public Task<string[]> SelectOptionAsync(string value, bool? noWaitAfter = null, int? timeout = null)
+            => _channel.SelectOptionAsync(value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SelectOptionAsync(string[] values, NavigatingActionWaitOptions options = null)
-            => _channel.SelectOptionAsync(values, options ?? new NavigatingActionWaitOptions());
+        public Task<string[]> SelectOptionAsync(string[] values, bool? noWaitAfter = null, int? timeout = null)
+            => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SelectOptionAsync(ElementHandle element, NavigatingActionWaitOptions options = null)
-            => _channel.SelectOptionAsync(element, options ?? new NavigatingActionWaitOptions());
+        public Task<string[]> SelectOptionAsync(IElementHandle element, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(new[] { element }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SelectOptionAsync(ElementHandle[] elements, NavigatingActionWaitOptions options = null)
-            => _channel.SelectOptionAsync(elements, options ?? new NavigatingActionWaitOptions());
+        public Task<string[]> SelectOptionAsync(IElementHandle[] elements, bool? noWaitAfter = null, int? timeout = null)
+            => _channel.SelectOptionAsync(elements.Cast<ElementHandle>(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SelectOptionAsync(SelectOption selectOption, NavigatingActionWaitOptions options = null)
-            => _channel.SelectOptionAsync(selectOption, options ?? new NavigatingActionWaitOptions());
+        public Task<string[]> SelectOptionAsync(SelectOption selectOption, bool? noWaitAfter = null, int? timeout = null)
+            => _channel.SelectOptionAsync(selectOption, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SelectOptionAsync(SelectOption[] selectOptions, NavigatingActionWaitOptions options = null)
-            => _channel.SelectOptionAsync(selectOptions, options ?? new NavigatingActionWaitOptions());
+        public Task<string[]> SelectOptionAsync(SelectOption[] selectOptions, bool? noWaitAfter = null, int? timeout = null)
+            => _channel.SelectOptionAsync(selectOptions, noWaitAfter, timeout);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectOptionAsync(bool? noWaitAfter = null, int? timeout = null)
+        => _channel.SelectOptionAsync(null, noWaitAfter, timeout);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectOptionAsync(params string[] values) => SelectOptionAsync(values, null, null);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectOptionAsync(params SelectOption[] values) => SelectOptionAsync(values, null, null);
+
+        /// <inheritdoc />
+        public Task<string[]> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values, null, null);
 
         /// <inheritdoc />
         public Task CheckAsync(CheckOptions options)

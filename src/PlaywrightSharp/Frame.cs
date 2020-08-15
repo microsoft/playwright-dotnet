@@ -221,34 +221,34 @@ namespace PlaywrightSharp
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => AddStyleTagAsync(false, options);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, params string[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, params SelectOption[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
         public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
@@ -296,6 +296,9 @@ namespace PlaywrightSharp
 
         internal Task HoverAsync(bool isPageCall, string selector, Point? position, Modifier[] modifiers, bool force, int? timeout)
             => _channel.HoverAsync(selector, position, modifiers, force, timeout, isPageCall);
+
+        internal Task<string[]> SelectOptionAsync(bool isPageCall, string selector, object values, bool? noWaitAfter, int? timeout)
+            => _channel.SelectOptionAsync(selector, values, noWaitAfter, timeout, isPageCall);
 
         internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, int? timeout = null)
             => _channel.DispatchEventAsync(

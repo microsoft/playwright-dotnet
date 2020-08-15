@@ -406,34 +406,34 @@ namespace PlaywrightSharp
             int? timeout = null) => MainFrame.HoverAsync(true, selector, position, modifiers, force, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, params string[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, params SelectOption[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, params SelectOption[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string selector, params IElementHandle[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
         public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);

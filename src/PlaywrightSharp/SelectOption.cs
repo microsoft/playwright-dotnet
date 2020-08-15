@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options used with <see cref="IPage.SelectAsync(string, SelectOption[])"/>.
+    /// Options used with <see cref="IPage.SelectOptionAsync(string, SelectOption[])"/>.
     /// </summary>
     public class SelectOption
     {
