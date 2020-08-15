@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -9,8 +10,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.fill</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageFillTests : PlaywrightSharpPageBaseTest
+    public class PageFillTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageFillTests(ITestOutputHelper output) : base(output)
@@ -41,16 +41,16 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on non-text inputs</playwright-it>
+        ///<playwright-it>should throw on unsupported inputs</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldThrowOnNonTextInputs()
+        public async Task ShouldThrowOnUnsupportedInputs()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            foreach (string type in new[] { "color", "number", "date" })
+            foreach (string type in new[] { "color", "file" })
             {
                 await Page.QuerySelectorEvaluateAsync("input", "(input, type) => input.setAttribute('type', type)", type);
                 var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("input", string.Empty));
-                Assert.Contains("Cannot fill input of type", exception.Message);
+                Assert.Contains($"input of type \"{type}\" cannot be filled", exception.Message);
             }
         }
 
@@ -67,6 +67,78 @@ namespace PlaywrightSharp.Tests.Page
                 await Page.FillAsync("input", "text " + type);
                 Assert.Equal("text " + type, await Page.EvaluateAsync<string>("() => result"));
             }
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should fill date input after clicking</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFillDateInputAfterClicking()
+        {
+            await Page.SetContentAsync("<input type=date>");
+            await Page.ClickAsync("input");
+            await Page.FillAsync("input", "2020-03-02");
+            Assert.Equal("2020-03-02", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should throw on incorrect date</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ShouldThrowOnIncorrectDate()
+        {
+            await Page.SetContentAsync("<input type=date>");
+            await Page.ClickAsync("input");
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "2020-13-02"));
+            Assert.Contains("Malformed value", exception.Message);
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should fill time input after clicking</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFillTimeInputAfterClicking()
+        {
+            await Page.SetContentAsync("<input type=time>");
+            await Page.ClickAsync("input");
+            await Page.FillAsync("input", "13:15");
+            Assert.Equal("13:15", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should throw on incorrect time</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ShouldThrowOnIncorrectTime()
+        {
+            await Page.SetContentAsync("<input type=time>");
+            await Page.ClickAsync("input");
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "25:05"));
+            Assert.Contains("Malformed value", exception.Message);
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should fill datetime-local input</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFillDatetimeLocalInput()
+        {
+            await Page.SetContentAsync("<input type=datetime-local>");
+            await Page.ClickAsync("input");
+            await Page.FillAsync("input", "2020-03-02T05:15");
+            Assert.Equal("2020-03-02T05:15", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should throw on incorrect datetime-local</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldThrowOnIncorrectDateTimeLocal()
+        {
+            await Page.SetContentAsync("<input type=datetime-local>");
+            await Page.ClickAsync("input");
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "abc"));
+            Assert.Contains("Malformed value", exception.Message);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -132,38 +204,58 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should wait for visible visibilty</playwright-it>
+        ///<playwright-it>should retry on disabled element</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldWaitForVisibleVisibilty()
+        public async Task ShouldRetryOnDisabledElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.FillAsync("input", "some value");
-            Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
+            await Page.QuerySelectorEvaluateAsync("input", "i => i.disabled = true");
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'none'");
-            await TaskUtils.WhenAll(
-                Page.FillAsync("input", "some value"),
-                Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'block'")
-            );
+            var task = Page.FillAsync("input", "some value");
+            await GiveItAChanceToFillAsync(Page);
+            Assert.False(task.IsCompleted);
+            Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
+
+            await Page.QuerySelectorEvaluateAsync("input", "i => i.disabled = false");
+            await task;
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on disabled and readonly elements</playwright-it>
+        ///<playwright-it>should retry on readonly element</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldThrowOnDisabledAndReadonlyElements()
+        public async Task ShouldRetryOnReadonlyElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.disabled = true");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "some value"));
-            Assert.Equal("Cannot fill a disabled input.", exception.Message);
-
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.QuerySelectorEvaluateAsync("textarea", "i => i.readOnly = true");
-            exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("textarea", "some value"));
-            Assert.Equal("Cannot fill a readonly textarea.", exception.Message);
+            var task = Page.FillAsync("textarea", "some value");
+            await GiveItAChanceToFillAsync(Page);
+            Assert.False(task.IsCompleted);
+            Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
+
+            await Page.QuerySelectorEvaluateAsync("textarea", "i => i.readOnly = false");
+            await task;
+            Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should retry on invisible element</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldRetryOnInvisibleElement()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'none'");
+
+            var task = Page.FillAsync("input", "some value");
+            await GiveItAChanceToFillAsync(Page);
+            Assert.False(task.IsCompleted);
+            Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
+
+            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'inline'");
+            await task;
+            Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -179,6 +271,17 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should fill fixed position input</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFillFixedPositionInput()
+        {
+            await Page.SetContentAsync("<input style='position: fixed;' />");
+            await Page.FillAsync("input", "some value");
+            Assert.Equal("some value", await Page.QuerySelectorEvaluateAsync<string>("input", "i => i.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
         ///<playwright-it>should be able to fill when focus is in the wrong frame</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToFillWhenFocusIsInTheWrongFrame()
@@ -187,6 +290,71 @@ namespace PlaywrightSharp.Tests.Page
             await Page.FocusAsync("iframe");
             await Page.FillAsync("div", "some value");
             Assert.Equal("some value", await Page.QuerySelectorEvaluateAsync<string>("div", "d => d.textContent"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should be able to fill the input[type=number]</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeAbleToFillTheInputTypeNumber()
+        {
+            await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
+            await Page.FillAsync("input", "42");
+            Assert.Equal("42", await Page.EvaluateAsync<string>("() => input.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should be able to fill exponent into the input[type=number]</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeAbleToFillTheInputExponentIntoTypeNumber()
+        {
+            await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
+            await Page.FillAsync("input", "-10e5");
+            Assert.Equal("-10e5", await Page.EvaluateAsync<string>("() => input.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should be able to fill the input[type=number] with empty string</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeAbleToFillTheInputTypeNumberWithEmptyString()
+        {
+            await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
+            await Page.FillAsync("input", "");
+            Assert.Empty(await Page.EvaluateAsync<string>("() => input.value"));
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should not be able to fill text into the input[type=number]</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldNotBeAbleToFillTextIntoTheInputTypeNumber()
+        {
+            await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "abc"));
+            Assert.Contains("Cannot type text into input[type=number]", exception.Message);
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.fill</playwright-describe>
+        ///<playwright-it>should be able to clear</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeAbleToClear()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.FillAsync("input", "some value");
+            Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
+            await Page.FillAsync("input", "");
+            Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
+        }
+
+        private async Task GiveItAChanceToFillAsync(IPage page)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                await page.EvaluateAsync("() => new Promise(f => requestAnimationFrame(() => requestAnimationFrame(f)))");
+            }
         }
     }
 }
