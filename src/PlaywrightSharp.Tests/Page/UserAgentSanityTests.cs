@@ -52,6 +52,5 @@ namespace PlaywrightSharp.Tests.Page
                 }
             }
         }
-
     }
 }
