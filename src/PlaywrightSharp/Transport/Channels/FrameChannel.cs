@@ -238,6 +238,19 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task<ElementHandleChannel> AddStyleTagAsync(AddTagOptions options, bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "addStyleTag",
+                new Dictionary<string, object>
+                {
+                    ["url"] = options.Url,
+                    ["path"] = options.Path,
+                    ["content"] = options.Content,
+                    ["type"] = options.Type,
+                    ["isPage"] = isPage,
+                });
+
         internal Task WaitForLoadStateAsync(LifecycleEvent state, int? timeout, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,

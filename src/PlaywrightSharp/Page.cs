@@ -491,7 +491,7 @@ namespace PlaywrightSharp
         public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => MainFrame.AddScriptTagAsync(true, options);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => throw new NotImplementedException();
+        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => MainFrame.AddStyleTagAsync(true, options);
 
         /// <inheritdoc />
         public Task ClickAsync(string selector, ClickOptions options = null) => MainFrame.ClickAsync(true, selector, options);
