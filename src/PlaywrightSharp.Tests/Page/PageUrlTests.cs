@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>page.spec.js</playwright-file>
     ///<playwright-describe>Page.url</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageUrlTests : PlaywrightSharpPageBaseTest
+    public class PageUrlTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageUrlTests(ITestOutputHelper output) : base(output)
@@ -26,6 +25,18 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("about:blank", Page.Url);
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
+        }
+
+        ///<playwright-file>page.spec.js</playwright-file>
+        ///<playwright-describe>Page.url</playwright-describe>
+        ///<playwright-it>should include hashes</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldIncludeHashes()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
+            Assert.Equal(TestConstants.EmptyPage + "#hash", Page.Url);
+            await Page.EvaluateAsync("() => window.location.hash = 'dynamic'");
+            Assert.Equal(TestConstants.EmptyPage + "#dynamic", Page.Url);
         }
     }
 }
