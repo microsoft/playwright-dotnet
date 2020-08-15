@@ -394,6 +394,20 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task<string[]> PressAsync(string selector, string text, int delay, bool? noWaitAfter, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<string[]>(
+                Guid,
+                "press",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["key"] = text,
+                    ["delay"] = delay,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                });
+
         internal Task<string[]> SelectOptionAsync(string selector, object values, bool? noWaitAfter, int? timeout, bool isPage)
             => Scope.SendMessageToServer<string[]>(
                 Guid,

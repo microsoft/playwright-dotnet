@@ -406,6 +406,9 @@ namespace PlaywrightSharp
             int? timeout = null) => MainFrame.HoverAsync(true, selector, position, modifiers, force, timeout);
 
         /// <inheritdoc />
+        public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null) => MainFrame.PressAsync(true, selector, text, delay, noWaitAfter, timeout);
+
+        /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
