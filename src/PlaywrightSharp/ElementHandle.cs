@@ -116,22 +116,22 @@ namespace PlaywrightSharp
         public Task FocusAsync() => _channel.FocusAsync();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string[] values) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(IElementHandle[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(IElementHandle[] values) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(SelectOption[] values) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(SelectOption[] values) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(string value) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(string value) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(IElementHandle value) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(IElementHandle value) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<string[]> SelectAsync(SelectOption value) => throw new NotImplementedException();
+        public Task<string[]> SelectOptionAsync(SelectOption value) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null)

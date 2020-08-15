@@ -381,6 +381,20 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task<string[]> SelectOptionAsync(string selector, object values, bool? noWaitAfter, int? timeout, bool isPage)
+            => Scope.SendMessageToServer<string[]>(
+                Guid,
+                "selectOption",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["values"] = values,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["timeout"] = timeout,
+                    ["isPage"] = isPage,
+                },
+                true);
+
         internal Task<string> GetAttributeAsync(string selector, string name, int? timeout, bool isPage)
             => Scope.SendMessageToServer<string>(
                 Guid,

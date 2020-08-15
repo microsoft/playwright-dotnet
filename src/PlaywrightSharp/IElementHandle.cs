@@ -368,7 +368,7 @@ namespace PlaywrightSharp
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string[] values);
+        Task<string[]> SelectOptionAsync(string[] values);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -377,7 +377,7 @@ namespace PlaywrightSharp
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(IElementHandle[] values);
+        Task<string[]> SelectOptionAsync(IElementHandle[] values);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -386,7 +386,7 @@ namespace PlaywrightSharp
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(SelectOption[] values);
+        Task<string[]> SelectOptionAsync(SelectOption[] values);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -394,7 +394,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="value">Value to select.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string value);
+        Task<string[]> SelectOptionAsync(string value);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -402,7 +402,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="value">Value to select.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(IElementHandle value);
+        Task<string[]> SelectOptionAsync(IElementHandle value);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -410,7 +410,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="value">Value to select.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(SelectOption value);
+        Task<string[]> SelectOptionAsync(SelectOption value);
 
         /// <summary>
         /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.

@@ -557,9 +557,13 @@ namespace PlaywrightSharp
         /// Triggers a change and input event once all, unselecting all the selected elements.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, WaitForSelectorOptions options = null);
+        Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -567,9 +571,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="value">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, string value, WaitForSelectorOptions options = null);
+        Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -577,9 +585,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="value">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, SelectOption value, WaitForSelectorOptions options = null);
+        Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -587,9 +599,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="value">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, IElementHandle value, WaitForSelectorOptions options = null);
+        Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -598,9 +614,13 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, string[] values, WaitForSelectorOptions options);
+        Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -609,9 +629,13 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, SelectOption[] values, WaitForSelectorOptions options);
+        Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -620,29 +644,13 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <param name="options">Wait options.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, IElementHandle[] values, WaitForSelectorOptions options);
-
-        /// <summary>
-        /// Triggers a change and input event once all the provided options have been selected.
-        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
-        /// </summary>
-        /// <param name="selector">A selector to query page for.</param>
-        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
-        /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, params string[] values);
-
-        /// <summary>
-        /// Triggers a change and input event once all the provided options have been selected.
-        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
-        /// </summary>
-        /// <param name="selector">A selector to query page for.</param>
-        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
-        /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, params SelectOption[] values);
+        Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -652,7 +660,27 @@ namespace PlaywrightSharp
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectAsync(string selector, params IElementHandle[] values);
+        Task<string[]> SelectOptionAsync(string selector, params string[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectOptionAsync(string selector, params SelectOption[] values);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values);
 
         /// <summary>
         /// Completes when the page reaches a required load state, load by default.
