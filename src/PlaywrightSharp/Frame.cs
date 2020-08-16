@@ -78,7 +78,7 @@ namespace PlaywrightSharp
         public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => GoToAsync(false, url, options);
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => GoToAsync(url, new GoToOptions { WaitUntil = waitUntil });
 
         /// <inheritdoc />
         public Task SetContentAsync(string html, NavigationOptions options = null) => SetContentAsync(false, html, options);
