@@ -27,6 +27,5 @@ namespace PlaywrightSharp.Tests.Fixtures
         ///<playwright-it>should close the browser when the node process closes</playwright-it>
         [Fact(Skip = "We don't need to test process handling")]
         public void ShouldCloseTheBrowserWhenTheNodeProcessCloses() { }
-
     }
 }
