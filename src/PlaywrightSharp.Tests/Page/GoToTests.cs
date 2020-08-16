@@ -41,7 +41,6 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(3, Page.Frames.Length);
         }
 
-
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goBack</playwright-describe>
         ///<playwright-it>should use http for no protocol</playwright-it>
