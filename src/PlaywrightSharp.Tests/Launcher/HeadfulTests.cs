@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests.Launcher
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should not override viewport size when passed null</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
