@@ -15,7 +15,5 @@ namespace PlaywrightSharp.Transport.Protocol
         public IDictionary<string, string> Headers { get; set; }
 
         public RequestChannel Request { get; set; }
-
-        public FrameChannel Frame { get; set; }
     }
 }

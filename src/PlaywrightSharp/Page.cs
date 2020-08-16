@@ -196,15 +196,31 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public int DefaultTimeout
         {
-            get => _timeoutSettings.Timeout;
-            set => _timeoutSettings.SetDefaultTimeout(value);
+            get
+            {
+                return _timeoutSettings.Timeout;
+            }
+
+            set
+            {
+                _timeoutSettings.SetDefaultTimeout(value);
+                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
+            }
         }
 
         /// <inheritdoc/>
         public int DefaultNavigationTimeout
         {
-            get => _timeoutSettings.NavigationTimeout;
-            set => _timeoutSettings.SetDefaultNavigationTimeout(value);
+            get
+            {
+                return _timeoutSettings.NavigationTimeout;
+            }
+
+            set
+            {
+                _timeoutSettings.SetDefaultNavigationTimeout(value);
+                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+            }
         }
 
         /// <inheritdoc />
@@ -331,10 +347,11 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, int timeout, LifecycleEvent waitUntil)
+            => GoToAsync(url, new GoToOptions { Timeout = timeout, WaitUntil = waitUntil });
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, params LifecycleEvent[] waitUntil) => throw new NotImplementedException();
+        public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => GoToAsync(url, new GoToOptions { WaitUntil = waitUntil });
 
         /// <inheritdoc />
         public async Task CloseAsync(PageCloseOptions options = null)
@@ -476,7 +493,7 @@ namespace PlaywrightSharp
         public Task<string> GetContentAsync() => MainFrame.GetContentAsync(true);
 
         /// <inheritdoc />
-        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => throw new NotImplementedException();
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => _channel.SetExtraHttpHeadersAsync(headers);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);

@@ -471,23 +471,23 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout. </param>
-        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
         /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        Task<IResponse> GoToAsync(string url, int timeout, params LifecycleEvent[] waitUntil);
+        Task<IResponse> GoToAsync(string url, int timeout, LifecycleEvent waitUntil);
 
         /// <summary>
         /// Navigates to an url.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>. Given an array of <see cref="LifecycleEvent"/>, navigation is considered to be successful after all events have been fired.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
         /// <seealso cref="GoToAsync(string, GoToOptions)"></seealso>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
-        Task<IResponse> GoToAsync(string url, params LifecycleEvent[] waitUntil);
+        Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil);
 
         /// <summary>
         /// Closes the page.

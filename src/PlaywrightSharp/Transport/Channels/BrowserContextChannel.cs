@@ -66,6 +66,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task CloseAsync() => Scope.SendMessageToServer(Guid, "close");
 
+        internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setDefaultNavigationTimeoutNoReply",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
         internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
             => Scope.SendMessageToServer<PageChannel>(
                 Guid,
