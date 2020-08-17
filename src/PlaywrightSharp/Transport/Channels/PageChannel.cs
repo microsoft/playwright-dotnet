@@ -119,6 +119,24 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
+        internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setDefaultTimeoutNoReply",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
+        internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
+            => Scope.SendMessageToServer<PageChannel>(
+                Guid,
+                "setDefaultNavigationTimeoutNoReply",
+                new Dictionary<string, object>
+                {
+                    ["timeout"] = timeout,
+                });
+
         internal Task SetFileChooserInterceptedNoReplyAsync(bool intercepted)
             => Scope.SendMessageToServer<PageChannel>(
                 Guid,
@@ -292,6 +310,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["delay"] = delay,
                     ["button"] = button,
                     ["clickCount"] = clickCount,
+                });
+
+        internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+            => Scope.SendMessageToServer(
+                Guid,
+                "setExtraHTTPHeaders",
+                new Dictionary<string, object>
+                {
+                    ["headers"] = headers,
                 });
     }
 }
