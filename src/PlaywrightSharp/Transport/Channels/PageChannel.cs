@@ -170,22 +170,49 @@ namespace PlaywrightSharp.Transport.Channels
                     ["source"] = script,
                 });
 
-        internal Task<ResponseChannel> ReloadAsync(NavigationOptions options)
+        internal Task<ResponseChannel> GoBackAsync(int? timeout, LifecycleEvent? waitUntil)
         {
             var args = new Dictionary<string, object>
             {
-                ["timeout"] = options?.Timeout,
+                ["timeout"] = timeout,
             };
 
-            if (options != null)
+            if (waitUntil != null)
             {
-                args["waitUntil"] = options.WaitUntil;
+                args["waitUntil"] = waitUntil;
             }
 
-            return Scope.SendMessageToServer<ResponseChannel>(
-                Guid,
-                "reload",
-                args);
+            return Scope.SendMessageToServer<ResponseChannel>(Guid, "goBack", args);
+        }
+
+        internal Task<ResponseChannel> GoForwardAsync(int? timeout, LifecycleEvent? waitUntil)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            };
+
+            if (waitUntil != null)
+            {
+                args["waitUntil"] = waitUntil;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(Guid, "goForward", args);
+        }
+
+        internal Task<ResponseChannel> ReloadAsync(int? timeout, LifecycleEvent? waitUntil)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            };
+
+            if (waitUntil != null)
+            {
+                args["waitUntil"] = waitUntil;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(Guid, "reload", args);
         }
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)

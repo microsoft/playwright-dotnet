@@ -45,11 +45,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var waitForNavigationResult = Page.WaitForNavigationAsync(new WaitForNavigationOptions
-            {
-                Url = "**/frame.html",
-                Timeout = 5000,
-            });
+            var waitForNavigationResult = Page.WaitForNavigationAsync(null, "**/frame.html", 5000);
 
             await Page.GoToAsync(TestConstants.EmptyPage);
 
@@ -71,18 +67,12 @@ namespace PlaywrightSharp.Tests.Page
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions
-            {
-                WaitUntil = LifecycleEvent.DOMContentLoaded
-            });
+            var domContentLoadedTask = Page.WaitForNavigationAsync(LifecycleEvent.DOMContentLoaded);
 
             bool bothFired = false;
             var bothFiredTask = TaskUtils.WhenAll(
                 domContentLoadedTask,
-                Page.WaitForNavigationAsync(new WaitForNavigationOptions
-                {
-                    WaitUntil = LifecycleEvent.Load,
-                })).ContinueWith(_ => bothFired = true);
+                Page.WaitForNavigationAsync(LifecycleEvent.Load)).ContinueWith(_ => bothFired = true);
 
             await waitForRequestTask.WithTimeout();
             await domContentLoadedTask.WithTimeout();
@@ -340,7 +330,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var waitTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions { WaitUntil = LifecycleEvent.DOMContentLoaded });
+            var waitTask = Page.WaitForNavigationAsync(LifecycleEvent.DOMContentLoaded);
 
             string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
             var gotoTask = Page.GoToAsync(url);
