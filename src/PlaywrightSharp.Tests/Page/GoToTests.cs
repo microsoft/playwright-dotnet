@@ -347,7 +347,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
-                => await Page.GoToAsync(TestConstants.EmptyPage, new GoToOptions { Timeout = 1 }));
+                => await Page.GoToAsync(TestConstants.EmptyPage, timeout: 1));
             Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
@@ -435,7 +435,7 @@ namespace PlaywrightSharp.Tests.Page
             }
             Page.Load += OnLoad;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = LifecycleEvent.Load });
+            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", LifecycleEvent.Load, null, 0);
             Assert.True(loaded);
         }
 
@@ -613,10 +613,7 @@ namespace PlaywrightSharp.Tests.Page
             await TaskUtils.WhenAll(
                 Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
                 Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
-                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
-                {
-                    Referer = "http://google.com/"
-                })
+                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", referer: "http://google.com/")
             );
 
             Assert.Equal("http://google.com/", referer1);
@@ -637,10 +634,7 @@ namespace PlaywrightSharp.Tests.Page
             });
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () =>
-                await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
-                {
-                    Referer = "http://google.com/"
-                }));
+                await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", referer: "http://google.com/"));
 
             Assert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
             Assert.Contains(TestConstants.ServerUrl + "/grid.html", exception.Message);
@@ -665,11 +659,7 @@ namespace PlaywrightSharp.Tests.Page
             await TaskUtils.WhenAll(
                 reqTask1,
                 reqTask2,
-                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
-                {
-                    Referer = "http://microsoft.com/"
-                })
-            );
+                Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", referer: "http://microsoft.com/"));
 
             Assert.Equal("http://microsoft.com/", referer1);
             // Make sure subresources do not inherit referer.

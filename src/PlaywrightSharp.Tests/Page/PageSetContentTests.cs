@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.Page
             // stall for image
             Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
             await Assert.ThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new NavigationOptions { Timeout = 1 })
+                Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", timeout: 1)
             );
         }
 
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests.Page
             // stall for image
             Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
             var exception = await Assert.ThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new NavigationOptions { Timeout = 1 })
+                Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", timeout: 1)
             );
 
             Assert.Contains("Timeout 1ms exceeded during page.setContent", exception.Message);

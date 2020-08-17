@@ -28,10 +28,7 @@ namespace PlaywrightSharp.Tests.Browser
 
             var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var page = await remote.NewPageAsync();
-            var navigationTask = page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", new GoToOptions
-            {
-                Timeout = 60000
-            });
+            var navigationTask = page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", timeout: 60000);
             await Server.WaitForRequest("/one-style.css");
             await remote.CloseAsync();
             await Assert.ThrowsAsync<NavigationException>(() => navigationTask);
