@@ -326,7 +326,13 @@ namespace PlaywrightSharp.Transport.Channels
             var param = new Dictionary<string, object>
             {
                 ["isPage"] = isPage,
+                ["timeout"] = options?.Timeout,
             };
+
+            if (options?.Url != null)
+            {
+                param["url"] = options?.Url;
+            }
 
             if (options?.WaitUntil != null)
             {
