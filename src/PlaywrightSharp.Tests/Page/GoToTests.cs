@@ -588,7 +588,6 @@ namespace PlaywrightSharp.Tests.Page
             const string url = TestConstants.HttpsPrefix + "/redirect/1.html";
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(url));
             Assert.Contains(url, exception.Message);
-            Assert.Contains(url, exception.Url);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
