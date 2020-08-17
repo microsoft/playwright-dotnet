@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page
 
             Assert.Contains("Timeout 5000ms exceeded during page.waitForNavigation.", exception.Message);
             Assert.Contains("waiting for navigation to \"**/frame.html\" until \"load\"", exception.Message);
-            Assert.Contains($"navigated to \"{TestConstants.EmptyPage}\", exception.Message);
+            Assert.Contains($"navigated to \"{TestConstants.EmptyPage}\"", exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
