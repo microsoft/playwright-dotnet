@@ -40,7 +40,7 @@ namespace PlaywrightSharp
         public string StatusText => _initializer.StatusText;
 
         /// <inheritdoc />
-        public IFrame Frame => _initializer.Frame.Object;
+        public IFrame Frame => _initializer.Request.Object.Frame;
 
         /// <inheritdoc />
         public string Url => _initializer.Url;

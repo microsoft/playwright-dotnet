@@ -97,7 +97,11 @@ namespace PlaywrightSharp
         public int DefaultNavigationTimeout
         {
             get => _timeoutSettings.NavigationTimeout;
-            set => _timeoutSettings.SetDefaultNavigationTimeout(value);
+            set
+            {
+                _timeoutSettings.SetDefaultNavigationTimeout(value);
+                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+            }
         }
 
         internal Page OwnerPage { get; set; }

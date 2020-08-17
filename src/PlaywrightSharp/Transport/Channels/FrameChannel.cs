@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Transport.Channels
         {
             var args = new Dictionary<string, object>
             {
-                ["referrer"] = options?.Referer,
+                ["url"] = url,
                 ["timeout"] = options?.Timeout,
                 ["isPage"] = isPage,
             };
@@ -30,14 +30,12 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = options.WaitUntil;
             }
 
-            return Scope.SendMessageToServer<ResponseChannel>(
-                Guid,
-                "goto",
-                new Dictionary<string, object>
-                {
-                    ["url"] = url,
-                    ["options"] = options ?? new GoToOptions(),
-                });
+            if (options?.Referer != null)
+            {
+                args["referer"] = options?.Referer;
+            }
+
+            return Scope.SendMessageToServer<ResponseChannel>(Guid, "goto", args);
         }
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(

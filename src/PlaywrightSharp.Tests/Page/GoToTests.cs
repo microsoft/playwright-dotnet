@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,8 +12,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.goto</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class GoToTests : PlaywrightSharpPageBaseTest
+    public class GoToTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public GoToTests(ITestOutputHelper output) : base(output)
@@ -29,6 +26,28 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
+            Assert.Equal(TestConstants.EmptyPage, Page.Url);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goBack</playwright-describe>
+        ///<playwright-it>should work with file URL</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWithFileURL()
+        {
+            string fileurl = "file://" + TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html")).Replace("\\", "/");
+            await Page.GoToAsync(fileurl);
+            Assert.Equal(fileurl.ToLower(), Page.Url.ToLower());
+            Assert.Equal(3, Page.Frames.Length);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goBack</playwright-describe>
+        ///<playwright-it>should use http for no protocol</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldUseHttpForNoProtocol()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage.Replace("http://", string.Empty));
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
         }
 
@@ -135,7 +154,8 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
             Server.SetRedirect("/redirect/2.html", "/empty.html");
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/redirect/1.html");
+            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/redirect/1.html");
+            Assert.Equal(HttpStatusCode.OK, response.Status);
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
@@ -176,7 +196,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should work with subframes return 204</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWhenServerReturns204()
         {
             Server.SetRoute("/empty.html", context =>
@@ -186,7 +206,19 @@ namespace PlaywrightSharp.Tests.Page
             });
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(
                 () => Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains(TestConstants.IsChromium ? "net::ERR_ABORTED" : "NS_BINDING_ABORTED", exception.Message);
+
+            if (TestConstants.IsChromium)
+            {
+                Assert.Contains("net::ERR_ABORTED", exception.Message);
+            }
+            else if (TestConstants.IsFirefox)
+            {
+                Assert.Contains("NS_BINDING_ABORTED", exception.Message);
+            }
+            else
+            {
+                Assert.Contains("Aborted: 204 No Content", exception.Message);
+            }
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -195,10 +227,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage, waitUntil: new[]
-            {
-                LifecycleEvent.DOMContentLoaded
-            });
+            var response = await Page.GoToAsync(TestConstants.EmptyPage, LifecycleEvent.DOMContentLoaded);
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
@@ -272,9 +301,17 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should throw if networkidle is passed as an option</playwright-it>
+        ///<playwright-it>should throw if networkidle0 is passed as an option</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowIfNetworkidleIsPassedAsAnOption() { }
+        public void ShouldThrowIfNetworkidle0IsPassedAsAnOption()
+        { }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should throw if networkidle2 is passed as an option</playwright-it>
+        [Fact(Skip = "We don't need this test")]
+        public void ShouldThrowIfNetworkidle2IsPassedAsAnOption()
+        { }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
@@ -311,7 +348,8 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
                 => await Page.GoToAsync(TestConstants.EmptyPage, new GoToOptions { Timeout = 1 }));
-            Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -321,9 +359,24 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Page.Context.DefaultNavigationTimeout = 2;
             Page.DefaultNavigationTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains(TestConstants.EmptyPage, exception.Message);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when exceeding browser context navigation timeout</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
+        {
+            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Page.Context.DefaultNavigationTimeout = 2;
+            var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
+            Assert.Contains("Timeout 2ms exceeded during page.goto.", exception.Message);
+            Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -332,16 +385,30 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
-            // Hang for request to the empty.html
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Page.Context.DefaultTimeout = 2;
             Page.DefaultTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when exceeding default maximum timeout</playwright-it>
+        ///<playwright-it>should fail when exceeding browser context timeout</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFailWhenExceedingBrowserContextTimeout()
+        {
+            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Page.Context.DefaultTimeout = 2;
+            var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
+            Assert.Contains("Timeout 2ms exceeded during page.goto.", exception.Message);
+            Assert.Contains(TestConstants.EmptyPage, exception.Message);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should prioritize default navigation timeout over default timeout</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
@@ -350,7 +417,8 @@ namespace PlaywrightSharp.Tests.Page
             Page.DefaultTimeout = 0;
             Page.DefaultNavigationTimeout = 1;
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -369,6 +437,38 @@ namespace PlaywrightSharp.Tests.Page
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions { Timeout = 0, WaitUntil = LifecycleEvent.Load });
             Assert.True(loaded);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should fail when replaced by another navigation</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFailWhenReplacedByAnotherNavigation()
+        {
+            Task anotherTask = null;
+
+            // Hang for request to the empty.html
+            Server.SetRoute("/empty.html", context =>
+            {
+                anotherTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+                return Task.Delay(-1);
+            });
+
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
+            await anotherTask;
+
+            if (TestConstants.IsChromium)
+            {
+                Assert.Contains("net::ERR_ABORTED", exception.Message);
+            }
+            else if (TestConstants.IsWebKit)
+            {
+                Assert.Contains("cancelled", exception.Message);
+            }
+            else
+            {
+                Assert.Contains("NS_BINDING_ABORTED", exception.Message);
+            }
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -420,19 +520,22 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should not leak listeners during navigation</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldNotLeakListenersDuringNavigation() { }
+        public void ShouldNotLeakListenersDuringNavigation()
+        { }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should not leak listeners during bad navigation</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldNotLeakListenersDuringBadNavigation() { }
+        public void ShouldNotLeakListenersDuringBadNavigation()
+        { }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should not leak listeners during navigation of 11 pages</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldNotLeakListenersDuringNavigationOf11Pages() { }
+        public void ShouldNotLeakListenersDuringNavigationOf11Pages()
+        { }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
@@ -483,9 +586,19 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             const string url = TestConstants.HttpsPrefix + "/redirect/1.html";
-            var exception = await Assert.ThrowsAnyAsync<NavigationException>(async () => await Page.GoToAsync(url));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(url));
             Assert.Contains(url, exception.Message);
-            Assert.Contains(url, exception.Url);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>should be able to navigate to a page controlled by service worker</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeAbleToNavigateToAPageControlledByServiceWorker()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/fetch/sw.html");
+            await Page.EvaluateAsync("() => window.activationPromise");
+            await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/fetch/sw.html");
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -523,13 +636,14 @@ namespace PlaywrightSharp.Tests.Page
                 ["referer"] = "http://microsoft.com/"
             });
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () =>
                 await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", new GoToOptions
                 {
                     Referer = "http://google.com/"
                 }));
 
-            Assert.Equal("\"referer\" is already specified as extra HTTP header", exception.Message);
+            Assert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
+            Assert.Contains(TestConstants.ServerUrl + "/grid.html", exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -566,18 +680,24 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when canceled by another navigation</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWhenCanceledByAnotherNavigation()
         {
-            Server.SetRoute("/one-style.css", context => Task.Delay(10_000));
-            var request = Server.WaitForRequest("/one-style.css");
+            Server.SetRoute("/one-style.html", context => Task.Delay(10_000));
+            var request = Server.WaitForRequest("/one-style.html");
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load);
             await request;
             await Page.GoToAsync(TestConstants.EmptyPage);
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await failed);
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await failed);
+        }
 
-            Assert.Equal($"Navigation to {TestConstants.ServerUrl}/one-style.html was canceled by another one", exception.Message);
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Page.goto</playwright-describe>
+        ///<playwright-it>extraHttpHeaders should be pushed to provisional page</playwright-it>
+        [Fact(Skip = "Skipped in Playwright")]
+        public void ExtraHttpHeadersShouldBePushedToProvisionalPage()
+        {
         }
     }
 }
