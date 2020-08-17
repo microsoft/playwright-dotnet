@@ -23,18 +23,8 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
-        /// Wait for this specific URL.
+        /// Wait for this specific URL. Regex or URL Predicate.
         /// </summary>
         public string Url { get; set; }
-
-        /// <summary>
-        /// Wait for an URL matching this expression.
-        /// </summary>
-        public Regex UrlRegEx { get; set; }
-
-        /// <summary>
-        /// Function that will check for the URL match.
-        /// </summary>
-        public Func<string, bool> UrlPredicate { get; set; }
     }
 }
