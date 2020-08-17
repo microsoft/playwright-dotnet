@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,8 +12,7 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.waitForLoadState</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class WaitForLoadStateTests : PlaywrightSharpPageBaseTest
+    public class WaitForLoadStateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public WaitForLoadStateTests(ITestOutputHelper output) : base(output)
@@ -68,7 +66,7 @@ namespace PlaywrightSharp.Tests.Page
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(timeout: 1));
-            Assert.Contains("Timeout of 1 ms exceeded", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
             responseTask.TrySetResult(true);
             await navigationTask;
         }
