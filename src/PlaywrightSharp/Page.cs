@@ -263,13 +263,11 @@ namespace PlaywrightSharp
             });
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => MainFrame.GoToAsync(true, url, options);
+        public Task<IResponse> GoToAsync(string url, LifecycleEvent? waitUntil = null, string referer = null, int? timeout = null)
+            => MainFrame.GoToAsync(true, url, waitUntil, referer, timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitForNavigationOptions options = null) => MainFrame.WaitForNavigationAsync(true, options);
-
-        /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent waitUntil) => MainFrame.WaitForNavigationAsync(true, waitUntil);
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, string url = null, int? timeout = null) => MainFrame.WaitForNavigationAsync(true, waitUntil, url, timeout);
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
@@ -345,13 +343,6 @@ namespace PlaywrightSharp
                 throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
             }
         }
-
-        /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, int timeout, LifecycleEvent waitUntil)
-            => GoToAsync(url, new GoToOptions { Timeout = timeout, WaitUntil = waitUntil });
-
-        /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => GoToAsync(url, new GoToOptions { WaitUntil = waitUntil });
 
         /// <inheritdoc />
         public async Task CloseAsync(PageCloseOptions options = null)
@@ -483,11 +474,7 @@ namespace PlaywrightSharp
         public Task<string> ScreenshotBase64Async(ScreenshotOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, NavigationOptions options = null) => MainFrame.SetContentAsync(true, html, options);
-
-        /// <inheritdoc />
-        public Task SetContentAsync(string html, LifecycleEvent waitUntil)
-            => MainFrame.SetContentAsync(true, html, new NavigationOptions { WaitUntil = waitUntil });
+        public Task SetContentAsync(string html, LifecycleEvent? waitUntil = null, int? timeout = null) => MainFrame.SetContentAsync(true, html, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => MainFrame.GetContentAsync(true);
@@ -520,14 +507,16 @@ namespace PlaywrightSharp
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<IResponse> GoBackAsync(NavigationOptions options = null) => throw new NotImplementedException();
+        public async Task<IResponse> GoBackAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
+            => (await _channel.GoBackAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task<IResponse> GoForwardAsync(NavigationOptions options = null) => throw new NotImplementedException();
+        public async Task<IResponse> GoForwardAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
+            => (await _channel.GoForwardAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IResponse> ReloadAsync(NavigationOptions options = null)
-            => (await _channel.ReloadAsync(options).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> ReloadAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
+            => (await _channel.ReloadAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
