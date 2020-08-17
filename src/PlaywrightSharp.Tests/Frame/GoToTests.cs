@@ -1,9 +1,9 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,8 +12,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.goto</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class GoToTests : PlaywrightSharpPageBaseTest
+    public class GoToTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public GoToTests(ITestOutputHelper output) : base(output)
@@ -47,8 +46,22 @@ namespace PlaywrightSharp.Tests.Frame
             var navigationTask = Page.FirstChildFrame().GoToAsync(TestConstants.EmptyPage);
             await waitForRequestTask;
             await Page.QuerySelectorEvaluateAsync("iframe", "frame => frame.remove()");
-            var exception = await Assert.ThrowsAsync<NavigationException>(async () => await navigationTask);
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await navigationTask);
             Assert.Contains("frame was detached", exception.Message);
+        }
+
+        ///<playwright-file>navigation.spec.js</playwright-file>
+        ///<playwright-describe>Frame.goto</playwright-describe>
+        ///<playwright-it>should continue after client redirect</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldContinueAfterClientRedirect()
+        {
+            Server.SetRoute("/frames/script.js", context => Task.Delay(10000));
+            string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GoToAsync(url, LifecycleEvent.Networkidle, null, 5000));
+
+            Assert.Contains("Timeout 5000ms exceeded during page.goto.", exception.Message);
+            Assert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
         }
 
         ///<playwright-file>navigation.spec.js</playwright-file>
@@ -57,8 +70,6 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
-            // Disable cache: otherwise, chromium will cache similar requests.
-            await Page.SetCacheEnabledAsync(false);
             await Page.GoToAsync(TestConstants.EmptyPage);
             // Attach three frames.
             var matchingData = new MatchingResponseData[]
