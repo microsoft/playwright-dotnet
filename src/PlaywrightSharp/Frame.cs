@@ -75,13 +75,11 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, GoToOptions options = null) => GoToAsync(false, url, options);
+        public Task<IResponse> GoToAsync(string url, LifecycleEvent? waitUntil = null, string referer = null, int? timeout = null)
+            => GoToAsync(false, url, waitUntil, referer, timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil) => GoToAsync(url, new GoToOptions { WaitUntil = waitUntil });
-
-        /// <inheritdoc />
-        public Task SetContentAsync(string html, NavigationOptions options = null) => SetContentAsync(false, html, options);
+        public Task SetContentAsync(string htm, int? timeout = null, LifecycleEvent? waitUntil = null) => SetContentAsync(false, html, timeout, waitUntil);
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => GetContentAsync(false);
@@ -213,9 +211,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task TypeAsync(string selector, string text, int delay = 0) => TypeAsync(false, selector, text, delay);
-
-        /// <inheritdoc />
-        public Task WaitForLoadStateAsync(NavigationOptions options = null) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => AddStyleTagAsync(false, options);
@@ -353,8 +348,8 @@ namespace PlaywrightSharp
         internal Task UncheckAsync(bool isPageCall, string selector, CheckOptions options)
             => _channel.UncheckAsync(selector, options, isPageCall);
 
-        internal Task SetContentAsync(bool isPageCall, string html, NavigationOptions options)
-            => _channel.SetcontentAsync(html, options, isPageCall);
+        internal Task SetContentAsync(bool isPageCall, string html, int? timeout = null, LifecycleEvent? waitUntil = null)
+            => _channel.SetcontentAsync(html, timeout, waitUntil, isPageCall);
 
         internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
             => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false)).Object;
@@ -494,7 +489,7 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<IResponse> GoToAsync(bool isPage, string url, GoToOptions options = null)
-            => (await _channel.GoToAsync(url, options, isPage).ConfigureAwait(false))?.Object;
+        internal async Task<IResponse> GoToAsync(bool isPage, string url, LifecycleEvent waitUntil, string referer, int? timeout)
+            => (await _channel.GoToAsync(url, timeout, waitUntil, referer, isPage).ConfigureAwait(false))?.Object;
     }
 }

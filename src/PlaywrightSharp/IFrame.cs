@@ -74,62 +74,41 @@ namespace PlaywrightSharp
         /// Navigates to an URL.
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <param name="options">Extra options.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
+        /// <param name="referer">Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.IDictionary{string, string})"/>.</param>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
         /// </returns>
         /// <remarks>
-        /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will throw an error if:
+        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will throw an error if:
         /// * There's an SSL error (e.g. in case of self-signed certificates).
         /// * Target URL is invalid.
         /// * The timeout is exceeded during navigation.
         /// * The remote server does not respond or is unreachable.
         /// * The main resource failed to load.
         /// <para/>
-        /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+        /// <see cref="IPage.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
         /// The status code for such responses can be retrieved by calling response.status().
         /// <para/>
-        /// NOTE <see cref="IFrame.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
+        /// NOTE <see cref="IPage.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
         /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
         /// <para/>
         /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
+        /// <para/>
+        /// Shortcut for <see cref="IFrame.GoToAsync(string, GoToOptions)"/>.
         /// </remarks>
-        Task<IResponse> GoToAsync(string url, GoToOptions options = null);
-
-        /// <summary>
-        /// Navigates to an URL.
-        /// </summary>
-        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
-        /// <param name="waitUntil">When to consider navigation succeeded.</param>
-        /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// </returns>
-        /// <remarks>
-        /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will throw an error if:
-        /// * There's an SSL error (e.g. in case of self-signed certificates).
-        /// * Target URL is invalid.
-        /// * The timeout is exceeded during navigation.
-        /// * The remote server does not respond or is unreachable.
-        /// * The main resource failed to load.
-        /// <para/>
-        /// <see cref="IFrame.GoToAsync(string, GoToOptions)"/> will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
-        /// The status code for such responses can be retrieved by calling response.status().
-        /// <para/>
-        /// NOTE <see cref="IFrame.GoToAsync(string, GoToOptions)"/> either throws an error or returns a main resource response.
-        /// The only exceptions are navigation to about:blank or navigation to the same URL with a different hash, which would succeed and return null.
-        /// <para/>
-        /// NOTE Headless mode doesn't support navigation to a PDF document. See the upstream issue.
-        /// </remarks>
-        Task<IResponse> GoToAsync(string url, LifecycleEvent waitUntil);
+        Task<IResponse> GoToAsync(string url, LifecycleEvent? waitUntil = null, string referer = null, int? timeout = null);
 
         /// <summary>
         /// Sets the HTML markup to the frame.
         /// </summary>
         /// <param name="html">HTML markup to assign to the page.</param>
-        /// <param name="options">The navigations options.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the javascript code executing injected the HTML finishes.</returns>
         /// <seealso cref="IPage.SetContentAsync(string, NavigationOptions)"/>
-        Task SetContentAsync(string html, NavigationOptions options = null);
+        Task SetContentAsync(string html, int? timeout = null, LifecycleEvent? waitUntil = null);
 
         /// <summary>
         /// Gets the full HTML contents of the page, including the doctype.
@@ -556,9 +535,10 @@ namespace PlaywrightSharp
         /// The navigation can be in progress when it is called.
         /// If navigation is already at a required state, completes immediately.
         /// </summary>
-        /// <param name="options">Extra options.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
-        Task WaitForLoadStateAsync(NavigationOptions options = null);
+        Task WaitForLoadStateAsync(LifecycleEvent? waitUntil = null, int? timeout = null);
 
         /// <summary>
         /// Adds a <c><![CDATA[<link rel="stylesheet">]]></c> tag into the page with the desired url or a <c><![CDATA[<link rel="stylesheet">]]></c> tag with the content.
