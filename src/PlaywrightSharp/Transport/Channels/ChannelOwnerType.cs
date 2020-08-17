@@ -51,5 +51,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "browserServer")]
         BrowserServer,
+
+        [EnumMember(Value = "worker")]
+        Worker,
     }
 }
