@@ -100,7 +100,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when a request fails, for example by timing out.
         /// </summary>
-        event EventHandler<RequestEventArgs> RequestFailed;
+        event EventHandler<RequestFailedEventArgs> RequestFailed;
 
         /// <summary>
         /// Raised when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c> or <c>beforeunload</c>.

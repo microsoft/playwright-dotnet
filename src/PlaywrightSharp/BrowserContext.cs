@@ -301,6 +301,9 @@ namespace PlaywrightSharp
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
+        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => _channel.SetExtraHttpHeadersAsync(headers);
+
         internal void OnRoute(Route route, Request request)
         {
             foreach (var item in _routes)

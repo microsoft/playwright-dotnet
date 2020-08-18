@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
             Server.SetRedirect("/foo.html", "/empty.html");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
-            var redirectedFrom = response.Request.RedirectFrom;
+            var redirectedFrom = response.Request.RedirectedFrom;
             Assert.NotNull(redirectedFrom);
             var redirected = await redirectedFrom.GetResponseAsync();
             Assert.Equal(HttpStatusCode.Redirect, redirected.Status);

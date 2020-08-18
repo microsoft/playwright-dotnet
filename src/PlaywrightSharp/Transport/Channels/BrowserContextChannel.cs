@@ -170,5 +170,14 @@ namespace PlaywrightSharp.Transport.Channels
                 true);
 
         internal Task ClearCookiesAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
+
+        internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+            => Scope.SendMessageToServer(
+                Guid,
+                "setExtraHTTPHeaders",
+                new Dictionary<string, object>
+                {
+                    ["headers"] = headers,
+                });
     }
 }

@@ -47,17 +47,17 @@ namespace PlaywrightSharp
 
         /// <summary>
         /// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/> object.
-        /// The two requests are connected by <see cref="IRequest.RedirectFrom"/> and <see cref="IRequest.RedirectTo"/> methods.
-        /// When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling <see cref="RedirectFrom"/>.
+        /// The two requests are connected by <see cref="IRequest.RedirectedFrom"/> and <see cref="IRequest.RedirectedTo"/> methods.
+        /// When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling <see cref="RedirectedFrom"/>.
         /// </summary>
-        IRequest RedirectFrom { get; }
+        IRequest RedirectedFrom { get; }
 
         /// <summary>
         /// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/> object.
-        /// The two requests are connected by <see cref="IRequest.RedirectFrom"/> and <see cref="IRequest.RedirectTo"/> methods.
-        /// When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling <see cref="RedirectFrom"/>..
+        /// The two requests are connected by <see cref="IRequest.RedirectedFrom"/> and <see cref="IRequest.RedirectedTo"/> methods.
+        /// When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling <see cref="RedirectedFrom"/>..
         /// </summary>
-        IRequest RedirectTo { get; }
+        IRequest RedirectedTo { get; }
 
         /// <summary>
         /// Gets or sets the failure.

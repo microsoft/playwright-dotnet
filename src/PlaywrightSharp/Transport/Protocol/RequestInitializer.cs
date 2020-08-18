@@ -19,5 +19,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public Frame Frame { get; set; }
 
         public RequestChannel RedirectedFrom { get; set; }
+
+        public ResourceType ResourceType { get; set; }
     }
 }

@@ -69,5 +69,8 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public async Task<byte[]> GetBodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
+
+        /// <inheritdoc />
+        public Task FinishedAsync() => _channel.FinishedAsync();
     }
 }
