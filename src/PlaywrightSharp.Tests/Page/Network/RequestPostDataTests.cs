@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Request.postData</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class RequestPostDataTests : PlaywrightSharpPageBaseTest
+    public class RequestPostDataTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public RequestPostDataTests(ITestOutputHelper output) : base(output)
