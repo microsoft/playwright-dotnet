@@ -74,6 +74,7 @@ namespace PlaywrightSharp.Tests.Page.Network
                 context.Response.WriteAsync("hello ");
                 return serverResponseCompletion.Task;
             });
+
             // Setup page to trap response.
             bool requestFinished = false;
             Page.RequestFinished += (sender, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
