@@ -519,9 +519,6 @@ namespace PlaywrightSharp
             => (await _channel.ReloadAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task SetRequestInterceptionAsync(bool enabled) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
 
         /// <inheritdoc/>

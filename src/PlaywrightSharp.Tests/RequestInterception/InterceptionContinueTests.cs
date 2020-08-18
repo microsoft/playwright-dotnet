@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public InterceptionContinueTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Interception.continue</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -49,5 +49,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             );
             Assert.Equal("bar", requestTask.Result);
         }
+        */
     }
 }

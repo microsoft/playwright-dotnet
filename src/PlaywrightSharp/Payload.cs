@@ -6,7 +6,6 @@ namespace PlaywrightSharp
     /// <summary>
     /// Payload information.
     /// </summary>
-    /// <see cref="IRequest.ContinueAsync(Payload)"/>
     public class Payload
     {
         /// <summary>

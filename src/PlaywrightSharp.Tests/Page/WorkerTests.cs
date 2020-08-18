@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         public WorkerTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>Page.Workers</playwright-it>
@@ -234,5 +234,6 @@ namespace PlaywrightSharp.Tests.Page
             await socketClosedTcs.Task;
             Assert.Equal($"open < ws://localhost:{TestConstants.Port}/ws>:close", string.Join(":", log));
         }
+        */
     }
 }

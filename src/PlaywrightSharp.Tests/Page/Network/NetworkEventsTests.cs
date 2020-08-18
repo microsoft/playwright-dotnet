@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public NetworkEventsTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Network Events</playwright-describe>
         ///<playwright-it>Page.Events.Request</playwright-it>
@@ -172,5 +172,6 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Single(redirectChain);
             Assert.Contains("/foo.html", redirectChain[0].Url);
         }
+        */
     }
 }

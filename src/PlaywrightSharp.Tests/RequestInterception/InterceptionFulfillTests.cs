@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public InterceptionFulfillTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>interception.fulfill</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -122,5 +122,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("true", response.Headers["foo"]);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
+        */
     }
 }

@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public InterceptionVsIsNavigationRequestTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Interception vs isNavigationRequest</playwright-describe>
         ///<playwright-it>should work with request interception</playwright-it>
@@ -40,5 +40,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.False(requests["script.js"].IsNavigationRequest);
             Assert.False(requests["style.css"].IsNavigationRequest);
         }
+        */
     }
 }

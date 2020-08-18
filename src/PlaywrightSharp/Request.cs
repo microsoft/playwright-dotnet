@@ -56,18 +56,9 @@ namespace PlaywrightSharp
         public IRequest[] RedirectChain { get; }
 
         /// <inheritdoc />
-        public IResponse Response { get; }
-
-        /// <inheritdoc />
         public string Failure { get; }
 
         /// <inheritdoc />
-        public Task ContinueAsync(Payload payload = null) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task FulfillAsync(ResponseData response) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed) => throw new NotImplementedException();
+        public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
     }
 }
