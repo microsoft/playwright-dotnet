@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Abort error codes. used by <see cref="IRequest.AbortAsync(RequestAbortErrorCode)"/>.
+    /// Abort error codes.
     /// </summary>
     public enum RequestAbortErrorCode
     {

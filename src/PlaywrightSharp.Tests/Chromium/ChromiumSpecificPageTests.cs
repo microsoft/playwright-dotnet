@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.Chromium
         public ChromiumSpecificPageTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium-Specific Page Tests</playwright-describe>
         ///<playwright-it>Page.setRequestInterception should work with intervention headers</playwright-it>
@@ -45,5 +45,6 @@ namespace PlaywrightSharp.Tests.Chromium
 
             Assert.Contains("feature/5718547946799104", interventionHeader);
         }
+        */
     }
 }

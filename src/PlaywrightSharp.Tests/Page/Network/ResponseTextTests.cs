@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public ResponseTextTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -98,5 +98,6 @@ namespace PlaywrightSharp.Tests.Page.Network
             serverResponseCompletion.SetResult(true);
             Assert.Equal("hello world!", await responseText);
         }
+        */
     }
 }

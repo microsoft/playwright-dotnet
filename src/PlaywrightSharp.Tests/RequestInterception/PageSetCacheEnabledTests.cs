@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public PageSetCacheEnabledTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         //<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setCacheEnabled</playwright-describe>
         ///<playwright-it>should stay disabled when toggling request interception on/off</playwright-it>
@@ -36,5 +36,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             );
             Assert.Equal(StringValues.Empty, nonCachedRequestTask.Result);
         }
+        */
     }
 }

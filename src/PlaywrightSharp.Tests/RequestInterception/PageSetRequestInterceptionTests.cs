@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public PageSetRequestInterceptionTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.setRequestInterception</playwright-describe>
         ///<playwright-it>should intercept</playwright-it>
@@ -629,5 +629,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("Navigation to " + TestConstants.ServerUrl + "/one-style.html was canceled by another one", exception.Message);
             await request.ContinueAsync();
         }
+        */
     }
 }

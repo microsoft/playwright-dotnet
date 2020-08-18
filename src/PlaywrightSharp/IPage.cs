@@ -1061,14 +1061,6 @@ namespace PlaywrightSharp
         Task<IResponse> ReloadAsync(int? timeout = null, LifecycleEvent? waitUntil = null);
 
         /// <summary>
-        /// Activating request interception enables <see cref="IRequest.AbortAsync(RequestAbortErrorCode)">request.AbortAsync</see>,
-        /// <see cref="IRequest.ContinueAsync(Payload)">request.ContinueAsync</see> and <see cref="IRequest.FulfillAsync(ResponseData)">request.FulfillAsync</see> methods.
-        /// </summary>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="enabled">Whether to enable request interception..</param>
-        Task SetRequestInterceptionAsync(bool enabled);
-
-        /// <summary>
         /// Set offline mode for the page.
         /// </summary>
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>

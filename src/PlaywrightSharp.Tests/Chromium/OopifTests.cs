@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Chromium
         public OopifTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>chromium/oopif.spec.js</playwright-file>
         ///<playwright-describe>OOPIF</playwright-describe>
         ///<playwright-it>should wait for a target</playwright-it>
@@ -51,5 +51,6 @@ namespace PlaywrightSharp.Tests.Chromium
             await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
         }
+        */
     }
 }

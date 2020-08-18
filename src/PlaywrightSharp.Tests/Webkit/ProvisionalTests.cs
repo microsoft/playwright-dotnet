@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Webkit
         public ProvisionalTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>webkit/provisional.spec.js</playwright-file>
         ///<playwright-describe>provisional page</playwright-describe>
         ///<playwright-it>extraHttpHeaders should be pushed to provisional page</playwright-it>
@@ -76,5 +76,6 @@ namespace PlaywrightSharp.Tests.Webkit
             Assert.Equal("setRequestInterception", order[0]);
             Assert.Equal("goto", order[1]);
         }
+        */
     }
 }
