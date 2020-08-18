@@ -9,11 +9,10 @@ namespace PlaywrightSharp.Tests.Page
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Page.reload</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ReloadTests : PlaywrightSharpPageBaseTest
+    public class PageReloadTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ReloadTests(ITestOutputHelper output) : base(output)
+        public PageReloadTests(ITestOutputHelper output) : base(output)
         {
         }
 
