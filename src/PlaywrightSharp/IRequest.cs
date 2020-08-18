@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -79,5 +80,20 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the response is resolved.</returns>
         Task<IResponse> GetResponseAsync();
+
+        /// <summary>
+        /// Returns the parsed request's body for form-urlencoded and JSON as a fallback if any.
+        /// </summary>
+        /// <param name="options">Parser options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <see cref="JsonDocument"/> representation of request body.</returns>
+        JsonDocument GetJsonAsync(JsonDocumentOptions options = default);
+
+        /// <summary>
+        /// Returns the parsed request's body for form-urlencoded and JSON as a fallback if any.
+        /// </summary>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="options">Parser options.</param>
+        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <typeparamref name="T"/> representation of request body.</returns>
+        T GetJsonAsync<T>(JsonSerializerOptions options = null);
     }
 }
