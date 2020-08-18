@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
+using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport.Protocol
 {
@@ -16,5 +17,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public bool IsNavigationRequest { get; set; }
 
         public Frame Frame { get; set; }
+
+        public RequestChannel RedirectedFrom { get; set; }
     }
 }
