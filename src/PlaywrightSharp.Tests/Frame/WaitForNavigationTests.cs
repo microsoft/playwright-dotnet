@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>navigation.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForNavigation</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class WaitForNavigationTests : PlaywrightSharpPageBaseTest
+    public class WaitForNavigationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public WaitForNavigationTests(ITestOutputHelper output) : base(output)
@@ -46,15 +45,15 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldFailWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.FirstChildFrame();
+            var frame = Page.Frames[1];
             Server.SetRoute("/empty.html", context => Task.Delay(10000));
-            var waitForNavigationResult = frame.WaitForNavigationAsync();
-            await TaskUtils.WhenAll(
-                Server.WaitForRequest("/empty.html"),
-                frame.EvaluateAsync($"() => window.location = '{TestConstants.EmptyPage}'"));
 
-            await Page.QuerySelectorEvaluateAsync("iframe", "frame => frame.remove()");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => waitForNavigationResult);
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
+                frame.WaitForNavigationAsync(),
+                frame.EvaluateAsync($"() => window.location = '{TestConstants.EmptyPage}'"),
+                Page.EvaluateAsync($"setTimeout(() => document.querySelector(\"iframe\").remove())")));
+
+            Assert.Contains("waiting for navigation until \"load\"", exception.Message);
             Assert.Contains("frame was detached", exception.Message);
         }
     }
