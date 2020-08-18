@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.json</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ResponseJsonTests : PlaywrightSharpPageBaseTest
+    public class ResponseJsonTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ResponseJsonTests(ITestOutputHelper output) : base(output)

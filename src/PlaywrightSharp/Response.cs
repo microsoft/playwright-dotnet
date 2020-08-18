@@ -62,10 +62,18 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default) => throw new NotImplementedException();
+        public async Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default)
+        {
+            string content = await GetTextAsync().ConfigureAwait(false);
+            return JsonDocument.Parse(content, options);
+        }
 
         /// <inheritdoc />
-        public Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null) => throw new NotImplementedException();
+        public async Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null)
+        {
+            string content = await GetTextAsync().ConfigureAwait(false);
+            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Scope.Connection.GetDefaultJsonSerializerOptions());
+        }
 
         /// <inheritdoc />
         public async Task<byte[]> GetBodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
