@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
             Server.EnableGzip("/simple.json");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("gzip", response.Headers["Content-Encoding"]);
+            Assert.Equal("gzip", response.Headers["content-encoding"]);
             Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
         }
 
