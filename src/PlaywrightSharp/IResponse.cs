@@ -71,5 +71,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the response is returned by the server, yielding a <see cref="byte"/> array.</returns>
         Task<byte[]> GetBodyAsync();
+
+        /// <summary>
+        /// Waits for this response to finish, returns failure error if request failed.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the response finished.</returns>
+        Task FinishedAsync();
     }
 }

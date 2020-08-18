@@ -47,7 +47,19 @@ namespace PlaywrightSharp
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
+            _channel.RequestFailed += (sender, e) =>
+            {
+                e.Request.Object.Failure = e.FailureText;
+
+                RequestFailed?.Invoke(this, new RequestFailedEventArgs
+                {
+                    Request = e.Request.Object,
+                    FailureText = e.FailureText,
+                });
+            };
+
             _channel.Request += (sender, e) => Request?.Invoke(this, e);
+            _channel.RequestFinished += (sender, e) => RequestFinished?.Invoke(this, e);
             _channel.Response += (sender, e) => Response?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
@@ -82,7 +94,7 @@ namespace PlaywrightSharp
         public event EventHandler<RequestEventArgs> RequestFinished;
 
         /// <inheritdoc />
-        public event EventHandler<RequestEventArgs> RequestFailed;
+        public event EventHandler<RequestFailedEventArgs> RequestFailed;
 
         /// <inheritdoc />
         public event EventHandler<DialogEventArgs> Dialog;

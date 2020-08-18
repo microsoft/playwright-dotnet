@@ -417,5 +417,12 @@ namespace PlaywrightSharp
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
         Task SetOfflineAsync(bool enabled);
+
+        /// <summary>
+        /// Sets extra HTTP headers that will be sent with every request in every page in the context.
+        /// </summary>
+        /// <param name="headers">Additional http headers to be sent with every request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
+        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
     }
 }

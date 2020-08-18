@@ -23,6 +23,12 @@ namespace PlaywrightSharp
             _scope = scope;
             _channel = new RequestChannel(guid, scope, this);
             _initializer = initializer;
+            RedirectedFrom = _initializer.RedirectedFrom?.Object;
+
+            if (RedirectedFrom != null)
+            {
+                _initializer.RedirectedFrom.Object.RedirectedTo = this;
+            }
         }
 
         /// <inheritdoc/>
@@ -53,13 +59,16 @@ namespace PlaywrightSharp
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
         /// <inheritdoc />
-        public ResourceType ResourceType { get; }
+        public ResourceType ResourceType => _initializer.ResourceType;
 
         /// <inheritdoc />
-        public IRequest[] RedirectChain { get; }
+        public string Failure { get; internal set; }
 
         /// <inheritdoc />
-        public string Failure { get; }
+        public IRequest RedirectedFrom { get; }
+
+        /// <inheritdoc />
+        public IRequest RedirectedTo { get; internal set; }
 
         /// <inheritdoc />
         public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;

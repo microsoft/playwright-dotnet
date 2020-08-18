@@ -11,14 +11,13 @@ namespace PlaywrightSharp.Tests.Page.Network
     ///<playwright-file>network.spec.js</playwright-file>
     ///<playwright-describe>Response.text</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ResponseTextTests : PlaywrightSharpPageBaseTest
+    public class ResponseTextTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ResponseTextTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Response.text</playwright-describe>
         ///<playwright-it>should work</playwright-it>
@@ -37,7 +36,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
             Server.EnableGzip("/simple.json");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("gzip", response.Headers["Content-Encoding"]);
+            Assert.Equal("gzip", response.Headers["content-encoding"]);
             Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
         }
 
@@ -49,9 +48,9 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
             Server.SetRedirect("/foo.html", "/empty.html");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
-            var redirectChain = response.Request.RedirectChain;
-            Assert.Single(redirectChain);
-            var redirected = redirectChain[0].Response;
+            var redirectedFrom = response.Request.RedirectedFrom;
+            Assert.NotNull(redirectedFrom);
+            var redirected = await redirectedFrom.GetResponseAsync();
             Assert.Equal(HttpStatusCode.Redirect, redirected.Status);
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await redirected.GetTextAsync());
@@ -75,6 +74,7 @@ namespace PlaywrightSharp.Tests.Page.Network
                 context.Response.WriteAsync("hello ");
                 return serverResponseCompletion.Task;
             });
+
             // Setup page to trap response.
             bool requestFinished = false;
             Page.RequestFinished += (sender, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
@@ -98,6 +98,5 @@ namespace PlaywrightSharp.Tests.Page.Network
             serverResponseCompletion.SetResult(true);
             Assert.Equal("hello world!", await responseText);
         }
-        */
     }
 }

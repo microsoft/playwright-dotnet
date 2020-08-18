@@ -19,6 +19,10 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RequestEventArgs> Request;
 
+        internal event EventHandler<RequestEventArgs> RequestFinished;
+
+        internal event EventHandler<PageChannelRequestFailedEventArgs> RequestFailed;
+
         internal event EventHandler<ResponseEventArgs> Response;
 
         internal event EventHandler DOMContentLoaded;
@@ -109,6 +113,12 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "request":
                     Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    break;
+                case "requestFinished":
+                    RequestFinished?.Invoke(this, new RequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    break;
+                case "requestFailed":
+                    RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestFailedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "response":
                     Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.ToObject<ResponseChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });

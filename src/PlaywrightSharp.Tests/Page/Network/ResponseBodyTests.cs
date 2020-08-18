@@ -8,18 +8,17 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
-    ///<playwright-describe>Response.buffer</playwright-describe>
+    ///<playwright-describe>Response.body</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ResponseBufferTests : PlaywrightSharpPageBaseTest
+    public class ResponseBodyTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ResponseBufferTests(ITestOutputHelper output) : base(output)
+        public ResponseBodyTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.buffer</playwright-describe>
+        ///<playwright-describe>Response.body</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
@@ -30,7 +29,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.buffer</playwright-describe>
+        ///<playwright-describe>Response.body</playwright-describe>
         ///<playwright-it>should work with compression</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithCompression()

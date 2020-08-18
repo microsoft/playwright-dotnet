@@ -47,28 +47,18 @@ namespace PlaywrightSharp
         ResourceType ResourceType { get; }
 
         /// <summary>
-        /// A redirectChain is a chain of requests initiated to fetch a resource.
-        /// If there are no redirects and the request was successful, the chain will be empty.
-        /// If a server responds with at least a single redirect, then the chain will contain all the requests that were redirected.
-        /// redirectChain is shared between all the requests of the same chain.
+        /// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/> object.
+        /// The two requests are connected by <see cref="IRequest.RedirectedFrom"/> and <see cref="IRequest.RedirectedTo"/> methods.
+        /// When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling <see cref="RedirectedFrom"/>.
         /// </summary>
-        /// <example>
-        /// For example, if the website http://example.com has a single redirect to https://example.com, then the chain will contain one request:
-        /// <code>
-        /// var response = await page.GoToAsync("http://example.com");
-        /// var chain = response.Request.RedirectChain;
-        /// Console.WriteLine(chain.Length); // 1
-        /// Console.WriteLine(chain[0].Url); // 'http://example.com'
-        /// </code>
-        /// If the website https://google.com has no redirects, then the chain will be empty:
-        /// <code>
-        /// var response = await page.GoToAsync("https://google.com");
-        /// var chain = response.Request.RedirectChain;
-        /// Console.WriteLine(chain.Length); // 0
-        /// </code>
-        /// </example>
-        /// <value>The redirect chain.</value>
-        IRequest[] RedirectChain { get; }
+        IRequest RedirectedFrom { get; }
+
+        /// <summary>
+        /// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/> object.
+        /// The two requests are connected by <see cref="IRequest.RedirectedFrom"/> and <see cref="IRequest.RedirectedTo"/> methods.
+        /// When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling <see cref="RedirectedFrom"/>..
+        /// </summary>
+        IRequest RedirectedTo { get; }
 
         /// <summary>
         /// Gets or sets the failure.
