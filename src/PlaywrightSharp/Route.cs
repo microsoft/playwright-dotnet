@@ -74,9 +74,9 @@ namespace PlaywrightSharp
             if (!string.IsNullOrEmpty(response.Path))
             {
                 byte[] content = File.ReadAllBytes(response.Path);
-                string buffer = Convert.ToBase64String(content);
+                body = Convert.ToBase64String(content);
                 isBase64 = true;
-                length = buffer.Length;
+                length = body.Length;
             }
             else if (!string.IsNullOrEmpty(response.Body))
             {
@@ -84,11 +84,11 @@ namespace PlaywrightSharp
                 isBase64 = false;
                 length = body.Length;
             }
-            else
+            else if (response.BodyContent != null)
             {
-                string buffer = Convert.ToBase64String(response.BodyContent);
+                body = Convert.ToBase64String(response.BodyContent);
                 isBase64 = true;
-                length = buffer.Length;
+                length = body.Length;
             }
 
             var headers = new Dictionary<string, string>();

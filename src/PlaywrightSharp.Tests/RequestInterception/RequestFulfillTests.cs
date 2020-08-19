@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -72,7 +75,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>request.fulfill</playwright-describe>
         ///<playwright-it>should allow mocking binary responses</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldAllowMockingBinaryResponses()
         {
             await Page.RouteAsync("**/*", (route, request) =>
@@ -105,7 +108,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>request.fulfill</playwright-describe>
         ///<playwright-it>should work with file path</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldWorkWithFilePath()
         {
             await Page.RouteAsync("**/*", (route, request) =>
@@ -150,6 +153,81 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal(HttpStatusCode.OK, response.Status);
             Assert.Equal("true", response.Headers["foo"]);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>request.fulfill</playwright-describe>
+        ///<playwright-it>should not modify the headers sent to the server</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldNotModifyTheHeadersSentToTheServer()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var interceptedRequests = new List<Dictionary<string, string>>();
+
+            await Page.GoToAsync(TestConstants.ServerUrl + "/unused");
+
+            Server.SetRoute("/something", ctx =>
+            {
+                interceptedRequests.Add(ctx.Request.Headers.ToDictionary());
+                ctx.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                return ctx.Response.WriteAsync("done");
+
+            });
+
+            string text = await Page.EvaluateAsync<string>(@"async url => {
+                const data = await fetch(url);
+                return data.text();
+            }", TestConstants.CrossProcessUrl + "/something");
+
+            Assert.Equal("done", text);
+
+            IRequest playwrightRequest = null;
+
+            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route, request) =>
+            {
+                playwrightRequest = request;
+                route.ContinueAsync(new RouteContinueOverrides { Headers = request.Headers });
+            });
+
+            string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
+                const data = await fetch(url);
+                return data.text();
+            }", TestConstants.CrossProcessUrl + "/something");
+
+            Assert.Equal("done", textAfterRoute);
+
+            Assert.Equal(2, interceptedRequests.Count);
+            Assert.Equal(interceptedRequests[1], interceptedRequests[0]);
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>request.fulfill</playwright-describe>
+        ///<playwright-it>should include the origin header</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldIncludeTheOriginHeader()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            IRequest interceptedRequest = null;
+
+            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route, request) =>
+            {
+                interceptedRequest = request;
+                route.FulfillAsync(new RouteFilfillResponse
+                {
+
+                    Headers = new Dictionary<string, string> { ["Access-Control-Allow-Origin"] = "*" },
+                    ContentType = "text/plain",
+                    Body = "done",
+                });
+            });
+
+            string text = await Page.EvaluateAsync<string>(@"async url => {
+                const data = await fetch(url);
+                return data.text();
+            }", TestConstants.CrossProcessUrl + "/something");
+
+            Assert.Equal("done", text);
+            Assert.Equal(TestConstants.ServerUrl, interceptedRequest.Headers["origin"]);
         }
     }
 }
