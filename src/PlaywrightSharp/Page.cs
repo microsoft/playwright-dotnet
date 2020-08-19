@@ -643,10 +643,42 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
+        public Task RouteAsync(Regex regex, Action<Route, IRequest> handler)
+        {
+            _routes.Add(new RouteSetting
+            {
+                Regex = regex,
+                Handler = handler,
+            });
+
+            if (_routes.Count == 1)
+            {
+                return _channel.SetNetworkInterceptionEnabledAsync(true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
         public Task UnrouteAsync(string url, Action<Route, IRequest> handler = null)
         {
             var newRoutesList = new List<RouteSetting>();
             newRoutesList.AddRange(_routes.Where(r => r.Url != url || (handler != null && r.Handler != handler)));
+            _routes = newRoutesList;
+
+            if (_routes.Count == 0)
+            {
+                return _channel.SetNetworkInterceptionEnabledAsync(false);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task UnrouteAsync(Regex regex, Action<Route, IRequest> handler = null)
+        {
+            var newRoutesList = new List<RouteSetting>();
+            newRoutesList.AddRange(_routes.Where(r => r.Regex != regex || (handler != null && r.Handler != handler)));
             _routes = newRoutesList;
 
             if (_routes.Count == 0)
@@ -720,7 +752,9 @@ namespace PlaywrightSharp
         {
             foreach (var route in _routes)
             {
-                if (e.Request.Url.UrlMatches(route.Url))
+                if (
+                    (route.Url != null && e.Request.Url.UrlMatches(route.Url)) ||
+                    (route.Regex?.IsMatch(e.Request.Url) == true))
                 {
                     route.Handler(e.Route, e.Request);
                     return;

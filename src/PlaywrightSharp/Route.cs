@@ -52,6 +52,13 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
+        /// Aborts the route's request.
+        /// </summary>
+        /// <param name="errorCode">Optional error code.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was sent.</returns>
+        public Task AbortAsync(RequestAbortErrorCode errorCode = RequestAbortErrorCode.Failed) => _channel.AbortAsync(errorCode);
+
+        /// <summary>
         /// Continues route's request with optional overrides.
         /// </summary>
         /// <param name="overrides">Optional request overrides.</param>
@@ -76,6 +83,12 @@ namespace PlaywrightSharp
                 body = response.Body;
                 isBase64 = false;
                 length = body.Length;
+            }
+            else
+            {
+                string buffer = Convert.ToBase64String(response.BodyContent);
+                isBase64 = true;
+                length = buffer.Length;
             }
 
             var headers = new Dictionary<string, string>();

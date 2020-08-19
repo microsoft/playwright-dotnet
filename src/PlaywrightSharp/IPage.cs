@@ -1386,12 +1386,29 @@ namespace PlaywrightSharp
         Task RouteAsync(string url, Action<Route, IRequest> handler);
 
         /// <summary>
+        /// Routing provides the capability to modify network requests that are made by a page.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="regex">A regex to match while routing.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(Regex regex, Action<Route, IRequest> handler);
+
+        /// <summary>
         /// Removes a route created with <see cref="IPage.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
         /// </summary>
         /// <param name="url">A glob pattern used to match while routing.</param>
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
         Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Regex, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="regex">A regex used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(Regex regex, Action<Route, IRequest> handler = null);
 
         /// <summary>
         /// Under the hood, it creates an instance of an event based on the given type, initializes it with eventInit properties and dispatches it on the element.

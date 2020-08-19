@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -8,11 +9,14 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        public Task AbortAsync(string errorCode)
+        public Task AbortAsync(RequestAbortErrorCode errorCode)
             => Scope.SendMessageToServer(
                 Guid,
                 "abort",
-                errorCode);
+                new Dictionary<string, object>
+                {
+                    ["errorCode"] = errorCode,
+                });
 
         public Task FulfillAsync(NormalizedFulfillResponse response)
             => Scope.SendMessageToServer(
@@ -24,6 +28,7 @@ namespace PlaywrightSharp.Transport.Channels
             => Scope.SendMessageToServer(
                 Guid,
                 "continue",
-                (object)overrides ?? new { });
+                (object)overrides ?? new { },
+                true);
     }
 }

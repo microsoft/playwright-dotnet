@@ -10,26 +10,24 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests.RequestInterception
 {
     ///<playwright-file>interception.spec.js</playwright-file>
-    ///<playwright-describe>interception.fulfill</playwright-describe>
+    ///<playwright-describe>request.fulfill</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class InterceptionFulfillTests : PlaywrightSharpPageBaseTest
+    public class RequestFulfillTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public InterceptionFulfillTests(ITestOutputHelper output) : base(output)
+        public RequestFulfillTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>interception.fulfill</playwright-describe>
+        ///<playwright-describe>request.fulfill</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += async (sender, e) =>
+            await Page.RouteAsync("**/*", (route, request) =>
             {
-                await e.Request.FulfillAsync(new ResponseData
+                route.FulfillAsync(new RouteFilfillResponse
                 {
                     Status = HttpStatusCode.Created,
                     Headers = new Dictionary<string, string>
@@ -39,7 +37,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     ContentType = "text/html",
                     Body = "Yo, page!"
                 });
-            };
+            });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.Created, response.Status);
             Assert.Equal("bar", response.Headers["foo"]);
@@ -52,20 +50,19 @@ namespace PlaywrightSharp.Tests.RequestInterception
         /// As the goal here is testing HTTP codes that are not in Chromium (see https://cs.chromium.org/chromium/src/net/http/http_status_code_list.h?sq=package:chromium) we will use code 426: Upgrade Required
         /// </summary>
         ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>interception.fulfill</playwright-describe>
+        ///<playwright-describe>request.fulfill</playwright-describe>
         ///<playwright-it>should work with status code 422</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithStatusCode422()
         {
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += (sender, e) =>
+            await Page.RouteAsync("**/*", (route, request) =>
             {
-                e.Request.FulfillAsync(new ResponseData
+                route.FulfillAsync(new RouteFilfillResponse
                 {
                     Status = HttpStatusCode.UpgradeRequired,
                     Body = "Yo, page!"
                 });
-            };
+            });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.UpgradeRequired, response.Status);
             Assert.Equal("Upgrade Required", response.StatusText);
@@ -73,21 +70,20 @@ namespace PlaywrightSharp.Tests.RequestInterception
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>interception.fulfill</playwright-describe>
+        ///<playwright-describe>request.fulfill</playwright-describe>
         ///<playwright-it>should allow mocking binary responses</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAllowMockingBinaryResponses()
         {
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += (sender, e) =>
+            await Page.RouteAsync("**/*", (route, request) =>
             {
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
-                e.Request.FulfillAsync(new ResponseData
+                route.FulfillAsync(new RouteFilfillResponse
                 {
                     ContentType = "image/png",
-                    BodyData = imageBuffer
+                    BodyContent = imageBuffer
                 });
-            };
+            });
             await Page.EvaluateAsync(@"PREFIX => {
                 const img = document.createElement('img');
                 img.src = PREFIX + '/does-not-exist.png';
@@ -99,15 +95,47 @@ namespace PlaywrightSharp.Tests.RequestInterception
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>interception.fulfill</playwright-describe>
+        ///<playwright-describe>request.fulfill</playwright-describe>
+        ///<playwright-it>should allow mocking svg with charset</playwright-it>
+        [Fact(Skip = "We need screenshots for this")]
+        public void ShouldAllowMockingSvgWithCharset()
+        {
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>request.fulfill</playwright-describe>
+        ///<playwright-it>should work with file path</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWithFilePath()
+        {
+            await Page.RouteAsync("**/*", (route, request) =>
+            {
+                route.FulfillAsync(new RouteFilfillResponse
+                {
+                    ContentType = "shouldBeIgnored",
+                    Path = TestUtils.GetWebServerFile("pptr.png")
+                }); ;
+            });
+
+            await Page.EvaluateAsync(@"PREFIX => {
+                const img = document.createElement('img');
+                img.src = PREFIX + '/does-not-exist.png';
+                document.body.appendChild(img);
+                return new Promise(fulfill => img.onload = fulfill);
+            }", TestConstants.ServerUrl);
+            var img = await Page.QuerySelectorAsync("img");
+            Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
+        }
+
+        ///<playwright-file>interception.spec.js</playwright-file>
+        ///<playwright-describe>request.fulfill</playwright-describe>
         ///<playwright-it>should stringify intercepted request response headers</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += async (sender, e) =>
+            await Page.RouteAsync("**/*", (route, request) =>
             {
-                await e.Request.FulfillAsync(new ResponseData
+                route.FulfillAsync(new RouteFilfillResponse
                 {
                     Status = HttpStatusCode.OK,
                     Headers = new Dictionary<string, string>
@@ -116,12 +144,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     },
                     Body = "Yo, page!"
                 });
-            };
+            });
+
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.OK, response.Status);
             Assert.Equal("true", response.Headers["foo"]);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
-        */
     }
 }

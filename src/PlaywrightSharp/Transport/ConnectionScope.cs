@@ -128,8 +128,8 @@ namespace PlaywrightSharp.Transport
             Connection.OnObjectCreated(guid, result);
         }
 
-        internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args = null)
-            => Connection.SendMessageToServerAsync<JsonElement?>(guid, method, args);
+        internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args = null, bool ignoreNullValues = false)
+            => Connection.SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues);
 
         internal Task<T> SendMessageToServer<T>(
             string guid,

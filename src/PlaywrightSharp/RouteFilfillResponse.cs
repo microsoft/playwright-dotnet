@@ -29,6 +29,11 @@ namespace PlaywrightSharp
         public string Body { get; set; }
 
         /// <summary>
+        /// Optional response body.
+        /// </summary>
+        public byte[] BodyContent { get; set; }
+
+        /// <summary>
         /// Optional file path to respond with. The content type will be inferred from file extension.
         /// If path is a relative path, then it is resolved relative to current working directory.
         /// </summary>
