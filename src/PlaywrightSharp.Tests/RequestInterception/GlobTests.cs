@@ -1,8 +1,8 @@
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Tests;
+using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests;
 
 namespace PlaywrightSharp.Tests.RequestInterception
 {
