@@ -159,6 +159,8 @@ namespace PlaywrightSharp.Transport.Channels
                 },
                 true);
 
+        internal Task ClearPermissionsAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearPermissions", null);
+
         internal Task SetGeolocationAsync(GeolocationOption geolocation)
             => Scope.SendMessageToServer<PageChannel>(
                 Guid,
