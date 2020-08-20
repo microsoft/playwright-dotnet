@@ -152,6 +152,19 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
+        /// Network proxy settings.
+        /// </summary>
+        public ProxySettings Proxy
+        {
+            get
+            {
+                Values.TryGetValue("proxy", out object result);
+                return result as ProxySettings;
+            }
+            set => Values["proxy"] = value;
+        }
+
+        /// <summary>
         /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
         /// </summary>
         /// <param name="options">Option to convert.</param>

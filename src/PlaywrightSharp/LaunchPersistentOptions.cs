@@ -360,6 +360,19 @@ namespace PlaywrightSharp
             set => Values["extraHTTPHeaders"] = value;
         }
 
+        /// <summary>
+        /// Network proxy settings.
+        /// </summary>
+        public ProxySettings Proxy
+        {
+            get
+            {
+                Values.TryGetValue("proxy", out object result);
+                return result as ProxySettings;
+            }
+            set => Values["proxy"] = value;
+        }
+
         internal Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
 
         /// <summary>
