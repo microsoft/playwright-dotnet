@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -196,7 +195,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("done", textAfterRoute);
 
             Assert.Equal(2, interceptedRequests.Count);
-            Assert.Equal(interceptedRequests[1], interceptedRequests[0]);
+            Assert.Equal(interceptedRequests[1].OrderBy(kv => kv.Key), interceptedRequests[0].OrderBy(kv => kv.Key));
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>

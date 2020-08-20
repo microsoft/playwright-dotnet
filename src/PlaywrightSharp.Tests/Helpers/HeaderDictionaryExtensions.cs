@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
 namespace PlaywrightSharp.Tests.Helpers
 {
-    public static class HeaderDictionaryExtensions
+    internal static class HeaderDictionaryExtensions
     {
         public static Dictionary<string, string> ToDictionary(this IHeaderDictionary headers)
         {
