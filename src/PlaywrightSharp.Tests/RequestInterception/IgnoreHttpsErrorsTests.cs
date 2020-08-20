@@ -10,14 +10,13 @@ namespace PlaywrightSharp.Tests.RequestInterception
     ///<playwright-file>interception.spec.js</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class IgnoreHttpsErrorsTests : PlaywrightSharpBaseTest
+    public class IgnoreHttpsErrorsTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public IgnoreHttpsErrorsTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with request interception</playwright-it>
@@ -32,10 +31,9 @@ namespace PlaywrightSharp.Tests.RequestInterception
 
             var page = await context.NewPageAsync();
 
-            await page.SetRequestInterceptionAsync(true);
-            page.Request += async (sender, e) => await e.Request.ContinueAsync();
+            await page.RouteAsync("**/*", (route, request) => route.ContinueAsync());
             var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.Equal(HttpStatusCode.OK, response.Status);
-        }*/
+        }
     }
 }

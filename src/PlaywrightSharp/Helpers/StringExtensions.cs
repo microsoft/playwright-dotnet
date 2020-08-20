@@ -700,7 +700,7 @@ namespace PlaywrightSharp.Helpers
             };
         }
 
-        private static Regex GlobToRegex(string glob)
+        internal static Regex GlobToRegex(string glob)
         {
             List<string> tokens = new List<string> { "^" };
             bool inGroup = false;
