@@ -33,6 +33,5 @@ namespace PlaywrightSharp.Tests.Launcher
         public void ShouldLogContextLevel()
         {
         }
-
     }
 }
