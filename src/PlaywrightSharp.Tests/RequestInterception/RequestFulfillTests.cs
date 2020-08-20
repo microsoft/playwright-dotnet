@@ -117,7 +117,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 {
                     ContentType = "shouldBeIgnored",
                     Path = TestUtils.GetWebServerFile("pptr.png")
-                }); ;
+                });
             });
 
             await Page.EvaluateAsync(@"PREFIX => {
@@ -171,7 +171,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 interceptedRequests.Add(ctx.Request.Headers.ToDictionary());
                 ctx.Response.Headers["Access-Control-Allow-Origin"] = "*";
                 return ctx.Response.WriteAsync("done");
-
             });
 
             string text = await Page.EvaluateAsync<string>(@"async url => {
@@ -214,7 +213,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 interceptedRequest = request;
                 route.FulfillAsync(new RouteFilfillResponse
                 {
-
                     Headers = new Dictionary<string, string> { ["Access-Control-Allow-Origin"] = "*" },
                     ContentType = "text/plain",
                     Body = "done",

@@ -167,7 +167,6 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Contains("/one-style.html", requests[1].Headers["referer"]);
         }
 
-
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.route</playwright-describe>
         ///<playwright-it>should properly return navigation response when URL has cookies</playwright-it>
