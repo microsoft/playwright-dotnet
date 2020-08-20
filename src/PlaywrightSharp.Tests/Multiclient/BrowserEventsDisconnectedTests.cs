@@ -10,10 +10,10 @@ namespace PlaywrightSharp.Tests.Multiclient
     ///<playwright-file>multiclient.spec.js</playwright-file>
     ///<playwright-describe>Browser.Events.Disconnected</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserEventsDisconnected : PlaywrightSharpBrowserBaseTest
+    public class BrowserEventsDisconnectedTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public BrowserEventsDisconnected(ITestOutputHelper output) : base(output)
+        public BrowserEventsDisconnectedTests(ITestOutputHelper output) : base(output)
         {
         }
 
