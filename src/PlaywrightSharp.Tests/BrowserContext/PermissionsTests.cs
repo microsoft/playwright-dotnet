@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should be prompt by default</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBePromptByDefault()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should deny permission when not listed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldDenyPermissionWhenNotListed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should grant geolocation permission when listed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantGeolocationPermissionWhenListed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should grant notifications permission when listed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantNotificationsPermissionWhenListed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should accumulate when adding</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldAccumulateWhenAdding()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should clear permissions</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldClearPermissions()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should grant permission when listed for all domains</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenListedForAllDomains()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should grant permission when creating context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenCreatingContext()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -125,7 +125,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should reset permissions</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldResetPermissions()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -138,7 +138,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should trigger permission onchange</playwright-it>
-        [Fact(Skip = "Skipped in Playwright")]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldTriggerPermissionOnchange()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -167,7 +167,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>permissions.spec.js</playwright-file>
         ///<playwright-describe>Permissions</playwright-describe>
         ///<playwright-it>should trigger permission onchange</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldIsolatePermissionsBetweenBrowserContexts()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
