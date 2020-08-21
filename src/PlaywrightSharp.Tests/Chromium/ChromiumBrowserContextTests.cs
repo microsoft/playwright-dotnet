@@ -87,6 +87,5 @@ namespace PlaywrightSharp.Tests.Chromium
 
             Assert.Equal("worker|context", string.Join("|", messages));
         }
-
     }
 }
