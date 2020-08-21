@@ -152,7 +152,7 @@ namespace PlaywrightSharp
         public event EventHandler<PageErrorEventArgs> PageError;
 
         /// <inheritdoc />
-        public event EventHandler<WorkerEventArgs> WorkerCreated;
+        public event EventHandler<WorkerEventArgs> Worker;
 
         /// <inheritdoc />
         public event EventHandler<WorkerEventArgs> WorkerDestroyed;

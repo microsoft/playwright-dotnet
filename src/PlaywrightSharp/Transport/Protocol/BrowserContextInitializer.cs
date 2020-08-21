@@ -10,5 +10,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public IEnumerable<ChannelBase> Pages { get; set; }
 
         public IEnumerable<ChannelBase> CrBackgroundPages { get; set; }
+
+        public IEnumerable<ChannelBase> CrServiceWorkers { get; set; }
     }
 }

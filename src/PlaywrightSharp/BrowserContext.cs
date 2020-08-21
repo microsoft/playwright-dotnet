@@ -20,6 +20,7 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
         private readonly List<Page> _crBackgroundPages = new List<Page>();
+        private readonly List<Worker> _crServiceWorkers = new List<Worker>();
         private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
         private readonly List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
@@ -54,15 +55,49 @@ namespace PlaywrightSharp
                     var page = ((PageChannel)pageChannel).Object;
                     _crBackgroundPages.Add(page);
                     page.BrowserContext = this;
+                    BackgroundPage?.Invoke(this, new PageEventArgs { Page = page });
                 }
             }
+
+            _channel.BackgroundPage += (sender, e) =>
+            {
+                var page = e.PageChannel.Object;
+                page.BrowserContext = this;
+                _crBackgroundPages.Add(page);
+                BackgroundPage?.Invoke(this, new PageEventArgs { Page = page });
+            };
+
+            if (initializer.CrServiceWorkers != null)
+            {
+                foreach (var workerChannel in initializer.CrServiceWorkers)
+                {
+                    var worker = ((WorkerChannel)workerChannel).Object;
+                    _crServiceWorkers.Add(worker);
+                    worker.BrowserContext = this;
+                    ServiceWorker?.Invoke(this, new WorkerEventArgs(worker));
+                }
+            }
+
+            _channel.ServiceWorker += (sender, e) =>
+            {
+                var worker = e.WorkerChannel.Object;
+                _crServiceWorkers.Add(worker);
+                worker.BrowserContext = this;
+                ServiceWorker?.Invoke(this, new WorkerEventArgs(worker));
+            };
         }
 
         /// <inheritdoc/>
         public event EventHandler<EventArgs> Closed;
 
         /// <inheritdoc/>
-        public event EventHandler<PageEventArgs> PageCreated;
+        public event EventHandler<PageEventArgs> Page;
+
+        /// <inheritdoc/>
+        public event EventHandler<PageEventArgs> BackgroundPage;
+
+        /// <inheritdoc/>
+        public event EventHandler<WorkerEventArgs> ServiceWorker;
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
@@ -78,6 +113,12 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public IPage[] Pages => PagesList.ToArray();
+
+        /// <inheritdoc />
+        public IPage[] BackgroundPages => _crBackgroundPages.ToArray();
+
+        /// <inheritdoc />
+        public IWorker[] ServiceWorkers => _crServiceWorkers.ToArray();
 
         /// <inheritdoc />
         public Browser Browser { get; internal set; }
@@ -332,12 +373,12 @@ namespace PlaywrightSharp
             _scope.Dispose();
         }
 
-        private void Channel_OnPage(object sender, BrowserContextOnPageEventArgs e)
+        private void Channel_OnPage(object sender, BrowserContextPageEventArgs e)
         {
             var page = e.PageChannel.Object;
             page.BrowserContext = this;
             PagesList.Add(page);
-            PageCreated?.Invoke(this, new PageEventArgs { Page = page });
+            Page?.Invoke(this, new PageEventArgs { Page = page });
         }
 
         private void Channel_BindingCall(object sender, BindingCallEventArgs e)

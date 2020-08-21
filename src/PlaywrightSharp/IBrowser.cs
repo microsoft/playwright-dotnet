@@ -101,35 +101,5 @@ namespace PlaywrightSharp
         /// <param name="options">Context options.</param>
         /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
         Task<IPage> NewPageAsync(BrowserContextOptions options = null);
-
-        /// <summary>
-        /// This searches for a target in this specific browser context.
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// await page.EvaluateAsync("() => window.open('https://www.example.com/')");
-        /// var newWindowTarget = await browserContext.WaitForTargetAsync((target) => target.Url == "https://www.example.com/");
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// </summary>
-        /// <param name="predicate">A function to be run for every target.</param>
-        /// <param name="options">options.</param>
-        /// <returns>Resolves to the first target found that matches the predicate function.</returns>
-        Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null);
-
-        /// <summary>
-        /// Get all the browser's targets.
-        /// </summary>
-        /// <param name="context">Optional <see cref="IBrowserContext"/> to use as a filter.</param>
-        /// <returns>A list of all the browser's <see cref="ITarget"/>.</returns>
-        IEnumerable<ITarget> GetTargets(IBrowserContext context = null);
-
-        /// <summary>
-        /// Gets the <see cref="IWorker"/> associated to the <see cref="ITarget"/>.
-        /// </summary>
-        /// <param name="target">Target worker.</param>
-        /// <returns>A <see cref="Task"/> that completes when the worker is found, yielding the associated worker.</returns>
-        Task<IWorker> GetServiceWorkerAsync(ITarget target);
     }
 }

@@ -127,7 +127,7 @@ namespace PlaywrightSharp
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
         /// <param name="script">Script to be evaluated in browser context.</param>
@@ -139,7 +139,7 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(string script);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
         /// <remarks>
@@ -150,7 +150,7 @@ namespace PlaywrightSharp
         Task<JsonElement?> EvaluateAsync(string script);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
         /// <param name="script">Script to be evaluated in browser context.</param>
@@ -163,7 +163,7 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(string script, object args);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to script.</param>

@@ -2,7 +2,7 @@ using System;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class BrowserContextOnPageEventArgs : EventArgs
+    internal class BrowserContextPageEventArgs : EventArgs
     {
         public PageChannel PageChannel { get; set; }
     }

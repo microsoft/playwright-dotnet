@@ -14,7 +14,11 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Close;
 
-        internal event EventHandler<BrowserContextOnPageEventArgs> Page;
+        internal event EventHandler<BrowserContextPageEventArgs> Page;
+
+        internal event EventHandler<BrowserContextPageEventArgs> BackgroundPage;
+
+        internal event EventHandler<BrowserContextWorkerEventArgs> ServiceWorker;
 
         internal event EventHandler<BindingCallEventArgs> BindingCall;
 
@@ -47,9 +51,25 @@ namespace PlaywrightSharp.Transport.Channels
                 case "page":
                     Page?.Invoke(
                         this,
-                        new BrowserContextOnPageEventArgs
+                        new BrowserContextPageEventArgs
                         {
                             PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                        });
+                    break;
+                case "crBackgroundPage":
+                    BackgroundPage?.Invoke(
+                        this,
+                        new BrowserContextPageEventArgs
+                        {
+                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                        });
+                    break;
+                case "crServiceWorker":
+                    ServiceWorker?.Invoke(
+                        this,
+                        new BrowserContextWorkerEventArgs
+                        {
+                            WorkerChannel = serverParams?.ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
             }
