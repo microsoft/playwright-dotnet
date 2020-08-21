@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<BrowserContextPageEventArgs> BackgroundPage;
 
-        internal event EventHandler<BrowserContextWorkerEventArgs> ServiceWorker;
+        internal event EventHandler<WorkerChannelEventArgs> ServiceWorker;
 
         internal event EventHandler<BindingCallEventArgs> BindingCall;
 
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Transport.Channels
                 case "crServiceWorker":
                     ServiceWorker?.Invoke(
                         this,
-                        new BrowserContextWorkerEventArgs
+                        new WorkerChannelEventArgs
                         {
                             WorkerChannel = serverParams?.ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });

@@ -2,7 +2,7 @@ using System;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class BrowserContextWorkerEventArgs : EventArgs
+    internal class WorkerChannelEventArgs : EventArgs
     {
         public WorkerChannel WorkerChannel { get; set; }
     }

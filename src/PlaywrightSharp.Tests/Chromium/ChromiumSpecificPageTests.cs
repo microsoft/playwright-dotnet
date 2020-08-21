@@ -10,19 +10,18 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>Chromium-Specific Page Tests</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ChromiumSpecificPageTests : PlaywrightSharpPageBaseTest
+    public class ChromiumSpecificPageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ChromiumSpecificPageTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>Chromium-Specific Page Tests</playwright-describe>
-        ///<playwright-it>Page.setRequestInterception should work with intervention headers</playwright-it>
+        ///<playwright-it>Page.route should work with intervention headers</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task ShouldWorkWithInterventionHeaders()
+        public async Task PageRouteShouldWorkWithInterventionHeaders()
         {
             Server.SetRoute("/intervention", context => context.Response.WriteAsync($@"
               <script>
@@ -38,13 +37,11 @@ namespace PlaywrightSharp.Tests.Chromium
                 return context.Response.WriteAsync("console.log(1);");
             });
 
-            await Page.SetRequestInterceptionAsync(true);
-            Page.Request += async (sender, e) => await e.Request.ContinueAsync();
+            await Page.RouteAsync("*", (route, _) => route.ContinueAsync());
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/intervention");
 
             Assert.Contains("feature/5718547946799104", interventionHeader);
         }
-        */
     }
 }

@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
             var (worker2, _) = await TaskUtils.WhenAll(
                 Context.WaitForEvent<WorkerEventArgs>(ContextEvent.ServiceWorker),
-                Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html"));
+                Page.GoToAsync(TestConstants.CrossProcessUrl + "/serviceworkers/empty/sw.html"));
 
             Assert.Equal(2, Context.ServiceWorkers.Length);
             Assert.Contains(worker1.Worker, Context.ServiceWorkers);

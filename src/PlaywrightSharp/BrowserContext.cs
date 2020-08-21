@@ -20,7 +20,6 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
         private readonly List<Page> _crBackgroundPages = new List<Page>();
-        private readonly List<Worker> _crServiceWorkers = new List<Worker>();
         private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
         private readonly List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
@@ -72,7 +71,7 @@ namespace PlaywrightSharp
                 foreach (var workerChannel in initializer.CrServiceWorkers)
                 {
                     var worker = ((WorkerChannel)workerChannel).Object;
-                    _crServiceWorkers.Add(worker);
+                    ServiceWorkersList.Add(worker);
                     worker.BrowserContext = this;
                     ServiceWorker?.Invoke(this, new WorkerEventArgs(worker));
                 }
@@ -81,7 +80,7 @@ namespace PlaywrightSharp
             _channel.ServiceWorker += (sender, e) =>
             {
                 var worker = e.WorkerChannel.Object;
-                _crServiceWorkers.Add(worker);
+                ServiceWorkersList.Add(worker);
                 worker.BrowserContext = this;
                 ServiceWorker?.Invoke(this, new WorkerEventArgs(worker));
             };
@@ -118,7 +117,7 @@ namespace PlaywrightSharp
         public IPage[] BackgroundPages => _crBackgroundPages.ToArray();
 
         /// <inheritdoc />
-        public IWorker[] ServiceWorkers => _crServiceWorkers.ToArray();
+        public IWorker[] ServiceWorkers => ServiceWorkersList.ToArray();
 
         /// <inheritdoc />
         public Browser Browser { get; internal set; }
@@ -148,6 +147,8 @@ namespace PlaywrightSharp
         internal Page OwnerPage { get; set; }
 
         internal List<Page> PagesList { get; } = new List<Page>();
+
+        internal List<Worker> ServiceWorkersList { get; } = new List<Worker>();
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)

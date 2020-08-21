@@ -76,6 +76,12 @@ namespace PlaywrightSharp
             {
                 _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
             };
+            _channel.Worker += (sender, e) =>
+            {
+                WorkersList.Add(e.WorkerChannel.Object);
+                e.WorkerChannel.Object.Page = this;
+                Worker?.Invoke(this, new WorkerEventArgs(e.WorkerChannel.Object));
+            };
         }
 
         /// <inheritdoc />
@@ -244,6 +250,8 @@ namespace PlaywrightSharp
         internal BrowserContext OwnedContext { get; set; }
 
         internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
+
+        internal List<Worker> WorkersList { get; } = new List<Worker>();
 
         /// <inheritdoc />
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();

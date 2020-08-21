@@ -25,10 +25,18 @@ namespace PlaywrightSharp
 
             _channel.Closed += (sender, e) =>
             {
+                if (Page != null)
+                {
+                    Page.WorkersList.Remove(this);
+                }
+
+                if (BrowserContext != null)
+                {
+                    BrowserContext.ServiceWorkersList.Remove(this);
+                }
+
                 Closed?.Invoke(this, EventArgs.Empty);
-
-
-            }
+            };
         }
 
         /// <inheritdoc/>
@@ -38,10 +46,16 @@ namespace PlaywrightSharp
         public string Url => _initializer.Url;
 
         /// <inheritdoc/>
-        public IPage Page { get; internal set; }
+        IPage IWorker.Page => Page;
+
+        /// <inheritdoc cref="IWorker.Page"/>
+        public Page Page { get; internal set; }
 
         /// <inheritdoc/>
-        public IBrowserContext BrowserContext { get; internal set; }
+        IBrowserContext IWorker.BrowserContext => BrowserContext;
+
+        /// <inheritdoc cref="IWorker.BrowserContext"/>
+        public BrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
