@@ -156,7 +156,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is spawned by the page.
         /// </summary>
-        event EventHandler<WorkerEventArgs> WorkerCreated;
+        event EventHandler<WorkerEventArgs> Worker;
 
         /// <summary>
         /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
