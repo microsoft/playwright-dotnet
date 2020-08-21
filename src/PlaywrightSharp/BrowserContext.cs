@@ -153,7 +153,7 @@ namespace PlaywrightSharp
         public Task SetGeolocationAsync(GeolocationOption geolocation) => _channel.SetGeolocationAsync(geolocation);
 
         /// <inheritdoc />
-        public Task ClearPermissionsAsync() => throw new NotImplementedException();
+        public Task ClearPermissionsAsync() => _channel.ClearPermissionsAsync();
 
         /// <inheritdoc />
         public IEnumerable<IPage> GetExistingPages() => throw new NotImplementedException();
