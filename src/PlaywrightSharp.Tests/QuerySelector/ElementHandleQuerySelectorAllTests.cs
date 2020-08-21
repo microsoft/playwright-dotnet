@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var elements = await html.QuerySelectorAllAsync("div");
-            Assert.Equal(2, elements.Length);
+            Assert.Equal(2, elements.Count());
             var tasks = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
             Assert.Equal(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
         }

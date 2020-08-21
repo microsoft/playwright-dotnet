@@ -28,6 +28,72 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
+        internal Task<ElementHandleChannel> QuerySelectorAsync(string selector)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "querySelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                });
+
+        internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
+            => Scope.SendMessageToServer<ChannelBase[]>(
+                Guid,
+                "querySelectorAll",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                });
+
+        internal Task<JSHandleChannel> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evalOnSelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                });
+
+        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, EvaluateArgument arg)
+            => Scope.SendMessageToServer<JsonElement?>(
+                Guid,
+                "evalOnSelector",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                });
+
+        internal Task<JSHandleChannel> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evalOnSelectorAll",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                });
+
+        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, EvaluateArgument arg)
+            => Scope.SendMessageToServer<JsonElement?>(
+                Guid,
+                "evalOnSelectorAll",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                });
+
         internal Task<FrameChannel> GetContentFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "contentFrame", null);
 
         internal Task<FrameChannel> GetOwnerFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "ownerFrame", null);
