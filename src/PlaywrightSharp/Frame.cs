@@ -344,7 +344,7 @@ namespace PlaywrightSharp
             => _channel.SetcontentAsync(html, timeout, waitUntil, isPageCall);
 
         internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
-            => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false)).Object;
+            => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false))?.Object;
 
         internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(
