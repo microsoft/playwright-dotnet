@@ -142,7 +142,7 @@ namespace PlaywrightSharp
         public Task<IElementHandle> QuerySelectorAsync(string selector) => QuerySelectorAsync(false, selector);
 
         /// <inheritdoc />
-        public Task<IElementHandle[]> QuerySelectorAllAsync(string selector) => throw new NotImplementedException();
+        public Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector) => QuerySelectorAllAsync(false, selector);
 
         /// <inheritdoc />
         public Task QuerySelectorAllEvaluateAsync(string selector, string script, object args) => QuerySelectorEvaluateAsync(false, selector, script, args);
@@ -344,7 +344,10 @@ namespace PlaywrightSharp
             => _channel.SetcontentAsync(html, timeout, waitUntil, isPageCall);
 
         internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
-            => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false)).Object;
+            => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false))?.Object;
+
+        internal async Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(bool isPageCall, string selector)
+            => (await _channel.QuerySelectorAllAsync(selector, isPageCall).ConfigureAwait(false)).Select(c => ((ElementHandleChannel)c).Object);
 
         internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(

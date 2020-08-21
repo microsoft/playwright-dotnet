@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
@@ -282,7 +283,7 @@ namespace PlaywrightSharp
         /// <returns>
         /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
-        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
+        Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the frame and passes it as the first argument to pageFunction.

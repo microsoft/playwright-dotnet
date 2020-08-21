@@ -498,7 +498,7 @@ namespace PlaywrightSharp
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
 
         /// <inheritdoc />
-        public Task<IElementHandle[]> QuerySelectorAllAsync(string selector) => throw new NotImplementedException();
+        public Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector) => MainFrame.QuerySelectorAllAsync(true, selector);
 
         /// <inheritdoc />
         public Task<IJSHandle> EvaluateHandleAsync(string pageFunction) => MainFrame.EvaluateHandleAsync(pageFunction);

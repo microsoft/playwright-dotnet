@@ -340,6 +340,16 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
+        internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector, bool isPage)
+            => Scope.SendMessageToServer<ChannelBase[]>(
+                Guid,
+                "querySelectorAll",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["isPage"] = isPage,
+                });
+
         internal Task FillAsync(string selector, string value, NavigatingActionWaitOptions options, bool isPage)
             => Scope.SendMessageToServer(
                 Guid,
