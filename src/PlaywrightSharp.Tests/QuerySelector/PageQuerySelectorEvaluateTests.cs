@@ -293,7 +293,6 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select'date\"]"));
             Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\\'date']"));
 
-
             await Page.SetContentAsync("<div><input placeholder=\"Select &apos; date\"></div>");
             Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select ' date\"]"));
             Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \\' date']"));
