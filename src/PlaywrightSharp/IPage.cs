@@ -956,7 +956,7 @@ namespace PlaywrightSharp
         /// <returns>
         /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
-        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
+        Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// Executes a script in browser context.
