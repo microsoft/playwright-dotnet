@@ -9,9 +9,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$eval</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
+    public class PageQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
@@ -75,12 +73,12 @@ namespace PlaywrightSharp.Tests.QuerySelector
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with zs selector</playwright-it>
+        ///<playwright-it>should work with text selector</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldWorkWithZsSelector()
+        public async Task ShouldWorkWithTextSelector()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
-            string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("zs=\"43543\"", "e => e.id");
+            string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("text=\"43543\"", "e => e.id");
             Assert.Equal("testAttribute", idAttribute);
         }
 
@@ -99,7 +97,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-describe>Page.$eval</playwright-describe>
         ///<playwright-it>should work with text selector</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldWorkWithTextSelector()
+        public async Task ShouldWorkWithTextSelector2()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
             string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("text=43543", "e => e.id");
@@ -115,6 +113,17 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
             string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("section", "e => e.id");
             Assert.Equal("testAttribute", idAttribute);
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should auto-detect nested selectors</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldAutoDetectNestedSelectors()
+        {
+            await Page.SetContentAsync("<div foo=bar><section>43543<span>Hello<div id=target></div></span></section></div>");
+            string idAttribute = await Page.QuerySelectorEvaluateAsync<string>("div[foo=bar] > section >> \"Hello\" >> div", "e => e.id");
+            Assert.Equal("target", idAttribute);
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -157,10 +166,9 @@ namespace PlaywrightSharp.Tests.QuerySelector
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowErrorIfNoElementIsFound()
         {
-            var exception = await Assert.ThrowsAsync<SelectorException>(()
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
                 => Page.QuerySelectorEvaluateAsync("section", "e => e.id"));
-            Assert.Equal("Failed to find element matching selector", exception.Message);
-            Assert.Equal("section", exception.Selector);
+            Assert.Contains("failed to find element matching selector \"section\"", exception.Message);
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -181,7 +189,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldSupportDoubleGreaterThanSyntaxWithDifferentEngines()
         {
             await Page.SetContentAsync("<section><div><span>hello</span></div></section>");
-            string text = await Page.QuerySelectorEvaluateAsync<string>("xpath=/html/body/section >> css=div >> zs=\"hello\"", "(e, suffix) => e.textContent + suffix", " world!");
+            string text = await Page.QuerySelectorEvaluateAsync<string>("xpath=/html/body/section >> css=div >> text=\"hello\"", "(e, suffix) => e.textContent + suffix", " world!");
             Assert.Equal("hello world!", text);
         }
 
@@ -198,23 +206,108 @@ namespace PlaywrightSharp.Tests.QuerySelector
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should enter shadow roots with >> syntax</playwright-it>
+        ///<playwright-it>should not stop at first failure with >> syntax</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldEnterShadowRootsWithDoubleGreaterThanSyntax()
+        public async Task ShouldNotStopAtFirstFailureWithDoubleGraterThanSyntax()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
-            string text1 = await Page.QuerySelectorEvaluateAsync<string>("css=div >> css=span", "e => e.textContent");
-            Assert.Equal("Hello from root1", text1);
-            string text2 = await Page.QuerySelectorEvaluateAsync<string>("css=div >> css=*:nth-child(2) >> css=span", "e => e.textContent");
-            Assert.Equal("Hello from root2", text2);
-            var nonExisting = await Page.QuerySelectorAsync("css=div div >> css=span");
-            Assert.Null(nonExisting);
-            string text3 = await Page.QuerySelectorEvaluateAsync<string>("css=section div >> css=span", "e => e.textContent");
-            Assert.Equal("Hello from root1", text3);
-            string text4 = await Page.QuerySelectorEvaluateAsync<string>("xpath=/html/body/section/div >> css=div >> css=span", "e => e.textContent");
-            Assert.Equal("Hello from root2", text4);
-            string text5 = await Page.QuerySelectorEvaluateAsync<string>("zs=section div >> css=div >> css=span", "e => e.textContent");
-            Assert.Equal("Hello from root2", text5);
+            await Page.SetContentAsync("<div><span>Next</span><button>Previous</button><button>Next</button></div>");
+            string text = await Page.QuerySelectorEvaluateAsync<string>("button >> \"Next\"", "(e) => e.outerHTML");
+            Assert.Equal("<button>Next</button>", text);
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should support * capture</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSupportStarCapture()
+        {
+            await Page.SetContentAsync("<section><div><span>a</span></div></section><section><div><span>b</span></div></section>");
+            Assert.Equal("<div><span>b</span></div>", await Page.QuerySelectorEvaluateAsync<string>("*css=div >> \"b\"", "(e) => e.outerHTML"));
+            Assert.Equal("<div><span>b</span></div>", await Page.QuerySelectorEvaluateAsync<string>("section >> *css=div >> \"b\"", "(e) => e.outerHTML"));
+            Assert.Equal("<span>b</span>", await Page.QuerySelectorEvaluateAsync<string>("css=div >> *text=\"b\"", "(e) => e.outerHTML"));
+            Assert.NotNull(await Page.QuerySelectorAsync("*"));
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should throw on multiple * captures</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldThrowOnMultipleStarCaptures()
+        {
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.QuerySelectorEvaluateAsync<string>("*css=div >> *css=span", "(e) => e.outerHTML"));
+            Assert.Equal("Only one of the selectors can capture using * modifier", exception.Message);
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should throw on malformed * capture</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldThrowOnMalformedStarCapture()
+        {
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.QuerySelectorEvaluateAsync<string>("*=div", "(e) => e.outerHTML"));
+            Assert.Equal("Unknown engine \"\" while parsing selector *=div", exception.Message);
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should work with spaces in css attributes</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWithSpacesInCssAttributes()
+        {
+            await Page.SetContentAsync("<div><input placeholder=\"Select date\"></div>");
+            Assert.NotNull(await Page.WaitForSelectorAsync("[placeholder = \"Select date\"]"));
+            Assert.NotNull(await Page.WaitForSelectorAsync("[placeholder = 'Select date']"));
+            Assert.NotNull(await Page.WaitForSelectorAsync("input[placeholder = \"Select date\"]"));
+            Assert.NotNull(await Page.WaitForSelectorAsync("input[placeholder = 'Select date']"));
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select date\"]"));
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select date']"));
+            Assert.NotNull(await Page.QuerySelectorAsync("input[placeholder = \"Select date\"]"));
+            Assert.NotNull(await Page.QuerySelectorAsync("input[placeholder = 'Select date']"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("[placeholder = \"Select date\"]", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("[placeholder = 'Select date']", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("input[placeholder = \"Select date\"]", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("input[placeholder = 'Select date']", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("css =[placeholder = \"Select date\"]", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("css =[placeholder = 'Select date']", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("css = input[placeholder = \"Select date\"]", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("css = input[placeholder = 'Select date']", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("div >> [placeholder = \"Select date\"]", "e => e.outerHTML"));
+            Assert.Equal("<input placeholder=\"Select date\">", await Page.QuerySelectorEvaluateAsync<string>("div >> [placeholder = 'Select date']", "e => e.outerHTML"));
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should work with quotes in css attributes</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWihQuotesInCssAttributes()
+        {
+            await Page.SetContentAsync("<div><input placeholder=\"Select&quot;date\"></div>");
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select\\\"date\"]"));
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\"date']"));
+
+            await Page.SetContentAsync("<div><input placeholder=\"Select &quot; date\"></div>");
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select \\\" date\"]"));
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \" date']"));
+
+            await Page.SetContentAsync("<div><input placeholder=\"Select&apos;date\"></div>");
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select'date\"]"));
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\\'date']"));
+
+            await Page.SetContentAsync("<div><input placeholder=\"Select &apos; date\"></div>");
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select ' date\"]"));
+            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \\' date']"));
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$eval</playwright-describe>
+        ///<playwright-it>should work with quotes in css attributes when missing</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWihQuotesInCssAttributesWhenMissing()
+        {
+            var inputTask = Page.WaitForSelectorAsync("[placeholder = \"Select\\\"date\"]");
+            Assert.Null(await Page.QuerySelectorAsync("[placeholder = \"Select\\\"date\"]"));
+            await Page.SetContentAsync("<div><input placeholder=\"Select&quot;date\"></div>");
+            await inputTask;
         }
     }
 }
