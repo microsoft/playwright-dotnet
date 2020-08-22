@@ -102,7 +102,6 @@ namespace PlaywrightSharp.Tests.QuerySelector
 
             await Page.SetContentAsync("<div><div><span></span></div><span></span><span></span></div><div></div>");
             Assert.Equal(2, await Page.QuerySelectorAllEvaluateAsync<int>("*css=div >> span", "els => els.length"));
-
         }
     }
 }
