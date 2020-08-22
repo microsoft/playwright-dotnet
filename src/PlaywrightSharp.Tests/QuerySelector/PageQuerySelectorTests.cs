@@ -9,8 +9,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class PageQuerySelectorTests : PlaywrightSharpPageBaseTest
+    public class PageQuerySelectorTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public PageQuerySelectorTests(ITestOutputHelper output) : base(output)
@@ -30,12 +29,12 @@ namespace PlaywrightSharp.Tests.QuerySelector
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should query existing element with zs selector</playwright-it>
+        ///<playwright-it>should query existing element with text selector</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldQueryExistingElementWithZsSelector()
+        public async Task ShouldQueryExistingElementWithTextSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
-            var element = await Page.QuerySelectorAsync("zs=\"test\"");
+            var element = await Page.QuerySelectorAsync("text=\"test\"");
             Assert.NotNull(element);
         }
 
@@ -68,6 +67,17 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("//html/body/section");
+            Assert.NotNull(element);
+        }
+
+        ///<playwright-file>queryselector.spec.js</playwright-file>
+        ///<playwright-describe>Page.$</playwright-describe>
+        ///<playwright-it>should auto-detect xpath selector with starting parenthesis</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldAutoDetectXpathSelectorWithStartingParenthesis()
+        {
+            await Page.SetContentAsync("<section>test</section>");
+            var element = await Page.QuerySelectorAsync("(//section)[1]");
             Assert.NotNull(element);
         }
 
