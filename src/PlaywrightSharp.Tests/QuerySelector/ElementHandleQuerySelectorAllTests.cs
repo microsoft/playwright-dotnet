@@ -10,8 +10,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.$$</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ElementHandleQuerySelectorAllTests : PlaywrightSharpPageBaseTest
+    public class ElementHandleQuerySelectorAllTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public ElementHandleQuerySelectorAllTests(ITestOutputHelper output) : base(output)
