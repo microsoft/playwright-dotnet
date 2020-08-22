@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -27,8 +28,8 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAllAsync("xpath=./body/div[contains(@class, 'second')]");
-            var inner = await second[0].QuerySelectorAllAsync("xpath=./div[contains(@class, 'inner')]");
-            string content = await Page.EvaluateAsync<string>("e => e.textContent", inner[0]);
+            var inner = await second.First().QuerySelectorAllAsync("xpath=./div[contains(@class, 'inner')]");
+            string content = await Page.EvaluateAsync<string>("e => e.textContent", inner.First());
             Assert.Equal("A", content);
         }
 
