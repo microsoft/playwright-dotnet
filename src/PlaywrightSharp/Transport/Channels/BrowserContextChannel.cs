@@ -14,7 +14,11 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Close;
 
-        internal event EventHandler<BrowserContextOnPageEventArgs> Page;
+        internal event EventHandler<BrowserContextPageEventArgs> Page;
+
+        internal event EventHandler<BrowserContextPageEventArgs> BackgroundPage;
+
+        internal event EventHandler<WorkerChannelEventArgs> ServiceWorker;
 
         internal event EventHandler<BindingCallEventArgs> BindingCall;
 
@@ -47,9 +51,25 @@ namespace PlaywrightSharp.Transport.Channels
                 case "page":
                     Page?.Invoke(
                         this,
-                        new BrowserContextOnPageEventArgs
+                        new BrowserContextPageEventArgs
                         {
                             PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                        });
+                    break;
+                case "crBackgroundPage":
+                    BackgroundPage?.Invoke(
+                        this,
+                        new BrowserContextPageEventArgs
+                        {
+                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                        });
+                    break;
+                case "crServiceWorker":
+                    ServiceWorker?.Invoke(
+                        this,
+                        new WorkerChannelEventArgs
+                        {
+                            WorkerChannel = serverParams?.ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
             }
@@ -158,6 +178,8 @@ namespace PlaywrightSharp.Transport.Channels
                     ["origin"] = origin,
                 },
                 true);
+
+        internal Task ClearPermissionsAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearPermissions", null);
 
         internal Task SetGeolocationAsync(GeolocationOption geolocation)
             => Scope.SendMessageToServer<PageChannel>(

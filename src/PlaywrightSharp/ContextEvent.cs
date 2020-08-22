@@ -6,13 +6,23 @@ namespace PlaywrightSharp
     public enum ContextEvent
     {
         /// <summary>
-        /// Page created event.
+        /// <see cref="IBrowserContext.Page"/>.
         /// </summary>
-        PageCreated,
+        Page,
 
         /// <summary>
-        /// Context closed event.
+        /// <see cref="IBrowserContext.Closed"/>.
         /// </summary>
         Closed,
+
+        /// <summary>
+        /// <see cref="IBrowserContext.BackgroundPage"/>.
+        /// </summary>
+        BackgroundPage,
+
+        /// <summary>
+        /// <see cref="IBrowserContext.ServiceWorker"/>.
+        /// </summary>
+        ServiceWorker,
     }
 }

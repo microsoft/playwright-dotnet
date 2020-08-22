@@ -156,7 +156,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is spawned by the page.
         /// </summary>
-        event EventHandler<WorkerEventArgs> WorkerCreated;
+        event EventHandler<WorkerEventArgs> Worker;
 
         /// <summary>
         /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
@@ -956,7 +956,7 @@ namespace PlaywrightSharp
         /// <returns>
         /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
-        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
+        Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// Executes a script in browser context.

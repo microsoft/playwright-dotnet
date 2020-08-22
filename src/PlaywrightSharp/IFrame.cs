@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
@@ -127,7 +128,7 @@ namespace PlaywrightSharp
         Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
         /// <param name="script">Script to be evaluated in browser context.</param>
@@ -139,7 +140,7 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(string script);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
         /// <remarks>
@@ -150,7 +151,7 @@ namespace PlaywrightSharp
         Task<JsonElement?> EvaluateAsync(string script);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
         /// <param name="script">Script to be evaluated in browser context.</param>
@@ -163,7 +164,7 @@ namespace PlaywrightSharp
         Task<T> EvaluateAsync<T>(string script, object args);
 
         /// <summary>
-        /// Executes a script in browser context.
+        /// Executes a script in the frame context.
         /// </summary>
         /// <param name="script">Script to be evaluated in browser context.</param>
         /// <param name="args">Arguments to pass to script.</param>
@@ -282,7 +283,7 @@ namespace PlaywrightSharp
         /// <returns>
         /// A <see cref="Task"/> that completes when the javascript function finishes, yielding an array of <see cref="IElementHandle"/>.
         /// </returns>
-        Task<IElementHandle[]> QuerySelectorAllAsync(string selector);
+        Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the frame and passes it as the first argument to pageFunction.

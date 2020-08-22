@@ -32,7 +32,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when a new page is created in the Browser context.
         /// </summary>
-        event EventHandler<PageEventArgs> PageCreated;
+        event EventHandler<PageEventArgs> Page;
+
+        /// <summary>
+        /// Raised when new background page is created in the context. Chromium only
+        /// </summary>
+        event EventHandler<PageEventArgs> BackgroundPage;
+
+        /// <summary>
+        /// Raised when new service worker is created in the context. Chromium only
+        /// </summary>
+        event EventHandler<WorkerEventArgs> ServiceWorker;
 
         /// <summary>
         /// This setting will change the default maximum time for all the methods accepting timeout option.
@@ -48,6 +58,16 @@ namespace PlaywrightSharp
         /// An array of all pages inside the browser context.
         /// </summary>
         IPage[] Pages { get; }
+
+        /// <summary>
+        /// All existing background pages in the context. Chromium Only.
+        /// </summary>
+        IPage[] BackgroundPages { get; }
+
+        /// <summary>
+        /// All existing service workers in the context. Chromium Only.
+        /// </summary>
+        IWorker[] ServiceWorkers { get; }
 
         /// <summary>
         /// Options used to create the context.

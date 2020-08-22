@@ -119,6 +119,9 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.Route:
                     result = new Route(this, guid, initializer?.ToObject<RouteInitializer>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.Worker:
+                    result = new Worker(this, guid, initializer?.ToObject<WorkerInitializer>(Connection.GetDefaultJsonSerializerOptions()));
+                    break;
                 default:
                     Debug.Write("Missing type " + type);
                     break;

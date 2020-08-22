@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// See <see cref="IBrowserContext.PageCreated"/>.
+    /// See <see cref="IBrowserContext.Page"/>.
     /// </summary>
     public class PageEventArgs : EventArgs
     {

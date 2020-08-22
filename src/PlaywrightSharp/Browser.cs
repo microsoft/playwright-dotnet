@@ -103,15 +103,6 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null) => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public IEnumerable<ITarget> GetTargets(IBrowserContext context = null) => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public Task<IWorker> GetServiceWorkerAsync(ITarget target) => throw new NotImplementedException();
-
-        /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
     }
 }

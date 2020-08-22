@@ -67,7 +67,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Page WorkerCreated event
         /// </summary>
-        /// <see cref="IPage.WorkerCreated"/>
+        /// <see cref="IPage.Worker"/>
         WorkerCreated,
 
         /// <summary>
