@@ -9,11 +9,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>ElementHandle.$eval</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ElementHandlesQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
+    public class ElementHandleQuerySelectorEvaluateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ElementHandlesQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
+        public ElementHandleQuerySelectorEvaluateTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -52,7 +51,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => elementHandle.QuerySelectorEvaluateAsync(".a", "node => node.innerText"));
-            Assert.Equal("Failed to find element matching selector \".a\"", exception.Message);
+            Assert.Contains("failed to find element matching selector \".a\"", exception.Message);
         }
     }
 }
