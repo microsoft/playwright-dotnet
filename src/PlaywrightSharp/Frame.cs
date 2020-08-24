@@ -356,8 +356,7 @@ namespace PlaywrightSharp
                 arg: EvaluateArgument.Undefined,
                 isPage: isPageCall,
                 timeout: timeout,
-                polling: polling ?? WaitForFunctionPollingOption.Raf,
-                pollingInterval: pollingInterval).ConfigureAwait(false)).Object;
+                polling: (object)polling ?? pollingInterval).ConfigureAwait(false)).Object;
 
         internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, object args, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(
@@ -366,8 +365,7 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall,
                 timeout: timeout,
-                polling: polling ?? WaitForFunctionPollingOption.Raf,
-                pollingInterval: pollingInterval).ConfigureAwait(false)).Object;
+                polling: (object)polling ?? pollingInterval).ConfigureAwait(false)).Object;
 
         internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorOptions options)
             => (await _channel.WaitForSelector(
