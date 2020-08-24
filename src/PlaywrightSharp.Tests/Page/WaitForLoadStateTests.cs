@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Page
                 }
             });
 
-            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
             await waitForRequestTask;
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(timeout: 1));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
