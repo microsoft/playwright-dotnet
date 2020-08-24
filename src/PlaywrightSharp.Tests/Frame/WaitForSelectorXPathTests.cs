@@ -11,8 +11,7 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForSelector xpath</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class WaitForSelectorXPathTests : PlaywrightSharpPageBaseTest
+    public class WaitForSelectorXPathTests : PlaywrightSharpPageBaseTest
     {
         const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
@@ -38,10 +37,11 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                    => Page.WaitForSelectorAsync("//div", timeout: 10));
+            var exception = await Assert.ThrowsAsync<TimeoutException>(()
+                    => Page.WaitForSelectorAsync("//div", WaitForState.Attached, timeout: 3000));
 
-            Assert.Contains("waiting for selector \"[visible] //div\" failed: timeout", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded during page.waitForSelector", exception.Message);
+            Assert.Contains("waiting for selector \"//div\"", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Frame
             await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
             var frame1 = Page.Frames.First(f => f.Name == "frame1");
             var frame2 = Page.Frames.First(f => f.Name == "frame2");
-            var waitForXPathPromise = frame2.WaitForSelectorAsync("//div");
+            var waitForXPathPromise = frame2.WaitForSelectorAsync("//div", WaitForState.Attached);
             await frame1.EvaluateAsync(AddElement, "div");
             await frame2.EvaluateAsync(AddElement, "div");
             var eHandle = await waitForXPathPromise;
