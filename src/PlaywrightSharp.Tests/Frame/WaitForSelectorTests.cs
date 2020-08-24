@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -10,13 +11,28 @@ namespace PlaywrightSharp.Tests.Frame
     ///<playwright-file>waittask.spec.js</playwright-file>
     ///<playwright-describe>Frame.waitForSelector</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class WaitForSelectorTests : PlaywrightSharpPageBaseTest
+    public class WaitForSelectorTests : PlaywrightSharpPageBaseTest
     {
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
         /// <inheritdoc/>
         public WaitForSelectorTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should throw on waitFor</playwright-it>
+        [Fact(Skip = "We don't need to test this")]
+        public void ShouldThrowOnWaitFor()
+        {
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should tolerate waitFor=visible</playwright-it>
+        [Fact(Skip = "We don't need to test this")]
+        public void ShouldTolerateWaitForVisible()
         {
         }
 
@@ -30,7 +46,7 @@ namespace PlaywrightSharp.Tests.Frame
             var frame = Page.MainFrame;
             await frame.WaitForSelectorAsync("*");
             await frame.EvaluateAsync(AddElement, "div");
-            await frame.WaitForSelectorAsync("div");
+            await frame.WaitForSelectorAsync("div", WaitForState.Attached);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -57,7 +73,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
-            var watchdog = frame.WaitForSelectorAsync("div");
+            var watchdog = frame.WaitForSelectorAsync("div", WaitForState.Attached);
             await frame.EvaluateAsync(AddElement, "br");
             await frame.EvaluateAsync(AddElement, "div");
             var eHandle = await watchdog;
@@ -68,12 +84,119 @@ namespace PlaywrightSharp.Tests.Frame
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should report logs while waiting for visible</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldReportLogsWhileWaitingForVisible()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var frame = Page.MainFrame;
+            var watchdog = frame.WaitForSelectorAsync("div", timeout: 5000);
+
+            await frame.EvaluateAsync(@"() => {
+              const div = document.createElement('div');
+              div.className = 'foo bar';
+              div.id = 'mydiv';
+              div.setAttribute('style', 'display: none');
+              div.setAttribute('foo', '123456789012345678901234567890123456789012345678901234567890');
+              div.textContent = 'abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvwyxz';
+              document.body.appendChild(div);
+            }");
+
+            await GiveItTimeToLogAsync(frame);
+
+            await frame.EvaluateAsync("() => document.querySelector('div').remove()");
+            await GiveItTimeToLogAsync(frame);
+
+            await frame.EvaluateAsync(@"() => {
+              const div = document.createElement('div');
+              div.className = 'another';
+              div.style.display = 'none';
+              document.body.appendChild(div);
+            }");
+            await GiveItTimeToLogAsync(frame);
+
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => watchdog);
+
+            Assert.Contains("Timeout 5000ms exceeded during frame.waitForSelector.", exception.Message);
+            Assert.Contains("waiting for selector \"div\" to be visible", exception.Message);
+            Assert.Contains("selector resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"1234567890123456…>abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>", exception.Message);
+            Assert.Contains("selector did not resolve to any element", exception.Message);
+            Assert.Contains("selector resolved to hidden <div class=\"another\"></div>", exception.Message);
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should report logs while waiting for hidden</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldReportLogsWhileWaitingForHidden()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var frame = Page.MainFrame;
+
+            await frame.EvaluateAsync(@"() => {
+              const div = document.createElement('div');
+              div.className = 'foo bar';
+              div.id = 'mydiv';
+              div.textContent = 'hello';
+              document.body.appendChild(div);
+            }");
+
+            var watchdog = frame.WaitForSelectorAsync("div", WaitForState.Hidden, 5000);
+            await GiveItTimeToLogAsync(frame);
+
+            await frame.EvaluateAsync(@"() => {
+              document.querySelector('div').remove();
+              const div = document.createElement('div');
+              div.className = 'another';
+              div.textContent = 'hello';
+              document.body.appendChild(div);
+            }");
+            await GiveItTimeToLogAsync(frame);
+
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => watchdog);
+
+            Assert.Contains("Timeout 5000ms exceeded during frame.waitForSelector.", exception.Message);
+            Assert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
+            Assert.Contains("selector resolved to visible <div id=\"mydiv\" class=\"foo bar\">hello</div>", exception.Message);
+            Assert.Contains("selector resolved to visible <div class=\"another\">hello</div>", exception.Message);
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should resolve promise when node is added in shadow dom</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldResolvePromiseWhenNodeIsAddedInShadowDom()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var watchdog = Page.WaitForSelectorAsync("span");
+
+            await Page.EvaluateAsync(@"() => {
+              const div = document.createElement('div');
+              div.attachShadow({mode: 'open'});
+              document.body.appendChild(div);
+            }");
+
+            await Page.EvaluateAsync(@"() => new Promise(f => setTimeout(f, 100))");
+
+            await Page.EvaluateAsync(@"() => {
+              const span = document.createElement('span');
+              span.textContent = 'Hello from shadow';
+              document.querySelector('div').shadowRoot.appendChild(span);
+            }");
+
+            var handle = await watchdog;
+
+            Assert.Equal("Hello from shadow", await handle.EvaluateAsync<string>("e => e.textContent"));
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should work when node is added through innerHTML</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var watchdog = Page.WaitForSelectorAsync("h3 div");
+            var watchdog = Page.WaitForSelectorAsync("h3 div", WaitForState.Attached);
             await Page.EvaluateAsync(AddElement, "span");
             await Page.EvaluateAsync("document.querySelector('span').innerHTML = '<h3><div></div></h3>'");
             await watchdog;
@@ -88,7 +211,7 @@ namespace PlaywrightSharp.Tests.Frame
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var otherFrame = Page.FirstChildFrame();
-            var watchdog = Page.WaitForSelectorAsync("div");
+            var watchdog = Page.WaitForSelectorAsync("div", WaitForState.Attached);
             await otherFrame.EvaluateAsync(AddElement, "div");
             await Page.EvaluateAsync(AddElement, "div");
             var eHandle = await watchdog;
@@ -105,7 +228,7 @@ namespace PlaywrightSharp.Tests.Frame
             await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
             var frame1 = Page.FirstChildFrame();
             var frame2 = Page.Frames.ElementAt(2);
-            var waitForSelectorPromise = frame2.WaitForSelectorAsync("div");
+            var waitForSelectorPromise = frame2.WaitForSelectorAsync("div", WaitForState.Attached);
             await frame1.EvaluateAsync(AddElement, "div");
             await frame2.EvaluateAsync(AddElement, "div");
             var eHandle = await waitForSelectorPromise;
@@ -151,7 +274,7 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldWaitForVisible()
         {
             bool divFound = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Visible })
+            var waitForSelector = Page.WaitForSelectorAsync("div", WaitForState.Visible)
                 .ContinueWith(_ => divFound = true);
             await Page.SetContentAsync("<div style='display: none; visibility: hidden;'>1</div>");
             Assert.False(divFound);
@@ -164,13 +287,28 @@ namespace PlaywrightSharp.Tests.Frame
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should not consider visible when zero-sized</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldNotConsiderVisibleWhenZeroSized()
+        {
+            await Page.SetContentAsync("<div style='width: 0; height: 0;'>1</div>");
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", timeout: 1000));
+            Assert.Contains("Timeout 1000ms exceeded during page.waitForSelector.", exception.Message);
+            await Page.EvaluateAsync("() => document.querySelector('div').style.width = '10px'");
+            exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", timeout: 1000));
+            Assert.Contains("Timeout 1000ms exceeded during page.waitForSelector.", exception.Message);
+            await Page.EvaluateAsync("() => document.querySelector('div').style.height = '10px'");
+            Assert.NotNull(await Page.WaitForSelectorAsync("div", timeout: 1000));
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-it>should wait for visible recursively</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWaitForVisibleRecursively()
         {
             bool divVisible = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div#inner", new WaitForSelectorOptions { State = WaitForState.Visible })
-                .ContinueWith(_ => divVisible = true);
+            var waitForSelector = Page.WaitForSelectorAsync("div#inner", WaitForState.Visible).ContinueWith(_ => divVisible = true);
             await Page.SetContentAsync("<div style='display: none; visibility: hidden;'><div id='inner'>hi</div></div>");
             Assert.False(divVisible);
             await Page.EvaluateAsync("document.querySelector('div').style.removeProperty('display')");
@@ -183,7 +321,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
         ///<playwright-its>
-        /// <playwright-it>hidden should wait for visibility: hidden</playwright-it>
+        /// <playwright-it>hidden should wait for hidden</playwright-it>
         /// <playwright-it>hidden should wait for display: none</playwright-it>
         ///</playwright-its>
         [Theory]
@@ -192,8 +330,8 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task HiddenShouldWaitForVisibility(string propertyName, string propertyValue)
         {
             bool divHidden = false;
-            await Page.SetContentAsync("<div style='display: block;'></div>");
-            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Hidden })
+            await Page.SetContentAsync("<div style='display: block;'>content</div>");
+            var waitForSelector = Page.WaitForSelectorAsync("div", WaitForState.Hidden)
                 .ContinueWith(_ => divHidden = true);
             await Page.WaitForSelectorAsync("div"); // do a round trip
             Assert.False(divHidden);
@@ -208,9 +346,9 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task HiddenShouldWaitForRemoval()
         {
-            await Page.SetContentAsync("<div></div>");
+            await Page.SetContentAsync("<div>content</div>");
             bool divRemoved = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Hidden })
+            var waitForSelector = Page.WaitForSelectorAsync("div", WaitForState.Hidden)
                 .ContinueWith(_ => divRemoved = true);
             await Page.WaitForSelectorAsync("div"); // do a round trip
             Assert.False(divRemoved);
@@ -225,7 +363,7 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReturnNullIfWaitingToHideNonExistingElement()
         {
-            var handle = await Page.WaitForSelectorAsync("non-existing", new WaitForSelectorOptions { State = WaitForState.Hidden });
+            var handle = await Page.WaitForSelectorAsync("non-existing", WaitForState.Hidden);
             Assert.Null(handle);
         }
 
@@ -235,10 +373,11 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
-                => await Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { Timeout = 10 }));
+            var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForSelectorAsync("div", WaitForState.Attached, 3000));
 
-            Assert.Contains("waiting for selector \"[visible] div\" failed: timeout", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded during page.waitForSelector", exception.Message);
+            Assert.Contains("waiting for selector \"div\"", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -247,11 +386,12 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
         {
-            await Page.SetContentAsync("<div></div>");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
-                => await Page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Hidden, Timeout = 10 }));
+            await Page.SetContentAsync("<div>content</div>");
+            var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForSelectorAsync("div", WaitForState.Hidden, 1000));
 
-            Assert.Contains("waiting for selector \"[hidden] div\" failed: timeout", exception.Message);
+            Assert.Contains("Timeout 1000ms exceeded during page.waitForSelector", exception.Message);
+            Assert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -261,10 +401,10 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldRespondToNodeAttributeMutation()
         {
             bool divFound = false;
-            var waitForSelector = Page.WaitForSelectorAsync(".zombo").ContinueWith(_ => divFound = true);
+            var waitForSelector = Page.WaitForSelectorAsync(".zombo", WaitForState.Attached).ContinueWith(_ => divFound = true);
             await Page.SetContentAsync("<div class='notZombo'></div>");
             Assert.False(divFound);
-            await Page.EvaluateAsync("document.querySelector('div').class Name = 'zombo'");
+            await Page.EvaluateAsync("document.querySelector('div').className = 'zombo'");
             Assert.True(await waitForSelector);
         }
 
@@ -285,34 +425,34 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveCorrectStackTraceForTimeout()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
-                => await Page.WaitForSelectorAsync(".zombo", new WaitForSelectorOptions { Timeout = 10 }));
+            var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForSelectorAsync(".zombo", timeout: 10));
             Assert.Contains("WaitForSelectorTests", exception.StackTrace);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
-        ///<playwright-it>should throw for unknown waitFor option</playwright-it>
+        ///<playwright-it>should throw for unknown state option</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowForUnknownWaitForOption() { }
+        public void ShouldThrowForUnknownStateOption() { }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
-        ///<playwright-it>should throw for numeric waitFor option</playwright-it>
+        ///<playwright-it>should throw for visibility option</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowForNumericWaitForOption() { }
+        public void ShouldThrowForVisibilityOption() { }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
-        ///<playwright-it>should throw for true waitFor option</playwright-it>
+        ///<playwright-it>should throw for true state option</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowForTrueWaitForOption() { }
+        public void ShouldThrowForTrueStateOption() { }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
-        ///<playwright-it>should throw for false waitFor option</playwright-it>
+        ///<playwright-it>should throw for false state option</playwright-it>
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowForFalseWaitForOption() { }
+        public void ShouldThrowForFalseStateOption() { }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
         ///<playwright-describe>Frame.waitForSelector</playwright-describe>
@@ -322,7 +462,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
-            var watchdog = frame.WaitForSelectorAsync("css=div >> css=span");
+            var watchdog = frame.WaitForSelectorAsync("css=div >> css=span", WaitForState.Attached);
             await frame.EvaluateAsync(AddElement, "br");
             await frame.EvaluateAsync(AddElement, "div");
             await frame.EvaluateAsync("() => document.querySelector('div').appendChild(document.createElement('span'))");
@@ -330,6 +470,37 @@ namespace PlaywrightSharp.Tests.Frame
             var tagProperty = await eHandle.GetPropertyAsync("tagName");
             string tagName = await tagProperty.GetJsonValueAsync<string>();
             Assert.Equal("SPAN", tagName);
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should wait for detached if already detached</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWaitForDetachedIfAlreadyDetached()
+        {
+            await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
+            Assert.Null(await Page.WaitForSelectorAsync("css=div", WaitForState.Detached));
+        }
+
+        ///<playwright-file>waittask.spec.js</playwright-file>
+        ///<playwright-describe>Frame.waitForSelector</playwright-describe>
+        ///<playwright-it>should wait for detached</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWaitForDetached()
+        {
+            await Page.SetContentAsync("<section id=\"testAttribute\"><div>43543</div></section>");
+            var waitForTask = Page.WaitForSelectorAsync("css=div", WaitForState.Detached);
+            Assert.False(waitForTask.IsCompleted);
+            await Page.WaitForSelectorAsync("css=section");
+            Assert.False(waitForTask.IsCompleted);
+            await Page.QuerySelectorEvaluateAsync("div", "div => div.remove()");
+            await waitForTask;
+        }
+
+        private async Task GiveItTimeToLogAsync(IFrame frame)
+        {
+            await frame.EvaluateAsync("() => new Promise(f => requestAnimationFrame(() => requestAnimationFrame(f)))");
+            await frame.EvaluateAsync("() => new Promise(f => requestAnimationFrame(() => requestAnimationFrame(f)))");
         }
     }
 }

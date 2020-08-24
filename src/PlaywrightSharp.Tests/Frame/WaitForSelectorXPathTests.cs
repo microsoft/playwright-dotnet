@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                    => Page.WaitForSelectorAsync("//div", new WaitForSelectorOptions { Timeout = 10 }));
+                    => Page.WaitForSelectorAsync("//div", timeout: 10));
 
             Assert.Contains("waiting for selector \"[visible] //div\" failed: timeout", exception.Message);
         }

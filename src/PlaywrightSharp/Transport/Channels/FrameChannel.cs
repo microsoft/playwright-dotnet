@@ -211,17 +211,25 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<string> GetTitleAsync() => Scope.SendMessageToServer<string>(Guid, "title", null);
 
-        internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForSelectorOptions options, bool isPage)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
+        internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForState? state, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["timeout"] = timeout,
+                ["isPage"] = isPage,
+            };
+
+            if (state != null)
+            {
+                args["state"] = state;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "waitForSelector",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["timeout"] = options.Timeout,
-                    ["state"] = options.State,
-                    ["isPage"] = isPage,
-                });
+                args);
+        }
 
         internal Task<ElementHandleChannel> AddScriptTagAsync(AddTagOptions options, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(

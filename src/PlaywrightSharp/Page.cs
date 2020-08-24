@@ -470,16 +470,7 @@ namespace PlaywrightSharp
         public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc />
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null) => MainFrame.WaitForSelectorAsync(true, selector, options);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForSelectorEvaluateAsync(
-            string selector,
-            string script,
-            object args,
-            int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
-            int? pollingInterval = null) => throw new NotImplementedException();
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null) => MainFrame.WaitForSelectorAsync(true, selector, state, timeout);
 
         /// <inheritdoc />
         public Task<JsonElement?> EvaluateAsync(string script) => MainFrame.EvaluateAsync(true, script);
