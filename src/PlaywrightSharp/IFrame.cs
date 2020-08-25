@@ -211,30 +211,15 @@ namespace PlaywrightSharp
         /// Waits for a selector to be added to the DOM.
         /// </summary>
         /// <param name="selector">A selector of an element to wait for.</param>
-        /// <param name="options">Optional waiting parameters.</param>
+        /// <param name="state">Wait for element to become in the specified state.</param>
+        /// <param name="timeout">
+        /// Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.
+        /// </param>
         /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null);
-
-        /// <summary>
-        /// Waits for a selector to be added to the DOM.
-        /// </summary>
-        /// <param name="selector">A selector of an element to wait for.</param>
-        /// <param name="script">Function to execute when the selector is found.</param>
-        /// <param name="args">Arguments to be passed.</param>
-        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="WaitForFunctionPollingOption.Raf"/>.</param>
-        /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
-        /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
-        /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
-        Task<IJSHandle> WaitForSelectorEvaluateAsync(
-            string selector,
-            string script,
-            object args,
-            int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
-            int? pollingInterval = null);
+        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.

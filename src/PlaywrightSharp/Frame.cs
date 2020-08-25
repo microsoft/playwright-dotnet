@@ -109,17 +109,8 @@ namespace PlaywrightSharp
         public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => FillAsync(false, selector, text, options);
 
         /// <inheritdoc />
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorOptions options = null)
-            => WaitForSelectorAsync(false, selector, options);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForSelectorEvaluateAsync(
-            string selector,
-            string script,
-            object args,
-            int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
-            int? pollingInterval = null) => throw new NotImplementedException();
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null)
+            => WaitForSelectorAsync(false, selector, state, timeout);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
@@ -367,18 +358,19 @@ namespace PlaywrightSharp
                 timeout: timeout,
                 polling: (object)polling ?? pollingInterval).ConfigureAwait(false)).Object;
 
-        internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorOptions options)
+        internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForState? state, int? timeout)
             => (await _channel.WaitForSelector(
                 selector: selector,
-                options: options ?? new WaitForSelectorOptions(),
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+                state: state,
+                timeout: timeout,
+                isPage: isPageCall).ConfigureAwait(false))?.Object;
 
         internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined,
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+                isPage: isPageCall).ConfigureAwait(false))?.Object;
 
         internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script, object args)
             => (await _channel.EvaluateExpressionHandleAsync(
@@ -386,7 +378,7 @@ namespace PlaywrightSharp
                 isFunction: script.IsJavascriptFunction(),
                 arg: args,
                 isPage: isPageCall,
-                serializeArgument: true).ConfigureAwait(false)).Object;
+                serializeArgument: true).ConfigureAwait(false))?.Object;
 
         internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(

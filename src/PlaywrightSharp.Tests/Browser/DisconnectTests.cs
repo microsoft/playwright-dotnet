@@ -45,9 +45,9 @@ namespace PlaywrightSharp.Tests.Browser
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
             var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
             var page = await remote.NewPageAsync();
-            var watchdog = page.WaitForSelectorAsync("div", new WaitForSelectorOptions { State = WaitForState.Attached, Timeout = 60000 });
+            var watchdog = page.WaitForSelectorAsync("div", WaitForState.Attached, 60000);
 
-            await page.WaitForSelectorAsync("body", new WaitForSelectorOptions { State = WaitForState.Attached });
+            await page.WaitForSelectorAsync("body", WaitForState.Attached);
 
             await remote.CloseAsync();
             await Assert.ThrowsAsync<TargetClosedException>(() => watchdog);

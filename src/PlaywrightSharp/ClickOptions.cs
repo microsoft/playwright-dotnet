@@ -6,8 +6,20 @@ namespace PlaywrightSharp
     /// <summary>
     /// Options to use when clicking.
     /// </summary>
-    public class ClickOptions : WaitForSelectorOptions, IPointerActionOptions
+    public class ClickOptions : IPointerActionOptions
     {
+        /// <summary>
+        /// Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.
+        /// </summary>
+        public int? Timeout { get; set; }
+
+        /// <summary>
+        /// Wait for element to become in the specified state.
+        /// </summary>
+        public WaitForState State { get; set; } = WaitForState.Visible;
+
         /// <summary>
         /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults to 0.
         /// </summary>
