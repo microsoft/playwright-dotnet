@@ -878,20 +878,46 @@ namespace PlaywrightSharp
         /// <summary>
         /// Takes a screenshot of the page.
         /// </summary>
-        /// <param name="options">Screenshot options.</param>
+        /// <param name="fullPage">When <c>true</c>, takes a screenshot of the full scrollable page. Defaults to <c>false</c>.</param>
         /// <returns>
         /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="t:byte[]"/>.
         /// </returns>
-        Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
+        Task<byte[]> ScreenshotAsync(bool fullPage);
 
         /// <summary>
         /// Takes a screenshot of the page.
         /// </summary>
-        /// <param name="options">Screenshot options.</param>
+        /// <param name="clip">Specifies clipping region of the page.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a base64 <see cref="string"/>.
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="t:byte[]"/>.
         /// </returns>
-        Task<string> ScreenshotBase64Async(ScreenshotOptions options = null);
+        Task<byte[]> ScreenshotAsync(Rect clip);
+
+        /// <summary>
+        /// Takes a screenshot of the page.
+        /// </summary>
+        /// <param name="path">The file path to save the image to.
+        ///  The screenshot type will be inferred from file extension.
+        /// If path is a relative path, then it is resolved relative to current working directory.
+        /// If no path is provided, the image won't be saved to the disk.</param>
+        /// <param name="fullPage">When <c>true</c>, takes a screenshot of the full scrollable page. Defaults to <c>false</c>.</param>
+        /// <param name="clip">Specifies clipping region of the page.</param>
+        /// <param name="omitBackground">Hides default white background and allows capturing screenshots with transparency. Defaults to <c>false</c>.</param>
+        /// <param name="type">Specify screenshot type, can be either jpeg or png. Defaults to 'png'.</param>
+        /// <param name="quality">The quality of the image, between 0-100. Not applicable to png images.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="t:byte[]"/>.
+        /// </returns>
+        Task<byte[]> ScreenshotAsync(
+            string path = null,
+            bool fullPage = false,
+            Rect clip = null,
+            bool omitBackground = false,
+            ScreenshotFormat? type = null,
+            int? quality = null,
+            int? timeout = null);
 
         /// <summary>
         /// Sets the HTML markup to the main frame.
@@ -915,6 +941,16 @@ namespace PlaywrightSharp
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
+
+        /// <summary>
+        /// In the case of multiple pages in a single browser, each page can have its own viewport size.
+        /// However, <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> allows to set viewport size (and more) for all pages in the context at once.
+        /// <see cref="IPage.SetViewportSizeAsync(ViewportSize)"/> will resize the page.A lot of websites don't expect phones to change size, so you should set the viewport size before navigating to the page.
+        /// </summary>
+        /// <param name="width">Viewport width.</param>
+        /// <param name="height">Viewport height.</param>
+        /// <returns>A <see cref="Task"/> that completes when the viewport is set.</returns>
+        Task SetViewportSizeAsync(int width, int height);
 
         /// <summary>
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.

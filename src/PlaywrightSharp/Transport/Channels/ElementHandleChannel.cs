@@ -58,6 +58,24 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                 });
 
+        internal Task<string> ScreenshotAsync(string path, bool omitBackground, ScreenshotFormat? type, int? quality, int? timeout)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["path"] = path,
+                ["omitBackground"] = omitBackground,
+                ["type"] = type,
+                ["timeout"] = timeout,
+            };
+
+            if (quality != null)
+            {
+                args["quality"] = quality;
+            }
+
+            return Scope.SendMessageToServer<string>(Guid, "screenshot", args);
+        }
+
         internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, EvaluateArgument arg)
             => Scope.SendMessageToServer<JsonElement?>(
                 Guid,
