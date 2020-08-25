@@ -81,8 +81,7 @@ namespace PlaywrightSharp.Transport.Channels
             object arg,
             bool isPage,
             int? timeout,
-            WaitForFunctionPollingOption? polling,
-            int? pollingInterval,
+            object polling,
             bool serializeArgument = false)
         {
             JsonSerializerOptions serializerOptions;
@@ -102,19 +101,24 @@ namespace PlaywrightSharp.Transport.Channels
                 serializerOptions = Scope.Connection.GetDefaultJsonSerializerOptions(false);
             }
 
+            var args = new Dictionary<string, object>
+            {
+                ["expression"] = expression,
+                ["isFunction"] = isFunction,
+                ["arg"] = arg,
+                ["timeout"] = timeout,
+                ["isPage"] = isPage,
+            };
+
+            if (polling != null)
+            {
+                args["polling"] = polling;
+            }
+
             return Scope.SendMessageToServer<JSHandleChannel>(
                 Guid,
                 "waitForFunction",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = expression,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                    ["timeout"] = timeout,
-                    ["polling"] = polling,
-                    ["pollingInterval"] = pollingInterval,
-                    ["isPage"] = isPage,
-                },
+                args,
                 serializerOptions: serializerOptions);
         }
 
