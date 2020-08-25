@@ -367,5 +367,32 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["headers"] = headers,
                 });
+
+        internal Task<string> ScreenshotAsync(
+            string path,
+            bool fullPage,
+            Rect clip,
+            bool omitBackground,
+            ScreenshotFormat? type,
+            int? quality,
+            int? timeout)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["path"] = path,
+                ["fullPage"] = fullPage,
+                ["clip"] = clip,
+                ["omitBackground"] = omitBackground,
+                ["type"] = type,
+                ["timeout"] = timeout,
+            };
+
+            if (quality != null)
+            {
+                args["quality"] = quality;
+            }
+
+            return Scope.SendMessageToServer<string>(Guid, "screenshot", args);
+        }
     }
 }

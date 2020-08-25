@@ -41,7 +41,13 @@ namespace PlaywrightSharp
         public Task TypeAsync(string text, int delay = 0) => _channel.TypeAsync(text, delay);
 
         /// <inheritdoc />
-        public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();
+        public async Task<byte[]> ScreenshotAsync(
+            string path = null,
+            bool omitBackground = false,
+            ScreenshotFormat? type = null,
+            int? quality = null,
+            int? timeout = null)
+            => Convert.FromBase64String(await _channel.ScreenshotAsync(path, omitBackground, type, quality, timeout).ConfigureAwait(false));
 
         /// <inheritdoc />
         public Task FillAsync(string text, NavigatingActionWaitOptions options = null)

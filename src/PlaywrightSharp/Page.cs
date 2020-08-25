@@ -479,10 +479,21 @@ namespace PlaywrightSharp
         public Task<JsonElement?> EvaluateAsync(string script, object args) => MainFrame.EvaluateAsync(true, script, args);
 
         /// <inheritdoc />
-        public Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null) => throw new NotImplementedException();
+        public Task<byte[]> ScreenshotAsync(bool fullPage) => ScreenshotAsync(null, fullPage);
 
         /// <inheritdoc />
-        public Task<string> ScreenshotBase64Async(ScreenshotOptions options = null) => throw new NotImplementedException();
+        public Task<byte[]> ScreenshotAsync(Rect clip) => ScreenshotAsync(null, false, clip);
+
+        /// <inheritdoc />
+        public async Task<byte[]> ScreenshotAsync(
+            string path = null,
+            bool fullPage = false,
+            Rect clip = null,
+            bool omitBackground = false,
+            ScreenshotFormat? type = null,
+            int? quality = null,
+            int? timeout = null)
+            => Convert.FromBase64String(await _channel.ScreenshotAsync(path, fullPage, clip, omitBackground, type, quality, timeout).ConfigureAwait(false));
 
         /// <inheritdoc />
         public Task SetContentAsync(string html, LifecycleEvent? waitUntil = null, int? timeout = null) => MainFrame.SetContentAsync(true, html, waitUntil, timeout);
@@ -691,6 +702,10 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
             => MainFrame.WaitForLoadStateAsync(true, waitUntil, timeout);
+
+        /// <inheritdoc />
+        public Task SetViewportSizeAsync(int width, int height)
+            => SetViewportSizeAsync(new ViewportSize { Width = width, Height = height });
 
         /// <inheritdoc />
         public Task SetViewportSizeAsync(ViewportSize viewport)

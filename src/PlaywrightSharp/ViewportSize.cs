@@ -8,12 +8,12 @@ namespace PlaywrightSharp
     public class ViewportSize : IEquatable<ViewportSize>
     {
         /// <summary>
-        /// Gets or sets the width.
+        /// Viewport width.
         /// </summary>
         public int Width { get; set; }
 
         /// <summary>
-        /// Gets or sets the height.
+        /// Viewport height.
         /// </summary>
         public int Height { get; set; }
 

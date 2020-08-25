@@ -99,11 +99,24 @@ namespace PlaywrightSharp
         /// <summary>
         /// Takes a screenshot of the element.
         /// </summary>
-        /// <param name="options">Screenshot options.</param>
+        /// <param name="path">The file path to save the image to.
+        ///  The screenshot type will be inferred from file extension.
+        /// If path is a relative path, then it is resolved relative to current working directory.
+        /// If no path is provided, the image won't be saved to the disk.</param>
+        /// <param name="omitBackground">Hides default white background and allows capturing screenshots with transparency. Defaults to <c>false</c>.</param>
+        /// <param name="type">Specify screenshot type, can be either jpeg or png. Defaults to 'png'.</param>
+        /// <param name="quality">The quality of the image, between 0-100. Not applicable to png images.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>
-        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="T:byte[]" />.
+        /// A <see cref="Task"/> that completes when the screenshot is done, yielding the screenshot as a <see cref="t:byte[]"/>.
         /// </returns>
-        Task<byte[]> ScreenshotAsync(ScreenshotOptions options = null);
+        Task<byte[]> ScreenshotAsync(
+            string path = null,
+            bool omitBackground = false,
+            ScreenshotFormat? type = null,
+            int? quality = null,
+            int? timeout = null);
 
         /// <summary>
         /// Focuses the element and triggers an `input` event after filling.
