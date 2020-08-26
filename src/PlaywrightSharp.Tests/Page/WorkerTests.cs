@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Page
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
             Page.Worker += (sender, e) => workerCreatedTcs.TrySetResult(e.Worker);
 
-            var workerObj = await Page.EvaluateHandleAsync("() => new Worker('data:text/javascript,1')");
+            var workerObj = await Page.EvaluateHandleAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], {type: 'application/javascript'})))");
             var worker = await workerCreatedTcs.Task;
             var workerThisObj = await worker.EvaluateHandleAsync("() => this");
             var workerDestroyedTcs = new TaskCompletionSource<IWorker>();
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             var (message, _) = await TaskUtils.WhenAll(
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console),
-                Page.EvaluateAsync("() => new Worker(`data:text/javascript,console.log(1)`)")
+                Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))")
             );
 
             Assert.Equal("1", message.Message.Text);
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.Page
             var consoleTcs = new TaskCompletionSource<ConsoleMessage>();
             Page.Console += (sender, e) => consoleTcs.TrySetResult(e.Message);
 
-            await Page.EvaluateAsync("() => new Worker(`data:text/javascript,console.log(1, 2, 3, this)`)");
+            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], {type: 'application/javascript'})))");
             var log = await consoleTcs.Task;
             Assert.Equal("1 2 3 JSHandle@object", log.Text);
             Assert.Equal(4, log.Args.Count());
