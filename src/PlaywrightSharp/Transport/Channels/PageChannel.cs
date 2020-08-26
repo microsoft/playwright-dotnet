@@ -394,5 +394,30 @@ namespace PlaywrightSharp.Transport.Channels
 
             return Scope.SendMessageToServer<string>(Guid, "screenshot", args);
         }
+
+        internal Task StartCSSCoverageAsync(bool resetOnNavigation)
+            => Scope.SendMessageToServer(
+                Guid,
+                "crStartCSSCoverage",
+                new Dictionary<string, object>
+                {
+                    ["resetOnNavigation"] = resetOnNavigation,
+                });
+
+        internal Task StartJSCoverageAsync(bool resetOnNavigation, bool reportAnonymousScripts)
+            => Scope.SendMessageToServer(
+                Guid,
+                "crStartJSCoverage",
+                new Dictionary<string, object>
+                {
+                    ["resetOnNavigation"] = resetOnNavigation,
+                    ["reportAnonymousScripts"] = reportAnonymousScripts,
+                });
+
+        internal Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
+            => Scope.SendMessageToServer<CSSCoverageEntry[]>(Guid, "crStopCSSCoverage", null);
+
+        internal Task<JSCoverageEntry[]> StopJSCoverageAsync()
+            => Scope.SendMessageToServer<JSCoverageEntry[]>(Guid, "crStopJSCoverage", null);
     }
 }

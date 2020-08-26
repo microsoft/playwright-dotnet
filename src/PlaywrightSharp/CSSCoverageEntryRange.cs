@@ -3,17 +3,17 @@ namespace PlaywrightSharp
     /// <summary>
     /// Script range.
     /// </summary>
-    public class CoverageEntryRange
+    public class CSSCoverageEntryRange
     {
         /// <summary>
         /// A start offset in text, inclusive.
         /// </summary>
-        public int Start { get; internal set; }
+        public int Start { get; set; }
 
         /// <summary>
         /// An end offset in text, exclusive.
         /// </summary>
-        public int End { get; internal set; }
+        public int End { get; set; }
 
         /// <inheritdoc cref="object"/>
         public override bool Equals(object obj)
@@ -23,7 +23,7 @@ namespace PlaywrightSharp
                 return false;
             }
 
-            var range = obj as CoverageEntryRange;
+            var range = obj as CSSCoverageEntryRange;
 
             return range.Start == Start &&
                    range.End == End;
