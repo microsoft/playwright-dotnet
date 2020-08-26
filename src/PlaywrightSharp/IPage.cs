@@ -161,11 +161,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
         /// </summary>
-        event EventHandler<WorkerEventArgs> WorkerDestroyed;
-
-        /// <summary>
-        /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
-        /// </summary>
         event EventHandler<WebsocketEventArgs> Websocket;
 
         /// <summary>
@@ -232,7 +227,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets all workers in the page.
         /// </summary>
-        IWorker[] Workers { get; }
+        IEnumerable<IWorker> Workers { get; }
 
         /// <summary>
         /// Browser-specific Coverage implementation, only available for Chromium atm.

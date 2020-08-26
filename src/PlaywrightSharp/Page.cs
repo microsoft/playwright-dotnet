@@ -161,9 +161,6 @@ namespace PlaywrightSharp
         public event EventHandler<WorkerEventArgs> Worker;
 
         /// <inheritdoc />
-        public event EventHandler<WorkerEventArgs> WorkerDestroyed;
-
-        /// <inheritdoc />
         public event EventHandler<WebsocketEventArgs> Websocket;
 
         /// <inheritdoc />
@@ -242,7 +239,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public IWorker[] Workers { get; }
+        public IEnumerable<IWorker> Workers => WorkersList;
 
         /// <inheritdoc />
         public ICoverage Coverage { get; }
