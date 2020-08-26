@@ -73,14 +73,14 @@ namespace PlaywrightSharp
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined).ConfigureAwait(false)).Object;
+                arg: EvaluateArgument.Undefined).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public async Task<IJSHandle> EvaluateHandleAsync(string script, object args)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false)).Object;
+                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task ClickAsync(ClickOptions options = null) => _channel.ClickAsync(options ?? new ClickOptions());
