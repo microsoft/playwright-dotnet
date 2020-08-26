@@ -14,8 +14,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>JSCoverage</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class JSCoverageTests : PlaywrightSharpPageBaseTest
+    public class JSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public JSCoverageTests(ITestOutputHelper output) : base(output)
@@ -33,19 +32,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
-            Assert.Equal(new[]
-            {
-                new CoverageEntryRange
-                {
-                    Start = 0,
-                    End = 17
-                },
-                new CoverageEntryRange
-                {
-                    Start = 35,
-                    End = 61
-                },
-            }, coverage[0].Ranges);
+            Assert.Equal(1, coverage[0].Functions.FirstOrDefault(f => f.FunctionName == "foo").Ranges[0].Count);
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -79,13 +66,10 @@ namespace PlaywrightSharp.Tests.Chromium
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotIgnoreEvalScriptsIfReportAnonymousScriptsIsTrue()
         {
-            await Page.Coverage.StartJSCoverageAsync(new CoverageStartOptions
-            {
-                ReportAnonymousScripts = true
-            });
+            await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
             await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
-            Assert.NotNull(coverage.FirstOrDefault(entry => entry.Url.StartsWith("debugger://", StringComparison.Ordinal)));
+            Assert.Equal("console.log(\"foo\")", coverage.FirstOrDefault(entry => entry.Url == string.Empty).Source);
             Assert.Equal(2, coverage.Length);
         }
 
@@ -95,10 +79,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldIgnorePlaywrightInternalScriptsIfReportAnonymousScriptsIsTrue()
         {
-            await Page.Coverage.StartJSCoverageAsync(new CoverageStartOptions
-            {
-                ReportAnonymousScripts = true
-            });
+            await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("console.log('foo')");
             await Page.EvaluateAsync("() => console.log('bar')");
@@ -119,79 +100,6 @@ namespace PlaywrightSharp.Tests.Chromium
             var orderedList = coverage.OrderBy(c => c.Url).ToArray();
             Assert.Contains("/jscoverage/script1.js", orderedList[0].Url);
             Assert.Contains("/jscoverage/script2.js", orderedList[1].Url);
-        }
-
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should report right ranges</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldReportRightRanges()
-        {
-            await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/ranges.html");
-            var coverage = await Page.Coverage.StopJSCoverageAsync();
-            Assert.Single(coverage);
-            var entry = coverage[0];
-            Assert.Single(entry.Ranges);
-            var range = entry.Ranges[0];
-            Assert.Equal("console.log('used!');", entry.Text.Substring(range.Start, range.End - range.Start));
-        }
-
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should report scripts that have no coverage</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldReportScriptsThatHaveNoCoverage()
-        {
-            await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/unused.html");
-            var coverage = await Page.Coverage.StopJSCoverageAsync();
-            Assert.Single(coverage);
-            var entry = coverage[0];
-            Assert.Contains("unused.html", entry.Url);
-            Assert.Empty(entry.Ranges);
-        }
-
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should work with conditionals</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldWorkWithConditionals()
-        {
-            const string involved = @"[
-              {
-                ""Url"": ""http://localhost:<PORT>/jscoverage/involved.html"",
-                ""Ranges"": [
-                  {
-                    ""Start"": 0,
-                    ""End"": 35
-                  },
-                  {
-                    ""Start"": 50,
-                    ""End"": 100
-                  },
-                  {
-                    ""Start"": 107,
-                    ""End"": 141
-                  },
-                  {
-                    ""Start"": 148,
-                    ""End"": 160
-                  },
-                  {
-                    ""Start"": 168,
-                    ""End"": 207
-                  }
-                ],
-                ""Text"": ""\nfunction foo() {\n  if (1 > 2)\n    console.log(1);\n  if (1 < 2)\n    console.log(2);\n  let x = 1 > 2 ? 'foo' : 'bar';\n  let y = 1 < 2 ? 'foo' : 'bar';\n  let z = () => {};\n  let q = () => {};\n  q();\n}\n\nfoo();\n""
-              }
-            ]";
-            await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/involved.html");
-            var coverage = await Page.Coverage.StopJSCoverageAsync();
-            Assert.Equal(
-                TestUtils.CompressText(involved),
-                Regex.Replace(TestUtils.CompressText(JsonConvert.SerializeObject(coverage)), @"\d{4}\/", "<PORT>/"));
         }
     }
 }

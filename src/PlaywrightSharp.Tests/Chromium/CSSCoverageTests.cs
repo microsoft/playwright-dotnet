@@ -12,8 +12,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>CSSCoverage</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class CSSCoverageTests : PlaywrightSharpPageBaseTest
+    public class CSSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
         public CSSCoverageTests(ITestOutputHelper output) : base(output)
@@ -33,7 +32,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains("/csscoverage/simple.html", coverage[0].Url);
             Assert.Equal(new[]
             {
-                new CoverageEntryRange
+                new CSSCoverageEntryRange
                 {
                     Start = 1,
                     End = 22
@@ -100,7 +99,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains("/csscoverage/media.html", entry.Url);
             Assert.Equal(new[]
             {
-                new CoverageEntryRange
+                new CSSCoverageEntryRange
                 {
                     Start = 17,
                     End = 38

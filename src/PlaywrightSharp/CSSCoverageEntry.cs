@@ -3,7 +3,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Coverage report for all non-anonymous scripts.
     /// </summary>
-    public class CoverageEntry
+    public class CSSCoverageEntry
     {
         /// <summary>
         /// Script URL.
@@ -13,7 +13,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Script ranges that were executed. Ranges are sorted and non-overlapping.
         /// </summary>
-        public CoverageEntryRange[] Ranges { get; set; }
+        public CSSCoverageEntryRange[] Ranges { get; set; }
 
         /// <summary>
         /// Script content.

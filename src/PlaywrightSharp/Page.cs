@@ -42,6 +42,7 @@ namespace PlaywrightSharp
             _frames.Add(MainFrame);
             Viewport = initializer.ViewportSize;
             Accessibility = new Accesibility(_channel);
+            Coverage = new Coverage(_channel);
             Keyboard = new Keyboard(_channel);
             Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;

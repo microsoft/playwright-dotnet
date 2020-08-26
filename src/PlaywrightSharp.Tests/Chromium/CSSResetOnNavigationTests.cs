@@ -12,11 +12,10 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/chromium.spec.js</playwright-file>
     ///<playwright-describe>resetOnNavigation</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class ResetOnNavigationTests : PlaywrightSharpPageBaseTest
+    public class CSSResetOnNavigationTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ResetOnNavigationTests(ITestOutputHelper output) : base(output)
+        public CSSResetOnNavigationTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -26,10 +25,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportStylesheetsAcrossNavigations()
         {
-            await Page.Coverage.StartCSSCoverageAsync(new CoverageStartOptions
-            {
-                ResetOnNavigation = false
-            });
+            await Page.Coverage.StartCSSCoverageAsync(false);
             await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
             await Page.GoToAsync(TestConstants.EmptyPage);
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
@@ -64,6 +60,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 link.href = url;
                 document.head.appendChild(link);
                 await new Promise(x => link.onload = x);
+                await new Promise(f => requestAnimationFrame(f));
             }", TestConstants.ServerUrl + "/csscoverage/stylesheet1.css");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Single(coverage);
