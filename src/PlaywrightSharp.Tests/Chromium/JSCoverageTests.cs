@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should ignore eval() scripts by default</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldIgnoreEvalScriptsByDefault()
         {
             await Page.Coverage.StartJSCoverageAsync();
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>shouldn't ignore eval() scripts if reportAnonymousScripts is true</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotIgnoreEvalScriptsIfReportAnonymousScriptsIsTrue()
         {
             await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should ignore playwright internal scripts if reportAnonymousScripts is true</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldIgnorePlaywrightInternalScriptsIfReportAnonymousScriptsIsTrue()
         {
             await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should report multiple scripts</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportMultipleScripts()
         {
             await Page.Coverage.StartJSCoverageAsync();
