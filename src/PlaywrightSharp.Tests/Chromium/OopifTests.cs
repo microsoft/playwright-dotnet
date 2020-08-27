@@ -12,18 +12,17 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-describe>OOPIF</playwright-describe>
     [Trait("Category", "chromium")]
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class OopifTests : PlaywrightSharpBaseTest
+    public class OopifTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
         public OopifTests(ITestOutputHelper output) : base(output)
         {
         }
-        /*
+
         ///<playwright-file>chromium/oopif.spec.js</playwright-file>
         ///<playwright-describe>OOPIF</playwright-describe>
-        ///<playwright-it>should wait for a target</playwright-it>
-        [Fact(Skip = "Ignored in Playwright")]
+        ///<playwright-it>should report oopif frames</playwright-it>
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportOopifFrames()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -31,8 +30,8 @@ namespace PlaywrightSharp.Tests.Chromium
             await using var browser = await BrowserType.LaunchAsync(options);
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
-            Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
             Assert.Equal(2, page.Frames.Length);
+            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"));
 
         }
 
@@ -51,6 +50,5 @@ namespace PlaywrightSharp.Tests.Chromium
             await page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Single(browser.GetTargets().Where(target => target.Type == TargetType.IFrame));
         }
-        */
     }
 }
