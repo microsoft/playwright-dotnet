@@ -93,6 +93,9 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
+        public async Task<ICDPSession> NewBrowserCDPSessionAsync() => (await _channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
+
+        /// <inheritdoc/>
         public async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
         {
             var context = await NewContextAsync(options).ConfigureAwait(false) as BrowserContext;

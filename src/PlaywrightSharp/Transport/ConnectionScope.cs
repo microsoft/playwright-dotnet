@@ -122,6 +122,9 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.Worker:
                     result = new Worker(this, guid, initializer?.ToObject<WorkerInitializer>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.CDPSession:
+                    result = new CDPSession(this, guid, initializer?.ToObject<CDPSessionInitializer>(Connection.GetDefaultJsonSerializerOptions()));
+                    break;
                 default:
                     Debug.Write("Missing type " + type);
                     break;

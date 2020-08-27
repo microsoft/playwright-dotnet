@@ -101,5 +101,11 @@ namespace PlaywrightSharp
         /// <param name="options">Context options.</param>
         /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
         Task<IPage> NewPageAsync(BrowserContextOptions options = null);
+
+        /// <summary>
+        /// Creates a new browser session.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the browser session was created, yielding the new session.</returns>
+        Task<ICDPSession> NewBrowserCDPSessionAsync();
     }
 }

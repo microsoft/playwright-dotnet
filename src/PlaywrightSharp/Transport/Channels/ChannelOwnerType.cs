@@ -54,5 +54,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "worker")]
         Worker,
+
+        [EnumMember(Value = "cdpSession")]
+        CDPSession,
     }
 }
