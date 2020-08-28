@@ -87,5 +87,11 @@ namespace PlaywrightSharp
         /// </summary>
         /// <see cref="IPage.Download"/>
         Download,
+
+        /// <summary>
+        /// Frame detached event.
+        /// </summary>
+        /// <see cref="IPage.FrameDetached"/>
+        FrameDetached,
     }
 }

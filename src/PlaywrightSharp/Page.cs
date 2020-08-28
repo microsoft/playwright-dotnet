@@ -538,9 +538,6 @@ namespace PlaywrightSharp
         public async Task<IResponse> ReloadAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
             => (await _channel.ReloadAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
-        /// <inheritdoc />
-        public Task SetOfflineModeAsync(bool enabled) => throw new NotImplementedException();
-
         /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction)
             => ExposeBindingAsync(name, (Delegate)playwrightFunction);

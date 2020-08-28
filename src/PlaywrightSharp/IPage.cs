@@ -1077,13 +1077,6 @@ namespace PlaywrightSharp
         Task<IResponse> ReloadAsync(int? timeout = null, LifecycleEvent? waitUntil = null);
 
         /// <summary>
-        /// Set offline mode for the page.
-        /// </summary>
-        /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
-        Task SetOfflineModeAsync(bool enabled);
-
-        /// <summary>
         /// Adds a script which would be evaluated in one of the following scenarios:
         /// * Whenever a page is created in the browser context or is navigated.
         /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
