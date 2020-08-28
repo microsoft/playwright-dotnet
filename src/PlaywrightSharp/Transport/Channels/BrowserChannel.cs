@@ -35,5 +35,8 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "close",
                 null);
+
+        internal Task<CDPSessionChannel> NewBrowserCDPSessionAsync()
+            => Scope.SendMessageToServer<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
     }
 }
