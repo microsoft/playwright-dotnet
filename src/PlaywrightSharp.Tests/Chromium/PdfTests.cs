@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Chromium
         ///<playwright-file>chromium/pdf.spec.js</playwright-file>
         ///<playwright-describe>Page.pdf</playwright-describe>
         ///<playwright-it>should be able to save file</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToSaveFile()
         {
             string outputFile = Path.Combine(BaseDirectory, "output.pdf");
