@@ -13,8 +13,7 @@ namespace PlaywrightSharp.Tests.Chromium
     ///<playwright-file>chromium/tracing.spec.js</playwright-file>
     ///<playwright-describe>Chromium.startTracing</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1000:Test classes must be public", Justification = "Disabled")]
-    class TracingTests : PlaywrightSharpPageBaseTest
+    public class TracingTests : PlaywrightSharpPageBaseTest
     {
         private readonly string _file;
 
@@ -61,11 +60,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldOutputATrace()
         {
-            await Browser.StartTracingAsync(Page, new TracingOptions
-            {
-                Screenshots = true,
-                Path = _file
-            });
+            await Browser.StartTracingAsync(Page, screenshots: true, path: _file);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             await Browser.StopTracingAsync();
 
@@ -78,15 +73,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldRunWithCustomCategoriesProvided()
         {
-            await Browser.StartTracingAsync(Page, new TracingOptions
-            {
-                Screenshots = true,
-                Path = _file,
-                Categories = new List<string>
-                {
-                    "disabled-by-default-v8.cpu_profiler.hires"
-                }
-            });
+            await Browser.StartTracingAsync(Page, true, _file, new[] { "disabled-by-default-v8.cpu_profiler.hires" });
 
             await Browser.StopTracingAsync();
 
@@ -101,17 +88,11 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowIfTracingOnTwoPages()
         {
-            await Browser.StartTracingAsync(Page, new TracingOptions
-            {
-                Path = _file
-            });
+            await Browser.StartTracingAsync(Page, path: _file);
             var newPage = await Browser.NewPageAsync();
-            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Assert.ThrowsAsync<PlaywrightSharpException>(async () =>
             {
-                await Browser.StartTracingAsync(newPage, new TracingOptions
-                {
-                    Path = _file
-                });
+                await Browser.StartTracingAsync(newPage, path: _file);
             });
 
             await newPage.CloseAsync();
@@ -124,11 +105,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReturnABuffer()
         {
-            await Browser.StartTracingAsync(Page, new TracingOptions
-            {
-                Screenshots = true,
-                Path = _file
-            });
+            await Browser.StartTracingAsync(Page, true, _file);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             string trace = await Browser.StopTracingAsync();
             string buf = File.ReadAllText(_file);
@@ -149,20 +126,11 @@ namespace PlaywrightSharp.Tests.Chromium
 
         ///<playwright-file>chromium/tracing.spec.js</playwright-file>
         ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should return null in case of Buffer error</playwright-it>
-        [Fact(Skip = "We don't need this test")]
-        public void ShouldReturnNullInCaseOfBufferError() { }
-
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
         ///<playwright-it>should support a buffer without a path</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportABufferWithoutAPath()
         {
-            await Browser.StartTracingAsync(Page, new TracingOptions
-            {
-                Screenshots = true
-            });
+            await Browser.StartTracingAsync(Page, true);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             string trace = await Browser.StopTracingAsync();
             Assert.Contains("screenshot", trace);

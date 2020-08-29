@@ -53,10 +53,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Starts tracing.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         /// <param name="page">Optional, if specified, tracing includes screenshots of the given page.</param>
-        /// <param name="options">Tracing options.</param>
-        Task StartTracingAsync(IPage page = null, TracingOptions options = null);
+        /// <param name="screenshots">Gets or sets a value indicating whether Tracing should captures screenshots in the trace.</param>
+        /// <param name="path">A path to write the trace file to.</param>
+        /// <param name="categories">Specify custom categories to use instead of default.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task StartTracingAsync(IPage page = null, bool screenshots = false, string path = null, IEnumerable<string> categories = null);
 
         /// <summary>
         /// Stops tracing.

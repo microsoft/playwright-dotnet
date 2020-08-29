@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
@@ -63,10 +64,15 @@ namespace PlaywrightSharp
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
 
         /// <inheritdoc/>
-        public Task StartTracingAsync(IPage page = null, TracingOptions options = null) => throw new NotImplementedException();
+        public Task StartTracingAsync(IPage page = null, bool screenshots = false, string path = null, IEnumerable<string> categories = null)
+            => _channel.StartTracingAsync(page, screenshots, path, categories);
 
         /// <inheritdoc/>
-        public Task<string> StopTracingAsync() => throw new NotImplementedException();
+        public async Task<string> StopTracingAsync()
+        {
+            string result = await _channel.StopTracingAsync().ConfigureAwait(false);
+            return Encoding.UTF8.GetString(Convert.FromBase64String(result));
+        }
 
         /// <inheritdoc/>
         public async Task CloseAsync()

@@ -30,13 +30,32 @@ namespace PlaywrightSharp.Transport.Channels
                 "newContext",
                 (options ?? new BrowserContextOptions()).ToChannelDictionary());
 
-        internal Task CloseAsync()
-            => Scope.SendMessageToServer<BrowserContextChannel>(
-                Guid,
-                "close",
-                null);
+        internal Task CloseAsync() => Scope.SendMessageToServer<BrowserContextChannel>(Guid, "close", null);
 
         internal Task<CDPSessionChannel> NewBrowserCDPSessionAsync()
             => Scope.SendMessageToServer<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
+
+        internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["screenshots"] = screenshots,
+                ["path"] = path,
+            };
+
+            if (page != null)
+            {
+                args["page"] = page;
+            }
+
+            if (categories != null)
+            {
+                args["categories"] = categories;
+            }
+
+            return Scope.SendMessageToServer(Guid, "crStartTracing", args);
+        }
+
+        internal Task<string> StopTracingAsync() => Scope.SendMessageToServer<string>(Guid, "crStopTracing", null);
     }
 }
