@@ -444,5 +444,12 @@ namespace PlaywrightSharp
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
+
+        /// <summary>
+        /// Creates a new browser session.
+        /// </summary>
+        /// <param name="page">Page to create a new session for.</param>
+        /// <returns>A <see cref="Task"/> that completes when the browser session was created, yielding the new session.</returns>
+        Task<ICDPSession> NewCDPSessionAsync(IPage page);
     }
 }

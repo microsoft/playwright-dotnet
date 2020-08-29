@@ -312,6 +312,9 @@ namespace PlaywrightSharp
         public Task SetOfflineAsync(bool enabled) => _channel.SetOfflineAsync(enabled);
 
         /// <inheritdoc />
+        public async Task<ICDPSession> NewCDPSessionAsync(IPage page) => (await _channel.NewCDPSessionAsync(page).ConfigureAwait(false))?.Object;
+
+        /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
         {
             _routes.Add(new RouteSetting

@@ -38,10 +38,10 @@ namespace PlaywrightSharp
         IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 
         /// <inheritdoc/>
-        public Task<JsonElement?> SendAsync(string method, object args) => _channel.SendAsync(method, args);
+        public Task<JsonElement?> SendAsync(string method, object args = null) => _channel.SendAsync(method, args);
 
         /// <inheritdoc/>
-        public async Task<T> SendAsync<T>(string method, object args)
+        public async Task<T> SendAsync<T>(string method, object args = null)
         {
             var result = await _channel.SendAsync(method, args).ConfigureAwait(false);
             return result == null ? default : result.Value.ToObject<T>(_scope.Connection.GetDefaultJsonSerializerOptions());

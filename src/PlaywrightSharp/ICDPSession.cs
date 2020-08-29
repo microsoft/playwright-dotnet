@@ -20,7 +20,7 @@ namespace PlaywrightSharp
         /// <param name="method">Method name.</param>
         /// <param name="args">Arguments.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser session, yielding the result.</returns>
-        Task<JsonElement?> SendAsync(string method, object args);
+        Task<JsonElement?> SendAsync(string method, object args = null);
 
         /// <summary>
         /// Make a method call to the browser session.
@@ -29,7 +29,7 @@ namespace PlaywrightSharp
         /// <param name="method">Method name.</param>
         /// <param name="args">Arguments.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser session, yielding the result.</returns>
-        Task<T> SendAsync<T>(string method, object args);
+        Task<T> SendAsync<T>(string method, object args = null);
 
         /// <summary>
         /// Detaches the CDPSession from the target. Once detached, the CDPSession object won't emit any events and can't be used to send messages.
