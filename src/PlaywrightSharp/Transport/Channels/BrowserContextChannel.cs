@@ -201,5 +201,14 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["headers"] = headers,
                 });
+
+        internal Task<CDPSessionChannel> NewCDPSessionAsync(IPage page)
+            => Scope.SendMessageToServer<CDPSessionChannel>(
+                Guid,
+                "crNewCDPSession",
+                new Dictionary<string, object>
+                {
+                    ["page"] = page,
+                });
     }
 }
