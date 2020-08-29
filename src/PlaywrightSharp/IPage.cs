@@ -1327,63 +1327,50 @@ namespace PlaywrightSharp
         Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null);
 
         /// <summary>
-        /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
-        /// </summary>
-        /// <param name="file">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
-        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
-        /// <remarks>
-        /// Generating a pdf is currently only supported in Chrome headless.
-        /// </remarks>
-        Task GetPdfAsync(string file);
-
-        /// <summary>
         ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
-        /// <param name="file">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
-        /// <param name="options">pdf options.</param>
+        /// <param name="path">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
+        /// <param name="scale">Scale of the webpage rendering. Defaults to <c>1</c>. Scale amount must be between 0.1 and 2.</param>
+        /// <param name="displayHeaderFooter">Display header and footer. Defaults to <c>false</c>.</param>
+        /// <param name="headerTemplate">HTML template for the print header. Should be valid HTML markup with following classes used to inject printing values into them:
+        ///   <c>date</c> - formatted print date
+        ///   <c>title</c> - document title
+        ///   <c>url</c> - document location
+        ///   <c>pageNumber</c> - current page number
+        ///   <c>totalPages</c> - total pages in the document.</param>
+        /// <param name="footerTemplate">HTML template for the print footer. Should be valid HTML markup with following classes used to inject printing values into them:
+        ///   <c>date</c> - formatted print date
+        ///   <c>title</c> - document title
+        ///   <c>url</c> - document location
+        ///   <c>pageNumber</c> - current page number
+        ///   <c>totalPages</c> - total pages in the document.</param>
+        /// <param name="printBackground">Print background graphics. Defaults to <c>false</c>.</param>
+        /// <param name="landscape">Paper orientation.. Defaults to <c>false</c>.</param>
+        /// <param name="pageRanges">Paper ranges to print, e.g., <c>1-5, 8, 11-13</c>. Defaults to the empty string, which means print all pages.</param>
+        /// <param name="format">Paper format. If set, takes priority over <paramref name="width"/> and <paramref name="height"/>.</param>
+        /// <param name="width">Paper width, accepts values labeled with units.</param>
+        /// <param name="height">Paper height, accepts values labeled with units.</param>
+        /// <param name="marginOptions">Paper margins, defaults to none.</param>
+        /// <param name="preferCSSPageSize">Give any CSS <c>@page</c> size declared in the page priority over what is declared in <c>width</c> and <c>height</c> or <c>format</c> options.
+        /// Defaults to <c>false</c>, which will scale the content to fit the paper size.</param>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
         /// <remarks>
         /// Generating a pdf is currently only supported in Chrome headless.
         /// </remarks>
-        Task GetPdfAsync(string file, PdfOptions options);
-
-        /// <summary>
-        /// generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
-        /// <remarks>
-        /// Generating a pdf is currently only supported in Chrome headless.
-        /// </remarks>
-        Task<Stream> GetPdfStreamAsync();
-
-        /// <summary>
-        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
-        /// </summary>
-        /// <param name="options">pdf options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
-        /// <remarks>
-        /// Generating a pdf is currently only supported in Chrome headless.
-        /// </remarks>
-        Task<Stream> GetPdfStreamAsync(PdfOptions options);
-
-        /// <summary>
-        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
-        /// <remarks>
-        /// Generating a pdf is currently only supported in Chrome headless.
-        /// </remarks>
-        Task<byte[]> GetPdfDataAsync();
-
-        /// <summary>
-        /// Generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
-        /// </summary>
-        /// <param name="options">pdf options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
-        /// <remarks>
-        /// Generating a pdf is currently only supported in Chrome headless.
-        /// </remarks>
-        Task<byte[]> GetPdfDataAsync(PdfOptions options);
+        Task<byte[]> GetPdfAsync(
+            string path = "",
+            decimal scale = 1,
+            bool displayHeaderFooter = false,
+            string headerTemplate = "",
+            string footerTemplate = "",
+            bool printBackground = false,
+            bool landscape = false,
+            string pageRanges = "",
+            PaperFormat format = null,
+            string width = null,
+            string height = null,
+            MarginOptions marginOptions = null,
+            bool preferCSSPageSize = false);
 
         /// <summary>
         /// Routing provides the capability to modify network requests that are made by a page.

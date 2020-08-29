@@ -6,7 +6,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Paper format.
     /// </summary>
-    /// <seealso cref="PdfOptions.Format"/>
+    /// <seealso cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat, string, string, MarginOptions, bool)"/>
     public class PaperFormat : IEquatable<PaperFormat>
     {
         /// <summary>
