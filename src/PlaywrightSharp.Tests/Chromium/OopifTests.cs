@@ -333,6 +333,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(new[] { TestConstants.EmptyPage, "https://google.com/" }, urls.ToArray());
         }
 
+        /// <inheritdoc/>
         public async Task InitializeAsync()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -340,6 +341,9 @@ namespace PlaywrightSharp.Tests.Chromium
             _browser = await BrowserType.LaunchAsync(options);
             _page = await _browser.NewPageAsync();
         }
+
+        /// <inheritdoc/>
+        public Task DisposeAsync() => _browser.CloseAsync();
 
         private async Task<int> CountOOPIFsASync(IBrowser browser)
         {
@@ -359,7 +363,5 @@ namespace PlaywrightSharp.Tests.Chromium
             await browserSession.DetachAsync();
             return oopifs.Count;
         }
-
-        public Task DisposeAsync() => _browser.CloseAsync();
     }
 }
