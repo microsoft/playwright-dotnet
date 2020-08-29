@@ -605,22 +605,34 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task GetPdfAsync(string file) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task GetPdfAsync(string file, PdfOptions options) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<Stream> GetPdfStreamAsync() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<Stream> GetPdfStreamAsync(PdfOptions options) => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<byte[]> GetPdfDataAsync() => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<byte[]> GetPdfDataAsync(PdfOptions options) => throw new NotImplementedException();
+        public async Task<byte[]> GetPdfAsync(
+            string path = "",
+            decimal scale = 1,
+            bool displayHeaderFooter = false,
+            string headerTemplate = "",
+            string footerTemplate = "",
+            bool printBackground = false,
+            bool landscape = false,
+            string pageRanges = "",
+            PaperFormat format = null,
+            string width = null,
+            string height = null,
+            MarginOptions marginOptions = null,
+            bool preferCSSPageSize = false)
+            => Convert.FromBase64String(await _channel.GetPdfAsync(
+                path,
+                scale,
+                displayHeaderFooter,
+                headerTemplate,
+                footerTemplate,
+                printBackground,
+                landscape,
+                pageRanges,
+                format,
+                width,
+                height,
+                marginOptions,
+                preferCSSPageSize).ConfigureAwait(false));
 
         /// <inheritdoc />
         public Task AddInitScriptAsync(string script, params object[] args)

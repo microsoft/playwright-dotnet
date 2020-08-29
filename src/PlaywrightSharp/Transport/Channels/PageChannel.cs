@@ -419,5 +419,48 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<JSCoverageEntry[]> StopJSCoverageAsync()
             => Scope.SendMessageToServer<JSCoverageEntry[]>(Guid, "crStopJSCoverage", null);
+
+        internal Task<string> GetPdfAsync(
+            string path,
+            decimal scale,
+            bool displayHeaderFooter,
+            string headerTemplate,
+            string footerTemplate,
+            bool printBackground,
+            bool landscape,
+            string pageRanges,
+            PaperFormat format,
+            string width,
+            string height,
+            MarginOptions marginOptions,
+            bool preferCSSPageSize)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["path"] = path,
+                ["scale"] = scale,
+                ["displayHeaderFooter"] = displayHeaderFooter,
+                ["headerTemplate"] = headerTemplate,
+                ["footerTemplate"] = footerTemplate,
+                ["printBackground"] = printBackground,
+                ["landscape"] = landscape,
+                ["pageRanges"] = pageRanges,
+                ["format"] = format,
+                ["marginOptions"] = marginOptions,
+                ["preferCSSPageSize"] = preferCSSPageSize,
+            };
+
+            if (!string.IsNullOrEmpty(width))
+            {
+                args["width"] = width;
+            }
+
+            if (!string.IsNullOrEmpty(height))
+            {
+                args["height"] = height;
+            }
+
+            return Scope.SendMessageToServer<string>(Guid, "pdf", args);
+        }
     }
 }
