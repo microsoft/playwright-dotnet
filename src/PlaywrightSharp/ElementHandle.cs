@@ -235,11 +235,11 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values, null, null);
 
         /// <inheritdoc />
-        public Task CheckAsync(CheckOptions options)
-            => _channel.CheckAsync(options);
+        public Task CheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => _channel.CheckAsync(timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task UncheckAsync(CheckOptions options)
-            => _channel.UncheckAsync(options);
+        public Task UncheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => _channel.UncheckAsync(timeout, force, noWaitAfter);
     }
 }
