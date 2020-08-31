@@ -635,12 +635,15 @@ namespace PlaywrightSharp
                 preferCSSPageSize).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script, params object[] args)
-            => _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, args));
+        public Task AddInitScriptAsync(string script = null, object[] args = null, string path = null, string content = null)
+        {
+            if (string.IsNullOrEmpty(script))
+            {
+                script = ScriptsHelper.EvaluationScript(content, path);
+            }
 
-        /// <inheritdoc />
-        public Task AddInitScriptAsync(AddInitScriptOptions options, params object[] args)
-            => AddInitScriptAsync(ScriptsHelper.EvaluationScript(options?.Content, options?.Path), args);
+            return _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, args));
+        }
 
         /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
