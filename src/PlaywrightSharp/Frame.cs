@@ -85,7 +85,8 @@ namespace PlaywrightSharp
         public Task<string> GetContentAsync() => GetContentAsync(false);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => AddScriptTagAsync(false, options);
+        public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
+            => AddScriptTagAsync(false, url, path, content, type);
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string script) => EvaluateAsync<T>(false, script);
@@ -201,7 +202,8 @@ namespace PlaywrightSharp
         public Task TypeAsync(string selector, string text, int delay = 0) => TypeAsync(false, selector, text, delay);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => AddStyleTagAsync(false, options);
+        public Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string content = null)
+            => AddStyleTagAsync(false, url, path, content);
 
         /// <inheritdoc />
         public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null) => PressAsync(false, selector, text, delay, noWaitAfter, timeout);
@@ -306,15 +308,11 @@ namespace PlaywrightSharp
         internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent? waitUntil, int? timeout = null)
             => _channel.WaitForLoadStateAsync(waitUntil, timeout, isPageCall);
 
-        internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, AddTagOptions options)
-            => (await _channel.AddScriptTagAsync(
-                options: options,
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+        internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, string url, string path, string content, string type)
+            => (await _channel.AddScriptTagAsync(url, path, content, type, isPageCall).ConfigureAwait(false)).Object;
 
-        internal async Task<IElementHandle> AddStyleTagAsync(bool isPageCall, AddTagOptions options)
-            => (await _channel.AddStyleTagAsync(
-                options: options,
-                isPage: isPageCall).ConfigureAwait(false)).Object;
+        internal async Task<IElementHandle> AddStyleTagAsync(bool isPageCall, string url, string path, string content)
+            => (await _channel.AddStyleTagAsync(url, path, content, isPageCall).ConfigureAwait(false)).Object;
 
         internal Task SetInputFilesAsync(bool isPageCall, string selector, string[] files)
             => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToFilePayload()).ToArray(), isPageCall);

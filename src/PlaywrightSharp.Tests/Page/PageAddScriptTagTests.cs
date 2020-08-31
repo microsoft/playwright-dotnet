@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Url = "/injectedfile.js" });
+            var scriptHandle = await Page.AddScriptTagAsync(url: "/injectedfile.js");
             Assert.NotNull(scriptHandle);
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAUrlAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Url = "/es6/es6import.js", Type = "module" });
+            await Page.AddScriptTagAsync(url: "/es6/es6import.js", type: "module");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
 
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAPathAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Path = TestUtils.GetWebServerFile("es6/es6pathimport.js"), Type = "module" });
+            await Page.AddScriptTagAsync(path: TestUtils.GetWebServerFile("es6/es6pathimport.js"), type: "module");
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAContentAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Content = "import num from '/es6/es6module.js'; window.__es6injected = num;", Type = "module" });
+            await Page.AddScriptTagAsync(content: "import num from '/es6/es6module.js'; window.__es6injected = num;", type: "module");
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(new AddTagOptions { Url = "/nonexistfile.js" }));
+            await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(url: "/nonexistfile.js"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAPath()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Path = TestUtils.GetWebServerFile("injectedfile.js") });
+            var scriptHandle = await Page.AddScriptTagAsync(path: TestUtils.GetWebServerFile("injectedfile.js"));
             Assert.NotNull(scriptHandle);
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new AddTagOptions { Path = TestUtils.GetWebServerFile("injectedfile.js") });
+            await Page.AddScriptTagAsync(path: TestUtils.GetWebServerFile("injectedfile.js"));
             string result = await Page.EvaluateAsync<string>("() => __injectedError.stack");
             Assert.Contains(TestUtils.GetWebServerFile("injectedfile.js"), result);
         }
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithContent()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new AddTagOptions { Content = "window.__injected = 35;" });
+            var scriptHandle = await Page.AddScriptTagAsync(content: "window.__injected = 35;");
             Assert.NotNull(scriptHandle);
             Assert.Equal(35, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
-                Page.AddScriptTagAsync(new AddTagOptions { Content = "window.__injected = 35;" }));
+                Page.AddScriptTagAsync(content: "window.__injected = 35;"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -138,7 +138,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
-                Page.AddScriptTagAsync(new AddTagOptions { Url = TestConstants.CrossProcessUrl + "/injectedfile.js" }));
+                Page.AddScriptTagAsync(url: TestConstants.CrossProcessUrl + "/injectedfile.js"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             string url = TestConstants.ServerUrl + "/this_does_not_exists.js";
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(new AddTagOptions { Url = url }));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(url));
             Assert.Contains(url, exception.Message);
         }
     }

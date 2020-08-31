@@ -515,10 +515,12 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object args) => MainFrame.EvaluateHandleAsync(pageFunction, args);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddScriptTagAsync(AddTagOptions options) => MainFrame.AddScriptTagAsync(true, options);
+        public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
+            => MainFrame.AddScriptTagAsync(true, url, path, content, type);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => MainFrame.AddStyleTagAsync(true, options);
+        public Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string content = null)
+            => MainFrame.AddStyleTagAsync(true, url, path, content);
 
         /// <inheritdoc />
         public Task ClickAsync(string selector, ClickOptions options = null) => MainFrame.ClickAsync(true, selector, options);

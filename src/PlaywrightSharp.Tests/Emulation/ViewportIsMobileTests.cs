@@ -94,10 +94,7 @@ namespace PlaywrightSharp.Tests.Emulation
 
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
-            await page.AddScriptTagAsync(new AddTagOptions
-            {
-                Url = TestConstants.ServerUrl + "/modernizr.js"
-            });
+            await page.AddScriptTagAsync(url: TestConstants.ServerUrl + "/modernizr.js");
             Assert.True(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
         }
 
