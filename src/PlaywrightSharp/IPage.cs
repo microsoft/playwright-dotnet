@@ -1000,19 +1000,24 @@ namespace PlaywrightSharp
         /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.
         /// </summary>
-        /// <param name="options">add script tag options.</param>
+        /// <param name="url">URL of a script to be added.</param>
+        /// <param name="path">Path to the JavaScript file to be injected into frame. If path is a relative path, then it is resolved relative to current working directory.</param>
+        /// <param name="content">Raw JavaScript content to be injected into frame.</param>
+        /// <param name="type">Script type. Use 'module' in order to load a Javascript ES6 module.</param>
         /// <remarks>
         /// Shortcut for <c>page.MainFrame.AddScriptTagAsync(options)</c>.
         /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script's onload fires or when the script content was injected into frame, yielding the added <see cref="IElementHandle"/>.</returns>
-        Task<IElementHandle> AddScriptTagAsync(AddTagOptions options);
+        /// <returns>A <see cref="Task"/> that completes when the tag is added, yielding the added tag as an <see cref="IElementHandle"/> when the script's onload fires or when the script content was injected into frame.</returns>
+        Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null);
 
         /// <summary>
         /// Adds a <c><![CDATA[<link rel="stylesheet">]]></c> tag into the page with the desired url or a <c><![CDATA[<link rel="stylesheet">]]></c> tag with the content.
         /// </summary>
-        /// <param name="options">add style tag options.</param>
+        /// <param name="url">URL of the link tag.</param>
+        /// <param name="path">Path to the CSS file to be injected into frame. If path is a relative path, then it is resolved relative to current working directory.</param>
+        /// <param name="content">Raw CSS content to be injected into frame.</param>
         /// <returns>A <see cref="Task"/> that completes when the stylesheet's onload fires or when the CSS content was injected into frame, yieling the added <see cref="IElementHandle"/>.</returns>
-        Task<IElementHandle> AddStyleTagAsync(AddTagOptions options);
+        Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string content = null);
 
         /// <summary>
         /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.

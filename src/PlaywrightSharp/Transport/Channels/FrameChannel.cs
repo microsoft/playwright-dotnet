@@ -235,29 +235,28 @@ namespace PlaywrightSharp.Transport.Channels
                 args);
         }
 
-        internal Task<ElementHandleChannel> AddScriptTagAsync(AddTagOptions options, bool isPage)
+        internal Task<ElementHandleChannel> AddScriptTagAsync(string url, string path, string content, string type, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "addScriptTag",
                 new Dictionary<string, object>
                 {
-                    ["url"] = options.Url,
-                    ["path"] = options.Path,
-                    ["content"] = options.Content,
-                    ["type"] = options.Type,
+                    ["url"] = url,
+                    ["path"] = path,
+                    ["content"] = content,
+                    ["type"] = type,
                     ["isPage"] = isPage,
                 });
 
-        internal Task<ElementHandleChannel> AddStyleTagAsync(AddTagOptions options, bool isPage)
+        internal Task<ElementHandleChannel> AddStyleTagAsync(string url, string path, string content, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "addStyleTag",
                 new Dictionary<string, object>
                 {
-                    ["url"] = options.Url,
-                    ["path"] = options.Path,
-                    ["content"] = options.Content,
-                    ["type"] = options.Type,
+                    ["url"] = url,
+                    ["path"] = path,
+                    ["content"] = content,
                     ["isPage"] = isPage,
                 });
 
