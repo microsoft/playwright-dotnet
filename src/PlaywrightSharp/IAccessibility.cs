@@ -17,8 +17,9 @@ namespace PlaywrightSharp
         /// <summary>
         /// Snapshots the async.
         /// </summary>
-        /// <param name="options">Options.</param>
+        /// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to true.</param>
+        /// <param name="root">The root DOM element for the snapshot. Defaults to the whole page.</param>
         /// <returns>A <see cref="Task"/> that completes when the snapshot is completed, yielding the serialized result.</returns>
-        public Task<SerializedAXNode> SnapshotAsync(AccessibilitySnapshotOptions options = null);
+        public Task<SerializedAXNode> SnapshotAsync(bool interestingOnly = true, IElementHandle root = null);
     }
 }
