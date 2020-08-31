@@ -37,10 +37,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithAPath()
         {
-            await Page.AddInitScriptAsync(new AddInitScriptOptions
-            {
-                Path = TestUtils.GetWebServerFile("injectedfile.js")
-            });
+            await Page.AddInitScriptAsync(path: TestUtils.GetWebServerFile("injectedfile.js"));
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
@@ -52,9 +49,9 @@ namespace PlaywrightSharp.Tests.Evaluation
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithContents()
         {
-            await Page.AddInitScriptAsync(new AddInitScriptOptions { Content = @"function(){
+            await Page.AddInitScriptAsync(content: @"function(){
                 window.injected = 123;
-            }" });
+            }");
             await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
@@ -64,7 +61,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-it>should throw without path and content</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public Task ShouldThrowWithoutPathAndContent()
-            => Assert.ThrowsAnyAsync<ArgumentException>(() => Page.AddInitScriptAsync(new AddInitScriptOptions { }));
+            => Assert.ThrowsAnyAsync<ArgumentException>(() => Page.AddInitScriptAsync());
 
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
@@ -78,9 +75,9 @@ namespace PlaywrightSharp.Tests.Evaluation
             }");
 
             var page = await context.NewPageAsync();
-            await page.AddInitScriptAsync(new AddInitScriptOptions { Content = @"function(){
+            await page.AddInitScriptAsync(content: @"function(){
                 window.injected = window.temp;
-            }" });
+            }");
             await page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
@@ -92,10 +89,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync(new AddInitScriptOptions
-            {
-                Path = TestUtils.GetWebServerFile("injectedfile.js"),
-            });
+            await context.AddInitScriptAsync(path: TestUtils.GetWebServerFile("injectedfile.js"));
 
             var page = await context.NewPageAsync();
 
@@ -116,9 +110,9 @@ namespace PlaywrightSharp.Tests.Evaluation
                 window.temp = 123;
             }");
 
-            await page.AddInitScriptAsync(new AddInitScriptOptions { Content = @"function(){
+            await page.AddInitScriptAsync(content: @"function(){
                 window.injected = window.temp;
-            }" });
+            }");
 
             await page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));

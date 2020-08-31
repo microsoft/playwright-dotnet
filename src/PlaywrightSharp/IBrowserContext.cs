@@ -111,18 +111,10 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="script">Script to be evaluated in all pages in the browser context or script path.</param>
         /// <param name="args">Optional argument to pass to script .</param>
+        /// <param name="path">Gets or sets the path to the JavaScript file to be injected into frame. If its a relative path, then it is resolved relative to <see cref="System.IO.Directory.GetCurrentDirectory"/>.</param>
+        /// <param name="content">Gets or sets the raw JavaScript content to be injected into frame.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(string script, params object[] args);
-
-        /// <summary>
-        /// Adds a script which would be evaluated in one of the following scenarios:
-        /// * Whenever a page is created in the browser context or is navigated.
-        /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
-        /// </summary>
-        /// <param name="options">Options.</param>
-        /// <param name="args">Optional argument to pass to script .</param>
-        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(AddInitScriptOptions options, params object[] args);
+        Task AddInitScriptAsync(string script = null, object[] args = null, string path = null, string content = null);
 
         /// <summary>
         /// Clears all of the current cookies and then sets the cookies for the context.
