@@ -485,17 +485,27 @@ namespace PlaywrightSharp
         /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
         /// If the element is detached during the actionability checks, the action is retried.
         /// </summary>
-        /// <param name="options">Check options.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
-        Task CheckAsync(CheckOptions options = null);
+        Task CheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false);
 
         /// <summary>
         /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
         /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
         /// If the element is detached during the actionability checks, the action is retried.
         /// </summary>
-        /// <param name="options">Check options.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
-        Task UncheckAsync(CheckOptions options = null);
+        Task UncheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false);
     }
 }

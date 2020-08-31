@@ -722,10 +722,12 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, CheckOptions options = null) => MainFrame.CheckAsync(true, selector, options);
+        public Task CheckAsync(string selector, int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => MainFrame.CheckAsync(true, selector, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, CheckOptions options = null) => MainFrame.UncheckAsync(true, selector, options);
+        public Task UncheckAsync(string selector, int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => MainFrame.UncheckAsync(true, selector, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)

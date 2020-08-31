@@ -375,29 +375,29 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task CheckAsync(string selector, CheckOptions options, bool isPage)
+        internal Task CheckAsync(string selector, int? timeout, bool force, bool noWaitAfter, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "check",
                 new Dictionary<string, object>
                 {
                     ["selector"] = selector,
-                    ["force"] = options?.Force,
-                    ["timeout"] = options?.Timeout,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["noWaitAfter"] = noWaitAfter,
                     ["isPage"] = isPage,
                 });
 
-        internal Task UncheckAsync(string selector, CheckOptions options, bool isPage)
+        internal Task UncheckAsync(string selector, int? timeout, bool force, bool noWaitAfter, bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "uncheck",
                 new Dictionary<string, object>
                 {
                     ["selector"] = selector,
-                    ["force"] = options?.Force,
-                    ["timeout"] = options?.Timeout,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["noWaitAfter"] = noWaitAfter,
                     ["isPage"] = isPage,
                 });
 

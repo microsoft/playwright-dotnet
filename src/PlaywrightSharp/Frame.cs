@@ -151,10 +151,12 @@ namespace PlaywrightSharp
         public Task ClickAsync(string selector, ClickOptions options = null) => ClickAsync(false, selector, options);
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, CheckOptions options = null) => CheckAsync(false, selector, options);
+        public Task CheckAsync(string selector, int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => CheckAsync(false, selector, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, CheckOptions options = null) => UncheckAsync(false, selector, options);
+        public Task UncheckAsync(string selector, int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => UncheckAsync(false, selector, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
@@ -325,11 +327,11 @@ namespace PlaywrightSharp
         internal Task ClickAsync(bool isPageCall, string selector, ClickOptions options)
             => _channel.ClickAsync(selector, options, isPageCall);
 
-        internal Task CheckAsync(bool isPageCall, string selector, CheckOptions options)
-            => _channel.CheckAsync(selector, options, isPageCall);
+        internal Task CheckAsync(bool isPageCall, string selector, int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => _channel.CheckAsync(selector, timeout, force, noWaitAfter, isPageCall);
 
-        internal Task UncheckAsync(bool isPageCall, string selector, CheckOptions options)
-            => _channel.UncheckAsync(selector, options, isPageCall);
+        internal Task UncheckAsync(bool isPageCall, string selector, int? timeout = null, bool force = false, bool noWaitAfter = false)
+            => _channel.UncheckAsync(selector, timeout, force, noWaitAfter, isPageCall);
 
         internal Task SetContentAsync(bool isPageCall, string html, LifecycleEvent? waitUntil, int? timeout)
             => _channel.SetcontentAsync(html, timeout, waitUntil, isPageCall);
