@@ -118,7 +118,21 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<FrameChannel> GetOwnerFrameAsync() => Scope.SendMessageToServer<FrameChannel>(Guid, "ownerFrame", null);
 
-        internal Task HoverAsync(PointerActionOptions options) => Scope.SendMessageToServer(Guid, "hover", options);
+        internal Task HoverAsync(
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false)
+            => Scope.SendMessageToServer<JsonElement?>(
+                Guid,
+                "hover",
+                new Dictionary<string, object>
+                {
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["position"] = position,
+                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+                });
 
         internal Task FocusAsync() => Scope.SendMessageToServer(Guid, "focus", null);
 
