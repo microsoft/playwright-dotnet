@@ -322,17 +322,53 @@ namespace PlaywrightSharp
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
         /// </summary>
         /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
-        /// <param name="options">click options.</param>
+        /// <param name="delay">Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults to 0.</param>
+        /// <param name="button">Button to click. Details to <see cref="MouseButton.Left"/>.</param>
+        /// <param name="clickCount">Click count. Defaults to 1.</param>
+        /// <param name="modifiers">Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</param>
+        /// <param name="position">A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully clicked.</returns>
-        Task ClickAsync(string selector, ClickOptions options = null);
+        Task ClickAsync(
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            int clickCount = 1,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to double click in the center of the element.
         /// </summary>
         /// <param name="selector">A selector to search for element to click. If there are multiple elements satisfying the selector, the first will be clicked.</param>
-        /// <param name="options">click options.</param>
+        /// <param name="delay">Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults to 0.</param>
+        /// <param name="button">Button to click. Details to <see cref="MouseButton.Left"/>.</param>
+        /// <param name="modifiers">Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</param>
+        /// <param name="position">A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully double clicked.</returns>
-        Task DoubleClickAsync(string selector, ClickOptions options = null);
+        Task DoubleClickAsync(
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
@@ -660,7 +696,7 @@ namespace PlaywrightSharp
         Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values);
 
         /// <summary>
-        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, int, MouseButton, int, Modifier[], Point?, int?, bool, bool)"/> to click in the center of the element.
         /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
         /// If the element is detached during the actionability checks, the action is retried.
         /// </summary>
@@ -670,7 +706,7 @@ namespace PlaywrightSharp
         Task CheckAsync(string selector, CheckOptions options = null);
 
         /// <summary>
-        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, ClickOptions)"/> to click in the center of the element.
+        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, int, MouseButton, int, Modifier[], Point?, int?, bool, bool)"/> to click in the center of the element.
         /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
         /// If the element is detached during the actionability checks, the action is retried.
         /// </summary>

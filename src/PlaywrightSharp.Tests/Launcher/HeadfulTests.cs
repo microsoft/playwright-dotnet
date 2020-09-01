@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests.Launcher
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await page.ClickAsync("body", new ClickOptions { Button = MouseButton.Right });
+            await page.ClickAsync("body", button: MouseButton.Right);
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>

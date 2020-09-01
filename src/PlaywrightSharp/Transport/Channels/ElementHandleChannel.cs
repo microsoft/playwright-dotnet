@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -120,36 +122,50 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task FocusAsync() => Scope.SendMessageToServer(Guid, "focus", null);
 
-        internal Task ClickAsync(ClickOptions options)
+        internal Task ClickAsync(
+            int delay,
+            MouseButton button,
+            int clickCount,
+            Modifier[] modifiers,
+            Point? position,
+            int? timeout,
+            bool force,
+            bool noWaitAfter)
             => Scope.SendMessageToServer(
                 Guid,
                 "click",
                 new Dictionary<string, object>
                 {
-                    ["delay"] = options?.Delay,
-                    ["button"] = options?.Button ?? Input.MouseButton.Left,
-                    ["clickCount"] = options?.ClickCount ?? 1,
-                    ["force"] = options?.Force,
-                    ["timeout"] = options?.Timeout,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
-                    ["position"] = options?.Position,
-                    ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                    ["delay"] = delay,
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["position"] = position,
+                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
                 });
 
-        internal Task DoubleClickAsync(ClickOptions options)
+        internal Task DoubleClickAsync(
+            int delay,
+            MouseButton button,
+            Modifier[] modifiers,
+            Point? position,
+            int? timeout,
+            bool force,
+            bool noWaitAfter)
             => Scope.SendMessageToServer(
                 Guid,
                 "dblclick",
                 new Dictionary<string, object>
                 {
-                    ["delay"] = options?.Delay,
-                    ["button"] = options?.Button ?? Input.MouseButton.Left,
-                    ["clickCount"] = options?.ClickCount ?? 1,
-                    ["force"] = options?.Force,
-                    ["timeout"] = options?.Timeout,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
-                    ["position"] = options?.Position,
-                    ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                    ["delay"] = delay,
+                    ["button"] = button,
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["position"] = position,
+                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
                 });
 
         internal Task<Rect> GetBoundingBoxAsync() => Scope.SendMessageToServer<Rect>(Guid, "boundingBox", null);

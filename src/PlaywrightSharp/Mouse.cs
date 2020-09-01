@@ -16,20 +16,13 @@ namespace PlaywrightSharp
         public Task ClickAsync(double x, double y, int delay = 0, MouseButton button = MouseButton.Left, int clickCount = 1)
             => _channel.MouseClickAsync(x, y, delay, button, clickCount);
 
-        public Task DoubleClickAsync(double x, double y, ClickOptions options = null)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task DoubleClickAsync(double x, double y, int delay = 0, MouseButton button = MouseButton.Left)
+            => _channel.MouseClickAsync(x, y, delay, button, 2);
 
         public Task DownAsync(MouseButton button = MouseButton.Left, int clickCount = 1) => _channel.MouseDownAsync(button, clickCount);
 
         public Task MoveAsync(double x, double y, int? steps = 1) => _channel.MouseMoveAsync(x, y, steps);
 
         public Task UpAsync(MouseButton button = MouseButton.Left, int clickCount = 1) => _channel.MouseUpAsync(button, clickCount);
-
-        public Task WheelAsync(double deltaX, double deltaY)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

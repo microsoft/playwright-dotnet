@@ -521,10 +521,29 @@ namespace PlaywrightSharp
         public Task<IElementHandle> AddStyleTagAsync(AddTagOptions options) => MainFrame.AddStyleTagAsync(true, options);
 
         /// <inheritdoc />
-        public Task ClickAsync(string selector, ClickOptions options = null) => MainFrame.ClickAsync(true, selector, options);
+        public Task ClickAsync(
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            int clickCount = 1,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => MainFrame.ClickAsync(true, selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
+        public Task DoubleClickAsync(
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => MainFrame.DoubleClickAsync(true, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public async Task<IResponse> GoBackAsync(int? timeout = null, LifecycleEvent? waitUntil = null)

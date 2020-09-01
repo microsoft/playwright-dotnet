@@ -148,7 +148,17 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script) => QuerySelectorAllEvaluateAsync<T>(false, selector, script);
 
         /// <inheritdoc />
-        public Task ClickAsync(string selector, ClickOptions options = null) => ClickAsync(false, selector, options);
+        public Task ClickAsync(
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            int clickCount = 1,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => ClickAsync(false, selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task CheckAsync(string selector, CheckOptions options = null) => CheckAsync(false, selector, options);
@@ -157,7 +167,16 @@ namespace PlaywrightSharp
         public Task UncheckAsync(string selector, CheckOptions options = null) => UncheckAsync(false, selector, options);
 
         /// <inheritdoc />
-        public Task DoubleClickAsync(string selector, ClickOptions options = null) => throw new NotImplementedException();
+        public Task DoubleClickAsync(
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => DoubleClickAsync(false, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task QuerySelectorEvaluateAsync(string selector, string script, object args) => QuerySelectorEvaluateAsync(false, selector, script, args);
@@ -322,8 +341,30 @@ namespace PlaywrightSharp
         internal Task SetInputFilesAsync(bool isPageCall, string selector, FilePayload[] files)
             => _channel.SetInputFilesAsync(selector, files, isPageCall);
 
-        internal Task ClickAsync(bool isPageCall, string selector, ClickOptions options)
-            => _channel.ClickAsync(selector, options, isPageCall);
+        internal Task ClickAsync(
+            bool isPageCall,
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            int clickCount = 1,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, isPageCall);
+
+        internal Task DoubleClickAsync(
+            bool isPageCall,
+            string selector,
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => _channel.DoubleClickAsync(selector, delay, button, modifiers, position, timeout, force, noWaitAfter, isPageCall);
 
         internal Task CheckAsync(bool isPageCall, string selector, CheckOptions options)
             => _channel.CheckAsync(selector, options, isPageCall);

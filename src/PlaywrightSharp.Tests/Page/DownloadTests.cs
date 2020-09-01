@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.Page
 
             await TaskUtils.WhenAll(
                 downloadTask,
-                page.ClickAsync("a", new ClickOptions { Modifiers = new[] { Modifier.Alt } }));
+                page.ClickAsync("a", modifiers: new[] { Modifier.Alt }));
 
             var download = downloadTask.Result.Download;
             string path = await download.GetPathAsync();
