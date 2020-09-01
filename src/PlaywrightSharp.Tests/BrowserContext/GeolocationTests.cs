@@ -27,16 +27,16 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.SetGeolocationAsync(new GeolocationOption
+            await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 10,
                 Latitude = 10
             });
-            var geolocation = await Page.EvaluateAsync<GeolocationOption>(
+            var geolocation = await Page.EvaluateAsync<Geolocation>(
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-            Assert.Equal(new GeolocationOption
+            Assert.Equal(new Geolocation
             {
                 Latitude = 10,
                 Longitude = 10
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldThrowWhenInvalidLongitude()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
-                Context.SetGeolocationAsync(new GeolocationOption
+                Context.SetGeolocationAsync(new Geolocation
                 {
                     Longitude = 200,
                     Latitude = 100
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldIsolateContexts()
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
-            await Context.SetGeolocationAsync(new GeolocationOption
+            await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 10,
                 Latitude = 10
@@ -76,27 +76,27 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await using var context2 = await Browser.NewContextAsync(new BrowserContextOptions
             {
                 Permissions = new[] { ContextPermission.Geolocation },
-                Geolocation = new GeolocationOption { Latitude = 20, Longitude = 20 },
+                Geolocation = new Geolocation { Latitude = 20, Longitude = 20 },
             });
 
             var page2 = await context2.NewPageAsync();
             await page2.GoToAsync(TestConstants.EmptyPage);
 
-            var geolocation = await Page.EvaluateAsync<GeolocationOption>(
+            var geolocation = await Page.EvaluateAsync<Geolocation>(
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-            Assert.Equal(new GeolocationOption
+            Assert.Equal(new Geolocation
             {
                 Latitude = 10,
                 Longitude = 10
             }, geolocation);
 
-            var geolocation2 = await page2.EvaluateAsync<GeolocationOption>(
+            var geolocation2 = await page2.EvaluateAsync<Geolocation>(
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-            Assert.Equal(new GeolocationOption
+            Assert.Equal(new Geolocation
             {
                 Latitude = 20,
                 Longitude = 20
@@ -115,11 +115,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldNotModifyPassedDefaultOptionsObject()
         {
-            var geolocation = new GeolocationOption { Latitude = 10, Longitude = 10 };
+            var geolocation = new Geolocation { Latitude = 10, Longitude = 10 };
             BrowserContextOptions options = new BrowserContextOptions { Geolocation = geolocation };
             await using var context = await Browser.NewContextAsync(options);
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.SetGeolocationAsync(new GeolocationOption
+            await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 20,
                 Latitude = 20
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var options = new BrowserContextOptions
             {
-                Geolocation = new GeolocationOption
+                Geolocation = new Geolocation
                 {
                     Latitude = 10,
                     Longitude = 10
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 
-            var geolocation = await page.EvaluateAsync<GeolocationOption>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
+            var geolocation = await page.EvaluateAsync<Geolocation>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
             }))");
             Assert.Equal(options.Geolocation, geolocation);
@@ -171,13 +171,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var messages = new List<string>();
             Page.Console += (sender, e) => messages.Add(e.Message.Text);
 
-            await Context.SetGeolocationAsync(new GeolocationOption
+            await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 0,
                 Latitude = 0
             });
 
-            var geolocation = await Page.EvaluateAsync<GeolocationOption>(@"() => {
+            var geolocation = await Page.EvaluateAsync<Geolocation>(@"() => {
                 navigator.geolocation.watchPosition(pos => {
                     const coords = pos.coords;
                     console.log(`lat=${coords.latitude} lng=${coords.longitude}`);
@@ -186,15 +186,15 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             await TaskUtils.WhenAll(
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console, e => e.Message.Text.Contains("lat=0 lng=10")),
-                Context.SetGeolocationAsync(new GeolocationOption { Latitude = 0, Longitude = 10 }));
+                Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 }));
 
             await TaskUtils.WhenAll(
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console, e => e.Message.Text.Contains("lat=20 lng=30")),
-                Context.SetGeolocationAsync(new GeolocationOption { Latitude = 20, Longitude = 30 }));
+                Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
                 Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console, e => e.Message.Text.Contains("lat=40 lng=50")),
-                Context.SetGeolocationAsync(new GeolocationOption { Latitude = 40, Longitude = 50 }));
+                Context.SetGeolocationAsync(new Geolocation { Latitude = 40, Longitude = 50 }));
 
             string allMessages = string.Join("|", messages);
             Assert.Contains("lat=0 lng=10", allMessages);
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldUseContextOptionsForPopup()
         {
             await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
-            await Context.SetGeolocationAsync(new GeolocationOption
+            await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 10,
                 Latitude = 10,
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 Page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/geolocation.html"));
 
             await popupTask.Result.Page.WaitForLoadStateAsync();
-            var geolocation = await popupTask.Result.Page.EvaluateAsync<GeolocationOption>("() => window.geolocationPromise");
+            var geolocation = await popupTask.Result.Page.EvaluateAsync<Geolocation>("() => window.geolocationPromise");
             Assert.Equal(10, geolocation.Longitude);
             Assert.Equal(10, geolocation.Longitude);
         }
