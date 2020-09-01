@@ -422,7 +422,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
             {
-                Geolocation = new GeolocationOption
+                Geolocation = new Geolocation
                 {
                     Latitude = 10,
                     Longitude = 10,
@@ -431,7 +431,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             });
 
             await page.GoToAsync(TestConstants.EmptyPage);
-            var geolocation = await page.EvaluateAsync<GeolocationOption>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
+            var geolocation = await page.EvaluateAsync<Geolocation>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
             }))");
             Assert.Equal(10, geolocation.Latitude);

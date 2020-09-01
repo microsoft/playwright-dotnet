@@ -46,7 +46,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="geolocation">Geolocation.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task SetGeolocationAsync(GeolocationOption geolocation);
+        Task SetGeolocationAsync(Geolocation geolocation);
 
         /// <summary>
         /// Closes the current context.

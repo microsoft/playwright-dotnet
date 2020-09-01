@@ -220,12 +220,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Changes the Geolocation of the context.
         /// </summary>
-        public GeolocationOption Geolocation
+        public Geolocation Geolocation
         {
             get
             {
                 Values.TryGetValue("geolocation", out object result);
-                return result as GeolocationOption;
+                return result as Geolocation;
             }
             set => Values["geolocation"] = value;
         }

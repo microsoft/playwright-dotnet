@@ -155,9 +155,18 @@ namespace PlaywrightSharp
         /// <summary>
         /// Sets the page's geolocation.
         /// </summary>
+        /// <param name="latitude">Latitude between -90 and 90.</param>
+        /// <param name="longitude">Longitude between -180 and 180.</param>
+        /// <param name="accuracy">Optional non-negative accuracy value.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task SetGeolocationAsync(double latitude, double longitude, double? accuracy);
+
+        /// <summary>
+        /// Sets the page's geolocation.
+        /// </summary>
         /// <param name="geolocation">Geolocation.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task SetGeolocationAsync(GeolocationOption geolocation);
+        Task SetGeolocationAsync(Geolocation geolocation);
 
         /// <summary>
         /// Clears all permission overrides for the browser context.
