@@ -288,22 +288,22 @@ namespace PlaywrightSharp
         public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, string url = null, int? timeout = null) => MainFrame.WaitForNavigationAsync(true, waitUntil, url, timeout);
 
         /// <inheritdoc />
-        public async Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null)
+        public async Task<IRequest> WaitForRequestAsync(string url, int? timeout = null)
         {
             var result = await WaitForEvent<RequestEventArgs>(
                 PageEvent.Request,
                 e => e.Request.Url.Equals(url),
-                options?.Timeout).ConfigureAwait(false);
+                timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
-        public async Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null)
+        public async Task<IRequest> WaitForRequestAsync(Regex regex, int? timeout = null)
         {
             var result = await WaitForEvent<RequestEventArgs>(
                 PageEvent.Request,
                 e => regex.IsMatch(e.Request.Url),
-                options?.Timeout).ConfigureAwait(false);
+                timeout).ConfigureAwait(false);
             return result.Request;
         }
 
@@ -616,12 +616,12 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc />
-        public async Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null)
+        public async Task<IResponse> WaitForResponseAsync(string url, int? timeout = null)
         {
             var result = await WaitForEvent<ResponseEventArgs>(
                 PageEvent.Response,
                 e => e.Response.Url.Equals(url),
-                options?.Timeout).ConfigureAwait(false);
+                timeout).ConfigureAwait(false);
             return result.Response;
         }
 
