@@ -323,21 +323,57 @@ namespace PlaywrightSharp.Transport.Channels
                 args);
         }
 
-        internal Task ClickAsync(string selector, ClickOptions options, bool isPage)
+        internal Task ClickAsync(
+            string selector,
+            int delay,
+            MouseButton button,
+            int clickCount,
+            Modifier[] modifiers,
+            Point? position,
+            int? timeout,
+            bool force,
+            bool noWaitAfter,
+            bool isPage)
             => Scope.SendMessageToServer<ElementHandleChannel>(
                 Guid,
                 "click",
                 new Dictionary<string, object>
                 {
                     ["selector"] = selector,
-                    ["delay"] = options?.Delay,
-                    ["button"] = options?.Button ?? Input.MouseButton.Left,
-                    ["clickCount"] = options?.ClickCount ?? 1,
-                    ["force"] = options?.Force,
-                    ["timeout"] = options?.Timeout,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
-                    ["position"] = options?.Position,
-                    ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                    ["delay"] = delay,
+                    ["button"] = button,
+                    ["clickCount"] = clickCount,
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["position"] = position,
+                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+                    ["isPage"] = isPage,
+                });
+
+        internal Task DoubleClickAsync(
+            string selector,
+            int delay,
+            MouseButton button,
+            Modifier[] modifiers,
+            Point? position,
+            int? timeout,
+            bool force,
+            bool noWaitAfter,
+            bool isPage)
+            => Scope.SendMessageToServer<ElementHandleChannel>(
+                Guid,
+                "dblclick",
+                new Dictionary<string, object>
+                {
+                    ["selector"] = selector,
+                    ["delay"] = delay,
+                    ["button"] = button,
+                    ["force"] = force,
+                    ["timeout"] = timeout,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["position"] = position,
+                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
                     ["isPage"] = isPage,
                 });
 

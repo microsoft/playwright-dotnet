@@ -230,7 +230,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var popupEventTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
             await TaskUtils.WhenAll(
               popupEventTask,
-              page.ClickAsync("a", new ClickOptions { Modifiers = new[] { Modifier.Shift } }));
+              page.ClickAsync("a", modifiers: new[] { Modifier.Shift }));
 
             Assert.Null(await popupEventTask.Result.Page.GetOpenerAsync());
         }
@@ -251,7 +251,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var popupEventTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
             await TaskUtils.WhenAll(
               popupEventTask,
-              page.ClickAsync("a", new ClickOptions { Modifiers = new[] { TestConstants.IsMacOSX ? Modifier.Meta : Modifier.Control } }));
+              page.ClickAsync("a", modifiers: new[] { TestConstants.IsMacOSX ? Modifier.Meta : Modifier.Control }));
 
             Assert.Null(await popupEventTask.Result.Page.GetOpenerAsync());
         }

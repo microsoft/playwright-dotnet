@@ -225,7 +225,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Server.SetRoute("/empty.html", context => Task.CompletedTask);
 
             await Page.SetContentAsync($@"<a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>");
-            await Page.ClickAsync("a", new ClickOptions { NoWaitAfter = true });
+            await Page.ClickAsync("a", noWaitAfter: true);
         }
 
         ///<playwright-file>autowaiting.spec.js</playwright-file>

@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.style.display = 'none'", button);
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => button.ClickAsync(new ClickOptions { Force = true }));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => button.ClickAsync(force: true));
             Assert.Contains("Element is not visible", exception.Message);
         }
 
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.parentElement.style.display = 'none'", button);
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => button.ClickAsync(new ClickOptions { Force = true }));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => button.ClickAsync(force: true));
             Assert.Contains("Element is not visible", exception.Message);
         }
 
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
             await Page.SetContentAsync("hello<br>goodbye");
             var br = await Page.QuerySelectorAsync("br");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => br.ClickAsync(new ClickOptions { Force = true }));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => br.ClickAsync(force: true));
             Assert.Contains("Element is outside of the viewport", exception.Message);
         }
 

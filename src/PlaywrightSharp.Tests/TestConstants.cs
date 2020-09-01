@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests
         public const string FirefoxProduct = "FIREFOX";
 
         public static string Product => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PRODUCT")) ?
-            ChromiumProduct :
+            WebkitProduct :
             Environment.GetEnvironmentVariable("PRODUCT");
 
         public const string TestFixtureBrowserCollectionName = "PlaywrightSharpBrowserLoaderFixture collection";

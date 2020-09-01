@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -83,10 +85,27 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task ClickAsync(ClickOptions options = null) => _channel.ClickAsync(options ?? new ClickOptions());
+        public Task ClickAsync(
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            int clickCount = 1,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => _channel.ClickAsync(delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DoubleClickAsync(ClickOptions options = null) => _channel.DoubleClickAsync(options ?? new ClickOptions());
+        public Task DoubleClickAsync(
+            int delay = 0,
+            MouseButton button = MouseButton.Left,
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false,
+            bool noWaitAfter = false)
+            => _channel.DoubleClickAsync(delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string file) => SetInputFilesAsync(new[] { file });
