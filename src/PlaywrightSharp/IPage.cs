@@ -340,10 +340,11 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
         /// <param name="url">URL to wait for.</param>
-        /// <param name="options">Options.</param>
-        Task<IRequest> WaitForRequestAsync(string url, WaitForOptions options = null);
+        /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        Task<IRequest> WaitForRequestAsync(string url, int? timeout = null);
 
         /// <summary>
         /// Waits for a request.
@@ -356,10 +357,11 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
         /// <param name="regex">Pattern to wait for.</param>
-        /// <param name="options">Options.</param>
-        Task<IRequest> WaitForRequestAsync(Regex regex, WaitForOptions options = null);
+        /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        Task<IRequest> WaitForRequestAsync(Regex regex, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
@@ -1365,9 +1367,10 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <param name="url">URL to wait for.</param>
-        /// <param name="options">Options.</param>
+        /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
         /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
-        Task<IResponse> WaitForResponseAsync(string url, WaitForOptions options = null);
+        Task<IResponse> WaitForResponseAsync(string url, int? timeout = null);
 
         /// <summary>
         ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.

@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", new WaitForOptions { Timeout = 0 });
+            var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", 0);
             var (response, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {
