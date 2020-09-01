@@ -138,9 +138,18 @@ namespace PlaywrightSharp
         /// <summary>
         /// Scrolls element into view if needed, and then uses <see cref="IPage.Mouse"/> to hover over the center of the element.
         /// </summary>
-        /// <param name="options">Hover options.</param>
+        /// <param name="modifiers">Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</param>
+        /// <param name="position">A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="force">Whether to pass the accionability checks.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully hovered.</returns>
-        Task HoverAsync(PointerActionOptions options = null);
+        Task HoverAsync(
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false);
 
         /// <summary>
         /// Tries to scroll element into view, unless it is completely visible as defined by <see href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"/>'s <b>ratio</b>.

@@ -59,7 +59,12 @@ namespace PlaywrightSharp
         public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task HoverAsync(PointerActionOptions options = null) => _channel.HoverAsync(options ?? new PointerActionOptions());
+        public Task HoverAsync(
+            Modifier[] modifiers = null,
+            Point? position = null,
+            int? timeout = null,
+            bool force = false)
+            => _channel.HoverAsync(modifiers, position, timeout, force);
 
         /// <inheritdoc />
         public Task ScrollIntoViewIfNeededAsync(int? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
