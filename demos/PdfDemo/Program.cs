@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp;
-using PlaywrightSharp.Chromium;
 
 namespace PdfDemo
 {
@@ -11,19 +10,13 @@ namespace PdfDemo
     {
         static async Task Main(string[] args)
         {
-            var options = new LaunchOptions
-            {
-                Headless = true
-            };
+            Console.WriteLine("Installing playwright");
+            await Playwright.InstallAsync();
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = true });
 
-            Console.WriteLine("Downloading chromium");
-            var chromium = new ChromiumBrowserType();
-
-            await chromium.CreateBrowserFetcher().DownloadAsync();
-
+            var page = await browser.NewPageAsync();
             Console.WriteLine("Navigating google");
-            await using var browser = await chromium.LaunchAsync(options);
-            var page = await browser.DefaultContext.NewPageAsync();
             await page.GoToAsync("http://www.google.com");
 
             Console.WriteLine("Generating PDF");
