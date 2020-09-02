@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Page
             // We have to interact with a page so that 'beforeunload' handlers
             // fire.
             await newPage.ClickAsync("body");
-            var pageClosingTask = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
+            var pageClosingTask = newPage.CloseAsync(true);
             var dialog = await newPage.WaitForEvent<DialogEventArgs>(PageEvent.Dialog).ContinueWith(task => task.Result.Dialog);
             Assert.Equal(DialogType.BeforeUnload, dialog.Type);
             Assert.Empty(dialog.DefaultValue);
