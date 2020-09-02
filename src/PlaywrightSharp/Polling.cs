@@ -3,7 +3,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// An interval at which the <c>pageFunction</c> is executed.
     /// </summary>
-    public enum WaitForFunctionPollingOption
+    public enum Polling
     {
         /// <summary>
         /// To constantly execute <c>pageFunction</c> in <c>requestAnimationFrame</c> callback.

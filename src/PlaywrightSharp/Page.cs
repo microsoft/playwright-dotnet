@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -305,7 +305,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForFunctionAsync(
             string pageFunction,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null)
             => MainFrame.WaitForFunctionAsync(true, pageFunction, timeout, polling, pollingInterval);
 
@@ -314,7 +314,7 @@ namespace PlaywrightSharp
             string pageFunction,
             object args,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null)
             => MainFrame.WaitForFunctionAsync(true, pageFunction, args, timeout, polling, pollingInterval);
 
@@ -397,7 +397,8 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script);
 
         /// <inheritdoc />
-        public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => MainFrame.FillAsync(true, selector, text, options);
+        public Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false)
+            => MainFrame.FillAsync(true, selector, text, timeout, noWaitAfter);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, string file) => SetInputFilesAsync(selector, new[] { file });

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             var watchdog = Page.WaitForFunctionAsync(
                 "() => window.__FOO === 'hit'",
-                polling: WaitForFunctionPollingOption.Raf);
+                polling: Polling.Raf);
             await Page.EvaluateAsync("window.__FOO = 'hit'");
             await watchdog;
         }
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Frame
             await TaskUtils.WhenAll(
                 Page.WaitForFunctionAsync(
                     "() => window.__FOO === 'hit'",
-                    polling: WaitForFunctionPollingOption.Raf),
+                    polling: Polling.Raf),
                 Page.EvaluateAsync("window.__FOO = 'hit'"));
         }
 

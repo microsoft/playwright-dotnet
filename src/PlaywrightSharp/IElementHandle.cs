@@ -125,9 +125,12 @@ namespace PlaywrightSharp
         /// If element is not a text `&lt;input&gt;`, `&lt;textarea&gt;` or `[contenteditable]` element, the method throws an error.
         /// </summary>
         /// <param name="text">Value to set for the `&lt;input&gt;`, `&lt;textarea&gt;` or `[contenteditable]` element.</param>
-        /// <param name="options">Options.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
-        Task FillAsync(string text, NavigatingActionWaitOptions options = null);
+        Task FillAsync(string text, int? timeout = null, bool noWaitAfter = false);
 
         /// <summary>
         /// Content frame for element handles referencing iframe nodes, or null otherwise.

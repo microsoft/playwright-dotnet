@@ -52,8 +52,8 @@ namespace PlaywrightSharp
             => Convert.FromBase64String(await _channel.ScreenshotAsync(path, omitBackground, type, quality, timeout).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public Task FillAsync(string text, NavigatingActionWaitOptions options = null)
-            => _channel.FillAsync(text, options ?? new NavigatingActionWaitOptions());
+        public Task FillAsync(string text, int? timeout = null, bool noWaitAfter = false)
+            => _channel.FillAsync(text, timeout, noWaitAfter);
 
         /// <inheritdoc />
         public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
