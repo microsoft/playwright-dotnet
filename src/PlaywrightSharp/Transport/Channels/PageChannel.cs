@@ -432,7 +432,7 @@ namespace PlaywrightSharp.Transport.Channels
             PaperFormat format,
             string width,
             string height,
-            MarginOptions marginOptions,
+            Margin marginOptions,
             bool preferCSSPageSize)
         {
             var args = new Dictionary<string, object>

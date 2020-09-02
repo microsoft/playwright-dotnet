@@ -633,7 +633,7 @@ namespace PlaywrightSharp
             PaperFormat format = null,
             string width = null,
             string height = null,
-            MarginOptions marginOptions = null,
+            Margin marginOptions = null,
             bool preferCSSPageSize = false)
             => Convert.FromBase64String(await _channel.GetPdfAsync(
                 path,
