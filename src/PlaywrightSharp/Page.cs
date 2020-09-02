@@ -162,9 +162,6 @@ namespace PlaywrightSharp
         public event EventHandler<WorkerEventArgs> Worker;
 
         /// <inheritdoc />
-        public event EventHandler<WebsocketEventArgs> Websocket;
-
-        /// <inheritdoc />
         public event EventHandler<DownloadEventArgs> Download;
 
         /// <inheritdoc/>

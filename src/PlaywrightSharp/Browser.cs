@@ -32,15 +32,6 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public event EventHandler<TargetChangedArgs> TargetChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<TargetChangedArgs> TargetCreated;
-
-        /// <inheritdoc/>
-        public event EventHandler<TargetChangedArgs> TargetDestroyed;
-
-        /// <inheritdoc/>
         public event EventHandler Disconnected;
 
         /// <inheritdoc/>
@@ -85,9 +76,6 @@ namespace PlaywrightSharp
 
             await _closedTcs.Task.ConfigureAwait(false);
         }
-
-        /// <inheritdoc/>
-        public ITarget GetPageTarget(IPage page) => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)

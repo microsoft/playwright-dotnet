@@ -159,11 +159,6 @@ namespace PlaywrightSharp
         event EventHandler<WorkerEventArgs> Worker;
 
         /// <summary>
-        /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
-        /// </summary>
-        event EventHandler<WebsocketEventArgs> Websocket;
-
-        /// <summary>
         /// Emitted when attachment download started.
         /// User can access basic file operations on downloaded content via the passed Download instance.
         /// </summary>
