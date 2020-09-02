@@ -13,13 +13,11 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly CDPSessionChannel _channel;
-        private readonly CDPSessionInitializer _initializer;
 
-        internal CDPSession(ConnectionScope scope, string guid, CDPSessionInitializer initializer)
+        internal CDPSession(ConnectionScope scope, string guid)
         {
             _scope = scope.CreateChild(guid);
             _channel = new CDPSessionChannel(guid, scope, this);
-            _initializer = initializer;
 
             _channel.CDPEvent += (sender, e) => MessageReceived?.Invoke(this, e);
             _channel.Disconnected += (sender, e) => _scope.Dispose();
