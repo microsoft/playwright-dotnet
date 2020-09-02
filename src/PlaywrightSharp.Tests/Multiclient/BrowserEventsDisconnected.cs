@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -24,11 +24,11 @@ namespace PlaywrightSharp.Tests.Multiclient
         public async Task ShouldBeEmittedWhenBrowserGetsClosedDisconnectedOrUnderlyingWebsocketGetsClosed()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var originalBrowser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var originalBrowser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             string wsEndpoint = browserServer.WSEndpoint;
 
-            await using var remoteBrowser1 = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = wsEndpoint });
-            await using var remoteBrowser2 = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = wsEndpoint });
+            await using var remoteBrowser1 = await BrowserType.ConnectAsync(wsEndpoint);
+            await using var remoteBrowser2 = await BrowserType.ConnectAsync(wsEndpoint);
 
             int disconnectedOriginal = 0;
             int disconnectedRemote1 = 0;

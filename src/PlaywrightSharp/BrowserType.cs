@@ -68,6 +68,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null)
-            => (await _channel.ConnectAsync(options).ConfigureAwait(false)).Object;
+            => (await _channel.ConnectAsync(wsEndpoint, timeout, slowMo).ConfigureAwait(false)).Object;
     }
 }

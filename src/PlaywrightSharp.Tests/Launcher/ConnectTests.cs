@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -25,14 +25,14 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldBeAbleToReconnectToADisconnectedBrowser()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var browser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 
             await browser.CloseAsync();
 
-            await using var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var remote = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
 
             context = await remote.NewContextAsync();
             page = await context.NewPageAsync();
