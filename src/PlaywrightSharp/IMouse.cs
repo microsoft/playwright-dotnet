@@ -15,10 +15,10 @@ namespace PlaywrightSharp
         /// <param name="y">Y coordinate.</param>
         /// <param name="steps">Sends intermediate mousemove events.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task MoveAsync(double x, double y, int? steps = 1);
+        Task MoveAsync(decimal x, decimal y, int? steps = 1);
 
         /// <summary>
-        /// Shortcut for <see cref="MoveAsync(double, double, int?)"/>, <see cref="DownAsync(MouseButton, int)"/> and <see cref="UpAsync(MouseButton, int)"/>.
+        /// Shortcut for <see cref="MoveAsync(decimal, decimal, int?)"/>, <see cref="DownAsync(MouseButton, int)"/> and <see cref="UpAsync(MouseButton, int)"/>.
         /// </summary>
         /// <param name="x">X coordinate.</param>
         /// <param name="y">Y coordinate.</param>
@@ -26,17 +26,17 @@ namespace PlaywrightSharp
         /// <param name="button">Button to click. Details to <see cref="MouseButton.Left"/>.</param>
         /// <param name="clickCount">Click count. Defaults to 1.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task ClickAsync(double x, double y, int delay = 0, MouseButton button = MouseButton.Left, int clickCount = 1);
+        Task ClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left, int clickCount = 1);
 
         /// <summary>
-        /// Shortcut for <see cref="MoveAsync(double, double, int?)"/>, <see cref="DownAsync(MouseButton, int)"/>, <see cref="UpAsync(MouseButton, int)"/>, <see cref="DownAsync(MouseButton, int)"/> and <see cref="UpAsync(MouseButton, int)"/>.
+        /// Shortcut for <see cref="MoveAsync(decimal, decimal, int?)"/>, <see cref="DownAsync(MouseButton, int)"/>, <see cref="UpAsync(MouseButton, int)"/>, <see cref="DownAsync(MouseButton, int)"/> and <see cref="UpAsync(MouseButton, int)"/>.
         /// </summary>
         /// <param name="x">X coordinate.</param>
         /// <param name="y">Y coordinate.</param>
         /// <param name="delay">Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults to 0.</param>
         /// <param name="button">Button to click. Details to <see cref="MouseButton.Left"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task DoubleClickAsync(double x, double y, int delay = 0, MouseButton button = MouseButton.Left);
+        Task DoubleClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left);
 
         /// <summary>
         /// Dispatches a <c>mousedown</c> event.

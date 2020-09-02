@@ -141,12 +141,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets or sets the device scale factor.
         /// </summary>
-        public double? DeviceScaleFactor
+        public decimal? DeviceScaleFactor
         {
             get
             {
                 Values.TryGetValue("deviceScaleFactor", out object result);
-                return result as double?;
+                return result as decimal?;
             }
             set => Values["deviceScaleFactor"] = value;
         }
