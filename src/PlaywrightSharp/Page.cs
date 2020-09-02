@@ -255,9 +255,6 @@ namespace PlaywrightSharp
         public async Task<IPage> GetOpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task SetCacheEnabledAsync(bool enabled = true) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task EmulateMediaAsync()
             => _channel.EmulateMediaAsync(new Dictionary<string, object>());
 

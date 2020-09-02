@@ -10,10 +10,7 @@ namespace PlaywrightSharp.Transport.Converters
     {
         public override bool CanConvert(Type type) => typeof(EvaluateArgument).IsAssignableFrom(type);
 
-        public override EvaluateArgument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        public override EvaluateArgument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => null;
 
         public override void Write(Utf8JsonWriter writer, EvaluateArgument value, JsonSerializerOptions options)
         {

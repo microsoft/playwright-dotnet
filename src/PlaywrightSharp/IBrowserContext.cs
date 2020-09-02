@@ -175,12 +175,6 @@ namespace PlaywrightSharp
         Task ClearPermissionsAsync();
 
         /// <summary>
-        /// Gets all the existing pages in the context.
-        /// </summary>
-        /// <returns>A list of pages.</returns>
-        IEnumerable<IPage> GetExistingPages();
-
-        /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
         /// <param name="e">Event to wait for.</param>

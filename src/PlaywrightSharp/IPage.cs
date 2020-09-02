@@ -265,13 +265,6 @@ namespace PlaywrightSharp
         Task WaitForLoadStateAsync(LifecycleEvent waitUntil = LifecycleEvent.Load, int? timeout = null);
 
         /// <summary>
-        /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
-        /// </summary>
-        /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SetCacheEnabledAsync(bool enabled = true);
-
-        /// <summary>
         /// Setup media emulation.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>

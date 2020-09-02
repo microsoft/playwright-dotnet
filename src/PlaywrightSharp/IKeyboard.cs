@@ -50,13 +50,6 @@ namespace PlaywrightSharp
         Task PressAsync(string key, int delay = 0);
 
         /// <summary>
-        /// Ensure click modifiers.
-        /// </summary>
-        /// <param name="modifiers"><see cref="Modifier"/> to check.</param>
-        /// <returns>A <see cref="Task"/> that completes when the modifiers are ensure, yeilding the applied modifiers.</returns>
-        internal Task<Modifier[]> EnsureModifiersAsync(Modifier[] modifiers);
-
-        /// <summary>
         /// Dispatches only input event, does not emit the keydown, keyup or keypress events.
         /// </summary>
         /// <param name="text">Sets input to the specified text value.</param>

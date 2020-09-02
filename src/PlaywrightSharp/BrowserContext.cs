@@ -201,9 +201,6 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task ClearPermissionsAsync() => _channel.ClearPermissionsAsync();
 
-        /// <inheritdoc />
-        public IEnumerable<IPage> GetExistingPages() => throw new NotImplementedException();
-
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
