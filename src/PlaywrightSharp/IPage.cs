@@ -444,9 +444,9 @@ namespace PlaywrightSharp
         /// <summary>
         /// Closes the page.
         /// </summary>
-        /// <param name="options">Extra options.</param>
+        /// <param name="runBeforeUnload">Defaults to <c>false</c>. Whether to run the beforeunload page handlers.</param>
         /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
-        Task CloseAsync(PageCloseOptions options = null);
+        Task CloseAsync(bool runBeforeUnload = false);
 
         /// <summary>
         /// Executes a script in browser context.

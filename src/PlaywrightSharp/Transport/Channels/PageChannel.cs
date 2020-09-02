@@ -166,11 +166,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["intercepted"] = intercepted,
                 });
 
-        internal Task CloseAsync(PageCloseOptions options)
+        internal Task CloseAsync(bool runBeforeUnload)
             => Scope.SendMessageToServer(
                 Guid,
                 "close",
-                options);
+                new Dictionary<string, object>
+                {
+                    ["runBeforeUnload"] = runBeforeUnload,
+                });
 
         internal Task ExposeBindingAsync(string name)
             => Scope.SendMessageToServer<PageChannel>(

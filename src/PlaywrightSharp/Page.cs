@@ -357,9 +357,9 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public async Task CloseAsync(PageCloseOptions options = null)
+        public async Task CloseAsync(bool runBeforeUnload = false)
         {
-            await _channel.CloseAsync(options).ConfigureAwait(false);
+            await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
             if (OwnedContext != null)
             {
                 await OwnedContext.CloseAsync().ConfigureAwait(false);
