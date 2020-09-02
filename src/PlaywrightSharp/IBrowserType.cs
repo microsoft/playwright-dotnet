@@ -51,8 +51,10 @@ namespace PlaywrightSharp
         /// <summary>
         /// This methods attaches PlaywrightSharp to an existing browser instance.
         /// </summary>
-        /// <param name="options">Connect options.</param>
+        /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
+        /// <param name="timeout">Maximum time in milliseconds to wait for the connection to be established. Defaults to 30000 (30 seconds). Pass 0 to disable timeout.</param>
+        /// <param name="slowMo">Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</param>
         /// <returns>A <see cref="Task"/> that completes when connection is ready, yielding the browser.</returns>
-        Task<IBrowser> ConnectAsync(ConnectOptions options = null);
+        Task<IBrowser> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null);
     }
 }

@@ -24,8 +24,8 @@ namespace PlaywrightSharp.Tests.Multiclient
         public async Task ShouldBeAbleToConnectMultipleTimesToTheSameBrowser()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            var browser1 = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
-            await using var browser2 = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            var browser1 = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
+            await using var browser2 = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
 
             var page1 = await browser1.NewPageAsync();
             Assert.Equal(56, await page1.EvaluateAsync<int>("() => 7 * 8"));
@@ -44,12 +44,12 @@ namespace PlaywrightSharp.Tests.Multiclient
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
 
-            await using (var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint }))
+            await using (var remote = await BrowserType.ConnectAsync(browserServer.WSEndpoint))
             {
                 await remote.NewPageAsync();
             }
 
-            await using (var remote = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint }))
+            await using (var remote = await BrowserType.ConnectAsync(browserServer.WSEndpoint))
             {
                 await remote.NewPageAsync();
             }
