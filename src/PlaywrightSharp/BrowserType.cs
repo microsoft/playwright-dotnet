@@ -64,7 +64,7 @@ namespace PlaywrightSharp
             => (await _channel.LaunchPersistenContextAsync(userDataDir, options).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public async Task<IBrowser> ConnectAsync(ConnectOptions options = null)
-            => (await _channel.ConnectAsync(options).ConfigureAwait(false)).Object;
+        public async Task<IBrowser> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null)
+            => (await _channel.ConnectAsync(wsEndpoint, timeout, slowMo).ConfigureAwait(false)).Object;
     }
 }

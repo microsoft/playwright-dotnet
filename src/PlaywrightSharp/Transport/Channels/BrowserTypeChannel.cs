@@ -22,11 +22,16 @@ namespace PlaywrightSharp.Transport.Channels
                 "launchServer",
                 (options ?? new LaunchOptions()).ToChannelDictionary());
 
-        internal Task<BrowserChannel> ConnectAsync(ConnectOptions options)
+        internal Task<BrowserChannel> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null)
             => Scope.SendMessageToServer<BrowserChannel>(
                 Guid,
                 "connect",
-                options ?? new ConnectOptions());
+                new Dictionary<string, object>
+                {
+                    ["wsEndpoint"] = wsEndpoint,
+                    ["timeout"] = timeout,
+                    ["slowMo"] = slowMo,
+                });
 
         internal Task<BrowserContextChannel> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
         {

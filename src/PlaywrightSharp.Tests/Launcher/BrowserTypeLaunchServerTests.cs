@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldWork()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var browser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             var browserContext = await browser.NewContextAsync();
             Assert.Empty(browserContext.Pages);
             Assert.NotEmpty(browserServer.WSEndpoint);
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldFireDisconnectedWhenClosingTheServer()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var browser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             var disconnectedTcs = new TaskCompletionSource<bool>();
             var closedTcs = new TaskCompletionSource<bool>();
             browser.Disconnected += (server, e) => disconnectedTcs.TrySetResult(true);

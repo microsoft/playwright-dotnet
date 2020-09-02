@@ -24,12 +24,12 @@ namespace PlaywrightSharp.Tests.Multiclient
         public async Task ShouldReturnAllOfThePages()
         {
             await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser1 = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var browser1 = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             Assert.Empty(browser1.Contexts);
             await browser1.NewContextAsync();
             Assert.Single(browser1.Contexts);
 
-            await using var browser2 = await BrowserType.ConnectAsync(new ConnectOptions { WSEndpoint = browserServer.WSEndpoint });
+            await using var browser2 = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             Assert.Empty(browser2.Contexts);
             await browser2.NewContextAsync();
             Assert.Single(browser2.Contexts);
