@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp;
-using PlaywrightSharp.Firefox;
 
 namespace PdfDemo
 {
@@ -10,19 +9,13 @@ namespace PdfDemo
     {
         static async Task Main(string[] args)
         {
-            var options = new LaunchOptions
-            {
-                Headless = true
-            };
+            Console.WriteLine("Installing playwright");
+            await Playwright.InstallAsync();
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = true });
 
-            Console.WriteLine("Downloading Firefox");
-            var firefox = new FirefoxBrowserType();
-
-            await firefox.CreateBrowserFetcher().DownloadAsync();
-
-            Console.WriteLine("Navigating google");
-            await using var browser = await firefox.LaunchAsync(options);
-            var page = await browser.DefaultContext.NewPageAsync();
+            Console.WriteLine("Navigating microsoft");
+            var page = await browser.NewPageAsync();
             await page.GoToAsync("http://www.microsoft.com");
 
             Console.WriteLine("Taking Screenshot");
