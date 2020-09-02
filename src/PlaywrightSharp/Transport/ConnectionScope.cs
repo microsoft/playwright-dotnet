@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Transport
 #pragma warning restore CA2000 // Dispose objects before losing scope
                     break;
                 case ChannelOwnerType.Browser:
-                    result = new Browser(this, guid, initializer?.ToObject<BrowserInitializer>(Connection.GetDefaultJsonSerializerOptions()));
+                    result = new Browser(this, guid);
                     break;
                 case ChannelOwnerType.BrowserServer:
                     result = new BrowserServer(this, guid, initializer?.ToObject<BrowserServerInitializer>(Connection.GetDefaultJsonSerializerOptions()));
