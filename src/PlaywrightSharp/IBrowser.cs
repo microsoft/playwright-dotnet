@@ -12,21 +12,6 @@ namespace PlaywrightSharp
     public interface IBrowser : IAsyncDisposable
     {
         /// <summary>
-        /// Raised when the url of a target changes
-        /// </summary>
-        public event EventHandler<TargetChangedArgs> TargetChanged;
-
-        /// <summary>
-        /// Raised when a target is created, for example when a new page is opened by <c>window.open</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/Window/open"/> or <see cref="IBrowserContext.NewPageAsync"/>.
-        /// </summary>
-        public event EventHandler<TargetChangedArgs> TargetCreated;
-
-        /// <summary>
-        /// Raised when a target is destroyed, for example when a page is closed
-        /// </summary>
-        public event EventHandler<TargetChangedArgs> TargetDestroyed;
-
-        /// <summary>
         /// Raised when the <see cref="IBrowser"/> gets disconnected from the browser instance.
         /// This might happen because one of the following:
         /// - Browser is closed or crashed
@@ -72,13 +57,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the browser is closed.</returns>
         Task CloseAsync();
-
-        /// <summary>
-        /// Gets the <see cref="IPage"/> <see cref="ITarget"/>.
-        /// </summary>
-        /// <param name="page">Page to evaluate.</param>
-        /// <returns><see cref="IPage"/> main target.</returns>
-        ITarget GetPageTarget(IPage page);
 
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.

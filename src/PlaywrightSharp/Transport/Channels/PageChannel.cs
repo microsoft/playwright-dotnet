@@ -166,11 +166,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["intercepted"] = intercepted,
                 });
 
-        internal Task CloseAsync(PageCloseOptions options)
+        internal Task CloseAsync(bool runBeforeUnload)
             => Scope.SendMessageToServer(
                 Guid,
                 "close",
-                options);
+                new Dictionary<string, object>
+                {
+                    ["runBeforeUnload"] = runBeforeUnload,
+                });
 
         internal Task ExposeBindingAsync(string name)
             => Scope.SendMessageToServer<PageChannel>(
@@ -325,7 +328,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
-        internal Task MouseMoveAsync(double x, double y, int? steps)
+        internal Task MouseMoveAsync(decimal x, decimal y, int? steps)
             => Scope.SendMessageToServer(
                 Guid,
                 "mouseMove",
@@ -346,7 +349,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
-        internal Task MouseClickAsync(double x, double y, int delay, MouseButton button, int clickCount)
+        internal Task MouseClickAsync(decimal x, decimal y, int delay, MouseButton button, int clickCount)
             => Scope.SendMessageToServer(
                 Guid,
                 "mouseClick",
@@ -432,7 +435,7 @@ namespace PlaywrightSharp.Transport.Channels
             PaperFormat format,
             string width,
             string height,
-            MarginOptions marginOptions,
+            Margin marginOptions,
             bool preferCSSPageSize)
         {
             var args = new Dictionary<string, object>

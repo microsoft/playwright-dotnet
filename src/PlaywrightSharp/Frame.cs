@@ -107,7 +107,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string script, object args) => EvaluateHandleAsync(false, script, args);
 
         /// <inheritdoc />
-        public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => FillAsync(false, selector, text, options);
+        public Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false) => FillAsync(false, selector, text, timeout, noWaitAfter);
 
         /// <inheritdoc />
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null)
@@ -118,7 +118,7 @@ namespace PlaywrightSharp
             string pageFunction,
             object args,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null)
             => WaitForFunctionAsync(false, pageFunction, args, timeout, polling, pollingInterval);
 
@@ -126,7 +126,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForFunctionAsync(
             string pageFunction,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null)
             => WaitForFunctionAsync(false, pageFunction, timeout, polling, pollingInterval);
 
@@ -323,8 +323,8 @@ namespace PlaywrightSharp
         internal async Task<IResponse> WaitForNavigationAsync(bool isPageCall, LifecycleEvent? waitUntil = null, string url = null, int? timeout = null)
             => (await _channel.WaitForNavigationAsync(waitUntil, url, timeout, isPageCall).ConfigureAwait(false))?.Object;
 
-        internal Task FillAsync(bool isPageCall, string selector, string text, NavigatingActionWaitOptions options)
-            => _channel.FillAsync(selector, text, options ?? new NavigatingActionWaitOptions(), isPageCall);
+        internal Task FillAsync(bool isPageCall, string selector, string text, int? timeout = null, bool noWaitAfter = false)
+            => _channel.FillAsync(selector, text, timeout, noWaitAfter, isPageCall);
 
         internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent? waitUntil, int? timeout = null)
             => _channel.WaitForLoadStateAsync(waitUntil, timeout, isPageCall);
@@ -381,7 +381,7 @@ namespace PlaywrightSharp
         internal async Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(bool isPageCall, string selector)
             => (await _channel.QuerySelectorAllAsync(selector, isPageCall).ConfigureAwait(false)).Select(c => ((ElementHandleChannel)c).Object);
 
-        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
+        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, int? timeout, Polling? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(
                 expression: expression,
                 isFunction: expression.IsJavascriptFunction(),
@@ -390,7 +390,7 @@ namespace PlaywrightSharp
                 timeout: timeout,
                 polling: (object)polling ?? pollingInterval).ConfigureAwait(false)).Object;
 
-        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, object args, int? timeout, WaitForFunctionPollingOption? polling, int? pollingInterval)
+        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, object args, int? timeout, Polling? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(
                 expression: expression,
                 isFunction: expression.IsJavascriptFunction(),

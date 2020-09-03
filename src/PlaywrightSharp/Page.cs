@@ -162,9 +162,6 @@ namespace PlaywrightSharp
         public event EventHandler<WorkerEventArgs> Worker;
 
         /// <inheritdoc />
-        public event EventHandler<WebsocketEventArgs> Websocket;
-
-        /// <inheritdoc />
         public event EventHandler<DownloadEventArgs> Download;
 
         /// <inheritdoc/>
@@ -258,9 +255,6 @@ namespace PlaywrightSharp
         public async Task<IPage> GetOpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task SetCacheEnabledAsync(bool enabled = true) => throw new NotImplementedException();
-
-        /// <inheritdoc />
         public Task EmulateMediaAsync()
             => _channel.EmulateMediaAsync(new Dictionary<string, object>());
 
@@ -311,7 +305,7 @@ namespace PlaywrightSharp
         public Task<IJSHandle> WaitForFunctionAsync(
             string pageFunction,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null)
             => MainFrame.WaitForFunctionAsync(true, pageFunction, timeout, polling, pollingInterval);
 
@@ -320,7 +314,7 @@ namespace PlaywrightSharp
             string pageFunction,
             object args,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null)
             => MainFrame.WaitForFunctionAsync(true, pageFunction, args, timeout, polling, pollingInterval);
 
@@ -363,9 +357,9 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public async Task CloseAsync(PageCloseOptions options = null)
+        public async Task CloseAsync(bool runBeforeUnload = false)
         {
-            await _channel.CloseAsync(options).ConfigureAwait(false);
+            await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
             if (OwnedContext != null)
             {
                 await OwnedContext.CloseAsync().ConfigureAwait(false);
@@ -403,7 +397,8 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script);
 
         /// <inheritdoc />
-        public Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null) => MainFrame.FillAsync(true, selector, text, options);
+        public Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false)
+            => MainFrame.FillAsync(true, selector, text, timeout, noWaitAfter);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, string file) => SetInputFilesAsync(selector, new[] { file });
@@ -638,7 +633,7 @@ namespace PlaywrightSharp
             PaperFormat format = null,
             string width = null,
             string height = null,
-            MarginOptions marginOptions = null,
+            Margin marginOptions = null,
             bool preferCSSPageSize = false)
             => Convert.FromBase64String(await _channel.GetPdfAsync(
                 path,

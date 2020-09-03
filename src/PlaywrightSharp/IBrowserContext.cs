@@ -159,7 +159,7 @@ namespace PlaywrightSharp
         /// <param name="longitude">Longitude between -180 and 180.</param>
         /// <param name="accuracy">Optional non-negative accuracy value.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task SetGeolocationAsync(double latitude, double longitude, double? accuracy);
+        Task SetGeolocationAsync(decimal latitude, decimal longitude, decimal? accuracy);
 
         /// <summary>
         /// Sets the page's geolocation.
@@ -173,12 +173,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task ClearPermissionsAsync();
-
-        /// <summary>
-        /// Gets all the existing pages in the context.
-        /// </summary>
-        /// <returns>A list of pages.</returns>
-        IEnumerable<IPage> GetExistingPages();
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.

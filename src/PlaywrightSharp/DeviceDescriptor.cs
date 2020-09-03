@@ -33,7 +33,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Device scale factor.
         /// </summary>
-        public double DeviceScaleFactor { get; set; }
+        public decimal DeviceScaleFactor { get; set; }
 
         /// <summary>
         /// Converts the <see cref="DeviceDescriptor"/> to <see cref="BrowserContextOptions"/>.

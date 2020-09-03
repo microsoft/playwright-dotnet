@@ -159,11 +159,6 @@ namespace PlaywrightSharp
         event EventHandler<WorkerEventArgs> Worker;
 
         /// <summary>
-        /// Raised when a dedicated WebWorker (<see href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"/>) is terminated.
-        /// </summary>
-        event EventHandler<WebsocketEventArgs> Websocket;
-
-        /// <summary>
         /// Emitted when attachment download started.
         /// User can access basic file operations on downloaded content via the passed Download instance.
         /// </summary>
@@ -270,13 +265,6 @@ namespace PlaywrightSharp
         Task WaitForLoadStateAsync(LifecycleEvent waitUntil = LifecycleEvent.Load, int? timeout = null);
 
         /// <summary>
-        /// Toggles ignoring cache for each request based on the enabled state. By default, caching is enabled.
-        /// </summary>
-        /// <param name="enabled">sets the <c>enabled</c> state of the cache.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task SetCacheEnabledAsync(bool enabled = true);
-
-        /// <summary>
         /// Setup media emulation.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
@@ -369,13 +357,13 @@ namespace PlaywrightSharp
         /// <param name="pageFunction">Function to be evaluated in browser context.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="WaitForFunctionPollingOption.Raf"/>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
         /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
         Task<IJSHandle> WaitForFunctionAsync(
             string pageFunction,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null);
 
         /// <summary>
@@ -385,14 +373,14 @@ namespace PlaywrightSharp
         /// <param name="args">Arguments to pass to <c>script</c>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="WaitForFunctionPollingOption.Raf"/>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
         /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
         Task<IJSHandle> WaitForFunctionAsync(
             string pageFunction,
             object args,
             int? timeout = null,
-            WaitForFunctionPollingOption? polling = null,
+            Polling? polling = null,
             int? pollingInterval = null);
 
         /// <summary>
@@ -456,9 +444,9 @@ namespace PlaywrightSharp
         /// <summary>
         /// Closes the page.
         /// </summary>
-        /// <param name="options">Extra options.</param>
+        /// <param name="runBeforeUnload">Defaults to <c>false</c>. Whether to run the beforeunload page handlers.</param>
         /// <returns>A <see cref="Task"/> that completes when the close process finishes.</returns>
-        Task CloseAsync(PageCloseOptions options = null);
+        Task CloseAsync(bool runBeforeUnload = false);
 
         /// <summary>
         /// Executes a script in browser context.
@@ -593,9 +581,12 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
-        /// <param name="options">Optional waiting parameters.</param>
-        /// <returns>A <see cref="Task"/> that completes when the fill message is confirmed by the browser.</returns>
-        Task FillAsync(string selector, string text, NavigatingActionWaitOptions options = null);
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
+        /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
+        Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false);
 
         /// <summary>
         /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
@@ -1415,7 +1406,7 @@ namespace PlaywrightSharp
             PaperFormat format = null,
             string width = null,
             string height = null,
-            MarginOptions marginOptions = null,
+            Margin marginOptions = null,
             bool preferCSSPageSize = false);
 
         /// <summary>

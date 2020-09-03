@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
@@ -16,7 +15,7 @@ namespace PlaywrightSharp
         private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
         private bool _isClosedOrClosing;
 
-        internal Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
+        internal Browser(ConnectionScope scope, string guid)
         {
             _scope = scope.CreateChild(guid);
             _channel = new BrowserChannel(guid, scope, this);
@@ -30,15 +29,6 @@ namespace PlaywrightSharp
                 _closedTcs.TrySetResult(true);
             };
         }
-
-        /// <inheritdoc/>
-        public event EventHandler<TargetChangedArgs> TargetChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<TargetChangedArgs> TargetCreated;
-
-        /// <inheritdoc/>
-        public event EventHandler<TargetChangedArgs> TargetDestroyed;
 
         /// <inheritdoc/>
         public event EventHandler Disconnected;
@@ -85,9 +75,6 @@ namespace PlaywrightSharp
 
             await _closedTcs.Task.ConfigureAwait(false);
         }
-
-        /// <inheritdoc/>
-        public ITarget GetPageTarget(IPage page) => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)

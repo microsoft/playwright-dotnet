@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Margin options used in <see cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat, string, string, MarginOptions, bool)"/>.
+    /// Margin options used in <see cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat, string, string, Margin, bool)"/>.
     /// </summary>
-    public class MarginOptions : IEquatable<MarginOptions>
+    public class Margin : IEquatable<Margin>
     {
         /// <summary>
         /// Top margin, accepts values labeled with units.
@@ -29,11 +29,11 @@ namespace PlaywrightSharp
         public string Right { get; set; }
 
         /// <inheritdoc cref="IEquatable{T}"/>
-        public static bool operator ==(MarginOptions left, MarginOptions right)
-            => EqualityComparer<MarginOptions>.Default.Equals(left, right);
+        public static bool operator ==(Margin left, Margin right)
+            => EqualityComparer<Margin>.Default.Equals(left, right);
 
         /// <inheritdoc cref="IEquatable{T}"/>
-        public static bool operator !=(MarginOptions left, MarginOptions right) => !(left == right);
+        public static bool operator !=(Margin left, Margin right) => !(left == right);
 
         /// <summary>
         /// Checks for object equality.
@@ -47,7 +47,7 @@ namespace PlaywrightSharp
                 return false;
             }
 
-            return Equals((MarginOptions)obj);
+            return Equals((Margin)obj);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="options">Options to check.</param>
         /// <returns>Whether the objects are equal or not.</returns>
-        public bool Equals(MarginOptions options)
+        public bool Equals(Margin options)
             => options != null &&
                    Top == options.Top &&
                    Left == options.Left &&

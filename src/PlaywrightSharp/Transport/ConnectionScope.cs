@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Transport
 #pragma warning restore CA2000 // Dispose objects before losing scope
                     break;
                 case ChannelOwnerType.Browser:
-                    result = new Browser(this, guid, initializer?.ToObject<BrowserInitializer>(Connection.GetDefaultJsonSerializerOptions()));
+                    result = new Browser(this, guid);
                     break;
                 case ChannelOwnerType.BrowserServer:
                     result = new BrowserServer(this, guid, initializer?.ToObject<BrowserServerInitializer>(Connection.GetDefaultJsonSerializerOptions()));
@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Transport
                     result = new Worker(this, guid, initializer?.ToObject<WorkerInitializer>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.CDPSession:
-                    result = new CDPSession(this, guid, initializer?.ToObject<CDPSessionInitializer>(Connection.GetDefaultJsonSerializerOptions()));
+                    result = new CDPSession(this, guid);
                     break;
                 default:
                     Debug.Write("Missing type " + type);

@@ -193,15 +193,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
-        internal Task FillAsync(string value, NavigatingActionWaitOptions options)
+        internal Task FillAsync(string value, int? timeout, bool noWaitAfter)
             => Scope.SendMessageToServer(
                 Guid,
                 "fill",
                 new Dictionary<string, object>
                 {
                     ["value"] = value,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
-                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["timeout"] = timeout,
                 });
 
         internal Task DispatchEventAsync(string type, object eventInit, int? timeout)

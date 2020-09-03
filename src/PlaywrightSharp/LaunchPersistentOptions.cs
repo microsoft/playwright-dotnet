@@ -87,34 +87,21 @@ namespace PlaywrightSharp
         }
 
         /// <summary>
-        /// Logs process counts after launching the browser and after exiting.
-        /// </summary>
-        public bool? LogProcess
-        {
-            get
-            {
-                Values.TryGetValue("logProcess", out object result);
-                return result as bool?;
-            }
-            set => Values["logProcess"] = value;
-        }
-
-        /// <summary>
-        /// If <c>true</c>, then do not use <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
-        /// Dangerous option; use with care. Defaults to <c>false</c>.
+        /// If true, Playwright does not pass its own configurations args and only uses the ones from args.
+        /// Dangerous option; use with care. Defaults to false.
         /// </summary>
         public bool? IgnoreDefaultArgs
         {
             get
             {
-                Values.TryGetValue("ignoreDefaultArgs", out object result);
+                Values.TryGetValue("ignoreDefaultAR", out object result);
                 return result as bool?;
             }
-            set => Values["ignoreDefaultArgs"] = value;
+            set => Values["headless"] = value;
         }
 
         /// <summary>
-        /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter <see cref="IBrowserType.GetDefaultArgs(BrowserArgOptions)"/>.
+        /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.
         /// </summary>
         public string[] IgnoredDefaultArgs
         {

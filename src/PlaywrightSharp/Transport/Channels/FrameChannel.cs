@@ -397,7 +397,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task FillAsync(string selector, string value, NavigatingActionWaitOptions options, bool isPage)
+        internal Task FillAsync(string selector, string value, int? timeout, bool noWaitAfter, bool isPage)
             => Scope.SendMessageToServer(
                 Guid,
                 "fill",
@@ -405,8 +405,8 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["selector"] = selector,
                     ["value"] = value,
-                    ["noWaitAfter"] = options?.NoWaitAfter,
-                    ["timeout"] = options?.Timeout,
+                    ["noWaitAfter"] = noWaitAfter,
+                    ["timeout"] = timeout,
                     ["isPage"] = isPage,
                 });
 

@@ -11,17 +11,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// Latitude between -90 and 90.
         /// </summary>
-        public double Latitude { get; set; }
+        public decimal Latitude { get; set; }
 
         /// <summary>
         /// Longitude between -180 and 180.
         /// </summary>
-        public double Longitude { get; set; }
+        public decimal Longitude { get; set; }
 
         /// <summary>
         /// Optional non-negative accuracy value.
         /// </summary>
-        public double? Accuracy { get; set; }
+        public decimal? Accuracy { get; set; }
 
         /// <inheritdoc cref="IEquatable{T}"/>
         public bool Equals(Geolocation other)
