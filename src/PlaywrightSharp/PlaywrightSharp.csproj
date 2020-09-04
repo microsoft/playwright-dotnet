@@ -11,6 +11,10 @@
 
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <LangVersion>8.0</LangVersion>
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <PackageProjectUrl>https://github.com/hardkoded/playwright-sharp</PackageProjectUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
         <RunWithWarnings>true</RunWithWarnings>
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
@@ -45,6 +49,7 @@
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="Resources\injectedSource.ts" />

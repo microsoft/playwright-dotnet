@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests
         public const string FirefoxProduct = "FIREFOX";
 
         public static string Product => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PRODUCT")) ?
-            WebkitProduct :
+            ChromiumProduct :
             Environment.GetEnvironmentVariable("PRODUCT");
 
         public const string TestFixtureBrowserCollectionName = "PlaywrightSharpBrowserLoaderFixture collection";
@@ -34,7 +34,6 @@ namespace PlaywrightSharp.Tests
                 SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
                 Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
                 Timeout = 0,
-                LogProcess = true,
             };
 
         public static LaunchOptions GetHeadfulOptions()

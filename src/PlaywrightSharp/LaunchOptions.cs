@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace PlaywrightSharp
@@ -10,240 +11,183 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether to run browser in headless mode. Defaults to true unless the devtools option is true.
         /// </summary>
-        public bool? Headless
-        {
-            get
-            {
-                Values.TryGetValue("headless", out object result);
-                return result as bool?;
-            }
-            set => Values["headless"] = value;
-        }
+        public bool? Headless { get; set; }
 
         /// <summary>
         /// Additional arguments to pass to the browser instance.
         /// </summary>
-        public string[] Args
-        {
-            get
-            {
-                Values.TryGetValue("args", out object result);
-                return result as string[];
-            }
-            set => Values["args"] = value;
-        }
+        public string[] Args { get; set; }
 
         /// <summary>
         /// Path to a User Data Directory.
         /// </summary>
-        public string UserDataDir
-        {
-            get
-            {
-                Values.TryGetValue("userDataDir", out object result);
-                return result as string;
-            }
-            set => Values["userDataDir"] = value;
-        }
+        public string UserDataDir { get; set; }
 
         /// <summary>
         /// Whether to auto-open DevTools panel for each tab. If this option is true, the headless option will be set false.
         /// </summary>
-        public bool? Devtools
-        {
-            get
-            {
-                Values.TryGetValue("devtools", out object result);
-                return result as bool?;
-            }
-            set => Values["devtools"] = value;
-        }
+        public bool? Devtools { get; set; }
 
         /// <summary>
         /// Path to a browser executable to run instead of the bundled one.
         /// </summary>
-        public string ExecutablePath
-        {
-            get
-            {
-                Values.TryGetValue("executablePath", out object result);
-                return result as string;
-            }
-            set => Values["executablePath"] = value;
-        }
+        public string ExecutablePath { get; set; }
 
         /// <summary>
         /// If specified, accepted downloads are downloaded into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.
         /// </summary>
-        public string DownloadsPath
-        {
-            get
-            {
-                Values.TryGetValue("downloadsPath", out object result);
-                return result as string;
-            }
-            set => Values["downloadsPath"] = value;
-        }
+        public string DownloadsPath { get; set; }
 
         /// <summary>
         /// Whether to ignore HTTPS errors during navigation. Defaults to false.
         /// </summary>
-        public bool? IgnoreHTTPSErrors
-        {
-            get
-            {
-                Values.TryGetValue("ignoreHTTPSErrors", out object result);
-                return result as bool?;
-            }
-            set => Values["ignoreHTTPSErrors"] = value;
-        }
+        public bool? IgnoreHTTPSErrors { get; set; }
 
         /// <summary>
         /// Maximum time in milliseconds to wait for the browser instance to start.
         /// </summary>
-        public int? Timeout
-        {
-            get
-            {
-                Values.TryGetValue("timeout", out object result);
-                return result as int?;
-            }
-            set => Values["timeout"] = value;
-        }
+        public int? Timeout { get; set; }
 
         /// <summary>
         ///  Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.
         /// </summary>
-        public bool? DumpIO
-        {
-            get
-            {
-                Values.TryGetValue("dumpIO", out object result);
-                return result as bool?;
-            }
-            set => Values["dumpIO"] = value;
-        }
+        public bool? DumpIO { get; set; }
 
         /// <summary>
         /// Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.
         /// </summary>
-        public int? SlowMo
-        {
-            get
-            {
-                Values.TryGetValue("slowMo", out object result);
-                return result as int?;
-            }
-            set => Values["slowmMo"] = value;
-        }
-
-        /// <summary>
-        /// Logs process counts after launching the browser and after exiting.
-        /// </summary>
-        public bool? LogProcess
-        {
-            get
-            {
-                Values.TryGetValue("logProgress", out object result);
-                return result as bool?;
-            }
-            set => Values["logProgress"] = value;
-        }
+        public int? SlowMo { get; set; }
 
         /// <summary>
         /// If true, Playwright does not pass its own configurations args and only uses the ones from args.
         /// Dangerous option; use with care. Defaults to false.
         /// </summary>
-        public bool? IgnoreDefaultArgs
-        {
-            get
-            {
-                Values.TryGetValue("ignoreDefaultAR", out object result);
-                return result as bool?;
-            }
-            set => Values["headless"] = value;
-        }
+        public bool? IgnoreDefaultArgs { get; set; }
 
         /// <summary>
         /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.
         /// </summary>
-        public string[] IgnoredDefaultArgs
-        {
-            get
-            {
-                Values.TryGetValue("ignoredDefaultArgs", out object result);
-                return result as string[];
-            }
-            set => Values["ignoredDefaultArgs"] = value;
-        }
+        public string[] IgnoredDefaultArgs { get; set; }
 
         /// <summary>
         /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
         /// </summary>
-        public IDictionary<string, string> Env
-        {
-            get
-            {
-                Values.TryGetValue("env", out object result);
-                return result as Dictionary<string, string>;
-            }
-            set => Values["env"] = value;
-        }
+        public IDictionary<string, string> Env { get; set; }
 
         /// <summary>
         /// Firefox user preferences. Learn more about the Firefox user preferences at about:config.
         /// </summary>
-        public IDictionary<string, object> FirefoxUserPrefs
-        {
-            get
-            {
-                Values.TryGetValue("firefoxUserPrefs", out object result);
-                return result as Dictionary<string, object>;
-            }
-            set => Values["firefoxUserPrefs"] = value;
-        }
+        public IDictionary<string, object> FirefoxUserPrefs { get; set; }
 
         /// <summary>
         /// Network proxy settings.
         /// </summary>
-        public ProxySettings Proxy
-        {
-            get
-            {
-                Values.TryGetValue("proxy", out object result);
-                return result as ProxySettings;
-            }
-            set => Values["proxy"] = value;
-        }
-
-        internal Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
+        public ProxySettings Proxy { get; set; }
 
         /// <summary>
         /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
         /// </summary>
-        /// <param name="options">Option to convert.</param>
-        public static implicit operator LaunchPersistentOptions(LaunchOptions options)
+        /// <returns>The object converted to <see cref="LaunchPersistentOptions"/>.</returns>
+        public LaunchPersistentOptions ToPersistentOptions()
+            => new LaunchPersistentOptions
+            {
+                Headless = Headless,
+                Args = Args,
+                UserDataDir = UserDataDir,
+                Devtools = Devtools,
+                ExecutablePath = ExecutablePath,
+                DownloadsPath = DownloadsPath,
+                IgnoreHTTPSErrors = IgnoreHTTPSErrors,
+                Timeout = Timeout,
+                DumpIO = DumpIO,
+                SlowMo = SlowMo,
+                IgnoreDefaultArgs = IgnoreDefaultArgs,
+                IgnoredDefaultArgs = IgnoredDefaultArgs,
+                Env = Env,
+                FirefoxUserPrefs = FirefoxUserPrefs,
+                Proxy = Proxy,
+            };
+
+        internal virtual Dictionary<string, object> ToChannelDictionary()
         {
-            if (options == null)
+            var args = new Dictionary<string, object>();
+
+            if (Headless != null)
             {
-                return null;
+                args["headless"] = Headless;
             }
 
-            var result = new LaunchPersistentOptions();
-            foreach (var kv in options.Values)
+            if (Args != null)
             {
-                result.Values[kv.Key] = kv.Value;
+                args["args"] = Args;
             }
 
-            return result;
+            if (!string.IsNullOrEmpty(UserDataDir))
+            {
+                args["userDataDir"] = UserDataDir;
+            }
+
+            if (Devtools != null)
+            {
+                args["devTools"] = Devtools;
+            }
+
+            if (ExecutablePath != null)
+            {
+                args["executablePath"] = ExecutablePath;
+            }
+
+            if (DownloadsPath != null)
+            {
+                args["downloadsPath"] = DownloadsPath;
+            }
+
+            if (IgnoreHTTPSErrors != null)
+            {
+                args["ignoreHTTPSErrors"] = IgnoreHTTPSErrors;
+            }
+
+            if (Timeout != null)
+            {
+                args["timeout"] = Timeout;
+            }
+
+            if (DumpIO != null)
+            {
+                args["dumpIO"] = DumpIO;
+            }
+
+            if (SlowMo != null)
+            {
+                args["slowMo"] = SlowMo;
+            }
+
+            if (IgnoreDefaultArgs != null)
+            {
+                args["ignoreDefaultArgs"] = IgnoreDefaultArgs;
+            }
+
+            if (IgnoredDefaultArgs != null)
+            {
+                args["ignoredDefaultArgs"] = IgnoredDefaultArgs;
+            }
+
+            if (Env != null)
+            {
+                args["env"] = Env;
+            }
+
+            if (FirefoxUserPrefs != null)
+            {
+                args["firefoxUserPref"] = FirefoxUserPrefs;
+            }
+
+            if (Proxy != null)
+            {
+                args["proxy"] = Proxy;
+            }
+
+            return args;
         }
-
-        /// <summary>
-        /// Converts the <see cref="LaunchOptions"/> to <see cref="LaunchPersistentOptions"/>.
-        /// </summary>
-        /// <returns>A <see cref="LaunchPersistentOptions"/> with the same information as the <see cref="LaunchOptions"/>.</returns>
-        public LaunchPersistentOptions ToLaunchPersistentOptions() => this;
-
-        internal Dictionary<string, object> ToChannelDictionary() => Values;
     }
 }

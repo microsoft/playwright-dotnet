@@ -8,6 +8,11 @@ namespace PlaywrightSharp
     public class ViewportSize : IEquatable<ViewportSize>
     {
         /// <summary>
+        /// ViewportSize used to determine if the a Viewport was set or not.
+        /// </summary>
+        public static ViewportSize None => new ViewportSize { Height = -1, Width = -1 };
+
+        /// <summary>
         /// Viewport width.
         /// </summary>
         public int Width { get; set; }

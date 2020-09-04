@@ -11,10 +11,12 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         public Task<BrowserChannel> LaunchAsync(LaunchOptions options)
-            => Scope.SendMessageToServer<BrowserChannel>(
+        {
+            return Scope.SendMessageToServer<BrowserChannel>(
                 Guid,
                 "launch",
-                (options ?? new LaunchOptions()).ToChannelDictionary());
+                options.ToChannelDictionary());
+        }
 
         public Task<BrowserServerChannel> LaunchServerAsync(LaunchOptions options)
             => Scope.SendMessageToServer<BrowserServerChannel>(
@@ -35,7 +37,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<BrowserContextChannel> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
         {
-            var args = (options ?? new LaunchPersistentOptions()).ToChannelDictionary();
+            var args = options.ToChannelDictionary();
             args["userDataDir"] = userDataDir;
 
             return Scope.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args);

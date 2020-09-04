@@ -61,6 +61,100 @@ namespace PlaywrightSharp
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
         /// </summary>
+        /// <param name="viewport">Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.</param>
+        /// <param name="userAgent">Specific user agent to use in this context.</param>
+        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+        /// <param name="javaScriptEnabled">Whether or not to enable or disable JavaScript in the context. Defaults to true.</param>
+        /// <param name="timezoneId">Changes the timezone of the context. See <see href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU’s metaZones.txt</see> for a list of supported timezone IDs.</param>
+        /// <param name="geolocation">Changes the Geolocation of the context.</param>
+        /// <param name="permissions">A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/> for more details.</param>
+        /// <param name="isMobile">Gets or sets whether the meta viewport tag is taken into account.</param>
+        /// <param name="offline">Whether to emulate network being offline. Defaults to `false`.</param>
+        /// <param name="deviceScaleFactor">Gets or sets the device scale factor.</param>
+        /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
+        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+        /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
+        /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
+        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <example>.
+        /// <code>
+        /// <![CDATA[
+        /// // Create a new incognito browser context.
+        /// const context = await browser.NewContextAsync();
+        /// // Create a new page in a pristine context.
+        /// const page = await context.NewPageAsync("https://example.com");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created.</returns>
+        Task<IBrowserContext> NewContextAsync(
+            ViewportSize viewport,
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null);
+
+        /// <summary>
+        /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
+        /// </summary>
+        /// <param name="userAgent">Specific user agent to use in this context.</param>
+        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+        /// <param name="javaScriptEnabled">Whether or not to enable or disable JavaScript in the context. Defaults to true.</param>
+        /// <param name="timezoneId">Changes the timezone of the context. See <see href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU’s metaZones.txt</see> for a list of supported timezone IDs.</param>
+        /// <param name="geolocation">Changes the Geolocation of the context.</param>
+        /// <param name="permissions">A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/> for more details.</param>
+        /// <param name="isMobile">Gets or sets whether the meta viewport tag is taken into account.</param>
+        /// <param name="offline">Whether to emulate network being offline. Defaults to `false`.</param>
+        /// <param name="deviceScaleFactor">Gets or sets the device scale factor.</param>
+        /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
+        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+        /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
+        /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
+        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <example>.
+        /// <code>
+        /// <![CDATA[
+        /// // Create a new incognito browser context.
+        /// const context = await browser.NewContextAsync();
+        /// // Create a new page in a pristine context.
+        /// const page = await context.NewPageAsync("https://example.com");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created.</returns>
+        Task<IBrowserContext> NewContextAsync(
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null);
+
+        /// <summary>
+        /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
+        /// </summary>
         /// <param name="options">Context options.</param>
         /// <example>.
         /// <code>
@@ -73,14 +167,108 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task{IBrowserContext}"/> that completes when a new <see cref="IBrowserContext"/> is created.</returns>
-        Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null);
+        Task<IBrowserContext> NewContextAsync(BrowserContextOptions options);
+
+        /// <summary>
+        /// Creates a new page in a new browser context. Closing this page will close the context as well.
+        /// </summary>
+        /// <param name="viewport">Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.</param>
+        /// <param name="userAgent">Specific user agent to use in this context.</param>
+        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+        /// <param name="javaScriptEnabled">Whether or not to enable or disable JavaScript in the context. Defaults to true.</param>
+        /// <param name="timezoneId">Changes the timezone of the context. See <see href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU’s metaZones.txt</see> for a list of supported timezone IDs.</param>
+        /// <param name="geolocation">Changes the Geolocation of the context.</param>
+        /// <param name="permissions">A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/> for more details.</param>
+        /// <param name="isMobile">Gets or sets whether the meta viewport tag is taken into account.</param>
+        /// <param name="offline">Whether to emulate network being offline. Defaults to `false`.</param>
+        /// <param name="deviceScaleFactor">Gets or sets the device scale factor.</param>
+        /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
+        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+        /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
+        /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
+        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <example>.
+        /// <code>
+        /// <![CDATA[
+        /// // Create a new incognito browser context.
+        /// const context = await browser.NewContextAsync();
+        /// // Create a new page in a pristine context.
+        /// const page = await context.NewPageAsync("https://example.com");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
+        Task<IPage> NewPageAsync(
+            ViewportSize viewport,
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null);
+
+        /// <summary>
+        /// Creates a new page in a new browser context. Closing this page will close the context as well.
+        /// </summary>
+        /// <param name="userAgent">Specific user agent to use in this context.</param>
+        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+        /// <param name="javaScriptEnabled">Whether or not to enable or disable JavaScript in the context. Defaults to true.</param>
+        /// <param name="timezoneId">Changes the timezone of the context. See <see href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU’s metaZones.txt</see> for a list of supported timezone IDs.</param>
+        /// <param name="geolocation">Changes the Geolocation of the context.</param>
+        /// <param name="permissions">A <see cref="Dictionary{TKey, TValue}"/> from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/> for more details.</param>
+        /// <param name="isMobile">Gets or sets whether the meta viewport tag is taken into account.</param>
+        /// <param name="offline">Whether to emulate network being offline. Defaults to `false`.</param>
+        /// <param name="deviceScaleFactor">Gets or sets the device scale factor.</param>
+        /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
+        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+        /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
+        /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
+        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <example>.
+        /// <code>
+        /// <![CDATA[
+        /// // Create a new incognito browser context.
+        /// const context = await browser.NewContextAsync();
+        /// // Create a new page in a pristine context.
+        /// const page = await context.NewPageAsync("https://example.com");
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
+        Task<IPage> NewPageAsync(
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null);
 
         /// <summary>
         /// Creates a new page in a new browser context. Closing this page will close the context as well.
         /// </summary>
         /// <param name="options">Context options.</param>
         /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
-        Task<IPage> NewPageAsync(BrowserContextOptions options = null);
+        Task<IPage> NewPageAsync(BrowserContextOptions options);
 
         /// <summary>
         /// Creates a new browser session.

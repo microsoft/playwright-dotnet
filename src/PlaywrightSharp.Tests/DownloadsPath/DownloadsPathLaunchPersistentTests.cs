@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Helpers;
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             _downloadsPath = new TempDirectory();
             _userDataDir = new TempDirectory();
 
-            var options = (LaunchPersistentOptions)TestConstants.GetDefaultBrowserOptions();
+            var options = TestConstants.GetDefaultBrowserOptions().ToPersistentOptions();
             options.DownloadsPath = _downloadsPath.Path;
             options.AcceptDownloads = true;
             _context = await Playwright[TestConstants.Product].LaunchPersistenContextAsync(_userDataDir.Path, options);

@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { JavaScriptEnabled = false }))
+            await using (var context = await Browser.NewContextAsync(javaScriptEnabled: false))
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync("data:text/html, <script>var something = 'forbidden'</script>");
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { JavaScriptEnabled = false });
+            await using var context = await Browser.NewContextAsync(javaScriptEnabled: false);
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
         }

@@ -52,16 +52,230 @@ namespace PlaywrightSharp
         public string Name => _initializer.Name;
 
         /// <inheritdoc />
+        public Task<IBrowser> LaunchAsync(
+            bool? headless = null,
+            string[] args = null,
+            string userDataDir = null,
+            bool? devtools = null,
+            string executablePath = null,
+            string downloadsPath = null,
+            bool? ignoreHTTPSErrors = null,
+            int? timeout = null,
+            bool? dumpIO = null,
+            int? slowMo = null,
+            bool? ignoreDefaultArgs = null,
+            string[] ignoredDefaultArgs = null,
+            IDictionary<string, string> env = null,
+            IDictionary<string, object> firefoxUserPrefs = null,
+            ProxySettings proxy = null)
+            => LaunchAsync(new LaunchOptions
+            {
+                Headless = headless,
+                Args = args,
+                UserDataDir = userDataDir,
+                Devtools = devtools,
+                ExecutablePath = executablePath,
+                DownloadsPath = downloadsPath,
+                IgnoreHTTPSErrors = ignoreHTTPSErrors,
+                Timeout = timeout,
+                DumpIO = dumpIO,
+                SlowMo = slowMo,
+                IgnoreDefaultArgs = ignoreHTTPSErrors,
+                IgnoredDefaultArgs = ignoredDefaultArgs,
+                Env = env,
+                FirefoxUserPrefs = firefoxUserPrefs,
+                Proxy = proxy,
+            });
+
+        /// <inheritdoc />
         public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
-            => (await _channel.LaunchAsync(options).ConfigureAwait(false)).Object;
+            => (await _channel.LaunchAsync(options ?? new LaunchOptions()).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public async Task<IBrowserServer> LaunchServerAsync(LaunchOptions options = null)
             => (await _channel.LaunchServerAsync(options).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
+        public Task<IBrowserServer> LaunchServerAsync(
+            bool? headless = null,
+            string[] args = null,
+            string userDataDir = null,
+            bool? devtools = null,
+            string executablePath = null,
+            string downloadsPath = null,
+            bool? ignoreHTTPSErrors = null,
+            int? timeout = null,
+            bool? dumpIO = null,
+            int? slowMo = null,
+            bool? ignoreDefaultArgs = null,
+            string[] ignoredDefaultArgs = null,
+            IDictionary<string, string> env = null,
+            IDictionary<string, object> firefoxUserPrefs = null,
+            ProxySettings proxy = null)
+            => LaunchServerAsync(new LaunchOptions
+            {
+                Headless = headless,
+                Args = args,
+                UserDataDir = userDataDir,
+                Devtools = devtools,
+                ExecutablePath = executablePath,
+                DownloadsPath = downloadsPath,
+                IgnoreHTTPSErrors = ignoreHTTPSErrors,
+                Timeout = timeout,
+                DumpIO = dumpIO,
+                SlowMo = slowMo,
+                IgnoreDefaultArgs = ignoreHTTPSErrors,
+                IgnoredDefaultArgs = ignoredDefaultArgs,
+                Env = env,
+                FirefoxUserPrefs = firefoxUserPrefs,
+                Proxy = proxy,
+            });
+
+        /// <inheritdoc />
+        public Task<IBrowserContext> LaunchPersistenContextAsync(
+            string userDataDir,
+            ViewportSize viewport,
+            bool? headless = null,
+            string[] args = null,
+            bool? devtools = null,
+            string executablePath = null,
+            string downloadsPath = null,
+            bool? ignoreHTTPSErrors = null,
+            int? timeout = null,
+            bool? dumpIO = null,
+            int? slowMo = null,
+            bool? ignoreDefaultArgs = null,
+            string[] ignoredDefaultArgs = null,
+            IDictionary<string, string> env = null,
+            IDictionary<string, object> firefoxUserPrefs = null,
+            ProxySettings proxy = null,
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null)
+            => LaunchPersistenContextAsync(
+                userAgent,
+                new LaunchPersistentOptions
+                {
+                    Headless = headless,
+                    Args = args,
+                    UserDataDir = userDataDir,
+                    Devtools = devtools,
+                    ExecutablePath = executablePath,
+                    DownloadsPath = downloadsPath,
+                    IgnoreHTTPSErrors = ignoreHTTPSErrors,
+                    Timeout = timeout,
+                    DumpIO = dumpIO,
+                    SlowMo = slowMo,
+                    IgnoreDefaultArgs = ignoreHTTPSErrors,
+                    IgnoredDefaultArgs = ignoredDefaultArgs,
+                    Env = env,
+                    FirefoxUserPrefs = firefoxUserPrefs,
+                    Proxy = proxy,
+                    Viewport = viewport,
+                    UserAgent = userAgent,
+                    BypassCSP = bypassCSP,
+                    JavaScriptEnabled = javaScriptEnabled,
+                    TimezoneId = timezoneId,
+                    Geolocation = geolocation,
+                    Permissions = permissions,
+                    IsMobile = isMobile,
+                    Offline = offline,
+                    DeviceScaleFactor = deviceScaleFactor,
+                    HttpCredentials = httpCredentials,
+                    HasTouch = hasTouch,
+                    AcceptDownloads = acceptDownloads,
+                    ColorScheme = colorScheme,
+                    Locale = locale,
+                    ExtraHttpHeaders = extraHttpHeaders,
+                });
+
+        /// <inheritdoc />
+        public Task<IBrowserContext> LaunchPersistenContextAsync(
+            string userDataDir,
+            bool? headless = null,
+            string[] args = null,
+            bool? devtools = null,
+            string executablePath = null,
+            string downloadsPath = null,
+            bool? ignoreHTTPSErrors = null,
+            int? timeout = null,
+            bool? dumpIO = null,
+            int? slowMo = null,
+            bool? ignoreDefaultArgs = null,
+            string[] ignoredDefaultArgs = null,
+            IDictionary<string, string> env = null,
+            IDictionary<string, object> firefoxUserPrefs = null,
+            ProxySettings proxy = null,
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null)
+            => LaunchPersistenContextAsync(
+                userAgent,
+                new LaunchPersistentOptions
+                {
+                    Headless = headless,
+                    Args = args,
+                    UserDataDir = userDataDir,
+                    Devtools = devtools,
+                    ExecutablePath = executablePath,
+                    DownloadsPath = downloadsPath,
+                    IgnoreHTTPSErrors = ignoreHTTPSErrors,
+                    Timeout = timeout,
+                    DumpIO = dumpIO,
+                    SlowMo = slowMo,
+                    IgnoreDefaultArgs = ignoreHTTPSErrors,
+                    IgnoredDefaultArgs = ignoredDefaultArgs,
+                    Env = env,
+                    FirefoxUserPrefs = firefoxUserPrefs,
+                    Proxy = proxy,
+                    UserAgent = userAgent,
+                    BypassCSP = bypassCSP,
+                    JavaScriptEnabled = javaScriptEnabled,
+                    TimezoneId = timezoneId,
+                    Geolocation = geolocation,
+                    Permissions = permissions,
+                    IsMobile = isMobile,
+                    Offline = offline,
+                    DeviceScaleFactor = deviceScaleFactor,
+                    HttpCredentials = httpCredentials,
+                    HasTouch = hasTouch,
+                    AcceptDownloads = acceptDownloads,
+                    ColorScheme = colorScheme,
+                    Locale = locale,
+                    ExtraHttpHeaders = extraHttpHeaders,
+                });
+
+        /// <inheritdoc />
+        public Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchOptions options)
+            => LaunchPersistenContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
+
+        /// <inheritdoc />
         public async Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
-            => (await _channel.LaunchPersistenContextAsync(userDataDir, options).ConfigureAwait(false)).Object;
+            => (await _channel.LaunchPersistenContextAsync(userDataDir, options ?? new LaunchPersistentOptions()).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null)
