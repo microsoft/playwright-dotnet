@@ -179,7 +179,7 @@ namespace PlaywrightSharp
 
             if (FirefoxUserPrefs != null)
             {
-                args["firefoxUserPref"] = FirefoxUserPrefs;
+                args["firefoxUserPrefs"] = FirefoxUserPrefs;
             }
 
             if (Proxy != null)
