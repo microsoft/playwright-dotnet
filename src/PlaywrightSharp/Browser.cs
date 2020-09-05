@@ -77,9 +77,83 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options = null)
+        public Task<IBrowserContext> NewContextAsync(
+            ViewportSize viewport,
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null)
+            => NewContextAsync(new BrowserContextOptions
+            {
+                Viewport = viewport,
+                UserAgent = userAgent,
+                BypassCSP = bypassCSP,
+                JavaScriptEnabled = javaScriptEnabled,
+                TimezoneId = timezoneId,
+                Geolocation = geolocation,
+                Permissions = permissions,
+                IsMobile = isMobile,
+                Offline = offline,
+                DeviceScaleFactor = deviceScaleFactor,
+                HttpCredentials = httpCredentials,
+                HasTouch = hasTouch,
+                AcceptDownloads = acceptDownloads,
+                ColorScheme = colorScheme,
+                Locale = locale,
+                ExtraHttpHeaders = extraHttpHeaders,
+            });
+
+        /// <inheritdoc/>
+        public Task<IBrowserContext> NewContextAsync(
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null)
+            => NewContextAsync(new BrowserContextOptions
+            {
+                UserAgent = userAgent,
+                BypassCSP = bypassCSP,
+                JavaScriptEnabled = javaScriptEnabled,
+                TimezoneId = timezoneId,
+                Geolocation = geolocation,
+                Permissions = permissions,
+                IsMobile = isMobile,
+                Offline = offline,
+                DeviceScaleFactor = deviceScaleFactor,
+                HttpCredentials = httpCredentials,
+                HasTouch = hasTouch,
+                AcceptDownloads = acceptDownloads,
+                ColorScheme = colorScheme,
+                Locale = locale,
+                ExtraHttpHeaders = extraHttpHeaders,
+            });
+
+        /// <inheritdoc/>
+        public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options)
         {
-            var context = (await _channel.NewContextAsync(options).ConfigureAwait(false)).Object;
+            var context = (await _channel.NewContextAsync(options ?? new BrowserContextOptions()).ConfigureAwait(false)).Object;
             BrowserContextsList.Add(context);
             context.Browser = this;
             return context;
@@ -89,7 +163,81 @@ namespace PlaywrightSharp
         public async Task<ICDPSession> NewBrowserCDPSessionAsync() => (await _channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc/>
-        public async Task<IPage> NewPageAsync(BrowserContextOptions options = null)
+        public Task<IPage> NewPageAsync(
+            ViewportSize viewport,
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null)
+            => NewPageAsync(new BrowserContextOptions
+            {
+                Viewport = viewport,
+                UserAgent = userAgent,
+                BypassCSP = bypassCSP,
+                JavaScriptEnabled = javaScriptEnabled,
+                TimezoneId = timezoneId,
+                Geolocation = geolocation,
+                Permissions = permissions,
+                IsMobile = isMobile,
+                Offline = offline,
+                DeviceScaleFactor = deviceScaleFactor,
+                HttpCredentials = httpCredentials,
+                HasTouch = hasTouch,
+                AcceptDownloads = acceptDownloads,
+                ColorScheme = colorScheme,
+                Locale = locale,
+                ExtraHttpHeaders = extraHttpHeaders,
+            });
+
+        /// <inheritdoc/>
+        public Task<IPage> NewPageAsync(
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null)
+            => NewPageAsync(new BrowserContextOptions
+            {
+                UserAgent = userAgent,
+                BypassCSP = bypassCSP,
+                JavaScriptEnabled = javaScriptEnabled,
+                TimezoneId = timezoneId,
+                Geolocation = geolocation,
+                Permissions = permissions,
+                IsMobile = isMobile,
+                Offline = offline,
+                DeviceScaleFactor = deviceScaleFactor,
+                HttpCredentials = httpCredentials,
+                HasTouch = hasTouch,
+                AcceptDownloads = acceptDownloads,
+                ColorScheme = colorScheme,
+                Locale = locale,
+                ExtraHttpHeaders = extraHttpHeaders,
+            });
+
+        /// <inheritdoc/>
+        public async Task<IPage> NewPageAsync(BrowserContextOptions options)
         {
             var context = await NewContextAsync(options).ConfigureAwait(false) as BrowserContext;
             var page = await context.NewPageAsync().ConfigureAwait(false) as Page;

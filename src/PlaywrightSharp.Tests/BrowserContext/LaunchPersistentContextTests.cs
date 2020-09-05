@@ -648,7 +648,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var tmp = new TempDirectory();
             var context = await BrowserType.LaunchPersistenContextAsync(
                 tmp.Path,
-                (LaunchPersistentOptions)TestConstants.GetDefaultBrowserOptions() + (options ?? new BrowserContextOptions()));
+                TestConstants.GetDefaultBrowserOptions().ToPersistentOptions() + (options ?? new BrowserContextOptions()));
             var page = context.Pages.First();
 
             return (tmp, context, page);

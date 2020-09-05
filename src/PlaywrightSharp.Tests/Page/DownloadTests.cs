@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsTrue()
         {
-            var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
 

@@ -25,10 +25,7 @@ namespace PlaywrightSharp.Tests.Emulation
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
-            {
-                Locale = "fr-CH"
-            });
+            await using var context = await Browser.NewContextAsync(locale: "fr-CH");
             string acceptLanguage = string.Empty;
             var page = await context.NewPageAsync();
             var requestTask = Server.WaitForRequest("/empty.html", c => acceptLanguage = c.Headers["accept-language"]);

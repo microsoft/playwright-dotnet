@@ -8,7 +8,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// BrowserContexts provide a way to operate multiple independent browser sessions.
     /// If a <see cref="IPage"/> opens another page, e.g.with a window.open call, the popup will belong to the parent page's browser context.
-    /// PlaywrightSharp allows creation of "incognito" browser contexts with <seealso cref="IBrowser.NewContextAsync"/> method. "Incognito" browser contexts don't write any browsing data to disk.
+    /// PlaywrightSharp allows creation of "incognito" browser contexts with <seealso cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> method. "Incognito" browser contexts don't write any browsing data to disk.
     /// </summary>
     /// <example>
     /// <code>

@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 Assert.Null(await page.EvaluateAsync("window.__injected"));
             }
             // By-pass CSP and try one more time.
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { BypassCSP = true }))
+            await using (var context = await Browser.NewContextAsync(bypassCSP: true))
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
 
             // By-pass CSP and try one more time.
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { BypassCSP = true }))
+            await using (var context = await Browser.NewContextAsync(bypassCSP: true))
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBypassAfterCrossProcessNavigation()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { BypassCSP = true });
+            await using var context = await Browser.NewContextAsync(bypassCSP: true);
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
             await page.AddScriptTagAsync(content: "window.__injected = 42;");
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
 
             // By-pass CSP and try one more time.
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { BypassCSP = true }))
+            await using (var context = await Browser.NewContextAsync(bypassCSP: true))
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
