@@ -164,7 +164,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null)
-            => LaunchPersistenContextAsync(
+            => LaunchPersistentContextAsync(
                 userAgent,
                 new LaunchPersistentOptions
                 {
@@ -233,7 +233,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null)
-            => LaunchPersistenContextAsync(
+            => LaunchPersistentContextAsync(
                 userAgent,
                 new LaunchPersistentOptions
                 {
@@ -271,10 +271,10 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchOptions options)
-            => LaunchPersistenContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
+            => LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
 
         /// <inheritdoc />
-        public async Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
+        public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
             => (await _channel.LaunchPersistenContextAsync(userDataDir, options ?? new LaunchPersistentOptions()).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />

@@ -35,13 +35,11 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets the ConsoleMessage type.
         /// </summary>
-        /// <value>ConsoleMessageType.</value>
         public string Type => _initializer.Type;
 
         /// <summary>
         /// Gets the arguments.
         /// </summary>
-        /// <value>The arguments.</value>
         public IEnumerable<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object);
 
         /// <summary>
@@ -52,7 +50,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets the console text.
         /// </summary>
-        /// <value>The text.</value>
-        internal string Text => _initializer.Text;
+        public string Text => _initializer.Text;
     }
 }
