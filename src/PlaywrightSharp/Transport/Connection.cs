@@ -183,7 +183,7 @@ namespace PlaywrightSharp.Transport
         private static string GetExecutablePath()
         {
             // This is not the final solution.
-            string tempDirectory = Path.Combine(new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).Directory.FullName, "Drivers");
+            string tempDirectory = Path.Combine(new FileInfo(typeof(Playwright).Assembly.Location).Directory.FullName, "Drivers");
             string playwrightServer = "driver-win.exe";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
