@@ -183,19 +183,53 @@ namespace PlaywrightSharp.Transport
         private static string GetExecutablePath()
         {
             // This is not the final solution.
-            string tempDirectory = Path.Combine(new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).Directory.FullName, "Drivers");
-            string playwrightServer = "driver-win.exe";
+            string tempDirectory = new FileInfo(typeof(Playwright).Assembly.Location).Directory.FullName;
+            string driver = "driver-win.exe";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                playwrightServer = "driver-macos";
+                driver = "driver-macos";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                playwrightServer = "driver-linux";
+                driver = "driver-linux";
             }
 
-            return Path.Combine(tempDirectory, playwrightServer);
+            string file = Path.Combine(tempDirectory, driver);
+
+            if (!new FileInfo(file).Exists)
+            {
+                ExtractDriver(file, driver);
+            }
+
+            return file;
+        }
+
+        private static void ExtractDriver(string file, string driver)
+        {
+            using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.browsers.json"))
+            {
+                var fileInfo = new FileInfo(Path.Combine(new FileInfo(file).Directory.FullName, "browsers.json"));
+                if (fileInfo.Exists)
+                {
+                    fileInfo.Delete();
+                }
+
+                using var fileStream = new FileStream(fileInfo.FullName, FileMode.OpenOrCreate, FileAccess.Write);
+                resource.CopyTo(fileStream);
+            }
+
+            using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.{driver}"))
+            {
+                var fileInfo = new FileInfo(file);
+                if (fileInfo.Exists)
+                {
+                    fileInfo.Delete();
+                }
+
+                using var fileStream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+                resource.CopyTo(fileStream);
+            }
         }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)

@@ -54,20 +54,20 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="Drivers\driver-linux" />
-      <Content Include="Drivers\driver-linux">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+      <EmbeddedResource Include="Drivers\driver-linux">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <None Remove="Drivers\driver-macos" />
-      <Content Include="Drivers\driver-macos">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+      <EmbeddedResource Include="Drivers\driver-macos">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <None Remove="Drivers\driver-win.exe" />
-      <Content Include="Drivers\driver-win.exe">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+      <EmbeddedResource Include="Drivers\driver-win.exe">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <None Remove="Drivers\browsers.json" />
-      <Content Include="Drivers\browsers.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+      <EmbeddedResource Include="Drivers\browsers.json">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>
