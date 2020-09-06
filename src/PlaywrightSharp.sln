@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp", "Playwrig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Demo", "PlaywrightSharp.Demo\PlaywrightSharp.Demo.csproj", "{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5C6D57B1-C82A-48D6-9EBD-73B712CAE476}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiChecker", "tools\ApiChecker\ApiChecker.csproj", "{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,12 +48,17 @@ Global
 		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
+		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}

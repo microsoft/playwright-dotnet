@@ -57,19 +57,19 @@ namespace PlaywrightSharp
         /// Returns download error if any.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when failure is resolved, yielding the faulire.</returns>
-        internal Task<string> GetFailureAsync() => _channel.GetFailureAsync();
+        public Task<string> GetFailureAsync() => _channel.GetFailureAsync();
 
         /// <summary>
         /// Deletes the downloaded file.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the file is removed.</returns>
-        internal Task DeleteAsync() => _channel.DeleteAsync();
+        public Task DeleteAsync() => _channel.DeleteAsync();
 
         /// <summary>
         /// Returns readable stream for current download or null if download failed.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the stream is created, yielding the stream.</returns>
-        internal async Task<Stream> CreateReadStreamAsync()
+        public async Task<Stream> CreateReadStreamAsync()
         {
             string fileName = await GetPathAsync().ConfigureAwait(false);
             return string.IsNullOrEmpty(fileName) ? null : new FileStream(fileName, FileMode.Open);

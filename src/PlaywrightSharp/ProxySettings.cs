@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Proxy Settings. See <see cref="IBrowserType.LaunchAsync(LaunchOptions)"/> and <see cref="IBrowserType.LaunchPersistenContextAsync(string, LaunchPersistentOptions)"/>.
+    /// Proxy Settings. See <see cref="IBrowserType.LaunchAsync(LaunchOptions)"/> and <see cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchPersistentOptions)"/>.
     /// </summary>
     public class ProxySettings
     {

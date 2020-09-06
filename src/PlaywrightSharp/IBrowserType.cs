@@ -257,7 +257,7 @@ namespace PlaywrightSharp
         /// <param name="userDataDir">Path to a User Data Directory, which stores browser session data like cookies and local storage.</param>
         /// <param name="options">Launch options.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
-        Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options);
+        Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options);
 
         /// <summary>
         /// This methods attaches PlaywrightSharp to an existing browser instance.

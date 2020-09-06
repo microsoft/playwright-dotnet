@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Options for <seealso cref="IBrowserType.LaunchPersistenContextAsync(string, LaunchPersistentOptions)"/>.
+    /// Options for <seealso cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchPersistentOptions)"/>.
     /// </summary>
     public class LaunchPersistentOptions : LaunchOptions
     {

@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             var options = TestConstants.GetDefaultBrowserOptions().ToPersistentOptions();
             options.DownloadsPath = _downloadsPath.Path;
             options.AcceptDownloads = true;
-            _context = await Playwright[TestConstants.Product].LaunchPersistenContextAsync(_userDataDir.Path, options);
+            _context = await Playwright[TestConstants.Product].LaunchPersistentContextAsync(_userDataDir.Path, options);
             _page = _context.Pages[0];
             await _page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
         }
