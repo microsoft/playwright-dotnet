@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Title>PlaywrightSharp.Abstractions</Title>
-        <PackageId>PlaywrightSharp.Abstractions</PackageId>
+        <Title>PlaywrightSharp</Title>
+        <PackageId>PlaywrightSharp</PackageId>
         <Summary>Playwright-Sharp .NET library to automate Chromium, Firefox and WebKit with a single API.</Summary>
-        <Description>
-          This is the abstraction library. You should install this library if you want to create a browser agnostic library.
-          If you want to create browser specific code, please download PlaywrightSharp.Chromium, PlaywrightSharp.Firefox or PlaywrightSharp.Webkit
-        </Description>
-
+        <Description>PlaywrightSharp is a .NET library to automate Chromium, Firefox and WebKit with a single API. Playwright is built to enable cross-browser web automation that is ever-green, capable, reliable and fast.</Description>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <LangVersion>8.0</LangVersion>
         <DebugType>embedded</DebugType>
@@ -50,15 +46,6 @@
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Remove="Resources\injectedSource.ts" />
-        <None Remove="Resources\zsSelectorEngineSource.ts" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Protocol" />
-      <Folder Include="Server" />
-      <Folder Include="Servers" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
