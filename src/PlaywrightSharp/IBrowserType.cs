@@ -113,7 +113,7 @@ namespace PlaywrightSharp
         /// <param name="userDataDir">Path to a User Data Directory, which stores browser session data like cookies and local storage.</param>
         /// <param name="options">Launch options.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
-        Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchOptions options);
+        Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options);
 
         /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.
@@ -151,7 +151,7 @@ namespace PlaywrightSharp
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
-        Task<IBrowserContext> LaunchPersistenContextAsync(
+        Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             ViewportSize viewport,
             bool? headless = null,
@@ -219,7 +219,7 @@ namespace PlaywrightSharp
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
-        Task<IBrowserContext> LaunchPersistenContextAsync(
+        Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             bool? headless = null,
             string[] args = null,

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
             using var tempDir = new TempDirectory();
-            await using var browserContext = await BrowserType.LaunchPersistenContextAsync(tempDir.Path, TestConstants.GetHeadfulOptions());
+            await using var browserContext = await BrowserType.LaunchPersistentContextAsync(tempDir.Path, TestConstants.GetHeadfulOptions());
             string[] pages = browserContext.Pages.Select(page => page.Url).ToArray();
             Assert.Equal(new[] { "about:blank" }, pages);
         }
@@ -44,13 +44,13 @@ namespace PlaywrightSharp.Tests.Launcher
             var headfulOptions = TestConstants.GetHeadfulOptions();
             headfulOptions.UserDataDir = userDataDir.Path;
 
-            await using var headfulContext = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetHeadfulOptions());
+            await using var headfulContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetHeadfulOptions());
             var headfulPage = await headfulContext.NewPageAsync();
             await headfulPage.GoToAsync(TestConstants.EmptyPage);
             await headfulPage.EvaluateAsync("() => document.cookie = 'foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT'");
             await headfulContext.CloseAsync();
 
-            var headlessContext = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions());
+            var headlessContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions());
             var headlessPage = await headlessContext.NewPageAsync();
             await headlessPage.GoToAsync(TestConstants.EmptyPage);
             string cookie = await headlessPage.EvaluateAsync<string>("() => document.cookie");
@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public async Task ShouldCloseBrowserWithBeforeunloadPage()
         {
             using var userDataDir = new TempDirectory();
-            await using var browserContext = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetHeadfulOptions());
+            await using var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetHeadfulOptions());
             var page = await browserContext.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/beforeunload.html");

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -507,14 +507,14 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             using var userDataDir = new TempDirectory();
 
-            await using (var browserContext = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
             {
                 var page = await browserContext.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
                 await page.EvaluateAsync("() => localStorage.hey = 'hello'");
             }
 
-            await using (var browserContext2 = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -522,7 +522,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
 
             using var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchPersistenContextAsync(userDataDir2.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path, TestConstants.GetDefaultBrowserOptions()))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -541,7 +541,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
             var userDataDir = new TempDirectory();
 
-            await using (var browserContext = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
             {
                 var page = await browserContext.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -553,7 +553,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 Assert.Equal("doSomethingOnlyOnce=true", documentCookie);
             }
 
-            await using (var browserContext2 = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -561,7 +561,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
 
             var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchPersistenContextAsync(userDataDir2.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path, TestConstants.GetDefaultBrowserOptions()))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -597,7 +597,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var options = TestConstants.GetDefaultBrowserOptions();
             options.Args = new[] { TestConstants.EmptyPage };
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchPersistenContextAsync(tmp.Path, options));
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchPersistentContextAsync(tmp.Path, options));
 
             tmp.Dispose();
         }
