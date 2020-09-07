@@ -132,7 +132,7 @@ namespace PlaywrightSharp
             });
 
         /// <inheritdoc />
-        public Task<IBrowserContext> LaunchPersistenContextAsync(
+        public Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             ViewportSize viewport,
             bool? headless = null,
@@ -202,7 +202,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task<IBrowserContext> LaunchPersistenContextAsync(
+        public Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             bool? headless = null,
             string[] args = null,
@@ -270,12 +270,12 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task<IBrowserContext> LaunchPersistenContextAsync(string userDataDir, LaunchOptions options)
+        public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
             => LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
 
         /// <inheritdoc />
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
-            => (await _channel.LaunchPersistenContextAsync(userDataDir, options ?? new LaunchPersistentOptions()).ConfigureAwait(false)).Object;
+            => (await _channel.LaunchPersistentContextAsync(userDataDir, options ?? new LaunchPersistentOptions()).ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null)

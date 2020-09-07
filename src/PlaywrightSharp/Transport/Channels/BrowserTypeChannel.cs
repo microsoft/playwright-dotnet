@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["slowMo"] = slowMo,
                 });
 
-        internal Task<BrowserContextChannel> LaunchPersistenContextAsync(string userDataDir, LaunchPersistentOptions options)
+        internal Task<BrowserContextChannel> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
         {
             var args = options.ToChannelDictionary();
             args["userDataDir"] = userDataDir;

@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
                 $"--load-extension={extensionPath}",
             };
 
-            await using var context = await BrowserType.LaunchPersistenContextAsync(userDataDir.Path, options);
+            await using var context = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, options);
             var backgroundPage = context.BackgroundPages.Any()
                 ? context.BackgroundPages.First()
                 : (await context.WaitForEvent<PageEventArgs>(ContextEvent.BackgroundPage)).Page;
