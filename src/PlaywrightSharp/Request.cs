@@ -17,6 +17,7 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
+        private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         internal Request(ConnectionScope scope, string guid, RequestInitializer initializer)
         {
@@ -28,6 +29,14 @@ namespace PlaywrightSharp
             if (RedirectedFrom != null)
             {
                 _initializer.RedirectedFrom.Object.RedirectedTo = this;
+            }
+
+            if (initializer.Headers != null)
+            {
+                foreach (var kv in initializer.Headers)
+                {
+                    _headers[kv.Name] = kv.Value;
+                }
             }
         }
 
@@ -47,7 +56,7 @@ namespace PlaywrightSharp
         public HttpMethod Method => _initializer.Method;
 
         /// <inheritdoc />
-        public IDictionary<string, string> Headers => _initializer.Headers;
+        public IDictionary<string, string> Headers => _headers;
 
         /// <inheritdoc />
         public string PostData => _initializer.PostData;

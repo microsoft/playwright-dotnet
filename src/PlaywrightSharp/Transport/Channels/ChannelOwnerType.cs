@@ -13,8 +13,8 @@ namespace PlaywrightSharp.Transport.Channels
         [EnumMember(Value = "browserType")]
         BrowserType,
 
-        [EnumMember(Value = "context")]
-        Context,
+        [EnumMember(Value = "browserContext")]
+        BrowserContext,
 
         [EnumMember(Value = "consoleMessage")]
         ConsoleMessage,
@@ -57,5 +57,11 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "cdpSession")]
         CDPSession,
+
+        [EnumMember(Value = "electron")]
+        Electron,
+
+        [EnumMember(Value = "selectors")]
+        Selectors,
     }
 }

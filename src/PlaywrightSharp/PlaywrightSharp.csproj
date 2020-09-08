@@ -53,21 +53,17 @@
       </Reference>
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Drivers\driver-linux" />
-      <EmbeddedResource Include="Drivers\driver-linux">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <None Remove="Drivers\playwright-driver-linux" />
+      <EmbeddedResource Include="Drivers\playwright-driver-linux">
       </EmbeddedResource>
-      <None Remove="Drivers\driver-macos" />
-      <EmbeddedResource Include="Drivers\driver-macos">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <None Remove="Drivers\playwright-driver-macos" />
+      <EmbeddedResource Include="Drivers\playwright-driver-macos">
       </EmbeddedResource>
-      <None Remove="Drivers\driver-win.exe" />
-      <EmbeddedResource Include="Drivers\driver-win.exe">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <None Remove="Drivers\playwright-driver-win.exe" />
+      <EmbeddedResource Include="Drivers\playwright-driver-win.exe">
       </EmbeddedResource>
       <None Remove="Drivers\browsers.json" />
       <EmbeddedResource Include="Drivers\browsers.json">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
 </Project>

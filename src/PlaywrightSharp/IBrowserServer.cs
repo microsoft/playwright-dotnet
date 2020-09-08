@@ -19,7 +19,7 @@ namespace PlaywrightSharp
         int ProcessId { get; }
 
         /// <summary>
-        /// Browser websocket endpoint which can be used as an argument to <see cref="IBrowserType.ConnectAsync(string, int?, int?)"/> to establish connection to the browser.
+        /// Browser websocket endpoint which can be used to establish connection to the browser.
         /// </summary>
         string WSEndpoint { get; }
 

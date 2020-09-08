@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.BrowserType:
                     result = new BrowserType(this, guid, initializer?.ToObject<BrowserTypeInitializer>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
-                case ChannelOwnerType.Context:
+                case ChannelOwnerType.BrowserContext:
                     result = new BrowserContext(this, guid, initializer?.ToObject<BrowserContextInitializer>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.ConsoleMessage:
@@ -134,14 +134,14 @@ namespace PlaywrightSharp.Transport
             Connection.OnObjectCreated(guid, result);
         }
 
-        internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args = null, bool ignoreNullValues = false)
+        internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args = null, bool ignoreNullValues = true)
             => Connection.SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues);
 
         internal Task<T> SendMessageToServer<T>(
             string guid,
             string method,
             object args,
-            bool ignoreNullValues = false,
+            bool ignoreNullValues = true,
             JsonSerializerOptions serializerOptions = null)
             => Connection.SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues, serializerOptions);
 

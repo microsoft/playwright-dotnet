@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Page
             var worker = await workerCreatedTcs.Task;
             var workerThisObj = await worker.EvaluateHandleAsync("() => this");
             var workerDestroyedTcs = new TaskCompletionSource<IWorker>();
-            worker.Closed += (sender, e) => workerDestroyedTcs.TrySetResult((IWorker)sender);
+            worker.Close += (sender, e) => workerDestroyedTcs.TrySetResult((IWorker)sender);
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
             Assert.Same(worker, await workerDestroyedTcs.Task);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => workerThisObj.GetPropertyAsync("self"));
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests.Page
 
             Assert.Single(Page.Workers);
             bool destroyed = false;
-            worker.Closed += (sender, e) => destroyed = true;
+            worker.Close += (sender, e) => destroyed = true;
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(destroyed);
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Page
 
             Assert.Single(Page.Workers);
             bool destroyed = false;
-            worker.Closed += (sender, e) => destroyed = true;
+            worker.Close += (sender, e) => destroyed = true;
 
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.True(destroyed);

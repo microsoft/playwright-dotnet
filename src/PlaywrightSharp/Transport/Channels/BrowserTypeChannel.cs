@@ -11,36 +11,18 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         public Task<BrowserChannel> LaunchAsync(LaunchOptions options)
-        {
-            return Scope.SendMessageToServer<BrowserChannel>(
-                Guid,
-                "launch",
-                options.ToChannelDictionary());
-        }
-
-        public Task<BrowserServerChannel> LaunchServerAsync(LaunchOptions options)
-            => Scope.SendMessageToServer<BrowserServerChannel>(
-                Guid,
-                "launchServer",
-                (options ?? new LaunchOptions()).ToChannelDictionary());
-
-        internal Task<BrowserChannel> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null)
             => Scope.SendMessageToServer<BrowserChannel>(
                 Guid,
-                "connect",
-                new Dictionary<string, object>
-                {
-                    ["wsEndpoint"] = wsEndpoint,
-                    ["timeout"] = timeout,
-                    ["slowMo"] = slowMo,
-                });
+                "launch",
+                options.ToChannelDictionary(),
+                false);
 
         internal Task<BrowserContextChannel> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
         {
             var args = options.ToChannelDictionary();
             args["userDataDir"] = userDataDir;
 
-            return Scope.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args);
+            return Scope.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args, false);
         }
     }
 }

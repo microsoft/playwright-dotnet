@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -89,7 +91,7 @@ namespace PlaywrightSharp.Transport.Channels
                 case "popup":
                     Popup?.Invoke(this, new PageChannelPopupEventArgs
                     {
-                        Page = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                     });
                     break;
                 case "pageError":
@@ -99,34 +101,34 @@ namespace PlaywrightSharp.Transport.Channels
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "frameAttached":
-                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
                 case "frameDetached":
-                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
                 case "frameNavigated":
                     FrameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "dialog":
-                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
                 case "console":
-                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
+                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
                     break;
                 case "request":
-                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "requestFinished":
-                    RequestFinished?.Invoke(this, new RequestEventArgs { Request = serverParams?.ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    RequestFinished?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "requestFailed":
                     RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestFailedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "response":
-                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.ToObject<ResponseChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.GetProperty("response").ToObject<ResponseChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "download":
-                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.ToObject<DownloadChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "worker":
                     Worker?.Invoke(
@@ -195,10 +197,12 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<ResponseChannel> GoBackAsync(int? timeout, LifecycleEvent? waitUntil)
         {
-            var args = new Dictionary<string, object>
+            var args = new Dictionary<string, object>();
+
+            if (timeout != null)
             {
-                ["timeout"] = timeout,
-            };
+                args["timeout"] = timeout;
+            }
 
             if (waitUntil != null)
             {
@@ -210,10 +214,12 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<ResponseChannel> GoForwardAsync(int? timeout, LifecycleEvent? waitUntil)
         {
-            var args = new Dictionary<string, object>
+            var args = new Dictionary<string, object>();
+
+            if (timeout != null)
             {
-                ["timeout"] = timeout,
-            };
+                args["timeout"] = timeout;
+            }
 
             if (waitUntil != null)
             {
@@ -225,10 +231,12 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<ResponseChannel> ReloadAsync(int? timeout, LifecycleEvent? waitUntil)
         {
-            var args = new Dictionary<string, object>
+            var args = new Dictionary<string, object>();
+
+            if (timeout != null)
             {
-                ["timeout"] = timeout,
-            };
+                args["timeout"] = timeout;
+            }
 
             if (waitUntil != null)
             {
@@ -368,7 +376,7 @@ namespace PlaywrightSharp.Transport.Channels
                 "setExtraHTTPHeaders",
                 new Dictionary<string, object>
                 {
-                    ["headers"] = headers,
+                    ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
                 });
 
         internal Task<string> ScreenshotAsync(

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -53,7 +55,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BrowserContextPageEventArgs
                         {
-                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
                 case "crBackgroundPage":
@@ -61,7 +63,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BrowserContextPageEventArgs
                         {
-                            PageChannel = serverParams?.ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
                 case "crServiceWorker":
@@ -69,7 +71,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new WorkerChannelEventArgs
                         {
-                            WorkerChannel = serverParams?.ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
             }
@@ -199,7 +201,7 @@ namespace PlaywrightSharp.Transport.Channels
                 "setExtraHTTPHeaders",
                 new Dictionary<string, object>
                 {
-                    ["headers"] = headers,
+                    ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
                 });
 
         internal Task<CDPSessionChannel> NewCDPSessionAsync(IPage page)

@@ -81,7 +81,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
             var messages = new List<string>();
             Context.Closed += (sender, e) => messages.Add("context");
-            worker.Worker.Closed += (sender, e) => messages.Add("worker");
+            worker.Worker.Close += (sender, e) => messages.Add("worker");
 
             await Context.CloseAsync();
 

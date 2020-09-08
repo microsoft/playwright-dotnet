@@ -10,6 +10,6 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public BrowserType Firefox { get; set; }
 
-        public Dictionary<string, DeviceDescriptor> DeviceDescriptors { get; set; }
+        public IEnumerable<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
     }
 }

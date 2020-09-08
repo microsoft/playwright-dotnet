@@ -16,12 +16,21 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
+        private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         internal Response(ConnectionScope scope, string guid, ResponseInitializer initializer)
         {
             _scope = scope;
             _channel = new ResponseChannel(guid, scope, this);
             _initializer = initializer;
+
+            if (initializer.Headers != null)
+            {
+                foreach (var kv in initializer.Headers)
+                {
+                    _headers[kv.Name] = kv.Value;
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -46,7 +55,7 @@ namespace PlaywrightSharp
         public string Url => _initializer.Url;
 
         /// <inheritdoc />
-        public IDictionary<string, string> Headers => _initializer.Headers;
+        public IDictionary<string, string> Headers => _headers;
 
         /// <inheritdoc />
         public bool Ok => Status == HttpStatusCode.OK;

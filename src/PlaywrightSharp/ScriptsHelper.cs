@@ -62,7 +62,7 @@ namespace PlaywrightSharp
             {
                 if (value is IChannelOwner channelOwner)
                 {
-                    return new EvaluateArgumentValueElement
+                    return new EvaluateArgumentValueElement.Handle
                     {
                         H = PushHandle(channelOwner.Channel.Guid),
                     };
@@ -77,7 +77,7 @@ namespace PlaywrightSharp
             return new EvaluateArgument
             {
                 Value = value,
-                Guids = guids,
+                Handles = guids,
             };
         }
 

@@ -21,8 +21,16 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         private static async Task LaunchBrowserAsync()
         {
-            Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
-            Browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            try
+            {
+                Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
+                Browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("Launch failed", ex);
+            }
         }
 
         internal static async Task ShutDownAsync()

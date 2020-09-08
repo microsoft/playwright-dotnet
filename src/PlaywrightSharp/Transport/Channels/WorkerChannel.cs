@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Transport.Channels
                 serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
                 arg = new EvaluateArgument
                 {
-                    Guids = new List<EvaluateArgumentGuidElement>(),
+                    Handles = new List<EvaluateArgumentGuidElement>(),
                     Value = arg,
                 };
                 serializerOptions.Converters.Add(new EvaluateArgumentConverter());

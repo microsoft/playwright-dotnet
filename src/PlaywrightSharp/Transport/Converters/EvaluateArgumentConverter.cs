@@ -31,8 +31,8 @@ namespace PlaywrightSharp.Transport.Converters
                 JsonSerializer.Serialize(writer, value.Value, serializerOptions);
             }
 
-            writer.WritePropertyName("guids");
-            JsonSerializer.Serialize(writer, value.Guids, options);
+            writer.WritePropertyName("handles");
+            JsonSerializer.Serialize(writer, value.Handles, options);
             writer.WriteEndObject();
         }
     }

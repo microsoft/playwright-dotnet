@@ -123,16 +123,21 @@ namespace PlaywrightSharp.Transport.Channels
             Point? position = null,
             int? timeout = null,
             bool force = false)
-            => Scope.SendMessageToServer<JsonElement?>(
-                Guid,
-                "hover",
-                new Dictionary<string, object>
-                {
-                    ["force"] = force,
-                    ["timeout"] = timeout,
-                    ["position"] = position,
-                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                });
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["force"] = force,
+                ["timeout"] = timeout,
+                ["position"] = position,
+            };
+
+            if (modifiers != null)
+            {
+                args["modifiers"] = modifiers?.Select(m => m.ToValueString());
+            }
+
+            return Scope.SendMessageToServer<JsonElement?>(Guid, "hover", args);
+        }
 
         internal Task FocusAsync() => Scope.SendMessageToServer(Guid, "focus", null);
 
@@ -145,20 +150,33 @@ namespace PlaywrightSharp.Transport.Channels
             int? timeout,
             bool force,
             bool noWaitAfter)
-            => Scope.SendMessageToServer(
-                Guid,
-                "click",
-                new Dictionary<string, object>
-                {
-                    ["delay"] = delay,
-                    ["button"] = button,
-                    ["clickCount"] = clickCount,
-                    ["force"] = force,
-                    ["timeout"] = timeout,
-                    ["noWaitAfter"] = noWaitAfter,
-                    ["position"] = position,
-                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                });
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["delay"] = delay,
+                ["button"] = button,
+                ["clickCount"] = clickCount,
+                ["force"] = force,
+                ["noWaitAfter"] = noWaitAfter,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
+
+            if (modifiers != null)
+            {
+                args["modifiers"] = modifiers?.Select(m => m.ToValueString());
+            }
+
+            return Scope.SendMessageToServer(Guid, "click", args);
+        }
 
         internal Task DoubleClickAsync(
             int delay,
@@ -168,19 +186,32 @@ namespace PlaywrightSharp.Transport.Channels
             int? timeout,
             bool force,
             bool noWaitAfter)
-            => Scope.SendMessageToServer(
-                Guid,
-                "dblclick",
-                new Dictionary<string, object>
-                {
-                    ["delay"] = delay,
-                    ["button"] = button,
-                    ["force"] = force,
-                    ["timeout"] = timeout,
-                    ["noWaitAfter"] = noWaitAfter,
-                    ["position"] = position,
-                    ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                });
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["delay"] = delay,
+                ["button"] = button,
+                ["force"] = force,
+                ["noWaitAfter"] = noWaitAfter,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
+
+            if (modifiers != null)
+            {
+                args["modifiers"] = modifiers?.Select(m => m.ToValueString());
+            }
+
+            return Scope.SendMessageToServer(Guid, "dblclick", args);
+        }
 
         internal Task<Rect> GetBoundingBoxAsync() => Scope.SendMessageToServer<Rect>(Guid, "boundingBox", null);
 

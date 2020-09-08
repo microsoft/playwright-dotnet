@@ -13,7 +13,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when worker gets closed.
         /// </summary>
-        event EventHandler<EventArgs> Closed;
+        event EventHandler<EventArgs> Close;
 
         /// <summary>
         /// Get the page that the service worker belongs to.

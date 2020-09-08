@@ -11,8 +11,6 @@ namespace PlaywrightSharp
         [JsonIgnore]
         public bool FallbackSet { get; set; }
 
-        public int? H { get; set; }
-
         [JsonIgnore]
         public object FallThrough
         {
@@ -42,6 +40,11 @@ namespace PlaywrightSharp
         public class Object : EvaluateArgumentValueElement
         {
             public object O { get; internal set; }
+        }
+
+        public class Handle : EvaluateArgumentValueElement
+        {
+            public int? H { get; set; }
         }
     }
 }
