@@ -2,12 +2,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PlaywrightSharp.Helpers;
+using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Converters;
@@ -33,7 +35,7 @@ namespace PlaywrightSharp.Transport
             _rootScript = CreateScope(string.Empty);
 
             _playwrightServerProcess = GetProcess();
-
+            _playwrightServerProcess.StartInfo.Arguments = "--run";
             _playwrightServerProcess.Start();
             _playwrightServerProcess.Exited += (sender, e) => CloseAsync("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
@@ -62,7 +64,7 @@ namespace PlaywrightSharp.Transport
             process.StartInfo.RedirectStandardOutput = false;
             process.StartInfo.RedirectStandardInput = false;
             process.EnableRaisingEvents = true;
-            process.StartInfo.Arguments = "install";
+            process.StartInfo.Arguments = "--install";
             process.Exited += (sender, e) => tcs.TrySetResult(true);
             process.Start();
 
@@ -122,7 +124,7 @@ namespace PlaywrightSharp.Transport
             string guid,
             string method,
             object args,
-            bool ignoreNullValues = false,
+            bool ignoreNullValues = true,
             JsonSerializerOptions options = null)
         {
             if (IsClosed)
@@ -161,6 +163,10 @@ namespace PlaywrightSharp.Transport
             {
                 return default;
             }
+            else if (typeof(ChannelBase).IsAssignableFrom(typeof(T)))
+            {
+                return result.Value.EnumerateObject().FirstOrDefault().Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+            }
             else
             {
                 return result.Value.ToObject<T>(GetDefaultJsonSerializerOptions());
@@ -184,24 +190,19 @@ namespace PlaywrightSharp.Transport
         {
             // This is not the final solution.
             string tempDirectory = new FileInfo(typeof(Playwright).Assembly.Location).Directory.FullName;
-            string driver = "driver-win.exe";
+            string driver = "playwright-driver-win.exe";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                driver = "driver-macos";
+                driver = "playwright-driver-macos";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                driver = "driver-linux";
+                driver = "playwright-driver-linux";
             }
 
             string file = Path.Combine(tempDirectory, driver);
-
-            if (!new FileInfo(file).Exists)
-            {
-                ExtractDriver(file, driver);
-            }
-
+            ExtractDriver(file, driver);
             return file;
         }
 
@@ -230,6 +231,14 @@ namespace PlaywrightSharp.Transport
                 using var fileStream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
                 resource.CopyTo(fileStream);
             }
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if (LinuxSysCall.Chmod(file, LinuxSysCall.ExecutableFilePermissions) != 0)
+                {
+                    throw new PlaywrightSharpException($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                }
+            }
         }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -245,7 +254,7 @@ namespace PlaywrightSharp.Transport
                 {
                     if (message.Error != null)
                     {
-                        callback.TrySetException(CreateException(message.Error));
+                        callback.TrySetException(CreateException(message.Error.Error));
                     }
                     else
                     {

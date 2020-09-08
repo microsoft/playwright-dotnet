@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public string StatusText { get; set; }
 
-        public IDictionary<string, string> Headers { get; set; }
+        public IEnumerable<HeaderEntry> Headers { get; set; }
 
         public RequestChannel Request { get; set; }
     }

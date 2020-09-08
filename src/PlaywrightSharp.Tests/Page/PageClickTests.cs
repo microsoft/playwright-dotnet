@@ -284,7 +284,7 @@ namespace PlaywrightSharp.Tests.Page
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", timeout: 5000));
 
-            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("Timeout 5000ms exceeded", exception.Message);
             Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
             Assert.Contains("element is not visible - waiting", exception.Message);
         }
@@ -301,7 +301,7 @@ namespace PlaywrightSharp.Tests.Page
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", timeout: 5000));
 
-            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("Timeout 5000ms exceeded", exception.Message);
             Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
             Assert.Contains("element is not visible - waiting", exception.Message);
         }
@@ -695,7 +695,7 @@ namespace PlaywrightSharp.Tests.Page
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", timeout: 5000));
 
-            Assert.Contains("Timeout 5000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("Timeout 5000ms exceeded", exception.Message);
             Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
             Assert.Contains("element is moving - waiting", exception.Message);
         }
@@ -765,9 +765,7 @@ namespace PlaywrightSharp.Tests.Page
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => button.ClickAsync(timeout: 5000));
 
-            Assert.Contains("Timeout 5000ms exceeded during elementHandle.click.", exception.Message);
-            Assert.Contains("element does not receive pointer events", exception.Message);
-            Assert.Contains("retrying elementHandle.click action", exception.Message);
+            Assert.Contains("Timeout 5000ms exceeded.", exception.Message);
         }
 
         ///<playwright-file>click.spec.js</playwright-file>
@@ -1219,7 +1217,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
 
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", timeout: 3000));
-            Assert.Contains("Timeout 3000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             var dialog = await dialogTask;
             await dialog.Dialog.DismissAsync();
         }

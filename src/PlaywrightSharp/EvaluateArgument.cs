@@ -15,6 +15,6 @@ namespace PlaywrightSharp
 
         public object Value { get; set; }
 
-        public List<EvaluateArgumentGuidElement> Guids { get; set; } = new List<EvaluateArgumentGuidElement>();
+        public List<EvaluateArgumentGuidElement> Handles { get; set; } = new List<EvaluateArgumentGuidElement>();
     }
 }

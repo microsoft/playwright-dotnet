@@ -28,7 +28,8 @@ namespace PlaywrightSharp.Transport.Channels
             => Scope.SendMessageToServer<BrowserContextChannel>(
                 Guid,
                 "newContext",
-                options.ToChannelDictionary());
+                options.ToChannelDictionary(),
+                true);
 
         internal Task CloseAsync() => Scope.SendMessageToServer<BrowserContextChannel>(Guid, "close", null);
 

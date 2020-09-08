@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public HttpMethod Method { get; set; }
 
-        public IDictionary<string, string> Headers { get; set; }
+        public IEnumerable<HeaderEntry> Headers { get; set; }
 
         public string PostData { get; set; }
 

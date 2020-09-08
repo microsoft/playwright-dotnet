@@ -64,50 +64,6 @@ namespace PlaywrightSharp
             ProxySettings proxy = null);
 
         /// <summary>
-        /// Launches browser server that client can connect to.
-        /// </summary>
-        /// <param name="options">Launch options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
-        Task<IBrowserServer> LaunchServerAsync(LaunchOptions options);
-
-        /// <summary>
-        /// Launches browser server that client can connect to.
-        /// </summary>
-        /// <param name="headless">Whether to run browser in headless mode. Defaults to true unless the devtools option is true.</param>
-        /// <param name="args">Additional arguments to pass to the browser instance.</param>
-        /// <param name="userDataDir">Path to a User Data Directory.</param>
-        /// <param name="devtools">Whether to auto-open DevTools panel for each tab. If this option is true, the headless option will be set false.</param>
-        /// <param name="executablePath">Path to a browser executable to run instead of the bundled one.</param>
-        /// <param name="downloadsPath">If specified, accepted downloads are downloaded into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.</param>
-        /// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
-        /// <param name="timeout">Maximum time in milliseconds to wait for the browser instance to start.</param>
-        /// <param name="dumpIO">Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.</param>
-        /// <param name="slowMo">Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</param>
-        /// <param name="ignoreDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
-        /// Dangerous option; use with care. Defaults to false.</param>
-        /// <param name="ignoredDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
-        /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
-        /// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at about:config.</param>
-        /// <param name="proxy">Network proxy settings.</param>
-        /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
-        Task<IBrowserServer> LaunchServerAsync(
-            bool? headless = null,
-            string[] args = null,
-            string userDataDir = null,
-            bool? devtools = null,
-            string executablePath = null,
-            string downloadsPath = null,
-            bool? ignoreHTTPSErrors = null,
-            int? timeout = null,
-            bool? dumpIO = null,
-            int? slowMo = null,
-            bool? ignoreDefaultArgs = null,
-            string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
-            ProxySettings proxy = null);
-
-        /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.
         /// </summary>
         /// <param name="userDataDir">Path to a User Data Directory, which stores browser session data like cookies and local storage.</param>
@@ -258,14 +214,5 @@ namespace PlaywrightSharp
         /// <param name="options">Launch options.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
         Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options);
-
-        /// <summary>
-        /// This methods attaches PlaywrightSharp to an existing browser instance.
-        /// </summary>
-        /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
-        /// <param name="timeout">Maximum time in milliseconds to wait for the connection to be established. Defaults to 30000 (30 seconds). Pass 0 to disable timeout.</param>
-        /// <param name="slowMo">Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</param>
-        /// <returns>A <see cref="Task"/> that completes when connection is ready, yielding the browser.</returns>
-        Task<IBrowser> ConnectAsync(string wsEndpoint, int? timeout = null, int? slowMo = null);
     }
 }

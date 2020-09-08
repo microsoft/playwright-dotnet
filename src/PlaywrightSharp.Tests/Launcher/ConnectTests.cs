@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.Launcher
         public ConnectTests(ITestOutputHelper output) : base(output)
         {
         }
-
+        /*
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Playwright.connect</playwright-describe>
         ///<playwright-it>should be able to reconnect to a browser</playwright-it>
@@ -48,5 +48,6 @@ namespace PlaywrightSharp.Tests.Launcher
         public void ShouldHandleExceptionsDuringConnect()
         {
         }
+        */
     }
 }

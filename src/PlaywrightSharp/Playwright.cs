@@ -26,6 +26,7 @@ namespace PlaywrightSharp
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
         private readonly ConnectionScope _scope;
+        private readonly Dictionary<string, DeviceDescriptor> _devices = new Dictionary<string, DeviceDescriptor>();
 
         internal Playwright(ConnectionScope scope, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
         {
@@ -33,6 +34,11 @@ namespace PlaywrightSharp
             _initializer = initializer;
             _channel = new PlaywrightChannel(guid, scope, this);
             _loggerFactory = loggerFactory;
+
+            foreach (var entry in initializer.DeviceDescriptors)
+            {
+                _devices[entry.Name] = entry.DeviceDescriptor;
+            }
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -50,7 +56,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
         /// </summary>
-        public IReadOnlyDictionary<string, DeviceDescriptor> Devices => _initializer.DeviceDescriptors;
+        public IReadOnlyDictionary<string, DeviceDescriptor> Devices => _devices;
 
         /// <inheritdoc/>
         public IBrowserType Chromium => _initializer.Chromium;
@@ -83,7 +89,7 @@ namespace PlaywrightSharp
         {
             var connection = new Connection(loggerFactory, scheduler);
 
-            var playwright = await connection.WaitForObjectWithKnownName<Playwright>("playwright").ConfigureAwait(false);
+            var playwright = await connection.WaitForObjectWithKnownName<Playwright>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
 
             return playwright;

@@ -17,6 +17,7 @@ namespace PlaywrightSharp.Tests.Browser
         {
         }
 
+        /*
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>
         ///<playwright-it>should terminate network waiters</playwright-it>
@@ -40,6 +41,7 @@ namespace PlaywrightSharp.Tests.Browser
             Assert.Contains("Page closed", exception.Message);
             Assert.DoesNotContain("Timeout", exception.Message);
         }
+        */
 
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-describe>Browser.close</playwright-describe>

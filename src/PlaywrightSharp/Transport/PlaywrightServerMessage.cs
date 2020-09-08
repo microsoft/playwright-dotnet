@@ -14,6 +14,6 @@ namespace PlaywrightSharp.Transport
 
         public JsonElement? Result { get; set; }
 
-        public PlaywrightServerError Error { get; set; }
+        public ErrorEntry Error { get; set; }
     }
 }

@@ -7,7 +7,7 @@
         <FileVersion>$(PackageVersion)</FileVersion>
         <Authors>Darío Kondratiuk</Authors>
         <Owners>Darío Kondratiuk</Owners>
-        <PackageProjectUrl>https://github.com/hardkodedinstallasy/playwright-sharp</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/hardkoded/playwright-sharp</PackageProjectUrl>
         <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
         <PackageReleaseNotes><![CDATA[
 ]]></PackageReleaseNotes>

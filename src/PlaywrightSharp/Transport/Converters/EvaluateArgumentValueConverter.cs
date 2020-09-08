@@ -31,7 +31,12 @@ namespace PlaywrightSharp.Transport.Converters
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             var result = document.RootElement;
 
-            return (T)ParseEvaluateResult(result, typeof(T), options);
+            return (T)ParseEvaluateResult(
+                result.ValueKind == JsonValueKind.Object && result.TryGetProperty("value", out var valueProperty)
+                    ? valueProperty
+                    : result,
+                typeof(T),
+                options);
         }
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
@@ -86,9 +91,43 @@ namespace PlaywrightSharp.Transport.Converters
                 return;
             }
 
-            if (IsPrimitiveValue(value.GetType()))
+            if (value.GetType() == typeof(string))
             {
+                writer.WriteStartObject();
+                writer.WritePropertyName("s");
                 JsonSerializer.Serialize(writer, value);
+                writer.WriteEndObject();
+
+                return;
+            }
+
+            if (
+                value.GetType() == typeof(int) ||
+                value.GetType() == typeof(decimal) ||
+                value.GetType() == typeof(long) ||
+                value.GetType() == typeof(short) ||
+                value.GetType() == typeof(double) ||
+                value.GetType() == typeof(int?) ||
+                value.GetType() == typeof(decimal?) ||
+                value.GetType() == typeof(long?) ||
+                value.GetType() == typeof(short?) ||
+                value.GetType() == typeof(double?))
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName("n");
+                JsonSerializer.Serialize(writer, value);
+                writer.WriteEndObject();
+
+                return;
+            }
+
+            if (value.GetType() == typeof(bool) || value.GetType() == typeof(bool?))
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName("b");
+                JsonSerializer.Serialize(writer, value);
+                writer.WriteEndObject();
+
                 return;
             }
 
@@ -127,10 +166,10 @@ namespace PlaywrightSharp.Transport.Converters
 
             if (value is IChannelOwner channelOwner)
             {
-                _parentObject.Guids.Add(new EvaluateArgumentGuidElement { Guid = channelOwner.Channel.Guid });
+                _parentObject.Handles.Add(new EvaluateArgumentGuidElement { Guid = channelOwner.Channel.Guid });
 
                 writer.WriteStartObject();
-                writer.WriteNumber("h", _parentObject.Guids.Count - 1);
+                writer.WriteNumber("h", _parentObject.Handles.Count - 1);
                 writer.WriteEndObject();
 
                 return;
@@ -138,13 +177,15 @@ namespace PlaywrightSharp.Transport.Converters
 
             writer.WriteStartObject();
             writer.WritePropertyName("o");
-            writer.WriteStartObject();
+            writer.WriteStartArray();
 
             _visited.Add(value);
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
+                writer.WriteStartObject();
                 object obj = propertyDescriptor.GetValue(value);
-                writer.WritePropertyName(propertyDescriptor.Name);
+                writer.WriteString("k", propertyDescriptor.Name);
+                writer.WritePropertyName("v");
 
                 if (obj == null)
                 {
@@ -156,24 +197,15 @@ namespace PlaywrightSharp.Transport.Converters
                 {
                     JsonSerializer.Serialize(writer, obj, options);
                 }
+
+                writer.WriteEndObject();
             }
 
             _visited.Remove(value);
 
-            writer.WriteEndObject();
+            writer.WriteEndArray();
             writer.WriteEndObject();
         }
-
-        private static bool IsPrimitiveValue(Type type)
-            => type == typeof(string) ||
-            type == typeof(int) ||
-            type == typeof(decimal) ||
-            type == typeof(double) ||
-            type == typeof(bool) ||
-            type == typeof(int?) ||
-            type == typeof(decimal?) ||
-            type == typeof(double?) ||
-            type == typeof(bool?);
 
         private static object ParseEvaluateResult(JsonElement result, Type t, JsonSerializerOptions options)
         {
@@ -186,6 +218,7 @@ namespace PlaywrightSharp.Transport.Converters
 
                 return value.ToString() switch
                 {
+                    "null" => GetDefaultValue(t),
                     "undefined" => GetDefaultValue(t),
                     "Infinity" => double.PositiveInfinity,
                     "-Infinity" => double.NegativeInfinity,
@@ -198,6 +231,21 @@ namespace PlaywrightSharp.Transport.Converters
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("d", out var date))
             {
                 return date.ToObject<DateTime>();
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("b", out var boolean))
+            {
+                return boolean.ToObject(t);
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("s", out var stringValue))
+            {
+                return stringValue.ToObject(t);
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("n", out var numbericValue))
+            {
+                return numbericValue.ToObject(t);
             }
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
