@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Page
 {
-    ///<playwright-file>navigation.spec.js</playwright-file>
-    ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+    ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+    ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForNavigationTests : PlaywrightSharpPageBaseTest
     {
@@ -22,8 +20,8 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
@@ -39,26 +37,26 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("grid.html", response.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var waitForNavigationResult = Page.WaitForNavigationAsync(null, "**/frame.html", 5000);
+            var waitForNavigationResult = Page.WaitForNavigationAsync("**/frame.html", timeout: 5000);
 
             await Page.GoToAsync(TestConstants.EmptyPage);
 
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => waitForNavigationResult);
 
-            Assert.Contains("Timeout 5000ms exceeded during page.waitForNavigation.", exception.Message);
-            Assert.Contains("waiting for navigation to \"**/frame.html\" until \"load\"", exception.Message);
+            Assert.Contains("Timeout 5000ms exceeded", exception.Message);
+            Assert.Contains("waiting for navigation to \"**/frame.html\" until \"Load\"", exception.Message);
             Assert.Contains($"navigated to \"{TestConstants.EmptyPage}\"", exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
+        ///<playwright-it>should work with both domcontentloaded and load</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithBothDomcontentloadedAndLoad()
         {
@@ -82,8 +80,8 @@ namespace PlaywrightSharp.Tests.Page
             await navigationTask.WithTimeout();
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with clicking on anchor links</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithClickingOnAnchorLinks()
@@ -99,8 +97,8 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage + "#foobar", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with clicking on links which do not commit navigation</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithClickingOnLinksWhichDoNotCommitNavigation()
@@ -115,8 +113,8 @@ namespace PlaywrightSharp.Tests.Page
             TestUtils.AssertSSLError(exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with history.pushState()</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithHistoryPushState()
@@ -137,8 +135,8 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/wow.html", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with history.replaceState()</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithHistoryReplaceState()
@@ -159,8 +157,8 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/replaced.html", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with DOM history.back()/history.forward()</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithDOMHistoryBackAndHistoryForward()
@@ -193,8 +191,8 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/second.html", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work when subframe issues window.stop()</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWhenSubframeIssuesWindowStop()
@@ -241,32 +239,23 @@ namespace PlaywrightSharp.Tests.Page
             );
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with url match</playwright-it>
-        [Fact(Skip = "Not supported yet")]
-        public void ShouldWorkWithUrlMatch()
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWithUrlMatch()
         {
-            /*
             IResponse response1 = null;
-            var response1Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
-            {
-                UrlRegEx = new Regex("one-style\\.html")
-            }).ContinueWith(t => response1 = t.Result);
+            var response1Task = Page.WaitForNavigationAsync(new Regex("one-style\\.html")).ContinueWith(t => response1 = t.Result);
             IResponse response2 = null;
-            var response2Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
-            {
-                UrlRegEx = new Regex("\\/frame.html")
-            }).ContinueWith(t => response2 = t.Result);
+            var response2Task = Page.WaitForNavigationAsync(new Regex("\\/frame.html")).ContinueWith(t => response2 = t.Result);
             IResponse response3 = null;
-            var response3Task = Page.WaitForNavigationAsync(new WaitForNavigationOptions
-            {
-                UrlPredicate = (url) =>
+            var response3Task = Page.WaitForNavigationAsync(
+                (url) =>
                 {
                     var query = new Uri(url).Query.ParseQueryString();
                     return query.ContainsKey("foo") && query["foo"] == "bar";
-                }
-            }).ContinueWith(t => response3 = t.Result);
+                }).ContinueWith(t => response3 = t.Result);
 
             Assert.Null(response1);
             Assert.Null(response2);
@@ -294,20 +283,17 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/one-style.html", response1.Url);
             Assert.Equal(TestConstants.ServerUrl + "/frame.html", response2.Url);
             Assert.Equal(TestConstants.ServerUrl + "/frame.html?foo=bar", response3.Url);
-            */
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with url match for same document navigations</playwright-it>
-        [Fact(Skip = "Not supported yet")]
-        public void ShouldWorkWithUrlMatchForSameDocumentNavigations()
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWithUrlMatchForSameDocumentNavigations()
         {
-            /*
             await Page.GoToAsync(TestConstants.EmptyPage);
             bool resolved = false;
-            var waitTask = Page.WaitForNavigationAsync(new WaitForNavigationOptions { UrlRegEx = new Regex("third\\.html") })
-                .ContinueWith(t => resolved = true);
+            var waitTask = Page.WaitForNavigationAsync(new Regex("third\\.html")).ContinueWith(t => resolved = true);
 
             Assert.False(resolved);
 
@@ -320,11 +306,10 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync("() => history.pushState({}, '', '/third.html')");
             await waitTask;
             Assert.True(resolved);
-            */
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForNavigation</playwright-describe>
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work for cross-process navigations</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkForCrossProcessNavigations()
@@ -339,6 +324,49 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(url, Page.Url);
             Assert.Equal(url, await Page.EvaluateAsync<string>("document.location.href"));
             await gotoTask;
+        }
+
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
+        ///<playwright-it>should work on frame</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkOnFrame()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            var frame = Page.Frames[1];
+            var (response, _) = await TaskUtils.WhenAll(
+                frame.WaitForNavigationAsync(),
+                frame.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
+            );
+            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Contains("grid.html", response.Url);
+            Assert.Same(frame, response.Frame);
+            Assert.Contains("/frames/one-frame.html", Page.Url);
+        }
+
+        ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
+        ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
+        ///<playwright-it>should fail when frame detaches</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldFailWhenFrameDetaches()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            var frame = Page.Frames[1];
+            Server.SetRoute("/empty.html", r => Task.Delay(6000));
+            var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame.WaitForNavigationAsync());
+
+            try
+            {
+                await TaskUtils.WhenAll(
+                    exceptionTask,
+                    frame.EvaluateAsync("window.location.href = '/empty.html'"),
+                    Page.EvaluateAsync("setTimeout(() => document.querySelector(\"iframe\").remove())"));
+            }
+            catch
+            { }
+
+            Assert.Contains("waiting for navigation until \"Load\"", exceptionTask.Result.Message);
+            Assert.Contains("frame was detached", exceptionTask.Result.Message);
         }
     }
 }

@@ -35,8 +35,6 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
-        internal event EventHandler<FrameNavigatedEventArgs> FrameNavigated;
-
         internal event EventHandler<FrameEventArgs> FrameAttached;
 
         internal event EventHandler<FrameEventArgs> FrameDetached;
@@ -105,9 +103,6 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "frameDetached":
                     FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
-                    break;
-                case "frameNavigated":
-                    FrameNavigated?.Invoke(this, serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "dialog":
                     Dialog?.Invoke(this, new DialogEventArgs(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));

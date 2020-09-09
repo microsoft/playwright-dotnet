@@ -686,22 +686,18 @@ namespace PlaywrightSharp.Helpers
             }
         }
 
-        internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
-
-        internal static FilePayload ToFilePayload(this string file)
+        /// <summary>
+        /// Converts an url glob expression to a regex.
+        /// </summary>
+        /// <param name="glob">Input url.</param>
+        /// <returns>A Regex with the glob expression.</returns>
+        public static Regex GlobToRegex(this string glob)
         {
-            var fileInfo = new FileInfo(file);
-
-            return new FilePayload
+            if (string.IsNullOrEmpty(glob))
             {
-                Name = fileInfo.Name,
-                Buffer = Convert.ToBase64String(File.ReadAllBytes(file)),
-                MimeType = _mappings.TryGetValue(fileInfo.Extension, out string mime) ? mime : "application/octet-stream",
-            };
-        }
+                return null;
+            }
 
-        internal static Regex GlobToRegex(string glob)
-        {
             List<string> tokens = new List<string> { "^" };
             bool inGroup = false;
 
@@ -772,6 +768,20 @@ namespace PlaywrightSharp.Helpers
 
             tokens.Add("$");
             return new Regex(string.Concat(tokens.ToArray()));
+        }
+
+        internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
+
+        internal static FilePayload ToFilePayload(this string file)
+        {
+            var fileInfo = new FileInfo(file);
+
+            return new FilePayload
+            {
+                Name = fileInfo.Name,
+                Buffer = Convert.ToBase64String(File.ReadAllBytes(file)),
+                MimeType = _mappings.TryGetValue(fileInfo.Extension, out string mime) ? mime : "application/octet-stream",
+            };
         }
 
         private static bool IsQuoted(this string value)

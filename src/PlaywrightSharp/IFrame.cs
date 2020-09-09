@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
+using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp
 {
@@ -438,11 +441,10 @@ namespace PlaywrightSharp
         Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script);
 
         /// <summary>
-        /// This resolves when the page navigates to a new URL or reloads.
+        /// This resolves when the frame navigates to a new URL or reloads.
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
         /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
-        /// <param name="url">Wait for this specific URL. Regex or URL Predicate.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -460,7 +462,82 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, string url = null, int? timeout = null);
+        Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, int? timeout = null);
+
+        /// <summary>
+        /// This resolves when the frame navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="url">Wait for this specific URL.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var navigationTask = page.WaitForNavigationAsync();
+        /// await page.ClickAsync("a.my-link");
+        /// await navigationTask;
+        /// ]]>
+        /// </code>
+        /// </example>
+        Task<IResponse> WaitForNavigationAsync(string url, LifecycleEvent? waitUntil = null, int? timeout = null);
+
+        /// <summary>
+        /// This resolves when the frame navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="regex">Wait for this specific URL Regex.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var navigationTask = page.WaitForNavigationAsync();
+        /// await page.ClickAsync("a.my-link");
+        /// await navigationTask;
+        /// ]]>
+        /// </code>
+        /// </example>
+        Task<IResponse> WaitForNavigationAsync(Regex regex, LifecycleEvent? waitUntil = null, int? timeout = null);
+
+        /// <summary>
+        /// This resolves when the frame navigates to a new URL or reloads.
+        /// It is useful for when you run code which will indirectly cause the page to navigate.
+        /// </summary>
+        /// <param name="matchFunc">Wait for this specific URL that matches the function condition.</param>
+        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
+        /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
+        /// <returns>Task which resolves to the main resource response.
+        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
+        /// </returns>
+        /// <remarks>
+        /// Usage of the <c>History API</c> <see href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"/> to change the URL is considered a navigation.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var navigationTask = page.WaitForNavigationAsync();
+        /// await page.ClickAsync("a.my-link");
+        /// await navigationTask;
+        /// ]]>
+        /// </code>
+        /// </example>
+        Task<IResponse> WaitForNavigationAsync(Func<string, bool> matchFunc, LifecycleEvent? waitUntil = null, int? timeout = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.

@@ -4,6 +4,6 @@ namespace PlaywrightSharp.Transport.Protocol
     {
         public string Name { get; set; }
 
-        public DeviceDescriptor DeviceDescriptor { get; set; }
+        public DeviceDescriptor Descriptor { get; set; }
     }
 }

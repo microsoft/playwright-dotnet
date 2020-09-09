@@ -16,6 +16,32 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
+        internal event EventHandler<FrameNavigatedEventArgs> Navigated;
+
+        internal event EventHandler<FrameChannelLoadStateEventArgs> LoadState;
+
+        internal override void OnMessage(string method, JsonElement? serverParams)
+        {
+            switch (method)
+            {
+                case "navigated":
+                    var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions());
+
+                    if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
+                    {
+                        e.NewDocument = documentElement.ToObject<NavigateDocument>(Scope.Connection.GetDefaultJsonSerializerOptions());
+                    }
+
+                    Navigated?.Invoke(this, e);
+                    break;
+                case "loadstate":
+                    LoadState?.Invoke(
+                        this,
+                        serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    break;
+            }
+        }
+
         internal Task<ResponseChannel> GoToAsync(string url, int? timeout, LifecycleEvent? waitUntil, string referer, bool isPage)
         {
             var args = new Dictionary<string, object>
