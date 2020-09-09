@@ -21,6 +21,7 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly FrameChannel _channel;
         private readonly FrameInitializer _initializer;
+        private readonly List<LifecycleEvent> _loadStates = new List<LifecycleEvent>();
 
         internal Frame(ConnectionScope scope, string guid, FrameInitializer initializer)
         {
@@ -30,7 +31,43 @@ namespace PlaywrightSharp
             Url = _initializer.Url;
             Name = _initializer.Name;
             ParentFrame = _initializer.ParentFrame;
+
+            _channel.LoadState += (sender, e) =>
+            {
+                if (e.Add.HasValue)
+                {
+                    _loadStates.Add(e.Add.Value);
+                    LoadState?.Invoke(this, new LoadStateEventArgs { LifecycleEvent = e.Add.Value });
+                }
+
+                if (e.Remove.HasValue)
+                {
+                    _loadStates.Remove(e.Remove.Value);
+                }
+            };
+
+            _channel.Navigated += (sender, e) =>
+            {
+                Url = e.Url;
+                Name = e.Name;
+                Navigated?.Invoke(this, e);
+
+                if (string.IsNullOrEmpty(e.Error))
+                {
+                    ((Page)Page)?.OnFrameNavigated(this);
+                }
+            };
         }
+
+        /// <summary>
+        /// Raised when a navigation is received.
+        /// </summary>
+        public event EventHandler<FrameNavigatedEventArgs> Navigated;
+
+        /// <summary>
+        /// Raised when a new LoadState was added.
+        /// </summary>
+        public event EventHandler<LoadStateEventArgs> LoadState;
 
         /// <inheritdoc/>
         ConnectionScope IChannelOwner.Scope => _scope;
@@ -194,7 +231,20 @@ namespace PlaywrightSharp
         public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script) => QuerySelectorEvaluateAsync<T>(false, selector, script);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, string url = null, int? timeout = null) => WaitForNavigationAsync(false, waitUntil, url, timeout);
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, int? timeout = null)
+            => WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: null, timeout: timeout);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(string url, LifecycleEvent? waitUntil = null, int? timeout = null)
+            => WaitForNavigationAsync(waitUntil: waitUntil, url: url, regex: null, match: null, timeout: timeout);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(Regex regex, LifecycleEvent? waitUntil = null, int? timeout = null)
+            => WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: regex, match: null, timeout: timeout);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> matchFunc, LifecycleEvent? waitUntil = null, int? timeout = null)
+            => WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: matchFunc, timeout: timeout);
 
         /// <inheritdoc />
         public Task FocusAsync(string selector, int? timeout = null) => FocusAsync(false, selector, timeout);
@@ -283,6 +333,63 @@ namespace PlaywrightSharp
         public Task<string> GetTextContentAsync(string selector, int? timeout = null)
             => GetTextContentAsync(false, selector, timeout);
 
+        internal async Task<IResponse> WaitForNavigationAsync(
+            LifecycleEvent? waitUntil = null,
+            string url = null,
+            Regex regex = null,
+            Func<string, bool> match = null,
+            int? timeout = null)
+        {
+            waitUntil ??= LifecycleEvent.Load;
+            var waiter = SetupNavigationWaiter(timeout);
+            string toUrl = !string.IsNullOrEmpty(url) ? $" to \"{url}\"" : string.Empty;
+
+            waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
+
+            var navigatedEvent = await waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
+                this,
+                "Navigated",
+                e =>
+                {
+                    // Any failed navigation results in a rejection.
+                    if (e.Error != null)
+                    {
+                        return true;
+                    }
+
+                    waiter.Log($"  navigated to \"{e.Url}\"");
+                    return UrlMatches(e.Url, url, regex, match);
+                }).ConfigureAwait(false);
+
+            if (navigatedEvent.Error != null)
+            {
+                var ex = new NavigationException(navigatedEvent.Error);
+                var tcs = new TaskCompletionSource<bool>();
+                tcs.TrySetException(ex);
+                await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
+            }
+
+            if (!_loadStates.Contains(waitUntil.Value))
+            {
+                await waiter.WaitForEventAsync<LoadStateEventArgs>(
+                    this,
+                    "LoadState",
+                    e =>
+                    {
+                        waiter.Log($"  \"{e.LifecycleEvent}\" event fired");
+                        return e.LifecycleEvent == waitUntil;
+                    }).ConfigureAwait(false);
+            }
+
+            var request = navigatedEvent.NewDocument != null ? navigatedEvent.NewDocument.Request.Object : null;
+            var response = request != null
+                ? await waiter.WaitForPromiseAsync(request.FinalRequest.GetResponseAsync()).ConfigureAwait(false)
+                : null;
+
+            waiter.Dispose();
+            return response;
+        }
+
         internal Task<string> GetContentAsync(bool isPageCall) => _channel.GetContentAsync(isPageCall);
 
         internal Task FocusAsync(bool isPageCall, string selector, int? timeout = null)
@@ -319,9 +426,6 @@ namespace PlaywrightSharp
                     eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
                     timeout,
                     isPageCall);
-
-        internal async Task<IResponse> WaitForNavigationAsync(bool isPageCall, LifecycleEvent? waitUntil = null, string url = null, int? timeout = null)
-            => (await _channel.WaitForNavigationAsync(waitUntil, url, timeout, isPageCall).ConfigureAwait(false))?.Object;
 
         internal Task FillAsync(bool isPageCall, string selector, string text, int? timeout = null, bool noWaitAfter = false)
             => _channel.FillAsync(selector, text, timeout, noWaitAfter, isPageCall);
@@ -517,5 +621,46 @@ namespace PlaywrightSharp
 
         internal async Task<IResponse> GoToAsync(bool isPage, string url, LifecycleEvent? waitUntil, string referer, int? timeout)
             => (await _channel.GoToAsync(url, timeout, waitUntil, referer, isPage).ConfigureAwait(false))?.Object;
+
+        private Waiter SetupNavigationWaiter(int? timeout)
+        {
+            var waiter = new Waiter();
+            waiter.RejectOnEvent<EventArgs>(Page, "Closed", new NavigationException("Navigation failed because page was closed!"));
+            waiter.RejectOnEvent<EventArgs>(Page, "Crashed", new NavigationException("Navigation failed because page was crashed!"));
+            waiter.RejectOnEvent<FrameEventArgs>(
+                Page,
+                "FrameDetached",
+                new NavigationException("Navigation failed because page was closed!"),
+                e => e.Frame == this);
+            timeout ??= Page?.DefaultNavigationTimeout ?? Playwright.DefaultTimeout;
+            waiter.RejectOnTimeout(timeout, $"Timeout {timeout}ms exceeded.");
+
+            return waiter;
+        }
+
+        private bool UrlMatches(string url, string matchUrl, Regex regex, Func<string, bool> match)
+        {
+            if (matchUrl == null && regex == null && match == null)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrEmpty(matchUrl))
+            {
+                regex = matchUrl.GlobToRegex();
+            }
+
+            if (matchUrl != null && url == matchUrl)
+            {
+                return true;
+            }
+
+            if (regex != null)
+            {
+                return regex.IsMatch(url);
+            }
+
+            return match(url);
+        }
     }
 }

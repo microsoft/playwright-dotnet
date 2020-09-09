@@ -37,7 +37,7 @@ namespace PlaywrightSharp
 
             foreach (var entry in initializer.DeviceDescriptors)
             {
-                _devices[entry.Name] = entry.DeviceDescriptor;
+                _devices[entry.Name] = entry.Descriptor;
             }
         }
 

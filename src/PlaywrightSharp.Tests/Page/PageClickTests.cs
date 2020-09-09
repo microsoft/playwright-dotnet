@@ -819,7 +819,7 @@ namespace PlaywrightSharp.Tests.Page
 
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => clickTask);
 
-            Assert.Contains("Timeout 3000ms exceeded during page.click.", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             Assert.Contains("element is disabled - waiting", exception.Message);
         }
 

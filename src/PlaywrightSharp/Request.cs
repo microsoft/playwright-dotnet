@@ -79,6 +79,8 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public IRequest RedirectedTo { get; internal set; }
 
+        internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
+
         /// <inheritdoc />
         public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 

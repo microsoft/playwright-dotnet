@@ -18,14 +18,10 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IPage" />
     public class Page : IChannelOwner<Page>, IPage
     {
-        private static readonly Dictionary<PageEvent, EventInfo> _pageEventsMap = ((PageEvent[])Enum.GetValues(typeof(PageEvent)))
-            .ToDictionary(x => x, x => typeof(Page).GetEvent(x.ToString()));
-
         private readonly ConnectionScope _scope;
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
-        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
         private readonly object _fileChooserEventLock = new object();
 
         private List<RouteSetting> _routes = new List<RouteSetting>();
@@ -64,7 +60,6 @@ namespace PlaywrightSharp
             _channel.Response += (sender, e) => Response?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
-            _channel.FrameNavigated += Channel_FrameNavigated;
             _channel.FrameAttached += Channel_FrameAttached;
             _channel.FrameDetached += Channel_FrameDetached;
             _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
@@ -211,12 +206,12 @@ namespace PlaywrightSharp
         {
             get
             {
-                return _timeoutSettings.Timeout;
+                return TimeoutSettings.Timeout;
             }
 
             set
             {
-                _timeoutSettings.SetDefaultTimeout(value);
+                TimeoutSettings.SetDefaultTimeout(value);
                 _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
             }
         }
@@ -226,12 +221,12 @@ namespace PlaywrightSharp
         {
             get
             {
-                return _timeoutSettings.NavigationTimeout;
+                return TimeoutSettings.NavigationTimeout;
             }
 
             set
             {
-                _timeoutSettings.SetDefaultNavigationTimeout(value);
+                TimeoutSettings.SetDefaultNavigationTimeout(value);
                 _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
             }
         }
@@ -247,6 +242,8 @@ namespace PlaywrightSharp
         internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
 
         internal List<Worker> WorkersList { get; } = new List<Worker>();
+
+        internal TimeoutSettings TimeoutSettings { get; set; } = new TimeoutSettings();
 
         /// <inheritdoc />
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
@@ -279,7 +276,20 @@ namespace PlaywrightSharp
             => MainFrame.GoToAsync(true, url, waitUntil, referer, timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, string url = null, int? timeout = null) => MainFrame.WaitForNavigationAsync(true, waitUntil, url, timeout);
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, int? timeout = null)
+             => MainFrame.WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: null, timeout: timeout);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(string url, LifecycleEvent? waitUntil = null, int? timeout = null)
+            => MainFrame.WaitForNavigationAsync(waitUntil: null, url: url, regex: null, match: null, timeout: timeout);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(Regex url, LifecycleEvent? waitUntil = null, int? timeout = null)
+            => MainFrame.WaitForNavigationAsync(waitUntil: null, url: null, regex: url, match: null, timeout: timeout);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> match, LifecycleEvent? waitUntil = null, int? timeout = null)
+            => MainFrame.WaitForNavigationAsync(waitUntil: null, url: null, regex: null, match: match, timeout: timeout);
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, int? timeout = null)
@@ -321,39 +331,21 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<T> WaitForEvent<T>(PageEvent e, Func<T, bool> predicate = null, int? timeout = null)
         {
-            var info = _pageEventsMap[e];
-            ValidateArgumentsTypes();
-            var eventTsc = new TaskCompletionSource<T>();
-            void PageEventHandler(object sender, T e)
+            timeout ??= TimeoutSettings.Timeout;
+            using var waiter = new Waiter();
+            waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{e.ToString()}\"");
+
+            if (e != PageEvent.Crashed)
             {
-                if (predicate == null || predicate(e))
-                {
-                    info.RemoveEventHandler(this, (EventHandler<T>)PageEventHandler);
-                    eventTsc.TrySetResult(e);
-                }
+                waiter.RejectOnEvent<EventArgs>(this, "Crashed", new PlaywrightSharpException("Page crashed"));
             }
 
-            info.AddEventHandler(this, (EventHandler<T>)PageEventHandler);
-            var disconnectedTcs = new TaskCompletionSource<bool>();
-            _waitForCancellationTcs.Add((e, disconnectedTcs));
-            await Task.WhenAny(eventTsc.Task, disconnectedTcs.Task).WithTimeout(timeout ?? DefaultTimeout).ConfigureAwait(false);
-            if (disconnectedTcs.Task.IsCompleted)
+            if (e != PageEvent.Closed)
             {
-                await disconnectedTcs.Task.ConfigureAwait(false);
+                waiter.RejectOnEvent<EventArgs>(this, "Closed", new PlaywrightSharpException("Page closed"));
             }
 
-            return await eventTsc.Task.ConfigureAwait(false);
-
-            void ValidateArgumentsTypes()
-            {
-                if ((info.EventHandlerType.GenericTypeArguments.Length == 0 && typeof(T) == typeof(EventArgs))
-                    || info.EventHandlerType.GenericTypeArguments[0] == typeof(T))
-                {
-                    return;
-                }
-
-                throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
-            }
+            return await waiter.WaitForEventAsync<T>(this, e.ToString(), predicate).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -768,6 +760,9 @@ namespace PlaywrightSharp
         public Task<string> GetTextContentAsync(string name, int? timeout = null)
              => MainFrame.GetTextContentAsync(true, name, timeout);
 
+        internal void OnFrameNavigated(Frame frame)
+            => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
+
         private void Channel_Closed(object sender, EventArgs e)
         {
             IsClosed = true;
@@ -804,13 +799,6 @@ namespace PlaywrightSharp
             }
 
             BrowserContext.OnRoute(e.Route, e.Request);
-        }
-
-        private void Channel_FrameNavigated(object sender, FrameNavigatedEventArgs e)
-        {
-            e.Frame.Object.Url = e.Url;
-            e.Frame.Object.Name = e.Name;
-            FrameNavigated?.Invoke(this, new FrameEventArgs(e.Frame.Object));
         }
 
         private void Channel_FrameDetached(object sender, FrameEventArgs e)
