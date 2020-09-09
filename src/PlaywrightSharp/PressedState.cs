@@ -1,19 +1,19 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Three-state boolean. See <seealso cref="SerializedAXNode.Checked"/>.
+    /// Three-state boolean. See <seealso cref="SerializedAXNode.Pressed"/>.
     /// </summary>
-    public enum CheckedState
+    public enum PressedState
     {
         /// <summary>
-        /// Checked.
+        /// Pressed.
         /// </summary>
-        Checked = 0,
+        Pressed = 0,
 
         /// <summary>
-        /// Unchecked.
+        /// Released.
         /// </summary>
-        Unchecked,
+        Released,
 
         /// <summary>
         /// Mixed.

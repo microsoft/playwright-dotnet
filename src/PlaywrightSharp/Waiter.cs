@@ -68,7 +68,7 @@ namespace PlaywrightSharp
 
         internal (Task<T> task, Action dispose) WaitForEvent<T>(object eventSource, string e, Func<T, bool> predicate)
         {
-            var info = typeof(Frame).GetEvent(e);
+            var info = eventSource.GetType().GetEvent(e);
             var eventTsc = new TaskCompletionSource<T>();
             void EventHandler(object sender, T e)
             {

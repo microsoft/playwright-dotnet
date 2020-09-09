@@ -27,7 +27,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// The current value of the node.
         /// </summary>
-        public object Value { get; set; }
+        public string ValueString { get; set; }
+
+        /// <summary>
+        /// The current value of the node.
+        /// </summary>
+        public decimal? ValueNumber { get; set; }
 
         /// <summary>
         /// An additional human readable description of the node.
@@ -99,12 +104,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether the checkbox is checked, or "mixed".
         /// </summary>
-        public bool Checked { get; set; }
+        public CheckedState Checked { get; set; }
 
         /// <summary>
         /// Whether the toggle button is checked, or "mixed".
         /// </summary>
-        public CheckedState Pressed { get; set; }
+        public PressedState Pressed { get; set; }
 
         /// <summary>
         /// The level of a heading.
@@ -156,11 +161,12 @@ namespace PlaywrightSharp
                 (ReferenceEquals(this, other) || (
                     Role == other.Role &&
                     Name == other.Name &&
-                    Value?.ToString() == other.Value?.ToString() &&
+                    ValueString?.ToString() == other.ValueString?.ToString() &&
                     Description == other.Description &&
                     KeyShortcuts == other.KeyShortcuts &&
                     RoleDescription == other.RoleDescription &&
                     ValueText == other.ValueText &&
+                    ValueNumber == other.ValueNumber &&
                     AutoComplete == other.AutoComplete &&
                     HasPopup == other.HasPopup &&
                     Orientation == other.Orientation &&
@@ -187,7 +193,7 @@ namespace PlaywrightSharp
         public override int GetHashCode()
             => Role.GetHashCode() ^
                 Name.GetHashCode() ^
-                Value.GetHashCode() ^
+                ValueString.GetHashCode() ^
                 Description.GetHashCode() ^
                 KeyShortcuts.GetHashCode() ^
                 RoleDescription.GetHashCode() ^
