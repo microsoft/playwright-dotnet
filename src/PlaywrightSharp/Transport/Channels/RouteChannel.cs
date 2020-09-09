@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport.Protocol;
 
@@ -39,10 +41,13 @@ namespace PlaywrightSharp.Transport.Channels
 
                 if (!string.IsNullOrEmpty(overrides.PostData))
                 {
-                    args["postData"] = overrides.PostData;
+                    args["postData"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(overrides.PostData));
                 }
 
-                args["headers"] = overrides.Headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+                if (overrides.Headers != null)
+                {
+                    args["headers"] = overrides.Headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+                }
             }
 
             return Scope.SendMessageToServer(
