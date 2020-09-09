@@ -32,6 +32,21 @@ namespace PlaywrightSharp
             public DateTime? D { get; set; }
         }
 
+        public class String : EvaluateArgumentValueElement
+        {
+            public string S { get; set; }
+        }
+
+        public class Number : EvaluateArgumentValueElement
+        {
+            public object N { get; set; }
+        }
+
+        public class Boolean : EvaluateArgumentValueElement
+        {
+            public bool B { get; set; }
+        }
+
         public class Array : EvaluateArgumentValueElement
         {
             public object[] A { get; set; }

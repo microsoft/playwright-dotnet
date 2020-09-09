@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -25,10 +27,29 @@ namespace PlaywrightSharp.Transport.Channels
                 response);
 
         public Task ContinueAsync(RouteContinueOverrides overrides = null)
-            => Scope.SendMessageToServer(
+        {
+            var args = new Dictionary<string, object>();
+
+            if (overrides != null)
+            {
+                if (overrides.Method != null)
+                {
+                    args["method"] = overrides.Method;
+                }
+
+                if (!string.IsNullOrEmpty(overrides.PostData))
+                {
+                    args["postData"] = overrides.PostData;
+                }
+
+                args["headers"] = overrides.Headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+            }
+
+            return Scope.SendMessageToServer(
                 Guid,
                 "continue",
-                (object)overrides ?? new { },
+                args,
                 true);
+        }
     }
 }

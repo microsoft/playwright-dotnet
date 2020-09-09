@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
@@ -7,7 +8,7 @@ namespace PlaywrightSharp
     {
         public int Status { get; set; }
 
-        public Dictionary<string, string> Headers { get; set; }
+        public HeaderEntry[] Headers { get; set; }
 
         public string Body { get; set; }
 
