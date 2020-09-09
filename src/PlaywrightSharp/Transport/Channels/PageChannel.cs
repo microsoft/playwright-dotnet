@@ -252,15 +252,25 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<PageChannel> GetOpenerAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "opener", null);
 
-        internal Task<SerializedAXNode> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
-            => Scope.SendMessageToServer<SerializedAXNode>(
-                Guid,
-                "accessibilitySnapshot",
-                new Dictionary<string, object>
-                {
-                    ["interestingOnly"] = interestingOnly ?? true,
-                    ["root"] = root,
-                });
+        internal async Task<SerializedAXNode> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["interestingOnly"] = interestingOnly ?? true,
+            };
+
+            if (root != null)
+            {
+                args["root"] = root;
+            }
+
+            if ((await Scope.SendMessageToServer(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
+            {
+                return jsonElement.ToObject<SerializedAXNode>(Scope.Connection.GetDefaultJsonSerializerOptions());
+            }
+
+            return null;
+        }
 
         internal Task SetViewportSizeAsync(ViewportSize viewport)
             => Scope.SendMessageToServer(

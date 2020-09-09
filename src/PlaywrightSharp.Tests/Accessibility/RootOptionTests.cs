@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "textbox",
                     Name = "My Input",
-                    Value = "My Value"
+                    ValueString = "My Value"
                 },
                 await Page.Accessibility.SnapshotAsync(root: input));
         }
@@ -129,8 +129,8 @@ namespace PlaywrightSharp.Tests.Accessibility
             var root = await Page.QuerySelectorAsync("#root");
             var snapshot = await Page.Accessibility.SnapshotAsync(false, root);
             Assert.Equal("textbox", snapshot.Role);
-            Assert.Contains("hello", snapshot.Value.ToString());
-            Assert.Contains("world", snapshot.Value.ToString());
+            Assert.Contains("hello", snapshot.ValueString.ToString());
+            Assert.Contains("world", snapshot.ValueString.ToString());
             Assert.NotEmpty(snapshot.Children);
         }
     }

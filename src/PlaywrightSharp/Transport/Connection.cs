@@ -165,7 +165,11 @@ namespace PlaywrightSharp.Transport
             }
             else if (typeof(ChannelBase).IsAssignableFrom(typeof(T)))
             {
-                return result.Value.EnumerateObject().FirstOrDefault().Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+                var enumerate = result.Value.EnumerateObject();
+
+                return enumerate.Any()
+                    ? enumerate.FirstOrDefault().Value.ToObject<T>(GetDefaultJsonSerializerOptions())
+                    : default;
             }
             else
             {

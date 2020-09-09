@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "textbox",
                     Name = "",
-                    Value = "Edit this image:"
+                    ValueString = "Edit this image:"
                 },
                 (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "textbox",
                     Name = "my favorite textbox",
-                    Value = "this is the inner content yo"
+                    ValueString = "this is the inner content yo"
                 };
             }
             else if (TestConstants.IsChromium)
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "textbox",
                     Name = "my favorite textbox",
-                    Value = "this is the inner content "
+                    ValueString = "this is the inner content "
                 };
             }
             else
@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "textbox",
                     Name = "my favorite textbox",
-                    Value = "this is the inner content  "
+                    ValueString = "this is the inner content  "
                 };
             }
             Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "checkbox",
                     Name = "my favorite checkbox",
-                    Checked = true
+                    Checked = CheckedState.Checked
                 },
                 (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "checkbox",
                     Name = "this is the inner content yo",
-                    Checked = true
+                    Checked = CheckedState.Checked
                 };
             }
             else
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 {
                     Role = "checkbox",
                     Name = "this is the inner content yo",
-                    Checked = true
+                    Checked = CheckedState.Checked
                 };
             }
 
