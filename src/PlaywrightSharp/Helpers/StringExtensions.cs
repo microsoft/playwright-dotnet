@@ -770,6 +770,18 @@ namespace PlaywrightSharp.Helpers
             return new Regex(string.Concat(tokens.ToArray()));
         }
 
+        internal static string GetContentType(this string path)
+        {
+            const string defaultContentType = "application/octet-stream";
+            string extension = GetExtension(path);
+            if (extension == null)
+            {
+                return defaultContentType;
+            }
+
+            return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
+        }
+
         internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
 
         internal static FilePayload ToFilePayload(this string file)
@@ -786,5 +798,21 @@ namespace PlaywrightSharp.Helpers
 
         private static bool IsQuoted(this string value)
             => value.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && value.EndsWith("\"", StringComparison.OrdinalIgnoreCase);
+
+        private static string GetExtension(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return null;
+            }
+
+            int index = path.LastIndexOf('.');
+            if (index < 0)
+            {
+                return null;
+            }
+
+            return path.Substring(index);
+        }
     }
 }

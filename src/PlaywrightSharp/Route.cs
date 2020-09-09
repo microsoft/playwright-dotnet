@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.StaticFiles;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -108,9 +108,7 @@ namespace PlaywrightSharp
             }
             else if (!string.IsNullOrEmpty(response.Path))
             {
-                new FileExtensionContentTypeProvider().TryGetContentType(response.Path, out string contentType);
-
-                headers["content-type"] = contentType ?? "application/octet-stream";
+                headers["content-type"] = response.Path.GetContentType();
             }
 
             if (length > 0 && !headers.ContainsKey("content-length"))
