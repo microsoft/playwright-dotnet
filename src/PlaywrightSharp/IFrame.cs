@@ -646,10 +646,10 @@ namespace PlaywrightSharp
         /// The navigation can be in progress when it is called.
         /// If navigation is already at a required state, completes immediately.
         /// </summary>
-        /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
+        /// <param name="state">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>A <see cref="Task"/> that completes when the load is completed.</returns>
-        Task WaitForLoadStateAsync(LifecycleEvent? waitUntil = null, int? timeout = null);
+        Task WaitForLoadStateAsync(LifecycleEvent state = LifecycleEvent.Load, int? timeout = null);
 
         /// <summary>
         /// Triggers a change and input event once all, unselecting all the selected elements.

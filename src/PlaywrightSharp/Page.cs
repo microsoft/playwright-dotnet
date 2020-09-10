@@ -718,8 +718,8 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task WaitForLoadStateAsync(LifecycleEvent waitUntil, int? timeout = null)
-            => MainFrame.WaitForLoadStateAsync(true, waitUntil, timeout);
+        public Task WaitForLoadStateAsync(LifecycleEvent state = LifecycleEvent.Load, int? timeout = null)
+            => MainFrame.WaitForLoadStateAsync(state, timeout);
 
         /// <inheritdoc />
         public Task SetViewportSizeAsync(int width, int height)
