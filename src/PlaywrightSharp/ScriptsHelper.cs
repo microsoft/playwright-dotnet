@@ -128,9 +128,29 @@ namespace PlaywrightSharp
                 return new EvaluateArgumentValueElement.SpecialType { V = "-0" };
             }
 
-            if (IsPrimitiveValue(value.GetType()))
+            if (value is string stringValue)
             {
-                return value;
+                return new EvaluateArgumentValueElement.String { S = stringValue };
+            }
+
+            if (
+                value.GetType() == typeof(int) ||
+                value.GetType() == typeof(decimal) ||
+                value.GetType() == typeof(long) ||
+                value.GetType() == typeof(short) ||
+                value.GetType() == typeof(double) ||
+                value.GetType() == typeof(int?) ||
+                value.GetType() == typeof(decimal?) ||
+                value.GetType() == typeof(long?) ||
+                value.GetType() == typeof(short?) ||
+                value.GetType() == typeof(double?))
+            {
+                return new EvaluateArgumentValueElement.Number { N = value };
+            }
+
+            if (value is bool boolean)
+            {
+                return new EvaluateArgumentValueElement.Boolean { B = boolean };
             }
 
             if (value is DateTime date)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.StaticFiles;
@@ -120,7 +121,7 @@ namespace PlaywrightSharp
             return new NormalizedFulfillResponse
             {
                 Status = (int)(response.Status ?? HttpStatusCode.OK),
-                Headers = headers,
+                Headers = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
                 Body = body,
                 IsBase64 = isBase64,
             };
