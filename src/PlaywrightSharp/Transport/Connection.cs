@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Transport
             {
                 return default;
             }
-            else if (typeof(ChannelBase).IsAssignableFrom(typeof(T)))
+            else if (typeof(ChannelBase).IsAssignableFrom(typeof(T)) || typeof(ChannelBase[]).IsAssignableFrom(typeof(T)))
             {
                 var enumerate = result.Value.EnumerateObject();
 

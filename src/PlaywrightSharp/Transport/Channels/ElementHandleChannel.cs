@@ -276,32 +276,32 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                 });
 
-        internal Task<string> GetInnerHtmlAsync(int? timeout)
-            => Scope.SendMessageToServer<string>(
+        internal async Task<string> GetInnerHtmlAsync(int? timeout)
+            => (await Scope.SendMessageToServer(
                 Guid,
-                "innerHTML",
+                "innterHTML",
                 new Dictionary<string, object>
                 {
                     ["timeout"] = timeout,
-                });
+                }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<string> GetInnerTextAsync(int? timeout)
-            => Scope.SendMessageToServer<string>(
+        internal async Task<string> GetInnerTextAsync(int? timeout)
+            => (await Scope.SendMessageToServer(
                 Guid,
                 "innerText",
                 new Dictionary<string, object>
                 {
                     ["timeout"] = timeout,
-                });
+                }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<string> GetTextContentAsync(int? timeout)
-            => Scope.SendMessageToServer<string>(
+        internal async Task<string> GetTextContentAsync(int? timeout)
+            => (await Scope.SendMessageToServer(
                 Guid,
                 "textContent",
                 new Dictionary<string, object>
                 {
                     ["timeout"] = timeout,
-                });
+                }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal Task SelectTextAsync(int? timeout)
             => Scope.SendMessageToServer<ElementHandleChannel>(

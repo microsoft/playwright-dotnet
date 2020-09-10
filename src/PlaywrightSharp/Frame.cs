@@ -310,8 +310,20 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task WaitForLoadStateAsync(LifecycleEvent? waitUntil = null, int? timeout = null)
-            => WaitForLoadStateAsync(false, waitUntil, timeout);
+        public async Task WaitForLoadStateAsync(LifecycleEvent state = LifecycleEvent.Load, int? timeout = null)
+        {
+            if (_loadStates.Contains(state))
+            {
+                return;
+            }
+
+            using var waiter = SetupNavigationWaiter(timeout);
+            await waiter.WaitForEventAsync<LoadStateEventArgs>(this, "LoadState", s =>
+            {
+                waiter.Log($"  \"{s}\" event fired");
+                return s.LifecycleEvent == state;
+            }).ConfigureAwait(false);
+        }
 
         /// <inheritdoc />
         public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)
@@ -429,9 +441,6 @@ namespace PlaywrightSharp
 
         internal Task FillAsync(bool isPageCall, string selector, string text, int? timeout = null, bool noWaitAfter = false)
             => _channel.FillAsync(selector, text, timeout, noWaitAfter, isPageCall);
-
-        internal Task WaitForLoadStateAsync(bool isPageCall, LifecycleEvent? waitUntil, int? timeout = null)
-            => _channel.WaitForLoadStateAsync(waitUntil, timeout, isPageCall);
 
         internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, string url, string path, string content, string type)
             => (await _channel.AddScriptTagAsync(url, path, content, type, isPageCall).ConfigureAwait(false)).Object;
