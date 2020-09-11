@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -443,10 +444,26 @@ namespace PlaywrightSharp
             => _channel.FillAsync(selector, text, timeout, noWaitAfter, isPageCall);
 
         internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, string url, string path, string content, string type)
-            => (await _channel.AddScriptTagAsync(url, path, content, type, isPageCall).ConfigureAwait(false)).Object;
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                content = File.ReadAllText(path);
+                content += "//# sourceURL=" + path.Replace("\n", string.Empty);
+            }
+
+            return (await _channel.AddScriptTagAsync(url, path, content, type, isPageCall).ConfigureAwait(false)).Object;
+        }
 
         internal async Task<IElementHandle> AddStyleTagAsync(bool isPageCall, string url, string path, string content)
-            => (await _channel.AddStyleTagAsync(url, path, content, isPageCall).ConfigureAwait(false)).Object;
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                content = File.ReadAllText(path);
+                content += "//# sourceURL=" + path.Replace("\n", string.Empty);
+            }
+
+            return (await _channel.AddStyleTagAsync(url, path, content, isPageCall).ConfigureAwait(false)).Object;
+        }
 
         internal Task SetInputFilesAsync(bool isPageCall, string selector, string[] files)
             => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToFilePayload()).ToArray(), isPageCall);
