@@ -9,5 +9,7 @@ namespace PlaywrightSharp.Transport
         public string Method { get; set; }
 
         public object Params { get; set; }
+
+        public bool TreatErrorPropertyAsError { get; set; }
     }
 }

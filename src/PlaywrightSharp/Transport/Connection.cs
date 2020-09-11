@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Transport
         private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
         private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
-        private readonly ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>> _callbacks = new ConcurrentDictionary<int, TaskCompletionSource<JsonElement?>>();
+        private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new ConcurrentDictionary<int, ConnectionCallback>();
         private readonly ConnectionScope _rootScript;
         private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
@@ -125,7 +125,8 @@ namespace PlaywrightSharp.Transport
             string method,
             object args,
             bool ignoreNullValues = true,
-            JsonSerializerOptions options = null)
+            JsonSerializerOptions options = null,
+            bool treatErrorPropertyAsError = true)
         {
             if (IsClosed)
             {
@@ -134,7 +135,13 @@ namespace PlaywrightSharp.Transport
 
             int id = Interlocked.Increment(ref _lastId);
             var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _callbacks.TryAdd(id, tcs);
+            var callback = new ConnectionCallback
+            {
+                TaskCompletionSource = tcs,
+                TreatErrorPropertyAsError = treatErrorPropertyAsError,
+            };
+
+            _callbacks.TryAdd(id, callback);
 
             await _queue.Enqueue(() =>
             {
@@ -258,11 +265,15 @@ namespace PlaywrightSharp.Transport
                 {
                     if (message.Error != null)
                     {
-                        callback.TrySetException(CreateException(message.Error.Error));
+                        callback.TaskCompletionSource.TrySetException(CreateException(message.Error.Error));
+                    }
+                    else if (callback.TreatErrorPropertyAsError && message.Result?.TryGetProperty("error", out var _) == true)
+                    {
+                        callback.TaskCompletionSource.TrySetException(CreateException(message.Result?.GetProperty("error").ToString()));
                     }
                     else
                     {
-                        callback.TrySetResult(message.Result);
+                        callback.TaskCompletionSource.TrySetResult(message.Result);
                     }
                 }
 
@@ -299,7 +310,7 @@ namespace PlaywrightSharp.Transport
             {
                 foreach (var callback in _callbacks)
                 {
-                    callback.Value.TrySetException(new TargetClosedException(reason));
+                    callback.Value.TaskCompletionSource.TrySetException(new TargetClosedException(reason));
                 }
 
                 Dispose();
@@ -330,6 +341,26 @@ namespace PlaywrightSharp.Transport
             }
 
             return new PlaywrightSharpException(error.Message);
+        }
+
+        private Exception CreateException(string message)
+        {
+            if (message.Contains("Timeout") && message.Contains("ms exceeded"))
+            {
+                return new TimeoutException(message);
+            }
+
+            if (message.Contains("Target closed") || message.Contains("The page has been closed."))
+            {
+                return new TargetClosedException(message);
+            }
+
+            if (message.Contains("Navigation failed because"))
+            {
+                return new NavigationException(message);
+            }
+
+            return new PlaywrightSharpException(message);
         }
 
         private void Dispose(bool disposing)

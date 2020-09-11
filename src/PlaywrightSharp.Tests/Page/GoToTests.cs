@@ -348,7 +348,7 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
                 => await Page.GoToAsync(TestConstants.EmptyPage, timeout: 1));
-            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
@@ -362,7 +362,7 @@ namespace PlaywrightSharp.Tests.Page
             Page.Context.DefaultNavigationTimeout = 2;
             Page.DefaultNavigationTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
@@ -375,7 +375,7 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             Page.Context.DefaultNavigationTimeout = 2;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout 2ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 2ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
@@ -389,7 +389,7 @@ namespace PlaywrightSharp.Tests.Page
             Page.Context.DefaultTimeout = 2;
             Page.DefaultTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
@@ -402,7 +402,7 @@ namespace PlaywrightSharp.Tests.Page
             Server.SetRoute("/empty.html", context => Task.Delay(-1));
             Page.Context.DefaultTimeout = 2;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout 2ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 2ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
@@ -417,7 +417,7 @@ namespace PlaywrightSharp.Tests.Page
             Page.DefaultTimeout = 0;
             Page.DefaultNavigationTimeout = 1;
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
-            Assert.Contains("Timeout 1ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 

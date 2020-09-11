@@ -134,8 +134,13 @@ namespace PlaywrightSharp.Transport
             Connection.OnObjectCreated(guid, result);
         }
 
-        internal Task<JsonElement?> SendMessageToServer(string guid, string method, object args = null, bool ignoreNullValues = true)
-            => Connection.SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues);
+        internal Task<JsonElement?> SendMessageToServer(
+            string guid,
+            string method,
+            object args = null,
+            bool ignoreNullValues = true,
+            bool treatErrorPropertyAsError = true)
+            => Connection.SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues, treatErrorPropertyAsError: treatErrorPropertyAsError);
 
         internal Task<T> SendMessageToServer<T>(
             string guid,
