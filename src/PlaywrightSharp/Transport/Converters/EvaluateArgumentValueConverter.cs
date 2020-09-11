@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using PlaywrightSharp.Helpers;
@@ -250,12 +251,19 @@ namespace PlaywrightSharp.Transport.Converters
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
             {
-                if (t == typeof(ExpandoObject) || t == typeof(object))
+                var keyValues = obj.ToObject<KeyValueObject[]>();
+                object objResult = Activator.CreateInstance(t);
+
+                foreach (var kv in keyValues)
                 {
-                    return ReadObject(obj, options);
+                    var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+
+                    var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.K, StringComparison.OrdinalIgnoreCase));
+                    serializerOptions.Converters.Add(GetNewConverter(property.PropertyType));
+                    property.SetValue(objResult, kv.V.ToObject(property.PropertyType, serializerOptions));
                 }
 
-                return obj.ToObject(t);
+                return objResult;
             }
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)

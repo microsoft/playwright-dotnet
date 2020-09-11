@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
@@ -191,7 +193,7 @@ namespace PlaywrightSharp
 
             if (ExtraHttpHeaders != null)
             {
-                args["extraHTTPHeaders"] = ExtraHttpHeaders;
+                args["extraHTTPHeaders"] = ExtraHttpHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
 
             return args;

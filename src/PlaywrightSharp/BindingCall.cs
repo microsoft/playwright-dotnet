@@ -52,7 +52,7 @@ namespace PlaywrightSharp
 
                 for (int i = 0; i < methodParams.Length; i++)
                 {
-                    args.Add(_initializer.Args[i].ToObject(methodParams[i], _scope.Connection.GetDefaultJsonSerializerOptions()));
+                    args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
                 }
 
                 object result = binding.DynamicInvoke(args.ToArray());
@@ -68,15 +68,15 @@ namespace PlaywrightSharp
                     }
                 }
 
-                _channel.ResolveAsync(result);
+                await _channel.ResolveAsync(result).ConfigureAwait(false);
             }
             catch (TargetInvocationException ex)
             {
-                _channel.RejectAsync(ex.InnerException);
+                await _channel.RejectAsync(ex.InnerException).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _channel.RejectAsync(ex);
+                await _channel.RejectAsync(ex).ConfigureAwait(false);
             }
         }
     }

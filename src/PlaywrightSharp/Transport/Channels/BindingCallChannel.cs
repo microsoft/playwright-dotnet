@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -9,16 +11,16 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal void ResolveAsync(object result)
+        internal Task ResolveAsync(object result)
             => Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "resolve",
                 new Dictionary<string, object>
                 {
-                    ["result"] = result,
+                    ["result"] = ScriptsHelper.SerializedArgument(result),
                 });
 
-        internal void RejectAsync(Exception ex)
+        internal Task RejectAsync(Exception ex)
             => Scope.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "reject",

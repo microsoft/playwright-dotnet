@@ -252,7 +252,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<ElementHandleChannel> GetFrameElementAsync() => Scope.SendMessageToServer<ElementHandleChannel>(Guid, "frameElement", null);
 
-        internal Task<string> GetTitleAsync() => Scope.SendMessageToServer<string>(Guid, "title", null);
+        internal async Task<string> GetTitleAsync()
+            => (await Scope.SendMessageToServer(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForState? state, int? timeout, bool isPage)
         {

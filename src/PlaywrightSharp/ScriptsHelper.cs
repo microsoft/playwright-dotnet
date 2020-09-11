@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
@@ -37,6 +38,16 @@ namespace PlaywrightSharp
             }
 
             return script;
+        }
+
+        internal static object ParseEvaluateResult(JsonElement? element, Type t)
+        {
+            var parseEvaluateResult = typeof(ScriptsHelper)
+                .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+                .FirstOrDefault(m => m.Name == "ParseEvaluateResult" && m.GetGenericArguments().Any());
+
+            var genericMethod = parseEvaluateResult.MakeGenericMethod(new[] { t });
+            return genericMethod.Invoke(null, new object[] { element });
         }
 
         internal static T ParseEvaluateResult<T>(JsonElement? result)
