@@ -251,6 +251,11 @@ namespace PlaywrightSharp.Transport.Converters
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
             {
+                if (t == typeof(JsonElement) || t == typeof(JsonElement?))
+                {
+                    return obj;
+                }
+
                 var keyValues = obj.ToObject<KeyValueObject[]>();
                 object objResult = Activator.CreateInstance(t);
 
