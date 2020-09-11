@@ -9,9 +9,11 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<string> GetPathAsync() => Scope.SendMessageToServer<string>(Guid, "path", null);
+        internal async Task<string> GetPathAsync()
+            => (await Scope.SendMessageToServer(Guid, "path", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<string> GetFailureAsync() => Scope.SendMessageToServer<string>(Guid, "failure", null);
+        internal async Task<string> GetFailureAsync()
+            => (await Scope.SendMessageToServer(Guid, "failure", null).ConfigureAwait(false))?.GetProperty("error").ToString();
 
         internal Task DeleteAsync() => Scope.SendMessageToServer(Guid, "delete", null);
     }
