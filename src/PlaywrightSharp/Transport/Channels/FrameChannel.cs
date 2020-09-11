@@ -280,29 +280,59 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<ElementHandleChannel> AddScriptTagAsync(string url, string path, string content, string type, bool isPage)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
-                Guid,
-                "addScriptTag",
-                new Dictionary<string, object>
-                {
-                    ["url"] = url,
-                    ["path"] = path,
-                    ["content"] = content,
-                    ["type"] = type,
-                    ["isPage"] = isPage,
-                });
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["isPage"] = isPage,
+            };
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                args["url"] = url;
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                args["path"] = path;
+            }
+
+            if (!string.IsNullOrEmpty(content))
+            {
+                args["content"] = content;
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                args["type"] = type;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "addScriptTag", args);
+        }
 
         internal Task<ElementHandleChannel> AddStyleTagAsync(string url, string path, string content, bool isPage)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
-                Guid,
-                "addStyleTag",
-                new Dictionary<string, object>
-                {
-                    ["url"] = url,
-                    ["path"] = path,
-                    ["content"] = content,
-                    ["isPage"] = isPage,
-                });
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["isPage"] = isPage,
+            };
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                args["url"] = url;
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                args["path"] = path;
+            }
+
+            if (!string.IsNullOrEmpty(content))
+            {
+                args["content"] = content;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "addStyleTag", args);
+        }
 
         internal Task<ResponseChannel> WaitForNavigationAsync(LifecycleEvent? waitUntil, string url, int? timeout, bool isPage)
         {
