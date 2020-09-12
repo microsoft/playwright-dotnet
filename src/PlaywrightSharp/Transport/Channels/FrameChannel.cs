@@ -415,7 +415,7 @@ namespace PlaywrightSharp.Transport.Channels
             Point? position,
             int? timeout,
             bool force,
-            bool noWaitAfter,
+            bool? noWaitAfter,
             bool isPage)
         {
             var args = new Dictionary<string, object>
@@ -425,7 +425,6 @@ namespace PlaywrightSharp.Transport.Channels
                 ["button"] = button,
                 ["clickCount"] = clickCount,
                 ["force"] = force,
-                ["noWaitAfter"] = noWaitAfter,
                 ["isPage"] = isPage,
             };
 
@@ -437,6 +436,11 @@ namespace PlaywrightSharp.Transport.Channels
             if (position != null)
             {
                 args["position"] = position;
+            }
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
             }
 
             if (timeout != null)
@@ -455,7 +459,7 @@ namespace PlaywrightSharp.Transport.Channels
             Point? position,
             int? timeout,
             bool force,
-            bool noWaitAfter,
+            bool? noWaitAfter,
             bool isPage)
         {
             var args = new Dictionary<string, object>
@@ -464,8 +468,6 @@ namespace PlaywrightSharp.Transport.Channels
                 ["delay"] = delay,
                 ["button"] = button,
                 ["force"] = force,
-                ["noWaitAfter"] = noWaitAfter,
-                ["position"] = position,
                 ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
                 ["isPage"] = isPage,
             };
@@ -473,6 +475,16 @@ namespace PlaywrightSharp.Transport.Channels
             if (timeout != null)
             {
                 args["timeout"] = timeout;
+            }
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
+
+            if (position != null)
+            {
+                args["position"] = position;
             }
 
             return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "dblclick", args);
@@ -498,13 +510,12 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task FillAsync(string selector, string value, int? timeout, bool noWaitAfter, bool isPage)
+        internal Task FillAsync(string selector, string value, int? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["value"] = value,
-                ["noWaitAfter"] = noWaitAfter,
                 ["isPage"] = isPage,
             };
 
@@ -513,18 +524,27 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
+
             return Scope.SendMessageToServer(Guid, "fill", args);
         }
 
-        internal Task CheckAsync(string selector, int? timeout, bool force, bool noWaitAfter, bool isPage)
+        internal Task CheckAsync(string selector, int? timeout, bool force, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["force"] = force,
-                ["noWaitAfter"] = noWaitAfter,
                 ["isPage"] = isPage,
             };
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
 
             if (timeout != null)
             {
@@ -534,15 +554,19 @@ namespace PlaywrightSharp.Transport.Channels
             return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(string selector, int? timeout, bool force, bool noWaitAfter, bool isPage)
+        internal Task UncheckAsync(string selector, int? timeout, bool force, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["force"] = force,
-                ["noWaitAfter"] = noWaitAfter,
                 ["isPage"] = isPage,
             };
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
 
             if (timeout != null)
             {
@@ -596,13 +620,17 @@ namespace PlaywrightSharp.Transport.Channels
                 ["selector"] = selector,
                 ["key"] = text,
                 ["delay"] = delay,
-                ["noWaitAfter"] = noWaitAfter,
                 ["isPage"] = isPage,
             };
 
             if (timeout != null)
             {
                 args["timeout"] = timeout;
+            }
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
             }
 
             return Scope.SendMessageToServer<string[]>(Guid, "press", args);
