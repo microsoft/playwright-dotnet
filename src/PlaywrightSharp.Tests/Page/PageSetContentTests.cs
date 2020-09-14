@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.Page
                 Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", timeout: 1)
             );
 
-            Assert.Contains("Timeout 1ms exceeded during page.setContent", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>

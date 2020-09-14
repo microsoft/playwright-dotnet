@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BindingCallEventArgs
                         {
-                            BidingCall = serverParams?.ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
                     break;
                 case "route":
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Transport.Channels
                     });
                     break;
                 case "pageError":
-                    PageError?.Invoke(this, serverParams?.GetProperty("error").ToObject<PageErrorEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<PageErrorEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "fileChooser":
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new WorkerChannelEventArgs
                         {
-                            WorkerChannel = serverParams?.ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
             }
@@ -384,7 +384,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
                 });
 
-        internal Task<string> ScreenshotAsync(
+        internal async Task<string> ScreenshotAsync(
             string path,
             bool fullPage,
             Rect clip,
@@ -395,20 +395,36 @@ namespace PlaywrightSharp.Transport.Channels
         {
             var args = new Dictionary<string, object>
             {
-                ["path"] = path,
                 ["fullPage"] = fullPage,
-                ["clip"] = clip,
                 ["omitBackground"] = omitBackground,
-                ["type"] = type,
-                ["timeout"] = timeout,
             };
+
+            if (clip != null)
+            {
+                args["clip"] = clip;
+            }
+
+            if (path != null)
+            {
+                args["path"] = path;
+            }
+
+            if (type != null)
+            {
+                args["type"] = type;
+            }
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
 
             if (quality != null)
             {
                 args["quality"] = quality;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "screenshot", args);
+            return (await Scope.SendMessageToServer(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
         internal Task StartCSSCoverageAsync(bool resetOnNavigation)

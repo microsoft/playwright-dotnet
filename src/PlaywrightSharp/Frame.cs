@@ -278,28 +278,50 @@ namespace PlaywrightSharp
             => AddStyleTagAsync(false, url, path, content);
 
         /// <inheritdoc />
-        public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null) => PressAsync(false, selector, text, delay, noWaitAfter, timeout);
+        public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null)
+            => PressAsync(false, selector, text, delay, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, null, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(false, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, value, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, value, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, value, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(false, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null)
+        {
+            if (values == null)
+            {
+                throw new ArgumentException("values should not be null", nameof(values));
+            }
+
+            return SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
+        }
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null) => SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null)
+        {
+            if (values == null)
+            {
+                throw new ArgumentException("values should not be null", nameof(values));
+            }
+
+            return SelectOptionAsync(false, selector, values, noWaitAfter, timeout);
+        }
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
@@ -429,8 +451,21 @@ namespace PlaywrightSharp
         internal Task<string[]> PressAsync(bool isPageCall, string selector, string text, int delay, bool? noWaitAfter, int? timeout)
             => _channel.PressAsync(selector, text, delay, noWaitAfter, timeout, isPageCall);
 
-        internal Task<string[]> SelectOptionAsync(bool isPageCall, string selector, object values, bool? noWaitAfter, int? timeout)
-            => _channel.SelectOptionAsync(selector, values, noWaitAfter, timeout, isPageCall);
+        internal Task<string[]> SelectOptionAsync(bool isPageCall, string selector, object[] values, bool? noWaitAfter, int? timeout)
+        {
+            if (values != null)
+            {
+                for (int i = 0; i < values.Length; i++)
+                {
+                    if (values[i] == null)
+                    {
+                        throw new PlaywrightSharpException($"options[{i}]: expected object, got null");
+                    }
+                }
+            }
+
+            return _channel.SelectOptionAsync(selector, values, noWaitAfter, timeout, isPageCall);
+        }
 
         internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, int? timeout = null)
             => _channel.DispatchEventAsync(
@@ -503,7 +538,7 @@ namespace PlaywrightSharp
             => _channel.UncheckAsync(selector, timeout, force, noWaitAfter, isPageCall);
 
         internal Task SetContentAsync(bool isPageCall, string html, LifecycleEvent? waitUntil, int? timeout)
-            => _channel.SetcontentAsync(html, timeout, waitUntil, isPageCall);
+            => _channel.SetContentAsync(html, timeout, waitUntil, isPageCall);
 
         internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
             => (await _channel.QuerySelectorAsync(selector, isPageCall).ConfigureAwait(false))?.Object;

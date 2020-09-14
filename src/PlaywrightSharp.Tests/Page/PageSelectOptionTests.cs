@@ -233,7 +233,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync("() => makeMultiple()");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(
                 () => Page.SelectOptionAsync("select", new[] { "blue", null, "black", "magenta" }));
-            Assert.Contains("Value items must not be null", exception.Message);
+            Assert.Contains("got null", exception.Message);
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
