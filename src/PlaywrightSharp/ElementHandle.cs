@@ -223,11 +223,11 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string value, bool? noWaitAfter = null, int? timeout = null)
-            => _channel.SelectOptionAsync(value, noWaitAfter, timeout);
+            => SelectOptionAsync(new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string[] values, bool? noWaitAfter = null, int? timeout = null)
-            => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
+            => _channel.SelectOptionAsync(values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(IElementHandle element, bool? noWaitAfter = null, int? timeout = null)
@@ -239,7 +239,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(SelectOption selectOption, bool? noWaitAfter = null, int? timeout = null)
-            => _channel.SelectOptionAsync(selectOption, noWaitAfter, timeout);
+            => SelectOptionAsync(new[] { selectOption }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(SelectOption[] selectOptions, bool? noWaitAfter = null, int? timeout = null)

@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Transport.Channels
             switch (method)
             {
                 case "previewUpdated":
-                    PreviewUpdated?.Invoke(this, new PreviewUpdatedEventArgs { Preview = serverParams.Value.ToString() });
+                    PreviewUpdated?.Invoke(this, new PreviewUpdatedEventArgs { Preview = serverParams.Value.GetProperty("preview").ToString() });
                     break;
             }
         }
@@ -60,22 +60,34 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                 });
 
-        internal Task<string> ScreenshotAsync(string path, bool omitBackground, ScreenshotFormat? type, int? quality, int? timeout)
+        internal async Task<string> ScreenshotAsync(string path, bool omitBackground, ScreenshotFormat? type, int? quality, int? timeout)
         {
             var args = new Dictionary<string, object>
             {
-                ["path"] = path,
                 ["omitBackground"] = omitBackground,
-                ["type"] = type,
-                ["timeout"] = timeout,
             };
+
+            if (path != null)
+            {
+                args["path"] = path;
+            }
+
+            if (type != null)
+            {
+                args["type"] = type;
+            }
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
 
             if (quality != null)
             {
                 args["quality"] = quality;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "screenshot", args);
+            return (await Scope.SendMessageToServer(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
         internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, EvaluateArgument arg)
@@ -127,9 +139,17 @@ namespace PlaywrightSharp.Transport.Channels
             var args = new Dictionary<string, object>
             {
                 ["force"] = force,
-                ["timeout"] = timeout,
-                ["position"] = position,
             };
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
 
             if (modifiers != null)
             {
@@ -221,16 +241,29 @@ namespace PlaywrightSharp.Transport.Channels
             return Scope.SendMessageToServer(Guid, "dblclick", args);
         }
 
-        internal Task<Rect> GetBoundingBoxAsync() => Scope.SendMessageToServer<Rect>(Guid, "boundingBox", null);
+        internal async Task<Rect> GetBoundingBoxAsync()
+        {
+            var result = (await Scope.SendMessageToServer(Guid, "boundingBox", null).ConfigureAwait(false)).Value;
+
+            if (result.TryGetProperty("value", out var value))
+            {
+                return value.ToObject<Rect>();
+            }
+
+            return null;
+        }
 
         internal Task ScrollIntoViewIfNeededAsync(int? timeout)
-            => Scope.SendMessageToServer<ElementHandleChannel>(
-                Guid,
-                "scrollIntoViewIfNeeded",
-                new Dictionary<string, object>
-                {
-                    ["timeout"] = timeout,
-                });
+        {
+            var args = new Dictionary<string, object>();
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "scrollIntoViewIfNeeded", args);
+        }
 
         internal Task FillAsync(string value, int? timeout, bool? noWaitAfter)
         {
@@ -277,7 +310,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["files"] = files,
                 });
 
-        internal Task<string> GetAttributeAsync(string name, int? timeout)
+        internal async Task<string> GetAttributeAsync(string name, int? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -289,7 +322,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "getAttribute", args);
+            return (await Scope.SendMessageToServer(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
@@ -312,7 +345,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return (await Scope.SendMessageToServer(Guid, "innterHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+            return (await Scope.SendMessageToServer(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
         internal async Task<string> GetInnerTextAsync(int? timeout)
@@ -351,12 +384,21 @@ namespace PlaywrightSharp.Transport.Channels
             return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "selectText", args);
         }
 
-        internal Task<string[]> SelectOptionAsync(object values, bool? noWaitAfter = null, int? timeout = null)
+        internal async Task<string[]> SelectOptionAsync(object values, bool? noWaitAfter = null, int? timeout = null)
         {
-            var args = new Dictionary<string, object>
+            var args = new Dictionary<string, object>();
+
+            if (values != null)
             {
-                ["values"] = values,
-            };
+                if (values is IElementHandle[])
+                {
+                    args["elements"] = values;
+                }
+                else
+                {
+                    args["options"] = values;
+                }
+            }
 
             if (timeout != null)
             {
@@ -368,7 +410,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["noWaitAter"] = noWaitAfter;
             }
 
-            return Scope.SendMessageToServer<string[]>(Guid, "selectOption", args);
+            return (await Scope.SendMessageToServer(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
         }
 
         internal Task CheckAsync(int? timeout, bool force, bool? noWaitAfter)

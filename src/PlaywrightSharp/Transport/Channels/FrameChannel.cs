@@ -666,7 +666,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Scope.SendMessageToServer(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
         }
 
-        internal Task<string> GetAttributeAsync(string selector, string name, int? timeout, bool isPage)
+        internal async Task<string> GetAttributeAsync(string selector, string name, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -680,10 +680,10 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "getAttribute", args);
+            return (await Scope.SendMessageToServer(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task<string> GetInnerHtmlAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetInnerHtmlAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -696,7 +696,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "innerHTML", args);
+            return (await Scope.SendMessageToServer(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
         internal Task TypeAsync(string selector, string text, int? delay, bool isPage)
@@ -736,7 +736,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Scope.SendMessageToServer(Guid, "focus", args);
         }
 
-        internal Task<string> GetInnerTextAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetInnerTextAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -749,7 +749,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "innerText", args);
+            return (await Scope.SendMessageToServer(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
         internal Task SetInputFilesAsync(string selector, FilePayload[] files, bool isPage)
@@ -763,7 +763,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task<string> GetTextContentAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetTextContentAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -776,7 +776,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "textContent", args);
+            return (await Scope.SendMessageToServer(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
     }
 }
