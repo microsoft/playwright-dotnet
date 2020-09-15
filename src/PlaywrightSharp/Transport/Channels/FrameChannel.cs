@@ -465,9 +465,13 @@ namespace PlaywrightSharp.Transport.Channels
                 ["delay"] = delay,
                 ["button"] = button,
                 ["force"] = force,
-                ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
                 ["isPage"] = isPage,
             };
+
+            if (modifiers != null)
+            {
+                args["modifiers"] = modifiers?.Select(m => m.ToValueString());
+            }
 
             if (timeout != null)
             {
@@ -596,11 +600,19 @@ namespace PlaywrightSharp.Transport.Channels
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["position"] = position,
-                ["modifiers"] = modifiers,
                 ["force"] = force,
                 ["isPage"] = isPage,
             };
+
+            if (modifiers != null)
+            {
+                args["modifiers"] = modifiers?.Select(m => m.ToValueString());
+            }
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
 
             if (timeout != null)
             {

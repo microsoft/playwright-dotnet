@@ -255,7 +255,17 @@ namespace PlaywrightSharp.Transport.Converters
 
                 if (t == typeof(JsonElement) || t == typeof(JsonElement?) || t == typeof(ExpandoObject))
                 {
-                    var dicResult = new Dictionary<string, object>();
+                    var dynamicResult = new ExpandoObject();
+                    IDictionary<string, object> dicResult;
+
+                    if (typeof(T) == typeof(ExpandoObject))
+                    {
+                        dicResult = dynamicResult;
+                    }
+                    else
+                    {
+                        dicResult = new Dictionary<string, object>();
+                    }
 
                     foreach (var kv in keyValues)
                     {
@@ -268,6 +278,12 @@ namespace PlaywrightSharp.Transport.Converters
 
                     var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
                     string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
+
+                    if (typeof(T) == typeof(ExpandoObject))
+                    {
+                        return dynamicResult;
+                    }
+
                     return JsonSerializer.Deserialize<T>(serialized, defaultConverter);
                 }
 
@@ -344,7 +360,31 @@ namespace PlaywrightSharp.Transport.Converters
         }
 
         private static Type ValueKindToType(JsonElement element)
-            => element.ValueKind switch
+        {
+            if (element.ValueKind == JsonValueKind.Object)
+            {
+                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("d", out var _))
+                {
+                    return typeof(DateTime);
+                }
+
+                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("b", out var _))
+                {
+                    return typeof(bool);
+                }
+
+                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("s", out var _))
+                {
+                    return typeof(string);
+                }
+
+                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("n", out var _))
+                {
+                    return typeof(decimal);
+                }
+            }
+
+            return element.ValueKind switch
             {
                 JsonValueKind.Array => typeof(Array),
                 JsonValueKind.String => typeof(string),
@@ -353,6 +393,7 @@ namespace PlaywrightSharp.Transport.Converters
                 JsonValueKind.False => typeof(bool),
                 _ => typeof(object),
             };
+        }
 
         private static object ReadList(JsonElement jsonElement, JsonSerializerOptions options)
         {
