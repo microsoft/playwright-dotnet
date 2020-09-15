@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
@@ -146,7 +148,11 @@ namespace PlaywrightSharp
         {
             var args = base.ToChannelDictionary();
 
-            if (Viewport == null || !Viewport.Equals(ViewportSize.None))
+            if (Viewport == null)
+            {
+                args["noDefaultViewport"] = true;
+            }
+            else if (!Viewport.Equals(ViewportSize.None))
             {
                 args["viewport"] = Viewport;
             }
@@ -228,7 +234,7 @@ namespace PlaywrightSharp
 
             if (ExtraHttpHeaders != null)
             {
-                args["extraHTTPHeaders"] = ExtraHttpHeaders;
+                args["extraHTTPHeaders"] = ExtraHttpHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
 
             return args;

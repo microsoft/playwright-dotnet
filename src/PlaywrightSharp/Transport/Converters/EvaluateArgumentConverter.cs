@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Transport.Converters
             if (value.Value == null)
             {
                 writer.WriteStartObject();
-                writer.WriteNull("v");
+                writer.WriteString("v", "null");
                 writer.WriteEndObject();
             }
             else

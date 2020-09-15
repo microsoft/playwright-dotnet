@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
@@ -42,9 +43,9 @@ namespace PlaywrightSharp.Tests.Launcher
             var options = TestConstants.GetDefaultBrowserOptions();
             options.UserDataDir = "random-invalid-path";
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchAsync(options));
 
-            Assert.Contains("launchPersistentContext", exception.Message);
+            Assert.Contains("LaunchPersistentContextAsync", exception.Message);
         }
 
 

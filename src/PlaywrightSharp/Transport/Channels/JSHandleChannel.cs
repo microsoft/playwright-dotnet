@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -35,8 +36,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["name"] = propertyName,
                 });
 
-        internal Task<List<JSElementProperty>> GetPropertiesAsync()
-            => Scope.SendMessageToServer<List<JSElementProperty>>(Guid, "getPropertyList", null);
+        internal async Task<List<JSElementProperty>> GetPropertiesAsync()
+            => (await Scope.SendMessageToServer(Guid, "getPropertyList", null).ConfigureAwait(false))?
+                .GetProperty("properties").ToObject<List<JSElementProperty>>(Scope.Connection.GetDefaultJsonSerializerOptions());
 
         internal class JSElementProperty
         {

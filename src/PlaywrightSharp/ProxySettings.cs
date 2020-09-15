@@ -15,16 +15,16 @@ namespace PlaywrightSharp
         /// <summary>
         /// Optional coma-separated domains to bypass proxy, for example ".com, chromium.org, .domain.com".
         /// </summary>
-        public string Bypass { get; set; }
+        public string Bypass { get; set; } = string.Empty;
 
         /// <summary>
         ///  Optional username to use if HTTP proxy requires authentication.
         /// </summary>
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         /// <summary>
         /// Optional password to use if HTTP proxy requires authentication.
         /// </summary>
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

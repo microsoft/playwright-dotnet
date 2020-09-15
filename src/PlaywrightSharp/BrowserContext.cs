@@ -192,7 +192,7 @@ namespace PlaywrightSharp
         public Task GrantPermissionsAsync(ContextPermission permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
 
         /// <inheritdoc />
-        public Task SetGeolocationAsync(decimal latitude, decimal longitude, decimal? accuracy)
+        public Task SetGeolocationAsync(decimal latitude, decimal longitude, decimal accuracy = 0)
             => SetGeolocationAsync(new Geolocation { Latitude = latitude, Longitude = longitude, Accuracy = accuracy });
 
         /// <inheritdoc />

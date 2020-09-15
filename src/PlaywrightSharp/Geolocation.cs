@@ -21,7 +21,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Optional non-negative accuracy value.
         /// </summary>
-        public decimal? Accuracy { get; set; }
+        public decimal Accuracy { get; set; } = 0;
 
         /// <inheritdoc cref="IEquatable{T}"/>
         public bool Equals(Geolocation other)

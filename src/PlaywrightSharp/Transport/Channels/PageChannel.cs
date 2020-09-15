@@ -446,14 +446,13 @@ namespace PlaywrightSharp.Transport.Channels
                     ["reportAnonymousScripts"] = reportAnonymousScripts,
                 });
 
-        internal Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
-            => Scope.SendMessageToServer<CSSCoverageEntry[]>(Guid, "crStopCSSCoverage", null);
+        internal async Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
+            => (await Scope.SendMessageToServer(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
 
-        internal Task<JSCoverageEntry[]> StopJSCoverageAsync()
-            => Scope.SendMessageToServer<JSCoverageEntry[]>(Guid, "crStopJSCoverage", null);
+        internal async Task<JSCoverageEntry[]> StopJSCoverageAsync()
+            => (await Scope.SendMessageToServer(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
 
-        internal Task<string> GetPdfAsync(
-            string path,
+        internal async Task<string> GetPdfAsync(
             decimal scale,
             bool displayHeaderFooter,
             string headerTemplate,
@@ -469,7 +468,6 @@ namespace PlaywrightSharp.Transport.Channels
         {
             var args = new Dictionary<string, object>
             {
-                ["path"] = path,
                 ["scale"] = scale,
                 ["displayHeaderFooter"] = displayHeaderFooter,
                 ["headerTemplate"] = headerTemplate,
@@ -477,7 +475,6 @@ namespace PlaywrightSharp.Transport.Channels
                 ["printBackground"] = printBackground,
                 ["landscape"] = landscape,
                 ["pageRanges"] = pageRanges,
-                ["format"] = format,
                 ["marginOptions"] = marginOptions,
                 ["preferCSSPageSize"] = preferCSSPageSize,
             };
@@ -487,12 +484,17 @@ namespace PlaywrightSharp.Transport.Channels
                 args["width"] = width;
             }
 
+            if (format != null)
+            {
+                args["format"] = format;
+            }
+
             if (!string.IsNullOrEmpty(height))
             {
                 args["height"] = height;
             }
 
-            return Scope.SendMessageToServer<string>(Guid, "pdf", args);
+            return (await Scope.SendMessageToServer(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
         }
     }
 }

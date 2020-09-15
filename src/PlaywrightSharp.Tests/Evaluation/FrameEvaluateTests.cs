@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -87,7 +88,7 @@ namespace PlaywrightSharp.Tests.Evaluation
                 return foo;
             }");
             var childFrame = Page.MainFrame.ChildFrames[0];
-            dynamic childResult = await childFrame.EvaluateAsync<object>("() => window.__foo");
+            dynamic childResult = await childFrame.EvaluateAsync<ExpandoObject>("() => window.__foo");
             Assert.Equal("baz", childResult.bar);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
             Assert.Equal("JSHandles can be evaluated only in the context they were created!", exception.Message);

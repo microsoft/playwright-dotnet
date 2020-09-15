@@ -147,8 +147,9 @@ namespace PlaywrightSharp.Transport
             string method,
             object args,
             bool ignoreNullValues = true,
+            bool treatErrorPropertyAsError = true,
             JsonSerializerOptions serializerOptions = null)
-            => Connection.SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues, serializerOptions);
+            => Connection.SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues, serializerOptions, treatErrorPropertyAsError);
 
         private void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
 

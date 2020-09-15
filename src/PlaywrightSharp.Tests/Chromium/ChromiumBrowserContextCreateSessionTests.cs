@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Expression = "1 + 2",
                 ReturnByValue = true
             });
-            Assert.Equal(3, evalResponse?.GetProperty("result").GetProperty("value").GetInt32());
+            Assert.Equal(3, evalResponse?.GetProperty("result").GetProperty("result").GetProperty("value").GetInt32());
             await client.DetachAsync();
 
             var exception = await Assert.ThrowsAnyAsync<Exception>(()
