@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace PlaywrightSharp.Transport
 {
     internal class MessageRequest
@@ -10,6 +12,7 @@ namespace PlaywrightSharp.Transport
 
         public object Params { get; set; }
 
+        [JsonIgnore]
         public bool TreatErrorPropertyAsError { get; set; }
     }
 }

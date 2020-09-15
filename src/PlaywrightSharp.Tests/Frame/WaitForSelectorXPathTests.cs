@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                     => Page.WaitForSelectorAsync("//div", WaitForState.Attached, timeout: 3000));
 
-            Assert.Contains("Timeout 3000ms exceeded during page.waitForSelector", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             Assert.Contains("waiting for selector \"//div\"", exception.Message);
         }
 

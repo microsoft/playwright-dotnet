@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests.Frame
             string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GoToAsync(url, LifecycleEvent.Networkidle, null, 5000));
 
-            Assert.Contains("Timeout 5000ms exceeded during page.goto.", exception.Message);
+            Assert.Contains("Timeout 5000ms", exception.Message);
             Assert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
         }
 
