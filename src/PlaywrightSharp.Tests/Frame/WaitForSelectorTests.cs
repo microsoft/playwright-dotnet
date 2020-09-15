@@ -117,7 +117,7 @@ namespace PlaywrightSharp.Tests.Frame
 
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => watchdog);
 
-            Assert.Contains("Timeout 5000ms exceeded during frame.waitForSelector.", exception.Message);
+            Assert.Contains("Timeout 5000ms", exception.Message);
             Assert.Contains("waiting for selector \"div\" to be visible", exception.Message);
             Assert.Contains("selector resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"1234567890123456…>abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>", exception.Message);
             Assert.Contains("selector did not resolve to any element", exception.Message);
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Tests.Frame
 
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => watchdog);
 
-            Assert.Contains("Timeout 5000ms exceeded during frame.waitForSelector.", exception.Message);
+            Assert.Contains("Timeout 5000ms", exception.Message);
             Assert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
             Assert.Contains("selector resolved to visible <div id=\"mydiv\" class=\"foo bar\">hello</div>", exception.Message);
             Assert.Contains("selector resolved to visible <div class=\"another\">hello</div>", exception.Message);
@@ -293,10 +293,10 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.SetContentAsync("<div style='width: 0; height: 0;'>1</div>");
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", timeout: 1000));
-            Assert.Contains("Timeout 1000ms exceeded during page.waitForSelector.", exception.Message);
+            Assert.Contains("Timeout 1000ms", exception.Message);
             await Page.EvaluateAsync("() => document.querySelector('div').style.width = '10px'");
             exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", timeout: 1000));
-            Assert.Contains("Timeout 1000ms exceeded during page.waitForSelector.", exception.Message);
+            Assert.Contains("Timeout 1000ms", exception.Message);
             await Page.EvaluateAsync("() => document.querySelector('div').style.height = '10px'");
             Assert.NotNull(await Page.WaitForSelectorAsync("div", timeout: 1000));
         }
@@ -376,7 +376,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
                 => await Page.WaitForSelectorAsync("div", WaitForState.Attached, 3000));
 
-            Assert.Contains("Timeout 3000ms exceeded during page.waitForSelector", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             Assert.Contains("waiting for selector \"div\"", exception.Message);
         }
 
@@ -390,7 +390,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
                 => await Page.WaitForSelectorAsync("div", WaitForState.Hidden, 1000));
 
-            Assert.Contains("Timeout 1000ms exceeded during page.waitForSelector", exception.Message);
+            Assert.Contains("Timeout 1000ms exceeded", exception.Message);
             Assert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
         }
 

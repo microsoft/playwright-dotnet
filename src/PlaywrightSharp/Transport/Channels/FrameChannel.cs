@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Transport.Channels
             object arg,
             bool isPage,
             int? timeout,
-            object polling,
+            int? polling,
             bool serializeArgument = false)
         {
             JsonSerializerOptions serializerOptions;
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Transport.Channels
 
             if (polling != null)
             {
-                args["polling"] = polling;
+                args["pollingInterval"] = polling;
             }
 
             return Scope.SendMessageToServer<JSHandleChannel>(

@@ -241,7 +241,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(timeout: 3000));
-            Assert.Contains("Timeout 3000ms exceeded during elementHandle.screenshot", exception.Message);
+            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             Assert.Contains("element is not visible", exception.Message);
         }
 

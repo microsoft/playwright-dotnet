@@ -9,7 +9,8 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<string> GetBodyAsync() => Scope.SendMessageToServer<string>(Guid, "body", null);
+        internal async Task<string> GetBodyAsync()
+            => (await Scope.SendMessageToServer(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 
         internal Task FinishedAsync() => Scope.SendMessageToServer(Guid, "finished", null);
     }

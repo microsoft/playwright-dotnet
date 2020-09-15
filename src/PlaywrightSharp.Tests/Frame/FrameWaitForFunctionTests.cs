@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Frame
             int savedCounter = counter;
             await Page.WaitForTimeoutAsync(2000);
 
-            Assert.Contains("Timeout 1000ms exceeded during page.waitForFunction", exception.Message);
+            Assert.Contains("Timeout 1000ms exceeded", exception.Message);
             Assert.Equal(savedCounter, counter);
         }
 
@@ -214,7 +214,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.WaitForFunctionAsync("false", timeout: 10));
 
-            Assert.Contains("Timeout 10ms exceeded during page.waitForFunction", exception.Message);
+            Assert.Contains("Timeout 10ms exceeded", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests.Frame
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.WaitForFunctionAsync("false"));
 
-            Assert.Contains("Timeout 1ms exceeded during page.waitForFunction", exception.Message);
+            Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
         ///<playwright-file>waittask.spec.js</playwright-file>
