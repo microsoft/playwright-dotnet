@@ -184,7 +184,14 @@ namespace PlaywrightSharp
                 return new EvaluateArgumentValueElement.Array { A = result.ToArray() };
             }
 
-            return new EvaluateArgumentValueElement.Object { O = value };
+            var kvList = new List<KeyValueObject>();
+
+            foreach (var property in value.GetType().GetProperties())
+            {
+                kvList.Add(new KeyValueObject { K = property.Name, V = Serialize(property.GetValue(value), jsHandleSerializer, visited) });
+            }
+
+            return new EvaluateArgumentValueElement.Object { O = kvList.ToArray() };
         }
 
         internal static string EvaluationScript(string content, string path, bool addSourceUrl = true)

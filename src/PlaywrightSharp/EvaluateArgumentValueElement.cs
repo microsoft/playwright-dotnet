@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp
 {
@@ -54,7 +55,7 @@ namespace PlaywrightSharp
 
         public class Object : EvaluateArgumentValueElement
         {
-            public object O { get; internal set; }
+            public KeyValueObject[] O { get; set; }
         }
 
         public class Handle : EvaluateArgumentValueElement

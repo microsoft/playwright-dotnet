@@ -337,12 +337,12 @@ namespace PlaywrightSharp
 
             if (e != PageEvent.Crashed)
             {
-                waiter.RejectOnEvent<EventArgs>(this, "Crashed", new PlaywrightSharpException("Page crashed"));
+                waiter.RejectOnEvent<EventArgs>(this, "Crashed", new TargetClosedException("Page crashed"));
             }
 
             if (e != PageEvent.Closed)
             {
-                waiter.RejectOnEvent<EventArgs>(this, "Closed", new PlaywrightSharpException("Page closed"));
+                waiter.RejectOnEvent<EventArgs>(this, "Closed", new TargetClosedException("Page closed"));
             }
 
             return await waiter.WaitForEventAsync<T>(this, e.ToString(), predicate).ConfigureAwait(false);
@@ -419,28 +419,43 @@ namespace PlaywrightSharp
             int? timeout = null) => MainFrame.HoverAsync(true, selector, position, modifiers, force, timeout);
 
         /// <inheritdoc />
-        public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null) => MainFrame.PressAsync(true, selector, text, delay, noWaitAfter, timeout);
+        public Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null)
+            => MainFrame.PressAsync(true, selector, text, delay, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null)
+            => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, value, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, value, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, value, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null)
+            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, values, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null)
+            => MainFrame.SelectOptionAsync(true, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, values, noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null)
+        {
+            if (values == null)
+            {
+                throw new ArgumentException("values should not be null", nameof(values));
+            }
+
+            return MainFrame.SelectOptionAsync(true, selector, values, noWaitAfter, timeout);
+        }
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null) => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>(), noWaitAfter, timeout);
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null)
+            => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>().ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);

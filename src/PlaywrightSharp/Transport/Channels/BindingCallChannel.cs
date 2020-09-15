@@ -28,9 +28,12 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["error"] = new
                     {
-                        message = ex.Message,
-                        stack = ex.StackTrace,
-                        name = ex.GetType().Name,
+                        error = new
+                        {
+                            message = ex.Message,
+                            stack = ex.StackTrace,
+                            name = ex.GetType().Name,
+                        },
                     },
                 });
     }

@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -9,11 +11,13 @@ namespace PlaywrightSharp
         /// <summary>
         /// JPEG type.
         /// </summary>
+        [EnumMember(Value = "jpeg")]
         Jpeg,
 
         /// <summary>
         /// PNG type.
         /// </summary>
+        [EnumMember(Value = "png")]
         Png,
     }
 }

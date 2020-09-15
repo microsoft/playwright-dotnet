@@ -2,10 +2,10 @@ using System.Text.Json;
 
 namespace PlaywrightSharp.Transport.Converters
 {
-    internal class KeyValueObject
+    internal class KeyJsonElementValueObject
     {
         public string K { get; set; }
 
-        public object V { get; set; }
+        public JsonElement V { get; set; }
     }
 }

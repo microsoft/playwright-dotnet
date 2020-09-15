@@ -14,16 +14,21 @@ namespace PlaywrightSharp
         private readonly List<Task> _faulures = new List<Task>();
         private readonly List<Action> _dispose = new List<Action>();
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private bool _disposed = false;
 
         public void Dispose()
         {
-            foreach (var dispose in _dispose)
+            if (!_disposed)
             {
-                dispose();
-            }
+                _disposed = true;
+                foreach (var dispose in _dispose)
+                {
+                    dispose();
+                }
 
-            _cts.Cancel();
-            _cts.Dispose();
+                _cts.Cancel();
+                _cts.Dispose();
+            }
         }
 
         internal void Log(string log) => _logs.Add(log);
@@ -34,7 +39,7 @@ namespace PlaywrightSharp
             PlaywrightSharpException navigationException,
             Func<T, bool> predicate = null)
         {
-            if (eventSource != null)
+            if (eventSource == null)
             {
                 return;
             }

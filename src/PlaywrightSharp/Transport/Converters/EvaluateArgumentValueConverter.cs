@@ -251,12 +251,26 @@ namespace PlaywrightSharp.Transport.Converters
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
             {
-                if (t == typeof(JsonElement) || t == typeof(JsonElement?))
+                var keyValues = obj.ToObject<KeyJsonElementValueObject[]>();
+
+                if (t == typeof(JsonElement) || t == typeof(JsonElement?) || t == typeof(ExpandoObject))
                 {
-                    return obj;
+                    var dicResult = new Dictionary<string, object>();
+
+                    foreach (var kv in keyValues)
+                    {
+                        var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                        var type = ValueKindToType(kv.V);
+
+                        serializerOptions.Converters.Add(GetNewConverter(type));
+                        dicResult[kv.K] = kv.V.ToObject(type, serializerOptions);
+                    }
+
+                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                    string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
+                    return JsonSerializer.Deserialize<T>(serialized, defaultConverter);
                 }
 
-                var keyValues = obj.ToObject<KeyValueObject[]>();
                 object objResult = Activator.CreateInstance(t);
 
                 foreach (var kv in keyValues)

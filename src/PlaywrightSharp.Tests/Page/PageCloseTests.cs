@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => TaskUtils.WhenAll(
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
                 newPage.WaitForRequestAsync(TestConstants.EmptyPage),
                 newPage.WaitForResponseAsync(TestConstants.EmptyPage),
                 newPage.CloseAsync()
