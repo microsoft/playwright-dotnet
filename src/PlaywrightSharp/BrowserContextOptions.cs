@@ -111,7 +111,11 @@ namespace PlaywrightSharp
         {
             var args = new Dictionary<string, object>();
 
-            if (Viewport == null || !Viewport.Equals(ViewportSize.None))
+            if (Viewport == null)
+            {
+                args["noDefaultViewport"] = true;
+            }
+            else if (!Viewport.Equals(ViewportSize.None))
             {
                 args["viewport"] = Viewport;
             }

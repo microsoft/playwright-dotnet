@@ -21,7 +21,7 @@ namespace PlaywrightSharp
         /// <param name="y">The y coordinate.</param>
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
-        public Rect(double x, double y, double width, double height)
+        public Rect(decimal x, decimal y, decimal width, decimal height)
         {
             X = x;
             Y = y;
@@ -32,22 +32,22 @@ namespace PlaywrightSharp
         /// <summary>
         /// The x coordinate of the element in pixels.
         /// </summary>
-        public double X { get; set; }
+        public decimal X { get; set; }
 
         /// <summary>
         /// The y coordinate of the element in pixels.
         /// </summary>
-        public double Y { get; set; }
+        public decimal Y { get; set; }
 
         /// <summary>
         /// The width of the element in pixels.
         /// </summary>
-        public double Width { get; set; }
+        public decimal Width { get; set; }
 
         /// <summary>
         /// The height of the element in pixels.
         /// </summary>
-        public double Height { get; set; }
+        public decimal Height { get; set; }
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
