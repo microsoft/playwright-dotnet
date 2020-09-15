@@ -41,8 +41,12 @@ namespace PlaywrightSharp.Transport.Channels
             var args = new Dictionary<string, object>
             {
                 ["screenshots"] = screenshots,
-                ["path"] = path,
             };
+
+            if (path != null)
+            {
+                args["path"] = path;
+            }
 
             if (page != null)
             {
@@ -57,6 +61,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Scope.SendMessageToServer(Guid, "crStartTracing", args);
         }
 
-        internal Task<string> StopTracingAsync() => Scope.SendMessageToServer<string>(Guid, "crStopTracing", null);
+        internal async Task<string> StopTracingAsync()
+            => (await Scope.SendMessageToServer(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
     }
 }

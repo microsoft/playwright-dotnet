@@ -27,9 +27,14 @@ namespace PlaywrightSharp
         IDictionary<string, string> Headers { get; }
 
         /// <summary>
-        /// Gets or sets the post data.
+        /// Post data as string.
         /// </summary>
         string PostData { get; }
+
+        /// <summary>
+        /// Post data as a byte[].
+        /// </summary>
+        byte[] PostDataBuffer { get; }
 
         /// <summary>
         /// An <see cref="IFrame"/> that initiated this request, or null if navigating to error pages.
@@ -76,7 +81,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="options">Parser options.</param>
         /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <see cref="JsonDocument"/> representation of request body.</returns>
-        JsonDocument GetJsonAsync(JsonDocumentOptions options = default);
+        JsonDocument GetPostDataJsonAsync(JsonDocumentOptions options = default);
 
         /// <summary>
         /// Returns the parsed request's body for form-urlencoded and JSON as a fallback if any.

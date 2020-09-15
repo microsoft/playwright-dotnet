@@ -55,7 +55,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
                     Longitude = 200,
                     Latitude = 100
                 }));
-            Assert.Contains("Invalid longitude \"200\"", exception.Message);
+            Assert.Contains("geolocation.longitude", exception.Message);
+            Assert.Contains("failed", exception.Message);
         }
 
         ///<playwright-file>geolocation.spec.js</playwright-file>

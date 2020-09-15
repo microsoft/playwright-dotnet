@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Page.Network
 
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.postDataJSON</playwright-describe>
-        ///<playwright-it>should parse the JSON payload</playwright-it>
+        ///<playwright-it>should parse the JSON post payload</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldParseTheJSONPayload()
         {
@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Page.Request += (sender, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
-            Assert.Equal("bar", request.GetJsonAsync().RootElement.GetProperty("foo").ToString());
+            Assert.Equal("bar", request.GetPostDataJsonAsync().RootElement.GetProperty("foo").ToString());
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             await Page.ClickAsync("input[type=submit]");
 
             Assert.NotNull(request);
-            var element = request.GetJsonAsync().RootElement;
+            var element = request.GetPostDataJsonAsync().RootElement;
             Assert.Equal("bar", element.GetProperty("foo").ToString());
             Assert.Equal("123", element.GetProperty("baz").ToString());
         }
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Null(response.Request.GetJsonAsync());
+            Assert.Null(response.Request.GetPostDataJsonAsync());
         }
     }
 }

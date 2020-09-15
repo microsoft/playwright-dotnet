@@ -151,14 +151,16 @@ namespace PlaywrightSharp.Transport.Channels
                     ["offline"] = offline,
                 });
 
-        internal Task<IEnumerable<NetworkCookie>> GetCookiesAsync(string[] urls)
-            => Scope.SendMessageToServer<IEnumerable<NetworkCookie>>(
+        internal async Task<IEnumerable<NetworkCookie>> GetCookiesAsync(string[] urls)
+        {
+            return (await Scope.SendMessageToServer(
                 Guid,
                 "cookies",
                 new Dictionary<string, object>
                 {
                     ["urls"] = urls,
-                });
+                }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IEnumerable<NetworkCookie>>();
+        }
 
         internal Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies)
             => Scope.SendMessageToServer<PageChannel>(
@@ -171,15 +173,19 @@ namespace PlaywrightSharp.Transport.Channels
                 true);
 
         internal Task GrantPermissionsAsync(ContextPermission[] permissions, string origin)
-            => Scope.SendMessageToServer<PageChannel>(
-                Guid,
-                "grantPermissions",
-                new Dictionary<string, object>
-                {
-                    ["permissions"] = permissions,
-                    ["origin"] = origin,
-                },
-                true);
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["permissions"] = permissions,
+            };
+
+            if (origin != null)
+            {
+                args["origin"] = origin;
+            }
+
+            return Scope.SendMessageToServer<PageChannel>(Guid, "grantPermissions", args, true);
+        }
 
         internal Task ClearPermissionsAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearPermissions", null);
 

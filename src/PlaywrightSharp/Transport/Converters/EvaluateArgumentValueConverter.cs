@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Transport.Converters
             if (value == null)
             {
                 writer.WriteStartObject();
-                writer.WriteNull("v");
+                writer.WriteString("v", "null");
                 writer.WriteEndObject();
 
                 return;
@@ -191,7 +191,7 @@ namespace PlaywrightSharp.Transport.Converters
                 if (obj == null)
                 {
                     writer.WriteStartObject();
-                    writer.WriteNull("v");
+                    writer.WriteString("v", "null");
                     writer.WriteEndObject();
                 }
                 else
@@ -253,12 +253,12 @@ namespace PlaywrightSharp.Transport.Converters
             {
                 var keyValues = obj.ToObject<KeyJsonElementValueObject[]>();
 
-                if (t == typeof(JsonElement) || t == typeof(JsonElement?) || t == typeof(ExpandoObject))
+                if (t == typeof(JsonElement) || t == typeof(JsonElement?) || t == typeof(ExpandoObject) || t == typeof(object))
                 {
                     var dynamicResult = new ExpandoObject();
                     IDictionary<string, object> dicResult;
 
-                    if (typeof(T) == typeof(ExpandoObject))
+                    if (typeof(T) == typeof(ExpandoObject) || typeof(T) == typeof(object))
                     {
                         dicResult = dynamicResult;
                     }
@@ -279,7 +279,7 @@ namespace PlaywrightSharp.Transport.Converters
                     var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
                     string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
 
-                    if (typeof(T) == typeof(ExpandoObject))
+                    if (typeof(T) == typeof(ExpandoObject) || typeof(T) == typeof(object))
                     {
                         return dynamicResult;
                     }

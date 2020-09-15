@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -89,7 +90,14 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
-            => (await _channel.LaunchAsync(options ?? new LaunchOptions()).ConfigureAwait(false)).Object;
+        {
+            if (!string.IsNullOrEmpty(options?.UserDataDir))
+            {
+                throw new ArgumentException("UserDataDir option is not supported in LaunchAsync. Use LaunchPersistentContextAsync instead");
+            }
+
+            return (await _channel.LaunchAsync(options ?? new LaunchOptions()).ConfigureAwait(false)).Object;
+        }
 
         /// <inheritdoc />
         public Task<IBrowserContext> LaunchPersistentContextAsync(

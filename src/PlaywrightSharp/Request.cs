@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -25,6 +26,7 @@ namespace PlaywrightSharp
             _channel = new RequestChannel(guid, scope, this);
             _initializer = initializer;
             RedirectedFrom = _initializer.RedirectedFrom?.Object;
+            PostDataBuffer = _initializer.PostData != null ? Convert.FromBase64String(_initializer.PostData) : null;
 
             if (RedirectedFrom != null)
             {
@@ -59,7 +61,10 @@ namespace PlaywrightSharp
         public IDictionary<string, string> Headers => _headers;
 
         /// <inheritdoc />
-        public string PostData => _initializer.PostData;
+        public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
+
+        /// <inheritdoc />
+        public byte[] PostDataBuffer { get; }
 
         /// <inheritdoc />
         public IFrame Frame => _initializer.Frame;
@@ -85,7 +90,7 @@ namespace PlaywrightSharp
         public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public JsonDocument GetJsonAsync(JsonDocumentOptions options = default)
+        public JsonDocument GetPostDataJsonAsync(JsonDocumentOptions options = default)
         {
             string content = GetRequestForJson();
 
@@ -112,7 +117,7 @@ namespace PlaywrightSharp
 
         private string GetRequestForJson()
         {
-            if (_initializer.PostData == null)
+            if (PostData == null)
             {
                 return null;
             }
@@ -124,7 +129,7 @@ namespace PlaywrightSharp
 
             if (contentType == "application/x-www-form-urlencoded")
             {
-                var parsed = HttpUtility.ParseQueryString(_initializer.PostData);
+                var parsed = HttpUtility.ParseQueryString(PostData);
                 var dictionary = new Dictionary<string, string>();
 
                 foreach (string key in parsed.Keys)
@@ -135,7 +140,7 @@ namespace PlaywrightSharp
                 return JsonSerializer.Serialize(dictionary);
             }
 
-            return _initializer.PostData;
+            return PostData;
         }
     }
 }

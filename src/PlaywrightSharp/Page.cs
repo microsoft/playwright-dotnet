@@ -257,18 +257,18 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task EmulateMediaAsync(MediaType? media)
-            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["media"] = media });
+            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["media"] = (object)media ?? "null" });
 
         /// <inheritdoc />
         public Task EmulateMediaAsync(ColorScheme? colorScheme)
-            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["colorScheme"] = colorScheme });
+            => _channel.EmulateMediaAsync(new Dictionary<string, object> { ["colorScheme"] = (object)colorScheme ?? "null" });
 
         /// <inheritdoc />
         public Task EmulateMediaAsync(MediaType? media, ColorScheme? colorScheme)
             => _channel.EmulateMediaAsync(new Dictionary<string, object>
             {
-                ["media"] = media,
-                ["colorScheme"] = colorScheme,
+                ["media"] = (object)media ?? "null",
+                ["colorScheme"] = (object)colorScheme ?? "null",
             });
 
         /// <inheritdoc />
@@ -642,8 +642,8 @@ namespace PlaywrightSharp
             string height = null,
             Margin marginOptions = null,
             bool preferCSSPageSize = false)
-            => Convert.FromBase64String(await _channel.GetPdfAsync(
-                path,
+        {
+            byte[] result = Convert.FromBase64String(await _channel.GetPdfAsync(
                 scale,
                 displayHeaderFooter,
                 headerTemplate,
@@ -656,6 +656,14 @@ namespace PlaywrightSharp
                 height,
                 marginOptions,
                 preferCSSPageSize).ConfigureAwait(false));
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                File.WriteAllBytes(path, result);
+            }
+
+            return result;
+        }
 
         /// <inheritdoc />
         public Task AddInitScriptAsync(string script = null, object[] args = null, string path = null, string content = null)

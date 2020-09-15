@@ -22,7 +22,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// None
         /// </summary>
-        [EnumMember(Value = "")]
-        None,
+        [EnumMember(Value = "null")]
+        Null,
     }
 }
