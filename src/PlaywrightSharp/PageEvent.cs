@@ -47,6 +47,12 @@ namespace PlaywrightSharp
         Request,
 
         /// <summary>
+        /// Request event
+        /// </summary>
+        /// <see cref="IPage.RequestFinished"/>
+        RequestFinished,
+
+        /// <summary>
         /// FileChooser event.
         /// </summary>
         /// <see cref="IPage.FileChooser"/>
