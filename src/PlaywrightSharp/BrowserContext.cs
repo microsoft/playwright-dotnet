@@ -167,7 +167,7 @@ namespace PlaywrightSharp
             if (!_isClosedOrClosing)
             {
                 _isClosedOrClosing = true;
-                return _channel.CloseAsync();
+                return Task.WhenAny(_closeTcs.Task, _channel.CloseAsync());
             }
 
             return _closeTcs.Task;
