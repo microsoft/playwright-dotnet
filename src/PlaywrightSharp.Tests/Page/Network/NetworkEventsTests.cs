@@ -91,15 +91,16 @@ namespace PlaywrightSharp.Tests.Page.Network
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task PageEventsRequestFinished()
         {
-            var requests = new List<IRequest>();
-            Page.RequestFinished += (sender, e) => requests.Add(e.Request);
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Single(requests);
-            Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
-            Assert.NotNull(await requests[0].GetResponseAsync());
-            Assert.Equal(HttpMethod.Get, requests[0].Method);
-            Assert.Equal(Page.MainFrame, requests[0].Frame);
-            Assert.Equal(TestConstants.EmptyPage, requests[0].Frame.Url);
+            var (_, response) = await TaskUtils.WhenAll(
+                Page.WaitForEvent<RequestEventArgs>(PageEvent.RequestFinished),
+                Page.GoToAsync(TestConstants.EmptyPage));
+
+            var request = response.Request;
+            Assert.Equal(TestConstants.EmptyPage, request.Url);
+            Assert.NotNull(await request.GetResponseAsync());
+            Assert.Equal(HttpMethod.Get, request.Method);
+            Assert.Equal(Page.MainFrame, request.Frame);
+            Assert.Equal(TestConstants.EmptyPage, request.Frame.Url);
         }
 
         ///<playwright-file>network.spec.js</playwright-file>

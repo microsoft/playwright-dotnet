@@ -142,9 +142,38 @@ namespace PlaywrightSharp.Transport.Converters
                 return;
             }
 
-            if (value is IDictionary)
+            if (value is IDictionary dictionary && dictionary.Keys.OfType<string>().Any())
             {
-                JsonSerializer.Serialize(writer, value);
+                writer.WriteStartObject();
+                writer.WritePropertyName("o");
+                writer.WriteStartArray();
+
+                _visited.Add(value);
+                foreach (object key in dictionary.Keys)
+                {
+                    writer.WriteStartObject();
+                    object obj = dictionary[key];
+                    writer.WriteString("k", key.ToString());
+                    writer.WritePropertyName("v");
+
+                    if (obj == null)
+                    {
+                        writer.WriteStartObject();
+                        writer.WriteString("v", "null");
+                        writer.WriteEndObject();
+                    }
+                    else
+                    {
+                        JsonSerializer.Serialize(writer, obj, options);
+                    }
+
+                    writer.WriteEndObject();
+                }
+
+                _visited.Remove(value);
+
+                writer.WriteEndArray();
+                writer.WriteEndObject();
                 return;
             }
 
@@ -276,13 +305,13 @@ namespace PlaywrightSharp.Transport.Converters
                         dicResult[kv.K] = kv.V.ToObject(type, serializerOptions);
                     }
 
-                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
-                    string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
-
                     if (typeof(T) == typeof(ExpandoObject) || typeof(T) == typeof(object))
                     {
                         return dynamicResult;
                     }
+
+                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                    string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
 
                     return JsonSerializer.Deserialize<T>(serialized, defaultConverter);
                 }
@@ -381,6 +410,14 @@ namespace PlaywrightSharp.Transport.Converters
                 if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("n", out var _))
                 {
                     return typeof(decimal);
+                }
+
+                if (
+                    element.ValueKind == JsonValueKind.Object &&
+                    element.TryGetProperty("v", out var number) &&
+                    (number.ToString() == "Infinity" || number.ToString() == "-Infinity" || number.ToString() == "-0" || number.ToString() == "NaN"))
+                {
+                    return typeof(double);
                 }
             }
 

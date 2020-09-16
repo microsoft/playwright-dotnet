@@ -691,7 +691,7 @@ namespace PlaywrightSharp
             waiter.RejectOnEvent<FrameEventArgs>(
                 Page,
                 "FrameDetached",
-                new NavigationException("Navigation failed because page was closed!"),
+                new NavigationException("Navigating frame was detached!"),
                 e => e.Frame == this);
             timeout ??= Page?.DefaultNavigationTimeout ?? Playwright.DefaultTimeout;
             waiter.RejectOnTimeout(timeout, $"Timeout {timeout}ms exceeded.");

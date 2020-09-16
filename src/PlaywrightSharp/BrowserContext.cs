@@ -167,7 +167,7 @@ namespace PlaywrightSharp
             if (!_isClosedOrClosing)
             {
                 _isClosedOrClosing = true;
-                return _channel.CloseAsync();
+                return Task.WhenAny(_closeTcs.Task, _channel.CloseAsync());
             }
 
             return _closeTcs.Task;
@@ -375,9 +375,9 @@ namespace PlaywrightSharp
                 Browser.BrowserContextsList.Remove(this);
             }
 
+            Closed?.Invoke(this, EventArgs.Empty);
             _closeTcs.TrySetResult(true);
             RejectPendingOperations();
-            Closed?.Invoke(this, EventArgs.Empty);
             _scope.Dispose();
         }
 
