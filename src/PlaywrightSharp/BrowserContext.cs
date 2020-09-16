@@ -375,9 +375,9 @@ namespace PlaywrightSharp
                 Browser.BrowserContextsList.Remove(this);
             }
 
+            Closed?.Invoke(this, EventArgs.Empty);
             _closeTcs.TrySetResult(true);
             RejectPendingOperations();
-            Closed?.Invoke(this, EventArgs.Empty);
             _scope.Dispose();
         }
 
