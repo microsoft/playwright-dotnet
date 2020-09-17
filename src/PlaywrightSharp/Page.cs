@@ -70,7 +70,7 @@ namespace PlaywrightSharp
             _channel.Load += (sender, e) => Load?.Invoke(this, e);
             _channel.FileChooser += (sender, e) =>
             {
-                _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(e.Element.Object, e.IsMultiple));
+                _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
             };
             _channel.Worker += (sender, e) =>
             {
