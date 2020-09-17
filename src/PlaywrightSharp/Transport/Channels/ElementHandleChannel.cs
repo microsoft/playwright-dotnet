@@ -325,17 +325,6 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Scope.SendMessageToServer(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
-            => Scope.SendMessageToServer<JSHandleChannel>(
-                Guid,
-                "evaluateExpressionHandle",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = script,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                });
-
         internal async Task<string> GetInnerHtmlAsync(int? timeout)
         {
             var args = new Dictionary<string, object>();

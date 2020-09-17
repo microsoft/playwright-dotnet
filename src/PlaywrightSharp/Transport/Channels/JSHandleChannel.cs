@@ -23,6 +23,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                 });
 
+        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
+            => Scope.SendMessageToServer<JSHandleChannel>(
+                Guid,
+                "evaluateExpressionHandle",
+                new Dictionary<string, object>
+                {
+                    ["expression"] = script,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
+                });
+
         internal Task<JsonElement> GetJsonValue() => Scope.SendMessageToServer<JsonElement>(Guid, "jsonValue", null);
 
         internal Task DisposeAsync() => Scope.SendMessageToServer(Guid, "dispose", null);

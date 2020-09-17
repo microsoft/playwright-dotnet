@@ -76,20 +76,6 @@ namespace PlaywrightSharp
         public Task<Rect> GetBoundingBoxAsync() => _channel.GetBoundingBoxAsync();
 
         /// <inheritdoc />
-        public async Task<IJSHandle> EvaluateHandleAsync(string script)
-            => (await _channel.EvaluateExpressionHandleAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined).ConfigureAwait(false))?.Object;
-
-        /// <inheritdoc />
-        public async Task<IJSHandle> EvaluateHandleAsync(string script, object args)
-            => (await _channel.EvaluateExpressionHandleAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
-
-        /// <inheritdoc />
         public Task ClickAsync(
             int delay = 0,
             MouseButton button = MouseButton.Left,

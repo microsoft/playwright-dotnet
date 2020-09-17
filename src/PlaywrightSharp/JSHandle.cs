@@ -36,6 +36,20 @@ namespace PlaywrightSharp
         internal string Preview { get; set; }
 
         /// <inheritdoc />
+        public async Task<IJSHandle> EvaluateHandleAsync(string script)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: EvaluateArgument.Undefined).ConfigureAwait(false))?.Object;
+
+        /// <inheritdoc />
+        public async Task<IJSHandle> EvaluateHandleAsync(string script, object args)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                script: script,
+                isFunction: script.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
+
+        /// <inheritdoc />
         public async Task<T> EvaluateAsync<T>(string script)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
