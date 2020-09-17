@@ -29,21 +29,11 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
         </AssemblyAttribute>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Chromium, PublicKey=$(AssemblyPublicKey)</_Parameter1>
-        </AssemblyAttribute>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Firefox, PublicKey=$(AssemblyPublicKey)</_Parameter1>
-        </AssemblyAttribute>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Webkit, PublicKey=$(AssemblyPublicKey)</_Parameter1>
-        </AssemblyAttribute>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Esprima" Version="1.0.1270" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
-        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     </ItemGroup>
