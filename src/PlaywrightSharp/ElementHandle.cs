@@ -44,6 +44,10 @@ namespace PlaywrightSharp
                 timeout: timeout).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
+        public Task WaitForElementStateAsync(ElementState state, int? timeout = null)
+            => _channel.WaitForElementStateAsync(state, timeout);
+
+        /// <inheritdoc />
         public Task PressAsync(string key, int delay = 0) => _channel.PressAsync(key, delay);
 
         /// <inheritdoc />
