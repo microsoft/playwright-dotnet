@@ -565,7 +565,7 @@ namespace PlaywrightSharp
                 polling: polling != null ? null : pollingInterval).ConfigureAwait(false)).Object;
 
         internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForState? state, int? timeout)
-            => (await _channel.WaitForSelector(
+            => (await _channel.WaitForSelectorAsync(
                 selector: selector,
                 state: state,
                 timeout: timeout,

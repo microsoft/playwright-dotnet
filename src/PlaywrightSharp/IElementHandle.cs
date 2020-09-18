@@ -532,5 +532,19 @@ namespace PlaywrightSharp
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
         Task UncheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false);
+
+        /// <summary>
+        /// Waits for a selector to be added to the DOM.
+        /// </summary>
+        /// <param name="selector">A selector of an element to wait for, relative to the <see cref="IElementHandle"/>.</param>
+        /// <param name="state">Wait for element to become in the specified state.</param>
+        /// <param name="timeout">
+        /// Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
+        /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
+        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null);
     }
 }

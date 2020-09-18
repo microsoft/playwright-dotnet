@@ -37,6 +37,13 @@ namespace PlaywrightSharp
         internal IChannel<ElementHandle> ElementChannel => _channel;
 
         /// <inheritdoc />
+        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null)
+            => (await _channel.WaitForSelectorAsync(
+                selector: selector,
+                state: state,
+                timeout: timeout).ConfigureAwait(false))?.Object;
+
+        /// <inheritdoc />
         public Task PressAsync(string key, int delay = 0) => _channel.PressAsync(key, delay);
 
         /// <inheritdoc />

@@ -255,7 +255,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<string> GetTitleAsync()
             => (await Scope.SendMessageToServer(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<ElementHandleChannel> WaitForSelector(string selector, WaitForState? state, int? timeout, bool isPage)
+        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForState? state, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
