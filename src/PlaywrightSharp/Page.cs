@@ -828,7 +828,7 @@ namespace PlaywrightSharp
         {
             var frame = e.Frame as Frame;
             _frames.Remove(frame);
-            frame.Detached = true;
+            frame.IsDetached = true;
             frame.ParentFrame?.ChildFramesList?.Remove(frame);
             FrameDetached?.Invoke(this, e);
         }
