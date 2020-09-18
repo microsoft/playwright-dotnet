@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp
+namespace PlaywrightSharp
 {
     /// <summary>
     /// See <see cref="IElementHandle.WaitForElementStateAsync(ElementState, int?)"/>.
