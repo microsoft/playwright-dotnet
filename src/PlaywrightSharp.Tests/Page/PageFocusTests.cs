@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -80,8 +80,8 @@ namespace PlaywrightSharp.Tests.Page
 
             Assert.True(focused);
 
-            Assert.Equal("First", await Page.QuerySelectorEvaluateAsync<string>("#i1", "e => e.value"));
-            Assert.Equal("Last", await Page.QuerySelectorEvaluateAsync<string>("#i2", "e => e.value"));
+            Assert.Equal("First", await Page.EvalOnSelectorAsync<string>("#i1", "e => e.value"));
+            Assert.Equal("Last", await Page.EvalOnSelectorAsync<string>("#i2", "e => e.value"));
         }
     }
 }

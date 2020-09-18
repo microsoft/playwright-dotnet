@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         {
             await Page.SetContentAsync("<button>My Button</button>");
             var button = await Page.QuerySelectorAsync("button");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.remove()");
+            await Page.EvalOnSelectorAsync("button", "button => button.remove()");
 
             Assert.Null(await Page.Accessibility.SnapshotAsync(root: button));
         }

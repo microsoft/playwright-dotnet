@@ -290,7 +290,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> QuerySelectorEvaluateAsync(string selector, string script);
+        Task<JsonElement?> EvalOnSelectorAsync(string selector, string script);
 
         /// <summary>
         /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to <paramref name="script"/>.
@@ -303,7 +303,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> QuerySelectorEvaluateAsync(string selector, string script, object args);
+        Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object args);
 
         /// <summary>
         /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="script"/>.
@@ -316,7 +316,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string script);
 
         /// <summary>
         /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="script"/>.
@@ -330,7 +330,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, object args);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string script, object args);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="script"/>.
@@ -341,7 +341,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> QuerySelectorAllEvaluateAsync(string selector, string script);
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="script"/>.
@@ -353,7 +353,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> QuerySelectorAllEvaluateAsync(string selector, string script, object args);
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object args);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="script"/>.
@@ -365,7 +365,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string script);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="script"/>.
@@ -378,7 +378,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, object args);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object args);
 
         /// <summary>
         /// Calls focus on the element.

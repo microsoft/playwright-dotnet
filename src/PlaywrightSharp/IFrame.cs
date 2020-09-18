@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -297,7 +297,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task QuerySelectorAllEvaluateAsync(string selector, string script);
+        Task EvalOnSelectorAllAsync(string selector, string script);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the frame and passes it as the first argument to pageFunction.
@@ -309,7 +309,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string script);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the frame and passes it as the first argument to pageFunction.
@@ -321,7 +321,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task QuerySelectorAllEvaluateAsync(string selector, string script, object args);
+        Task EvalOnSelectorAllAsync(string selector, string script, object args);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the frame and passes it as the first argument to pageFunction.
@@ -334,7 +334,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, object args);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object args);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
@@ -399,7 +399,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task QuerySelectorEvaluateAsync(string selector, string script, object args);
+        Task EvalOnSelectorAsync(string selector, string script, object args);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
@@ -413,7 +413,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, object args);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string script, object args);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
@@ -425,7 +425,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task QuerySelectorEvaluateAsync(string selector, string script);
+        Task EvalOnSelectorAsync(string selector, string script);
 
         /// <summary>
         /// This method runs document.querySelector within the page and passes it as the first argument to pageFunction.
@@ -438,7 +438,7 @@ namespace PlaywrightSharp
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string script);
 
         /// <summary>
         /// This resolves when the frame navigates to a new URL or reloads.

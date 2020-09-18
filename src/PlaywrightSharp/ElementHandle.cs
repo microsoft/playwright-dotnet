@@ -126,7 +126,7 @@ namespace PlaywrightSharp
             => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(e => ((ElementHandleChannel)e).Object);
 
         /// <inheritdoc />
-        public async Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script)
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string script)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
@@ -134,7 +134,7 @@ namespace PlaywrightSharp
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> QuerySelectorEvaluateAsync(string selector, string script)
+        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string script)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
@@ -142,7 +142,7 @@ namespace PlaywrightSharp
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> QuerySelectorEvaluateAsync(string selector, string script, object args)
+        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object args)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
@@ -150,7 +150,7 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, object args)
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object args)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
@@ -158,7 +158,7 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script)
+        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string script)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
@@ -166,7 +166,7 @@ namespace PlaywrightSharp
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> QuerySelectorAllEvaluateAsync(string selector, string script)
+        public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
@@ -174,7 +174,7 @@ namespace PlaywrightSharp
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> QuerySelectorAllEvaluateAsync(string selector, string script, object args)
+        public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object args)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
@@ -182,7 +182,7 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, object args)
+        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object args)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,

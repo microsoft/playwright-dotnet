@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            await Page.QuerySelectorEvaluateAsync("#frame1", "e => e.remove()");
+            await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
 
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame1.GetFrameElementAsync());
 

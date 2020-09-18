@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Mouse
             await Page.HoverAsync("#target");
             await Page.Mouse.UpAsync();
 
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
+            Assert.True(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -242,7 +242,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(waitForTask.IsCompleted);
             await Page.WaitForSelectorAsync("css=section");
             Assert.False(waitForTask.IsCompleted);
-            await Page.QuerySelectorEvaluateAsync("div", "div => div.remove()");
+            await Page.EvalOnSelectorAsync("div", "div => div.remove()");
             await waitForTask;
         }
 

@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldNotWaitWithForce()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
                 => Page.ClickAsync("button", force: true));
@@ -238,7 +238,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWaitForDisplayNoneToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
             var clickTask = Page.ClickAsync("button", timeout: 0);
 
             await GiveItAChanceToClick(Page);
@@ -246,7 +246,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(clickTask.IsCompleted);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'block'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'block'");
             await clickTask.WithTimeout();
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
@@ -259,7 +259,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWaitForVisibilityhiddenToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.visibility = 'hidden'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", timeout: 0);
 
             await GiveItAChanceToClick(Page);
@@ -267,7 +267,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(clickTask.IsCompleted);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.visibility = 'visible'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'visible'");
             await clickTask.WithTimeout();
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
@@ -280,7 +280,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.display = 'none'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", timeout: 5000));
 
@@ -296,7 +296,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.style.visibility = 'hidden'");
+            await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", timeout: 5000);
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", timeout: 5000));
@@ -313,7 +313,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWaitForVisibleWhenParentIsHidden()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.parentElement.style.display = 'none'");
+            await Page.EvalOnSelectorAsync("button", "b => b.parentElement.style.display = 'none'");
             var clickTask = Page.ClickAsync("button", timeout: 0);
 
             await GiveItAChanceToClick(Page);
@@ -321,7 +321,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(clickTask.IsCompleted);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
-            await Page.QuerySelectorEvaluateAsync("button", "b => b.parentElement.style.display = 'block'");
+            await Page.EvalOnSelectorAsync("button", "b => b.parentElement.style.display = 'block'");
             await clickTask.WithTimeout();
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
@@ -513,7 +513,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<div style=\"width:100px;height:2000px\">spacer</div>");
             await FrameUtils.AttachFrameAsync(Page, "button-test", TestConstants.ServerUrl + "/input/button.html");
             var frame = Page.FirstChildFrame();
-            await frame.QuerySelectorEvaluateAsync("button", "button => button.style.setProperty('position', 'fixed')");
+            await frame.EvalOnSelectorAsync("button", "button => button.style.setProperty('position', 'fixed')");
             await frame.ClickAsync("button");
             Assert.Equal("Clicked", await frame.EvaluateAsync<string>("window.result"));
         }
@@ -551,7 +551,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClickTheButtonWithPxBorderWithRelativePoint()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
+            await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.ClickAsync("button", position: new Point { X = 20, Y = 10 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
@@ -566,8 +566,8 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClickTheButtonWithEmBorderWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '2em'");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.fontSize = '12px'");
+            await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '2em'");
+            await Page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
             await Page.ClickAsync("button", position: new Point { X = 20, Y = 10 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
@@ -582,8 +582,8 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClickAVeryLargeButtonWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.QuerySelectorEvaluateAsync("button", "button => button.style.height = button.style.width = '2000px'");
+            await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
+            await Page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
             await Page.ClickAsync("button", position: new Point { X = 1900, Y = 1910 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
@@ -598,7 +598,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClickAButtonInScrollingContainerWithOffset()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 const container = document.createElement('div');
                 container.style.overflow = 'auto';
                 container.style.width = '200px';
@@ -636,7 +636,7 @@ namespace PlaywrightSharp.Tests.Page
             var page = await context.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await page.QuerySelectorEvaluateAsync("button", @"button => {
+            await page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '8px';
                 document.body.style.margin = '0';
             }");
@@ -662,7 +662,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.transition = 'margin 500ms linear 0s';
                 button.style.marginLeft = '200px';
                 button.style.borderWidth = '0';
@@ -687,7 +687,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldTimeoutWaitingForStablePosition()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.transition = 'margin 5s linear 0s';
                 button.style.marginLeft = '200px';
             }");
@@ -707,7 +707,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWaitForBecomingHitTarget()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '0';
                 button.style.width = '200px';
                 button.style.height = '20px';
@@ -727,11 +727,11 @@ namespace PlaywrightSharp.Tests.Page
             var clickTask = Page.ClickAsync("button");
             Assert.False(clickTask.IsCompleted);
 
-            await Page.QuerySelectorEvaluateAsync(".flyover", "flyOver => flyOver.style.left = '0'");
+            await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '0'");
             await GiveItAChanceToClick(Page);
             Assert.False(clickTask.IsCompleted);
 
-            await Page.QuerySelectorEvaluateAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
+            await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
             await clickTask.WithTimeout();
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
         }
@@ -745,7 +745,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
 
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '0';
                 button.style.width = '200px';
                 button.style.height = '20px';
@@ -776,7 +776,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 document.body.style.position = 'relative';
                 const blocker = document.createElement('div');
                 blocker.style.position = 'absolute';

@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -80,8 +80,8 @@ namespace PlaywrightSharp.Tests.Capabilities
         public async Task ShouldPlayVideo()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/video.html");
-            await Page.QuerySelectorEvaluateAsync("video", "v => v.play()");
-            await Page.QuerySelectorEvaluateAsync("video", "v => v.pause()");
+            await Page.EvalOnSelectorAsync("video", "v => v.play()");
+            await Page.EvalOnSelectorAsync("video", "v => v.pause()");
         }
     }
 }
