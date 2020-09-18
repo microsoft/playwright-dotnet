@@ -148,7 +148,7 @@ namespace PlaywrightSharp
         public event EventHandler<EventArgs> Closed;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Crashed;
+        public event EventHandler<EventArgs> Crash;
 
         /// <inheritdoc />
         public event EventHandler<PageErrorEventArgs> PageError;
@@ -335,7 +335,7 @@ namespace PlaywrightSharp
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{e.ToString()}\"");
 
-            if (e != PageEvent.Crashed)
+            if (e != PageEvent.Crash)
             {
                 waiter.RejectOnEvent<EventArgs>(this, "Crashed", new TargetClosedException("Page crashed"));
             }
@@ -797,7 +797,7 @@ namespace PlaywrightSharp
         private void Channel_Crashed(object sender, EventArgs e)
         {
             RejectPendingOperations(true);
-            Crashed?.Invoke(this, EventArgs.Empty);
+            Crash?.Invoke(this, EventArgs.Empty);
         }
 
         private void Channel_BindingCall(object sender, BindingCallEventArgs e)
@@ -844,7 +844,7 @@ namespace PlaywrightSharp
 
         private void RejectPendingOperations(bool isCrash)
         {
-            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crashed : PageEvent.Closed)))
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crash : PageEvent.Closed)))
             {
                 waitTcs.TrySetException(new TargetClosedException(isCrash ? "Page crashed" : "Page closed"));
             }

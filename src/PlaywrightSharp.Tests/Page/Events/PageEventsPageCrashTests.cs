@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldEmitCrashEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var crashTask = Page.WaitForEvent<EventArgs>(PageEvent.Crashed);
+            var crashTask = Page.WaitForEvent<EventArgs>(PageEvent.Crash);
             await CrashAsync(Page);
             await crashTask.WithTimeout();
         }
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldThrowOnAnyActionAfterPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var crashTask = Page.WaitForEvent<EventArgs>(PageEvent.Crashed);
+            var crashTask = Page.WaitForEvent<EventArgs>(PageEvent.Crash);
             await CrashAsync(Page);
             await crashTask.WithTimeout();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => {}"));
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldBeAbleToCloseContextWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var crashTask = Page.WaitForEvent<EventArgs>(PageEvent.Crashed);
+            var crashTask = Page.WaitForEvent<EventArgs>(PageEvent.Crash);
             await CrashAsync(Page);
             await crashTask.WithTimeout();
             await Page.Context.CloseAsync();
