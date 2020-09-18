@@ -36,7 +36,7 @@ namespace PlaywrightSharp
             MainFrame = initializer.MainFrame.Object;
             MainFrame.Page = this;
             _frames.Add(MainFrame);
-            Viewport = initializer.ViewportSize;
+            ViewportSize = initializer.ViewportSize;
             Accessibility = new Accesibility(_channel);
             Coverage = new Coverage(_channel);
             Keyboard = new Keyboard(_channel);
@@ -184,7 +184,7 @@ namespace PlaywrightSharp
         public BrowserContext BrowserContext { get; internal set; }
 
         /// <inheritdoc />
-        public ViewportSize Viewport { get; private set; }
+        public ViewportSize ViewportSize { get; private set; }
 
         /// <inheritdoc />
         public IAccessibility Accessibility { get; }
@@ -751,7 +751,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task SetViewportSizeAsync(ViewportSize viewport)
         {
-            Viewport = viewport;
+            ViewportSize = viewport;
             return _channel.SetViewportSizeAsync(viewport);
         }
 
