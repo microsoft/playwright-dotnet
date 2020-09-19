@@ -48,7 +48,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets a value indicating if the frame is detached or not.
         /// </summary>
-        bool Detached { get; }
+        bool IsDetached { get; }
 
         /// <summary>
         /// FrameID.
@@ -224,6 +224,13 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
         Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false);
+
+        /// <summary>
+        /// Returns a Task that resolves after the timeout.
+        /// </summary>
+        /// <param name="timeout">A timeout to wait for.</param>
+        /// <returns>A <see cref="Task"/> that completes when the timeout is hit.</returns>
+        Task WaitForTimeoutAsync(int timeout);
 
         /// <summary>
         /// Waits for a selector to be added to the DOM.
