@@ -24,9 +24,9 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkForOpenShadowRoots()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
-            Assert.Equal("Hello from root2", await Page.QuerySelectorEvaluateAsync<string>("id=target", "e => e.textContent"));
-            Assert.Equal("Hello from root1", await Page.QuerySelectorEvaluateAsync<string>("data-testid=foo", "e => e.textContent"));
-            Assert.Equal(3, await Page.QuerySelectorAllEvaluateAsync<int>("data-testid=foo", "els => els.length"));
+            Assert.Equal("Hello from root2", await Page.EvalOnSelectorAsync<string>("id=target", "e => e.textContent"));
+            Assert.Equal("Hello from root1", await Page.EvalOnSelectorAsync<string>("data-testid=foo", "e => e.textContent"));
+            Assert.Equal(3, await Page.EvalOnSelectorAllAsync<int>("data-testid=foo", "els => els.length"));
             Assert.Null(await Page.QuerySelectorAsync("id:light=target"));
             Assert.Null(await Page.QuerySelectorAsync("data-testid:light=foo"));
             Assert.Empty(await Page.QuerySelectorAllAsync("data-testid:light=foo"));

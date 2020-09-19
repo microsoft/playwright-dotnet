@@ -46,8 +46,8 @@ namespace PlaywrightSharp.Tests
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload);
             await Page.SetInputFilesAsync("input", filePath);
 
-            Assert.Equal(1, await Page.QuerySelectorEvaluateAsync<int>("input", "e => e.files.length"));
-            Assert.Equal("file-to-upload.txt", await Page.QuerySelectorEvaluateAsync<string>("input", "e => e.files[0].name"));
+            Assert.Equal(1, await Page.EvalOnSelectorAsync<int>("input", "e => e.files.length"));
+            Assert.Equal("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "e => e.files[0].name"));
         }
 
         ///<playwright-file>page-set-input-files.spec.js</playwright-file>
@@ -64,8 +64,8 @@ namespace PlaywrightSharp.Tests
                 Buffer = Convert.ToBase64String(Encoding.UTF8.GetBytes("this is a test"))
             });
 
-            Assert.Equal(1, await Page.QuerySelectorEvaluateAsync<int>("input", "e => e.files.length"));
-            Assert.Equal("test.txt", await Page.QuerySelectorEvaluateAsync<string>("input", "e => e.files[0].name"));
+            Assert.Equal(1, await Page.EvalOnSelectorAsync<int>("input", "e => e.files.length"));
+            Assert.Equal("test.txt", await Page.EvalOnSelectorAsync<string>("input", "e => e.files[0].name"));
         }
 
         ///<playwright-file>page-set-input-files.spec.js</playwright-file>
@@ -142,8 +142,8 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<input type=file>");
 
             await Page.SetInputFilesAsync("input", Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload));
-            Assert.Equal(1, await Page.QuerySelectorEvaluateAsync<int>("input", "input => input.files.length"));
-            Assert.Equal("file-to-upload.txt", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.files[0].name"));
+            Assert.Equal(1, await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"));
+            Assert.Equal("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"));
         }
 
         ///<playwright-file>page-set-input-files.spec.js</playwright-file>
@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests
             var (fileChooser1, fileChooser2) = await TaskUtils.WhenAll(
                 Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
                 Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser),
-                Page.QuerySelectorEvaluateAsync("input", "input => input.click()")
+                Page.EvalOnSelectorAsync("input", "input => input.click()")
             );
             Assert.Equal(fileChooser1, fileChooser2);
         }
@@ -214,8 +214,8 @@ namespace PlaywrightSharp.Tests
             Assert.Same(Page, fileChooser.Page);
             Assert.NotNull(fileChooser.Element);
             await fileChooser.SetFilesAsync(TestConstants.FileToUpload);
-            Assert.Equal(1, await Page.QuerySelectorEvaluateAsync<int>("input", "input => input.files.length"));
-            Assert.Equal("file-to-upload.txt", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.files[0].name"));
+            Assert.Equal(1, await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"));
+            Assert.Equal("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"));
         }
 
         ///<playwright-file>page-set-input-files.spec.js</playwright-file>
@@ -271,7 +271,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<input type=file>");
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
                 .ContinueWith(task => task.Result.SetFilesAsync(TestConstants.FileToUpload));
-            Assert.Equal("contents of the file", await Page.QuerySelectorEvaluateAsync<string>("input", @"async picker => {
+            Assert.Equal("contents of the file", await Page.EvalOnSelectorAsync<string>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
                 const reader = new FileReader();
@@ -289,14 +289,14 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<input type=file>");
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
                 .ContinueWith(task => task.Result.SetFilesAsync(TestConstants.FileToUpload));
-            Assert.Equal(1, await Page.QuerySelectorEvaluateAsync<int>("input", @"async picker => {
+            Assert.Equal(1, await Page.EvalOnSelectorAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
                 return picker.files.length;
             }"));
             _ = Page.WaitForEvent<FileChooserEventArgs>(PageEvent.FileChooser)
                 .ContinueWith(task => task.Result.Element.SetInputFilesAsync(new string[] { }));
-            Assert.Equal(0, await Page.QuerySelectorEvaluateAsync<int>("input", @"async picker => {
+            Assert.Equal(0, await Page.EvalOnSelectorAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
                 return picker.files.length;

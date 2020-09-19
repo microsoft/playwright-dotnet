@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests.Mouse
             await Page.HoverAsync("#target");
             await Page.Mouse.UpAsync();
 
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
+            Assert.True(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
         }
     }
 }

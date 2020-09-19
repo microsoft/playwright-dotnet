@@ -242,7 +242,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(waitForTask.IsCompleted);
             await Page.WaitForSelectorAsync("css=section");
             Assert.False(waitForTask.IsCompleted);
-            await Page.QuerySelectorEvaluateAsync("div", "div => div.remove()");
+            await Page.EvalOnSelectorAsync("div", "div => div.remove()");
             await waitForTask;
         }
 

@@ -133,7 +133,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithTrickyContent()
         {
             await Page.SetContentAsync("<div>hello world</div>" + "\x7F");
-            Assert.Equal("hello world", await Page.QuerySelectorEvaluateAsync<string>("div", "div => div.textContent"));
+            Assert.Equal("hello world", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAccents()
         {
             await Page.SetContentAsync("<div>aberración</div>");
-            Assert.Equal("aberración", await Page.QuerySelectorEvaluateAsync<string>("div", "div => div.textContent"));
+            Assert.Equal("aberración", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithEmojis()
         {
             await Page.SetContentAsync("<div>🐥</div>");
-            Assert.Equal("🐥", await Page.QuerySelectorEvaluateAsync<string>("div", "div => div.textContent"));
+            Assert.Equal("🐥", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithNewline()
         {
             await Page.SetContentAsync("<div>\n</div>");
-            Assert.Equal("\n", await Page.QuerySelectorEvaluateAsync<string>("div", "div => div.textContent"));
+            Assert.Equal("\n", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
     }
 }

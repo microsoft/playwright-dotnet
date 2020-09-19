@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldNotThrowWhenSelectCausesNavigation()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.QuerySelectorEvaluateAsync("select", "select => select.addEventListener('input', () => window.location = '/empty.html')");
+            await Page.EvalOnSelectorAsync("select", "select => select.addEventListener('input', () => window.location = '/empty.html')");
             await TaskUtils.WhenAll(
                 Page.SelectOptionAsync("select", "blue"),
                 Page.WaitForNavigationAsync()
@@ -247,7 +247,7 @@ namespace PlaywrightSharp.Tests.Page
             string[] result = await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             Assert.True(result.All(r => new[] { "blue", "black", "magenta" }.Contains(r)));
             await Page.SelectOptionAsync("select");
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool?>("select", "select => Array.from(select.options).every(option => !option.selected)"));
+            Assert.True(await Page.EvalOnSelectorAsync<bool?>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -260,7 +260,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectOptionAsync("select", "blue", "black", "magenta");
             await Page.SelectOptionAsync("select");
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
+            Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -272,7 +272,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.SelectOptionAsync("select", "blue", "black", "magenta");
             await Page.SelectOptionAsync("select", Array.Empty<string>());
-            Assert.True(await Page.QuerySelectorEvaluateAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
+            Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>

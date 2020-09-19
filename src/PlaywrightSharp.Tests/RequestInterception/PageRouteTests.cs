@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     <input type=""hidden"" id=""foo"" name=""foo"" value=""FOOBAR"">
                 </form>");
             await TaskUtils.WhenAll(
-                Page.QuerySelectorEvaluateAsync("form", "form => form.submit()"),
+                Page.EvalOnSelectorAsync("form", "form => form.submit()"),
                 Page.WaitForNavigationAsync()
             );
         }
@@ -552,11 +552,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.SetContentAsync("<iframe></iframe>");
             Route route = null;
             await Page.RouteAsync("**/*", (r, _) => route = r);
-            _ = Page.QuerySelectorEvaluateAsync("iframe", "(frame, url) => frame.src = url", TestConstants.EmptyPage);
+            _ = Page.EvalOnSelectorAsync("iframe", "(frame, url) => frame.src = url", TestConstants.EmptyPage);
             // Wait for request interception.
             await Page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
             // Delete frame to cause request to be canceled.
-            await Page.QuerySelectorEvaluateAsync("iframe", "frame => frame.remove()");
+            await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
             await route.ContinueAsync();
         }
 

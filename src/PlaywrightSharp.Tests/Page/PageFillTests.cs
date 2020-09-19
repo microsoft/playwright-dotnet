@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             foreach (string type in new[] { "color", "file" })
             {
-                await Page.QuerySelectorEvaluateAsync("input", "(input, type) => input.setAttribute('type', type)", type);
+                await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
                 var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("input", string.Empty));
                 Assert.Contains($"input of type \"{type}\" cannot be filled", exception.Message);
             }
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             foreach (string type in new[] { "password", "search", "tel", "text", "url" })
             {
-                await Page.QuerySelectorEvaluateAsync("input", "(input, type) => input.setAttribute('type', type)", type);
+                await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
                 await Page.FillAsync("input", "text " + type);
                 Assert.Equal("text " + type, await Page.EvaluateAsync<string>("() => result"));
             }
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<input type=date>");
             await Page.ClickAsync("input");
             await Page.FillAsync("input", "2020-03-02");
-            Assert.Equal("2020-03-02", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.value"));
+            Assert.Equal("2020-03-02", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<input type=time>");
             await Page.ClickAsync("input");
             await Page.FillAsync("input", "13:15");
-            Assert.Equal("13:15", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.value"));
+            Assert.Equal("13:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -126,7 +126,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<input type=datetime-local>");
             await Page.ClickAsync("input");
             await Page.FillAsync("input", "2020-03-02T05:15");
-            Assert.Equal("2020-03-02T05:15", await Page.QuerySelectorEvaluateAsync<string>("input", "input => input.value"));
+            Assert.Equal("2020-03-02T05:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FillAsync("div[contenteditable]", "some value");
-            Assert.Equal("some value", await Page.QuerySelectorEvaluateAsync<string>("div[contenteditable]", "div => div.textContent"));
+            Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("div[contenteditable]", "div => div.textContent"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -160,18 +160,18 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
 
-            await Page.QuerySelectorEvaluateAsync("input", "input => input.value = 'value one'");
+            await Page.EvalOnSelectorAsync("input", "input => input.value = 'value one'");
             await Page.FillAsync("input", "another value");
             Assert.Equal("another value", await Page.EvaluateAsync<string>("() => result"));
 
-            await Page.QuerySelectorEvaluateAsync("input", @"input => {
+            await Page.EvalOnSelectorAsync("input", @"input => {
                 input.selectionStart = 1;
                 input.selectionEnd = 2;
             }");
             await Page.FillAsync("input", "maybe this one");
             Assert.Equal("maybe this one", await Page.EvaluateAsync<string>("() => result"));
 
-            await Page.QuerySelectorEvaluateAsync("div[contenteditable]", @"div => {
+            await Page.EvalOnSelectorAsync("div[contenteditable]", @"div => {
                 div.innerHTML = 'some text <span>some more text<span> and even more text';
                 var range = document.createRange();
                 range.selectNodeContents(div.querySelector('span'));
@@ -180,7 +180,7 @@ namespace PlaywrightSharp.Tests.Page
                 selection.addRange(range);
             }");
             await Page.FillAsync("div[contenteditable]", "replace with this");
-            Assert.Equal("replace with this", await Page.QuerySelectorEvaluateAsync<string>("div[contenteditable]", "div => div.textContent"));
+            Assert.Equal("replace with this", await Page.EvalOnSelectorAsync<string>("div[contenteditable]", "div => div.textContent"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -209,14 +209,14 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldRetryOnDisabledElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.disabled = true");
+            await Page.EvalOnSelectorAsync("input", "i => i.disabled = true");
 
             var task = Page.FillAsync("input", "some value");
             await GiveItAChanceToFillAsync(Page);
             Assert.False(task.IsCompleted);
             Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
 
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.disabled = false");
+            await Page.EvalOnSelectorAsync("input", "i => i.disabled = false");
             await task;
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
@@ -228,13 +228,13 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldRetryOnReadonlyElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("textarea", "i => i.readOnly = true");
+            await Page.EvalOnSelectorAsync("textarea", "i => i.readOnly = true");
             var task = Page.FillAsync("textarea", "some value");
             await GiveItAChanceToFillAsync(Page);
             Assert.False(task.IsCompleted);
             Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
 
-            await Page.QuerySelectorEvaluateAsync("textarea", "i => i.readOnly = false");
+            await Page.EvalOnSelectorAsync("textarea", "i => i.readOnly = false");
             await task;
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
@@ -246,14 +246,14 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldRetryOnInvisibleElement()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'none'");
+            await Page.EvalOnSelectorAsync("input", "i => i.style.display = 'none'");
 
             var task = Page.FillAsync("input", "some value");
             await GiveItAChanceToFillAsync(Page);
             Assert.False(task.IsCompleted);
             Assert.Empty(await Page.EvaluateAsync<string>("() => result"));
 
-            await Page.QuerySelectorEvaluateAsync("input", "i => i.style.display = 'inline'");
+            await Page.EvalOnSelectorAsync("input", "i => i.style.display = 'inline'");
             await task;
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
@@ -277,7 +277,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.SetContentAsync("<input style='position: fixed;' />");
             await Page.FillAsync("input", "some value");
-            Assert.Equal("some value", await Page.QuerySelectorEvaluateAsync<string>("input", "i => i.value"));
+            Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("input", "i => i.value"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -289,7 +289,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.SetContentAsync("<div contentEditable=\"true\"></div><iframe></iframe>");
             await Page.FocusAsync("iframe");
             await Page.FillAsync("div", "some value");
-            Assert.Equal("some value", await Page.QuerySelectorEvaluateAsync<string>("div", "d => d.textContent"));
+            Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("div", "d => d.textContent"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>

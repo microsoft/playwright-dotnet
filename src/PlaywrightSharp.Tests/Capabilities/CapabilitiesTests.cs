@@ -80,8 +80,8 @@ namespace PlaywrightSharp.Tests.Capabilities
         public async Task ShouldPlayVideo()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/video.html");
-            await Page.QuerySelectorEvaluateAsync("video", "v => v.play()");
-            await Page.QuerySelectorEvaluateAsync("video", "v => v.pause()");
+            await Page.EvalOnSelectorAsync("video", "v => v.play()");
+            await Page.EvalOnSelectorAsync("video", "v => v.pause()");
         }
     }
 }

@@ -9,10 +9,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
     ///<playwright-file>queryselector.spec.js</playwright-file>
     ///<playwright-describe>Page.$$eval</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageQuerySelectorAllEvaluateTests : PlaywrightSharpPageBaseTest
+    public class PageEvalOnSelectorAllTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public PageQuerySelectorAllEvaluateTests(ITestOutputHelper output) : base(output)
+        public PageEvalOnSelectorAllTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkWithCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
-            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("css=div", "divs => divs.length");
+            int divsCount = await Page.EvalOnSelectorAllAsync<int>("css=div", "divs => divs.length");
             Assert.Equal(3, divsCount);
         }
 
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkWithTextSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>beautiful</div><div>world!</div>");
-            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("text=beautiful", "divs => divs.length");
+            int divsCount = await Page.EvalOnSelectorAllAsync<int>("text=beautiful", "divs => divs.length");
             Assert.Equal(2, divsCount);
         }
 
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldWorkWithXpathSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
-            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("xpath=/html/body/div", "divs => divs.length");
+            int divsCount = await Page.EvalOnSelectorAllAsync<int>("xpath=/html/body/div", "divs => divs.length");
             Assert.Equal(3, divsCount);
         }
 
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
-            int divsCount = await Page.QuerySelectorAllEvaluateAsync<int>("div", "divs => divs.length");
+            int divsCount = await Page.EvalOnSelectorAllAsync<int>("div", "divs => divs.length");
             Assert.Equal(3, divsCount);
         }
 
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<div><span>hello</span></div><div>beautiful</div><div><span>wo</span><span>rld!</span></div><span>Not this one</span>");
-            int spansCount = await Page.QuerySelectorAllEvaluateAsync<int>("css=div >> css=span", "spans => spans.length");
+            int spansCount = await Page.EvalOnSelectorAllAsync<int>("css=div >> css=span", "spans => spans.length");
             Assert.Equal(3, spansCount);
         }
 
@@ -78,17 +78,17 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldSupportStarCapture()
         {
             await Page.SetContentAsync("<section><div><span>a</span></div></section><section><div><span>b</span></div></section>");
-            Assert.Equal(1, await Page.QuerySelectorAllEvaluateAsync<int>("*css=div >> \"b\"", "divs => divs.length"));
-            Assert.Equal(1, await Page.QuerySelectorAllEvaluateAsync<int>("section >> *css=div >> \"b\"", "divs => divs.length"));
-            Assert.Equal(4, await Page.QuerySelectorAllEvaluateAsync<int>("section >> *", "divs => divs.length"));
+            Assert.Equal(1, await Page.EvalOnSelectorAllAsync<int>("*css=div >> \"b\"", "divs => divs.length"));
+            Assert.Equal(1, await Page.EvalOnSelectorAllAsync<int>("section >> *css=div >> \"b\"", "divs => divs.length"));
+            Assert.Equal(4, await Page.EvalOnSelectorAllAsync<int>("section >> *", "divs => divs.length"));
 
             await Page.SetContentAsync("<section><div><span>a</span><span>a</span></div></section>");
-            Assert.Equal(1, await Page.QuerySelectorAllEvaluateAsync<int>("*css=div >> \"a\"", "divs => divs.length"));
-            Assert.Equal(1, await Page.QuerySelectorAllEvaluateAsync<int>("section >> *css=div >> \"a\"", "divs => divs.length"));
+            Assert.Equal(1, await Page.EvalOnSelectorAllAsync<int>("*css=div >> \"a\"", "divs => divs.length"));
+            Assert.Equal(1, await Page.EvalOnSelectorAllAsync<int>("section >> *css=div >> \"a\"", "divs => divs.length"));
 
             await Page.SetContentAsync("<div><span>a</span></div><div><span>a</span></div><section><div><span>a</span></div></section>");
-            Assert.Equal(3, await Page.QuerySelectorAllEvaluateAsync<int>("*css=div >> \"a\"", "divs => divs.length"));
-            Assert.Equal(1, await Page.QuerySelectorAllEvaluateAsync<int>("section >> *css=div >> \"a\"", "divs => divs.length"));
+            Assert.Equal(3, await Page.EvalOnSelectorAllAsync<int>("*css=div >> \"a\"", "divs => divs.length"));
+            Assert.Equal(1, await Page.EvalOnSelectorAllAsync<int>("section >> *css=div >> \"a\"", "divs => divs.length"));
         }
 
         ///<playwright-file>queryselector.spec.js</playwright-file>
@@ -98,10 +98,10 @@ namespace PlaywrightSharp.Tests.QuerySelector
         public async Task ShouldSupportStarCaptureWhenMultiplePathsMatch()
         {
             await Page.SetContentAsync("<div><div><span></span></div></div><div></div>");
-            Assert.Equal(2, await Page.QuerySelectorAllEvaluateAsync<int>("*css=div >> span", "els => els.length"));
+            Assert.Equal(2, await Page.EvalOnSelectorAllAsync<int>("*css=div >> span", "els => els.length"));
 
             await Page.SetContentAsync("<div><div><span></span></div><span></span><span></span></div><div></div>");
-            Assert.Equal(2, await Page.QuerySelectorAllEvaluateAsync<int>("*css=div >> span", "els => els.length"));
+            Assert.Equal(2, await Page.EvalOnSelectorAllAsync<int>("*css=div >> span", "els => els.length"));
         }
     }
 }

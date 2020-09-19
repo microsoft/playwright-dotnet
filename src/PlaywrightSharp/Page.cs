@@ -365,28 +365,28 @@ namespace PlaywrightSharp
         public Task<T> EvaluateAsync<T>(string script, object args) => MainFrame.EvaluateAsync<T>(true, script, args);
 
         /// <inheritdoc />
-        public Task QuerySelectorEvaluateAsync(string selector, string script) => MainFrame.QuerySelectorEvaluateAsync(true, selector, script);
+        public Task EvalOnSelectorAsync(string selector, string script) => MainFrame.EvalOnSelectorAsync(true, selector, script);
 
         /// <inheritdoc />
-        public Task QuerySelectorEvaluateAsync(string selector, string script, object args) => MainFrame.QuerySelectorEvaluateAsync(true, selector, script, args);
+        public Task EvalOnSelectorAsync(string selector, string script, object args) => MainFrame.EvalOnSelectorAsync(true, selector, script, args);
 
         /// <inheritdoc />
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorEvaluateAsync<T>(true, selector, script);
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string script) => MainFrame.EvalOnSelectorAsync<T>(true, selector, script);
 
         /// <inheritdoc />
-        public Task<T> QuerySelectorEvaluateAsync<T>(string selector, string script, object args) => MainFrame.QuerySelectorEvaluateAsync<T>(true, selector, script, args);
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string script, object args) => MainFrame.EvalOnSelectorAsync<T>(true, selector, script, args);
 
         /// <inheritdoc />
-        public Task QuerySelectorAllEvaluateAsync(string selector, string script, object args) => MainFrame.QuerySelectorAllEvaluateAsync(true, selector, script, args);
+        public Task EvalOnSelectorAllAsync(string selector, string script, object args) => MainFrame.EvalOnSelectorAllAsync(true, selector, script, args);
 
         /// <inheritdoc />
-        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script, object args) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script, args);
+        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object args) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, script, args);
 
         /// <inheritdoc />
-        public Task QuerySelectorAllEvaluateAsync(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync(true, selector, script);
+        public Task EvalOnSelectorAllAsync(string selector, string script) => MainFrame.EvalOnSelectorAllAsync(true, selector, script);
 
         /// <inheritdoc />
-        public Task<T> QuerySelectorAllEvaluateAsync<T>(string selector, string script) => MainFrame.QuerySelectorAllEvaluateAsync<T>(true, selector, script);
+        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string script) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, script);
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false)

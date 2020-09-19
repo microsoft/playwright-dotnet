@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             }") as IElementHandle;
 
             Assert.NotNull(divHandle);
-            Assert.Equal("hello", await divHandle.QuerySelectorEvaluateAsync<string>("span", "e => e.textContent"));
+            Assert.Equal("hello", await divHandle.EvalOnSelectorAsync<string>("span", "e => e.textContent"));
 
             await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
             await Page.EvaluateAsync(@"() => {
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             }");
 
             Assert.NotNull(await divHandle.QuerySelectorAsync("span"));
-            Assert.Equal("hello", await divHandle.QuerySelectorEvaluateAsync<string>("span", "e => e.textContent"));
+            Assert.Equal("hello", await divHandle.EvalOnSelectorAsync<string>("span", "e => e.textContent"));
         }
     }
 }

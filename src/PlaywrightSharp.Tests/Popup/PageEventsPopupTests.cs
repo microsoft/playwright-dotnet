@@ -217,7 +217,7 @@ namespace PlaywrightSharp.Tests.Popup
             });
             await TaskUtils.WhenAll(
                 popupTask,
-                Page.QuerySelectorEvaluateAsync("a", "a => a.click()")
+                Page.EvalOnSelectorAsync("a", "a => a.click()")
             );
             var popup = await popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));

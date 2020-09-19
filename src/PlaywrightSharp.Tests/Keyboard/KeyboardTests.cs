@@ -432,9 +432,9 @@ namespace PlaywrightSharp.Tests.Keyboard
                 Assert.Equal(expectedKey, lastEvent.key);
                 Assert.Equal(expectedCode, lastEvent.code);
 
-                string value = await Page.QuerySelectorEvaluateAsync<string>("textarea", "t => t.value");
+                string value = await Page.EvalOnSelectorAsync<string>("textarea", "t => t.value");
                 Assert.Equal("\n", value);
-                await Page.QuerySelectorEvaluateAsync("textarea", "t => t.value = ''");
+                await Page.EvalOnSelectorAsync("textarea", "t => t.value = ''");
             }
         }
 
@@ -462,7 +462,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.TypeAsync("textarea", "👹 Tokyo street Japan 🇯🇵");
-            Assert.Equal("👹 Tokyo street Japan 🇯🇵", await Page.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
+            Assert.Equal("👹 Tokyo street Japan 🇯🇵", await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -476,7 +476,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             var frame = Page.Frames[1];
             var textarea = await frame.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("👹 Tokyo street Japan 🇯🇵");
-            Assert.Equal("👹 Tokyo street Japan 🇯🇵", await frame.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
+            Assert.Equal("👹 Tokyo street Japan 🇯🇵", await frame.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -493,7 +493,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             await Page.Keyboard.PressAsync("a");
             await Page.Keyboard.UpAsync(modifier);
             await Page.Keyboard.PressAsync("Backspace");
-            Assert.Empty(await Page.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
+            Assert.Empty(await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
@@ -505,7 +505,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("some text");
-            await Page.QuerySelectorEvaluateAsync("textarea", @"textarea => {
+            await Page.EvalOnSelectorAsync("textarea", @"textarea => {
                 textarea.addEventListener('keydown', event => {
                     if (event.key === 'a' && (event.metaKey || event.ctrlKey))
                     event.preventDefault();
@@ -516,7 +516,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             await Page.Keyboard.PressAsync("a");
             await Page.Keyboard.UpAsync(modifier);
             await Page.Keyboard.PressAsync("Backspace");
-            Assert.Equal("some tex", await Page.QuerySelectorEvaluateAsync<string>("textarea", "textarea => textarea.value"));
+            Assert.Equal("some tex", await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
         ///<playwright-file>keyboard.spec.js</playwright-file>
