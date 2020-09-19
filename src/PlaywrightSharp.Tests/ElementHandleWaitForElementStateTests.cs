@@ -150,7 +150,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
-            await Page.QuerySelectorEvaluateAsync("button", @"button => {
+            await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.transition = 'margin 10000ms linear 0s';
                 button.style.marginLeft = '20000px';
             }");
