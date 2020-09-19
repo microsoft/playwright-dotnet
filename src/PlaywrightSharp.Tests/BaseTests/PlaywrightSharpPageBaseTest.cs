@@ -34,10 +34,10 @@ namespace PlaywrightSharp.Tests.BaseTests
             void errorEvent(object sender, EventArgs e)
             {
                 wrapper.SetResult(true);
-                Page.Crashed -= errorEvent;
+                Page.Crash -= errorEvent;
             }
 
-            Page.Crashed += errorEvent;
+            Page.Crash += errorEvent;
 
             return wrapper.Task;
         }
