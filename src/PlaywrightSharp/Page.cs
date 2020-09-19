@@ -337,7 +337,7 @@ namespace PlaywrightSharp
 
             if (e != PageEvent.Crash)
             {
-                waiter.RejectOnEvent<EventArgs>(this, "Crashed", new TargetClosedException("Page crashed"));
+                waiter.RejectOnEvent<EventArgs>(this, "Crash", new TargetClosedException("Page crashed"));
             }
 
             if (e != PageEvent.Closed)

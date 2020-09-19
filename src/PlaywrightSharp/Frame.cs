@@ -687,7 +687,7 @@ namespace PlaywrightSharp
         {
             var waiter = new Waiter();
             waiter.RejectOnEvent<EventArgs>(Page, "Closed", new NavigationException("Navigation failed because page was closed!"));
-            waiter.RejectOnEvent<EventArgs>(Page, "Crashed", new NavigationException("Navigation failed because page was crashed!"));
+            waiter.RejectOnEvent<EventArgs>(Page, "Crash", new NavigationException("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<FrameEventArgs>(
                 Page,
                 "FrameDetached",
