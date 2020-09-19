@@ -546,5 +546,18 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when element specified by selector string is added to DOM, yielding the <see cref="IElementHandle"/> to wait for.
         /// Resolves to `null` if waiting for `hidden: true` and selector is not found in DOM.</returns>
         Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null);
+
+        /// <summary>
+        /// Depending on the state parameter, this method waits for one of the actionability checks to pass.
+        /// This method throws when the element is detached while waiting, unless waiting for the "hidden" state.
+        /// </summary>
+        /// <param name="state">State to wait for.</param>
+        /// <param name="timeout">
+        /// Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when the wait condition matches or timed out.</returns>
+        Task WaitForElementStateAsync(ElementState state, int? timeout = null);
     }
 }

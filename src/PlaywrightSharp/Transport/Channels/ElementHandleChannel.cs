@@ -62,6 +62,21 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                 });
 
+        internal Task WaitForElementStateAsync(ElementState state, int? timeout)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["state"] = state,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return Scope.SendMessageToServer<ElementHandleChannel>(Guid, "waitForElementState", args);
+        }
+
         internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
             => Scope.SendMessageToServer<ChannelBase[]>(
                 Guid,
