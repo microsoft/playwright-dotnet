@@ -182,7 +182,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Page Viewport.
         /// </summary>
-        ViewportSize Viewport { get; }
+        ViewportSize ViewportSize { get; }
 
         /// <summary>
         /// Gets the accessibility.

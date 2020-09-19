@@ -82,8 +82,8 @@ namespace PlaywrightSharp.Tests
 
         internal static async Task VerifyViewportAsync(IPage page, int width, int height)
         {
-            Assert.Equal(width, (int)page.Viewport.Width);
-            Assert.Equal(height, (int)page.Viewport.Height);
+            Assert.Equal(width, (int)page.ViewportSize.Width);
+            Assert.Equal(height, (int)page.ViewportSize.Height);
             Assert.Equal(width, await page.EvaluateAsync<int>("window.innerWidth"));
             Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
         }

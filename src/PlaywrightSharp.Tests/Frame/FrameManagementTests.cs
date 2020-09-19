@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.Frame
             Page.FrameDetached += (sender, e) => detachedFrames.Add(e.Frame);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             Assert.Single(detachedFrames);
-            Assert.True(detachedFrames[0].Detached);
+            Assert.True(detachedFrames[0].IsDetached);
         }
 
         ///<playwright-file>frame.spec.js</playwright-file>
@@ -213,14 +213,14 @@ namespace PlaywrightSharp.Tests.Frame
                 window.frame = document.querySelector('#frame1');
                 window.frame.remove();
             }");
-            Assert.True(frame1.Detached);
+            Assert.True(frame1.IsDetached);
 
             var (frame2, _) = await TaskUtils.WhenAll(
               Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated),
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
 
-            Assert.False(frame2.Frame.Detached);
+            Assert.False(frame2.Frame.IsDetached);
             Assert.NotSame(frame1, frame2);
         }
     }

@@ -98,7 +98,7 @@ namespace PlaywrightSharp
         public IPage Page { get; internal set; }
 
         /// <inheritdoc />
-        public bool Detached { get; internal set; }
+        public bool IsDetached { get; internal set; }
 
         /// <inheritdoc />
         public string Id { get; set; }
@@ -146,6 +146,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false) => FillAsync(false, selector, text, timeout, noWaitAfter);
+
+        /// <inheritdoc />
+        public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc />
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null)
