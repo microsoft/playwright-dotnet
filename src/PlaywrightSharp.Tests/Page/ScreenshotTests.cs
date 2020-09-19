@@ -178,8 +178,8 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             await Page.ScreenshotAsync(true);
 
-            Assert.Equal(500, Page.Viewport.Width);
-            Assert.Equal(500, Page.Viewport.Height);
+            Assert.Equal(500, Page.ViewportSize.Width);
+            Assert.Equal(500, Page.ViewportSize.Height);
         }
 
         ///<playwright-file>screenshot.spec.js</playwright-file>
