@@ -1565,5 +1565,11 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the textContent of the element.</returns>
         Task<string> GetTextContentAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Brings page to front (activates tab).
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
+        Task BringToFrontAsync();
     }
 }
