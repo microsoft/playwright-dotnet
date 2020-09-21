@@ -1,17 +1,16 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Page
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>download.spec.js</playwright-file>
-    ///<playwright-describe>Download</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadTests : PlaywrightSharpPageBaseTest
     {
@@ -34,7 +33,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report downloads with acceptDownloads: false</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsFalse()
@@ -56,7 +54,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report downloads with acceptDownloads: true</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsTrue()
@@ -77,7 +74,188 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
+        ///<playwright-it>should save to user-specified path</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSaveToUserSpecifiedPath()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            var download = downloadTask.Result.Download;
+            await download.SaveAsAsync(userPath);
+
+            Assert.True(new FileInfo(userPath).Exists);
+            Assert.Equal("Hello world", File.ReadAllText(userPath));
+            await page.CloseAsync();
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should save to user-specified path without updating original path</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSaveToUserSpecifiedPathWithoutUpdatingOriginalPath()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            var download = downloadTask.Result.Download;
+            await download.SaveAsAsync(userPath);
+
+            Assert.True(new FileInfo(userPath).Exists);
+            Assert.Equal("Hello world", File.ReadAllText(userPath));
+
+            string originalPath = await download.GetPathAsync();
+            Assert.True(new FileInfo(originalPath).Exists);
+            Assert.Equal("Hello world", File.ReadAllText(originalPath));
+
+            await page.CloseAsync();
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should save to two different paths with multiple saveAs calls</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSaveToTwoDifferentPathsWithMultipleSaveAsCalls()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            var download = downloadTask.Result.Download;
+            await download.SaveAsAsync(userPath);
+            Assert.True(new FileInfo(userPath).Exists);
+            Assert.Equal("Hello world", File.ReadAllText(userPath));
+
+            string anotherUserPath = Path.Combine(tmpDir.Path, "download (2).txt");
+            await download.SaveAsAsync(anotherUserPath);
+            Assert.True(new FileInfo(anotherUserPath).Exists);
+            Assert.Equal("Hello world", File.ReadAllText(anotherUserPath));
+
+            await page.CloseAsync();
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should save to overwritten filepath</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldSaveToOverwrittenFilepath()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            var download = downloadTask.Result.Download;
+            await download.SaveAsAsync(userPath);
+            Assert.Single(new DirectoryInfo(tmpDir.Path).GetFiles());
+            await download.SaveAsAsync(userPath);
+            Assert.Single(new DirectoryInfo(tmpDir.Path).GetFiles());
+
+            await page.CloseAsync();
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should create subdirectories when saving to non-existent user-specified path</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldCreateSubdirectoriesWhenSavingToNonExistentUserSpecifiedPath()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "download.txt");
+            var download = downloadTask.Result.Download;
+            await download.SaveAsAsync(userPath);
+            Assert.True(new FileInfo(userPath).Exists);
+            Assert.Equal("Hello world", File.ReadAllText(userPath));
+
+            await page.CloseAsync();
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should save when connected remotely</playwright-it>
+        [Fact(Skip = "SKIP WIRE")]
+        public void ShouldSaveWhenConnectedRemotely()
+        {
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should error when saving with downloads disabled</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldErrorWhenSavingWithDownloadsDisabled()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: false);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            var download = downloadTask.Result.Download;
+
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
+            Assert.Contains("Pass { acceptDownloads: true } when you are creating your browser context", exception.Message);
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should error when saving after deletion</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldErrorWhenSavingAfterDeletion()
+        {
+            var page = await Browser.NewPageAsync(acceptDownloads: true);
+            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            var download = downloadTask.Result.Download;
+            await download.DeleteAsync();
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
+            Assert.Contains("Download already deleted. Save before deleting.", exception.Message);
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
+        ///<playwright-it>should error when saving after deletion when connected remotely</playwright-it>
+        [Fact(Skip = "SKIP WIRE")]
+        public void ShouldErrorWhenSavingAfterDeletionWhenConnectedRemotely()
+        {
+        }
+
+        ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should report non-navigation downloads</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportNonNavigationDownloads()
@@ -107,8 +285,8 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
-        ///<playwright-it>should report download path within page.on('download', ?) handler for Files</playwright-it>
+
+        ///<playwright-it>should report download path within page.on('download', …) handler for Files</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForFiles()
         {
@@ -128,8 +306,7 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
-        ///<playwright-it>should report download path within page.on('download', ?) handler for Blobs</playwright-it>
+        ///<playwright-it>should report download path within page.on('download', …) handler for Blobs</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForBlobs()
         {
@@ -149,7 +326,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report alt-click downloads</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportAltClickDownloads()
@@ -176,7 +352,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should report new window downloads</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldReportNewWindowDownloads()
@@ -197,7 +372,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should delete file</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDeleteFile()
@@ -220,7 +394,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should expose stream</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldExposeStream()
@@ -241,7 +414,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should delete downloads on context destruction</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDeleteDownloadsOnContextDestruction()
@@ -270,7 +442,6 @@ namespace PlaywrightSharp.Tests.Page
         }
 
         ///<playwright-file>download.spec.js</playwright-file>
-        ///<playwright-describe>Download</playwright-describe>
         ///<playwright-it>should delete downloads on browser gone</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDeleteDownloadsOnBrowserGone()

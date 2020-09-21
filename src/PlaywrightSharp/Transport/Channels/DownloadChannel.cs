@@ -16,5 +16,7 @@ namespace PlaywrightSharp.Transport.Channels
             => (await Scope.SendMessageToServer(Guid, "failure", treatErrorPropertyAsError: false).ConfigureAwait(false))?.GetProperty("error").ToString();
 
         internal Task DeleteAsync() => Scope.SendMessageToServer(Guid, "delete", null);
+
+        internal Task SaveAsAsync(string path) => Scope.SendMessageToServer(Guid, "saveAs", new { path });
     }
 }
