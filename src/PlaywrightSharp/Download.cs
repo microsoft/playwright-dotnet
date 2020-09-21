@@ -66,6 +66,13 @@ namespace PlaywrightSharp
         public Task DeleteAsync() => _channel.DeleteAsync();
 
         /// <summary>
+        /// Saves the download to a user-specified path.
+        /// </summary>
+        /// <param name="path">Path where the download should be saved.</param>
+        /// <returns>A <see cref="Task"/> that completes when the file is saved.</returns>
+        public Task SaveAsAsync(string path) => _channel.SaveAsAsync(path);
+
+        /// <summary>
         /// Returns readable stream for current download or null if download failed.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the stream is created, yielding the stream.</returns>
