@@ -7,7 +7,6 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>browser.spec.js</playwright-file>
-
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserTests : PlaywrightSharpBrowserBaseTest
     {
