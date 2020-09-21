@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
@@ -12,14 +13,16 @@ namespace PlaywrightSharp
     {
         private readonly ConnectionScope _scope;
         private readonly BrowserChannel _channel;
+        private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
         private bool _isClosedOrClosing;
 
-        internal Browser(ConnectionScope scope, string guid)
+        internal Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
         {
             _scope = scope.CreateChild(guid);
             _channel = new BrowserChannel(guid, scope, this);
             IsConnected = true;
+            _initializer = initializer;
             _channel.Closed += (sender, e) =>
             {
                 IsConnected = false;
@@ -47,6 +50,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public bool IsConnected { get; private set; }
+
+        /// <inheritdoc/>
+        public string Version => _initializer.Version;
 
         /// <inheritdoc/>
         public IBrowserContext[] Contexts => BrowserContextsList.ToArray();
