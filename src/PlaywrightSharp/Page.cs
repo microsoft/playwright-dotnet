@@ -249,6 +249,9 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
 
         /// <inheritdoc />
+        public Task BringToFrontAsync() => _channel.BringToFrontAsync();
+
+        /// <inheritdoc />
         public async Task<IPage> GetOpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
