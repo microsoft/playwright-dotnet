@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class PageChannel : Channel<Page>
     {
-        public PageChannel(string guid, ConnectionScope scope, Page owner) : base(guid, scope, owner)
+        public PageChannel(string guid, Connection connection, Page owner) : base(guid, connection, owner)
         {
         }
 
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BindingCallEventArgs
                         {
-                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
                     break;
                 case "route":
@@ -82,62 +82,62 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new RouteEventArgs
                         {
-                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
                     break;
                 case "popup":
                     Popup?.Invoke(this, new PageChannelPopupEventArgs
                     {
-                        Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                        Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
                     });
                     break;
                 case "pageError":
-                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<PageErrorEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<PageErrorEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "fileChooser":
-                    FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "frameAttached":
-                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
                 case "frameDetached":
-                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
                 case "dialog":
-                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object));
+                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
                     break;
                 case "console":
-                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Scope.Connection.GetDefaultJsonSerializerOptions())));
+                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions())));
                     break;
                 case "request":
-                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "requestFinished":
-                    RequestFinished?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    RequestFinished?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "requestFailed":
-                    RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestFailedEventArgs>(Scope.Connection.GetDefaultJsonSerializerOptions()));
+                    RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestFailedEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "response":
-                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.GetProperty("response").ToObject<ResponseChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "download":
-                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "worker":
                     Worker?.Invoke(
                         this,
                         new WorkerChannelEventArgs
                         {
-                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
             }
         }
 
         internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setDefaultTimeoutNoReply",
                 new Dictionary<string, object>
@@ -146,7 +146,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setDefaultNavigationTimeoutNoReply",
                 new Dictionary<string, object>
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetFileChooserInterceptedNoReplyAsync(bool intercepted)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setFileChooserInterceptedNoReply",
                 new Dictionary<string, object>
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task CloseAsync(bool runBeforeUnload)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "close",
                 new Dictionary<string, object>
@@ -173,7 +173,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task ExposeBindingAsync(string name)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "exposeBinding",
                 new Dictionary<string, object>
@@ -182,7 +182,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task AddInitScriptAsync(string script)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "addInitScript",
                 new Dictionary<string, object>
@@ -204,7 +204,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = waitUntil;
             }
 
-            return Scope.SendMessageToServer<ResponseChannel>(Guid, "goBack", args);
+            return Connection.SendMessageToServer<ResponseChannel>(Guid, "goBack", args);
         }
 
         internal Task<ResponseChannel> GoForwardAsync(int? timeout, LifecycleEvent? waitUntil)
@@ -221,7 +221,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = waitUntil;
             }
 
-            return Scope.SendMessageToServer<ResponseChannel>(Guid, "goForward", args);
+            return Connection.SendMessageToServer<ResponseChannel>(Guid, "goForward", args);
         }
 
         internal Task<ResponseChannel> ReloadAsync(int? timeout, LifecycleEvent? waitUntil)
@@ -238,11 +238,11 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = waitUntil;
             }
 
-            return Scope.SendMessageToServer<ResponseChannel>(Guid, "reload", args);
+            return Connection.SendMessageToServer<ResponseChannel>(Guid, "reload", args);
         }
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setNetworkInterceptionEnabled",
                 new Dictionary<string, object>
@@ -250,7 +250,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
-        internal Task<PageChannel> GetOpenerAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "opener", null);
+        internal Task<PageChannel> GetOpenerAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "opener", null);
 
         internal async Task<SerializedAXNode> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
@@ -264,16 +264,16 @@ namespace PlaywrightSharp.Transport.Channels
                 args["root"] = root;
             }
 
-            if ((await Scope.SendMessageToServer(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
+            if ((await Connection.SendMessageToServer(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
-                return jsonElement.ToObject<SerializedAXNode>(Scope.Connection.GetDefaultJsonSerializerOptions());
+                return jsonElement.ToObject<SerializedAXNode>(Connection.GetDefaultJsonSerializerOptions());
             }
 
             return null;
         }
 
         internal Task SetViewportSizeAsync(ViewportSize viewport)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "setViewportSize",
                 new Dictionary<string, object>
@@ -282,7 +282,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task KeyboardDownAsync(string key)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "keyboardDown",
                 new Dictionary<string, object>
@@ -291,10 +291,10 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task EmulateMediaAsync(Dictionary<string, object> args)
-            => Scope.SendMessageToServer(Guid, "emulateMedia", args);
+            => Connection.SendMessageToServer(Guid, "emulateMedia", args);
 
         internal Task KeyboardUpAsync(string key)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "keyboardUp",
                 new Dictionary<string, object>
@@ -303,7 +303,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task TypeAsync(string text, int delay)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "keyboardType",
                 new Dictionary<string, object>
@@ -313,7 +313,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task PressAsync(string key, int delay)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "keyboardPress",
                 new Dictionary<string, object>
@@ -323,7 +323,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task InsertTextAsync(string text)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "keyboardInsertText",
                 new Dictionary<string, object>
@@ -332,7 +332,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseDownAsync(MouseButton button, int clickCount)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "mouseDown",
                 new Dictionary<string, object>
@@ -342,7 +342,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseMoveAsync(decimal x, decimal y, int? steps)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "mouseMove",
                 new Dictionary<string, object>
@@ -353,7 +353,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseUpAsync(MouseButton button, int clickCount)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "mouseUp",
                 new Dictionary<string, object>
@@ -363,7 +363,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseClickAsync(decimal x, decimal y, int delay, MouseButton button, int clickCount)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "mouseClick",
                 new Dictionary<string, object>
@@ -376,7 +376,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "setExtraHTTPHeaders",
                 new Dictionary<string, object>
@@ -424,11 +424,11 @@ namespace PlaywrightSharp.Transport.Channels
                 args["quality"] = quality;
             }
 
-            return (await Scope.SendMessageToServer(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            return (await Connection.SendMessageToServer(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
         internal Task StartCSSCoverageAsync(bool resetOnNavigation)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "crStartCSSCoverage",
                 new Dictionary<string, object>
@@ -437,7 +437,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task StartJSCoverageAsync(bool resetOnNavigation, bool reportAnonymousScripts)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "crStartJSCoverage",
                 new Dictionary<string, object>
@@ -447,10 +447,10 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal async Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
-            => (await Scope.SendMessageToServer(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
+            => (await Connection.SendMessageToServer(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
 
         internal async Task<JSCoverageEntry[]> StopJSCoverageAsync()
-            => (await Scope.SendMessageToServer(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
+            => (await Connection.SendMessageToServer(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
 
         internal async Task<string> GetPdfAsync(
             decimal scale,
@@ -494,7 +494,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["height"] = height;
             }
 
-            return (await Scope.SendMessageToServer(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
+            return (await Connection.SendMessageToServer(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
         }
     }
 }

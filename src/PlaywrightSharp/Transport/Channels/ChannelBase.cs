@@ -1,19 +1,19 @@
-using System;
+﻿using System;
 using System.Text.Json;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal abstract class ChannelBase
+    internal class ChannelBase
     {
-        public ChannelBase(string guid, ConnectionScope scope)
+        public ChannelBase(string guid, Connection connection)
         {
             Guid = guid;
-            Scope = scope;
+            Connection = connection;
         }
 
         public string Guid { get; }
 
-        public ConnectionScope Scope { get; }
+        public Connection Connection { get; }
 
         internal virtual void OnMessage(string method, JsonElement? serverParams)
         {

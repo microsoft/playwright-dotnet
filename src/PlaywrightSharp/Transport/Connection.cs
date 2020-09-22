@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
@@ -13,16 +13,15 @@ using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Converters;
+using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Transport
 {
     internal class Connection : IDisposable
     {
-        private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
-        private readonly ConcurrentDictionary<string, ConnectionScope> _scopes = new ConcurrentDictionary<string, ConnectionScope>();
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new ConcurrentDictionary<int, ConnectionCallback>();
-        private readonly ConnectionScope _rootScript;
+        private readonly ChannelOwnerBase _rootObject;
         private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
         private readonly ILoggerFactory _loggerFactory;
@@ -32,7 +31,7 @@ namespace PlaywrightSharp.Transport
 
         public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
         {
-            _rootScript = CreateScope(string.Empty);
+            _rootObject = new ChannelOwnerBase(null, this, string.Empty);
 
             _playwrightServerProcess = GetProcess();
             _playwrightServerProcess.StartInfo.Arguments = "--run";
@@ -48,9 +47,10 @@ namespace PlaywrightSharp.Transport
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Connection() => Dispose(false);
 
+        public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new ConcurrentDictionary<string, IChannelOwner>();
+
         public bool IsClosed { get; private set; }
 
-        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(true);
@@ -71,20 +71,28 @@ namespace PlaywrightSharp.Transport
             await tcs.Task.ConfigureAwait(false);
         }
 
-        internal ConnectionScope CreateScope(string guid)
-        {
-            var scope = new ConnectionScope(this, guid, _loggerFactory);
-            _scopes.TryAdd(guid, scope);
-            return scope;
-        }
+        internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
 
-        internal void RemoveScope(string guid) => _scopes.TryRemove(guid, out _);
+        internal Task<JsonElement?> SendMessageToServer(
+            string guid,
+            string method,
+            object args = null,
+            bool ignoreNullValues = true,
+            bool treatErrorPropertyAsError = true)
+            => SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues, treatErrorPropertyAsError: treatErrorPropertyAsError);
 
-        internal void RemoveObject(string guid) => _objects.TryRemove(guid, out _);
+        internal Task<T> SendMessageToServer<T>(
+            string guid,
+            string method,
+            object args,
+            bool ignoreNullValues = true,
+            bool treatErrorPropertyAsError = true,
+            JsonSerializerOptions serializerOptions = null)
+            => SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues, serializerOptions, treatErrorPropertyAsError);
 
         internal IChannelOwner GetObject(string guid)
         {
-            _objects.TryGetValue(guid, out var result);
+            Objects.TryGetValue(guid, out var result);
             return result;
         }
 
@@ -101,7 +109,7 @@ namespace PlaywrightSharp.Transport
         internal async Task<T> WaitForObjectWithKnownName<T>(string guid)
             where T : class
         {
-            if (_objects.TryGetValue(guid, out var channel))
+            if (Objects.TryGetValue(guid, out var channel))
             {
                 return channel as T;
             }
@@ -113,7 +121,7 @@ namespace PlaywrightSharp.Transport
 
         internal void OnObjectCreated(string guid, IChannelOwner result)
         {
-            _objects.TryAdd(guid, result);
+            Objects.TryAdd(guid, result);
             if (_waitingForObject.TryRemove(guid, out var callback))
             {
                 callback.TrySetResult(result);
@@ -287,21 +295,95 @@ namespace PlaywrightSharp.Transport
             {
                 if (message.Method == "__create__")
                 {
-                    _objects.TryGetValue(message.Guid, out var scopeObject);
-                    var scope = scopeObject != null ? scopeObject.Scope : _rootScript;
+                    Objects.TryGetValue(message.Guid, out var scopeObject);
                     var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
-                    scope.CreateRemoteObject(createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
+                    CreateRemoteObject(message.Guid, createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 
                     return;
                 }
 
-                _objects.TryGetValue(message.Guid, out var obj);
+                Objects.TryGetValue(message.Guid, out var obj);
                 obj?.Channel?.OnMessage(message.Method, message.Params);
             }
             catch (Exception ex)
             {
                 CloseAsync(ex.ToString());
             }
+        }
+
+        private void CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
+        {
+            IChannelOwner result = null;
+            var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
+
+            switch (type)
+            {
+                case ChannelOwnerType.BindingCall:
+                    result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Playwright:
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                    result = new Playwright(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()), _loggerFactory);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+                    break;
+                case ChannelOwnerType.Browser:
+                    result = new Browser(parent, guid);
+                    break;
+                case ChannelOwnerType.BrowserServer:
+                    result = new BrowserServer(parent, guid, initializer?.ToObject<BrowserServerInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.BrowserType:
+                    result = new BrowserType(parent, guid, initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.BrowserContext:
+                    result = new BrowserContext(parent, guid, initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.ConsoleMessage:
+                    result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Dialog:
+                    result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Download:
+                    result = new Download(parent, guid, initializer?.ToObject<DownloadInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.ElementHandle:
+                    result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Frame:
+                    result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.JSHandle:
+                    result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Page:
+                    result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Request:
+                    result = new Request(parent, guid, initializer?.ToObject<RequestInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Response:
+                    result = new Response(parent, guid, initializer?.ToObject<ResponseInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Route:
+                    result = new Route(parent, guid, initializer?.ToObject<RouteInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.Worker:
+                    result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
+                case ChannelOwnerType.CDPSession:
+                    result = new CDPSession(parent, guid);
+                    break;
+                case ChannelOwnerType.Selectors:
+                    result = new SelectorsOwner(parent, guid);
+                    break;
+                default:
+                    Debug.Write("Missing type " + type);
+                    break;
+            }
+
+            Objects.TryAdd(guid, result);
+            OnObjectCreated(guid, result);
         }
 
         private void CloseAsync(string reason)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -16,9 +16,8 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IPage" />
-    public class Page : IChannelOwner<Page>, IPage
+    public class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
-        private readonly ConnectionScope _scope;
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new List<Frame>();
         private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
@@ -28,17 +27,18 @@ namespace PlaywrightSharp
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
 
-        internal Page(ConnectionScope scope, string guid, PageInitializer initializer)
+        internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new PageChannel(guid, scope, this);
+            BrowserContext = parent as BrowserContext;
+
+            _channel = new PageChannel(guid, parent.Connection, this);
 
             MainFrame = initializer.MainFrame.Object;
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
             Accessibility = new Accesibility(_channel);
-            Coverage = new Coverage(_channel);
+            Coverage = BrowserContext.BrowserName == "chromium" ? new Coverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
             Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;
@@ -160,9 +160,6 @@ namespace PlaywrightSharp
         public event EventHandler<DownloadEventArgs> Download;
 
         /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
-
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
@@ -181,7 +178,7 @@ namespace PlaywrightSharp
         IBrowserContext IPage.Context => BrowserContext;
 
         /// <inheritdoc cref="IPage.Context" />
-        public BrowserContext BrowserContext { get; internal set; }
+        public BrowserContext BrowserContext { get; set; }
 
         /// <inheritdoc />
         public ViewportSize ViewportSize { get; private set; }

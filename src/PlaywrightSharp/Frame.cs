@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,17 +17,15 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IFrame" />
-    public class Frame : IChannelOwner<Frame>, IFrame
+    public class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
-        private readonly ConnectionScope _scope;
         private readonly FrameChannel _channel;
         private readonly FrameInitializer _initializer;
         private readonly List<LifecycleEvent> _loadStates = new List<LifecycleEvent>();
 
-        internal Frame(ConnectionScope scope, string guid, FrameInitializer initializer)
+        internal Frame(IChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new FrameChannel(guid, scope, this);
+            _channel = new FrameChannel(guid, parent.Connection, this);
             _initializer = initializer;
             Url = _initializer.Url;
             Name = _initializer.Name;
@@ -69,9 +67,6 @@ namespace PlaywrightSharp
         /// Raised when a new LoadState was added.
         /// </summary>
         public event EventHandler<LoadStateEventArgs> LoadState;
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

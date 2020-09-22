@@ -15,7 +15,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="PlaywrightSharp.IPlaywright" />
-    public sealed class Playwright : IPlaywright, IChannelOwner<Playwright>
+    public sealed class Playwright : ChannelOwnerBase, IPlaywright, IChannelOwner<Playwright>
     {
         /// <summary>
         /// Default timeout.
@@ -25,27 +25,30 @@ namespace PlaywrightSharp
         private readonly ILoggerFactory _loggerFactory;
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
-        private readonly ConnectionScope _scope;
+        private readonly Connection _connection;
         private readonly Dictionary<string, DeviceDescriptor> _devices = new Dictionary<string, DeviceDescriptor>();
 
-        internal Playwright(ConnectionScope scope, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
+        internal Playwright(IChannelOwner parent, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
+             : base(parent, guid)
         {
-            _scope = scope;
+            _connection = parent.Connection;
             _initializer = initializer;
-            _channel = new PlaywrightChannel(guid, scope, this);
+            _channel = new PlaywrightChannel(guid, parent.Connection, this);
             _loggerFactory = loggerFactory;
 
             foreach (var entry in initializer.DeviceDescriptors)
             {
                 _devices[entry.Name] = entry.Descriptor;
             }
+
+            _ = Selectors.AddChannelAsync(initializer.Selectors.Object);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Playwright() => Dispose(false);
 
         /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
+        Connection IChannelOwner.Connection => _connection;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -66,6 +69,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public IBrowserType Webkit => _initializer.Webkit;
+
+        /// <inheritdoc/>
+        public Selectors Selectors => Selectors.SharedSelectors;
 
         internal Connection Connection { get; set; }
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserType" />
-    public class BrowserType : IChannelOwner<BrowserType>, IBrowserType
+    public class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
     {
         /// <summary>
         /// Browser type Chromium.
@@ -28,17 +28,12 @@ namespace PlaywrightSharp
 
         private readonly BrowserTypeInitializer _initializer;
         private readonly BrowserTypeChannel _channel;
-        private readonly ConnectionScope _scope;
 
-        internal BrowserType(ConnectionScope scope, string guid, BrowserTypeInitializer initializer)
+        internal BrowserType(IChannelOwner parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
             _initializer = initializer;
-            _channel = new BrowserTypeChannel(guid, scope, this);
+            _channel = new BrowserTypeChannel(guid, parent.Connection, this);
         }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

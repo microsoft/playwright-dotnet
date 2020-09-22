@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,30 +12,30 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowserContext" />
-    public class BrowserContext : IChannelOwner<BrowserContext>, IBrowserContext
+    public class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
         private static readonly Dictionary<ContextEvent, EventInfo> _contextEventsMap = ((ContextEvent[])Enum.GetValues(typeof(ContextEvent)))
             .ToDictionary(x => x, x => typeof(BrowserContext).GetEvent(x.ToString()));
 
-        private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
         private readonly List<Page> _crBackgroundPages = new List<Page>();
         private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
         private readonly List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
         private readonly Dictionary<string, Delegate> _bindings = new Dictionary<string, Delegate>();
+        private readonly BrowserContextInitializer _initializer;
         private List<RouteSetting> _routes = new List<RouteSetting>();
 
         private bool _isClosedOrClosing;
 
-        internal BrowserContext(ConnectionScope scope, string guid, BrowserContextInitializer initializer)
+        internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
-            _scope = scope.CreateChild(guid);
-            _channel = new BrowserContextChannel(guid, scope, this);
+            _channel = new BrowserContextChannel(guid, parent.Connection, this);
             _channel.Close += Channel_Closed;
             _channel.Page += Channel_OnPage;
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
+            _initializer = initializer;
 
             if (initializer.Pages != null)
             {
@@ -99,9 +99,6 @@ namespace PlaywrightSharp
         public event EventHandler<WorkerEventArgs> ServiceWorker;
 
         /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
-
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
@@ -149,6 +146,8 @@ namespace PlaywrightSharp
         internal List<Page> PagesList { get; } = new List<Page>();
 
         internal List<Worker> ServiceWorkersList { get; } = new List<Worker>();
+
+        internal string BrowserName => _initializer.BrowserName;
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
@@ -378,7 +377,6 @@ namespace PlaywrightSharp
             Closed?.Invoke(this, EventArgs.Empty);
             _closeTcs.TrySetResult(true);
             RejectPendingOperations();
-            _scope.Dispose();
         }
 
         private void Channel_OnPage(object sender, BrowserContextPageEventArgs e)

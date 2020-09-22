@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using PlaywrightSharp.Transport;
@@ -10,21 +10,16 @@ namespace PlaywrightSharp
     /// <summary>
     /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
     /// </summary>
-    public class ConsoleMessage : IChannelOwner<ConsoleMessage>
+    public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>
     {
-        private readonly ConnectionScope _scope;
         private readonly ConsoleMessageChannel _channel;
         private readonly ConsoleMessageInitializer _initializer;
 
-        internal ConsoleMessage(ConnectionScope scope, string guid, ConsoleMessageInitializer initializer)
+        internal ConsoleMessage(IChannelOwner parent, string guid, ConsoleMessageInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new ConsoleMessageChannel(guid, scope, this);
+            _channel = new ConsoleMessageChannel(guid, parent.Connection, this);
             _initializer = initializer;
         }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

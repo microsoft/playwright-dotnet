@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,16 +13,16 @@ namespace PlaywrightSharp
     /// All the downloaded files belonging to the browser context are deleted when the browser context is closed.All downloaded files are deleted when the browser closes.
     /// Download event is emitted once the download starts.
     /// </summary>
-    public class Download : IChannelOwner<Download>
+    public class Download : ChannelOwnerBase, IChannelOwner<Download>
     {
-        private readonly ConnectionScope _scope;
+        private readonly Connection _connection;
         private readonly DownloadChannel _channel;
         private readonly DownloadInitializer _initializer;
 
-        internal Download(ConnectionScope scope, string guid, DownloadInitializer initializer)
+        internal Download(IChannelOwner parent, string guid, DownloadInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new DownloadChannel(guid, scope, this);
+            _connection = parent.Connection;
+            _channel = new DownloadChannel(guid, parent.Connection, this);
             _initializer = initializer;
         }
 
@@ -39,7 +39,7 @@ namespace PlaywrightSharp
         public string SuggestedFilename => _initializer.SuggestedFilename;
 
         /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
+        Connection IChannelOwner.Connection => _connection;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

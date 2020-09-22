@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class BrowserContextChannel : Channel<BrowserContext>
     {
-        public BrowserContextChannel(string guid, ConnectionScope scope, BrowserContext owner) : base(guid, scope, owner)
+        public BrowserContextChannel(string guid, Connection connection, BrowserContext owner) : base(guid, connection, owner)
         {
         }
 
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BindingCallEventArgs
                         {
-                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
                     break;
                 case "route":
@@ -46,8 +46,8 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new RouteEventArgs
                         {
-                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
-                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
                         });
                     break;
                 case "page":
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BrowserContextPageEventArgs
                         {
-                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
                 case "crBackgroundPage":
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BrowserContextPageEventArgs
                         {
-                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
                 case "crServiceWorker":
@@ -71,14 +71,14 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new WorkerChannelEventArgs
                         {
-                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Scope.Connection.GetDefaultJsonSerializerOptions()),
+                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()),
                         });
                     break;
             }
         }
 
         internal Task<PageChannel> NewPageAsync(string url)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "newPage",
                 new Dictionary<string, object>
@@ -86,10 +86,10 @@ namespace PlaywrightSharp.Transport.Channels
                     ["url"] = url,
                 });
 
-        internal Task CloseAsync() => Scope.SendMessageToServer(Guid, "close");
+        internal Task CloseAsync() => Connection.SendMessageToServer(Guid, "close");
 
         internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setDefaultNavigationTimeoutNoReply",
                 new Dictionary<string, object>
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setDefaultTimeoutNoReply",
                 new Dictionary<string, object>
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task ExposeBindingAsync(string name)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "exposeBinding",
                 new Dictionary<string, object>
@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task AddInitScriptAsync(string script)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "addInitScript",
                 new Dictionary<string, object>
@@ -125,7 +125,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setNetworkInterceptionEnabled",
                 new Dictionary<string, object>
@@ -134,7 +134,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetHttpCredentialsAsync(Credentials credentials)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setHTTPCredentials",
                 new Dictionary<string, object>
@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetOfflineAsync(bool offline)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setOffline",
                 new Dictionary<string, object>
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal async Task<IEnumerable<NetworkCookie>> GetCookiesAsync(string[] urls)
         {
-            return (await Scope.SendMessageToServer(
+            return (await Connection.SendMessageToServer(
                 Guid,
                 "cookies",
                 new Dictionary<string, object>
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "addCookies",
                 new Dictionary<string, object>
@@ -184,13 +184,13 @@ namespace PlaywrightSharp.Transport.Channels
                 args["origin"] = origin;
             }
 
-            return Scope.SendMessageToServer<PageChannel>(Guid, "grantPermissions", args, true);
+            return Connection.SendMessageToServer<PageChannel>(Guid, "grantPermissions", args, true);
         }
 
-        internal Task ClearPermissionsAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearPermissions", null);
+        internal Task ClearPermissionsAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "clearPermissions", null);
 
         internal Task SetGeolocationAsync(Geolocation geolocation)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "setGeolocation",
                 new Dictionary<string, object>
@@ -199,10 +199,10 @@ namespace PlaywrightSharp.Transport.Channels
                 },
                 true);
 
-        internal Task ClearCookiesAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
+        internal Task ClearCookiesAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
 
         internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "setExtraHTTPHeaders",
                 new Dictionary<string, object>
@@ -211,7 +211,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<CDPSessionChannel> NewCDPSessionAsync(IPage page)
-            => Scope.SendMessageToServer<CDPSessionChannel>(
+            => Connection.SendMessageToServer<CDPSessionChannel>(
                 Guid,
                 "crNewCDPSession",
                 new Dictionary<string, object>

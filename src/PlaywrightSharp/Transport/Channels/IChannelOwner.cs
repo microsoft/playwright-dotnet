@@ -1,3 +1,5 @@
+﻿using System.Collections.Concurrent;
+
 namespace PlaywrightSharp.Transport.Channels
 {
     /// <summary>
@@ -6,14 +8,19 @@ namespace PlaywrightSharp.Transport.Channels
     internal interface IChannelOwner
     {
         /// <summary>
-        /// Scope.
+        /// Connection.
         /// </summary>
-        ConnectionScope Scope { get; }
+        Connection Connection { get; }
 
         /// <summary>
         /// Channel.
         /// </summary>
         ChannelBase Channel { get; }
+
+        /// <summary>
+        /// Child objects.
+        /// </summary>
+        ConcurrentDictionary<string, IChannelOwner> Objects { get; }
     }
 
     /// <summary>
@@ -21,7 +28,7 @@ namespace PlaywrightSharp.Transport.Channels
     /// </summary>
     /// <typeparam name="T">Channel Owner implementation.</typeparam>
     internal interface IChannelOwner<T> : IChannelOwner
-        where T : IChannelOwner<T>
+        where T : ChannelOwnerBase, IChannelOwner<T>
     {
         /// <summary>
         /// Channel.

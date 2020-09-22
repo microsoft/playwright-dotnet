@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,12 +6,12 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class BrowserTypeChannel : Channel<BrowserType>
     {
-        public BrowserTypeChannel(string guid, ConnectionScope scope, BrowserType owner) : base(guid, scope, owner)
+        public BrowserTypeChannel(string guid, Connection connection, BrowserType owner) : base(guid, connection, owner)
         {
         }
 
         public Task<BrowserChannel> LaunchAsync(LaunchOptions options)
-            => Scope.SendMessageToServer<BrowserChannel>(
+            => Connection.SendMessageToServer<BrowserChannel>(
                 Guid,
                 "launch",
                 options.ToChannelDictionary(),
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Transport.Channels
             var args = options.ToChannelDictionary();
             args["userDataDir"] = userDataDir;
 
-            return Scope.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args, false);
+            return Connection.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args, false);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +87,18 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(height, (int)page.ViewportSize.Height);
             Assert.Equal(width, await page.EvaluateAsync<int>("window.innerWidth"));
             Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
+        }
+
+        internal static async Task RegisterEngineAsync(IPlaywright playwright, string name, string script)
+        {
+            try
+            {
+                await playwright.Selectors.RegisterAsync(name, script);
+            }
+            catch (PlaywrightSharpException ex) when (ex.Message.Contains("has been already registered"))
+            {
+
+            }
         }
     }
 }

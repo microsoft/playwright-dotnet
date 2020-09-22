@@ -10,23 +10,18 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class BindingCall : IChannelOwner<BindingCall>
+    internal class BindingCall : ChannelOwnerBase, IChannelOwner<BindingCall>
     {
-        private readonly ConnectionScope _scope;
         private readonly BindingCallChannel _channel;
         private readonly BindingCallInitializer _initializer;
 
-        public BindingCall(ConnectionScope scope, string guid, BindingCallInitializer initializer)
+        public BindingCall(IChannelOwner parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new BindingCallChannel(guid, scope, this);
+            _channel = new BindingCallChannel(guid, parent.Connection, this);
             _initializer = initializer;
         }
 
         public string Name => _initializer.Name;
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
