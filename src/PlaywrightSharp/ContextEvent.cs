@@ -10,21 +10,21 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Page"/>.
         /// </summary>
-        public static PlaywrightEvent<PageEventArgs> Page => new PlaywrightEvent<PageEventArgs>() { Name = "Page" };
+        public static PlaywrightEvent<PageEventArgs> Page { get; } = new PlaywrightEvent<PageEventArgs>() { Name = "Page" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Closed"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Closed => new PlaywrightEvent<EventArgs>() { Name = "Closed" };
+        public static PlaywrightEvent<EventArgs> Closed { get; } = new PlaywrightEvent<EventArgs>() { Name = "Closed" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.BackgroundPage"/>.
         /// </summary>
-        public static PlaywrightEvent<PageEventArgs> BackgroundPage => new PlaywrightEvent<PageEventArgs>() { Name = "BackgroundPage" };
+        public static PlaywrightEvent<PageEventArgs> BackgroundPage { get; } = new PlaywrightEvent<PageEventArgs>() { Name = "BackgroundPage" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.ServiceWorker"/>.
         /// </summary>
-        public static PlaywrightEvent<WorkerEventArgs> ServiceWorker => new PlaywrightEvent<WorkerEventArgs>() { Name = "ServiceWorker" };
+        public static PlaywrightEvent<WorkerEventArgs> ServiceWorker { get; } = new PlaywrightEvent<WorkerEventArgs>() { Name = "ServiceWorker" };
     }
 }
