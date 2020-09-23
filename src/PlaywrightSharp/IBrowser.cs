@@ -26,6 +26,11 @@ namespace PlaywrightSharp
         IEnumerable<IBrowserContext> BrowserContexts { get; }
 
         /// <summary>
+        /// Returns the browser version.
+        /// </summary>
+        string Version { get; }
+
+        /// <summary>
         /// Indicates that the browser is connected.
         /// </summary>
         bool IsConnected { get; }

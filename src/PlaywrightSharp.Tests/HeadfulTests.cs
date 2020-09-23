@@ -4,14 +4,13 @@ using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Launcher
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>headful.spec.js</playwright-file>
-    ///<playwright-describe>Headful</playwright-describe>
+
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class HeadfulTests : PlaywrightSharpBaseTest
     {
@@ -21,7 +20,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should have default url when launching browser</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
@@ -33,7 +31,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>headless should be able to read cookies written by headful</playwright-it>
         [SkipBrowserAndPlatformFact(skipChromium: true, skipWindows: true)]
         public async Task HeadlessShouldBeAbleToReadCookiesWrittenByHeadful()
@@ -60,7 +57,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should close browser with beforeunload page</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCloseBrowserWithBeforeunloadPage()
@@ -75,7 +71,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should not crash when creating second context</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotCrashWhenCreatingSecondContext()
@@ -94,7 +89,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should click background tab</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldClickBackgroundTab()
@@ -107,7 +101,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should close browser after context menu was triggered</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
@@ -119,7 +112,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should(not) block third party cookies</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
@@ -168,7 +160,6 @@ namespace PlaywrightSharp.Tests.Launcher
         }
 
         ///<playwright-file>headful.spec.js</playwright-file>
-        ///<playwright-describe>Headful</playwright-describe>
         ///<playwright-it>should not override viewport size when passed null</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
@@ -177,7 +168,7 @@ namespace PlaywrightSharp.Tests.Launcher
             var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+            var popupTask = page.WaitForEvent(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
                 popupTask,
@@ -189,6 +180,27 @@ namespace PlaywrightSharp.Tests.Launcher
             var popup = popupTask.Result.Page;
             await popup.WaitForLoadStateAsync();
             await popup.WaitForFunctionAsync("() => window.outerWidth === 500 && window.outerHeight === 450");
+        }
+
+        ///<playwright-file>headful.spec.js</playwright-file>
+        ///<playwright-it>Page.bringToFront should work</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task PageBringToFrontShouldWork()
+        {
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
+            var page1 = await context.NewPageAsync();
+            await page1.SetContentAsync("Page1");
+            var page2 = await context.NewPageAsync();
+            await page2.SetContentAsync("Page2");
+
+            await page1.BringToFrontAsync();
+            Assert.Equal("visible", await page1.EvaluateAsync<string>("document.visibilityState"));
+            Assert.Equal("visible", await page2.EvaluateAsync<string>("document.visibilityState"));
+
+            await page2.BringToFrontAsync();
+            Assert.Equal("visible", await page1.EvaluateAsync<string>("document.visibilityState"));
+            Assert.Equal("visible", await page2.EvaluateAsync<string>("document.visibilityState"));
         }
     }
 }

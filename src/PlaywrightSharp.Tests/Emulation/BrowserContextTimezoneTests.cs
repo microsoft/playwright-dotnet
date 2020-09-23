@@ -91,11 +91,11 @@ namespace PlaywrightSharp.Tests.Emulation
             await page.GoToAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
-                page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
+                page.WaitForEvent(PageEvent.Popup),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
             await TaskUtils.WhenAll(
-                page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
+                page.WaitForEvent(PageEvent.Popup),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
         }
     }

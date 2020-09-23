@@ -190,6 +190,8 @@ namespace PlaywrightSharp.Transport.Channels
                     ["source"] = script,
                 });
 
+        internal Task BringToFrontAsync() => Connection.SendMessageToServer(Guid, "bringToFront");
+
         internal Task<ResponseChannel> GoBackAsync(int? timeout, LifecycleEvent? waitUntil)
         {
             var args = new Dictionary<string, object>();

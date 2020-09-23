@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldAcceptDownloads()
         {
-            var downloadTask = _page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+            var downloadTask = _page.WaitForEvent(PageEvent.Download);
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotDeleteDownloadsWhenTheContextCloses()
         {
-            var downloadTask = _page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+            var downloadTask = _page.WaitForEvent(PageEvent.Download);
 
             await TaskUtils.WhenAll(
                 downloadTask,

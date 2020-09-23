@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
             var page = await _browser.NewPageAsync();
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+            var downloadTask = page.WaitForEvent(PageEvent.Download);
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
             var page = await _browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+            var downloadTask = page.WaitForEvent(PageEvent.Download);
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
             var page = await _browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEvent<DownloadEventArgs>(PageEvent.Download);
+            var downloadTask = page.WaitForEvent(PageEvent.Download);
 
             await TaskUtils.WhenAll(
                 downloadTask,

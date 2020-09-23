@@ -1212,7 +1212,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldTimeoutWhenClickOpensAlert()
         {
-            var dialogTask = Page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+            var dialogTask = Page.WaitForEvent(PageEvent.Dialog);
 
             await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
 

@@ -16,5 +16,7 @@ namespace PlaywrightSharp.Transport.Channels
             => (await Connection.SendMessageToServer(Guid, "failure", treatErrorPropertyAsError: false).ConfigureAwait(false))?.GetProperty("error").ToString();
 
         internal Task DeleteAsync() => Connection.SendMessageToServer(Guid, "delete", null);
+
+        internal Task SaveAsAsync(string path) => Connection.SendMessageToServer(Guid, "saveAs", new { path });
     }
 }

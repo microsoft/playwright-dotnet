@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEvent<RequestEventArgs>(PageEvent.Request, e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png");
+            var task = Page.WaitForEvent(PageEvent.Request, e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (requestEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
