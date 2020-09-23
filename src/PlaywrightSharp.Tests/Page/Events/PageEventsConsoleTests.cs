@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             }
             Page.Console += EventHandler;
             await TaskUtils.WhenAll(
-                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console),
+                Page.WaitForEvent(PageEvent.Console),
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
 
             Assert.Equal("hello 5 JSHandle@object", message.Text);
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Page.Console += EventHandler;
             await TaskUtils.WhenAll(
                 Page.EvaluateAsync("() => console.error(window)"),
-                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console)
+                Page.WaitForEvent(PageEvent.Console)
             );
             Assert.Equal("JSHandle@object", message.Text);
         }
@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
             await Page.GoToAsync("about:blank");
             var (messageEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console),
+                Page.WaitForEvent(PageEvent.Console),
                 Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
             );
             Assert.Contains("Access-Control-Allow-Origin", messageEvent.Message.Text);
@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var (messageEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console),
+                Page.WaitForEvent(PageEvent.Console),
                 Page.GoToAsync(TestConstants.ServerUrl + "/consolelog.html")
             );
             Assert.Equal("yellow", messageEvent.Message.Text);
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var (popup, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
+                Page.WaitForEvent(PageEvent.Popup),
                 Page.EvaluateAsync<bool>(@"async () =>
                 {
                     // 1. Create a popup that Playwright is not connected to.

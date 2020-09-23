@@ -1,103 +1,90 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Enums for <see cref="IPage.WaitForEvent{T}(PageEvent, System.Func{T, bool}, int?)"/>.
+    /// Page events for <see cref="IPage.WaitForEvent{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
     /// </summary>
-    public enum PageEvent
+    public static class PageEvent
     {
         /// <summary>
-        /// Close event.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Request"/>.
         /// </summary>
-        /// <see cref="IPage.Closed"/>
-        Closed,
+        public static PlaywrightEvent<RequestEventArgs> Request { get; } = new PlaywrightEvent<RequestEventArgs>() { Name = "Request" };
 
         /// <summary>
-        /// Load event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.RequestFinished"/>.
         /// </summary>
-        /// <see cref="IPage.Load"/>
-        Load,
+        public static PlaywrightEvent<RequestEventArgs> RequestFinished { get; } = new PlaywrightEvent<RequestEventArgs>() { Name = "RequestFinished" };
 
         /// <summary>
-        /// The JavaScript <c>DOMContentLoaded</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded"/> event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Crash"/>.
         /// </summary>
-        DOMContentLoaded,
+        public static PlaywrightEvent<EventArgs> Crash { get; } = new PlaywrightEvent<EventArgs>() { Name = "Crash" };
 
         /// <summary>
-        /// Console event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Closed"/>.
         /// </summary>
-        /// <see cref="IPage.Console"/>
-        Console,
+        public static PlaywrightEvent<EventArgs> Closed { get; } = new PlaywrightEvent<EventArgs>() { Name = "Closed" };
 
         /// <summary>
-        /// Popup event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Response"/>.
         /// </summary>
-        /// <see cref="IPage.Popup"/>
-        Popup,
+        public static PlaywrightEvent<ResponseEventArgs> Response { get; } = new PlaywrightEvent<ResponseEventArgs>() { Name = "Response" };
 
         /// <summary>
-        /// Dialog event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Download"/>.
         /// </summary>
-        /// <see cref="IPage.Dialog"/>
-        Dialog,
+        public static PlaywrightEvent<DownloadEventArgs> Download { get; } = new PlaywrightEvent<DownloadEventArgs>() { Name = "Download" };
 
         /// <summary>
-        /// Request event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Console"/>.
         /// </summary>
-        /// <see cref="IPage.Request"/>
-        Request,
+        public static PlaywrightEvent<ConsoleEventArgs> Console { get; } = new PlaywrightEvent<ConsoleEventArgs>() { Name = "Console" };
 
         /// <summary>
-        /// Request event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Popup"/>.
         /// </summary>
-        /// <see cref="IPage.RequestFinished"/>
-        RequestFinished,
+        public static PlaywrightEvent<PopupEventArgs> Popup { get; } = new PlaywrightEvent<PopupEventArgs>() { Name = "Popup" };
 
         /// <summary>
-        /// FileChooser event.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FrameNavigated"/>.
         /// </summary>
-        /// <see cref="IPage.FileChooser"/>
-        FileChooser,
+        public static PlaywrightEvent<FrameEventArgs> FrameNavigated { get; } = new PlaywrightEvent<FrameEventArgs>() { Name = "FrameNavigated" };
 
         /// <summary>
-        /// Response event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FrameDetached"/>.
         /// </summary>
-        /// <see cref="IPage.Response"/>
-        Response,
+        public static PlaywrightEvent<FrameEventArgs> FrameDetached { get; } = new PlaywrightEvent<FrameEventArgs>() { Name = "FrameDetached" };
 
         /// <summary>
-        /// Page error event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Worker"/>.
         /// </summary>
-        /// <see cref="IPage.PageError"/>
-        PageError,
+        public static PlaywrightEvent<WorkerEventArgs> Worker { get; } = new PlaywrightEvent<WorkerEventArgs>() { Name = "Worker" };
 
         /// <summary>
-        /// Page WorkerCreated event
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Dialog"/>.
         /// </summary>
-        /// <see cref="IPage.Worker"/>
-        Worker,
+        public static PlaywrightEvent<DialogEventArgs> Dialog { get; } = new PlaywrightEvent<DialogEventArgs>() { Name = "Dialog" };
 
         /// <summary>
-        /// Page Crashed event.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FileChooser"/>.
         /// </summary>
-        /// <see cref="IPage.Crash"/>
-        Crash,
+        public static PlaywrightEvent<FileChooserEventArgs> FileChooser { get; } = new PlaywrightEvent<FileChooserEventArgs>() { Name = "FileChooser" };
 
         /// <summary>
-        /// Frame navigated event.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.PageError"/>.
         /// </summary>
-        /// <see cref="IPage.FrameNavigated"/>
-        FrameNavigated,
+        public static PlaywrightEvent<PageErrorEventArgs> PageError { get; } = new PlaywrightEvent<PageErrorEventArgs>() { Name = "PageError" };
 
         /// <summary>
-        /// Download event.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Load"/>.
         /// </summary>
-        /// <see cref="IPage.Download"/>
-        Download,
+        public static PlaywrightEvent<EventArgs> Load { get; } = new PlaywrightEvent<EventArgs>() { Name = "Load" };
 
         /// <summary>
-        /// Frame detached event.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.DOMContentLoaded"/>.
         /// </summary>
-        /// <see cref="IPage.FrameDetached"/>
-        FrameDetached,
+        public static PlaywrightEvent<EventArgs> DOMContentLoaded { get; } = new PlaywrightEvent<EventArgs>() { Name = "DOMContentLoaded" };
     }
 }

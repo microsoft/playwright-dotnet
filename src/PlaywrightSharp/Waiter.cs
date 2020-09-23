@@ -68,7 +68,7 @@ namespace PlaywrightSharp
         internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool> predicate)
         {
             var (task, dispose) = WaitForEvent(eventSource, e, predicate);
-            return WaitForPromiseAsync<T>(task, dispose);
+            return WaitForPromiseAsync(task, dispose);
         }
 
         internal (Task<T> task, Action dispose) WaitForEvent<T>(object eventSource, string e, Func<T, bool> predicate)

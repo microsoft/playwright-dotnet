@@ -460,30 +460,31 @@ namespace PlaywrightSharp
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
         /// </summary>
-        /// <param name="e">Event to wait for.</param>
+        /// <param name="pageEvent">Event to wait for.</param>
         /// <param name="predicate">Receives the event data and resolves when the waiting should resolve.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <typeparam name="T">Return type.</typeparam>
+        /// <typeparam name="T">Resulting event args.</typeparam>
         /// <example>
         /// <code>
         /// <![CDATA[
         /// // wait for console event:
-        /// var console = await page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+        /// var console = await page.WaitForEvent(PageEvent.Console);
         ///
         /// // wait for popup event:
-        /// var popup = await page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+        /// var popup = await page.WaitForEvent(PageEvent.Popup);
         ///
         /// // wait for dialog event:
-        /// var dialog = await page.WaitForEvent<DialogEventArgs>(PageEvent.Dialog);
+        /// var dialog = await page.WaitForEvent(PageEvent.Dialog);
         ///
         /// // wait for request event:
-        /// var request = await page.WaitForEvent<RequestEventArgs>(PageEvent.Request);
+        /// var request = await page.WaitForEvent(PageEvent.Request);
         /// ]]>
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEvent<T>(PageEvent e, Func<T, bool> predicate = null, int? timeout = null);
+        Task<T> WaitForEvent<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
+            where T : EventArgs;
 
         /// <summary>
         /// Navigates to an URL.

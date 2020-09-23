@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.Frame
 
             await TaskUtils.WhenAll(
                 Page.GoToAsync(TestConstants.EmptyPage + "#foo"),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated)
+                Page.WaitForEvent(PageEvent.FrameNavigated)
             );
             Assert.Equal(TestConstants.EmptyPage + "#foo", Page.Url);
         }
@@ -216,7 +216,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.True(frame1.IsDetached);
 
             var (frame2, _) = await TaskUtils.WhenAll(
-              Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated),
+              Page.WaitForEvent(PageEvent.FrameNavigated),
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
 

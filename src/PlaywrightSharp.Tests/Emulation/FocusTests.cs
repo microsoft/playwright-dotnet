@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.Emulation
         public async Task ShouldFocusPopupsByDefault()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+            var popupTask = Page.WaitForEvent(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
                 popupTask,

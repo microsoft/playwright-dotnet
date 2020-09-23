@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldFireWhenExpected()
         {
             var task = Page.GoToAsync("about:blank");
-            await Page.WaitForEvent<EventArgs>(PageEvent.DOMContentLoaded);
+            await Page.WaitForEvent(PageEvent.DOMContentLoaded);
             await task;
         }
     }

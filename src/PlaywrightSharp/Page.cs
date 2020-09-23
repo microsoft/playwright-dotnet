@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace PlaywrightSharp
         private readonly ConnectionScope _scope;
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new List<Frame>();
-        private readonly List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(PageEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
+        private readonly List<(IEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(IEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly object _fileChooserEventLock = new object();
 
         private List<RouteSetting> _routes = new List<RouteSetting>();
@@ -297,20 +296,14 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEvent<RequestEventArgs>(
-                PageEvent.Request,
-                e => e.Request.Url.Equals(url),
-                timeout).ConfigureAwait(false);
+            var result = await WaitForEvent(PageEvent.Request, e => e.Request.Url.Equals(url), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(Regex regex, int? timeout = null)
         {
-            var result = await WaitForEvent<RequestEventArgs>(
-                PageEvent.Request,
-                e => regex.IsMatch(e.Request.Url),
-                timeout).ConfigureAwait(false);
+            var result = await WaitForEvent(PageEvent.Request, e => regex.IsMatch(e.Request.Url), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
@@ -332,23 +325,29 @@ namespace PlaywrightSharp
             => MainFrame.WaitForFunctionAsync(true, pageFunction, args, timeout, polling, pollingInterval);
 
         /// <inheritdoc />
-        public async Task<T> WaitForEvent<T>(PageEvent e, Func<T, bool> predicate = null, int? timeout = null)
+        public async Task<T> WaitForEvent<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
+            where T : EventArgs
         {
+            if (pageEvent == null)
+            {
+                throw new ArgumentException("Page event is required", nameof(pageEvent));
+            }
+
             timeout ??= TimeoutSettings.Timeout;
             using var waiter = new Waiter();
-            waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{e.ToString()}\"");
+            waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{typeof(T)}\"");
 
-            if (e != PageEvent.Crash)
+            if (pageEvent.Name != PageEvent.Crash.Name)
             {
                 waiter.RejectOnEvent<EventArgs>(this, "Crash", new TargetClosedException("Page crashed"));
             }
 
-            if (e != PageEvent.Closed)
+            if (pageEvent.Name != PageEvent.Closed.Name)
             {
                 waiter.RejectOnEvent<EventArgs>(this, "Closed", new TargetClosedException("Page closed"));
             }
 
-            return await waiter.WaitForEventAsync<T>(this, e.ToString(), predicate).ConfigureAwait(false);
+            return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -623,7 +622,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEvent<ResponseEventArgs>(
+            var result = await WaitForEvent(
                 PageEvent.Response,
                 e => e.Response.Url.Equals(url),
                 timeout).ConfigureAwait(false);

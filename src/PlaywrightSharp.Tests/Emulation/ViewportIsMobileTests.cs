@@ -160,7 +160,7 @@ namespace PlaywrightSharp.Tests.Emulation
                 window.addEventListener('orientationchange', () => console.log(++window.counter));
             }");
 
-            var event1Task = page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+            var event1Task = page.WaitForEvent(PageEvent.Console);
             await page.SetViewportSizeAsync(new ViewportSize
             {
                 Width = 400,
@@ -169,7 +169,7 @@ namespace PlaywrightSharp.Tests.Emulation
             var event1 = await event1Task;
             Assert.Equal("1", event1.Message.Text);
 
-            var event2Task = page.WaitForEvent<ConsoleEventArgs>(PageEvent.Console);
+            var event2Task = page.WaitForEvent(PageEvent.Console);
             await page.SetViewportSizeAsync(new ViewportSize
             {
                 Width = 300,
