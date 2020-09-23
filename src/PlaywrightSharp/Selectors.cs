@@ -32,13 +32,13 @@ namespace PlaywrightSharp
         {
             if (string.IsNullOrEmpty(script))
             {
-                script = ScriptsHelper.EvaluationScript(content, path);
+                script = ScriptsHelper.EvaluationScript(content, path, false);
             }
 
             var registerParam = new SelectorsRegisterParams
             {
                 Name = name,
-                Source = $"({script})(undefined)",
+                Source = script,
                 ContentScript = contentScript,
             };
 

@@ -79,6 +79,18 @@ namespace PlaywrightSharp.Tests
             return sb.ToString();
         }
 
+        internal static async Task RegisterEngineWithPathAsync(IPlaywright playwright, string name, string path)
+        {
+            try
+            {
+                await playwright.Selectors.RegisterAsync(name, path: path);
+            }
+            catch (PlaywrightSharpException ex) when (ex.Message.Contains("has been already registered"))
+            {
+
+            }
+        }
+
         internal static string GetWebServerFile(string path) => Path.Combine(FindParentDirectory("PlaywrightSharp.TestServer"), "wwwroot", path);
 
         internal static async Task VerifyViewportAsync(IPage page, int width, int height)
@@ -89,11 +101,11 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
         }
 
-        internal static async Task RegisterEngineAsync(IPlaywright playwright, string name, string script)
+        internal static async Task RegisterEngineAsync(IPlaywright playwright, string name, string script, bool? contentScript = null)
         {
             try
             {
-                await playwright.Selectors.RegisterAsync(name, script);
+                await playwright.Selectors.RegisterAsync(name, script, contentScript: contentScript);
             }
             catch (PlaywrightSharpException ex) when (ex.Message.Contains("has been already registered"))
             {

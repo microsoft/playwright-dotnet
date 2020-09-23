@@ -359,7 +359,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRespectSelectors()
         {
             var (tmp, context, page) = await LaunchAsync();
-            const string defaultContextCSS = @"() => ({
+            const string defaultContextCSS = @"({
                 create(root, target) {},
                 query(root, selector) {
                     return root.querySelector(selector);

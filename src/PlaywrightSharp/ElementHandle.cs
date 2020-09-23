@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -257,5 +257,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task UncheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false)
             => _channel.UncheckAsync(timeout, force, noWaitAfter);
+
+        internal Task<string> CreateSelectorForTestAsync(string name) => _channel.CreateSelectorForTestAsync(name);
     }
 }

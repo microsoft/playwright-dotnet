@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -398,6 +398,9 @@ namespace PlaywrightSharp.Transport.Channels
 
             return (await Connection.SendMessageToServer(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
+
+        internal async Task<string> CreateSelectorForTestAsync(string name)
+            => (await Connection.SendMessageToServer(Guid, "createSelectorForTest", new { name }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal Task SelectTextAsync(int? timeout)
         {
