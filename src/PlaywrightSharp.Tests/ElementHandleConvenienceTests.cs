@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
                 }
             })";
 
-            await TestUtils.RegisterEngineAsync(Playwright, "testContent", createDummySelector);
+            await TestUtils.RegisterEngineAsync(Playwright, "textContent", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
             string tc = await Page.GetTextContentAsync("textContent=div");
             Assert.Equal("Hello", tc);
@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
             await TestUtils.RegisterEngineAsync(Playwright, "getAttribute", createDummySelector);
             await Page.SetContentAsync("<div foo=hello></div>");
-            string tc = await Page.GetAttributeAsync("textContent=div", "foo");
+            string tc = await Page.GetAttributeAsync("getAttribute=div", "foo");
             Assert.Equal("Hello", tc);
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"));
         }
