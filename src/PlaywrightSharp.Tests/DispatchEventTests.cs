@@ -184,7 +184,6 @@ namespace PlaywrightSharp.Tests
             }", new { source, target }));
         }
 
-
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(drag)</playwright-describe>
         ///<playwright-it>should dispatch drag drop events</playwright-it>
@@ -202,7 +201,6 @@ namespace PlaywrightSharp.Tests
                 return source.parentElement === target;
             }", new { source, target }));
         }
-
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-it>should dispatch click event</playwright-it>

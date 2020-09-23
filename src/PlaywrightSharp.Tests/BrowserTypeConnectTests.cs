@@ -110,6 +110,5 @@ namespace PlaywrightSharp.Tests.Launcher
         public void ShouldRespectSelectors()
         {
         }
-
     }
 }

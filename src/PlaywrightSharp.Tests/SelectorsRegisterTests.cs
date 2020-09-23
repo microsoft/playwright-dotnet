@@ -63,7 +63,6 @@ namespace PlaywrightSharp.Tests
         }
 
         ///<playwright-file>selectors-register.spec.js</playwright-file>
-
         ///<playwright-it>should work in main and isolated world</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkInMainAndIsolatedWorld()
@@ -100,7 +99,6 @@ namespace PlaywrightSharp.Tests
         }
 
         ///<playwright-file>selectors-register.spec.js</playwright-file>
-
         ///<playwright-it>should handle errors</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldHandleErrors()

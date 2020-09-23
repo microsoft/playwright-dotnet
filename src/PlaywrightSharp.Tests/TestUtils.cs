@@ -87,7 +87,6 @@ namespace PlaywrightSharp.Tests
             }
             catch (PlaywrightSharpException ex) when (ex.Message.Contains("has been already registered"))
             {
-
             }
         }
 
@@ -109,7 +108,6 @@ namespace PlaywrightSharp.Tests
             }
             catch (PlaywrightSharpException ex) when (ex.Message.Contains("has been already registered"))
             {
-
             }
         }
     }

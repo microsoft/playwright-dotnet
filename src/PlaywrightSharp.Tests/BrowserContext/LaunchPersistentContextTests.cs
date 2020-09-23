@@ -330,7 +330,6 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = context.Pages.First();
 
             return (tmp, context, page);
-
         }
     }
 }
