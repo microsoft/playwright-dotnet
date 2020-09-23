@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await context.NewPageAsync();
 
             var (otherPage, _) = await TaskUtils.WhenAll(
-                context.WaitForEvent<PageEventArgs>(ContextEvent.Page),
+                context.WaitForEvent(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
             Assert.Equal(TestConstants.EmptyPage, otherPage.Page.Url);
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await context.NewPageAsync();
 
             var (otherPage, _) = await TaskUtils.WhenAll(
-                context.WaitForEvent<PageEventArgs>(ContextEvent.Page),
+                context.WaitForEvent(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
             await otherPage.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await context.NewPageAsync();
 
             var (otherPage, _) = await TaskUtils.WhenAll(
-                context.WaitForEvent<PageEventArgs>(ContextEvent.Page),
+                context.WaitForEvent(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", "about:blank"));
 
             await otherPage.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await context.NewPageAsync();
 
             var (otherPage, _) = await TaskUtils.WhenAll(
-                context.WaitForEvent<PageEventArgs>(ContextEvent.Page),
+                context.WaitForEvent(ContextEvent.Page),
                 page.EvaluateAsync("() => window.open()"));
 
             await otherPage.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             var page = await context.NewPageAsync();
 
             var (otherPageEvent, _) = await TaskUtils.WhenAll(
-                context.WaitForEvent<PageEventArgs>(ContextEvent.Page),
+                context.WaitForEvent(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html"));
             var otherPage = otherPageEvent.Page;
 
@@ -128,12 +128,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldReportInitializedPages()
         {
             await using var context = await Browser.NewContextAsync();
-            var pageTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
+            var pageTask = context.WaitForEvent(ContextEvent.Page);
             _ = context.NewPageAsync();
             var newPage = await pageTask;
             Assert.Equal("about:blank", newPage.Page.Url);
 
-            var popupTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
+            var popupTask = context.WaitForEvent(ContextEvent.Page);
             var evaluateTask = newPage.Page.EvaluateAsync("() => window.open('about:blank')");
             var popup = await popupTask;
             Assert.Equal("about:blank", popup.Page.Url);
@@ -156,7 +156,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             });
 
             // Open a new page. Use window.open to connect to the page later.
-            var pageCreatedTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
+            var pageCreatedTask = context.WaitForEvent(ContextEvent.Page);
             await TaskUtils.WhenAll(
                 pageCreatedTask,
                 page.EvaluateAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.GoToAsync(TestConstants.EmptyPage);
 
             var (popupEvent, _) = await TaskUtils.WhenAll(
-              context.WaitForEvent<PageEventArgs>(ContextEvent.Page),
+              context.WaitForEvent(ContextEvent.Page),
               page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html")).WithTimeout();
 
             var popup = popupEvent.Page;
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
-            var popupEventTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
+            var popupEventTask = context.WaitForEvent(ContextEvent.Page);
             await TaskUtils.WhenAll(
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { Modifier.Shift }));
@@ -248,7 +248,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
-            var popupEventTask = context.WaitForEvent<PageEventArgs>(ContextEvent.Page);
+            var popupEventTask = context.WaitForEvent(ContextEvent.Page);
             await TaskUtils.WhenAll(
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { TestConstants.IsMacOSX ? Modifier.Meta : Modifier.Control }));

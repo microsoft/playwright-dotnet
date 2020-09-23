@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithWindowClose()
         {
-            var newPageTask = Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup);
+            var newPageTask = Page.WaitForEvent(PageEvent.Popup);
             await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
             var newPage = (await newPageTask).Page;
             var closedTsc = new TaskCompletionSource<bool>();

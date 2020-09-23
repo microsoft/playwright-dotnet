@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
+                Page.WaitForEvent(PageEvent.Popup),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             var opener = await popupEvent.Page.GetOpenerAsync();
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent<PopupEventArgs>(PageEvent.Popup),
+                Page.WaitForEvent(PageEvent.Popup),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             await Page.CloseAsync();

@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.SetContentAsync($"<a href=\"{TestConstants.CrossProcessHttpPrefix}/empty.html\">empty.html</a>");
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("input[type=submit]").ContinueWith(t => messages.Add("click")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -113,7 +113,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("input[type=submit]").ContinueWith(t => messages.Add("click")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -134,7 +134,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
 
             await TaskUtils.WhenAll(
                 Page.EvaluateAsync($"window.location.href = '{TestConstants.EmptyPage}'").ContinueWith(t => messages.Add("evaluate")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|evaluate", string.Join("|", messages));
         }
@@ -182,7 +182,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
 
             await TaskUtils.WhenAll(
                 Page.EvaluateAsync($"window.location.reload();").ContinueWith(t => messages.Add("evaluate")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|evaluate", string.Join("|", messages));
         }
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),
-                Page.WaitForEvent<FrameEventArgs>(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
+                Page.WaitForEvent(PageEvent.FrameNavigated).ContinueWith(t => messages.Add("navigated")));
 
             Assert.Equal(TestConstants.EmptyPage, frame.Url);
             Assert.Equal("route|navigated|click", string.Join("|", messages));

@@ -1,28 +1,30 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Context events. See <see cref="IBrowserContext.WaitForEvent{T}(ContextEvent, System.Func{T, bool}, int?)"/>.
+    /// Context events. See <see cref="IBrowserContext.WaitForEvent{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
     /// </summary>
-    public enum ContextEvent
+    public static class ContextEvent
     {
         /// <summary>
-        /// <see cref="IBrowserContext.Page"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Page"/>.
         /// </summary>
-        Page,
+        public static PlaywrightEvent<PageEventArgs> Page => new PlaywrightEvent<PageEventArgs>() { Name = "Page" };
 
         /// <summary>
-        /// <see cref="IBrowserContext.Closed"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Closed"/>.
         /// </summary>
-        Closed,
+        public static PlaywrightEvent<EventArgs> Closed => new PlaywrightEvent<EventArgs>() { Name = "Closed" };
 
         /// <summary>
-        /// <see cref="IBrowserContext.BackgroundPage"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.BackgroundPage"/>.
         /// </summary>
-        BackgroundPage,
+        public static PlaywrightEvent<PageEventArgs> BackgroundPage => new PlaywrightEvent<PageEventArgs>() { Name = "BackgroundPage" };
 
         /// <summary>
-        /// <see cref="IBrowserContext.ServiceWorker"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.ServiceWorker"/>.
         /// </summary>
-        ServiceWorker,
+        public static PlaywrightEvent<WorkerEventArgs> ServiceWorker => new PlaywrightEvent<WorkerEventArgs>() { Name = "ServiceWorker" };
     }
 }

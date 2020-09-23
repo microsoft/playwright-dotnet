@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
             await using var context = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, options);
             var backgroundPage = context.BackgroundPages.Any()
                 ? context.BackgroundPages.First()
-                : (await context.WaitForEvent<PageEventArgs>(ContextEvent.BackgroundPage)).Page;
+                : (await context.WaitForEvent(ContextEvent.BackgroundPage)).Page;
 
             Assert.NotNull(backgroundPage);
             Assert.Contains(backgroundPage, context.BackgroundPages);

@@ -14,14 +14,11 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : IChannelOwner<BrowserContext>, IBrowserContext
     {
-        private static readonly Dictionary<ContextEvent, EventInfo> _contextEventsMap = ((ContextEvent[])Enum.GetValues(typeof(ContextEvent)))
-            .ToDictionary(x => x, x => typeof(BrowserContext).GetEvent(x.ToString()));
-
         private readonly ConnectionScope _scope;
         private readonly BrowserContextChannel _channel;
         private readonly List<Page> _crBackgroundPages = new List<Page>();
         private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
-        private readonly List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(ContextEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
+        private readonly List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
         private readonly Dictionary<string, Delegate> _bindings = new Dictionary<string, Delegate>();
         private List<RouteSetting> _routes = new List<RouteSetting>();
@@ -261,41 +258,24 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc/>
-        public async Task<T> WaitForEvent<T>(ContextEvent e, Func<T, bool> predicate = null, int? timeout = null)
+        public async Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
+            where T : EventArgs
         {
-            var info = _contextEventsMap[e];
-            ValidateArgumentsTypes();
-            var eventTsc = new TaskCompletionSource<T>();
-            void ContextEventHandler(object sender, T e)
+            if (e == null)
             {
-                if (predicate == null || predicate(e))
-                {
-                    eventTsc.TrySetResult(e);
-                    info.RemoveEventHandler(this, (EventHandler<T>)ContextEventHandler);
-                }
+                throw new ArgumentException("Page event is required", nameof(e));
             }
 
-            info.AddEventHandler(this, (EventHandler<T>)ContextEventHandler);
-            var disconnectedTcs = new TaskCompletionSource<bool>();
-            _waitForCancellationTcs.Add((e, disconnectedTcs));
-            await Task.WhenAny(eventTsc.Task, disconnectedTcs.Task).WithTimeout(timeout ?? DefaultTimeout).ConfigureAwait(false);
-            if (disconnectedTcs.Task.IsCompleted)
+            timeout ??= _timeoutSettings.Timeout;
+            using var waiter = new Waiter();
+            waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{typeof(T)}\"");
+
+            if (e.Name != ContextEvent.Closed.Name)
             {
-                await disconnectedTcs.Task.ConfigureAwait(false);
+                waiter.RejectOnEvent<EventArgs>(this, "Closed", new TargetClosedException("Context closed"));
             }
 
-            return await eventTsc.Task.ConfigureAwait(false);
-
-            void ValidateArgumentsTypes()
-            {
-                if ((info.EventHandlerType.GenericTypeArguments.Length == 0 && typeof(T) == typeof(EventArgs))
-                    || info.EventHandlerType.GenericTypeArguments[0] == typeof(T))
-                {
-                    return;
-                }
-
-                throw new ArgumentOutOfRangeException(nameof(e), $"{e} - {typeof(T).FullName}");
-            }
+            return await waiter.WaitForEventAsync(this, e.Name, predicate).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
