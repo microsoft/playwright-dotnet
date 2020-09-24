@@ -14,16 +14,14 @@ namespace PlaywrightSharp
     /// <summary>
     /// Whenever a network route is set up with <see cref="IPage.RouteAsync(string, Action{Route, IRequest})"/> or <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/> the Route object allows to handle the route.
     /// </summary>
-    public class Route : IChannelOwner<Route>
+    public class Route : ChannelOwnerBase, IChannelOwner<Route>
     {
-        private readonly ConnectionScope _scope;
         private readonly RouteChannel _channel;
         private readonly RouteInitializer _initializer;
 
-        internal Route(ConnectionScope scope, string guid, RouteInitializer initializer)
+        internal Route(IChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new RouteChannel(guid, scope, this);
+            _channel = new RouteChannel(guid, parent.Connection, this);
             _initializer = initializer;
         }
 
@@ -31,9 +29,6 @@ namespace PlaywrightSharp
         /// A request to be routed.
         /// </summary>
         public IRequest Request => _initializer.Request;
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

@@ -9,12 +9,12 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class RouteChannel : Channel<Route>
     {
-        public RouteChannel(string guid, ConnectionScope scope, Route owner) : base(guid, scope, owner)
+        public RouteChannel(string guid, Connection connection, Route owner) : base(guid, connection, owner)
         {
         }
 
         public Task AbortAsync(RequestAbortErrorCode errorCode)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "abort",
                 new Dictionary<string, object>
@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         public Task FulfillAsync(NormalizedFulfillResponse response)
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "fulfill",
                 response);
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Transport.Channels
                 }
             }
 
-            return Scope.SendMessageToServer(
+            return Connection.SendMessageToServer(
                 Guid,
                 "continue",
                 args,

@@ -5,7 +5,7 @@ namespace PlaywrightSharp.Transport.Channels
     /// </summary>
     /// <typeparam name="T">Chanel object type.</typeparam>
     internal interface IChannel<T>
-        where T : IChannelOwner<T>
+        where T : ChannelOwnerBase, IChannelOwner<T>
     {
         /// <summary>
         /// Channel object.

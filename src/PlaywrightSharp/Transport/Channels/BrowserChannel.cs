@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class BrowserChannel : Channel<Browser>
     {
-        public BrowserChannel(string guid, ConnectionScope scope, Browser owner) : base(guid, scope, owner)
+        public BrowserChannel(string guid, Connection connection, Browser owner) : base(guid, connection, owner)
         {
         }
 
@@ -25,16 +25,16 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<BrowserContextChannel> NewContextAsync(BrowserContextOptions options)
-            => Scope.SendMessageToServer<BrowserContextChannel>(
+            => Connection.SendMessageToServer<BrowserContextChannel>(
                 Guid,
                 "newContext",
                 options.ToChannelDictionary(),
                 true);
 
-        internal Task CloseAsync() => Scope.SendMessageToServer<BrowserContextChannel>(Guid, "close", null);
+        internal Task CloseAsync() => Connection.SendMessageToServer<BrowserContextChannel>(Guid, "close", null);
 
         internal Task<CDPSessionChannel> NewBrowserCDPSessionAsync()
-            => Scope.SendMessageToServer<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
+            => Connection.SendMessageToServer<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
 
         internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
         {
@@ -58,10 +58,10 @@ namespace PlaywrightSharp.Transport.Channels
                 args["categories"] = categories;
             }
 
-            return Scope.SendMessageToServer(Guid, "crStartTracing", args);
+            return Connection.SendMessageToServer(Guid, "crStartTracing", args);
         }
 
         internal async Task<string> StopTracingAsync()
-            => (await Scope.SendMessageToServer(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            => (await Connection.SendMessageToServer(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
     }
 }

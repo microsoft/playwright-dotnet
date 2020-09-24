@@ -9,35 +9,23 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IBrowser"/>
-    public class Browser : IChannelOwner<Browser>, IBrowser
+    public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
-        private readonly ConnectionScope _scope;
         private readonly BrowserChannel _channel;
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
         private bool _isClosedOrClosing;
 
-        internal Browser(ConnectionScope scope, string guid, BrowserInitializer initializer)
+        internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
-            _scope = scope.CreateChild(guid);
-            _channel = new BrowserChannel(guid, scope, this);
+            _channel = new BrowserChannel(guid, parent.Connection, this);
             IsConnected = true;
+            _channel.Closed += (sender, e) => DidClose();
             _initializer = initializer;
-            _channel.Closed += (sender, e) =>
-            {
-                IsConnected = false;
-                _isClosedOrClosing = true;
-                Disconnected?.Invoke(this, EventArgs.Empty);
-                _scope.Dispose();
-                _closedTcs.TrySetResult(true);
-            };
         }
 
         /// <inheritdoc/>
         public event EventHandler Disconnected;
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -254,5 +242,13 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+
+        private void DidClose()
+        {
+            IsConnected = false;
+            _isClosedOrClosing = true;
+            Disconnected?.Invoke(this, EventArgs.Empty);
+            _closedTcs.TrySetResult(true);
+        }
     }
 }

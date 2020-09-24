@@ -10,22 +10,17 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IJSHandle" />
-    public class JSHandle : IChannelOwner<JSHandle>, IJSHandle
+    public class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
     {
-        private readonly ConnectionScope _scope;
         private readonly JSHandleChannel _channel;
         private readonly JSHandleInitializer _initializer;
 
-        internal JSHandle(ConnectionScope scope, string guid, JSHandleInitializer initializer)
+        internal JSHandle(IChannelOwner parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new JSHandleChannel(guid, scope, this);
+            _channel = new JSHandleChannel(guid, parent.Connection, this);
             _initializer = initializer;
             Preview = _initializer.Preview;
         }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

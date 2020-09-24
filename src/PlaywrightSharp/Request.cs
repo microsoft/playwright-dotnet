@@ -13,17 +13,15 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IRequest" />
-    public class Request : IChannelOwner<Request>, IRequest
+    public class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     {
-        private readonly ConnectionScope _scope;
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
         private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        internal Request(ConnectionScope scope, string guid, RequestInitializer initializer)
+        internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new RequestChannel(guid, scope, this);
+            _channel = new RequestChannel(guid, parent.Connection, this);
             _initializer = initializer;
             RedirectedFrom = _initializer.RedirectedFrom?.Object;
             PostDataBuffer = _initializer.PostData != null ? Convert.FromBase64String(_initializer.PostData) : null;
@@ -41,9 +39,6 @@ namespace PlaywrightSharp
                 }
             }
         }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -112,7 +107,7 @@ namespace PlaywrightSharp
                 return default;
             }
 
-            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Scope.Connection.GetDefaultJsonSerializerOptions());
+            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Connection.GetDefaultJsonSerializerOptions());
         }
 
         private string GetRequestForJson()

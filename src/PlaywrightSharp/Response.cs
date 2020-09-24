@@ -11,17 +11,15 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc cref="IResponse" />
-    public class Response : IChannelOwner<Response>, IResponse
+    public class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
     {
-        private readonly ConnectionScope _scope;
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
         private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        internal Response(ConnectionScope scope, string guid, ResponseInitializer initializer)
+        internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new ResponseChannel(guid, scope, this);
+            _channel = new ResponseChannel(guid, parent.Connection, this);
             _initializer = initializer;
 
             if (initializer.Headers != null)
@@ -32,9 +30,6 @@ namespace PlaywrightSharp
                 }
             }
         }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -81,7 +76,7 @@ namespace PlaywrightSharp
         public async Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null)
         {
             string content = await GetTextAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Scope.Connection.GetDefaultJsonSerializerOptions());
+            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Connection.GetDefaultJsonSerializerOptions());
         }
 
         /// <inheritdoc />

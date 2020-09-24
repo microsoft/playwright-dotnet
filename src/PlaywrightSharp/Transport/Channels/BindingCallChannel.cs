@@ -7,12 +7,12 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class BindingCallChannel : Channel<BindingCall>
     {
-        public BindingCallChannel(string guid, ConnectionScope scope, BindingCall owner) : base(guid, scope, owner)
+        public BindingCallChannel(string guid, Connection connection, BindingCall owner) : base(guid, connection, owner)
         {
         }
 
         internal Task ResolveAsync(object result)
-            => Scope.SendMessageToServer<ResponseChannel>(
+            => Connection.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "resolve",
                 new Dictionary<string, object>
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task RejectAsync(Exception ex)
-            => Scope.SendMessageToServer<ResponseChannel>(
+            => Connection.SendMessageToServer<ResponseChannel>(
                 Guid,
                 "reject",
                 new Dictionary<string, object>

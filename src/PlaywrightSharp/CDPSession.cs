@@ -9,25 +9,24 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <inheritdoc/>
-    public class CDPSession : IChannelOwner<CDPSession>, ICDPSession
+    public class CDPSession : ChannelOwnerBase, IChannelOwner<CDPSession>, ICDPSession
     {
-        private readonly ConnectionScope _scope;
+        private readonly Connection _connection;
         private readonly CDPSessionChannel _channel;
 
-        internal CDPSession(ConnectionScope scope, string guid)
+        internal CDPSession(IChannelOwner parent, string guid) : base(parent, guid)
         {
-            _scope = scope.CreateChild(guid);
-            _channel = new CDPSessionChannel(guid, scope, this);
+            _connection = parent.Connection;
+            _channel = new CDPSessionChannel(guid, parent.Connection, this);
 
             _channel.CDPEvent += (sender, e) => MessageReceived?.Invoke(this, e);
-            _channel.Disconnected += (sender, e) => _scope.Dispose();
         }
 
         /// <inheritdoc/>
         public event EventHandler<CDPEventArgs> MessageReceived;
 
         /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
+        Connection IChannelOwner.Connection => _connection;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -42,7 +41,7 @@ namespace PlaywrightSharp
         public async Task<T> SendAsync<T>(string method, object args = null)
         {
             var result = await _channel.SendAsync(method, args).ConfigureAwait(false);
-            return result == null ? default : result.Value.ToObject<T>(_scope.Connection.GetDefaultJsonSerializerOptions());
+            return result == null ? default : result.Value.ToObject<T>(_connection.GetDefaultJsonSerializerOptions());
         }
 
         /// <inheritdoc/>

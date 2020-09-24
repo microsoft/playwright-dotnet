@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class BrowserServerChannel : Channel<BrowserServer>
     {
-        public BrowserServerChannel(string guid, ConnectionScope scope, BrowserServer owner) : base(guid, scope, owner)
+        public BrowserServerChannel(string guid, Connection connection, BrowserServer owner) : base(guid, connection, owner)
         {
         }
 
@@ -25,13 +25,13 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task CloseAsync()
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "close",
                 null);
 
         internal Task KillAsync()
-            => Scope.SendMessageToServer(
+            => Connection.SendMessageToServer(
                 Guid,
                 "kill",
                 null);

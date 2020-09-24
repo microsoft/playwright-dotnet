@@ -6,12 +6,12 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class DialogChannel : Channel<Dialog>
     {
-        public DialogChannel(string guid, ConnectionScope scope, Dialog owner) : base(guid, scope, owner)
+        public DialogChannel(string guid, Connection connection, Dialog owner) : base(guid, connection, owner)
         {
         }
 
         internal Task AcceptAsync(string promptText)
-            => Scope.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "accept",
                 new Dictionary<string, object>
@@ -19,6 +19,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["promptText"] = promptText,
                 });
 
-        internal Task DismissAsync() => Scope.SendMessageToServer<PageChannel>(Guid, "dismiss", null);
+        internal Task DismissAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "dismiss", null);
     }
 }

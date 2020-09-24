@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class WorkerChannel : Channel<Worker>
     {
-        public WorkerChannel(string guid, ConnectionScope scope, Worker owner) : base(guid, scope, owner)
+        public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
         {
         }
 
@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
-            => Scope.SendMessageToServer<JSHandleChannel>(
+            => Connection.SendMessageToServer<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
                 new Dictionary<string, object>
@@ -56,10 +56,10 @@ namespace PlaywrightSharp.Transport.Channels
             }
             else
             {
-                serializerOptions = Scope.Connection.GetDefaultJsonSerializerOptions(false);
+                serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
             }
 
-            return Scope.SendMessageToServer<JsonElement?>(
+            return Connection.SendMessageToServer<JsonElement?>(
                 Guid,
                 "evaluateExpression",
                 new Dictionary<string, object>

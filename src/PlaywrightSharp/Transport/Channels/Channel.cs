@@ -3,9 +3,9 @@ using System;
 namespace PlaywrightSharp.Transport.Channels
 {
     internal class Channel<T> : ChannelBase, IChannel<T>
-        where T : IChannelOwner<T>
+        where T : ChannelOwnerBase, IChannelOwner<T>
     {
-        public Channel(string guid, ConnectionScope scope, T owner) : base(guid, scope)
+        public Channel(string guid, Connection connection, T owner) : base(guid, connection)
         {
             Object = owner;
         }

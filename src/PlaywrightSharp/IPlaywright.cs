@@ -27,7 +27,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
         /// </summary>
-        public IReadOnlyDictionary<string, DeviceDescriptor> Devices { get; }
+        IReadOnlyDictionary<string, DeviceDescriptor> Devices { get; }
+
+        /// <summary>
+        /// Selectors can be used to install custom selector engines.
+        /// </summary>
+        Selectors Selectors { get; }
 
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.
@@ -35,6 +40,6 @@ namespace PlaywrightSharp
         /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="BrowserType"/>.
         /// e.g.: <see cref="BrowserType.Chromium"/>, <see cref="BrowserType.Firefox"/> or <see cref="BrowserType.Webkit"/>.
         /// </param>
-        public IBrowserType this[string browserType] { get; }
+        IBrowserType this[string browserType] { get; }
     }
 }

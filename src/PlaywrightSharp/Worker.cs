@@ -11,16 +11,14 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    internal class Worker : IChannelOwner<Worker>, IWorker
+    internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
     {
-        private readonly ConnectionScope _scope;
         private readonly WorkerChannel _channel;
         private readonly WorkerInitializer _initializer;
 
-        public Worker(ConnectionScope scope, string guid, WorkerInitializer initializer)
+        public Worker(IChannelOwner parent, string guid, WorkerInitializer initializer) : base(parent, guid)
         {
-            _scope = scope;
-            _channel = new WorkerChannel(guid, scope, this);
+            _channel = new WorkerChannel(guid, parent.Connection, this);
             _initializer = initializer;
 
             _channel.Closed += (sender, e) =>
@@ -56,9 +54,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IWorker.BrowserContext"/>
         public BrowserContext BrowserContext { get; internal set; }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;

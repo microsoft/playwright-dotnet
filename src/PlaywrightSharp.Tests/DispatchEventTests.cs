@@ -1,27 +1,21 @@
-using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.DispatchEvent
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>dispatchevent.spec.js</playwright-file>
-    ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageDispatchEventClickTests : PlaywrightSharpPageBaseTest
+    public class DispatchEventTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public PageDispatchEventClickTests(ITestOutputHelper output) : base(output)
+        public DispatchEventTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click event</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickEvent()
@@ -32,7 +26,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click event properties</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickEventProperties()
@@ -45,7 +38,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click svg</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickSvg()
@@ -60,7 +52,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click on a span with an inline element inside</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickOnASpanWithAnInlineElementInside()
@@ -78,7 +69,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click after navigation</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickAfterNavigation()
@@ -91,7 +81,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click after a cross origin navigation</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickAfterACrossOriginNavigation()
@@ -104,7 +93,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should not fail when element is blocked on hover</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldNotFailWhenElementIsBlockedOnHover()
@@ -126,7 +114,6 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should dispatch click when node is added in shadow dom</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDispatchClickWhenNodeIsAddedInShadowDom()
@@ -153,11 +140,77 @@ namespace PlaywrightSharp.Tests.DispatchEvent
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>should be atomic</playwright-it>
-        [Fact(Skip = "We need https://github.com/microsoft/playwright/issues/3267")]
-        public void ShouldBeAtomic()
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldBeAtomic()
         {
+            const string createDummySelector = @"({
+                create(root, target) {},
+                query(root, selector) {
+                    const result = root.querySelector(selector);
+                    if (result)
+                    Promise.resolve().then(() => result.onclick = '');
+                    return result;
+                },
+                queryAll(root, selector) {
+                    const result = Array.from(root.querySelectorAll(selector));
+                    for (const e of result)
+                    Promise.resolve().then(() => e.onclick = null);
+                    return result;
+                }
+            })";
+
+            await TestUtils.RegisterEngineAsync(Playwright, "dispatchEvent", createDummySelector);
+            await Page.SetContentAsync("<div onclick=\"window._clicked = true\">Hello</div>");
+            await Page.DispatchEventAsync("dispatchEvent=div", "click");
+            Assert.True(await Page.EvaluateAsync<bool>("() => window['_clicked']"));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-describe>Page.dispatchEvent(drag)</playwright-describe>
+        ///<playwright-it>should dispatch drag drop events</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ShouldDispatchDragDropEvents()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/drag-n-drop.html");
+            var dataTransfer = await Page.EvaluateHandleAsync("() => new DataTransfer()");
+            await Page.DispatchEventAsync("#source", "dragstart", new { dataTransfer });
+            await Page.DispatchEventAsync("#target", "drop", new { dataTransfer });
+
+            var source = await Page.QuerySelectorAsync("#source");
+            var target = await Page.QuerySelectorAsync("#target");
+            Assert.True(await Page.EvaluateAsync<bool>(@"() => {
+                return source.parentElement === target;
+            }", new { source, target }));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-describe>Page.dispatchEvent(drag)</playwright-describe>
+        ///<playwright-it>should dispatch drag drop events</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ElementHandleShouldDispatchDragDropEvents()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/drag-n-drop.html");
+            var dataTransfer = await Page.EvaluateHandleAsync("() => new DataTransfer()");
+            var source = await Page.QuerySelectorAsync("#source");
+            await source.DispatchEventAsync("dragstart", new { dataTransfer });
+            var target = await Page.QuerySelectorAsync("#target");
+            await target.DispatchEventAsync("drop", new { dataTransfer });
+
+            Assert.True(await Page.EvaluateAsync<bool>(@"() => {
+                return source.parentElement === target;
+            }", new { source, target }));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-it>should dispatch click event</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ElementHandleShouldDispatchClickEvent()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            var button = await Page.QuerySelectorAsync("button");
+            await button.DispatchEventAsync("click");
+            Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
     }
 }

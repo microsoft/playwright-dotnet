@@ -8,12 +8,12 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class JSHandleChannel : Channel<JSHandle>
     {
-        public JSHandleChannel(string guid, ConnectionScope scope, JSHandle owner) : base(guid, scope, owner)
+        public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
         {
         }
 
         internal Task<JsonElement?> EvaluateExpressionAsync(string script, bool isFunction, EvaluateArgument arg)
-            => Scope.SendMessageToServer<JsonElement?>(
+            => Connection.SendMessageToServer<JsonElement?>(
                 Guid,
                 "evaluateExpression",
                 new Dictionary<string, object>
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
-            => Scope.SendMessageToServer<JSHandleChannel>(
+            => Connection.SendMessageToServer<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
                 new Dictionary<string, object>
@@ -34,12 +34,12 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                 });
 
-        internal Task<JsonElement> GetJsonValue() => Scope.SendMessageToServer<JsonElement>(Guid, "jsonValue", null);
+        internal Task<JsonElement> GetJsonValue() => Connection.SendMessageToServer<JsonElement>(Guid, "jsonValue", null);
 
-        internal Task DisposeAsync() => Scope.SendMessageToServer(Guid, "dispose", null);
+        internal Task DisposeAsync() => Connection.SendMessageToServer(Guid, "dispose", null);
 
         internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
-            => Scope.SendMessageToServer<JSHandleChannel>(
+            => Connection.SendMessageToServer<JSHandleChannel>(
                 Guid,
                 "getProperty",
                 new Dictionary<string, object>
@@ -48,8 +48,8 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal async Task<List<JSElementProperty>> GetPropertiesAsync()
-            => (await Scope.SendMessageToServer(Guid, "getPropertyList", null).ConfigureAwait(false))?
-                .GetProperty("properties").ToObject<List<JSElementProperty>>(Scope.Connection.GetDefaultJsonSerializerOptions());
+            => (await Connection.SendMessageToServer(Guid, "getPropertyList", null).ConfigureAwait(false))?
+                .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.GetDefaultJsonSerializerOptions());
 
         internal class JSElementProperty
         {

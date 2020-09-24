@@ -15,18 +15,13 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IElementHandle" />
     public class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
     {
-        private readonly ConnectionScope _scope;
         private readonly ElementHandleChannel _channel;
 
-        internal ElementHandle(ConnectionScope scope, string guid, ElementHandleInitializer initializer) : base(scope, guid, initializer)
+        internal ElementHandle(IChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
         {
-            _scope = scope;
-            _channel = new ElementHandleChannel(guid, scope, this);
+            _channel = new ElementHandleChannel(guid, parent.Connection, this);
             _channel.PreviewUpdated += (sender, e) => Preview = e.Preview;
         }
-
-        /// <inheritdoc/>
-        ConnectionScope IChannelOwner.Scope => _scope;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -262,5 +257,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task UncheckAsync(int? timeout = null, bool force = false, bool noWaitAfter = false)
             => _channel.UncheckAsync(timeout, force, noWaitAfter);
+
+        internal Task<string> CreateSelectorForTestAsync(string name) => _channel.CreateSelectorForTestAsync(name);
     }
 }
