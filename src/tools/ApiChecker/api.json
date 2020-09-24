@@ -371,6 +371,43 @@
                   "returnComment": "",
                   "required": false,
                   "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for new pages. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
                 }
               }
             },
@@ -698,6 +735,43 @@
                     "properties": {}
                   },
                   "comment": "Logger sink for Playwright logging.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for the new page. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
                   "returnComment": "",
                   "required": false,
                   "templates": []
@@ -1611,6 +1685,19 @@
   "Page": {
     "name": "Page",
     "members": {
+      "_videostarted": {
+        "kind": "event",
+        "name": "_videostarted",
+        "type": {
+          "name": "Object",
+          "properties": {}
+        },
+        "comment": "**experimental**\nEmitted when video recording has started for this page. The event will fire only if `_recordVideos` option is configured on the parent context.",
+        "returnComment": "",
+        "required": true,
+        "templates": [],
+        "args": {}
+      },
       "close": {
         "kind": "method",
         "name": "close",
@@ -11915,6 +12002,18 @@
                   "required": false,
                   "templates": []
                 },
+                "_videosPath": {
+                  "kind": "property",
+                  "name": "_videosPath",
+                  "type": {
+                    "name": "string",
+                    "properties": {}
+                  },
+                  "comment": "**experimental** If specified, recorded videos are saved into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
                 "chromiumSandbox": {
                   "kind": "property",
                   "name": "chromiumSandbox",
@@ -12593,6 +12692,55 @@
                   "returnComment": "",
                   "required": false,
                   "templates": []
+                },
+                "_videosPath": {
+                  "kind": "property",
+                  "name": "_videosPath",
+                  "type": {
+                    "name": "string",
+                    "properties": {}
+                  },
+                  "comment": "**experimental** If specified, recorded videos are saved into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for the new page. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
                 }
               }
             },
@@ -12750,6 +12898,18 @@
                     "properties": {}
                   },
                   "comment": "If specified, accepted downloads are downloaded into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
+                "_videosPath": {
+                  "kind": "property",
+                  "name": "_videosPath",
+                  "type": {
+                    "name": "string",
+                    "properties": {}
+                  },
+                  "comment": "**experimental** If specified, recorded videos are saved into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.",
                   "returnComment": "",
                   "required": false,
                   "templates": []
@@ -13486,6 +13646,43 @@
                   "returnComment": "",
                   "required": false,
                   "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for new pages. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
                 }
               }
             },
@@ -13813,6 +14010,43 @@
                     "properties": {}
                   },
                   "comment": "Logger sink for Playwright logging.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for the new page. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
                   "returnComment": "",
                   "required": false,
                   "templates": []
@@ -15535,6 +15769,43 @@
                   "returnComment": "",
                   "required": false,
                   "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for new pages. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
                 }
               }
             },
@@ -15862,6 +16133,43 @@
                     "properties": {}
                   },
                   "comment": "Logger sink for Playwright logging.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for the new page. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
                   "returnComment": "",
                   "required": false,
                   "templates": []
@@ -16262,6 +16570,43 @@
                   "returnComment": "",
                   "required": false,
                   "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for new pages. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
                 }
               }
             },
@@ -16589,6 +16934,43 @@
                     "properties": {}
                   },
                   "comment": "Logger sink for Playwright logging.",
+                  "returnComment": "",
+                  "required": false,
+                  "templates": []
+                },
+                "_recordVideos": {
+                  "kind": "property",
+                  "name": "_recordVideos",
+                  "type": {
+                    "name": "Object",
+                    "properties": {
+                      "width": {
+                        "kind": "property",
+                        "name": "width",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame width.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      },
+                      "height": {
+                        "kind": "property",
+                        "name": "height",
+                        "type": {
+                          "name": "number",
+                          "properties": {}
+                        },
+                        "comment": "Video frame height.",
+                        "returnComment": "",
+                        "required": true,
+                        "templates": []
+                      }
+                    }
+                  },
+                  "comment": "**experimental** Enables automatic video recording for the new page. The video will have frames with the provided dimensions. Actual picture of the page will be scaled down if necessary to fit specified size.",
                   "returnComment": "",
                   "required": false,
                   "templates": []
