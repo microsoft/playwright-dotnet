@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -124,7 +124,7 @@ namespace PlaywrightSharp
         event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <summary>
-        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(string[])"/>.
+        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(FilePayload, int?, bool?)"/>.
         /// </summary>
         event EventHandler<FileChooserEventArgs> FileChooser;
 
@@ -345,7 +345,7 @@ namespace PlaywrightSharp
         /// This resolves when the page navigates to a new URL or reloads.
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
-        /// <param name="regex">Wait for this specific URL Regex.</param>
+        /// <param name="url">Wait for this specific URL Regex.</param>
         /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>Task which resolves to the main resource response.
@@ -364,13 +364,13 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(Regex regex, LifecycleEvent? waitUntil = null, int? timeout = null);
+        Task<IResponse> WaitForNavigationAsync(Regex url, LifecycleEvent? waitUntil = null, int? timeout = null);
 
         /// <summary>
         /// This resolves when the page navigates to a new URL or reloads.
         /// It is useful for when you run code which will indirectly cause the page to navigate.
         /// </summary>
-        /// <param name="matchFunc">Wait for this specific URL that matches the function condition.</param>
+        /// <param name="url">Wait for this specific URL that matches the function condition.</param>
         /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>Task which resolves to the main resource response.
@@ -389,7 +389,29 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        Task<IResponse> WaitForNavigationAsync(Func<string, bool> matchFunc, LifecycleEvent? waitUntil = null, int? timeout = null);
+        Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, LifecycleEvent? waitUntil = null, int? timeout = null);
+
+        /// <summary>
+        /// Returns frame matching the specified criteria.
+        /// </summary>
+        /// <param name="name">Frame name specified in the iframe's name attribute.</param>
+        /// <param name="url"> A glob pattern.</param>
+        /// <returns>The <see cref="IFrame"/> matching the condition if found.</returns>
+        IFrame GetFrame(string name = null, string url = null);
+
+        /// <summary>
+        /// Returns frame matching the specified criteria.
+        /// </summary>
+        /// <param name="url">Regex pattern.</param>
+        /// <returns>The <see cref="IFrame"/> matching the condition if found.</returns>
+        IFrame GetFrame(Regex url);
+
+        /// <summary>
+        /// Returns frame matching the specified criteria.
+        /// </summary>
+        /// <param name="url">A function receiving the framn's URL.</param>
+        /// <returns>The <see cref="IFrame"/> matching the condition if found.</returns>
+        IFrame GetFrame(Func<string, bool> url);
 
         /// <summary>
         /// Waits for a request.
@@ -419,11 +441,20 @@ namespace PlaywrightSharp
         /// ]]>
         /// </code>
         /// </example>
-        /// <param name="regex">Pattern to wait for.</param>
+        /// <param name="url">Regex to wait for.</param>
         /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
         /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
         /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
-        Task<IRequest> WaitForRequestAsync(Regex regex, int? timeout = null);
+        Task<IRequest> WaitForRequestAsync(Regex url, int? timeout = null);
+
+        /// <summary>
+        /// Waits for a request.
+        /// </summary>
+        /// <param name="predicate">Function used to evaluate requets.</param>
+        /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> predicate, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
@@ -431,31 +462,60 @@ namespace PlaywrightSharp
         /// <param name="pageFunction">Function to be evaluated in browser context.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
-        /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
-            int? timeout = null,
-            Polling? polling = null,
-            int? pollingInterval = null);
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
         /// <param name="pageFunction">Function to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to <c>script</c>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
-        /// <param name="pollingInterval">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
-            object args,
-            int? timeout = null,
-            Polling? polling = null,
-            int? pollingInterval = null);
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, Polling polling, int? timeout = null);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="polling">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, int polling, int? timeout = null);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to <c>script</c>.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, int? timeout = null);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to <c>script</c>.</param>
+        /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, Polling polling, int? timeout = null);
+
+        /// <summary>
+        /// Waits for a function to be evaluated to a truthy value.
+        /// </summary>
+        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to <c>script</c>.</param>
+        /// <param name="polling">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
+        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, int polling, int? timeout = null);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
@@ -491,7 +551,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
         /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
-        /// <param name="referer">Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.IDictionary{string, string})"/>.</param>
+        /// <param name="referer">Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHttpHeadersAsync(System.Collections.Generic.Dictionary{string, string})"/>.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -526,66 +586,40 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string)"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string script);
+        Task<T> EvaluateAsync<T>(string pageFunction);
 
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object)"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string script, object args);
+        Task<T> EvaluateAsync<T>(string pageFunction, object arg);
 
         /// <summary>
         /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAsync(string selector, string script, object args);
-
-        /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
-        /// If there's no element matching selector, the method throws an error.
-        /// </summary>
-        /// <typeparam name="T">Result type.</typeparam>
-        /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string script, object args);
-
-        /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
-        /// If there's no element matching selector, the method throws an error.
-        /// </summary>
-        /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <remarks>
-        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
-        /// </remarks>
-        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAsync(string selector, string script);
+        Task EvalOnSelectorAsync(string selector, string pageFunction, object arg);
 
         /// <summary>
         /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
@@ -593,60 +627,86 @@ namespace PlaywrightSharp
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string script);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction, object arg);
+
+        /// <summary>
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task EvalOnSelectorAsync(string selector, string pageFunction);
+
+        /// <summary>
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// If there's no element matching selector, the method throws an error.
+        /// </summary>
+        /// <typeparam name="T">Result type.</typeparam>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <remarks>
+        /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+        /// </remarks>
+        /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
+        Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAllAsync(string selector, string script, object args);
+        Task EvalOnSelectorAllAsync(string selector, string pageFunction, object arg);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object args);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction, object arg);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAllAsync(string selector, string script);
+        Task EvalOnSelectorAllAsync(string selector, string pageFunction);
 
         /// <summary>
         /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string script);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction);
 
         /// <summary>
         /// <![CDATA[
@@ -655,13 +715,13 @@ namespace PlaywrightSharp
         /// Shortcut for MainFrame.FillAsync.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="text"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
+        /// <param name="value"><![CDATA[Value to fill for the <input>, <textarea> or [contenteditable] element]]></param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the fill action is done.</returns>
-        Task FillAsync(string selector, string text, int? timeout = null, bool noWaitAfter = false);
+        Task FillAsync(string selector, string value, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
@@ -669,6 +729,11 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="delay">Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to 0.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <remarks>
         /// To press a special key, like <c>Control</c> or <c>ArrowDown</c> use <see cref="IKeyboard.PressAsync(string, int)"/>.
         /// </remarks>
@@ -679,65 +744,85 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
-        Task TypeAsync(string selector, string text, int delay = 0);
+        Task TypeAsync(string selector, string text, int delay = 0, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for each character in the text.
         /// </summary>
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
-        /// <param name="text">A text to type into a focused element.</param>
+        /// <param name="key">Name of the key to press or a character to generate, such as `ArrowLeft` or `a`.</param>
         /// <param name="delay">Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to 0.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the type message is confirmed by the browser.</returns>
-        Task PressAsync(string selector, string text, int delay = 0, bool? noWaitAfter = null, int? timeout = null);
+        Task PressAsync(string selector, string key, int delay = 0, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
-        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
-        /// <param name="file">The file path.</param>
+        /// <param name="files">The file path.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <remarks>
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, string file);
+        Task SetInputFilesAsync(string selector, string files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
         /// <param name="files">File paths.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <remarks>
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, string[] files);
+        Task SetInputFilesAsync(string selector, string[] files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
-        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
+        /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
-        /// <param name="file">The file payload.</param>
+        /// <param name="files">The file payload.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <remarks>
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, FilePayload file);
+        Task SetInputFilesAsync(string selector, FilePayload files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="selector">A selector of an element to type into. If there are multiple elements satisfying the selector, the first will be used.</param>
         /// <param name="files">File payloads.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <remarks>
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, FilePayload[] files);
+        Task SetInputFilesAsync(string selector, FilePayload[] files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.
@@ -769,70 +854,55 @@ namespace PlaywrightSharp
         /// Triggers a change and input event once all, unselecting all the selected elements.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, bool? noWaitAfter = null, int? timeout = null);
+        Task<string[]> SelectOptionAsync(string selector, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
         /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="value">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="values">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, string value, bool? noWaitAfter = null, int? timeout = null);
+        Task<string[]> SelectOptionAsync(string selector, string values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
         /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="value">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="values">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, SelectOption value, bool? noWaitAfter = null, int? timeout = null);
+        Task<string[]> SelectOptionAsync(string selector, SelectOption values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
         /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="value">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <param name="values">Value to select. If the <![CDATA[<select>]]> has the multiple attribute.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
-        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter = null, int? timeout = null);
-
-        /// <summary>
-        /// Triggers a change and input event once all the provided options have been selected.
-        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
-        /// </summary>
-        /// <param name="selector">A selector to query page for.</param>
-        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
-        /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
-        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
-        /// Pass `0` to disable timeout.
-        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, string[] values, bool? noWaitAfter = null, int? timeout = null);
+        Task<string[]> SelectOptionAsync(string selector, IElementHandle values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -841,13 +911,13 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, bool? noWaitAfter = null, int? timeout = null);
+        Task<string[]> SelectOptionAsync(string selector, string[] values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -856,13 +926,28 @@ namespace PlaywrightSharp
         /// <param name="selector">A selector to query page for.</param>
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
-        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
-        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, bool? noWaitAfter = null, int? timeout = null);
+        Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, int? timeout = null, bool? noWaitAfter = null);
+
+        /// <summary>
+        /// Triggers a change and input event once all the provided options have been selected.
+        /// If there's no <![CDATA[<select>]]> element matching selector, the method throws an error.
+        /// </summary>
+        /// <param name="selector">A selector to query page for.</param>
+        /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
+        /// all values are considered, otherwise only the first one is taken into account.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+        /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -918,25 +1003,25 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync(string)"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string script);
+        Task<JsonElement?> EvaluateAsync(string pageFunction);
 
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync(string, object)"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string script, object args);
+        Task<JsonElement?> EvaluateAsync(string pageFunction, object arg);
 
         /// <summary>
         /// Takes a screenshot of the page.
@@ -1003,7 +1088,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
-        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
+        Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers);
 
         /// <summary>
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.
@@ -1020,9 +1105,9 @@ namespace PlaywrightSharp
         /// However, <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> allows to set viewport size (and more) for all pages in the context at once.
         /// <see cref="IPage.SetViewportSizeAsync(ViewportSize)"/> will resize the page.A lot of websites don't expect phones to change size, so you should set the viewport size before navigating to the page.
         /// </summary>
-        /// <param name="viewport">Viewport to set.</param>
+        /// <param name="viewportSize">Viewport to set.</param>
         /// <returns>A <see cref="Task"/> that completes when the viewport is set.</returns>
-        Task SetViewportSizeAsync(ViewportSize viewport);
+        Task SetViewportSizeAsync(ViewportSize viewportSize);
 
         /// <summary>
         /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.
@@ -1057,13 +1142,13 @@ namespace PlaywrightSharp
         /// Executes a script in browser context.
         /// </summary>
         /// <param name="pageFunction">Script to be evaluated in browser context.</param>
-        /// <param name="args">Function arguments.</param>
+        /// <param name="arg">Function arguments.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object args);
+        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg);
 
         /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.
@@ -1088,7 +1173,7 @@ namespace PlaywrightSharp
         Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string content = null);
 
         /// <summary>
-        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, int, MouseButton, int, Modifier[], Point?, int?, bool, bool)"/> to click in the center of the element.
+        /// This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, int, MouseButton, int, Modifier[], Point?, int?, bool, bool?)"/> to click in the center of the element.
         /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
         /// If the element is detached during the actionability checks, the action is retried.
         /// </summary>
@@ -1100,10 +1185,10 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
-        Task CheckAsync(string selector, int? timeout = null, bool force = false, bool noWaitAfter = false);
+        Task CheckAsync(string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null);
 
         /// <summary>
-        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, int, MouseButton, int, Modifier[], Point?, int?, bool, bool)"/> to click in the center of the element.
+        /// This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <see cref="IPage.ClickAsync(string, int, MouseButton, int, Modifier[], Point?, int?, bool, bool?)"/> to click in the center of the element.
         /// If there's no element matching selector, the method waits until a matching element appears in the DOM.
         /// If the element is detached during the actionability checks, the action is retried.
         /// </summary>
@@ -1115,7 +1200,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
-        Task UncheckAsync(string selector, int? timeout = null, bool force = false, bool noWaitAfter = false);
+        Task UncheckAsync(string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to click in the center of the element.
@@ -1142,7 +1227,7 @@ namespace PlaywrightSharp
             Point? position = null,
             int? timeout = null,
             bool force = false,
-            bool noWaitAfter = false);
+            bool? noWaitAfter = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/>, scrolls it into view if needed, and then uses <see cref="IPage.Mouse"/> to double click in the center of the element.
@@ -1159,7 +1244,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully double clicked.</returns>
-        Task DoubleClickAsync(
+        Task DblClickAsync(
             string selector,
             int delay = 0,
             MouseButton button = MouseButton.Left,
@@ -1167,7 +1252,7 @@ namespace PlaywrightSharp
             Point? position = null,
             int? timeout = null,
             bool force = false,
-            bool noWaitAfter = false);
+            bool? noWaitAfter = null);
 
         /// <summary>
         /// Navigate to the previous page in history.
@@ -1201,24 +1286,24 @@ namespace PlaywrightSharp
         /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
         /// </summary>
         /// <param name="script">Script to be evaluated in all pages in the browser context or script path.</param>
-        /// <param name="args">Optional argument to pass to script .</param>
+        /// <param name="arg">Optional argument to pass to script .</param>
         /// <param name="path">Gets or sets the path to the JavaScript file to be injected into frame. If its a relative path, then it is resolved relative to <see cref="System.IO.Directory.GetCurrentDirectory"/>.</param>
         /// <param name="content">Gets or sets the raw JavaScript content to be injected into frame.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(string script = null, object[] args = null, string path = null, string content = null);
+        Task AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightFunction"/> completes.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightBinding"/> completes.
         /// </summary>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync(string, Action{BindingSource})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction);
+        Task ExposeBindingAsync(string name, Action<BindingSource> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
@@ -1439,6 +1524,24 @@ namespace PlaywrightSharp
         Task<IResponse> WaitForResponseAsync(string url, int? timeout = null);
 
         /// <summary>
+        /// Waits for a response.
+        /// </summary>
+        /// <param name="url">Regex to wait for.</param>
+        /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(Regex url, int? timeout = null);
+
+        /// <summary>
+        /// Waits for a response.
+        /// </summary>
+        /// <param name="predicate">Function used to evaluate requets.</param>
+        /// <param name="timeout">/// Maximum time to wait for in milliseconds. Pass 0 to disable timeout.
+        /// The default value can be changed by setting the <see cref="IPage.DefaultTimeout"/> property.</param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> predicate, int? timeout = null);
+
+        /// <summary>
         ///  generates a pdf of the page with <see cref="MediaType.Print"/> css media. To generate a pdf with <see cref="MediaType.Screen"/> media call <see cref="EmulateMediaAsync(MediaType?, ColorScheme?)"/> with <see cref="MediaType.Screen"/>.
         /// </summary>
         /// <param name="path">The file path to save the PDF to. paths are resolved using <see cref="Path.GetFullPath(string)"/>.</param>
@@ -1462,7 +1565,7 @@ namespace PlaywrightSharp
         /// <param name="format">Paper format. If set, takes priority over <paramref name="width"/> and <paramref name="height"/>.</param>
         /// <param name="width">Paper width, accepts values labeled with units.</param>
         /// <param name="height">Paper height, accepts values labeled with units.</param>
-        /// <param name="marginOptions">Paper margins, defaults to none.</param>
+        /// <param name="margin">Paper margins, defaults to none.</param>
         /// <param name="preferCSSPageSize">Give any CSS <c>@page</c> size declared in the page priority over what is declared in <c>width</c> and <c>height</c> or <c>format</c> options.
         /// Defaults to <c>false</c>, which will scale the content to fit the paper size.</param>
         /// <returns>A <see cref="Task"/> that completes when the PDF was generated.</returns>
@@ -1481,7 +1584,7 @@ namespace PlaywrightSharp
             PaperFormat format = null,
             string width = null,
             string height = null,
-            Margin marginOptions = null,
+            Margin margin = null,
             bool preferCSSPageSize = false);
 
         /// <summary>
@@ -1497,10 +1600,19 @@ namespace PlaywrightSharp
         /// Routing provides the capability to modify network requests that are made by a page.
         /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
         /// </summary>
-        /// <param name="regex">A regex to match while routing.</param>
+        /// <param name="url">A regex to match while routing.</param>
         /// <param name="handler">Handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(Regex regex, Action<Route, IRequest> handler);
+        Task RouteAsync(Regex url, Action<Route, IRequest> handler);
+
+        /// <summary>
+        /// Routing provides the capability to modify network requests that are made by a page.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="url">A fucntion that evaluate the URL match.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(Func<string, bool> url, Action<Route, IRequest> handler);
 
         /// <summary>
         /// Removes a route created with <see cref="IPage.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
@@ -1513,10 +1625,18 @@ namespace PlaywrightSharp
         /// <summary>
         /// Removes a route created with <see cref="IPage.RouteAsync(Regex, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
         /// </summary>
-        /// <param name="regex">A regex used to match while routing.</param>
+        /// <param name="url">A regex used to match while routing.</param>
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(Regex regex, Action<Route, IRequest> handler = null);
+        Task UnrouteAsync(Regex url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Regex, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="url">A function used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(Func<string, bool> url, Action<Route, IRequest> handler = null);
 
         /// <summary>
         /// Under the hood, it creates an instance of an event based on the given type, initializes it with eventInit properties and dispatches it on the element.

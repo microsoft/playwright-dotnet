@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Frame
                     return false;
                 }
                 return Date.now() - window.__startTime;
-            }", pollingInterval: polling);
+            }", polling: polling);
             int value = (await timeDelta.GetJsonValueAsync<int>());
 
             Assert.True(value >= polling);
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests.Frame
                   window.counter = (window.counter || 0) + 1;
                   console.log(window.counter);
                 }",
-                pollingInterval: 1,
+                polling: 1,
                 timeout: 1000));
 
             int savedCounter = counter;
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests.Frame
         public async Task ShouldThrowNegativePollingInterval()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.WaitForFunctionAsync("() => !!document.body", pollingInterval: -10));
+                => Page.WaitForFunctionAsync("() => !!document.body", -10));
 
             Assert.Contains("Cannot poll with non-positive interval", exception.Message);
         }
@@ -236,12 +236,13 @@ namespace PlaywrightSharp.Tests.Frame
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
-            var watchdog = Page.WaitForFunctionAsync(@"() => {
-                window.__counter = (window.__counter || 0) + 1;
-                return window.__injected;
-            }",
-            timeout: 0,
-            pollingInterval: 10);
+            var watchdog = Page.WaitForFunctionAsync(
+                @"() => {
+                    window.__counter = (window.__counter || 0) + 1;
+                    return window.__injected;
+                }",
+                polling: 10,
+                timeout: 0);
             await Page.WaitForFunctionAsync("() => window.__counter > 10");
             await Page.EvaluateAsync("window.__injected = true");
             await watchdog;

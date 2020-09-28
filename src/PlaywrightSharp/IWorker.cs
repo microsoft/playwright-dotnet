@@ -33,70 +33,70 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string script);
+        Task<IJSHandle> EvaluateHandleAsync(string pageFunction);
 
         /// <summary>
         /// Executes a function in browser context, passing the current <see cref="IElementHandle"/> as the first argument.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script is executed, yielding the return value of that script.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string script, object args);
+        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg);
 
         /// <summary>
         /// Executes a script in the frame context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string script);
+        Task<T> EvaluateAsync<T>(string pageFunction);
 
         /// <summary>
         /// Executes a script in the frame context.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string script);
+        Task<JsonElement?> EvaluateAsync(string pageFunction);
 
         /// <summary>
         /// Executes a script in the frame context.
         /// </summary>
         /// <typeparam name="T">Return type.</typeparam>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IPage.EvaluateAsync{T}(string, object)"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string script, object args);
+        Task<T> EvaluateAsync<T>(string pageFunction, object arg);
 
         /// <summary>
         /// Executes a script in the frame context.
         /// </summary>
-        /// <param name="script">Script to be evaluated in browser context.</param>
-        /// <param name="args">Arguments to pass to script.</param>
+        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IPage.EvaluateAsync(string, object)"/>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string script, object args);
+        Task<JsonElement?> EvaluateAsync(string pageFunction, object arg);
     }
 }

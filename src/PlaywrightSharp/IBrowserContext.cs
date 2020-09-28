@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
@@ -110,11 +111,11 @@ namespace PlaywrightSharp
         /// * Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.
         /// </summary>
         /// <param name="script">Script to be evaluated in all pages in the browser context or script path.</param>
-        /// <param name="args">Optional argument to pass to script .</param>
+        /// <param name="arg">Optional argument to pass to script .</param>
         /// <param name="path">Gets or sets the path to the JavaScript file to be injected into frame. If its a relative path, then it is resolved relative to <see cref="System.IO.Directory.GetCurrentDirectory"/>.</param>
         /// <param name="content">Gets or sets the raw JavaScript content to be injected into frame.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task AddInitScriptAsync(string script = null, object[] args = null, string path = null, string content = null);
+        Task AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null);
 
         /// <summary>
         /// Clears all of the current cookies and then sets the cookies for the context.
@@ -188,110 +189,110 @@ namespace PlaywrightSharp
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightFunction"/> completes.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightBinding"/> completes.
         /// </summary>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync(string, Action{BindingSource})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction);
+        Task ExposeBindingAsync(string name, Action<BindingSource> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightFunction"/> completes.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves when <paramref name="playwrightBinding"/> completes.
         /// </summary>
-        /// <typeparam name="T">The parameter of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T">The parameter of <paramref name="playwrightBinding"/>.</typeparam>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync(string, Action{BindingSource})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightFunction);
+        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightBinding"/>.
         /// </summary>
-        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightBinding"/>.</typeparam>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync{TResult}(string, Func{BindingSource, TResult})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightFunction);
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightBinding"/>.
         /// </summary>
-        /// <typeparam name="T">The parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T">The parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightBinding"/>.</typeparam>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync{T, TResult}(string, Func{BindingSource, T, TResult})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightFunction);
+        Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightBinding"/>.
         /// </summary>
-        /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T1">The first parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightBinding"/>.</typeparam>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync{T1, T2, TResult}(string, Func{BindingSource, T1, T2, TResult})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightFunction);
+        Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightBinding"/>.
         /// </summary>
-        /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="T3">The third parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T1">The first parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightBinding"/>.</typeparam>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync{T1, T2, T3, TResult}(string, Func{BindingSource, T1, T2, T3, TResult})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightFunction);
+        Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
-        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightBinding"/>.
         /// </summary>
-        /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="T3">The third parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="T4">The fourth parameter of <paramref name="playwrightFunction"/>.</typeparam>
-        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <typeparam name="T1">The first parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="T4">The fourth parameter of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightBinding"/>.</typeparam>
         /// <param name="name">Name of the function on the window object.</param>
-        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
         /// <remarks>
-        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
         /// Functions installed via <see cref="ExposeBindingAsync{T1, T2, T3, T4, TResult}(string, Func{BindingSource, T1, T2, T3, T4, TResult})"/> survive navigations.
         /// </remarks>
         /// <returns>Task.</returns>
-        Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightFunction);
+        Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.
@@ -403,12 +404,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Provide credentials for http authentication <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"/>.
         /// </summary>
-        /// <param name="credentials">The credentials.</param>
+        /// <param name="httpCredentials">The credentials.</param>
         /// <returns>A <see cref="Task"/> that completes when the credentials are set.</returns>
         /// <remarks>
         /// To disable authentication, pass <c>null</c>.
         /// </remarks>
-        Task SetHttpCredentialsAsync(Credentials credentials);
+        Task SetHttpCredentialsAsync(Credentials httpCredentials);
 
         /// <summary>
         /// Routing provides the capability to modify network requests that are made by any page in the browser context.
@@ -420,6 +421,24 @@ namespace PlaywrightSharp
         Task RouteAsync(string url, Action<Route, IRequest> handler);
 
         /// <summary>
+        /// Routing provides the capability to modify network requests that are made by a page.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="url">A regex to match while routing.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(Regex url, Action<Route, IRequest> handler);
+
+        /// <summary>
+        /// Routing provides the capability to modify network requests that are made by a page.
+        /// Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
+        /// </summary>
+        /// <param name="url">A fucntion that evaluate the URL match.</param>
+        /// <param name="handler">Handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(Func<string, bool> url, Action<Route, IRequest> handler);
+
+        /// <summary>
         /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
         /// </summary>
         /// <param name="url">A glob pattern used to match while routing.</param>
@@ -428,18 +447,34 @@ namespace PlaywrightSharp
         Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
 
         /// <summary>
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="url">A glob pattern used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(Regex url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// </summary>
+        /// <param name="url">A function used to match while routing.</param>
+        /// <param name="handler">Handler function used to route a request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(Func<string, bool> url, Action<Route, IRequest> handler = null);
+
+        /// <summary>
         /// Set offline mode for the context.
         /// </summary>
         /// <returns>A<see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        /// <param name="enabled">When <c>true</c> enables offline mode for the page.</param>
-        Task SetOfflineAsync(bool enabled);
+        /// <param name="offline">When <c>true</c> enables offline mode for the page.</param>
+        Task SetOfflineAsync(bool offline);
 
         /// <summary>
         /// Sets extra HTTP headers that will be sent with every request in every page in the context.
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
-        Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers);
+        Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers);
 
         /// <summary>
         /// Creates a new browser session.

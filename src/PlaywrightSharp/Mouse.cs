@@ -16,7 +16,7 @@ namespace PlaywrightSharp
         public Task ClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left, int clickCount = 1)
             => _channel.MouseClickAsync(x, y, delay, button, clickCount);
 
-        public Task DoubleClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left)
+        public Task DblClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left)
             => _channel.MouseClickAsync(x, y, delay, button, 2);
 
         public Task DownAsync(MouseButton button = MouseButton.Left, int clickCount = 1) => _channel.MouseDownAsync(button, clickCount);

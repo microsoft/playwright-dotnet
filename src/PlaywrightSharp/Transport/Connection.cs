@@ -329,9 +329,6 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.Browser:
                     result = new Browser(parent, guid, initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
-                case ChannelOwnerType.BrowserServer:
-                    result = new BrowserServer(parent, guid, initializer?.ToObject<BrowserServerInitializer>(GetDefaultJsonSerializerOptions()));
-                    break;
                 case ChannelOwnerType.BrowserType:
                     result = new BrowserType(parent, guid, initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions()));
                     break;

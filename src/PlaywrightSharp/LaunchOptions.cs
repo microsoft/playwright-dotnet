@@ -65,6 +65,26 @@ namespace PlaywrightSharp
         public bool? IgnoreDefaultArgs { get; set; }
 
         /// <summary>
+        /// Close the browser process on Ctrl-C. Defaults to true.
+        /// </summary>
+        public bool? HandleSIGINT { get; set; }
+
+        /// <summary>
+        /// Close the browser process on SIGTERM. Defaults to true.
+        /// </summary>
+        public bool? HandleSIGTERM { get; set; }
+
+        /// <summary>
+        /// Close the browser process on SIGHUP. Defaults to true.
+        /// </summary>
+        public bool? HandleSIGHUP { get; set; }
+
+        /// <summary>
+        /// Enable Chromium sandboxing. Defaults to true.
+        /// </summary>
+        public bool? ChromiumSandbox { get; set; }
+
+        /// <summary>
         /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.
         /// </summary>
         public string[] IgnoredDefaultArgs { get; set; }
@@ -72,12 +92,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
         /// </summary>
-        public IDictionary<string, string> Env { get; set; }
+        public Dictionary<string, string> Env { get; set; }
 
         /// <summary>
         /// Firefox user preferences. Learn more about the Firefox user preferences at about:config.
         /// </summary>
-        public IDictionary<string, object> FirefoxUserPrefs { get; set; }
+        public Dictionary<string, object> FirefoxUserPrefs { get; set; }
 
         /// <summary>
         /// Network proxy settings.
@@ -106,6 +126,7 @@ namespace PlaywrightSharp
                 Env = Env,
                 FirefoxUserPrefs = FirefoxUserPrefs,
                 Proxy = Proxy,
+                ChromiumSandbox = ChromiumSandbox,
             };
 
         internal virtual Dictionary<string, object> ToChannelDictionary()
@@ -185,6 +206,11 @@ namespace PlaywrightSharp
             if (Proxy != null)
             {
                 args["proxy"] = Proxy;
+            }
+
+            if (ChromiumSandbox != null)
+            {
+                args["chromiumSandbox"] = ChromiumSandbox;
             }
 
             return args;
