@@ -20,7 +20,8 @@ jobs:
           dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
-          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo dotnet dev-certs https --clean
+          sudo dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
       - name: Run tests
         env:
           PRODUCT: CHROMIUM
@@ -42,7 +43,8 @@ jobs:
           dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
-          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo dotnet dev-certs https --clean
+          sudo dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
       - name: Run tests
         env:
           PRODUCT: FIREFOX
@@ -64,7 +66,8 @@ jobs:
           dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
-          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+          sudo dotnet dev-certs https --clean
+          sudo dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
       - name: Run tests
         env:
           PRODUCT: WEBKIT
