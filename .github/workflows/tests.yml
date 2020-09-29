@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+        env:
+          DOTNET_INSTALL_DIR: ~/alternate/dotnet
       - name: Create Certificate
         run: |
           dotnet dev-certs https --clean
@@ -41,6 +43,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+        env:
+          DOTNET_INSTALL_DIR: ~/alternate/dotnet
       - name: Create Certificate
         run: |
           dotnet dev-certs https --clean
@@ -64,6 +68,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+        env:
+          DOTNET_INSTALL_DIR: ~/alternate/dotnet
       - name: Create Certificate
         run: |
           dotnet dev-certs https --clean
