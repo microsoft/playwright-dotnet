@@ -90,10 +90,20 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="loggerFactory">Logger.</param>
         /// <param name="scheduler">Task scheduler for long running tasks.</param>
+        /// <param name="driverExecutablePath">Playwright driver path. If not set <see cref="Playwright.InstallAsync(string, string)"/> needs to be used.</param>
+        /// <param name="driversLocationPath">Drivers location. Defaults to the PlaywrightSharp assembly path.</param>
+        /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
+        /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
+        /// </param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
-        public static async Task<IPlaywright> CreateAsync(ILoggerFactory loggerFactory = null, TransportTaskScheduler scheduler = null)
+        public static async Task<IPlaywright> CreateAsync(
+            ILoggerFactory loggerFactory = null,
+            TransportTaskScheduler scheduler = null,
+            string driverExecutablePath = null,
+            string driversLocationPath = null,
+            string browsersPath = null)
         {
-            var connection = new Connection(loggerFactory, scheduler);
+            var connection = new Connection(loggerFactory, scheduler, driverExecutablePath, driversLocationPath, browsersPath);
 
             var playwright = await connection.WaitForObjectWithKnownName<Playwright>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
@@ -104,8 +114,13 @@ namespace PlaywrightSharp
         /// <summary>
         /// Runs the playwright driver install command.
         /// </summary>
+        /// <param name="driversLocationPath">Drivers location. Defaults to the PlaywrightSharp assembly path.</param>
+        /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
+        /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
+        /// </param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver ran the install command.</returns>
-        public static Task InstallAsync() => Connection.InstallAsync();
+        public static Task InstallAsync(string driversLocationPath = null, string browsersPath = null)
+            => Connection.InstallAsync(driversLocationPath, browsersPath);
 
         /// <inheritdoc />
         public void Dispose()
