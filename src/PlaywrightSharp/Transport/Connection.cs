@@ -211,7 +211,6 @@ namespace PlaywrightSharp.Transport
                 };
 
                 string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
-                Debug.WriteLine($"pw:channel:command {messageString}");
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
@@ -308,7 +307,6 @@ namespace PlaywrightSharp.Transport
 
             if (message.Id.HasValue)
             {
-                Debug.WriteLine($"pw:channel:response {e.Message}");
                 _logger?.LogInformation($"pw:channel:response {e.Message}");
 
                 if (_callbacks.TryRemove(message.Id.Value, out var callback))
@@ -330,7 +328,6 @@ namespace PlaywrightSharp.Transport
                 return;
             }
 
-            Debug.WriteLine($"pw:channel:event {e.Message}");
             _logger?.LogInformation($"pw:channel:event {e.Message}");
 
             try
@@ -417,7 +414,7 @@ namespace PlaywrightSharp.Transport
                     result = new SelectorsOwner(parent, guid);
                     break;
                 default:
-                    Debug.Write("Missing type " + type);
+                    _logger?.LogInformation("Missing type " + type);
                     break;
             }
 
