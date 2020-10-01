@@ -448,7 +448,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer<ElementHandleChannel>(Guid, "click", args);
         }
 
-        internal Task DoubleClickAsync(
+        internal Task DblClickAsync(
             string selector,
             int delay,
             MouseButton button,
@@ -622,7 +622,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer(Guid, "hover", args);
         }
 
-        internal Task<string[]> PressAsync(string selector, string text, int delay, bool? noWaitAfter, int? timeout, bool isPage)
+        internal Task<string[]> PressAsync(string selector, string text, int delay, int? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -645,7 +645,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer<string[]>(Guid, "press", args);
         }
 
-        internal async Task<string[]> SelectOptionAsync(string selector, object values, bool? noWaitAfter, int? timeout, bool isPage)
+        internal async Task<string[]> SelectOptionAsync(string selector, object values, int? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -711,17 +711,28 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServer(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TypeAsync(string selector, string text, int? delay, bool isPage)
-            => Connection.SendMessageToServer(
-                Guid,
-                "type",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["text"] = text,
-                    ["delay"] = delay,
-                    ["isPage"] = isPage,
-                });
+        internal Task TypeAsync(string selector, string text, int? delay, int? timeout, bool? noWaitAfter, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["text"] = text,
+                ["delay"] = delay,
+                ["isPage"] = isPage,
+            };
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return Connection.SendMessageToServer(Guid, "type", args);
+        }
 
         internal async Task<string> GetContentAsync(bool isPage)
             => (await Connection.SendMessageToServer(
@@ -764,16 +775,27 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServer(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, FilePayload[] files, bool isPage)
-            => Connection.SendMessageToServer<string>(
-                Guid,
-                "setInputFiles",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["files"] = files,
-                    ["isPage"] = isPage,
-                });
+        internal Task SetInputFilesAsync(string selector, FilePayload[] files, int? timeout, bool? noWaitAfter, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["files"] = files,
+                ["isPage"] = isPage,
+            };
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return Connection.SendMessageToServer<string>(Guid, "setInputFiles", args);
+        }
 
         internal async Task<string> GetTextContentAsync(string selector, int? timeout, bool isPage)
         {

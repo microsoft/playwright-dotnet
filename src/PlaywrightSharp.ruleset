@@ -29,5 +29,6 @@
     <Rule Id="CA1304" Action="None" /><!-- ToLower with locale-->
     <Rule Id="CA1305" Action="None" /><!-- ChangeType with locale-->
     <Rule Id="CA1307" Action="None" /><!-- GetHashCode with locale settings-->
+    <Rule Id="CA1725" Action="Error" /><!-- Parameter names should match base declaration-->
   </Rules>
 </RuleSet>

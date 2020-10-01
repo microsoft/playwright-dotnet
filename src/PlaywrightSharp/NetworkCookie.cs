@@ -37,7 +37,7 @@ namespace PlaywrightSharp
         /// Gets or sets the expiration. Unix time in seconds.
         /// </summary>
         /// <value>Expiration.</value>
-        public double Expires { get; set; }
+        public decimal Expires { get; set; }
 
         /// <summary>
         /// Gets or sets if it's HTTP only.
@@ -88,16 +88,16 @@ namespace PlaywrightSharp
         public SetNetworkCookieParam ToSetNetworkCookieParam() => this;
 
         /// <inheritdoc cref="IEquatable{T}"/>
-        public bool Equals(NetworkCookie cookie)
-            => cookie != null &&
-                Name == cookie.Name &&
-                Value == cookie.Value &&
-                Domain == cookie.Domain &&
-                Path == cookie.Path &&
-                Expires == cookie.Expires &&
-                HttpOnly == cookie.HttpOnly &&
-                Secure == cookie.Secure &&
-                SameSite == cookie.SameSite;
+        public bool Equals(NetworkCookie other)
+            => other != null &&
+                Name == other.Name &&
+                Value == other.Value &&
+                Domain == other.Domain &&
+                Path == other.Path &&
+                Expires == other.Expires &&
+                HttpOnly == other.HttpOnly &&
+                Secure == other.Secure &&
+                SameSite == other.SameSite;
 
         /// <inheritdoc/>
         public override bool Equals(object obj) => Equals(obj as NetworkCookie);
@@ -109,7 +109,7 @@ namespace PlaywrightSharp
                 EqualityComparer<string>.Default.GetHashCode(Value) +
                 EqualityComparer<string>.Default.GetHashCode(Domain) +
                 EqualityComparer<string>.Default.GetHashCode(Path) +
-                EqualityComparer<double>.Default.GetHashCode(Expires) +
+                EqualityComparer<decimal>.Default.GetHashCode(Expires) +
                 EqualityComparer<bool>.Default.GetHashCode(HttpOnly) +
                 EqualityComparer<bool>.Default.GetHashCode(Secure) +
                 EqualityComparer<SameSite>.Default.GetHashCode(SameSite);

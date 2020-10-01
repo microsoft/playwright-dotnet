@@ -31,46 +31,46 @@ namespace PlaywrightSharp
         internal string Preview { get; set; }
 
         /// <inheritdoc />
-        public async Task<IJSHandle> EvaluateHandleAsync(string script)
+        public async Task<IJSHandle> EvaluateHandleAsync(string pageFunction)
             => (await _channel.EvaluateExpressionHandleAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script: pageFunction,
+                isFunction: pageFunction.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IJSHandle> EvaluateHandleAsync(string script, object args)
+        public async Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg)
             => (await _channel.EvaluateExpressionHandleAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
+                script: pageFunction,
+                isFunction: pageFunction.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<T> EvaluateAsync<T>(string script)
+        public async Task<T> EvaluateAsync<T>(string pageFunction)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script: pageFunction,
+                isFunction: pageFunction.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> EvaluateAsync(string script)
+        public async Task<JsonElement?> EvaluateAsync(string pageFunction)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script: pageFunction,
+                isFunction: pageFunction.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> EvaluateAsync(string script, object args)
+        public async Task<JsonElement?> EvaluateAsync(string pageFunction, object arg)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
+                script: pageFunction,
+                isFunction: pageFunction.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> EvaluateAsync<T>(string script, object args)
+        public async Task<T> EvaluateAsync<T>(string pageFunction, object arg)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false));
+                script: pageFunction,
+                isFunction: pageFunction.IsJavascriptFunction(),
+                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         /// <inheritdoc />
         public async Task<T> GetJsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.GetJsonValue().ConfigureAwait(false));
