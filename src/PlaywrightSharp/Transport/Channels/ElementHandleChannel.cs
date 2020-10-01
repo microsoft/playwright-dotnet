@@ -240,7 +240,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer(Guid, "click", args);
         }
 
-        internal Task DoubleClickAsync(
+        internal Task DblClickAsync(
             int delay,
             MouseButton button,
             Modifier[] modifiers,
@@ -339,14 +339,25 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer<ElementHandleChannel>(Guid, "dispatchEvent", args);
         }
 
-        internal Task SetInputFilesAsync(FilePayload[] files)
-            => Connection.SendMessageToServer<string>(
-                Guid,
-                "setInputFiles",
-                new Dictionary<string, object>
-                {
-                    ["files"] = files,
-                });
+        internal Task SetInputFilesAsync(FilePayload[] files, int? timeout, bool? noWaitAfter)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["files"] = files,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAter"] = noWaitAfter;
+            }
+
+            return Connection.SendMessageToServer<string>(Guid, "setInputFiles", args);
+        }
 
         internal async Task<string> GetAttributeAsync(string name, int? timeout)
         {
@@ -414,7 +425,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer<ElementHandleChannel>(Guid, "selectText", args);
         }
 
-        internal async Task<string[]> SelectOptionAsync(object values, bool? noWaitAfter = null, int? timeout = null)
+        internal async Task<string[]> SelectOptionAsync(object values, int? timeout = null, bool? noWaitAfter = null)
         {
             var args = new Dictionary<string, object>();
 
@@ -463,12 +474,14 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(int? timeout, bool force, bool? noWaitAfter)
+        internal Task UncheckAsync(int? timeout, bool? force, bool? noWaitAfter)
         {
-            var args = new Dictionary<string, object>
+            var args = new Dictionary<string, object>();
+
+            if (force != null)
             {
-                ["force"] = force,
-            };
+                args["force"] = force;
+            }
 
             if (timeout != null)
             {
@@ -483,24 +496,46 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServer<ElementHandleChannel>(Guid, "uncheck", args);
         }
 
-        internal Task TypeAsync(string text, int delay)
-            => Connection.SendMessageToServer(
-                Guid,
-                "type",
-                new Dictionary<string, object>
-                {
-                    ["text"] = text,
-                    ["delay"] = delay,
-                });
+        internal Task TypeAsync(string text, int delay, int? timeout, bool? noWaitAfter)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["text"] = text,
+                ["delay"] = delay,
+            };
 
-        internal Task PressAsync(string key, int delay)
-            => Connection.SendMessageToServer(
-                Guid,
-                "press",
-                new Dictionary<string, object>
-                {
-                    ["key"] = key,
-                    ["delay"] = delay,
-                });
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAter"] = noWaitAfter;
+            }
+
+            return Connection.SendMessageToServer(Guid, "type", args);
+        }
+
+        internal Task PressAsync(string key, int delay, int? timeout, bool? noWaitAfter)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["key"] = key,
+                ["delay"] = delay,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAter"] = noWaitAfter;
+            }
+
+            return Connection.SendMessageToServer(Guid, "press", args);
+        }
     }
 }

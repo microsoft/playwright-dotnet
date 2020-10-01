@@ -63,15 +63,15 @@ namespace PlaywrightSharp
         /// <summary>
         /// Determines whether the specified <see cref="Rect"/> is equal to the current <see cref="Rect"/>.
         /// </summary>
-        /// <param name="obj">The <see cref="Rect"/> to compare with the current <see cref="Rect"/>.</param>
+        /// <param name="other">The <see cref="Rect"/> to compare with the current <see cref="Rect"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Rect"/> is equal to the current
         /// <see cref="Rect"/>; otherwise, <c>false</c>.</returns>
-        public bool Equals(Rect obj)
-            => obj != null &&
-                obj.X == X &&
-                obj.Y == Y &&
-                obj.Height == Height &&
-                obj.Width == Width;
+        public bool Equals(Rect other)
+            => other != null &&
+                other.X == X &&
+                other.Y == Y &&
+                other.Height == Height &&
+                other.Width == Width;
 
         /// <inheritdoc/>
         public override int GetHashCode()

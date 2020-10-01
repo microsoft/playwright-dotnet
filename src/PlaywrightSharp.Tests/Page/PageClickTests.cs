@@ -427,7 +427,7 @@ namespace PlaywrightSharp.Tests.Page
                });
             }");
             var button = await Page.QuerySelectorAsync("button");
-            await button.DoubleClickAsync();
+            await button.DblClickAsync();
             Assert.True(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }

@@ -53,14 +53,14 @@ namespace PlaywrightSharp
         /// <summary>
         /// Checks for object equality.
         /// </summary>
-        /// <param name="options">Options to check.</param>
+        /// <param name="other">Options to check.</param>
         /// <returns>Whether the objects are equal or not.</returns>
-        public bool Equals(Margin options)
-            => options != null &&
-                   Top == options.Top &&
-                   Left == options.Left &&
-                   Bottom == options.Bottom &&
-                   Right == options.Right;
+        public bool Equals(Margin other)
+            => other != null &&
+                   Top == other.Top &&
+                   Left == other.Left &&
+                   Bottom == other.Bottom &&
+                   Right == other.Right;
 
         /// <inheritdoc/>
         public override int GetHashCode()

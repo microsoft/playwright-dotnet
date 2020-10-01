@@ -42,28 +42,48 @@ namespace PlaywrightSharp
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="file">The file path.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(string file) => Element.SetInputFilesAsync(file);
+        public Task SetFilesAsync(string file, int? timeout = null, bool? noWaitAfter = null)
+            => Element.SetInputFilesAsync(file, timeout, noWaitAfter);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="files">File paths.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(string[] files) => Element.SetInputFilesAsync(files);
+        public Task SetFilesAsync(string[] files, int? timeout = null, bool? noWaitAfter = null)
+            => Element.SetInputFilesAsync(files, timeout, noWaitAfter);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="file">The file payload.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(FilePayload file) => Element.SetInputFilesAsync(file);
+        public Task SetFilesAsync(FilePayload file, int? timeout = null, bool? noWaitAfter = null)
+            => Element.SetInputFilesAsync(file, timeout, noWaitAfter);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
         /// </summary>
         /// <param name="files">File payloads.</param>
+        /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
+        /// Pass `0` to disable timeout.
+        /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(FilePayload[] files) => Element.SetInputFilesAsync(files);
+        public Task SetFilesAsync(FilePayload[] files, int? timeout = null, bool? noWaitAfter = null)
+            => Element.SetInputFilesAsync(files, timeout, noWaitAfter);
     }
 }

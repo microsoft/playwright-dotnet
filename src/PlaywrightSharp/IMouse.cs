@@ -36,7 +36,7 @@ namespace PlaywrightSharp
         /// <param name="delay">Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults to 0.</param>
         /// <param name="button">Button to click. Details to <see cref="MouseButton.Left"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        Task DoubleClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left);
+        Task DblClickAsync(decimal x, decimal y, int delay = 0, MouseButton button = MouseButton.Left);
 
         /// <summary>
         /// Dispatches a <c>mousedown</c> event.

@@ -1,17 +1,32 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using PlaywrightSharp;
 
 namespace ApiChecker
 {
-    class Program
+    public static class Program
     {
+        private static readonly Dictionary<(string className, string memberName), string> _memberAnnotations = new Dictionary<(string className, string memberName), string>
+        {
+            [("IBrowserContext", "addInitScript")] = "C# signature: AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)",
+            [("IBrowserContext", "waitForEvent")] = "event is a reserved word. optionsOrPredicate was flatten: Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)",
+            [("IPage", "addInitScript")] = "C# signature: AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)",
+            [("IPage", "waitForEvent")] = "event is a reserved word. optionsOrPredicate was flatten: Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)",
+            [("IElementHandle", "asElement")] = "Implicit from C# type casting",
+            [("IJSHandle", "asElement")] = "Implicit from C# type casting",
+            [("Selectors", "register")] = "C# signature: RegisterAsync(string name, string script = null, string path = null, string content = null, bool? contentScript = null)",
+            [("IBrowserType", "launch")] = "The ignoreDefaultArgs list is ignoredDefaultArgs | firefoxUserPrefs and env are only exposed as a Dictionary<string, object>",
+        };
+
         static void Main(string[] args)
         {
             var report = new StringBuilder("<html><body><ul>");
@@ -56,7 +71,7 @@ namespace ApiChecker
 
                 foreach (var kv in entity.Members)
                 {
-                    EvaluateMember(kv.Key, kv.Value, entity, playwrightSharpEntity, report);
+                    EvaluateMember(kv.Key, kv.Value, playwrightSharpEntity, report);
                 }
 
                 report.AppendLine("</ul>");
@@ -71,12 +86,12 @@ namespace ApiChecker
             }
         }
 
-        private static void EvaluateMember(string memberName, PlaywrightMember member, PlaywrightEntity entity, Type playwrightSharpEntity, StringBuilder report)
+        private static void EvaluateMember(string memberName, PlaywrightMember member, Type playwrightSharpEntity, StringBuilder report)
         {
             switch (member.Kind)
             {
                 case "event":
-                    EvaluateEvent(memberName, member, entity, playwrightSharpEntity, report);
+                    EvaluateEvent(memberName, playwrightSharpEntity, report);
                     return;
                 case "method":
                     EvaluateMethod(memberName, member, playwrightSharpEntity, report);
@@ -90,7 +105,16 @@ namespace ApiChecker
             var typeToCheck = playwrightSharpEntity;
             MethodInfo playwrightSharpMethod = null;
 
-            while (typeToCheck != null && playwrightSharpMethod == null)
+            if (memberName == "toString")
+            {
+                report.AppendLine("<li>");
+                report.AppendLine($"{memberName}: found as ToString");
+                report.AppendLine("</li>");
+
+                return;
+            }
+
+            while (typeToCheck != null)
             {
                 playwrightSharpMethod = typeToCheck.GetMethods().FirstOrDefault(m => m.Name.ToLower() == memberName.ToLower());
 
@@ -109,6 +133,11 @@ namespace ApiChecker
                     playwrightSharpMethod = typeToCheck.GetMethods().FirstOrDefault(m => m.Name.ToLower() == $"get{memberName.ToLower()}");
                 }
 
+                if (playwrightSharpMethod != null)
+                {
+                    break;
+                }
+
                 typeToCheck = typeToCheck.GetTypeInfo().ImplementedInterfaces.FirstOrDefault();
             }
 
@@ -117,28 +146,28 @@ namespace ApiChecker
                 report.AppendLine("<li>");
                 report.AppendLine($"{memberName}: found as {playwrightSharpMethod.Name}");
 
+                if (_memberAnnotations.ContainsKey((playwrightSharpEntity.Name, memberName)))
+                {
+                    report.AppendLine($"<span style='color: coral'> ==> {_memberAnnotations[(playwrightSharpEntity.Name, memberName)]}</span>");
+                }
+
                 report.AppendLine("<ul>");
 
                 if (member.Args != null)
                 {
-                    int position = 0;
-
                     foreach (var kv in member.Args)
                     {
                         // we flatten options
                         if (kv.Key == "options")
                         {
-
                             foreach (var arg in kv.Value.Type.Properties)
                             {
-                                EvaluateArgument(arg.Key, arg.Value, playwrightSharpMethod, report, position);
-                                position++;
+                                EvaluateArgument(arg.Key, arg.Value, typeToCheck, playwrightSharpMethod, report);
                             }
                         }
                         else
                         {
-                            EvaluateArgument(kv.Key, kv.Value, playwrightSharpMethod, report, position);
-                            position++;
+                            EvaluateArgument(kv.Key, kv.Value, typeToCheck, playwrightSharpMethod, report);
                         }
                     }
                 }
@@ -151,6 +180,11 @@ namespace ApiChecker
             {
                 var playwrightSharpProperty = playwrightSharpEntity.GetProperties().FirstOrDefault(p => p.Name.ToLower() == memberName.ToLower());
 
+                if (playwrightSharpProperty == null && memberName.StartsWith("set"))
+                {
+                    playwrightSharpProperty = playwrightSharpEntity.GetProperties().FirstOrDefault(p => p.Name.ToLower() == memberName.Substring(3, memberName.Length - 3).ToLower());
+                }
+
                 if (playwrightSharpProperty != null)
                 {
                     report.AppendLine("<li>");
@@ -161,6 +195,12 @@ namespace ApiChecker
                 {
                     report.AppendLine("<li style='color: red'>");
                     report.AppendLine($"{memberName} NOT FOUND");
+
+                    if (_memberAnnotations.ContainsKey((playwrightSharpEntity.Name, memberName)))
+                    {
+                        report.AppendLine($"<span style='color: coral'> ==> {_memberAnnotations[(playwrightSharpEntity.Name, memberName)]}</span>");
+                    }
+
                     report.AppendLine("</li>");
                 }
             }
@@ -175,55 +215,128 @@ namespace ApiChecker
                 .Replace("$", "querySelector");
         }
 
-        private static void EvaluateArgument(string name, PlaywrightArgument arg, MethodInfo playwrightSharpMethod, StringBuilder report, int position)
+        private static void EvaluateArgument(string name, PlaywrightArgument arg, Type playwrightSharpEntity, MethodInfo playwrightSharpMethod, StringBuilder report)
         {
-            var playwrightSharpArgument = playwrightSharpMethod.GetParameters().FirstOrDefault(p => p.Name.ToLower() == name.ToLower());
-
-            if (playwrightSharpArgument != null)
+            foreach (string type in arg.Type.Name.Split("|").Where(t => t != "null"))
             {
-                if (!IsSameType(playwrightSharpArgument.ParameterType, arg.Type.Name))
+                var playwrightSharpArgument = playwrightSharpMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
+
+                if (playwrightSharpArgument != null)
                 {
-                    report.AppendLine("<li style='color: coral'>");
-                    report.AppendLine($"{name} ({arg.Type.Name.Replace("<", "{").Replace(">", "}")}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType}");
+                    if (!IsSameType(playwrightSharpArgument.ParameterType, type))
+                    {
+                        //Look for a matching override
+                        var overrideMethod = playwrightSharpEntity.GetMethods().FirstOrDefault(m =>
+                            m.Name == playwrightSharpMethod.Name &&
+                            m.GetParameters().Any(p => IsParameterNameMatch(p.Name, name) && IsSameType(p.ParameterType, type)));
+
+                        if (overrideMethod != null)
+                        {
+                            playwrightSharpArgument = overrideMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
+                            report.AppendLine("<li>");
+                            report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
+                        }
+                        else
+                        {
+                            report.AppendLine("<li style='color: coral'>");
+                            report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType}");
+                        }
+                    }
+                    else
+                    {
+                        report.AppendLine("<li>");
+                        report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
+                    }
+
+                    if (type.Contains("Object"))
+                    {
+                        report.AppendLine("<ul>");
+
+                        foreach (var kv in arg.Type.Properties)
+                        {
+                            EvaluateProperty(kv.Key, kv.Value, GetBaseType(playwrightSharpArgument.ParameterType), report);
+                        }
+
+                        report.AppendLine("</ul>");
+                    }
+
+                    report.AppendLine("</li>");
                 }
                 else
                 {
-                    report.AppendLine("<li>");
-                    report.AppendLine($"{name} ({arg.Type.Name}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
-                }
+                    //Look for a matching override
+                    var overrideMethod = playwrightSharpEntity.GetMethods().FirstOrDefault(m =>
+                        m.Name == playwrightSharpMethod.Name &&
+                        m.GetParameters().Any(p => IsParameterNameMatch(p.Name, name.ToLower()) && IsSameType(p.ParameterType, type)));
 
-                if (arg.Type.Name.Contains("Object"))
-                {
-                    report.AppendLine("<ul>");
-
-                    foreach (var kv in arg.Type.Properties)
+                    if (overrideMethod != null)
                     {
-                        EvaluateProperty(kv.Key, kv.Value, playwrightSharpArgument.ParameterType, report);
+                        playwrightSharpArgument = overrideMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
+                        report.AppendLine("<li>");
+                        report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
                     }
-
-                    report.AppendLine("</ul>");
+                    else
+                    {
+                        report.AppendLine("<li style='color: red'>");
+                        report.AppendLine($"{name} NOT FOUND");
+                        report.AppendLine("</li>");
+                    }
                 }
-
-                report.AppendLine("</li>");
             }
         }
 
-        private static bool IsSameType(Type parameterType, string plywrightType)
+        private static bool IsParameterNameMatch(string argumentName, string playwrightName)
+            => argumentName.ToLower() == playwrightName.ToLower() ||
+                (playwrightName == "urlOrPredicate" && (argumentName == "url" || argumentName == "predicate"));
+
+
+        private static Type GetBaseType(Type parameterType)
         {
-            if (plywrightType.Contains("Array<"))
+            if (parameterType.IsArray)
             {
-                plywrightType = plywrightType.Replace("Array<", "").Replace(">", "");
-                return parameterType.Name.ToLower() == plywrightType;
+                return parameterType.GetElementType();
             }
 
-            return plywrightType.Replace("null|", string.Empty) switch
+            if ((typeof(IEnumerable).IsAssignableFrom(parameterType) && parameterType.GenericTypeArguments.Length == 1))
             {
-                "string" => parameterType == typeof(string),
+                return parameterType.GenericTypeArguments[0];
+            }
+
+            return Nullable.GetUnderlyingType(parameterType) ?? parameterType;
+        }
+
+        private static bool IsSameType(Type parameterType, string playwrightType)
+        {
+            if (playwrightType.Contains("Array<"))
+            {
+                playwrightType = playwrightType.Replace("Array<", "").Replace(">", "");
+            }
+            parameterType = GetBaseType(parameterType);
+
+            if (playwrightType.StartsWith("\""))
+            {
+                return parameterType.IsEnum || (parameterType.GenericTypeArguments.Length > 0 && parameterType.GenericTypeArguments[0].IsEnum);
+            }
+
+            if (playwrightType.ToLower().StartsWith("function"))
+            {
+                return typeof(MulticastDelegate).IsAssignableFrom(parameterType);
+            }
+
+            return playwrightType switch
+            {
+                "string" => parameterType == typeof(string) || parameterType.IsEnum,
                 "number" => parameterType == typeof(int) || parameterType == typeof(decimal) || parameterType == typeof(int?) || parameterType == typeof(decimal?),
                 "Array<string>" => parameterType == typeof(Array) && parameterType.GenericTypeArguments[0] == typeof(string),
                 "boolean" => parameterType == typeof(bool) || parameterType == typeof(Nullable<bool>),
-                "Object<string,string>" => parameterType == typeof(Dictionary<string, string>),
-                "Object" => true,
+                "Object<string, string" => parameterType == typeof(Dictionary<string, string>) || parameterType == typeof(Dictionary<string, object>),
+                "Object<string, string>" => parameterType == typeof(Dictionary<string, string>),
+                "RegExp" => parameterType == typeof(Regex),
+                "EvaluationArgument" => parameterType == typeof(object),
+                "ElementHandle" => parameterType == typeof(IElementHandle),
+                "Buffer" => parameterType == typeof(string) || parameterType == typeof(byte[]),
+                "Object" => parameterType != typeof(string),
+                "Serializable" => true,
                 _ => false,
             };
         }
@@ -243,12 +356,18 @@ namespace ApiChecker
                     report.AppendLine("<li>");
                 }
 
-                report.AppendLine($"{memberName} ({arg.Type.Name}): found as as Property {playwrightSharpProperty.Name} with type ({playwrightSharpProperty.PropertyType})");
+                report.AppendLine($"{memberName} ({arg.Type.Name.ToHtml()}): found as as Property {playwrightSharpProperty.Name} with type ({playwrightSharpProperty.PropertyType})");
+                report.AppendLine("</li>");
+            }
+            else
+            {
+                report.AppendLine("<li style='color: red'>");
+                report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
             }
         }
 
-        private static void EvaluateEvent(string memberName, PlaywrightMember member, PlaywrightEntity entity, Type playwrightSharpEntity, StringBuilder report)
+        private static void EvaluateEvent(string memberName, Type playwrightSharpEntity, StringBuilder report)
         {
             var playwrightSharpEvent = playwrightSharpEntity.GetEvents().FirstOrDefault(e => e.Name.ToLower() == memberName.ToLower());
 
@@ -265,5 +384,7 @@ namespace ApiChecker
                 report.AppendLine("</li>");
             }
         }
+
+        public static string ToHtml(this string value) => WebUtility.HtmlEncode(value);
     }
 }

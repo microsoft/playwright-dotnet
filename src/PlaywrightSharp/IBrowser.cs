@@ -79,6 +79,7 @@ namespace PlaywrightSharp
         /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
         /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
         /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
@@ -107,6 +108,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null);
@@ -190,6 +192,7 @@ namespace PlaywrightSharp
         /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
         /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
         /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
@@ -218,6 +221,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null);
