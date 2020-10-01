@@ -13,9 +13,6 @@
         <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Options\" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\..\PlaywrightSharp\PlaywrightSharp.csproj" />
     </ItemGroup>
 </Project>
