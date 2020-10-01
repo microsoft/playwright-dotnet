@@ -136,7 +136,6 @@ namespace PlaywrightSharp.Tests.Page
 
             async Task RequestDelegate(HttpContext context)
             {
-                Debug.WriteLine($"Request {context.Request.Path}");
                 var taskCompletion = new TaskCompletionSource<bool>();
                 responses[context.Request.Path] = taskCompletion;
                 fetches[context.Request.Path].TrySetResult(true);
