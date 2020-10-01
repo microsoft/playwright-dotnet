@@ -26,6 +26,7 @@ namespace PlaywrightSharp
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
+
         private readonly Dictionary<string, DeviceDescriptor> _devices = new Dictionary<string, DeviceDescriptor>();
 
         internal Playwright(IChannelOwner parent, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
@@ -90,10 +91,20 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="loggerFactory">Logger.</param>
         /// <param name="scheduler">Task scheduler for long running tasks.</param>
+        /// <param name="driversLocationPath">Drivers location. Defaults to the PlaywrightSharp assembly path.</param>
+        /// <param name="driverExecutablePath">Playwright driver path. If not set <see cref="InstallAsync(string, string)"/> needs to be used.</param>
+        /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
+        /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
+        /// </param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
-        public static async Task<IPlaywright> CreateAsync(ILoggerFactory loggerFactory = null, TransportTaskScheduler scheduler = null)
+        public static async Task<IPlaywright> CreateAsync(
+            ILoggerFactory loggerFactory = null,
+            TransportTaskScheduler scheduler = null,
+            string driversLocationPath = null,
+            string driverExecutablePath = null,
+            string browsersPath = null)
         {
-            var connection = new Connection(loggerFactory, scheduler);
+            var connection = new Connection(loggerFactory, scheduler, driversLocationPath, driverExecutablePath, browsersPath);
 
             var playwright = await connection.WaitForObjectWithKnownName<Playwright>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
@@ -104,8 +115,18 @@ namespace PlaywrightSharp
         /// <summary>
         /// Runs the playwright driver install command.
         /// </summary>
+        /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.</param>
+        /// <param name="driverExecutablePath">Drivers location. Defaults to the PlaywrightSharp assembly path.</param>
+        /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
         /// <returns>A <see cref="Task"/> that completes when the playwright driver ran the install command.</returns>
-        public static Task InstallAsync() => Connection.InstallAsync();
+        public static Task InstallAsync(string browsersPath = null, string driverExecutablePath = null)
+            => Connection.InstallAsync(driverExecutablePath, browsersPath);
+
+        /// <summary>
+        /// Creates a Playwright driver in the specified <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">Destination path.</param>
+        public static void InstallDriver(string path) => Connection.InstallDriver(path);
 
         /// <inheritdoc />
         public void Dispose()

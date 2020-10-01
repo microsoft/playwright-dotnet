@@ -19,6 +19,9 @@ namespace PlaywrightSharp.Transport
 {
     internal class Connection : IDisposable
     {
+        private const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
+        private const string DriverPathEnvironmentVariable = "PLAYWRIGHT_DRIVER_PATH";
+
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new ConcurrentDictionary<int, ConnectionCallback>();
         private readonly ChannelOwnerBase _rootObject;
@@ -29,17 +32,32 @@ namespace PlaywrightSharp.Transport
         private readonly TaskQueue _queue = new TaskQueue();
         private int _lastId;
 
-        public Connection(ILoggerFactory loggerFactory, TransportTaskScheduler scheduler)
+        public Connection(
+            ILoggerFactory loggerFactory,
+            TransportTaskScheduler scheduler,
+            string driversLocationPath = null,
+            string driverExecutablePath = null,
+            string browsersPath = null)
         {
+            if (!string.IsNullOrEmpty(driverExecutablePath) && !string.IsNullOrEmpty(driversLocationPath))
+            {
+                throw new ArgumentException("Passing a driver executable path and a driver location path is not allowed");
+            }
+
+            if (!string.IsNullOrEmpty(browsersPath))
+            {
+                Environment.SetEnvironmentVariable(BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
+            }
+
             _rootObject = new ChannelOwnerBase(null, this, string.Empty);
 
-            _playwrightServerProcess = GetProcess();
+            _playwrightServerProcess = GetProcess(driversLocationPath, driverExecutablePath);
             _playwrightServerProcess.StartInfo.Arguments = "--run";
             _playwrightServerProcess.Start();
-            _playwrightServerProcess.Exited += (sender, e) => CloseAsync("Process exited");
+            _playwrightServerProcess.Exited += (sender, e) => Close("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
-            _transport.TransportClosed += (sender, e) => CloseAsync(e.CloseReason);
+            _transport.TransportClosed += (sender, e) => Close(e.CloseReason);
             _loggerFactory = loggerFactory;
             _logger = _loggerFactory?.CreateLogger<Connection>();
         }
@@ -57,18 +75,49 @@ namespace PlaywrightSharp.Transport
             GC.SuppressFinalize(this);
         }
 
-        internal static async Task InstallAsync()
+        internal static async Task InstallAsync(string driverPath = null, string browsersPath = null)
         {
+            if (!string.IsNullOrEmpty(browsersPath))
+            {
+                Environment.SetEnvironmentVariable(BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
+            }
+
             var tcs = new TaskCompletionSource<bool>();
-            using var process = GetProcess();
+            using var process = GetProcess(driverPath);
+            process.StartInfo.Arguments = "--install";
             process.StartInfo.RedirectStandardOutput = false;
             process.StartInfo.RedirectStandardInput = false;
             process.EnableRaisingEvents = true;
-            process.StartInfo.Arguments = "--install";
             process.Exited += (sender, e) => tcs.TrySetResult(true);
             process.Start();
 
             await tcs.Task.ConfigureAwait(false);
+        }
+
+        internal static string InstallDriver(string driversPath)
+        {
+            if (string.IsNullOrEmpty(driversPath) && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(DriverPathEnvironmentVariable)))
+            {
+                driversPath = Environment.GetEnvironmentVariable(DriverPathEnvironmentVariable);
+            }
+
+            var assembly = typeof(Playwright).Assembly;
+            string tempDirectory = new FileInfo(assembly.Location).Directory.FullName;
+            driversPath ??= Path.Combine(tempDirectory, "playwright-sharp-drivers");
+            string driver = "playwright-driver-win.exe";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                driver = "playwright-driver-macos";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                driver = "playwright-driver-linux";
+            }
+
+            string file = Path.Combine(driversPath, assembly.GetName().Version.ToString(), driver);
+            ExtractDriver(file, driver);
+            return file;
         }
 
         internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
@@ -192,12 +241,12 @@ namespace PlaywrightSharp.Transport
             }
         }
 
-        private static Process GetProcess()
+        private static Process GetProcess(string driversLocationPath = null, string driverExecutablePath = null)
             => new Process
             {
                 StartInfo =
                 {
-                    FileName = GetExecutablePath(),
+                    FileName = string.IsNullOrEmpty(driverExecutablePath) ? GetExecutablePath(driversLocationPath) : driverExecutablePath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
@@ -205,58 +254,51 @@ namespace PlaywrightSharp.Transport
                 },
             };
 
-        private static string GetExecutablePath()
+        private static string GetExecutablePath(string driversPath = null)
         {
-            // This is not the final solution.
-            string tempDirectory = new FileInfo(typeof(Playwright).Assembly.Location).Directory.FullName;
-            string driver = "playwright-driver-win.exe";
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (string.IsNullOrEmpty(driversPath) && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(DriverPathEnvironmentVariable)))
             {
-                driver = "playwright-driver-macos";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                driver = "playwright-driver-linux";
+                driversPath = Environment.GetEnvironmentVariable(DriverPathEnvironmentVariable);
             }
 
-            string file = Path.Combine(tempDirectory, driver);
-            ExtractDriver(file, driver);
-            return file;
+            return InstallDriver(driversPath);
         }
 
         private static void ExtractDriver(string file, string driver)
         {
+            string directory = new FileInfo(file).Directory.FullName;
+            Directory.CreateDirectory(directory);
+
             using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.browsers.json"))
             {
-                var fileInfo = new FileInfo(Path.Combine(new FileInfo(file).Directory.FullName, "browsers.json"));
-                if (fileInfo.Exists)
+                var browserFileInfo = new FileInfo(Path.Combine(directory, "browsers.json"));
+
+                if (!browserFileInfo.Exists)
                 {
-                    fileInfo.Delete();
+                    var fileInfo = browserFileInfo;
+                    if (fileInfo.Exists)
+                    {
+                        fileInfo.Delete();
+                    }
                 }
 
-                using var fileStream = new FileStream(fileInfo.FullName, FileMode.OpenOrCreate, FileAccess.Write);
+                using var fileStream = new FileStream(browserFileInfo.FullName, FileMode.OpenOrCreate, FileAccess.Write);
                 resource.CopyTo(fileStream);
             }
 
             using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.{driver}"))
             {
                 var fileInfo = new FileInfo(file);
-                if (fileInfo.Exists)
+                if (!fileInfo.Exists)
                 {
-                    fileInfo.Delete();
+                    using var fileStream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+                    resource.CopyTo(fileStream);
                 }
-
-                using var fileStream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
-                resource.CopyTo(fileStream);
             }
 
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && LinuxSysCall.Chmod(file, LinuxSysCall.ExecutableFilePermissions) != 0)
             {
-                if (LinuxSysCall.Chmod(file, LinuxSysCall.ExecutableFilePermissions) != 0)
-                {
-                    throw new PlaywrightSharpException($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
-                }
+                throw new PlaywrightSharpException($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
             }
         }
 
@@ -307,7 +349,7 @@ namespace PlaywrightSharp.Transport
             }
             catch (Exception ex)
             {
-                CloseAsync(ex.ToString());
+                Close(ex.ToString());
             }
         }
 
@@ -383,7 +425,7 @@ namespace PlaywrightSharp.Transport
             OnObjectCreated(guid, result);
         }
 
-        private void CloseAsync(string reason)
+        private void Close(string reason)
         {
             if (!IsClosed)
             {
