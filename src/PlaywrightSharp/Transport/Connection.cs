@@ -375,7 +375,7 @@ namespace PlaywrightSharp.Transport
                     result = new SelectorsOwner(parent, guid);
                     break;
                 default:
-                    Debug.Write("Missing type " + type);
+                    _logger?.LogInformation("Missing type " + type);
                     break;
             }
 
