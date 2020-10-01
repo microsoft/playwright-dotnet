@@ -115,12 +115,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Runs the playwright driver install command.
         /// </summary>
-        /// <param name="driverExecutablePath">Drivers location. Defaults to the PlaywrightSharp assembly path.</param>
         /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
+        /// <param name="driverExecutablePath">Drivers location. Defaults to the PlaywrightSharp assembly path.</param>
         /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver ran the install command.</returns>
-        public static Task InstallAsync(string driverExecutablePath = null, string browsersPath = null)
+        public static Task InstallAsync(string browsersPath = null, string driverExecutablePath = null)
             => Connection.InstallAsync(driverExecutablePath, browsersPath);
 
         /// <summary>
